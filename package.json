@@ -14,15 +14,15 @@
     "format": "npx prettier . --write"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.2",
-    "@astrojs/react": "^3.6.2",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.0.0",
     "@datocms/astro": "^0.3.4",
     "@datocms/cda-client": "^0.2.2",
     "@datocms/cma-client": "^3.3.5",
     "@mux/mux-player": "^2.9.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.13.3",
+    "astro": "^5.0.3",
     "datocms-structured-text-generic-html-renderer": "^4.0.1",
     "datocms-structured-text-to-plain-text": "^4.0.1",
     "gql.tada": "^1.8.5",
@@ -35,7 +35,7 @@
     "typescript": "^5.5.4"
   },
   "devDependencies": {
-    "@astrojs/ts-plugin": "^1.9.2",
+    "@astrojs/ts-plugin": "^1.10.4",
     "@types/jsdom": "^21.1.7",
     "@types/jsonwebtoken": "^9.0.6",
     "dotenv-cli": "^7.4.2",
