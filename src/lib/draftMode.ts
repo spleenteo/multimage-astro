@@ -20,6 +20,7 @@ export function enableDraftMode(context: APIContext) {
     path: '/',
     sameSite: 'none',
     httpOnly: false,
+    secure: true,
     ...({ partitioned: true } as AstroCookieSetOptions),
   });
 }
@@ -32,6 +33,7 @@ export function disableDraftMode(context: APIContext) {
     path: '/',
     sameSite: 'none',
     httpOnly: false,
+    secure: true,
     ...({ partitioned: true } as AstroCookieSetOptions),
   });
 }
