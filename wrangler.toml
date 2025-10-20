@@ -1,0 +1,4 @@
+name = "multimage-astro"
+account_id = "59fd5121a90b86d19e5a982e6fc41696"
+compatibility_date = "2025-02-01"
+pages_build_output_dir = "./dist"

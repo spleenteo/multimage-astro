@@ -1,0 +1,44 @@
+---
+type Props = {
+  name: string;
+  booksCount: number;
+  description?: string | null;
+  logo?: {
+    url?: string | null;
+    alt?: string | null;
+  } | null;
+  className?: string;
+};
+
+const { name, booksCount, description, logo, className = '' }: Props = Astro.props;
+const booksLabel =
+  booksCount === 1 ? 'Collana editoriale con 1 libro' : `Collana editoriale con ${booksCount} libri`;
+const logoAlt = logo?.alt?.trim() || name;
+---
+
+<div
+  class={`relative overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 px-6 py-12 text-center shadow-soft backdrop-blur-sm sm:px-12 sm:py-16 ${className}`}
+>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-mist/70 via-white/60 to-brand-sand/70"></div>
+  <div class="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-8">
+    <p class="text-sm font-semibold uppercase tracking-wide text-brand-slate">{booksLabel}</p>
+    <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{name}</h1>
+
+    {logo?.url ? (
+      <div class="flex h-36 w-36 items-center justify-center rounded-full bg-brand-mist/40 p-4 shadow-inner">
+        <img
+          src={`${logo.url}?w=320&h=320&fit=max`}
+          alt={logoAlt}
+          width="320"
+          height="320"
+          loading="lazy"
+          class="h-full w-full object-contain"
+        />
+      </div>
+    ) : null}
+
+    {description ? (
+      <p class="text-base leading-relaxed text-brand-charcoal/80 md:text-lg">{description}</p>
+    ) : null}
+  </div>
+</div>

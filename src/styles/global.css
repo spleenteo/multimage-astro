@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --header-height: 5rem;
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-serif: 'Playfair Display', 'Times New Roman', serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-sand text-brand-charcoal font-sans tracking-wide antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif text-brand-navy font-semibold leading-tight tracking-wide;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+
+  p {
+    @apply leading-relaxed text-base md:text-lg;
+  }
+
+  a {
+    @apply text-brand-sky transition-colors duration-150;
+  }
+
+  a:hover,
+  a:focus {
+    @apply text-brand-navy;
+  }
+
+  strong {
+    @apply font-semibold text-brand-charcoal;
+  }
+
+  button {
+    @apply font-sans rounded-none;
+  }
+
+  ::selection {
+    @apply bg-brand-sky/20;
+  }
+}
+
+@layer components {
+  .chip {
+    @apply inline-flex items-center bg-brand-mist px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-charcoal;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-brand-orange px-5 py-2 text-sm font-semibold uppercase tracking-wider text-white shadow-soft transition hover:bg-brand-crimson;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border border-brand-orange px-5 py-2 text-sm font-semibold uppercase tracking-wider text-brand-orange transition hover:bg-brand-orange hover:text-white;
+  }
+}

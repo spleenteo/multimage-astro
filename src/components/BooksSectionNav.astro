@@ -1,0 +1,68 @@
+---
+type NavItem = {
+  label: string;
+  href: string;
+  isActive: (pathname: string) => boolean;
+};
+
+type Props = {
+  currentPath: string;
+};
+
+const navItems: NavItem[] = [
+  {
+    label: 'Collane',
+    href: '/collane',
+    isActive: (pathname) => pathname.startsWith('/collane'),
+  },
+  {
+    label: 'In evidenza',
+    href: '/libri/highlights',
+    isActive: (pathname) => pathname.startsWith('/libri/highlights'),
+  },
+  {
+    label: 'Catalogo',
+    href: '/libri',
+    isActive: (pathname) =>
+      pathname === '/libri' ||
+      (/^\/libri\//.test(pathname) &&
+        !pathname.startsWith('/libri/ebooks') &&
+        !pathname.startsWith('/libri/archivio') &&
+        !pathname.startsWith('/libri/highlights')),
+  },
+  {
+    label: 'Ebooks',
+    href: '/libri/ebooks',
+    isActive: (pathname) => pathname.startsWith('/libri/ebooks'),
+  },
+  {
+    label: 'Fuori catalogo',
+    href: '/libri/archivio',
+    isActive: (pathname) => pathname.startsWith('/libri/archivio'),
+  },
+];
+
+const { currentPath }: Props = Astro.props;
+---
+
+<nav class="rounded-[2.5rem] border border-white/70 bg-white/95 shadow-soft">
+  <ul class="flex flex-wrap items-center justify-center gap-2 px-4 py-3 sm:gap-4 sm:px-6">
+    {navItems.map((item) => {
+      const active = item.isActive(currentPath);
+      return (
+        <li>
+          <a
+            href={item.href}
+            class={`inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold uppercase tracking-wide transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base ${
+              active
+                ? 'bg-brand-sky text-white shadow-soft'
+                : 'bg-brand-mist/60 text-brand-charcoal hover:bg-brand-mist hover:text-brand-navy'
+            }`}
+          >
+            {item.label}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</nav>

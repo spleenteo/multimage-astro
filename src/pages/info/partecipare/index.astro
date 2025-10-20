@@ -1,0 +1,20 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import InfoSection from '~/components/InfoSection.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Partecipare | Multimage',
+  description: 'Questa pagina spiegherà come collaborare con Multimage.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <InfoSection
+    title="Partecipare"
+    paragraphs={["Questa pagina spiegherà come collaborare con Multimage."]}
+    chip="Aggiornamento in arrivo"
+  />
+</BaseLayout>

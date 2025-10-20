@@ -1,0 +1,23 @@
+---
+type Props = {
+  title: string;
+  description?: string | null;
+  align?: 'left' | 'center';
+  className?: string;
+};
+
+const { title, description, align = 'left', className = '' }: Props = Astro.props;
+const alignmentClass = align === 'center' ? 'items-center text-center mx-auto' : 'text-left';
+---
+
+<div
+  class={`relative overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12 ${className}`}
+>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-mist/70 via-white/60 to-brand-sand/70"></div>
+  <div class={`relative z-10 flex max-w-3xl flex-col gap-5 ${alignmentClass}`}>
+    <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{title}</h1>
+    {description ? (
+      <p class="text-lg leading-relaxed text-brand-slate md:text-xl">{description}</p>
+    ) : null}
+  </div>
+</div>

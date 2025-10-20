@@ -1,0 +1,119 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionIntro from '~/components/SectionIntro.astro';
+import CollectionCard from '~/components/CollectionCard.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { graphql } from '~/lib/datocms/graphql';
+import { toPlainText, truncateToLength } from '~/lib/text';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const COLLECTIONS_QUERY = graphql(
+  /* GraphQL */ `
+    query CollectionsPage {
+      collectionsIndex {
+        title
+        subtitle
+        seoMetaTags: _seoMetaTags {
+          tag
+          attributes
+          content
+        }
+      }
+      allCollections(orderBy: name_ASC) {
+        id
+        name
+        slug
+        description
+        logo {
+          url
+          alt
+        }
+      }
+      allBooks(first: 500) {
+        id
+        collection {
+          id
+        }
+      }
+    }
+  `,
+);
+
+type SeoMetaTag = {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: string | null;
+};
+
+type CollectionsQueryResult = {
+  collectionsIndex: {
+    title: string | null;
+    subtitle: string | null;
+    seoMetaTags: SeoMetaTag[] | null;
+  } | null;
+  allCollections: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    logo: {
+      url: string;
+      alt: string | null;
+    } | null;
+  }>;
+  allBooks: Array<{
+    id: string;
+    collection: {
+      id: string;
+    } | null;
+  }>;
+};
+
+const data = (await executeQuery(COLLECTIONS_QUERY)) as CollectionsQueryResult;
+
+const heroTitle = data.collectionsIndex?.title ?? 'Collane';
+const heroSubtitle = toPlainText(data.collectionsIndex?.subtitle ?? null);
+const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+const seo = withFallbackSeo(data.collectionsIndex?.seoMetaTags, {
+  title: heroTitle,
+  description: heroDescription,
+});
+
+const bookCounts = new Map<string, number>();
+for (const book of data.allBooks ?? []) {
+  const collectionId = book.collection?.id;
+  if (!collectionId) {
+    continue;
+  }
+  bookCounts.set(collectionId, (bookCounts.get(collectionId) ?? 0) + 1);
+}
+
+const collections = (data.allCollections ?? []).map((collection) => ({
+  id: collection.id,
+  name: collection.name,
+  slug: collection.slug,
+  description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
+  logo: collection.logo,
+  booksCount: bookCounts.get(collection.id) ?? 0,
+}));
+---
+
+<BaseLayout seo={seo}>
+  <section class="space-y-12">
+    <div class="mx-auto max-w-5xl">
+      <SectionIntro title={heroTitle} description={heroDescription} />
+    </div>
+
+    {collections.length === 0 ? (
+      <p class="text-brand-slate">Nessuna collana pubblicata trovata.</p>
+    ) : (
+      <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {collections.map((collection) => (
+          <CollectionCard {...collection} />
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

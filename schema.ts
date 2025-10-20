@@ -1,0 +1,676 @@
+import { ItemTypeDefinition } from '@datocms/cma-client';
+type EnvironmentSettings = {
+  locales: 'it';
+};
+export type Video = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184828',
+  {
+    video: {
+      type: 'video';
+    };
+  }
+>;
+export type Book = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70450',
+  {
+    copyright: {
+      type: 'string';
+    };
+    edited_by: {
+      type: 'boolean';
+    };
+    isbn: {
+      type: 'string';
+    };
+    slug: {
+      type: 'slug';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    price: {
+      type: 'float';
+    };
+    pages: {
+      type: 'integer';
+    };
+    description: {
+      type: 'text';
+    };
+    promo: {
+      type: 'string';
+    };
+    license: {
+      type: 'link';
+    };
+    seo: {
+      type: 'seo';
+    };
+    highlight: {
+      type: 'boolean';
+    };
+    authors: {
+      type: 'links';
+    };
+    layout_artist: {
+      type: 'string';
+    };
+    epub_url: {
+      type: 'string';
+    };
+    review: {
+      type: 'text';
+    };
+    print_year: {
+      type: 'date';
+    };
+    archive: {
+      type: 'boolean';
+    };
+    edition: {
+      type: 'integer';
+    };
+    collection: {
+      type: 'link';
+    };
+    illustrator: {
+      type: 'string';
+    };
+    stock: {
+      type: 'integer';
+    };
+    first_print_year: {
+      type: 'integer';
+    };
+    format: {
+      type: 'string';
+    };
+    cover_designer: {
+      type: 'string';
+    };
+    cover_image: {
+      type: 'file';
+    };
+    reprints: {
+      type: 'rich_text';
+      blocks: Reprint;
+    };
+    dimensions: {
+      type: 'string';
+    };
+    original_title: {
+      type: 'string';
+    };
+    original_lang: {
+      type: 'string';
+    };
+    translator: {
+      type: 'string';
+    };
+    keywords: {
+      type: 'links';
+    };
+  }
+>;
+export type BlogPostOld = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70452',
+  {
+    sticky: {
+      type: 'boolean';
+    };
+    title: {
+      type: 'string';
+    };
+    category: {
+      type: 'link';
+    };
+    author: {
+      type: 'link';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    abstract: {
+      type: 'text';
+    };
+    tags: {
+      type: 'links';
+    };
+    related_posts: {
+      type: 'links';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    body_old: {
+      type: 'text';
+    };
+  }
+>;
+export type BlogPost = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184824',
+  {
+    sticky: {
+      type: 'boolean';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    abstract: {
+      type: 'text';
+    };
+    content: {
+      type: 'rich_text';
+      blocks: Section | Image | Video;
+    };
+    category: {
+      type: 'link';
+    };
+    author: {
+      type: 'link';
+    };
+    tags: {
+      type: 'links';
+    };
+    related_posts: {
+      type: 'links';
+    };
+    related_books: {
+      type: 'links';
+    };
+    related_authors: {
+      type: 'links';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Author = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70445',
+  {
+    full_name: {
+      type: 'string';
+    };
+    sort_by: {
+      type: 'string';
+    };
+    alias: {
+      type: 'string';
+    };
+    pseudonyms: {
+      type: 'links';
+    };
+    country: {
+      type: 'string';
+    };
+    biography: {
+      type: 'text';
+    };
+    picture: {
+      type: 'file';
+    };
+    slug: {
+      type: 'slug';
+    };
+    email: {
+      type: 'string';
+    };
+    phone: {
+      type: 'string';
+    };
+    note: {
+      type: 'text';
+    };
+  }
+>;
+export type Supplier = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70444',
+  {
+    name: {
+      type: 'string';
+    };
+    logo: {
+      type: 'file';
+    };
+    city: {
+      type: 'string';
+    };
+    region: {
+      type: 'string';
+    };
+    address: {
+      type: 'string';
+    };
+    telephone: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    url: {
+      type: 'string';
+    };
+    email: {
+      type: 'string';
+    };
+    map: {
+      type: 'lat_lon';
+    };
+  }
+>;
+export type SuppliersIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177742',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type CollectionsIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177447',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    cover: {
+      type: 'file';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type HighlightsIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177589',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Page = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70448',
+  {
+    menu: {
+      type: 'boolean';
+    };
+    label: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    body: {
+      type: 'text';
+    };
+    layout: {
+      type: 'string';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export type BlogTag = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70454',
+  {
+    name: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    slug: {
+      type: 'string';
+    };
+  }
+>;
+export type BlogCategory = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70453',
+  {
+    name: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    slug: {
+      type: 'string';
+    };
+  }
+>;
+export type Collection = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70447',
+  {
+    name: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
+    };
+    logo: {
+      type: 'file';
+    };
+  }
+>;
+export type Homeslide = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70446',
+  {
+    ref: {
+      type: 'integer';
+    };
+    claim: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    online: {
+      type: 'boolean';
+    };
+    item_position: {
+      type: 'integer';
+    };
+    creation_date: {
+      type: 'date_time';
+    };
+    updated_date: {
+      type: 'date_time';
+    };
+    image_image_uid: {
+      type: 'file';
+    };
+  }
+>;
+export type License = ItemTypeDefinition<
+  EnvironmentSettings,
+  '183992',
+  {
+    code: {
+      type: 'string';
+    };
+    name: {
+      type: 'string';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export type Banner = ItemTypeDefinition<
+  EnvironmentSettings,
+  '1936637',
+  {
+    featured_image: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    content: {
+      type: 'text';
+    };
+    link: {
+      type: 'string';
+    };
+  }
+>;
+export type Image = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184826',
+  {
+    image: {
+      type: 'file';
+    };
+  }
+>;
+export type BooksIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '171774',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type EbooksIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '180517',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Section = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184825',
+  {
+    title: {
+      type: 'string';
+    };
+    body: {
+      type: 'text';
+    };
+  }
+>;
+export type Reprint = ItemTypeDefinition<
+  EnvironmentSettings,
+  '181484',
+  {
+    number: {
+      type: 'integer';
+    };
+    circulation: {
+      type: 'integer';
+    };
+    year: {
+      type: 'date';
+    };
+  }
+>;
+export type BlogAuthor = ItemTypeDefinition<
+  EnvironmentSettings,
+  '181489',
+  {
+    name: {
+      type: 'string';
+    };
+    biography: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type ArchiveIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177591',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type AuthorsIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177592',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Keyword = ItemTypeDefinition<
+  EnvironmentSettings,
+  '1295615',
+  {
+    name: {
+      type: 'string';
+    };
+  }
+>;
+export type Home = ItemTypeDefinition<
+  EnvironmentSettings,
+  '152502',
+  {
+    hero_title: {
+      type: 'string';
+    };
+    newsletter_title: {
+      type: 'string';
+    };
+    cta_title: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    banner: {
+      type: 'file';
+    };
+    claim: {
+      type: 'text';
+    };
+    newsletter_body: {
+      type: 'text';
+    };
+    cta_body: {
+      type: 'text';
+    };
+    hero_image: {
+      type: 'file';
+    };
+    banner_url: {
+      type: 'string';
+    };
+    highlight: {
+      type: 'link';
+    };
+    hero_body: {
+      type: 'text';
+    };
+    banners: {
+      type: 'rich_text';
+      blocks: Banner;
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type AnyBlock = Video | Banner | Image | Section | Reprint;
+export type AnyModel =
+  | Book
+  | BlogPostOld
+  | BlogPost
+  | Author
+  | Supplier
+  | SuppliersIndex
+  | CollectionsIndex
+  | HighlightsIndex
+  | Page
+  | BlogTag
+  | BlogCategory
+  | Collection
+  | Homeslide
+  | License
+  | BooksIndex
+  | EbooksIndex
+  | BlogAuthor
+  | ArchiveIndex
+  | AuthorsIndex
+  | Keyword
+  | Home;
+export type AnyBlockOrModel = AnyBlock | AnyModel;

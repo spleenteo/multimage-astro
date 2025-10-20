@@ -1,0 +1,23 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Distribuzione | Multimage',
+  description:
+    'La sezione illustrerà canali di vendita, librerie e partner commerciali dedicati alla casa editrice.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <section class="space-y-6">
+    <h1>Distribuzione</h1>
+    <p>
+      La sezione illustrerà canali di vendita, librerie e partner commerciali. Useremo componenti
+      Tailwind per tabelle responsive e call to action dedicate ai distributori.
+    </p>
+    <span class="chip">Prossimo step</span>
+  </section>
+</BaseLayout>

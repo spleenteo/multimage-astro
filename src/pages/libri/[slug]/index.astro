@@ -1,0 +1,585 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import AlternateFormatsList from '~/components/AlternateFormatsList.astro';
+import DetailList from '~/components/DetailList.astro';
+import AuthorsSection from '~/components/AuthorsSection.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { graphql } from '~/lib/datocms/graphql';
+import { toPlainText, truncateToLength } from '~/lib/text';
+import {
+  buildLicenseLabel,
+  extractYear,
+  formatBookPrice,
+  formatCirculation,
+  formatEdition,
+  formatOrdinal,
+  normalizeText,
+} from '~/lib/books';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const BOOK_DETAIL_QUERY = graphql(
+  /* GraphQL */ `
+    query BookDetailPage($slug: String) {
+      book(filter: { slug: { eq: $slug } }) {
+        id
+        title
+        subtitle
+        slug
+        promo
+        description
+        review
+        isbn
+        edition
+        pages
+        format
+        price
+        printYear
+        firstPrintYear
+        coverDesigner
+        epubUrl
+        archive
+        coverImage {
+          url
+          alt
+          width
+          height
+        }
+        authors {
+          id
+          fullName
+          slug
+          biography
+          picture {
+            url
+            alt
+            width
+            height
+          }
+        }
+        license {
+          name
+          code
+        }
+        collection {
+          id
+          name
+          slug
+        }
+        reprints {
+          __typename
+          ... on ReprintRecord {
+            number
+            circulation
+            year
+          }
+        }
+        originalLang
+        originalTitle
+        translator
+        layoutArtist
+        dimensions
+        illustrator
+        format
+        seo: _seoMetaTags {
+          tag
+          attributes
+          content
+        }
+      }
+    }
+  `,
+);
+
+const BOOK_AUTHORS_BOOKS_QUERY = graphql(
+  /* GraphQL */ `
+    query BookAuthorsBooks($authorIds: [ItemId!]) {
+      allBooks(filter: { authors: { anyIn: $authorIds } }, first: 500) {
+        id
+        authors {
+          id
+        }
+      }
+    }
+  `,
+);
+
+const BOOK_ALTERNATE_FORMATS_QUERY = graphql(
+  /* GraphQL */ `
+    query BookAlternateFormats($title: String, $excludeSlug: SlugFilter) {
+      allBooks(
+        filter: { title: { eq: $title }, slug: $excludeSlug }
+        orderBy: format_ASC
+        first: 12
+      ) {
+        id
+        title
+        slug
+        format
+        price
+        epubUrl
+      }
+    }
+  `,
+);
+
+type SeoMetaTag = {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: string | null;
+};
+
+type BookDetailQueryResult = {
+  book: {
+    id: string;
+    title: string;
+    subtitle: string | null;
+    slug: string;
+    promo: string | null;
+    description: string | null;
+    review: string | null;
+    isbn: string | null;
+    edition: number | null;
+    pages: number | null;
+    format: string | null;
+    price: number | null;
+    printYear: string | null;
+    firstPrintYear: number | null;
+    coverDesigner: string | null;
+    epubUrl: string | null;
+    archive: boolean | null;
+    coverImage: {
+      url: string;
+      alt: string | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    authors: Array<{
+      id: string;
+      fullName: string | null;
+      slug: string | null;
+      biography: string | null;
+      picture: {
+        url: string;
+        alt: string | null;
+        width: number | null;
+        height: number | null;
+      } | null;
+    }>;
+    license: {
+      name: string | null;
+      code: string | null;
+    } | null;
+    collection: {
+      id: string;
+      name: string | null;
+      slug: string | null;
+    } | null;
+    reprints: Array<{
+      __typename: string;
+      number: number | null;
+      circulation: number | null;
+      year: string | null;
+    }>;
+    originalLang: string | null;
+    originalTitle: string | null;
+    translator: string | null;
+    layoutArtist: string | null;
+    dimensions: string | null;
+    illustrator: string | null;
+    seo: SeoMetaTag[] | null;
+  } | null;
+};
+
+type BookSlugsResult = {
+  allBooks: Array<{
+    slug: string | null;
+  }>;
+};
+
+type BookAuthorsBooksResult = {
+  allBooks: Array<{
+    id: string;
+    authors: Array<{
+      id: string;
+    }>;
+  }>;
+};
+
+type BookAlternateFormatsResult = {
+  allBooks: Array<{
+    id: string;
+    title: string;
+    slug: string;
+    format: string | null;
+    price: number | null;
+    epubUrl: string | null;
+  }>;
+};
+
+export async function getStaticPaths() {
+  const slugsQuery = graphql(
+    /* GraphQL */ `
+      query BookSlugsForStaticPaths {
+        allBooks(orderBy: title_ASC, first: 500) {
+          slug
+        }
+      }
+    `,
+  );
+
+  const data = (await executeQuery(slugsQuery)) as BookSlugsResult;
+
+  return (data.allBooks ?? [])
+    .map((book) => book.slug)
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing book slug');
+}
+
+const detailData = (await executeQuery(BOOK_DETAIL_QUERY, {
+  variables: { slug },
+})) as BookDetailQueryResult;
+
+const book = detailData.book;
+
+if (!book) {
+  throw new Error(`Book not found for slug: ${slug}`);
+}
+
+const authors = book.authors ?? [];
+const authorIds = authors
+  .map((author) => author.id)
+  .filter((id): id is string => Boolean(id && id.length > 0));
+
+let authorsBookCounts = new Map<string, number>();
+
+if (authorIds.length > 0) {
+  const authorsData = (await executeQuery(BOOK_AUTHORS_BOOKS_QUERY, {
+    variables: { authorIds },
+  })) as BookAuthorsBooksResult;
+
+  const counts = new Map<string, number>();
+  const targetAuthors = new Set(authorIds);
+
+  for (const relatedBook of authorsData.allBooks ?? []) {
+    const seen = new Set<string>();
+    for (const author of relatedBook.authors ?? []) {
+      const authorId = author.id;
+      if (!authorId || seen.has(authorId) || !targetAuthors.has(authorId)) {
+        continue;
+      }
+
+      counts.set(authorId, (counts.get(authorId) ?? 0) + 1);
+      seen.add(authorId);
+    }
+  }
+
+  authorsBookCounts = counts;
+}
+
+const alternateFormatsData = (await executeQuery(BOOK_ALTERNATE_FORMATS_QUERY, {
+  variables: {
+    title: book.title,
+    excludeSlug: { neq: book.slug ?? '' },
+  } as any,
+})) as BookAlternateFormatsResult;
+
+const authorsNames = authors
+  .map((author) => author.fullName?.trim())
+  .filter((name): name is string => Boolean(name))
+  .join(', ');
+
+const licenseLabel = buildLicenseLabel(book.license);
+const formattedPrice = formatBookPrice(book.price);
+const formattedEdition = formatEdition(book.edition);
+const formattedPrintYear = extractYear(book.printYear);
+const descriptionHtml = book.description;
+const reviewHtml = book.review && book.review !== book.description ? book.review : null;
+const promoText = toPlainText(book.promo);
+
+const formatValue = normalizeText(book.format);
+const isArchived = book.archive === true;
+const isEbookFormat = formatValue?.toLowerCase() === 'ebook';
+
+const alternateFormatsRaw = (alternateFormatsData.allBooks ?? []).filter(
+  (alt) => alt.slug !== book.slug,
+);
+
+const alternateFormats = alternateFormatsRaw
+  .map((alt) => {
+    const altFormat = normalizeText(alt.format) ?? 'Altro formato';
+    const altIsEbook = altFormat.toLowerCase() === 'ebook';
+    const altPrice = formatBookPrice(alt.price);
+    const href = altIsEbook && alt.epubUrl ? alt.epubUrl : `/libri/${alt.slug}`;
+
+    return {
+      id: alt.id,
+      format: altFormat,
+      price: altPrice,
+      href,
+      isExternal: altIsEbook && Boolean(alt.epubUrl),
+    };
+  })
+  .filter((alt) => alt.format.toLowerCase() !== (formatValue?.toLowerCase() ?? ''));
+
+const limitedAlternateFormats = alternateFormats.slice(0, 3);
+
+const authorsCards = authors.map((author) => {
+  const name = author.fullName?.trim() || 'Autore in aggiornamento';
+  const biographyPlain = toPlainText(author.biography);
+  const biographyExcerpt = biographyPlain.length > 0 ? truncateToLength(biographyPlain, 220) : 'Biografia in aggiornamento.';
+  const booksCount = authorsBookCounts.get(author.id) ?? (authorIds.includes(author.id) ? 1 : 0);
+  const booksLabel = booksCount === 1 ? '1 libro con Multimage' : `${booksCount} libri con Multimage`;
+
+  return {
+    id: author.id,
+    name,
+    slug: author.slug ?? null,
+    biography: biographyExcerpt,
+    booksLabel,
+    picture: author.picture,
+  };
+});
+
+const authorsSectionTitle = authorsCards.length > 1 ? 'Gli autori del libro' : 'L’autore del libro';
+
+const editionDetails = [] as Array<{ label: string; value: string; href?: string }>; 
+
+if (book.collection?.name && book.collection.slug) {
+  editionDetails.push({
+    label: 'Collana',
+    value: book.collection.name,
+    href: `/collane/${book.collection.slug}`,
+  });
+}
+
+if (book.isbn) {
+  editionDetails.push({ label: 'ISBN', value: book.isbn });
+}
+
+if (formattedPrintYear) {
+  editionDetails.push({ label: 'Anno di stampa', value: formattedPrintYear });
+}
+
+if (book.firstPrintYear) {
+  editionDetails.push({ label: 'Prima edizione', value: `${book.firstPrintYear}` });
+}
+
+if (book.edition && book.edition > 1 && formattedEdition) {
+  editionDetails.push({ label: 'Edizione', value: formattedEdition });
+}
+
+for (const reprint of book.reprints ?? []) {
+  if (reprint.__typename !== 'ReprintRecord') {
+    continue;
+  }
+
+  const reprintOrdinal = formatOrdinal(reprint.number);
+  if (reprintOrdinal) {
+    editionDetails.push({ label: 'Ristampa', value: `${reprintOrdinal} ristampa` });
+  }
+
+  const formattedCirculation = formatCirculation(reprint.circulation ?? null);
+  if (formattedCirculation) {
+    editionDetails.push({ label: 'Tiratura', value: formattedCirculation });
+  }
+
+  const reprintYear = extractYear(reprint.year ?? null);
+  if (reprintYear) {
+    editionDetails.push({ label: 'Anno di ristampa', value: reprintYear });
+  }
+}
+
+const originalLang = normalizeText(book.originalLang);
+if (originalLang) {
+  editionDetails.push({ label: 'Lingua originale', value: originalLang });
+}
+
+const originalTitle = normalizeText(book.originalTitle);
+if (originalTitle) {
+  editionDetails.push({ label: 'Titolo originale', value: originalTitle });
+}
+
+const translator = normalizeText(book.translator);
+if (translator) {
+  editionDetails.push({ label: 'Traduttore', value: translator });
+}
+
+if (formatValue) {
+  editionDetails.push({ label: 'Formato', value: formatValue });
+}
+
+if (formattedPrice) {
+  editionDetails.push({ label: 'Prezzo di copertina', value: formattedPrice });
+}
+
+if (licenseLabel) {
+  editionDetails.push({ label: 'Licenza', value: licenseLabel });
+}
+
+const graphicsDetails = [] as Array<{ label: string; value: string }>;
+
+if (book.pages) {
+  graphicsDetails.push({ label: 'Pagine', value: `${book.pages}` });
+}
+
+const illustrator = normalizeText(book.illustrator);
+if (illustrator) {
+  graphicsDetails.push({ label: 'Illustratore', value: illustrator });
+}
+
+const coverDesigner = normalizeText(book.coverDesigner);
+if (coverDesigner) {
+  graphicsDetails.push({ label: 'Grafica di copertina', value: coverDesigner });
+}
+
+const layoutArtist = normalizeText(book.layoutArtist);
+if (layoutArtist) {
+  graphicsDetails.push({ label: 'Impaginatore', value: layoutArtist });
+}
+
+const dimensions = normalizeText(book.dimensions);
+if (dimensions) {
+  graphicsDetails.push({ label: 'Dimensioni', value: dimensions });
+}
+
+const coverAlt = book.coverImage?.alt?.trim() || book.title;
+const coverWidth = book.coverImage?.width ?? 640;
+const coverHeight = book.coverImage?.height ?? Math.round(coverWidth * 1.5);
+
+const fallbackDescription = toPlainText(book.promo ?? book.description);
+const seo = withFallbackSeo(book.seo, {
+  title: `${book.title} | Multimage`,
+  description: fallbackDescription,
+});
+---
+
+<BaseLayout seo={seo}>
+  <article class="space-y-12">
+    <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start">
+      <div class="overflow-hidden rounded-[2.5rem] bg-white/95 shadow-soft">
+        <div class="bg-brand-mist">
+          {book.coverImage?.url ? (
+            <img
+              src={`${book.coverImage.url}?auto=compress&fit=max&w=960`}
+              alt={coverAlt}
+              width={coverWidth}
+              height={coverHeight}
+              loading="lazy"
+              sizes="(min-width: 1024px) 320px, 60vw"
+              class="h-auto w-full object-contain"
+            />
+          ) : (
+            <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">
+              Copertina in arrivo
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div class="rounded-[2.5rem] border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12">
+        <div class="flex flex-col gap-4">
+          <div class="space-y-2">
+            <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
+              {book.collection?.name ? `Collana ${book.collection.name}` : 'Catalogo Multimage'}
+            </p>
+            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{book.title}</h1>
+            {book.subtitle ? (
+              <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
+            ) : null}
+            {authorsNames ? (
+              <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+                {authorsNames}
+              </p>
+            ) : null}
+          </div>
+
+          {promoText ? (
+            <p class="text-base italic text-brand-charcoal/80">{promoText}</p>
+          ) : null}
+
+          {descriptionHtml ? (
+            <div class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal" set:html={descriptionHtml}>
+            </div>
+          ) : null}
+
+          <div class="space-y-4 pt-2">
+            {isArchived ? (
+              <div class="space-y-3">
+                <p class="rounded-2xl bg-brand-mist/50 p-4 text-sm font-semibold uppercase tracking-wide text-brand-slate">
+                  Titolo fuori catalogo.
+                </p>
+                <AlternateFormatsList formats={limitedAlternateFormats} />
+              </div>
+            ) : (
+              <>
+                {formattedPrice || formatValue ? (
+                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+                    {[formattedPrice, formatValue ? `Formato ${formatValue}` : null]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                ) : null}
+
+                <div class="flex flex-wrap gap-3">
+                  {(isEbookFormat && book.epubUrl) || (!isEbookFormat && (formattedPrice || formatValue)) ? (
+                    <a
+                      href={isEbookFormat && book.epubUrl ? book.epubUrl : '/info/ordinare'}
+                      target={isEbookFormat && book.epubUrl ? '_blank' : undefined}
+                      rel={isEbookFormat && book.epubUrl ? 'noopener noreferrer' : undefined}
+                      class="btn-primary"
+                    >
+                      {[formattedPrice, formatValue ? `Formato ${formatValue}` : null, isEbookFormat ? 'Scarica' : 'Ordina']
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </a>
+                  ) : null}
+
+                  {!isEbookFormat && book.epubUrl ? (
+                    <a
+                      href={book.epubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn-outline"
+                    >
+                      Scarica eBook
+                    </a>
+                  ) : null}
+                </div>
+
+                <AlternateFormatsList formats={limitedAlternateFormats} />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {reviewHtml ? (
+      <section class="mx-auto max-w-4xl space-y-6 rounded-[2.5rem] bg-white/95 p-8 shadow-soft">
+        <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
+        <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal" set:html={reviewHtml}>
+        </div>
+      </section>
+    ) : null}
+
+    <AuthorsSection title={authorsSectionTitle} authors={authorsCards} />
+
+    <section class="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 shadow-soft">
+      <div class="bg-brand-mist/60 px-6 py-6 text-center sm:px-12">
+        <h2 class="text-3xl font-serif text-brand-navy">Dettagli</h2>
+      </div>
+      <div class="grid gap-8 px-6 py-10 sm:px-12 md:grid-cols-2">
+        <DetailList title="Dettagli edizione" items={editionDetails} />
+        <DetailList title="Dettagli grafica" items={graphicsDetails} />
+      </div>
+    </section>
+  </article>
+</BaseLayout>

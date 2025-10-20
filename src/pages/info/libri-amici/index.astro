@@ -1,0 +1,20 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import InfoSection from '~/components/InfoSection.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Libri Amici | Multimage',
+  description: 'Listeremo i progetti amici e le letture consigliate.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <InfoSection
+    title="Libri Amici"
+    paragraphs={["Listeremo i progetti amici e le letture consigliate."]}
+    chip="Aggiornamento in arrivo"
+  />
+</BaseLayout>

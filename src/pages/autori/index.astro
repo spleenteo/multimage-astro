@@ -1,0 +1,23 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Autori | Multimage',
+  description:
+    'A breve verranno pubblicate le schede autore e i contributi presenti nell’archivio storico.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <section class="space-y-6">
+    <h1>Autori</h1>
+    <p>
+      A breve qui verranno pubblicate le schede autore e i contributi presenti nell’archivio
+      storico. L’obiettivo è mantenere le stesse gerarchie di navigazione del sito originale.
+    </p>
+    <span class="chip">Work in progress</span>
+  </section>
+</BaseLayout>

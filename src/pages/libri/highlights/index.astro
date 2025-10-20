@@ -1,0 +1,148 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionIntro from '~/components/SectionIntro.astro';
+import BookCard from '~/components/BookCard.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { graphql } from '~/lib/datocms/graphql';
+import { toPlainText } from '~/lib/text';
+import { mapBooksToCards } from '~/lib/books';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const HIGHLIGHTS_PAGE_QUERY = graphql(
+  /* GraphQL */ `
+    query HighlightsPage {
+      highlightsIndex {
+        title
+        subtitle
+        _seoMetaTags {
+          tag
+          attributes
+          content
+        }
+      }
+      allBooks(
+        orderBy: printYear_DESC
+        first: 500
+        filter: {
+          _status: { eq: published }
+          archive: { eq: false }
+          highlight: { eq: true }
+        }
+      ) {
+        id
+        title
+        subtitle
+        slug
+        promo
+        description
+        coverImage {
+          url
+          alt
+          colors {
+            hex
+          }
+          width
+          height
+        }
+        printYear
+        authors {
+          id
+          fullName
+        }
+        license {
+          name
+          code
+        }
+        format
+        price
+      }
+    }
+  `,
+);
+
+type SeoMetaTag = {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: string | null;
+};
+
+type HighlightsPageQueryResult = {
+  highlightsIndex: {
+    title: string | null;
+    subtitle: string | null;
+    _seoMetaTags: SeoMetaTag[] | null;
+  } | null;
+  allBooks: Array<{
+    id: string;
+    title: string;
+    subtitle: string | null;
+    slug: string;
+    promo: string | null;
+    description: string | null;
+    coverImage: {
+      url: string;
+      alt: string | null;
+      colors?: Array<{ hex: string }>;
+      width: number | null;
+      height: number | null;
+    } | null;
+    printYear: string | null;
+    authors: Array<{
+      id: string;
+      fullName: string | null;
+    }>;
+    license: {
+      name: string | null;
+      code: string | null;
+    } | null;
+    format: string | null;
+    price: number | null;
+  }>;
+};
+
+const data = (await executeQuery(HIGHLIGHTS_PAGE_QUERY)) as HighlightsPageQueryResult;
+
+const heroTitle = data.highlightsIndex?.title ?? 'In evidenza';
+const heroSubtitle = toPlainText(data.highlightsIndex?.subtitle ?? null);
+const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+const seo = withFallbackSeo(data.highlightsIndex?._seoMetaTags, {
+  title: heroTitle,
+  description: heroDescription,
+});
+
+const highlights = mapBooksToCards(data.allBooks);
+---
+
+<BaseLayout seo={seo}>
+  <section class="space-y-12">
+    <div class="mx-auto max-w-5xl">
+      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
+    </div>
+
+    {highlights.length === 0 ? (
+      <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        Stiamo selezionando i titoli in evidenza.
+      </p>
+    ) : (
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+          {highlights.map((book) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              subtitle={book.subtitle}
+              summary={book.summary}
+              coverImage={book.coverImage}
+              authors={book.authors}
+              license={book.license}
+              format={book.format}
+              price={book.price}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+</BaseLayout>

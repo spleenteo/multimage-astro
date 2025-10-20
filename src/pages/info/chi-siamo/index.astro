@@ -1,0 +1,20 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import InfoSection from '~/components/InfoSection.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Chi siamo | Multimage',
+  description: 'Stiamo trasferendo la storia dell’associazione su questa pagina.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <InfoSection
+    title="Chi siamo"
+    paragraphs={["Stiamo trasferendo la storia dell’associazione su questa pagina."]}
+    chip="Aggiornamento in arrivo"
+  />
+</BaseLayout>

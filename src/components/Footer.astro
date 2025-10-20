@@ -1,0 +1,175 @@
+---
+type FooterLink = {
+  label: string;
+  href: string;
+};
+
+type FooterGroup = {
+  title?: string;
+  links: FooterLink[];
+};
+
+type SocialLink = {
+  label: string;
+  href: string;
+  icon: string;
+};
+
+type LegalLink = {
+  label: string;
+  href: string;
+  external?: boolean;
+};
+
+const FOOTER_GROUPS: FooterGroup[] = [
+  {
+    title: 'Informazioni',
+    links: [
+      { label: 'Chi siamo?', href: '/info/chi-siamo' },
+      { label: 'La storia', href: '/info/la-storia' },
+      { label: 'Adesioni', href: '/info/adesioni' },
+    ],
+  },
+  {
+    links: [
+      { label: 'Sostieni Multimage', href: '/info/sostieni-multimage' },
+      { label: 'Ordinare', href: '/info/ordinare' },
+      { label: 'Partecipare', href: '/info/partecipare' },
+    ],
+  },
+  {
+    links: [
+      { label: 'Pubblicazioni', href: '/info/pubblicazioni' },
+      { label: 'Contatti', href: '/info/contatti' },
+      { label: 'Eirenefest', href: '/info/eirenefest' },
+    ],
+  },
+  {
+    links: [
+      { label: 'Libri Amici', href: '/info/libri-amici' },
+      { label: 'Vai bene così', href: '/info/vai-bene-cosi' },
+      { label: 'Sviluppo web', href: '/info/sviluppo-web' },
+    ],
+  },
+  {
+    links: [{ label: 'Carta Etica', href: '/info/carta-etica' }],
+  },
+] as const;
+
+const SOCIAL_LINKS: SocialLink[] = [
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/multimage_editrice/',
+    icon: 'iconoir:instagram',
+  },
+  {
+    label: 'Twitter',
+    href: 'https://twitter.com/multimageED',
+    icon: 'iconoir:twitter',
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/multimage/',
+    icon: 'iconoir:facebook-tag',
+  },
+] as const;
+
+const LEGAL_LINKS: LegalLink[] = [
+  {
+    label: 'Privacy Policy',
+    href: 'http://www.iubenda.com/privacy-policy/47684062',
+    external: true,
+  },
+  {
+    label: 'Cookie Policy',
+    href: 'http://www.iubenda.com/privacy-policy/47684062/cookie-policy',
+    external: true,
+  },
+  {
+    label: 'Design & Development Cantiere Creativo',
+    href: 'https://www.cantierecreativo.net/',
+    external: true,
+  },
+  {
+    label: 'Made with DatoCMS',
+    href: 'https://datocms.com/',
+    external: true,
+  },
+] as const;
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-brand-navy text-brand-mist">
+  <div class="border-b border-white/10">
+    <div class="container grid gap-8 py-12 md:grid-cols-12">
+      <div class="space-y-4 md:col-span-3">
+        <a href="/" class="inline-block">
+          <span class="relative block h-12 w-40">
+            <img
+              src="https://multimage.org/images/logo--white-f2946119.png"
+              alt="Multimage"
+              class="h-full w-full object-contain"
+              loading="lazy"
+            />
+          </span>
+        </a>
+        <p class="text-sm leading-relaxed text-brand-mist/80">
+          Multimage è la casa editrice dei diritti umani. Portiamo nel digitale l’archivio storico e le nuove pubblicazioni dedicate a nonviolenza, solidarietà e trasformazione sociale.
+        </p>
+      </div>
+
+      {FOOTER_GROUPS.map(({ title, links }) => (
+        <div class="md:col-span-2">
+          <div class="space-y-3">
+            {title ? (
+              <p class="text-xs font-semibold uppercase tracking-wider text-white/70">{title}</p>
+            ) : null}
+            <div class="flex flex-col gap-2">
+              {links.map(({ label, href }) => (
+                <a href={href} class="text-sm text-brand-mist transition hover:text-white">{label}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div class="space-y-4 md:col-span-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-white/70">Seguici</p>
+        <ul class="flex flex-col gap-2">
+          {SOCIAL_LINKS.map(({ label, href, icon }) => (
+            <li>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center gap-3 text-sm text-brand-mist transition hover:text-white"
+              >
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
+                  <iconify-icon icon={icon} width="16" height="16" aria-hidden="true"></iconify-icon>
+                </span>
+                <span>{label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container flex flex-col gap-2 py-6 text-xs text-brand-mist/80 md:flex-row md:items-center md:justify-between">
+    <p>©{year} Multimage Editrice</p>
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+      {LEGAL_LINKS.map(({ label, href, external }) => (
+        <a
+          href={href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noreferrer' : undefined}
+          class="text-xs transition hover:text-white"
+        >
+          {label}
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>

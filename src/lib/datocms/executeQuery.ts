@@ -1,8 +1,5 @@
 import { executeQuery as libExecuteQuery } from '@datocms/cda-client';
-import {
-  DATOCMS_DRAFT_CONTENT_CDA_TOKEN,
-  DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
-} from 'astro:env/server';
+import { DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN } from 'astro:env/server';
 import type { TadaDocumentNode } from 'gql.tada';
 
 /**
@@ -10,17 +7,15 @@ import type { TadaDocumentNode } from 'gql.tada';
  * different API token depending on whether we want to fetch draft content or
  * published.
  */
-export async function executeQuery<Result, Variables>(
+export async function executeQuery<Result, Variables = Record<string, never>>(
   query: TadaDocumentNode<Result, Variables>,
   options?: ExecuteQueryOptions<Variables>,
 ) {
-  const result = await libExecuteQuery(query, {
+  const result = await libExecuteQuery<Result, Variables>(query, {
     variables: options?.variables,
     excludeInvalid: true,
-    includeDrafts: options?.includeDrafts,
-    token: options?.includeDrafts
-      ? DATOCMS_DRAFT_CONTENT_CDA_TOKEN
-      : DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
+    includeDrafts: false,
+    token: DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
   });
 
   return result;

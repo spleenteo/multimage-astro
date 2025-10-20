@@ -1,0 +1,30 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const seo = withFallbackSeo([], {
+  title: 'Diventa socio | Multimage',
+  description:
+    'Porteremo in questa pagina il modulo di adesione e le informazioni su quote e benefici.',
+});
+---
+
+<BaseLayout seo={seo}>
+  <section class="space-y-6">
+    <h1>Diventa socio</h1>
+    <p>
+      Porteremo in questa pagina il modulo di adesione e le informazioni su quote e benefici. Nel
+      frattempo puoi continuare a usare il form presente nella copia statica.
+    </p>
+    <a
+      href="https://multimage.org/info/adesioni/index.html"
+      target="_blank"
+      rel="noreferrer"
+      class="btn-primary w-fit"
+    >
+      Apri la versione attuale
+    </a>
+  </section>
+</BaseLayout>

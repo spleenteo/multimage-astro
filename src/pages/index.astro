@@ -1,139 +1,97 @@
 ---
-import { graphql } from '~/lib/datocms/graphql';
-import Layout from '../layouts/Layout.astro';
-import { TagFragment } from '~/lib/datocms/commonFragments';
-import { executeQuery } from '~/lib/datocms/executeQuery';
-import { StructuredText } from '@datocms/astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
 
-import { HeadingWithAnchorLink } from '~/components/HeadingWithAnchorLink';
+export const prerender = true;
 
-import { isDraftModeEnabled } from '~/lib/draftMode';
-import { DraftModeQueryListener } from '~/components/DraftModeQueryListener';
+const seo = [
+  {
+    tag: 'title',
+    content: 'Multimage | Casa editrice dei diritti umani',
+  },
+];
 
-import { PageInline } from '~/components/inlineRecord/PageInline';
-import { PageInlineFragment } from '~/components/inlineRecord/PageInline/fragments';
-
-import { PageLink } from '~/components/linkToRecord/PageLink';
-import { PageLinkFragment } from '~/components/linkToRecord/PageLink/fragments';
-
-import { VideoBlock } from '~/components/blocks/VideoBlock';
-import { VideoBlockFragment } from '~/components/blocks/VideoBlock/fragments';
-
-import { ImageBlock } from '~/components/blocks/ImageBlock';
-import { ImageBlockFragment } from '~/components/blocks/ImageBlock/fragments';
-
-import { ImageGalleryBlock } from '~/components/blocks/ImageGalleryBlock';
-import { ImageGalleryBlockFragment } from '~/components/blocks/ImageGalleryBlock/fragments';
-
-/**
- * The GraphQL query that will be executed for this route to generate the page
- * content and metadata.
- *
- * Thanks to gql.tada, the result will be fully typed!
- */
-const query = graphql(
-  /* GraphQL */ `
-    query BasicPageQuery {
-      page {
-        _seoMetaTags {
-          ...TagFragment
-        }
-        title
-        _firstPublishedAt
-        structuredText {
-          value
-          blocks {
-            ... on RecordInterface {
-              id
-              __typename
-            }
-            ... on ImageBlockRecord {
-              ...ImageBlockFragment
-            }
-            ... on ImageGalleryBlockRecord {
-              ...ImageGalleryBlockFragment
-            }
-            ... on VideoBlockRecord {
-              ...VideoBlockFragment
-            }
-          }
-          links {
-            ... on RecordInterface {
-              id
-              __typename
-            }
-            ...PageLinkFragment
-            ...PageInlineFragment
-          }
-        }
-      }
-    }
-  `,
-  [
-    TagFragment,
-    ImageBlockFragment,
-    ImageGalleryBlockFragment,
-    VideoBlockFragment,
-    PageLinkFragment,
-    PageInlineFragment,
-  ],
-);
-
-const draftModeEnabled = isDraftModeEnabled(Astro.cookies);
-const { page } = await executeQuery(query, { includeDrafts: draftModeEnabled });
-
-if (!page) {
-  return new Response(null, {
-    status: 404,
-    statusText: 'Not found',
-  });
-}
+const FEATURE_LINKS = [
+  {
+    href: '/libri',
+    title: 'Catalogo libri',
+    icon: 'iconoir:book',
+    description:
+      'Sfoglia le pubblicazioni dedicate a diritti umani, nonviolenza e trasformazione sociale.',
+  },
+  {
+    href: '/autori',
+    title: 'Autori e autrici',
+    icon: 'iconoir:community',
+    description:
+      'Approfondimenti biografici, interviste e opere dei protagonisti della collana Multimage.',
+  },
+  {
+    href: '/collane',
+    title: 'Collane editoriali',
+    icon: 'iconoir:bookmark-book',
+    description:
+      'Percorsi tematici e serie storiche, presto disponibili con filtri e navigazione dinamica.',
+  },
+] as const;
 ---
 
-<Layout additionalSeo={page._seoMetaTags}>
-  <h1>{page.title}</h1>
-  {
-    /*
-     * Structured Text is a JSON format similar to HTML, but with the advantage
-     * of a significantly reduced and tailored set of possible tags
-     * for editorial content, along with the capability to create hyperlinks
-     * to other DatoCMS records and embed custom DatoCMS blocks.
-     */
-  }
-  <StructuredText
-    data={page.structuredText}
-    blockComponents={/*
-     * If the structured text embeds any blocks, it's up to you to decide
-     * how to render them:
-     */
-    {
-      ImageBlockRecord: ImageBlock,
-      ImageGalleryBlockRecord: ImageGalleryBlock,
-      VideoBlockRecord: VideoBlock,
-    }}
-    linkToRecordComponents={/*
-     * If the structured text includes a link to another DatoCMS record,
-     * it's your decision to determine where the link should lead, or if
-     * you wish to customize its appearance:
-     */
-    {
-      PageRecord: PageLink,
-    }}
-    inlineRecordComponents={/*
-     * If the structured text includes a reference to another DatoCMS
-     * record, it's up to you to decide how to render them:
-     */
-    {
-      PageRecord: PageInline,
-    }}
-    nodeOverrides={/*
-     * You can also override the default rendering of certain nodes.
-     * In this case, we want to tweak the way headings (h1-h6) are rendered.
-     */ {
-      heading: HeadingWithAnchorLink,
-    }}
-  />
-  <footer>Published at {page._firstPublishedAt}</footer>
+<BaseLayout seo={seo}>
+  <div class="space-y-12">
+    <section class="overflow-hidden rounded-3xl bg-brand-navy text-white shadow-soft">
+      <div class="grid gap-8 px-8 py-12 md:grid-cols-[2fr,1fr] md:px-12 md:py-16">
+        <div class="space-y-6">
+          <span class="chip bg-white/20 text-white">Dal 1991</span>
+          <h1 class="text-white">La casa editrice dei diritti umani</h1>
+          <p class="text-brand-mist">
+            Multimage promuove libri, autori e iniziative che raccontano i diritti umani, la
+            nonviolenza e le storie spesso dimenticate. Questa nuova applicazione Astro riprende
+            colori e tipografia dell’esperienza originale per offrire una base moderna e accessibile.
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="/libri" class="btn-primary">
+              <iconify-icon icon="iconoir:book" width="20" height="20" aria-hidden="true"></iconify-icon>
+              <span>Esplora i libri</span>
+            </a>
+            <a
+              href="/info/adesioni"
+              class="inline-flex items-center gap-2 rounded-full border border-white px-5 py-2 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
+            >
+              <iconify-icon icon="iconoir:pen" width="20" height="20" aria-hidden="true"></iconify-icon>
+              <span>Diventa socio</span>
+            </a>
+          </div>
+        </div>
+        <div class="hidden h-full w-full rounded-3xl bg-gradient-to-br from-brand-sky/20 via-white/5 to-brand-orange/20 md:block"></div>
+      </div>
+    </section>
 
-  <DraftModeQueryListener query={query} />
-</Layout>
+    <section class="space-y-6">
+      <h2>Prossime integrazioni</h2>
+      <p>
+        Stiamo portando nel progetto tutte le sezioni presenti nella copia statica: catalogo libri,
+        schede autore, collane editoriali e pagine informative. Le schede sottostanti anticipano la
+        struttura che verrà popolata con contenuti reali.
+      </p>
+      <div class="grid gap-6 md:grid-cols-3">
+        {FEATURE_LINKS.map(({ href, title, description, icon }) => (
+          <a
+            href={href}
+            class="group flex h-full flex-col justify-between rounded-3xl bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
+          >
+            <div class="space-y-3">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy shadow-soft">
+                <iconify-icon icon={icon} width="24" height="24" aria-hidden="true"></iconify-icon>
+              </span>
+              <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">{title}</h3>
+              <p>{description}</p>
+            </div>
+            <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-sky group-hover:text-brand-navy">
+              <span>Apri sezione</span>
+              <iconify-icon icon="iconoir:nav-arrow-right" width="16" height="16" aria-hidden="true"></iconify-icon>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
