@@ -52,6 +52,7 @@ const HIGHLIGHTS_PAGE_QUERY = graphql(/* GraphQL */ `
       }
       format
       price
+      archive
     }
   }
 `);
@@ -93,6 +94,7 @@ type HighlightsPageQueryResult = {
     } | null;
     format: string | null;
     price: number | null;
+    archive: boolean | null;
   }>;
 };
 
@@ -117,7 +119,7 @@ const highlights = mapBooksToCards(data.allBooks);
 
     {
       highlights.length === 0 ? (
-        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
           Stiamo selezionando i titoli in evidenza.
         </p>
       ) : (
@@ -134,6 +136,7 @@ const highlights = mapBooksToCards(data.allBooks);
                 license={book.license}
                 format={book.format}
                 price={book.price}
+                isArchived={book.isArchived}
               />
             ))}
           </div>

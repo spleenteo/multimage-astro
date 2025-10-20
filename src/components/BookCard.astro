@@ -29,6 +29,7 @@ type Props = {
   } | null;
   price?: number | null;
   className?: string;
+  isArchived?: boolean | null;
 };
 
 const {
@@ -42,6 +43,7 @@ const {
   authors = [],
   price,
   className = '',
+  isArchived: archivedFlag = false,
 }: Props = Astro.props;
 
 const destination = href ?? `/libri/${slug}`;
@@ -117,6 +119,7 @@ const shadowColor = hexToRgba(shadowColorHex, 0.42);
 const formattedPrice = formatEuro(price);
 const imageWidth = coverImage?.width ?? 480;
 const imageHeight = coverImage?.height ?? Math.round(imageWidth * 1.5);
+const isArchived = archivedFlag === true;
 ---
 
 <a
@@ -132,8 +135,18 @@ const imageHeight = coverImage?.height ?? Math.round(imageWidth * 1.5);
         {
           showFormatRibbon && formatLabel ? (
             <div class="pointer-events-none absolute left-6 top-6 z-10 inline-flex -rotate-12">
-              <span class="rounded-full bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft">
+              <span class="bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft">
                 {formatLabel}
+              </span>
+            </div>
+          ) : null
+        }
+
+        {
+          isArchived ? (
+            <div class="pointer-events-none absolute right-6 top-6 z-10 inline-flex rotate-12">
+              <span class="bg-brand-slate px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft">
+                Fuori catalogo
               </span>
             </div>
           ) : null
@@ -159,7 +172,7 @@ const imageHeight = coverImage?.height ?? Math.round(imageWidth * 1.5);
               />
             </div>
           ) : (
-            <div class="flex h-56 items-center justify-center rounded-2xl bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate">
+            <div class="flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate">
               Copertina in arrivo
             </div>
           )

@@ -31,6 +31,7 @@ export type BookRecordForCard = {
   format?: string | null;
   price?: number | null;
   printYear?: string | null;
+  archive?: boolean | null;
 };
 
 export type BookCardViewModel = {
@@ -45,6 +46,7 @@ export type BookCardViewModel = {
   format?: string | null;
   price?: number | null;
   printYear?: string | null;
+  isArchived: boolean;
 };
 
 export function toBookCard(record: BookRecordForCard): BookCardViewModel {
@@ -64,6 +66,7 @@ export function toBookCard(record: BookRecordForCard): BookCardViewModel {
     format: record.format ?? null,
     price: record.price ?? null,
     printYear: record.printYear ?? null,
+    isArchived: record.archive === true,
   };
 }
 

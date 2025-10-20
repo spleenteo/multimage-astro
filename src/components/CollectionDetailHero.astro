@@ -19,7 +19,7 @@ const logoAlt = logo?.alt?.trim() || name;
 ---
 
 <div
-  class={`relative overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 px-6 py-12 text-center shadow-soft backdrop-blur-sm sm:px-12 sm:py-16 ${className}`}
+  class={`relative overflow-hidden border border-white/70 bg-white/95 px-6 py-12 text-center shadow-soft backdrop-blur-sm sm:px-12 sm:py-16 ${className}`}
 >
   <div
     class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-mist/70 via-white/60 to-brand-sand/70"
@@ -31,7 +31,7 @@ const logoAlt = logo?.alt?.trim() || name;
 
     {
       logo?.url ? (
-        <div class="flex h-36 w-36 items-center justify-center rounded-full bg-brand-mist/40 p-4 shadow-inner">
+        <div class="flex h-36 w-36 items-center justify-center bg-brand-mist/40 p-4 shadow-inner">
           <img
             src={`${logo.url}?w=320&h=320&fit=max`}
             alt={logoAlt}

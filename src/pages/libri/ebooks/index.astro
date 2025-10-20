@@ -52,6 +52,7 @@ const EBOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
       }
       format
       price
+      archive
     }
   }
 `);
@@ -93,6 +94,7 @@ type EbooksPageQueryResult = {
     } | null;
     format: string | null;
     price: number | null;
+    archive: boolean | null;
   }>;
 };
 
@@ -117,7 +119,7 @@ const ebooks = mapBooksToCards(data.allBooks);
 
     {
       ebooks.length === 0 ? (
-        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
           Il catalogo digitale sarà disponibile a breve.
         </p>
       ) : (
@@ -134,6 +136,7 @@ const ebooks = mapBooksToCards(data.allBooks);
                 license={book.license}
                 format={book.format}
                 price={book.price}
+                isArchived={book.isArchived}
               />
             ))}
           </div>

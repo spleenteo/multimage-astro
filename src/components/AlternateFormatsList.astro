@@ -28,7 +28,7 @@ const { formats }: Props = Astro.props;
                 href={format.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1 rounded-full bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist"
+                class="inline-flex items-center gap-1 bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist"
               >
                 {format.format}
                 {format.price ? ` (${format.price})` : null}
@@ -36,7 +36,7 @@ const { formats }: Props = Astro.props;
             ) : (
               <a
                 href={format.href}
-                class="inline-flex items-center gap-1 rounded-full bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist"
+                class="inline-flex items-center gap-1 bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist"
               >
                 {format.format}
                 {format.price ? ` (${format.price})` : null}

@@ -37,7 +37,7 @@ const FEATURE_LINKS = [
 
 <BaseLayout seo={seo}>
   <div class="space-y-12">
-    <section class="overflow-hidden rounded-3xl bg-brand-navy text-white shadow-soft">
+    <section class="overflow-hidden bg-brand-navy text-white shadow-soft">
       <div class="grid gap-8 px-8 py-12 md:grid-cols-[2fr,1fr] md:px-12 md:py-16">
         <div class="space-y-6">
           <span class="chip bg-white/20 text-white">Dal 1991</span>
@@ -56,7 +56,7 @@ const FEATURE_LINKS = [
             </a>
             <a
               href="/info/adesioni"
-              class="inline-flex items-center gap-2 rounded-full border border-white px-5 py-2 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
+              class="inline-flex items-center gap-2 border border-white px-5 py-2 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
             >
               <iconify-icon icon="iconoir:pen" width="20" height="20" aria-hidden="true"
               ></iconify-icon>
@@ -65,7 +65,7 @@ const FEATURE_LINKS = [
           </div>
         </div>
         <div
-          class="hidden h-full w-full rounded-3xl bg-gradient-to-br from-brand-sky/20 via-white/5 to-brand-orange/20 md:block"
+          class="hidden h-full w-full bg-gradient-to-br from-brand-sky/20 via-white/5 to-brand-orange/20 md:block"
         >
         </div>
       </div>
@@ -83,10 +83,10 @@ const FEATURE_LINKS = [
           FEATURE_LINKS.map(({ href, title, description, icon }) => (
             <a
               href={href}
-              class="group flex h-full flex-col justify-between rounded-3xl bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
+              class="group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
             >
               <div class="space-y-3">
-                <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy shadow-soft">
+                <span class="inline-flex h-12 w-12 items-center justify-center bg-white text-brand-navy shadow-soft">
                   <iconify-icon icon={icon} width="24" height="24" aria-hidden="true" />
                 </span>
                 <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">

@@ -52,6 +52,7 @@ const BOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
         code
       }
       format
+      archive
     }
   }
 `);
@@ -91,6 +92,7 @@ type BooksPageQueryResult = {
       code: string | null;
     } | null;
     format: string | null;
+    archive: boolean | null;
     price: number | null;
   }>;
 };
@@ -116,7 +118,7 @@ const books = mapBooksToCards(data.allBooks);
 
     {
       books.length === 0 ? (
-        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
           Il catalogo sarà disponibile a breve.
         </p>
       ) : (
@@ -133,6 +135,7 @@ const books = mapBooksToCards(data.allBooks);
                 license={book.license}
                 format={book.format}
                 price={book.price}
+                isArchived={book.isArchived}
               />
             ))}
           </div>
