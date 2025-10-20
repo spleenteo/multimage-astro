@@ -10,8 +10,6 @@ const { title, paragraphs, chip }: Props = Astro.props;
 
 <section class="space-y-6">
   <h1>{title}</h1>
-  {paragraphs.map((text) => (
-    <p>{text}</p>
-  ))}
+  {paragraphs.map((text) => <p>{text}</p>)}
   {chip ? <span class="chip">{chip}</span> : null}
 </section>

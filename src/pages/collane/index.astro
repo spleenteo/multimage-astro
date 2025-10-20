@@ -9,37 +9,35 @@ import { withFallbackSeo } from '~/lib/seo';
 
 export const prerender = true;
 
-const COLLECTIONS_QUERY = graphql(
-  /* GraphQL */ `
-    query CollectionsPage {
-      collectionsIndex {
-        title
-        subtitle
-        seoMetaTags: _seoMetaTags {
-          tag
-          attributes
-          content
-        }
-      }
-      allCollections(orderBy: name_ASC) {
-        id
-        name
-        slug
-        description
-        logo {
-          url
-          alt
-        }
-      }
-      allBooks(first: 500) {
-        id
-        collection {
-          id
-        }
+const COLLECTIONS_QUERY = graphql(/* GraphQL */ `
+  query CollectionsPage {
+    collectionsIndex {
+      title
+      subtitle
+      seoMetaTags: _seoMetaTags {
+        tag
+        attributes
+        content
       }
     }
-  `,
-);
+    allCollections(orderBy: name_ASC) {
+      id
+      name
+      slug
+      description
+      logo {
+        url
+        alt
+      }
+    }
+    allBooks(first: 500) {
+      id
+      collection {
+        id
+      }
+    }
+  }
+`);
 
 type SeoMetaTag = {
   tag: string;
@@ -106,14 +104,16 @@ const collections = (data.allCollections ?? []).map((collection) => ({
       <SectionIntro title={heroTitle} description={heroDescription} />
     </div>
 
-    {collections.length === 0 ? (
-      <p class="text-brand-slate">Nessuna collana pubblicata trovata.</p>
-    ) : (
-      <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {collections.map((collection) => (
-          <CollectionCard {...collection} />
-        ))}
-      </div>
-    )}
+    {
+      collections.length === 0 ? (
+        <p class="text-brand-slate">Nessuna collana pubblicata trovata.</p>
+      ) : (
+        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+          {collections.map((collection) => (
+            <CollectionCard {...collection} />
+          ))}
+        </div>
+      )
+    }
   </section>
 </BaseLayout>

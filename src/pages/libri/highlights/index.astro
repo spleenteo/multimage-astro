@@ -10,57 +10,51 @@ import { withFallbackSeo } from '~/lib/seo';
 
 export const prerender = true;
 
-const HIGHLIGHTS_PAGE_QUERY = graphql(
-  /* GraphQL */ `
-    query HighlightsPage {
-      highlightsIndex {
-        title
-        subtitle
-        _seoMetaTags {
-          tag
-          attributes
-          content
-        }
-      }
-      allBooks(
-        orderBy: printYear_DESC
-        first: 500
-        filter: {
-          _status: { eq: published }
-          archive: { eq: false }
-          highlight: { eq: true }
-        }
-      ) {
-        id
-        title
-        subtitle
-        slug
-        promo
-        description
-        coverImage {
-          url
-          alt
-          colors {
-            hex
-          }
-          width
-          height
-        }
-        printYear
-        authors {
-          id
-          fullName
-        }
-        license {
-          name
-          code
-        }
-        format
-        price
+const HIGHLIGHTS_PAGE_QUERY = graphql(/* GraphQL */ `
+  query HighlightsPage {
+    highlightsIndex {
+      title
+      subtitle
+      _seoMetaTags {
+        tag
+        attributes
+        content
       }
     }
-  `,
-);
+    allBooks(
+      orderBy: printYear_DESC
+      first: 500
+      filter: { _status: { eq: published }, archive: { eq: false }, highlight: { eq: true } }
+    ) {
+      id
+      title
+      subtitle
+      slug
+      promo
+      description
+      coverImage {
+        url
+        alt
+        colors {
+          hex
+        }
+        width
+        height
+      }
+      printYear
+      authors {
+        id
+        fullName
+      }
+      license {
+        name
+        code
+      }
+      format
+      price
+    }
+  }
+`);
 
 type SeoMetaTag = {
   tag: string;
@@ -121,28 +115,30 @@ const highlights = mapBooksToCards(data.allBooks);
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
-    {highlights.length === 0 ? (
-      <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-        Stiamo selezionando i titoli in evidenza.
-      </p>
-    ) : (
-      <div class="mx-auto max-w-6xl">
-        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {highlights.map((book) => (
-            <BookCard
-              title={book.title}
-              slug={book.slug}
-              subtitle={book.subtitle}
-              summary={book.summary}
-              coverImage={book.coverImage}
-              authors={book.authors}
-              license={book.license}
-              format={book.format}
-              price={book.price}
-            />
-          ))}
+    {
+      highlights.length === 0 ? (
+        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+          Stiamo selezionando i titoli in evidenza.
+        </p>
+      ) : (
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {highlights.map((book) => (
+              <BookCard
+                title={book.title}
+                slug={book.slug}
+                subtitle={book.subtitle}
+                summary={book.summary}
+                coverImage={book.coverImage}
+                authors={book.authors}
+                license={book.license}
+                format={book.format}
+                price={book.price}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )
+    }
   </section>
 </BaseLayout>

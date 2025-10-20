@@ -10,53 +10,51 @@ import { mapBooksToCards } from '~/lib/books';
 
 export const prerender = true;
 
-const BOOKS_PAGE_QUERY = graphql(
-  /* GraphQL */ `
-    query BooksPage {
-      booksIndex {
-        title
-        subtitle
-        _seoMetaTags {
-          tag
-          attributes
-          content
-        }
-      }
-      allBooks(
-        orderBy: printYear_DESC
-        first: 500
-        filter: { _status: { eq: published }, archive: { eq: false } }
-      ) {
-        id
-        title
-        subtitle
-        slug
-        promo
-        description
-        printYear
-        coverImage {
-          url
-          alt
-          colors {
-            hex
-          }
-          width
-          height
-        }
-        price
-        authors {
-          id
-          fullName
-        }
-        license {
-          name
-          code
-        }
-        format
+const BOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
+  query BooksPage {
+    booksIndex {
+      title
+      subtitle
+      _seoMetaTags {
+        tag
+        attributes
+        content
       }
     }
-  `,
-);
+    allBooks(
+      orderBy: printYear_DESC
+      first: 500
+      filter: { _status: { eq: published }, archive: { eq: false } }
+    ) {
+      id
+      title
+      subtitle
+      slug
+      promo
+      description
+      printYear
+      coverImage {
+        url
+        alt
+        colors {
+          hex
+        }
+        width
+        height
+      }
+      price
+      authors {
+        id
+        fullName
+      }
+      license {
+        name
+        code
+      }
+      format
+    }
+  }
+`);
 type SeoMetaTag = {
   tag: string;
   attributes: Record<string, string> | null;
@@ -116,28 +114,30 @@ const books = mapBooksToCards(data.allBooks);
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
-    {books.length === 0 ? (
-      <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-        Il catalogo sarà disponibile a breve.
-      </p>
-    ) : (
-      <div class="mx-auto max-w-6xl">
-        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {books.map((book) => (
-            <BookCard
-              title={book.title}
-              slug={book.slug}
-              subtitle={book.subtitle}
-              summary={book.summary}
-              coverImage={book.coverImage}
-              authors={book.authors}
-              license={book.license}
-              format={book.format}
-              price={book.price}
-            />
-          ))}
+    {
+      books.length === 0 ? (
+        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+          Il catalogo sarà disponibile a breve.
+        </p>
+      ) : (
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {books.map((book) => (
+              <BookCard
+                title={book.title}
+                slug={book.slug}
+                subtitle={book.subtitle}
+                summary={book.summary}
+                coverImage={book.coverImage}
+                authors={book.authors}
+                license={book.license}
+                format={book.format}
+                price={book.price}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )
+    }
   </section>
 </BaseLayout>

@@ -10,57 +10,51 @@ import { withFallbackSeo } from '~/lib/seo';
 
 export const prerender = true;
 
-const EBOOKS_PAGE_QUERY = graphql(
-  /* GraphQL */ `
-    query EbooksPage {
-      ebooksIndex {
-        title
-        subtitle
-        _seoMetaTags {
-          tag
-          attributes
-          content
-        }
-      }
-      allBooks(
-        orderBy: printYear_DESC
-        first: 500
-        filter: {
-          _status: { eq: published }
-          archive: { eq: false }
-          format: { eq: "Ebook" }
-        }
-      ) {
-        id
-        title
-        subtitle
-        slug
-        promo
-        description
-        coverImage {
-          url
-          alt
-          colors {
-            hex
-          }
-          width
-          height
-        }
-        printYear
-        authors {
-          id
-          fullName
-        }
-        license {
-          name
-          code
-        }
-        format
-        price
+const EBOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
+  query EbooksPage {
+    ebooksIndex {
+      title
+      subtitle
+      _seoMetaTags {
+        tag
+        attributes
+        content
       }
     }
-  `,
-);
+    allBooks(
+      orderBy: printYear_DESC
+      first: 500
+      filter: { _status: { eq: published }, archive: { eq: false }, format: { eq: "Ebook" } }
+    ) {
+      id
+      title
+      subtitle
+      slug
+      promo
+      description
+      coverImage {
+        url
+        alt
+        colors {
+          hex
+        }
+        width
+        height
+      }
+      printYear
+      authors {
+        id
+        fullName
+      }
+      license {
+        name
+        code
+      }
+      format
+      price
+    }
+  }
+`);
 
 type SeoMetaTag = {
   tag: string;
@@ -121,28 +115,30 @@ const ebooks = mapBooksToCards(data.allBooks);
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
-    {ebooks.length === 0 ? (
-      <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-        Il catalogo digitale sarà disponibile a breve.
-      </p>
-    ) : (
-      <div class="mx-auto max-w-6xl">
-        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-          {ebooks.map((book) => (
-            <BookCard
-              title={book.title}
-              slug={book.slug}
-              subtitle={book.subtitle}
-              summary={book.summary}
-              coverImage={book.coverImage}
-              authors={book.authors}
-              license={book.license}
-              format={book.format}
-              price={book.price}
-            />
-          ))}
+    {
+      ebooks.length === 0 ? (
+        <p class="rounded-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+          Il catalogo digitale sarà disponibile a breve.
+        </p>
+      ) : (
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {ebooks.map((book) => (
+              <BookCard
+                title={book.title}
+                slug={book.slug}
+                subtitle={book.subtitle}
+                summary={book.summary}
+                coverImage={book.coverImage}
+                authors={book.authors}
+                license={book.license}
+                format={book.format}
+                price={book.price}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )
+    }
   </section>
 </BaseLayout>

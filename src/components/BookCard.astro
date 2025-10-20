@@ -129,59 +129,67 @@ const imageHeight = coverImage?.height ?? Math.round(imageWidth * 1.5);
         class="relative flex w-full justify-center p-12 transition duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-soft"
         style={`background: ${backgroundColor};`}
       >
-        {showFormatRibbon && formatLabel ? (
-          <div class="pointer-events-none absolute left-6 top-6 z-10 inline-flex -rotate-12">
-            <span class="rounded-full bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft">
-              {formatLabel}
-            </span>
-          </div>
-        ) : null}
+        {
+          showFormatRibbon && formatLabel ? (
+            <div class="pointer-events-none absolute left-6 top-6 z-10 inline-flex -rotate-12">
+              <span class="rounded-full bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft">
+                {formatLabel}
+              </span>
+            </div>
+          ) : null
+        }
 
-        {coverImage?.url ? (
-          <div class="relative flex items-center justify-center">
-            <div
-              class="pointer-events-none absolute left-1/2 top-full z-0 h-12 w-64 -translate-x-1/2 -translate-y-6 blur-[30px] transition duration-300 ease-out group-hover:opacity-10"
-              style={`background: ${shadowColor};`}
-              aria-hidden="true"
-            ></div>
-            <img
-              src={`${coverImage.url}?auto=compress&fit=max&w=480`}
-              alt={coverImage.alt?.trim() || title}
-              width={imageWidth}
-              height={imageHeight}
-              loading="lazy"
-              sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
-              class="relative z-10 mx-auto h-56 w-auto max-w-[240px] object-contain"
-              style={`filter: drop-shadow(26px 36px 48px ${shadowColor});`}
-            />
-          </div>
-        ) : (
-          <div class="flex h-56 items-center justify-center rounded-2xl bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate">
-            Copertina in arrivo
-          </div>
-        )}
+        {
+          coverImage?.url ? (
+            <div class="relative flex items-center justify-center">
+              <div
+                class="pointer-events-none absolute left-1/2 top-full z-0 h-12 w-64 -translate-x-1/2 -translate-y-6 blur-[30px] transition duration-300 ease-out group-hover:opacity-10"
+                style={`background: ${shadowColor};`}
+                aria-hidden="true"
+              />
+              <img
+                src={`${coverImage.url}?auto=compress&fit=max&w=480`}
+                alt={coverImage.alt?.trim() || title}
+                width={imageWidth}
+                height={imageHeight}
+                loading="lazy"
+                sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
+                class="relative z-10 mx-auto h-56 w-auto max-w-[240px] object-contain"
+                style={`filter: drop-shadow(26px 36px 48px ${shadowColor});`}
+              />
+            </div>
+          ) : (
+            <div class="flex h-56 items-center justify-center rounded-2xl bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate">
+              Copertina in arrivo
+            </div>
+          )
+        }
       </div>
     </div>
 
     <div class="flex flex-1 flex-col gap-3 px-6 pb-6 pt-8 text-left">
       <div class="space-y-1">
         <h3 class="text-2xl font-serif text-brand-navy">{title}</h3>
-        {subtitle ? (
-          <p class="text-sm font-medium uppercase tracking-wide text-brand-slate">{subtitle}</p>
-        ) : null}
+        {
+          subtitle ? (
+            <p class="text-sm font-medium uppercase tracking-wide text-brand-slate">{subtitle}</p>
+          ) : null
+        }
       </div>
 
-      <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">{authorsLabel}</p>
+      <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+        {authorsLabel}
+      </p>
 
-      {summary ? (
-        <p class="text-sm leading-relaxed text-brand-charcoal/70">{summary}</p>
-      ) : null}
+      {summary ? <p class="text-sm leading-relaxed text-brand-charcoal/70">{summary}</p> : null}
 
-      {formattedPrice ? (
-        <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy">
-          Prezzo: {formattedPrice}
-        </p>
-      ) : null}
+      {
+        formattedPrice ? (
+          <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy">
+            Prezzo: {formattedPrice}
+          </p>
+        ) : null
+      }
     </div>
   </article>
 </a>

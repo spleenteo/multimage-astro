@@ -45,23 +45,29 @@ const FEATURE_LINKS = [
           <p class="text-brand-mist">
             Multimage promuove libri, autori e iniziative che raccontano i diritti umani, la
             nonviolenza e le storie spesso dimenticate. Questa nuova applicazione Astro riprende
-            colori e tipografia dell’esperienza originale per offrire una base moderna e accessibile.
+            colori e tipografia dell’esperienza originale per offrire una base moderna e
+            accessibile.
           </p>
           <div class="flex flex-wrap items-center gap-3">
             <a href="/libri" class="btn-primary">
-              <iconify-icon icon="iconoir:book" width="20" height="20" aria-hidden="true"></iconify-icon>
+              <iconify-icon icon="iconoir:book" width="20" height="20" aria-hidden="true"
+              ></iconify-icon>
               <span>Esplora i libri</span>
             </a>
             <a
               href="/info/adesioni"
               class="inline-flex items-center gap-2 rounded-full border border-white px-5 py-2 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
             >
-              <iconify-icon icon="iconoir:pen" width="20" height="20" aria-hidden="true"></iconify-icon>
+              <iconify-icon icon="iconoir:pen" width="20" height="20" aria-hidden="true"
+              ></iconify-icon>
               <span>Diventa socio</span>
             </a>
           </div>
         </div>
-        <div class="hidden h-full w-full rounded-3xl bg-gradient-to-br from-brand-sky/20 via-white/5 to-brand-orange/20 md:block"></div>
+        <div
+          class="hidden h-full w-full rounded-3xl bg-gradient-to-br from-brand-sky/20 via-white/5 to-brand-orange/20 md:block"
+        >
+        </div>
       </div>
     </section>
 
@@ -73,24 +79,33 @@ const FEATURE_LINKS = [
         struttura che verrà popolata con contenuti reali.
       </p>
       <div class="grid gap-6 md:grid-cols-3">
-        {FEATURE_LINKS.map(({ href, title, description, icon }) => (
-          <a
-            href={href}
-            class="group flex h-full flex-col justify-between rounded-3xl bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
-          >
-            <div class="space-y-3">
-              <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy shadow-soft">
-                <iconify-icon icon={icon} width="24" height="24" aria-hidden="true"></iconify-icon>
+        {
+          FEATURE_LINKS.map(({ href, title, description, icon }) => (
+            <a
+              href={href}
+              class="group flex h-full flex-col justify-between rounded-3xl bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
+            >
+              <div class="space-y-3">
+                <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy shadow-soft">
+                  <iconify-icon icon={icon} width="24" height="24" aria-hidden="true" />
+                </span>
+                <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">
+                  {title}
+                </h3>
+                <p>{description}</p>
+              </div>
+              <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-sky group-hover:text-brand-navy">
+                <span>Apri sezione</span>
+                <iconify-icon
+                  icon="iconoir:nav-arrow-right"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                />
               </span>
-              <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">{title}</h3>
-              <p>{description}</p>
-            </div>
-            <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-sky group-hover:text-brand-navy">
-              <span>Apri sezione</span>
-              <iconify-icon icon="iconoir:nav-arrow-right" width="16" height="16" aria-hidden="true"></iconify-icon>
-            </span>
-          </a>
-        ))}
+            </a>
+          ))
+        }
       </div>
     </section>
   </div>

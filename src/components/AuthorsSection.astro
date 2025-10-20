@@ -19,77 +19,79 @@ type Props = {
 const { title, authors }: Props = Astro.props;
 ---
 
-{authors.length === 0 ? null : (
-  <section class="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 shadow-soft">
-    <div class="bg-brand-mist/60 px-6 py-6 text-center sm:px-12">
-      <h2 class="text-3xl font-serif text-brand-navy">{title}</h2>
-    </div>
-    <div class="space-y-8 px-6 py-10 sm:px-12">
-      {authors.map((author) => (
-        author.slug ? (
-          <a
-            href={`/autori/${author.slug}`}
-            class="group block overflow-hidden rounded-[2rem] border border-brand-mist/60 bg-white/95 p-6 shadow-soft transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
-          >
-            <article class="flex flex-col gap-6 sm:flex-row sm:items-start">
-              {author.picture?.url ? (
-                <div class="relative h-52 w-full overflow-hidden rounded-3xl bg-brand-mist/60 sm:h-56 sm:w-56">
-                  <img
-                    src={`${author.picture.url}?auto=compress&fit=crop&w=600&h=600`}
-                    alt={author.picture.alt?.trim() || author.name}
-                    loading="lazy"
-                    class="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02]"
-                  />
-                </div>
-              ) : (
-                <div class="flex h-52 w-full items-center justify-center rounded-3xl bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56">
-                  Ritratto in arrivo
-                </div>
-              )}
+{
+  authors.length === 0 ? null : (
+    <section class="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/95 shadow-soft">
+      <div class="bg-brand-mist/60 px-6 py-6 text-center sm:px-12">
+        <h2 class="text-3xl font-serif text-brand-navy">{title}</h2>
+      </div>
+      <div class="space-y-8 px-6 py-10 sm:px-12">
+        {authors.map((author) =>
+          author.slug ? (
+            <a
+              href={`/autori/${author.slug}`}
+              class="group block overflow-hidden rounded-[2rem] border border-brand-mist/60 bg-white/95 p-6 shadow-soft transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
+            >
+              <article class="flex flex-col gap-6 sm:flex-row sm:items-start">
+                {author.picture?.url ? (
+                  <div class="relative h-52 w-full overflow-hidden rounded-3xl bg-brand-mist/60 sm:h-56 sm:w-56">
+                    <img
+                      src={`${author.picture.url}?auto=compress&fit=crop&w=600&h=600`}
+                      alt={author.picture.alt?.trim() || author.name}
+                      loading="lazy"
+                      class="h-full w-full object-cover transition duration-200 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                ) : (
+                  <div class="flex h-52 w-full items-center justify-center rounded-3xl bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56">
+                    Ritratto in arrivo
+                  </div>
+                )}
 
-              <div class="flex flex-1 flex-col gap-4">
-                <div class="space-y-2">
-                  <h3 class="text-3xl font-serif text-brand-charcoal">{author.name}</h3>
-                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">
-                    {author.booksLabel}
-                  </p>
+                <div class="flex flex-1 flex-col gap-4">
+                  <div class="space-y-2">
+                    <h3 class="text-3xl font-serif text-brand-charcoal">{author.name}</h3>
+                    <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">
+                      {author.booksLabel}
+                    </p>
+                  </div>
+                  <p class="text-base leading-relaxed text-brand-charcoal/80">{author.biography}</p>
+                  <p class="text-sm font-medium text-brand-sky">Scopri il profilo →</p>
                 </div>
-                <p class="text-base leading-relaxed text-brand-charcoal/80">{author.biography}</p>
-                <p class="text-sm font-medium text-brand-sky">Scopri il profilo →</p>
-              </div>
-            </article>
-          </a>
-        ) : (
-          <div class="block overflow-hidden rounded-[2rem] border border-brand-mist/60 bg-white/95 p-6 shadow-soft">
-            <article class="flex flex-col gap-6 sm:flex-row sm:items-start">
-              {author.picture?.url ? (
-                <div class="relative h-52 w-full overflow-hidden rounded-3xl bg-brand-mist/60 sm:h-56 sm:w-56">
-                  <img
-                    src={`${author.picture.url}?auto=compress&fit=crop&w=600&h=600`}
-                    alt={author.picture.alt?.trim() || author.name}
-                    loading="lazy"
-                    class="h-full w-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div class="flex h-52 w-full items-center justify-center rounded-3xl bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56">
-                  Ritratto in arrivo
-                </div>
-              )}
+              </article>
+            </a>
+          ) : (
+            <div class="block overflow-hidden rounded-[2rem] border border-brand-mist/60 bg-white/95 p-6 shadow-soft">
+              <article class="flex flex-col gap-6 sm:flex-row sm:items-start">
+                {author.picture?.url ? (
+                  <div class="relative h-52 w-full overflow-hidden rounded-3xl bg-brand-mist/60 sm:h-56 sm:w-56">
+                    <img
+                      src={`${author.picture.url}?auto=compress&fit=crop&w=600&h=600`}
+                      alt={author.picture.alt?.trim() || author.name}
+                      loading="lazy"
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div class="flex h-52 w-full items-center justify-center rounded-3xl bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56">
+                    Ritratto in arrivo
+                  </div>
+                )}
 
-              <div class="flex flex-1 flex-col gap-4">
-                <div class="space-y-2">
-                  <h3 class="text-3xl font-serif text-brand-charcoal">{author.name}</h3>
-                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">
-                    {author.booksLabel}
-                  </p>
+                <div class="flex flex-1 flex-col gap-4">
+                  <div class="space-y-2">
+                    <h3 class="text-3xl font-serif text-brand-charcoal">{author.name}</h3>
+                    <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">
+                      {author.booksLabel}
+                    </p>
+                  </div>
+                  <p class="text-base leading-relaxed text-brand-charcoal/80">{author.biography}</p>
                 </div>
-                <p class="text-base leading-relaxed text-brand-charcoal/80">{author.biography}</p>
-              </div>
-            </article>
-          </div>
-        )
-      ))}
-    </div>
-  </section>
-)}
+              </article>
+            </div>
+          ),
+        )}
+      </div>
+    </section>
+  )
+}

@@ -19,36 +19,45 @@ const logoAlt = logo?.alt?.trim() || name;
   href={`/collane/${slug}`}
   class="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
 >
-  <article class="flex h-full flex-col rounded-3xl bg-white/95 p-8 text-center shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-2xl">
+  <article
+    class="flex h-full flex-col rounded-3xl bg-white/95 p-8 text-center shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-2xl"
+  >
     <div class="flex flex-1 flex-col items-center gap-6">
-      {logo?.url ? (
-        <div class="flex h-32 w-full items-center justify-center rounded-2xl bg-brand-mist/50 p-4">
-          <img
-            src={`${logo.url}?w=320&h=200&fit=max`}
-            alt={logoAlt}
-            width="320"
-            height="200"
-            loading="lazy"
-            sizes="(min-width: 1280px) 320px, (min-width: 768px) 50vw, 80vw"
-            class="h-full w-auto object-contain"
-          />
-        </div>
-      ) : (
-        <div class="flex h-32 w-full items-center justify-center rounded-2xl bg-brand-mist/50 p-4 text-sm uppercase tracking-wide text-brand-slate">
-          Logo in arrivo
-        </div>
-      )}
+      {
+        logo?.url ? (
+          <div class="flex h-32 w-full items-center justify-center rounded-2xl bg-brand-mist/50 p-4">
+            <img
+              src={`${logo.url}?w=320&h=200&fit=max`}
+              alt={logoAlt}
+              width="320"
+              height="200"
+              loading="lazy"
+              sizes="(min-width: 1280px) 320px, (min-width: 768px) 50vw, 80vw"
+              class="h-full w-auto object-contain"
+            />
+          </div>
+        ) : (
+          <div class="flex h-32 w-full items-center justify-center rounded-2xl bg-brand-mist/50 p-4 text-sm uppercase tracking-wide text-brand-slate">
+            Logo in arrivo
+          </div>
+        )
+      }
 
       <div class="flex flex-1 flex-col gap-3">
         <h3 class="text-2xl font-serif text-brand-navy">{name}</h3>
         <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy">
-          {booksCount} {booksLabel}
+          {booksCount}
+          {booksLabel}
         </p>
-        {description ? (
-          <p class="text-sm leading-relaxed text-brand-charcoal/80">{description}</p>
-        ) : (
-          <p class="text-sm leading-relaxed text-brand-charcoal/60">Descrizione in aggiornamento.</p>
-        )}
+        {
+          description ? (
+            <p class="text-sm leading-relaxed text-brand-charcoal/80">{description}</p>
+          ) : (
+            <p class="text-sm leading-relaxed text-brand-charcoal/60">
+              Descrizione in aggiornamento.
+            </p>
+          )
+        }
       </div>
     </div>
   </article>
