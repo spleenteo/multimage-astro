@@ -5,6 +5,7 @@ import DetailList from '~/components/DetailList.astro';
 import AuthorsSection from '~/components/AuthorsSection.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { graphql } from '~/lib/datocms/graphql';
+import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import {
   buildLicenseLabel,
@@ -118,99 +119,9 @@ const BOOK_ALTERNATE_FORMATS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-type SeoMetaTag = {
-  tag: string;
-  attributes: Record<string, string> | null;
-  content: string | null;
-};
-
-type BookDetailQueryResult = {
-  book: {
-    id: string;
-    title: string;
-    subtitle: string | null;
-    slug: string;
-    promo: string | null;
-    description: string | null;
-    review: string | null;
-    isbn: string | null;
-    edition: number | null;
-    pages: number | null;
-    format: string | null;
-    price: number | null;
-    printYear: string | null;
-    firstPrintYear: number | null;
-    coverDesigner: string | null;
-    epubUrl: string | null;
-    archive: boolean | null;
-    coverImage: {
-      url: string;
-      alt: string | null;
-      width: number | null;
-      height: number | null;
-    } | null;
-    authors: Array<{
-      id: string;
-      fullName: string | null;
-      slug: string | null;
-      biography: string | null;
-      picture: {
-        url: string;
-        alt: string | null;
-        width: number | null;
-        height: number | null;
-      } | null;
-    }>;
-    license: {
-      name: string | null;
-      code: string | null;
-    } | null;
-    collection: {
-      id: string;
-      name: string | null;
-      slug: string | null;
-    } | null;
-    reprints: Array<{
-      __typename: string;
-      number: number | null;
-      circulation: number | null;
-      year: string | null;
-    }>;
-    originalLang: string | null;
-    originalTitle: string | null;
-    translator: string | null;
-    layoutArtist: string | null;
-    dimensions: string | null;
-    illustrator: string | null;
-    seo: SeoMetaTag[] | null;
-  } | null;
-};
-
-type BookSlugsResult = {
-  allBooks: Array<{
-    slug: string | null;
-  }>;
-};
-
-type BookAuthorsBooksResult = {
-  allBooks: Array<{
-    id: string;
-    authors: Array<{
-      id: string;
-    }>;
-  }>;
-};
-
-type BookAlternateFormatsResult = {
-  allBooks: Array<{
-    id: string;
-    title: string;
-    slug: string;
-    format: string | null;
-    price: number | null;
-    epubUrl: string | null;
-  }>;
-};
+type BookDetailQueryResult = ResultOf<typeof BOOK_DETAIL_QUERY>;
+type BookAuthorsBooksResult = ResultOf<typeof BOOK_AUTHORS_BOOKS_QUERY>;
+type BookAlternateFormatsResult = ResultOf<typeof BOOK_ALTERNATE_FORMATS_QUERY>;
 
 export async function getStaticPaths() {
   const slugsQuery = graphql(/* GraphQL */ `
@@ -221,7 +132,7 @@ export async function getStaticPaths() {
     }
   `);
 
-  const data = (await executeQuery(slugsQuery)) as BookSlugsResult;
+  const data = await executeQuery(slugsQuery);
 
   return (data.allBooks ?? [])
     .map((book) => book.slug)
@@ -235,9 +146,9 @@ if (!slug) {
   throw new Error('Missing book slug');
 }
 
-const detailData = (await executeQuery(BOOK_DETAIL_QUERY, {
+const detailData: BookDetailQueryResult = await executeQuery(BOOK_DETAIL_QUERY, {
   variables: { slug },
-})) as BookDetailQueryResult;
+});
 
 const book = detailData.book;
 
@@ -253,9 +164,9 @@ const authorIds = authors
 let authorsBookCounts = new Map<string, number>();
 
 if (authorIds.length > 0) {
-  const authorsData = (await executeQuery(BOOK_AUTHORS_BOOKS_QUERY, {
+  const authorsData: BookAuthorsBooksResult = await executeQuery(BOOK_AUTHORS_BOOKS_QUERY, {
     variables: { authorIds },
-  })) as BookAuthorsBooksResult;
+  });
 
   const counts = new Map<string, number>();
   const targetAuthors = new Set(authorIds);
@@ -276,12 +187,15 @@ if (authorIds.length > 0) {
   authorsBookCounts = counts;
 }
 
-const alternateFormatsData = (await executeQuery(BOOK_ALTERNATE_FORMATS_QUERY, {
-  variables: {
-    title: book.title,
-    excludeSlug: { neq: book.slug ?? '' },
-  } as any,
-})) as BookAlternateFormatsResult;
+const alternateFormatsData: BookAlternateFormatsResult = await executeQuery(
+  BOOK_ALTERNATE_FORMATS_QUERY,
+  {
+    variables: {
+      title: book.title,
+      excludeSlug: { neq: book.slug ?? '' },
+    } as any,
+  },
+);
 
 const authorsNames = authors
   .map((author) => author.fullName?.trim())

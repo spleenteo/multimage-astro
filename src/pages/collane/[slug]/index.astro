@@ -4,6 +4,7 @@ import CollectionDetailHero from '~/components/CollectionDetailHero.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { graphql } from '~/lib/datocms/graphql';
+import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
@@ -66,63 +67,8 @@ const COLLECTION_RELATED_BOOKS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-type SeoMetaTag = {
-  tag: string;
-  attributes: Record<string, string> | null;
-  content: string | null;
-};
-
-type CollectionDetailResult = {
-  collection: {
-    id: string;
-    name: string;
-    description: string | null;
-    slug: string;
-    logo: {
-      url: string;
-      alt: string | null;
-    } | null;
-    _seoMetaTags: SeoMetaTag[] | null;
-  } | null;
-};
-
-type CollectionRelatedBooksResult = {
-  _allBooksMeta: {
-    count: number;
-  } | null;
-  allBooks: Array<{
-    id: string;
-    title: string;
-    subtitle: string | null;
-    slug: string;
-    promo: string | null;
-    description: string | null;
-    coverImage: {
-      url: string;
-      alt: string | null;
-      colors?: Array<{ hex: string }>;
-      width: number | null;
-      height: number | null;
-    } | null;
-    authors: Array<{
-      id: string;
-      fullName: string | null;
-    }>;
-    license: {
-      name: string | null;
-      code: string | null;
-    } | null;
-    format: string | null;
-    price: number | null;
-    archive: boolean | null;
-  }>;
-};
-
-type CollectionSlugsResult = {
-  allCollections: Array<{
-    slug: string | null;
-  }>;
-};
+type CollectionDetailResult = ResultOf<typeof COLLECTION_DETAIL_QUERY>;
+type CollectionRelatedBooksResult = ResultOf<typeof COLLECTION_RELATED_BOOKS_QUERY>;
 
 export async function getStaticPaths() {
   const slugsQuery = graphql(/* GraphQL */ `
@@ -133,7 +79,7 @@ export async function getStaticPaths() {
     }
   `);
 
-  const data = (await executeQuery(slugsQuery)) as CollectionSlugsResult;
+  const data = await executeQuery(slugsQuery);
 
   return (data.allCollections ?? [])
     .map((collection) => collection.slug)
@@ -147,9 +93,9 @@ if (!slug) {
   throw new Error('Missing collection slug');
 }
 
-const detailData = (await executeQuery(COLLECTION_DETAIL_QUERY, {
+const detailData: CollectionDetailResult = await executeQuery(COLLECTION_DETAIL_QUERY, {
   variables: { slug },
-})) as CollectionDetailResult;
+});
 
 const collection = detailData.collection;
 
@@ -157,9 +103,12 @@ if (!collection) {
   throw new Error(`Collection not found for slug: ${slug}`);
 }
 
-const relatedData = (await executeQuery(COLLECTION_RELATED_BOOKS_QUERY, {
-  variables: { collectionId: collection.id },
-})) as CollectionRelatedBooksResult;
+const relatedData: CollectionRelatedBooksResult = await executeQuery(
+  COLLECTION_RELATED_BOOKS_QUERY,
+  {
+    variables: { collectionId: collection.id },
+  },
+);
 
 const descriptionPlain = toPlainText(collection.description ?? null);
 const collectionDescription = descriptionPlain.length > 0 ? descriptionPlain : null;

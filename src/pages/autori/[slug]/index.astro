@@ -3,6 +3,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { graphql } from '~/lib/datocms/graphql';
+import type { ResultOf } from '~/lib/datocms/graphql';
 import { mapBooksToCards } from '~/lib/books';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
@@ -74,72 +75,8 @@ const AUTHOR_RELATED_BOOKS_QUERY = graphql(/* GraphQL */ `
   }
 `);
 
-type SeoMetaTag = {
-  tag: string;
-  attributes: Record<string, string> | null;
-  content: string | null;
-};
-
-type AuthorDetailResult = {
-  author: {
-    id: string;
-    fullName: string | null;
-    alias: string | null;
-    country: string | null;
-    biography: string | null;
-    note: string | null;
-    picture: {
-      url: string;
-      alt: string | null;
-      width: number | null;
-      height: number | null;
-    } | null;
-    pseudonyms: Array<{
-      id: string;
-      fullName: string | null;
-      slug: string | null;
-    }>;
-    _seoMetaTags: SeoMetaTag[] | null;
-  } | null;
-};
-
-type AuthorRelatedBooksResult = {
-  _allBooksMeta: {
-    count: number;
-  } | null;
-  allBooks: Array<{
-    id: string;
-    title: string;
-    subtitle: string | null;
-    slug: string;
-    promo: string | null;
-    description: string | null;
-    coverImage: {
-      url: string;
-      alt: string | null;
-      colors?: Array<{ hex: string }>;
-      width: number | null;
-      height: number | null;
-    } | null;
-    authors: Array<{
-      id: string;
-      fullName: string | null;
-    }>;
-    license: {
-      name: string | null;
-      code: string | null;
-    } | null;
-    format: string | null;
-    price: number | null;
-    archive: boolean | null;
-  }>;
-};
-
-type AuthorSlugsResult = {
-  allAuthors: Array<{
-    slug: string | null;
-  }>;
-};
+type AuthorDetailResult = ResultOf<typeof AUTHOR_DETAIL_QUERY>;
+type AuthorRelatedBooksResult = ResultOf<typeof AUTHOR_RELATED_BOOKS_QUERY>;
 
 export async function getStaticPaths() {
   const slugsQuery = graphql(/* GraphQL */ `
@@ -150,7 +87,7 @@ export async function getStaticPaths() {
     }
   `);
 
-  const data = (await executeQuery(slugsQuery)) as AuthorSlugsResult;
+  const data = await executeQuery(slugsQuery);
 
   return (data.allAuthors ?? [])
     .map((author) => author.slug)
@@ -164,9 +101,9 @@ if (!slug) {
   throw new Error('Missing author slug');
 }
 
-const detailData = (await executeQuery(AUTHOR_DETAIL_QUERY, {
+const detailData: AuthorDetailResult = await executeQuery(AUTHOR_DETAIL_QUERY, {
   variables: { slug },
-})) as AuthorDetailResult;
+});
 
 const author = detailData.author;
 
@@ -174,9 +111,9 @@ if (!author) {
   throw new Error(`Author not found for slug: ${slug}`);
 }
 
-const relatedData = (await executeQuery(AUTHOR_RELATED_BOOKS_QUERY, {
+const relatedData: AuthorRelatedBooksResult = await executeQuery(AUTHOR_RELATED_BOOKS_QUERY, {
   variables: { authorIds: [author.id] },
-})) as AuthorRelatedBooksResult;
+});
 
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
 const relatedBooks = mapBooksToCards(relatedData.allBooks);

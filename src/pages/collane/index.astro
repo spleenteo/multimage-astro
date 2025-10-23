@@ -4,6 +4,7 @@ import SectionIntro from '~/components/SectionIntro.astro';
 import CollectionCard from '~/components/CollectionCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { graphql } from '~/lib/datocms/graphql';
+import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 
@@ -38,38 +39,9 @@ const COLLECTIONS_QUERY = graphql(/* GraphQL */ `
     }
   }
 `);
+type CollectionsQueryResult = ResultOf<typeof COLLECTIONS_QUERY>;
 
-type SeoMetaTag = {
-  tag: string;
-  attributes: Record<string, string> | null;
-  content: string | null;
-};
-
-type CollectionsQueryResult = {
-  collectionsIndex: {
-    title: string | null;
-    subtitle: string | null;
-    seoMetaTags: SeoMetaTag[] | null;
-  } | null;
-  allCollections: Array<{
-    id: string;
-    name: string;
-    slug: string;
-    description: string | null;
-    logo: {
-      url: string;
-      alt: string | null;
-    } | null;
-  }>;
-  allBooks: Array<{
-    id: string;
-    collection: {
-      id: string;
-    } | null;
-  }>;
-};
-
-const data = (await executeQuery(COLLECTIONS_QUERY)) as CollectionsQueryResult;
+const data: CollectionsQueryResult = await executeQuery(COLLECTIONS_QUERY);
 
 const heroTitle = data.collectionsIndex?.title ?? 'Collane';
 const heroSubtitle = toPlainText(data.collectionsIndex?.subtitle ?? null);

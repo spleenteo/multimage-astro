@@ -4,6 +4,7 @@ import SectionIntro from '~/components/SectionIntro.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { graphql } from '~/lib/datocms/graphql';
+import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
@@ -56,49 +57,9 @@ const EBOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
     }
   }
 `);
+type EbooksPageQueryResult = ResultOf<typeof EBOOKS_PAGE_QUERY>;
 
-type SeoMetaTag = {
-  tag: string;
-  attributes: Record<string, string> | null;
-  content: string | null;
-};
-
-type EbooksPageQueryResult = {
-  ebooksIndex: {
-    title: string | null;
-    subtitle: string | null;
-    _seoMetaTags: SeoMetaTag[] | null;
-  } | null;
-  allBooks: Array<{
-    id: string;
-    title: string;
-    subtitle: string | null;
-    slug: string;
-    promo: string | null;
-    description: string | null;
-    coverImage: {
-      url: string;
-      alt: string | null;
-      colors?: Array<{ hex: string }>;
-      width: number | null;
-      height: number | null;
-    } | null;
-    printYear: string | null;
-    authors: Array<{
-      id: string;
-      fullName: string | null;
-    }>;
-    license: {
-      name: string | null;
-      code: string | null;
-    } | null;
-    format: string | null;
-    price: number | null;
-    archive: boolean | null;
-  }>;
-};
-
-const data = (await executeQuery(EBOOKS_PAGE_QUERY)) as EbooksPageQueryResult;
+const data: EbooksPageQueryResult = await executeQuery(EBOOKS_PAGE_QUERY);
 
 const heroTitle = data.ebooksIndex?.title ?? 'Ebook';
 const heroSubtitle = toPlainText(data.ebooksIndex?.subtitle ?? null);
