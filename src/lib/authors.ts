@@ -27,6 +27,7 @@ export type AuthorCardViewModel = {
   summary?: string | null;
   booksCount: number;
   picture?: AuthorPicture | null;
+  sortLetter: string;
 };
 
 function normalize(value: string | null | undefined): string | null {
@@ -37,10 +38,22 @@ function normalize(value: string | null | undefined): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function extractSortValue(author: AuthorRecordForCard): string {
+  return normalize(author.sortBy) ?? normalize(author.fullName) ?? '';
+}
+
 function extractSortKey(author: AuthorRecordForCard): string {
-  const sortValue = normalize(author.sortBy);
-  const name = normalize(author.fullName);
-  return (sortValue ?? name ?? '').toLocaleLowerCase('it');
+  return extractSortValue(author).toLocaleLowerCase('it');
+}
+
+function extractSortLetter(author: AuthorRecordForCard): string {
+  const sortValue = extractSortValue(author);
+  if (!sortValue) {
+    return '#';
+  }
+
+  const firstChar = sortValue.charAt(0).toUpperCase();
+  return /[A-ZÀ-ÖØ-Ý]/i.test(firstChar) ? firstChar : '#';
 }
 
 export function sortAuthorsForIndex(authors: Array<AuthorRecordForCard>) {
@@ -58,6 +71,7 @@ export function mapAuthorsToCards(
     const summary = biographyPlain.length > 0 ? truncateToLength(biographyPlain, 200) : undefined;
 
     const booksCount = bookCounts?.get(author.id) ?? 0;
+    const sortLetter = extractSortLetter(author);
 
     return {
       id: author.id,
@@ -68,6 +82,7 @@ export function mapAuthorsToCards(
       summary,
       booksCount,
       picture: author.picture ?? null,
+      sortLetter,
     };
   });
 }

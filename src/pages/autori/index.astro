@@ -104,6 +104,36 @@ const sortedAuthors = sortAuthorsForIndex(data.allAuthors ?? []);
 const authorCards = mapAuthorsToCards(sortedAuthors, { bookCounts }).filter(
   (author) => author.slug.length > 0,
 );
+
+type AuthorCardItem = (typeof authorCards)[number];
+
+function buildAnchorSegment(letter: string) {
+  const normalized = letter.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const cleaned = normalized.replace(/[^A-Za-z0-9]/g, '');
+  return cleaned.length > 0 ? cleaned.toLowerCase() : 'other';
+}
+
+const authorGroupsMap = new Map<
+  string,
+  {
+    letter: string;
+    anchorId: string;
+    authors: AuthorCardItem[];
+  }
+>();
+
+for (const author of authorCards) {
+  const letter = author.sortLetter || '#';
+  const anchorId = `group-${buildAnchorSegment(letter)}`;
+  if (!authorGroupsMap.has(letter)) {
+    authorGroupsMap.set(letter, { letter, anchorId, authors: [] as AuthorCardItem[] });
+  }
+
+  authorGroupsMap.get(letter)?.authors.push(author);
+}
+
+const authorGroups = Array.from(authorGroupsMap.values());
+const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, anchorId }));
 ---
 
 <BaseLayout seo={seo}>
@@ -119,17 +149,46 @@ const authorCards = mapAuthorsToCards(sortedAuthors, { bookCounts }).filter(
         </p>
       ) : (
         <div class="mx-auto max-w-6xl">
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {authorCards.map((author) => (
-              <AuthorCard
-                name={author.name}
-                slug={author.slug}
-                alias={author.alias}
-                country={author.country}
-                summary={author.summary}
-                booksCount={author.booksCount}
-                picture={author.picture}
-              />
+          <div id="char-menu" class="sr-only" aria-hidden="true" />
+
+          <nav
+            class="sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.4em] text-brand-slate shadow-soft backdrop-blur-sm"
+            aria-label="Indice alfabetico autori"
+          >
+            {navigationAnchors.map(({ letter, anchorId }) => (
+              <a href={`#${anchorId}`} class="transition duration-150 hover:text-brand-navy">
+                {letter}
+              </a>
+            ))}
+          </nav>
+
+          <div class="space-y-16">
+            {authorGroups.map(({ letter, anchorId, authors }) => (
+              <section id={anchorId} class="space-y-8">
+                <div class="flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft">
+                  <h2 class="text-3xl font-serif text-brand-navy">{letter}</h2>
+                  <a
+                    href="#char-menu"
+                    class="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy"
+                  >
+                    Torna al menu
+                  </a>
+                </div>
+
+                <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                  {authors.map((author) => (
+                    <AuthorCard
+                      name={author.name}
+                      slug={author.slug}
+                      alias={author.alias}
+                      country={author.country}
+                      summary={author.summary}
+                      booksCount={author.booksCount}
+                      picture={author.picture}
+                    />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         </div>
