@@ -3,7 +3,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
-import { toPlainText, truncateToLength } from '~/lib/text';
+import { toPlainText, toRichTextHtml, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
@@ -132,27 +132,20 @@ const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
 const relatedBooks = mapBooksToCards(relatedData.allBooks);
 
-const biographyParagraphs = (author.biography ?? '')
-  .split(/\r?\n\s*\r?\n/)
-  .map((paragraph) => paragraph.trim())
-  .filter((paragraph) => paragraph.length > 0);
+const biographyHtml = toRichTextHtml(author.biography ?? null);
+const biographyPlain = toPlainText(author.biography ?? null);
+const noteHtml = toRichTextHtml(author.note ?? null);
+const notePlain = toPlainText(author.note ?? null);
 
-const noteParagraphs = (author.note ?? '')
-  .split(/\r?\n\s*\r?\n/)
-  .map((paragraph) => paragraph.trim())
-  .filter((paragraph) => paragraph.length > 0);
-
-const [leadParagraph] = biographyParagraphs;
-const leadSummary = leadParagraph ? truncateToLength(leadParagraph, 220) : null;
+const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
+const leadSummary = summarySource.length > 0 ? truncateToLength(summarySource, 220) : null;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
 const pseudonyms = (author.pseudonyms ?? []).filter(
   (person) => person.fullName && person.fullName.trim().length > 0,
 );
 
-const fallbackDescription = leadParagraph
-  ? leadParagraph
-  : toPlainText(author.biography ?? author.note ?? null);
+const fallbackDescription = summarySource.length > 0 ? summarySource : undefined;
 const seo = withFallbackSeo(author._seoMetaTags, {
   title: `${author.fullName ?? 'Autore'} | Multimage`,
   description: fallbackDescription || undefined,
@@ -239,27 +232,25 @@ const pictureHeight = author.picture?.height ?? Math.round(pictureWidth * 1.1);
     </section>
 
     {
-      biographyParagraphs.length > 0 ? (
+      biographyHtml ? (
         <section class="mx-auto max-w-4xl space-y-6 bg-white/95 p-8 shadow-soft">
           <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
-          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90">
-            {biographyParagraphs.map((paragraph) => (
-              <p>{paragraph}</p>
-            ))}
-          </div>
+          <div
+            class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
+            set:html={biographyHtml}
+          />
         </section>
       ) : null
     }
 
     {
-      noteParagraphs.length > 0 ? (
+      noteHtml ? (
         <section class="mx-auto max-w-4xl space-y-6 border border-white/70 bg-white/95 p-8 shadow-soft">
           <h2 class="text-3xl font-serif text-brand-navy">Approfondimenti</h2>
-          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90">
-            {noteParagraphs.map((paragraph) => (
-              <p>{paragraph}</p>
-            ))}
-          </div>
+          <div
+            class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
+            set:html={noteHtml}
+          />
         </section>
       ) : null
     }

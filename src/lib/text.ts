@@ -52,3 +52,45 @@ export function truncateToLength(text: string, maxLength = 160): string {
   const truncated = text.slice(0, maxLength).replace(/\s+\S*$/, '');
   return `${truncated}…`;
 }
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export function toRichTextHtml(value: string | null | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  const looksLikeHtml = /<\s*\w+[^>]*>/i.test(trimmed);
+  if (looksLikeHtml) {
+    return trimmed;
+  }
+
+  const paragraphs = trimmed
+    .split(/\r?\n\s*\r?\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
+
+  if (paragraphs.length === 0) {
+    return null;
+  }
+
+  const renderParagraph = (text: string) => escapeHtml(text).replace(/\r?\n/g, '<br />');
+
+  if (paragraphs.length === 1) {
+    return `<p>${renderParagraph(paragraphs[0])}</p>`;
+  }
+
+  return paragraphs.map((paragraph) => `<p>${renderParagraph(paragraph)}</p>`).join('');
+}

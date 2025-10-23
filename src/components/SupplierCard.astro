@@ -14,7 +14,7 @@ const {
   telephone,
   email,
   website,
-  description,
+  descriptionHtml,
   logo,
   className = '',
 }: Props = Astro.props;
@@ -24,6 +24,7 @@ const hasAddress = Boolean(address);
 const hasContacts = Boolean(
   (telephone ?? '').length > 0 || (email ?? '').length > 0 || (website ?? '').length > 0,
 );
+const hasDescription = Boolean(descriptionHtml);
 
 function normalizeWebsite(raw: string | null) {
   if (!raw) {
@@ -79,8 +80,11 @@ const logoHeight = logo?.height ?? 320;
       <h3 class="text-3xl font-serif uppercase tracking-[0.08em] text-brand-navy">{name}</h3>
 
       {
-        description ? (
-          <p class="text-sm leading-relaxed text-brand-charcoal/75">{description}</p>
+        hasDescription ? (
+          <div
+            class="space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
+            set:html={descriptionHtml}
+          />
         ) : null
       }
 

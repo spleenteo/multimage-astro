@@ -1,6 +1,7 @@
 import type { ToItemAttributes } from '@datocms/cma-client';
 
 import type { Supplier } from '~/schema';
+import { toRichTextHtml } from './text';
 
 type SupplierAttributes = ToItemAttributes<Supplier>;
 
@@ -51,7 +52,7 @@ export type SupplierCardViewModel = {
   telephone: string | null;
   email: string | null;
   website: string | null;
-  description: string | null;
+  descriptionHtml: string | null;
   logo: SupplierAttributes['logo'];
 };
 
@@ -63,7 +64,7 @@ export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {
   const telephone = normalize(record.telephone);
   const email = normalize(record.email);
   const website = normalize(record.url);
-  const description = normalize(record.description);
+  const descriptionHtml = toRichTextHtml(record.description ?? null);
 
   const googleMapsUrl = buildGoogleMapsUrl(record, address);
 
@@ -77,7 +78,7 @@ export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {
     telephone,
     email,
     website,
-    description,
+    descriptionHtml,
     logo: record.logo ?? null,
   };
 }
