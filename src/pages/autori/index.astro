@@ -6,11 +6,13 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorSummaryRecord, AuthorsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
 const AUTHORS_PAGE_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query AuthorsPage {
     authorsIndex {
       title
@@ -32,8 +34,9 @@ const AUTHORS_PAGE_QUERY = /* GraphQL */ `
       picture {
         url
         alt
-        width
-        height
+        responsiveImage(imgixParams: { fit: crop, w: 600, h: 600, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
     }
     allBooks(first: 500) {

@@ -1,18 +1,20 @@
----
+  ---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+
 type Props = {
   name: string;
   slug: string;
   description?: string | null;
   booksCount: number;
-  logo?: {
-    url?: string | null;
-    alt?: string | null;
-  } | null;
+  logo?: AssetImage | null;
 };
 
 const { name, slug, description, booksCount, logo }: Props = Astro.props;
 const booksLabel = booksCount === 1 ? 'Libro' : 'Libri';
-const logoAlt = logo?.alt?.trim() || name;
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
 ---
 
 <a
@@ -24,16 +26,12 @@ const logoAlt = logo?.alt?.trim() || name;
   >
     <div class="flex flex-1 flex-col items-center gap-6">
       {
-        logo?.url ? (
-          <div class="flex h-32 w-full items-center justify-center bg-brand-mist/50 p-4">
-            <img
-              src={`${logo.url}?w=320&h=200&fit=max`}
-              alt={logoAlt}
-              width="320"
-              height="200"
-              loading="lazy"
-              sizes="(min-width: 1280px) 320px, (min-width: 768px) 50vw, 80vw"
-              class="h-full w-auto object-contain"
+        logoResponsiveImage ? (
+          <div class="flex h-32 w-full items-center justify-center bg-brand-mist/50 p-10">
+            <Image
+              data={logoResponsiveImage}
+              sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 80vw"
+              imgClass="h-full w-auto object-contain"
             />
           </div>
         ) : (

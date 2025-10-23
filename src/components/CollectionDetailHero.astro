@@ -1,12 +1,12 @@
 ---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+
 type Props = {
   name: string;
   booksCount: number;
   description?: string | null;
-  logo?: {
-    url?: string | null;
-    alt?: string | null;
-  } | null;
+  logo?: AssetImage | null;
   className?: string;
 };
 
@@ -15,7 +15,9 @@ const booksLabel =
   booksCount === 1
     ? 'Collana editoriale con 1 libro'
     : `Collana editoriale con ${booksCount} libri`;
-const logoAlt = logo?.alt?.trim() || name;
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
 ---
 
 <div
@@ -30,15 +32,12 @@ const logoAlt = logo?.alt?.trim() || name;
     <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{name}</h1>
 
     {
-      logo?.url ? (
+      logoResponsiveImage ? (
         <div class="flex h-36 w-36 items-center justify-center bg-brand-mist/40 p-4 shadow-inner">
-          <img
-            src={`${logo.url}?w=320&h=320&fit=max`}
-            alt={logoAlt}
-            width="320"
-            height="320"
-            loading="lazy"
-            class="h-full w-full object-contain"
+          <Image
+            data={logoResponsiveImage}
+            sizes="(min-width: 1024px) 220px, 40vw"
+            imgClass="h-full w-full object-contain"
           />
         </div>
       ) : null

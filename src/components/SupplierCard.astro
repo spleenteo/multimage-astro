@@ -1,4 +1,5 @@
 ---
+import { Image } from '@datocms/astro/Image';
 import type { SupplierCardViewModel } from '~/lib/suppliers';
 
 type Props = SupplierCardViewModel & {
@@ -59,9 +60,11 @@ function buildWebsiteLabel(url: string | null) {
 }
 
 const websiteLabel = buildWebsiteLabel(websiteHref);
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
+---
 
-const logoWidth = logo?.width ?? 320;
-const logoHeight = logo?.height ?? 320;
 ---
 
 <article
@@ -154,16 +157,13 @@ const logoHeight = logo?.height ?? 320;
     </div>
 
     {
-      logo?.url ? (
+      logoResponsiveImage ? (
         <div class="flex shrink-0 items-start justify-end">
           <div class="rounded-3xl bg-white/80 px-4 py-3 shadow-inner">
-            <img
-              src={`${logo.url}?auto=compress&fit=max&w=280`}
-              alt={logo.alt ?? name}
-              width={logoWidth}
-              height={logoHeight}
-              loading="lazy"
-              class="h-24 w-36 max-w-[220px] object-contain"
+            <Image
+              data={logoResponsiveImage}
+              sizes="(min-width: 1024px) 180px, 40vw"
+              imgClass="h-24 w-36 max-w-[220px] object-contain"
             />
           </div>
         </div>

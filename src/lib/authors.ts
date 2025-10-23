@@ -1,11 +1,5 @@
+import type { AssetImage } from './datocms/types';
 import { toPlainText, truncateToLength } from './text';
-
-type AuthorPicture = {
-  url?: string | null;
-  alt?: string | null;
-  width?: number | null;
-  height?: number | null;
-};
 
 export type AuthorRecordForCard = {
   id: string;
@@ -15,7 +9,7 @@ export type AuthorRecordForCard = {
   country?: string | null;
   biography?: string | null;
   sortBy?: string | null;
-  picture?: AuthorPicture | null;
+  picture?: AssetImage | null;
 };
 
 export type AuthorCardViewModel = {
@@ -26,7 +20,7 @@ export type AuthorCardViewModel = {
   country?: string | null;
   summary?: string | null;
   booksCount: number;
-  picture?: AuthorPicture | null;
+  picture?: AssetImage | null;
   sortLetter: string;
 };
 

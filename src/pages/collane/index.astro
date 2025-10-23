@@ -5,6 +5,7 @@ import CollectionCard from '~/components/CollectionCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type {
   CollectionSummaryRecord,
   CollectionsIndexRecord,
@@ -14,6 +15,7 @@ import type {
 export const prerender = true;
 
 const COLLECTIONS_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query CollectionsPage {
     collectionsIndex {
       title
@@ -32,6 +34,9 @@ const COLLECTIONS_QUERY = /* GraphQL */ `
       logo {
         url
         alt
+        responsiveImage(imgixParams: { fit: max, w: 320, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
     }
     allBooks(first: 500) {

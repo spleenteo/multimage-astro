@@ -1,16 +1,19 @@
 ---
+import { Image } from '@datocms/astro/Image';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
 import { toPlainText, toRichTextHtml, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
 
 export const prerender = true;
 
 const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query AuthorDetailPage($slug: String) {
     author(filter: { slug: { eq: $slug } }) {
       id
@@ -22,8 +25,9 @@ const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
       picture {
         url
         alt
-        width
-        height
+        responsiveImage(imgixParams: { fit: crop, w: 960, h: 960, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
       pseudonyms {
         id
@@ -40,6 +44,7 @@ const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
 `;
 
 const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query AuthorRelatedBooks($authorIds: [ItemId!]) {
     _allBooksMeta(filter: { authors: { anyIn: $authorIds } }) {
       count
@@ -57,8 +62,9 @@ const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
         colors {
           hex
         }
-        width
-        height
+        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
       authors {
         id
@@ -151,9 +157,12 @@ const seo = withFallbackSeo(author._seoMetaTags, {
   description: fallbackDescription || undefined,
 });
 
-const pictureAlt = author.picture?.alt?.trim() || author.fullName || 'Autore';
-const pictureWidth = author.picture?.width ?? 640;
-const pictureHeight = author.picture?.height ?? Math.round(pictureWidth * 1.1);
+const pictureResponsiveImage = author.picture?.responsiveImage
+  ? {
+      ...author.picture.responsiveImage,
+      alt: author.picture.responsiveImage.alt ?? author.fullName ?? 'Autore',
+    }
+  : null;
 ---
 
 <BaseLayout seo={seo}>
@@ -164,15 +173,11 @@ const pictureHeight = author.picture?.height ?? Math.round(pictureWidth * 1.1);
       <div class="overflow-hidden bg-white/95 shadow-soft">
         <div class="bg-brand-mist">
           {
-            author.picture?.url ? (
-              <img
-                src={`${author.picture.url}?auto=compress&fit=crop&w=960&h=960`}
-                alt={pictureAlt}
-                width={pictureWidth}
-                height={pictureHeight}
-                loading="lazy"
+            pictureResponsiveImage ? (
+              <Image
+                data={pictureResponsiveImage}
                 sizes="(min-width: 1024px) 320px, 60vw"
-                class="h-auto w-full object-cover"
+                imgClass="h-auto w-full object-cover"
               />
             ) : (
               <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">

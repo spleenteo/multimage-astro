@@ -1,16 +1,9 @@
+import type { AssetImage } from './datocms/types';
 import { toPlainText, truncateToLength } from './text';
 
 type BookAuthor = {
   id: string;
   fullName?: string | null;
-};
-
-type BookCover = {
-  url?: string | null;
-  alt?: string | null;
-  colors?: Array<{ hex?: string | null }> | null;
-  width?: number | null;
-  height?: number | null;
 };
 
 type BookLicense = {
@@ -25,7 +18,7 @@ export type BookRecordForCard = {
   slug: string;
   promo?: string | null;
   description?: string | null;
-  coverImage?: BookCover | null;
+  coverImage?: AssetImage | null;
   authors?: BookAuthor[] | null;
   license?: BookLicense | null;
   format?: string | null;
@@ -40,7 +33,7 @@ export type BookCardViewModel = {
   slug: string;
   subtitle?: string | null;
   summary?: string | null;
-  coverImage?: BookCover | null;
+  coverImage?: AssetImage | null;
   authors: BookAuthor[];
   license?: BookLicense | null;
   format?: string | null;

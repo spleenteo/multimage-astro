@@ -6,12 +6,14 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
 import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { SupplierRecord } from '~/lib/suppliers';
 import type { SuppliersIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
 const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query SuppliersPage {
     suppliersIndex {
       title
@@ -45,6 +47,9 @@ const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
         alt
         width
         height
+        responsiveImage(imgixParams: { fit: max, w: 280, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
     }
   }

@@ -1,9 +1,5 @@
-import type { ToItemAttributes } from '@datocms/cma-client-node';
-
-import type { Supplier } from '~/schema';
+import type { AssetImage } from './datocms/types';
 import { toRichTextHtml } from './text';
-
-type SupplierAttributes = ToItemAttributes<Supplier>;
 
 function normalize(value: string | null | undefined): string | null {
   if (!value) {
@@ -38,8 +34,23 @@ function buildGoogleMapsUrl(
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryParts.join(', '))}`;
 }
 
-export type SupplierRecord = SupplierAttributes & {
+type SupplierMapLocation = {
+  latitude: number | null;
+  longitude: number | null;
+} | null;
+
+export type SupplierRecord = {
   id: string;
+  name: string | null;
+  logo: AssetImage | null;
+  city: string | null;
+  region: string | null;
+  address: string | null;
+  telephone: string | null;
+  description: string | null;
+  url: string | null;
+  email: string | null;
+  map: SupplierMapLocation;
 };
 
 export type SupplierCardViewModel = {
@@ -53,7 +64,7 @@ export type SupplierCardViewModel = {
   email: string | null;
   website: string | null;
   descriptionHtml: string | null;
-  logo: SupplierAttributes['logo'];
+  logo: AssetImage | null;
 };
 
 export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {

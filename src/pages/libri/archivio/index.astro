@@ -6,12 +6,14 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { BookRecordForCard } from '~/lib/books';
 import type { ArchiveIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
 const ARCHIVE_PAGE_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query ArchivePage {
     archiveIndex {
       title
@@ -39,8 +41,9 @@ const ARCHIVE_PAGE_QUERY = /* GraphQL */ `
         colors {
           hex
         }
-        width
-        height
+        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
       printYear
       authors {

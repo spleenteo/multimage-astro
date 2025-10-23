@@ -10,3 +10,17 @@ export const TAG_FRAGMENT = /* GraphQL */ `
     content
   }
 `;
+
+export const RESPONSIVE_IMAGE_FRAGMENT = /* GraphQL */ `
+  fragment ResponsiveImageFragment on ResponsiveImage {
+    src
+    width
+    height
+    srcSet
+    sizes
+    alt
+    title
+    base64
+    bgColor
+  }
+`;

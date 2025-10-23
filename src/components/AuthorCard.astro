@@ -1,4 +1,7 @@
 ---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+
 type Props = {
   name: string;
   slug: string;
@@ -6,12 +9,7 @@ type Props = {
   country?: string | null;
   summary?: string | null;
   booksCount: number;
-  picture?: {
-    url?: string | null;
-    alt?: string | null;
-    width?: number | null;
-    height?: number | null;
-  } | null;
+  picture?: AssetImage | null;
 };
 
 const { name, slug, alias, country, summary, booksCount, picture }: Props = Astro.props;
@@ -20,7 +18,9 @@ const countryLabel = country?.trim() ?? null;
 const metaLabel = [aliasLabel, countryLabel].filter(Boolean).join(' · ');
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 const summaryText = summary?.trim() ?? 'Biografia in aggiornamento.';
-const imageAlt = picture?.alt?.trim() || name;
+const pictureResponsiveImage = picture?.responsiveImage
+  ? { ...picture.responsiveImage, alt: picture.responsiveImage.alt ?? name }
+  : null;
 ---
 
 <a
@@ -28,15 +28,12 @@ const imageAlt = picture?.alt?.trim() || name;
   class="group flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
 >
   {
-    picture?.url ? (
+    pictureResponsiveImage ? (
       <div class="relative h-72 w-full overflow-hidden bg-brand-mist/60">
-        <img
-          src={`${picture.url}?auto=compress&fit=crop&w=640&h=480`}
-          alt={imageAlt}
-          loading="lazy"
-          width={picture.width ?? 640}
-          height={picture.height ?? 480}
-          class="h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
+        <Image
+          data={pictureResponsiveImage}
+          sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
+          imgClass="h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
         />
       </div>
     ) : (

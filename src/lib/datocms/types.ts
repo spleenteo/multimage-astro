@@ -8,12 +8,25 @@ export type AssetColor = {
   hex?: string | null;
 };
 
+export type ResponsiveImage = {
+  src: string;
+  width: number;
+  height: number;
+  srcSet?: string | null;
+  sizes?: string | null;
+  alt?: string | null;
+  title?: string | null;
+  base64?: string | null;
+  bgColor?: string | null;
+};
+
 export type AssetImage = {
-  url: string;
+  url?: string | null;
   alt: string | null;
   width: number | null;
   height: number | null;
   colors?: AssetColor[] | null;
+  responsiveImage?: ResponsiveImage | null;
 };
 
 export type AuthorSummaryRecord = {

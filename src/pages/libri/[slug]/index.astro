@@ -1,4 +1,5 @@
 ---
+import { Image } from '@datocms/astro/Image';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AlternateFormatsList from '~/components/AlternateFormatsList.astro';
 import DetailList from '~/components/DetailList.astro';
@@ -15,11 +16,13 @@ import {
   normalizeText,
 } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
+import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AssetImage, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
 const BOOK_DETAIL_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
   query BookDetailPage($slug: String) {
     book(filter: { slug: { eq: $slug } }) {
       id
@@ -42,8 +45,9 @@ const BOOK_DETAIL_QUERY = /* GraphQL */ `
       coverImage {
         url
         alt
-        width
-        height
+        responsiveImage(imgixParams: { fit: max, w: 960, auto: format }) {
+          ...ResponsiveImageFragment
+        }
       }
       authors {
         id
@@ -53,8 +57,9 @@ const BOOK_DETAIL_QUERY = /* GraphQL */ `
         picture {
           url
           alt
-          width
-          height
+          responsiveImage(imgixParams: { fit: crop, w: 640, h: 640, auto: format }) {
+            ...ResponsiveImageFragment
+          }
         }
       }
       license {
@@ -80,7 +85,6 @@ const BOOK_DETAIL_QUERY = /* GraphQL */ `
       layoutArtist
       dimensions
       illustrator
-      format
       seo: _seoMetaTags {
         tag
         attributes
@@ -435,9 +439,9 @@ if (dimensions) {
   graphicsDetails.push({ label: 'Dimensioni', value: dimensions });
 }
 
-const coverAlt = book.coverImage?.alt?.trim() || book.title;
-const coverWidth = book.coverImage?.width ?? 640;
-const coverHeight = book.coverImage?.height ?? Math.round(coverWidth * 1.5);
+const coverResponsiveImage = book.coverImage?.responsiveImage
+  ? { ...book.coverImage.responsiveImage, alt: book.coverImage.responsiveImage.alt ?? book.title }
+  : null;
 
 const fallbackDescription = toPlainText(book.promo ?? book.description);
 const seo = withFallbackSeo(book.seo, {
@@ -452,15 +456,11 @@ const seo = withFallbackSeo(book.seo, {
       <div class="overflow-hidden bg-white/95 shadow-soft">
         <div class="bg-brand-mist">
           {
-            book.coverImage?.url ? (
-              <img
-                src={`${book.coverImage.url}?auto=compress&fit=max&w=960`}
-                alt={coverAlt}
-                width={coverWidth}
-                height={coverHeight}
-                loading="lazy"
+            coverResponsiveImage ? (
+              <Image
+                data={coverResponsiveImage}
                 sizes="(min-width: 1024px) 320px, 60vw"
-                class="h-auto w-full object-contain"
+                imgClass="h-auto w-full object-contain"
               />
             ) : (
               <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">
