@@ -86,3 +86,14 @@ export type SuppliersIndexRecord = {
   subtitle: string | null;
   seo: SeoMetaTag[] | null;
 };
+
+export type PageRecord = {
+  id: string;
+  title: string | null;
+  subtitle: string | null;
+  slug: string | null;
+  body: string | null;
+  label: string | null;
+  menu: boolean | null;
+  seo: SeoMetaTag[] | null;
+};
