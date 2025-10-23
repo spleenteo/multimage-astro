@@ -15,4 +15,7 @@ export default defineConfig({
     validateSecrets: true,
   },
   integrations: [tailwind()],
+  build: {
+    concurrency: 8, // Start here, then test 2, 6, 8
+  },
 });
