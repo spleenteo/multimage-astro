@@ -8,7 +8,7 @@ A headless CMS clearly separates the actual content from the display layer and t
 
 The headless CMS concept stems from the demands of the digital era and a business’s need to engage customers with personalized content via multiple channels at all stages of the customer journey.
 
-As the content in a headless CMS is considered *pure* (because it has no presentation layer attached), just one instance of it can be used for display on any device: websites (both desktop and mobile), apps, smartwatches, digital signage, Internet of Things devices, etc.
+As the content in a headless CMS is considered _pure_ (because it has no presentation layer attached), just one instance of it can be used for display on any device: websites (both desktop and mobile), apps, smartwatches, digital signage, Internet of Things devices, etc.
 
 To learn more, you can read our [Introduction to Headless CMS](https://www.datocms.com/academy/headless-cms/introduction-to-headless-cms.md) over at the DatoCMS academy.
 
@@ -16,10 +16,8 @@ To learn more, you can read our [Introduction to Headless CMS](https://www.datoc
 
 DatoCMS provides a content infrastructure that comprises different APIs for working with your content. Each of these APIs serves a different purpose, so which one to use depends on what you want to do:
 
--   To obtain content for presentation to users on a website or app, it is recommended that you utilize either the [Content Delivery API](/docs/content-delivery-api.md) or the [Real-time Updates API](/docs/real-time-updates-api.md). The latter is preferable if you require dynamic content that can be updated in real-time, delivering events as they happen.
-    
--   If you want to programmatically create or update content items, or make any other change to your project/schema, use the [Content Management API](/docs/content-management-api.md).
-    
+- To obtain content for presentation to users on a website or app, it is recommended that you utilize either the [Content Delivery API](/docs/content-delivery-api.md) or the [Real-time Updates API](/docs/real-time-updates-api.md). The latter is preferable if you require dynamic content that can be updated in real-time, delivering events as they happen.
+- If you want to programmatically create or update content items, or make any other change to your project/schema, use the [Content Management API](/docs/content-management-api.md).
 
 #### One account, multiple projects
 
@@ -93,7 +91,7 @@ You will also become the first owner of the newly created organization.
 
 > [!PROTIP] Pro tip: Customize your CMS domain
 > To help your editors find the CMS URL or to provide a more white-labeled solution, you can **customize the URL of your project’s CMS**.
-> 
+>
 > To do so, first ensure that the CNAME record of your chosen domain points to admin.datocms.com. Then, go to your dashboard, click on your project, and select “Add custom domain” in the Custom domain section.
 
 ## Organization members
@@ -112,19 +110,19 @@ DatoCMS currently offers two roles for your organization members. Let's review t
 The table below summarizes the available authorizations for each role:
 
 | Permission | Owner | Viewer |
-| --- | --- | --- |
+| ---------- | ----- | ------ |
 
 | Read-only access to everything | ✅ | ✅ |
-| Enter all projects with full proviledges | ✅ |  |
-| Create/edit/delete projects | ✅ |  |
-| Transfer projects | ✅ |  |
-| Manage members/roles | ✅ |  |
-| Manage plan and billing | ✅ |  |
-| Rename/delete organization | ✅ |  |
+| Enter all projects with full proviledges | ✅ | |
+| Create/edit/delete projects | ✅ | |
+| Transfer projects | ✅ | |
+| Manage members/roles | ✅ | |
+| Manage plan and billing | ✅ | |
+| Rename/delete organization | ✅ | |
 
 ### Organizational email notifications
 
-Organization **owners** will also receive email notifications for important events, like account payment issues and subscription deactivations/reactivations. Org **viewers** and project **collaborators** will *not* receive these emails.
+Organization **owners** will also receive email notifications for important events, like account payment issues and subscription deactivations/reactivations. Org **viewers** and project **collaborators** will _not_ receive these emails.
 
 Please see details at: [Payment failures and billing notifications](/docs/plans-pricing-and-billing/payment-failures-and-billing-notifications.md)
 
@@ -145,17 +143,13 @@ Let's recap the ways in which one can enter a DatoCMS project.
 
 ##### If the project is inside a personal account
 
--   The owner account always enters the project with full privileges.
-    
--   Accounts invited as [collaborators](/docs/general-concepts/roles-and-permission-system.md) within the project enter with the permissions of the specific role they have been given.
-    
+- The owner account always enters the project with full privileges.
+- Accounts invited as [collaborators](/docs/general-concepts/roles-and-permission-system.md) within the project enter with the permissions of the specific role they have been given.
 
 ##### If the project is inside an organization
 
--   Members of the organization with the Owner role enter the project with full privileges.
-    
--   Accounts invited as [collaborators](/docs/general-concepts/roles-and-permission-system.md) within the project, enter with the permissions of the specific role they have been assigned.
-    
+- Members of the organization with the Owner role enter the project with full privileges.
+- Accounts invited as [collaborators](/docs/general-concepts/roles-and-permission-system.md) within the project, enter with the permissions of the specific role they have been assigned.
 
 > [!WARNING] Collaborators take precedence over organization memberships
 > Within an organization, there is a further possibility worth emphasizing: if a member of the organization has also been invited as a collaborator, **the role as collaborator takes precedence**: they do not enter with full privileges, but with the permissions of the specific role they have been assigned as collaborator.
@@ -172,7 +166,7 @@ To leave an organization, select the organization from the scope selector, then 
 
 > [!WARNING] At least one member must be owner!
 > You can't leave an organization if you are the last remaining owner. To leave an organization, first assign the owner role to at least one organization member.
-> 
+>
 > If you are the only remaining member, you should delete the team instead.
 
 ### Losing Access to Your Two-Factor Authentication
@@ -182,9 +176,7 @@ If you find yourself unable to access your account due to issues with two-factor
 You have two options:
 
 1.  Locate your One-Time Password (OTP) backup codes that were provided at the time you set up 2FA. These codes can be used in place of the 2FA code to log into your account.
-    
 2.  If you have lost your OTP backup codes as well, or have used them all, please [contact our support team](https://www.datocms.com/support.md?topics=account-access/account-login-and-recovery) for assistance.
-    
 
 #### Asking your organization owners for a 2FA reset
 
@@ -218,10 +210,8 @@ The permissions given to a collaborator is managed separately and independently 
 
 Every DatoCMS project is automatically populated with the following roles, but you are free to create as many roles as you want, and assign them both to collaborators and API tokens:
 
--   **Admin:** Can do everything, including work with records, create and update models, configure project settings and work with API keys.
-    
--   **Editor:** Can work with records, does not have access to models, API keys or project settings.
-    
+- **Admin:** Can do everything, including work with records, create and update models, configure project settings and work with API keys.
+- **Editor:** Can work with records, does not have access to models, API keys or project settings.
 
 For each role, you can specify what the user is allowed and not allowed to do.
 
@@ -229,31 +219,22 @@ For each role, you can specify what the user is allowed and not allowed to do.
 
 Roles can grant/deny the ability to access and configure the project's administrative settings, including:
 
--   Models, fields and navigation bar;
-    
--   Project's languages, deployment, time zones and SSO settings;
-    
--   Roles and invite/remove collaborators;
-    
--   Webhooks;
-    
--   API tokens;
-    
--   Shared filters.
-    
+- Models, fields and navigation bar;
+- Project's languages, deployment, time zones and SSO settings;
+- Roles and invite/remove collaborators;
+- Webhooks;
+- API tokens;
+- Shared filters.
 
 [(Image content)](https://www.datocms-assets.com/205/1712593686-screenshot-2024-04-08-at-18-27-47.png?auto=format&fit=max&w=2000)
 
 ### Control access to environments
 
-Roles specify *access-level permissions* to [environments](/docs/general-concepts/primary-and-sandbox-environments.md). You can allow users to access:
+Roles specify _access-level permissions_ to [environments](/docs/general-concepts/primary-and-sandbox-environments.md). You can allow users to access:
 
--   All environments (useful for developers)
-    
--   Only the primary environment (useful for content editors)
-    
--   Only the sandbox environments (mostly useful for API tokens used in CI systems)
-    
+- All environments (useful for developers)
+- Only the primary environment (useful for content editors)
+- Only the sandbox environments (mostly useful for API tokens used in CI systems)
 
 [(Image content)](https://www.datocms-assets.com/205/1712593743-screenshot-2024-04-08-at-18-28-38.png?auto=format&fit=max&w=2000)
 
@@ -265,28 +246,19 @@ In other words, the permission to access the environments takes precedence over 
 
 For each environment, you can specify different permissions on actions that can be performed on records. Rules can be additive or subtractive, and are defined by:
 
--   **The action:**
-    
-    -   View
-        
-    -   Create/duplicate
-        
-    -   Edit
-        
-    -   Publish/unpublish
-        
-    -   Delete
-        
-    -   Take over
-        
-    -   Move to stage (for [workflows](/docs/general-concepts/workflows.md))
-        
--   **The model:** i.e., it's possible to give full access (everything allowed) to the model `meal`, but give zero access (can't even read) to the model `drink`.
-    
--   **The creator:** i.e., it's possible to edit only the content which the user has created themselves (or users with its same role), and deny opening content created by other users.
-    
+- **The action:**
+  - View
+  - Create/duplicate
+  - Edit
+  - Publish/unpublish
+  - Delete
+  - Take over
+  - Move to stage (for [workflows](/docs/general-concepts/workflows.md))
 
-The most important aspect is that **everything which is not explicitly allowed is denied**. Here's an example: if you've granted a user the permission to edit some records, you also need to give them permissions to *view* them, or they won't be able to open the record and make the changes.
+- **The model:** i.e., it's possible to give full access (everything allowed) to the model `meal`, but give zero access (can't even read) to the model `drink`.
+- **The creator:** i.e., it's possible to edit only the content which the user has created themselves (or users with its same role), and deny opening content created by other users.
+
+The most important aspect is that **everything which is not explicitly allowed is denied**. Here's an example: if you've granted a user the permission to edit some records, you also need to give them permissions to _view_ them, or they won't be able to open the record and make the changes.
 
 Even though it might feel counter-intuitive, this way of handling access rights helps to prevent unsolicited access: when you set up everything explicitly, there is no chance of accidentally giving someone access to something they shouldn't have.
 
@@ -312,33 +284,23 @@ When [forking an environment](/docs/general-concepts/primary-and-sandbox-environ
 
 Together with the actions that you can perform on the records, similarly you can apply the following permissions on assets:
 
--   **The action:**
-    
-    -   View
-        
-    -   Create/duplicate
-        
-    -   Edit metadata/replace asset
-        
-    -   Delete
-        
-    -   Edit creator
-        
--   **The creator:** i.e., it's possible to edit only the assets which the user has created themselves (or users with its same role), and deny using assets created by other users.
-    
+- **The action:**
+  - View
+  - Create/duplicate
+  - Edit metadata/replace asset
+  - Delete
+  - Edit creator
+
+- **The creator:** i.e., it's possible to edit only the assets which the user has created themselves (or users with its same role), and deny using assets created by other users.
 
 ## Putting everything together with an example
 
 To better exemplify, let’s consider a project that:
 
--   has only one environment (the primary one), and
-    
--   has a *Blog Editor* role that:
-    
-    -   **Access-level permission:** only gives access to the primary environment, and...
-        
-    -   **Content-level permission**: …only allows to manage records of type `article`.
-        
+- has only one environment (the primary one), and
+- has a _Blog Editor_ role that:
+  - **Access-level permission:** only gives access to the primary environment, and...
+  - **Content-level permission**: …only allows to manage records of type `article`.
 
 If I fork the primary environment to a new one called `foobar`, the content-level permissions get duplicated (that is, blog editors can only manage records of type `article` also inside the `foobar` environment). **But** **they will only be able to do so when the** **`foobar`** **environment gets promoted to primary**, since the access-level permission doesn't give them access to sandbox environments.
 
@@ -502,16 +464,12 @@ You can decide to activate the draft/published system on a per-model basis:
 
 If you do so:
 
--   When you create a new record, it will be put into a *Draft* status. This means that the record is still not published: you can continue making changes and saving the record without having to worry about showing unfinished content to your end users.
-    
--   Once you're satisfied with the changes, you can click on the *Publish* button: the latest revision of your record will be marked as the *Published version*, and it will be instantly available in the DatoCMS APIs:
-    
-    -   With the [Content Delivery API](/docs/content-delivery-api.md) and the [Realtime Updates API](/docs/real-time-updates-api.md), the default is to return only the published record, but you can request to consider the draft with the header [`X-Include-Drafts: true`](/docs/content-delivery-api/api-endpoints.md#preview-mode-to-retrieve-draft-contenthttps://www.datocms.com/docs/content-delivery-api/api-endpoints#preview-mode-to-retrieve-draft-content).
-        
-    -   With the [Content Management API](/docs/content-management-api.md), you can request to consider the published or draft versions of records with the parameter [`?version=current`](/docs/content-management-api/resources/item/instances.md) or [`?version=published`](/docs/content-management-api/resources/item/instances.md).
-        
--   If you make a change to a published record, its status will be become **Updated**. Again, those changes won't be visible to end users and published until you explicitly click on the *Publish* button again.
-    
+- When you create a new record, it will be put into a _Draft_ status. This means that the record is still not published: you can continue making changes and saving the record without having to worry about showing unfinished content to your end users.
+- Once you're satisfied with the changes, you can click on the _Publish_ button: the latest revision of your record will be marked as the _Published version_, and it will be instantly available in the DatoCMS APIs:
+  - With the [Content Delivery API](/docs/content-delivery-api.md) and the [Realtime Updates API](/docs/real-time-updates-api.md), the default is to return only the published record, but you can request to consider the draft with the header [`X-Include-Drafts: true`](/docs/content-delivery-api/api-endpoints.md#preview-mode-to-retrieve-draft-contenthttps://www.datocms.com/docs/content-delivery-api/api-endpoints#preview-mode-to-retrieve-draft-content).
+  - With the [Content Management API](/docs/content-management-api.md), you can request to consider the published or draft versions of records with the parameter [`?version=current`](/docs/content-management-api/resources/item/instances.md) or [`?version=published`](/docs/content-management-api/resources/item/instances.md).
+
+- If you make a change to a published record, its status will be become **Updated**. Again, those changes won't be visible to end users and published until you explicitly click on the _Publish_ button again.
 
 > [!POSITIVE]
 > For more information on how the system manages the draft/published status, you can refer to this in-depth guide: [Data consistency: key concepts and implications](/docs/content-modelling/data-migration.md).
@@ -604,7 +562,7 @@ You can efficiently tag assets using the bulk tagging feature:
 
 (Image content)
 
-DatoCMS also has *asset collections*, in addition to tags. You can create multiple collections, organize them in a tree structure, very much like folders on a classical file system. There are two main rules: each asset can only be assigned to one collection, and you can always view all assets by clicking on "All assets."
+DatoCMS also has _asset collections_, in addition to tags. You can create multiple collections, organize them in a tree structure, very much like folders on a classical file system. There are two main rules: each asset can only be assigned to one collection, and you can always view all assets by clicking on "All assets."
 
 To create collections and nested sub-collections, simply utilize the sidebar as you would with content views.
 
@@ -662,14 +620,10 @@ When an asset is uploaded to your media area, you immediately get access to a di
 
 To understand how that URL is formatted, we first need to understand how the file name is formatted after upload:
 
--   Underscores or dashes at the beginning or end of the file name are removed
-    
--   Character accents are removed
-    
--   All non-alphanumeric characters, except for underscores "\_", are replaced by dashes "-"
-    
--   If the file has a wrong or invalid extension in its name, it is replaced by the one matching the file type
-    
+- Underscores or dashes at the beginning or end of the file name are removed
+- Character accents are removed
+- All non-alphanumeric characters, except for underscores "\_", are replaced by dashes "-"
+- If the file has a wrong or invalid extension in its name, it is replaced by the one matching the file type
 
 The URL then is created using the project ID, an upload timestamp, and the newly formatted file name:
 
@@ -713,7 +667,7 @@ Play video »
 
 # Localization
 
-Each administrative area in DatoCMS supports multiple locales, which are defined by the short ISO locale codes (i.e. `en` or `de`). You can add or remove locales within the *Admin area > Site settings* section:
+Each administrative area in DatoCMS supports multiple locales, which are defined by the short ISO locale codes (i.e. `en` or `de`). You can add or remove locales within the _Admin area > Site settings_ section:
 
 (Video content)
 
@@ -740,7 +694,7 @@ You can configure a certain model so that your editors are not forced to insert 
 
 This allows use cases such as multi-language blogs, where some articles can be written only in English, other only in Italian and others in both languages.
 
-To require all locales to be always present on every record of a specific model, you can check the *All locales required?* option in your model settings:
+To require all locales to be always present on every record of a specific model, you can check the _All locales required?_ option in your model settings:
 
 (Video content)
 
@@ -886,19 +840,14 @@ Using our [roles and permissions system](/docs/general-concepts/roles-and-permis
 
 **Workflows are completely custom**: you are free to tailor the stages you need with no limits, following your organization's natural processes. For this example, we'll create a new workflow with three stages:
 
--   **Writing**
-    
--   **In review**
-    
--   **Approved**
-    
+- **Writing**
+- **In review**
+- **Approved**
 
 For this workflow, we also want to enforce the following simple rules:
 
--   **Creators** work on the content in the *Writing* stage. When they're done, they move articles to the *In review* stage, so that..
-    
--   **Editors** can either reject or approve them, moving them back to *Writing* or forward to *Approved* stage;
-    
+- **Creators** work on the content in the _Writing_ stage. When they're done, they move articles to the _In review_ stage, so that..
+- **Editors** can either reject or approve them, moving them back to _Writing_ or forward to _Approved_ stage;
 
 The first step is actually creating the workflow itself. Go to **Configuration > Workflows**, and create the following workflow:
 
@@ -942,14 +891,10 @@ If you need to know when data has changed in one of your projects, you can creat
 
 For example, you might use webhooks as the basis to:
 
--   Integrate/sync DatoCMS data with third-party systems (Snipcart, Shopify, Algolia, etc.);
-    
--   Get Slack/email notifications;
-    
--   Automatically post an update on Facebook/Twitter;
-    
--   Produce an automatic deploy on your staging environment;
-    
+- Integrate/sync DatoCMS data with third-party systems (Snipcart, Shopify, Algolia, etc.);
+- Get Slack/email notifications;
+- Automatically post an update on Facebook/Twitter;
+- Produce an automatic deploy on your staging environment;
 
 You can connect DatoCMS webhooks to any endpoint you like — for example, some custom AWS lambda function.
 
@@ -958,7 +903,7 @@ You can connect DatoCMS webhooks to any endpoint you like — for example, some 
 
 ## Setting up a webhook
 
-You can set up a new webhook under the *Project Settings > Webhooks* section of your administrative area. You can enter any URL as the destination for calls, add HTTP basic authentication and custom HTTP headers:
+You can set up a new webhook under the _Project Settings > Webhooks_ section of your administrative area. You can enter any URL as the destination for calls, add HTTP basic authentication and custom HTTP headers:
 
 [(Image content)](https://www.datocms-assets.com/205/1725965489-screenshot-2024-09-10-alle-12-50-20.png?auto=format&fit=max&w=2000)
 
@@ -973,15 +918,15 @@ Webhook triggers let you specify under which circumstances an HTTP call will be 
 You can add as many triggers as you want to a single webhook. DatoCMS supports events for the following objects:
 
 | Entity | Available events | Additional notes |
-| --- | --- | --- |
+| ------ | ---------------- | ---------------- |
 
-| Record | `create`, `update`, `delete`, `publish`, `unpublish` | You can trigger the webhook only for specific records or records belonging to specific models.  
-  
+| Record | `create`, `update`, `delete`, `publish`, `unpublish` | You can trigger the webhook only for specific records or records belonging to specific models.
+
 See the "Record Lifecycle Events" section for details. |
 | Model | `create`, `update`, `delete`, | You can trigger the webhook only for specific models. Changes made to a model's field will trigger a call as well. |
-| Upload | `create`, `update`, `delete` |  |
-| Build trigger | `deploy_started`, `deploy_succeeded`, `deploy_failed` |  |
-| Environment | `deploy_started`, `deploy_succeeded`, `deploy_failed` |  |
+| Upload | `create`, `update`, `delete` | |
+| Build trigger | `deploy_started`, `deploy_succeeded`, `deploy_failed` | |
+| Environment | `deploy_started`, `deploy_succeeded`, `deploy_failed` | |
 | Maintenance Mode | `change` | Triggers whenever an admin activates or deactivates the maintenance mode. |
 | SSO User | `create` | Triggers when an SSO User is added to a project as a collaborator. |
 | CDA Cache Tags | `invalidate` | Triggers when CDA Cache Tags need to be invalidated. |
@@ -995,7 +940,7 @@ DatoCMS will perform an HTTP POST request towards the specified endpoint. The HT
 The body will contain the following information:
 
 | Payload property | Description |
-| --- | --- |
+| ---------------- | ----------- |
 
 | `site_id` | ID of the project where the event occurred. |
 | `webhook_id` | ID of the webhook that triggered the delivery. |
@@ -1004,13 +949,13 @@ The body will contain the following information:
 | `webhook_call_id` | ID of the specific webhook event that triggered. |
 | `event_triggered_at` | Date when the event originally occurred. |
 | `attempted_auto_retries_count` | If auto-retry is on for the webhook, this field displays the number of the current attempt. |
-| `entity_type` | The type of entity that triggered the webhook (ie. item, item\_type...) |
+| `entity_type` | The type of entity that triggered the webhook (ie. item, item_type...) |
 | `event_type` | The type of event that triggered the webhook (i.e.: create, update, delete...) |
 | `entity` | The full payload of the entity serialized according to our Content Management API schema. |
 | `previous_entity` | Only present if the event type is "Record > Update". It represents the serialized record BEFORE the update (useful to know what changed). |
 | `related_entities` | An array containing all serialized entities specified in the entity's relationships. |
 
-As an example, in the case of a *Record > Update* event, you can access the record state both before the update operation (`previous_entity`) and after (`entity`), making it easier to make a diff and see exactly what fields in the record changed:
+As an example, in the case of a _Record > Update_ event, you can access the record state both before the update operation (`previous_entity`) and after (`entity`), making it easier to make a diff and see exactly what fields in the record changed:
 
 ```json
 {
@@ -1098,7 +1043,7 @@ As an example, in the case of a *Record > Update* event, you can access the reco
 
 ### Customize the URL or HTTP payload
 
-If you want, you can also customize the HTTP body of the outgoing requests. To do that, hit the *Send a custom payload?* switch and provide the new payload.
+If you want, you can also customize the HTTP body of the outgoing requests. To do that, hit the _Send a custom payload?_ switch and provide the new payload.
 
 You can use the [Mustache language](https://mustache.github.io/) to make the payload dynamic. The original payload we would send is used as source for the template. You can experiment with the Mustache language in their [sandbox](https://mustache.github.io/#demo), or read their [docs](https://mustache.github.io/mustache.5.html).
 
@@ -1133,7 +1078,7 @@ Optionally, you can activate the **Automatic Retry** option in your webhook sett
 Each retry will use the most recent webhook settings, and the retry schedule is as follows:
 
 | Retry | Time |
-| --- | --- |
+| ----- | ---- |
 
 | 1 | 2 minutes after the failure |
 | 2 | 6 minutes after the previous retry |
@@ -1148,7 +1093,7 @@ Each retry will use the most recent webhook settings, and the retry schedule is 
 Webhook calls can have different statuses to indicate the outcome of the delivery attempt:
 
 | Status | Description |
-| --- | --- |
+| ------ | ----------- |
 
 | Pending | The webhook call is currently being executed. |
 | Success | The webhook call was successfully delivered to the specified endpoint, and the server responded with an HTTP status code in the 2xx range. |
@@ -1157,7 +1102,7 @@ Webhook calls can have different statuses to indicate the outcome of the deliver
 
 ## Debug and keep track of webhooks activity
 
-You can browse webhook activity under the Project Settings > *Webhooks activity log* section of your project, or [using our API](/docs/content-management-api.md#webhook_call-0). In both cases, you can filter/order webhook calls to refine your search based on various criteria, such as status, type of event, date, etc:
+You can browse webhook activity under the Project Settings > _Webhooks activity log_ section of your project, or [using our API](/docs/content-management-api.md#webhook_call-0). In both cases, you can filter/order webhook calls to refine your search based on various criteria, such as status, type of event, date, etc:
 
 [(Image content)](https://www.datocms-assets.com/205/1725965994-screenshot-2024-09-10-alle-12-57-59.png?auto=format&fit=max&w=2000)
 
@@ -1169,27 +1114,23 @@ At any time you have the option to resend a webhook manually. To do so, click on
 
 When you choose to manually resend a webhook call, the system will repeat the exact same call with the updated webhook settings. If auto-retries are enabled:
 
--   a successful manual resend will stop further auto-retry attempts,
-    
--   a failed manual resend won't add to the count of automatic retries.
-    
+- a successful manual resend will stop further auto-retry attempts,
+- a failed manual resend won't add to the count of automatic retries.
 
 ## Webhook Timeouts
 
 DatoCMS enforces two timeout limits for webhook integrations:
 
--   **Connection Timeout: 2 seconds**  
-    This is the maximum time allowed to establish the initial connection to the webhook's HTTP server.
-    
--   **Total Execution Timeout: 8 seconds**  
-    This is the maximum time allowed for the entire webhook process to complete.
-    
+- **Connection Timeout: 2 seconds**  
+  This is the maximum time allowed to establish the initial connection to the webhook's HTTP server.
+- **Total Execution Timeout: 8 seconds**  
+  This is the maximum time allowed for the entire webhook process to complete.
 
 If your service exceeds either of these timeouts, DatoCMS will terminate the connection. The delivery attempt will then be marked as either Failed — or Rescheduled, if Automatic Retries are enabled.
 
 > [!PROTIP] Pro tip: Prefer asynchronous over synchronous
 > Due to the unpredictable nature of service completion times, it's recommended to handle the bulk of your processing in background jobs. This approach helps manage DatoCMS's timeout constraints effectively. Consider using job queue libraries such as Resque (Ruby), RQ (Python), or RabbitMQ (Java).
-> 
+>
 > The pattern we suggest is to perform the initial validation checks of the payload quickly and synchronously before starting the background jobs. This allows you to potentially respond with a status code other than `2XX` to the webhook, thereby notifying DatoCMS of the issue.
 
 ### Webhook events for record lifecycle changes
@@ -1199,14 +1140,14 @@ This section clarifies how webhooks are fired on record lifecycle changes (such 
 ##### With draft/publish system enabled
 
 | When a record is... | These events will be sent | `entity.meta.status` |
-| --- | --- | --- |
+| ------------------- | ------------------------- | -------------------- |
 
 | Saved for the first time | `create` | `draft` |
 | Modified & saved again without publishing | `update` | `draft` |
 | Published | `publish` | `published` |
 | Modified & saved after publishing | `update` | `updated` |
-| Selectively published  
-  
+| Selectively published
+
 (e.g., one locale gets selectively published, but there is still saved-but-unpublished data in other locales) | `publish` | `updated` |
 | Scheduled to publish / unpublish | `update` | `updated` |
 | Unpublished | `unpublish` | `draft` |
@@ -1221,7 +1162,7 @@ When draft/publish system is **disabled** on a model, the `publish` and `unpubli
 This will result in multiple events sent for each user action on a record, with the benefit of having a uniform way to listen for record changes via webhooks, regardless of the model draft/pub preference:
 
 | When a record is... | These events will be sent | `entity.meta.status` |
-| --- | --- | --- |
+| ------------------- | ------------------------- | -------------------- |
 
 | Saved for the first time | `create`  
 `publish` | `published` |
@@ -1242,14 +1183,10 @@ A better question is — what do you want to achieve with plugins? Using plugins
 
 Some common use cases are:
 
--   Adding custom field editors to improve the editor experience;
-    
--   Managing content versions for running A/B tests on structured content using personalization tools;
-    
--   Customizing the default entry editor to suit your specific needs;
-    
--   Seamlessly integrating DatoCMS with third-party software and services;
-    
+- Adding custom field editors to improve the editor experience;
+- Managing content versions for running A/B tests on structured content using personalization tools;
+- Customizing the default entry editor to suit your specific needs;
+- Seamlessly integrating DatoCMS with third-party software and services;
 
 ### Managing and distributing Plugins
 
@@ -1267,7 +1204,7 @@ More than 100 plugins are already available on the Marketplace, and can be insta
 
 To install a new plugin for your project, go to **Configuration > Plugins** and click on **Add a new plugin**.
 
-This action will open the **Plugin Marketplace** directly within your DatoCMS backend, allowing you to browse all available community plugins. You can filter by categories such as *Most Popular*, *Recently Released*, or use the search bar to find plugins by keyword.
+This action will open the **Plugin Marketplace** directly within your DatoCMS backend, allowing you to browse all available community plugins. You can filter by categories such as _Most Popular_, _Recently Released_, or use the search bar to find plugins by keyword.
 
 When you find a plugin you’d like to use, click on its card to open the details page. Here, you’ll see a description, metadata, and other relevant information about the plugin. Simply click the **Install** button to add it to your project.
 
@@ -1311,23 +1248,16 @@ DatoCMS Site Search is a way to **deliver tailored search results to your websit
 
 There are many third-party services out there that fill this need (like [SwiftType](https://swiftype.com/), [Algolia](https://www.algolia.com/), and [Cludo](https://www.cludo.com/)). Our solution seeks to be a great option for plenty of websites:
 
--   Extremely easy to integrate with your static website
-    
--   Completely customizable in terms of look & feel
-    
--   Minimal configuration needed
-    
--   Handles multilingual websites nicely
-    
--   included in the price of DatoCMS with no additional charges
-    
+- Extremely easy to integrate with your static website
+- Completely customizable in terms of look & feel
+- Minimal configuration needed
+- Handles multilingual websites nicely
+- included in the price of DatoCMS with no additional charges
 
 #### How it works
 
--   Every time your website finishes being deployed, **we'll crawl it to fetch updated content.**
-    
--   From your frontend, you can [**make AJAX requests to our Content Management API**](/docs/site-search/base-integration.md#performing-searches) **to present relevant results to your visitors**. We also provide [**React**](/docs/site-search/widget.md) **and** [**Vue**](/docs/site-search/vue-search-widget.md) **search widgets** that simplify the process.
-    
+- Every time your website finishes being deployed, **we'll crawl it to fetch updated content.**
+- From your frontend, you can [**make AJAX requests to our Content Management API**](/docs/site-search/base-integration.md#performing-searches) **to present relevant results to your visitors**. We also provide [**React**](/docs/site-search/widget.md) **and** [**Vue**](/docs/site-search/vue-search-widget.md) **search widgets** that simplify the process.
 
 > [!PROTIP] Pro tip: Integrating Algolia and DatoCMS
 > If you prefer to integrate a search provider like Algolia, [this guide](https://www.datocms.com/blog/algolia-nextjs-how-to-add-algolia-instantsearch.md) demonstrates setting up a Next.js project, configuring Algolia, and creating custom search components. While the guide focuses on Algolia Intellisearch, the process for setting up other third-party services like Meilisearch, Typesense, or ElasticSearch should be relatively similar.
@@ -1346,7 +1276,7 @@ In this guide you will learn how to make a project public and how to create and 
 
 ## Turn a project into a public template
 
-Since projects might contain sensitive information they are all private by default. To make a project public, head to the project main page in the DatoCMS dashboard and switch on the **Public template** project option in the *Danger Zone* section.
+Since projects might contain sensitive information they are all private by default. To make a project public, head to the project main page in the DatoCMS dashboard and switch on the **Public template** project option in the _Danger Zone_ section.
 
 **Important**: From now on anyone will be able to clone the project, so make sure it doesn't contain any sensitive information!
 
@@ -1354,10 +1284,8 @@ Since projects might contain sensitive information they are all private by defau
 
 Once you've set your project to be a public template, you can then generate:
 
--   A "Clone project" button to perform a complete clone of an existing DatoCMS project, or
-    
--   A "Project starter" button, to clone a project AND deploy a frontend capable of reading the content coming from the project itself.
-    
+- A "Clone project" button to perform a complete clone of an existing DatoCMS project, or
+- A "Project starter" button, to clone a project AND deploy a frontend capable of reading the content coming from the project itself.
 
 ## Generate a "Clone project" button
 
@@ -1369,9 +1297,9 @@ The "Clone project" dialog
 
 Use the form below to generate a ready-to-use clone button (the project ID can be retrieved [inside the details page of the project](/docs/general-concepts/project-starters-and-templates.md#project-id)):
 
-Project ID \* 
+Project ID \*
 
-Project Name \* 
+Project Name \*
 
 Use the following code to share the button on your README file or documentation:
 
@@ -1390,11 +1318,8 @@ Use the following code to share the button on your README file or documentation:
 Most of the time, a DatoCMS project is associated with a frontend project (website, application, etc.) that knows how to query for its content, and renders the result in a pleasant way to users. The "Project starter" button helps users deploy new sites from templates with one single click, performing the following actions for them:
 
 1.  Clone a DatoCMS template project and put the copy inside the user account;
-    
 2.  Fork a Git repository containing the frontend project inside the Github account of the user;
-    
 3.  Build and publish the frontend online using a free hosting solution (Netlify, Vercel, Heroku, etc.)
-    
 
 Check out our [Marketplace](https://www.datocms.com/marketplace/starters.md) to see a fine selection of Project Starters.
 
@@ -1425,12 +1350,12 @@ How the project can be built and deployed?Please select one...Simply make a copy
 Copy the following code and add it to your Git repository in a file called `datocms.json`:
 
 {
-  "name": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
-  "description": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
-  "previewImage": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
-  "datocmsProjectId": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
-  "deploymentType": "copyRepo",
-  "environmentVariables": {}
+"name": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
+"description": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
+"previewImage": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
+"datocmsProjectId": "THIS FIELD IS MANDATORY. PLEASE PROVIDE A VALUE!",
+"deploymentType": "copyRepo",
+"environmentVariables": {}
 }
 
 Use the following code to share the button on your README file or documentation:
@@ -1453,14 +1378,10 @@ The `deploymentType` setting allows you to configure what deployment target can 
 
 Additionally, DatoCMS supports the following deployment types:
 
--   `vercel`
-    
--   `netlify`
-    
--   `static` (user can choose between Vercel and Netlify)
-    
--   `heroku`
-    
+- `vercel`
+- `netlify`
+- `static` (user can choose between Vercel and Netlify)
+- `heroku`
 
 When one of these is chosen, users will be asked to authenticate on the service and therefore they need an active and valid account. Once authorized, the DatoCMS integration will deploy the template repository to the service.
 
@@ -1472,12 +1393,9 @@ When the deployment type is either `static`, `vercel`, `netlify` or `heroku`, yo
 
 When the deployment type is either `static`, `vercel`, `netlify` or `heroku`, you can specify a number of environment variables that will be configured on the hosting platform, before building the actual frontend. The value of each environment variable can be either:
 
--   A custom string
-    
--   The URL of the cloned DatoCMS project (ie. `https://<YOUR_PROJECT>.admin.datocms.com/`)
-    
--   One of the DatoCMS API tokens present in the template project (you need to specify the name of the API token, ie. "Read-only API token")
-    
+- A custom string
+- The URL of the cloned DatoCMS project (ie. `https://<YOUR_PROJECT>.admin.datocms.com/`)
+- One of the DatoCMS API tokens present in the template project (you need to specify the name of the API token, ie. "Read-only API token")
 
 ##### Post-deploy install URL
 
@@ -1526,27 +1444,19 @@ Essentially, they are a set of webhooks that you can manually trigger to launch 
 
 We offer out-of-the-box integrations with all the most popular solutions out there (most of them have a free plan available):
 
--   [Netlify](https://www.datocms.com/marketplace/hosting/netlify.md)
-    
--   [Vercel](https://www.datocms.com/marketplace/hosting/vercel.md)
-    
--   [Travis CI](https://www.datocms.com/marketplace/hosting/travis-ci.md)
-    
--   [Gitlab CI](https://www.datocms.com/marketplace/hosting/gitlab.md)
-    
--   [CircleCI](https://www.datocms.com/marketplace/hosting/circleci.md)
-    
+- [Netlify](https://www.datocms.com/marketplace/hosting/netlify.md)
+- [Vercel](https://www.datocms.com/marketplace/hosting/vercel.md)
+- [Travis CI](https://www.datocms.com/marketplace/hosting/travis-ci.md)
+- [Gitlab CI](https://www.datocms.com/marketplace/hosting/gitlab.md)
+- [CircleCI](https://www.datocms.com/marketplace/hosting/circleci.md)
 
 If you need to use another CI tool, we also offer a [custom webhook](https://www.datocms.com/marketplace/hosting/custom-webhook.md) that you can use to connect DatoCMS to your custom deployment solution.
 
 Regardless of the external service that you intend to use, your CI build script needs to perform three steps:
 
--   Run the `dato dump` command to fetch all the DatoCMS content and transform it into local files. Alternatively, you can fetch content using the [GraphQL CDA](/docs/content-delivery-api.md);
-    
--   Run the build command of your static website generator to produce the actual static website (e.g., `jekyll build` for Jekyll);
-    
--   Upload the files of your static website to S3, or any other hosting solution you want to use.
-    
+- Run the `dato dump` command to fetch all the DatoCMS content and transform it into local files. Alternatively, you can fetch content using the [GraphQL CDA](/docs/content-delivery-api.md);
+- Run the build command of your static website generator to produce the actual static website (e.g., `jekyll build` for Jekyll);
+- Upload the files of your static website to S3, or any other hosting solution you want to use.
 
 Once everything is set up, in the top navigation bar of the DatoCMS interface, you will find a "**Publish changes"** button: your editors will be able to request a new publication of the static website whenever they like.
 
@@ -1578,24 +1488,18 @@ Sandbox environments start out as **exact copies of one of the existing environm
 
 Each environment is identified by a name (e.g., `master`) and stores the following information:
 
--   Models
-    
--   Records
-    
--   Uploads
-    
--   Plugins
-    
--   The content navigation bar
-    
--   Configuration (locales, timezone settings, appearance, SEO preferences)
-    
+- Models
+- Records
+- Uploads
+- Plugins
+- The content navigation bar
+- Configuration (locales, timezone settings, appearance, SEO preferences)
 
 When making changes to any of the aforementioned entities in any environment, including the primary environment, **the data in all other environments remains unaffected**.
 
 ### Creating a new sandbox environment
 
-To manage all your project's environments, head over to the *Project Settings > Environments* section. To create a new sandbox starting from an existing environment, click on the contextual menu > **Fork**, and choose a name for the new environment.
+To manage all your project's environments, head over to the _Project Settings > Environments_ section. To create a new sandbox starting from an existing environment, click on the contextual menu > **Fork**, and choose a name for the new environment.
 
 (Video content)
 
@@ -1637,18 +1541,12 @@ On DatoCMS, usage quotas are tracked per account or per project. Let's see what 
 
 **Each account has quotas that are shared among all projects**. In particular, the shared resources are:
 
--   Records
-    
--   File storage
-    
--   API calls
-    
--   Bandwidth
-    
--   Video encoding
-    
--   Video streaming
-    
+- Records
+- File storage
+- API calls
+- Bandwidth
+- Video encoding
+- Video streaming
 
 These resources can be monitored from your dashboard, [in the plan details](https://dashboard.datocms.com/plan-billing), where you can monitor how your resources are used across different projects, so you can better understand which ones you should optimize, or which of your clients should be billed more for their usage.
 
@@ -1672,12 +1570,9 @@ The Audit Logs functionality is for monitoring audit events happening in an Ente
 
 The idea is to give Enterprise organization owners the ability to query user actions in a project. With Audit Logs, you can:
 
--   Automatically feed DatoCMS access data into a SIEM or other auditing tool
-    
--   Proactively monitor for potential security issues
-    
--   Write custom apps to gain insight into how your organization uses DatoCMS
-    
+- Automatically feed DatoCMS access data into a SIEM or other auditing tool
+- Proactively monitor for potential security issues
+- Write custom apps to gain insight into how your organization uses DatoCMS
 
 An audit log provides insight into audit events that are actually happening across a DatoCMS project, and is therefore read-only and immutable.
 
@@ -1697,44 +1592,28 @@ The way you define the kind of content you can edit inside each different admini
 
 Each administrative area can specify a number of different models, and they represent blueprints upon which users will store the website content. For example, a site can define different models for articles, products, categories, and so on.
 
-You can create new models in the *Settings > Models* section of your project:
+You can create new models in the _Settings > Models_ section of your project:
 
 [(Image content)](https://www.datocms-assets.com/205/1715001508-screenshot-2024-05-06-at-15-18-16.png?auto=format&fit=max&w=2000)
 
 Each model consists of a set of fields that you define. Fields can be one of the following:
 
--   **Single-line string**: Ideal for titles, headings, etc.
-    
--   **Multiple-paragraph text**: For simple Markdown, HTML or plain text.
-    
--   [**Modular content**](/docs/content-modelling/modular-content.md): To define dynamic layouts for ie. landing-pages and give the content writers the choice between different template options.
-    
--   [**Structured text**](/docs/content-modelling/structured-text.md): To store rich-text content, complete with images/videos/custom blocks using a portable JSON format.
-    
--   **Asset gallery**: To store one or more files (for sliders, carousels, etc.).
-    
--   **Single asset**: To store any kind of document (images, PDFs, ZIPs, videos, etc.).
-    
--   **Video**: To reference to an external YouTube/Vimeo video.
-    
--   **Date** and **DateTime**: A timestamp value for storing dates and times (i.e. an event start, office opening hours).
-    
--   **Integer** and **Floating-point number**: For storing integer SKUs, quantities, prices, etc.
-    
--   **Boolean**: For storing values that have two states, e.g., yes or no, true or false etc.
-    
--   **Geolocation**: Coordinate values for storing the latitude and longitude of a physical location.
-    
--   **Color**: For storing colors (with or without alpha channel).
-    
--   **SEO meta tags**: To manage a page meta title, meta description, OpenGraph cards, etc.
-    
--   [**Slug**](/docs/content-modelling/slug-permalinks.md): To generate a page permalink based on another textual field of the model.
-    
--   [**Single and multiple links**](/docs/content-modelling/links.md): To model relationships between content, including other models. For example, linking a blog to a category.
-    
--   **JSON**: For storing JSON objects.
-    
+- **Single-line string**: Ideal for titles, headings, etc.
+- **Multiple-paragraph text**: For simple Markdown, HTML or plain text.
+- [**Modular content**](/docs/content-modelling/modular-content.md): To define dynamic layouts for ie. landing-pages and give the content writers the choice between different template options.
+- [**Structured text**](/docs/content-modelling/structured-text.md): To store rich-text content, complete with images/videos/custom blocks using a portable JSON format.
+- **Asset gallery**: To store one or more files (for sliders, carousels, etc.).
+- **Single asset**: To store any kind of document (images, PDFs, ZIPs, videos, etc.).
+- **Video**: To reference to an external YouTube/Vimeo video.
+- **Date** and **DateTime**: A timestamp value for storing dates and times (i.e. an event start, office opening hours).
+- **Integer** and **Floating-point number**: For storing integer SKUs, quantities, prices, etc.
+- **Boolean**: For storing values that have two states, e.g., yes or no, true or false etc.
+- **Geolocation**: Coordinate values for storing the latitude and longitude of a physical location.
+- **Color**: For storing colors (with or without alpha channel).
+- **SEO meta tags**: To manage a page meta title, meta description, OpenGraph cards, etc.
+- [**Slug**](/docs/content-modelling/slug-permalinks.md): To generate a page permalink based on another textual field of the model.
+- [**Single and multiple links**](/docs/content-modelling/links.md): To model relationships between content, including other models. For example, linking a blog to a category.
+- **JSON**: For storing JSON objects.
 
 [(Image content)](https://www.datocms-assets.com/205/1715001535-screenshot-2024-05-06-at-15-18-46.png?auto=format&fit=max&w=2000)
 
@@ -1752,7 +1631,7 @@ Presentation tab in Field settings
 
 Fields in DatoCMS can also be [localized](/docs/general-concepts/localization.md), if you need to accept different values based on language.
 
-DatoCMS stores the individual pieces of content you create from a model as records, which are much like table rows in a database. You (and your editors) can create new records of a certain model within the *Content* tab of your administrative area:
+DatoCMS stores the individual pieces of content you create from a model as records, which are much like table rows in a database. You (and your editors) can create new records of a certain model within the _Content_ tab of your administrative area:
 
 [(Image content)](https://www.datocms-assets.com/205/1715001641-screenshot-2024-05-06-at-15-20-30.png?auto=format&fit=max&w=2000)
 
@@ -1794,13 +1673,13 @@ Play video »
 
 # Single instance models
 
-Real-world websites have often pages which don't resemble any other (eg. the *About us* page, or even the homepage).
+Real-world websites have often pages which don't resemble any other (eg. the _About us_ page, or even the homepage).
 
 If you want to allow the editors to change their content, you can create a Single-instance model:
 
 [(Image content)](https://www.datocms-assets.com/205/1715001694-screenshot-2024-05-06-at-15-21-28.png?auto=format&fit=max&w=2000)
 
-While *collection* models enable the creation of multiple records, *single-instance* models allow just a single item to be edited in the administrative area.
+While _collection_ models enable the creation of multiple records, _single-instance_ models allow just a single item to be edited in the administrative area.
 
 ---
 
@@ -1808,14 +1687,10 @@ While *collection* models enable the creation of multiple records, *single-insta
 
 The record collections can be ordered in different ways:
 
--   By the records that were last updated first (default ordering)
-    
--   By one specified field, in ascending or descending order
-    
--   In a tree-like structure
-    
--   By drag and drop reordering
-    
+- By the records that were last updated first (default ordering)
+- By one specified field, in ascending or descending order
+- In a tree-like structure
+- By drag and drop reordering
 
 The default ordering should be quite self-explanatory.
 
@@ -1872,23 +1747,16 @@ The "Blocks Library" section
 
 You can use blocks in two different contexts, to achieve different results:
 
--   Using [Structured Text](/docs/content-modelling/structured-text.md) fields, you can produce great pieces of content by interleaving free-form text with blocks representing predefined graphic components (CTA, quotes, image galleries, infographics, etc).
-    
--   Using [Modular Content](/docs/content-modelling/modular-content.md) fields, you can create a page-builder experience that enables your editors to assemble various blocks like Lego pieces, allowing for the construction of any dynamic layout — particularly beneficial for landing pages.
-    
+- Using [Structured Text](/docs/content-modelling/structured-text.md) fields, you can produce great pieces of content by interleaving free-form text with blocks representing predefined graphic components (CTA, quotes, image galleries, infographics, etc).
+- Using [Modular Content](/docs/content-modelling/modular-content.md) fields, you can create a page-builder experience that enables your editors to assemble various blocks like Lego pieces, allowing for the construction of any dynamic layout — particularly beneficial for landing pages.
 
 ## Key concepts
 
--   Just like records, a block is a composition of fields, on which you can define custom validations;
-    
--   Blocks defined in the library can be reused across different models;
-    
--   Unlike records, **blocks do not exist independently, but only within a parent record.** For this reason, **blocks do not count towards your plan's records limit,** and cannot be referenced in [Link fields](/docs/content-modelling/links.md). They only live inside [Modular Content](/docs/content-modelling/modular-content.md) and [Structured Text](/docs/content-modelling/structured-text.md) fields.
-    
--   When a record gets deleted, all the blocks it contains are deleted with it. This leaves no orphan data structures lying around your project.
-    
--   Block fields per se cannot be localized. Instead, it's the containing Modular Content or Structured Text field that can be localized, so that different content/blocks can be defined for each language.
-    
+- Just like records, a block is a composition of fields, on which you can define custom validations;
+- Blocks defined in the library can be reused across different models;
+- Unlike records, **blocks do not exist independently, but only within a parent record.** For this reason, **blocks do not count towards your plan's records limit,** and cannot be referenced in [Link fields](/docs/content-modelling/links.md). They only live inside [Modular Content](/docs/content-modelling/modular-content.md) and [Structured Text](/docs/content-modelling/structured-text.md) fields.
+- When a record gets deleted, all the blocks it contains are deleted with it. This leaves no orphan data structures lying around your project.
+- Block fields per se cannot be localized. Instead, it's the containing Modular Content or Structured Text field that can be localized, so that different content/blocks can be defined for each language.
 
 [(Image content)](https://www.datocms-assets.com/205/1623670404-records-blocks.png?auto=format&fit=max&w=2000)
 
@@ -1898,12 +1766,9 @@ While link fields reference other records, Modular Content and Structured Text f
 
 It's fairly easy to recognize when a piece of content should be modeled as a model or block if you ask yourself the following questions:
 
--   *"Would I ever want to reference this content outside of the record in which it is defined?"* — if so, then it should be a model.
-    
--   *"Does this content have standalone value, or does it make sense only in the context of a parent record?"* — in the first case, it should be a model; otherwise it should be a block.
-    
--   *"If the parent record were to be deleted, do I want this content to be deleted as well, or would I like it to remain?"* — in the first case, it should be a block; otherwise it is a model.
-    
+- _"Would I ever want to reference this content outside of the record in which it is defined?"_ — if so, then it should be a model.
+- _"Does this content have standalone value, or does it make sense only in the context of a parent record?"_ — in the first case, it should be a model; otherwise it should be a block.
+- _"If the parent record were to be deleted, do I want this content to be deleted as well, or would I like it to remain?"_ — in the first case, it should be a block; otherwise it is a model.
 
 #### Learn more about content modelling and blocks
 
@@ -1963,7 +1828,7 @@ Play video »
 
 # Modular content fields
 
-The **Modular Content** field is used to define a dynamic area for richer page layouts. 
+The **Modular Content** field is used to define a dynamic area for richer page layouts.
 
 For example, in a landing page, defining a Modular Content field allows the writer to choose between adding a text section, a carousel, or a call-to-action. This gives the writer the freedom to compose a landing page by alternating and ordering as many of these choices as needed.
 
@@ -1971,20 +1836,16 @@ For example, in a landing page, defining a Modular Content field allows the writ
 
 You can use Modular content to define dynamic layouts in any of your models: blog posts, landing pages, case studies, tutorials, or any place you want to give content writers a choice between different template options.
 
-Developers are in charge of defining which elements writers can use to compose content for a specific modular content field. You can think of those as "low-level" models, called *Block models*. Authors, to compose their dynamic content, will be able to add and reorder these blocks as they prefer.
+Developers are in charge of defining which elements writers can use to compose content for a specific modular content field. You can think of those as "low-level" models, called _Block models_. Authors, to compose their dynamic content, will be able to add and reorder these blocks as they prefer.
 
 ## How to build a Modular content editor
 
-Suppose we have an *Article* model, and we want to add a modular content field to manage its content. The first step is to decide the different kinds of basic blocks you want your authors to alternate. In this case, we want our content to be a flexible composition of:
+Suppose we have an _Article_ model, and we want to add a modular content field to manage its content. The first step is to decide the different kinds of basic blocks you want your authors to alternate. In this case, we want our content to be a flexible composition of:
 
--   Text
-    
--   Quotes
-    
--   Videos
-    
--   Text + Image blocks
-    
+- Text
+- Quotes
+- Videos
+- Text + Image blocks
 
 To achieve this result, first, we create the Article model, and add a Modular content field to it:
 
@@ -1996,13 +1857,13 @@ In the*Validations* tab, you can choose which blocks will populate your modular 
 
 ## Create and edit a block
 
-If you go to the *Blocks* tab in the Schema area, you will see all the blocks that you have already created, and you can create a new one:
+If you go to the _Blocks_ tab in the Schema area, you will see all the blocks that you have already created, and you can create a new one:
 
 [(Image content)](https://www.datocms-assets.com/205/1715866821-blocks-library.png?auto=format&fit=max&w=2000)
 
-Blocks are just a composition of fields, just like ordinary models. In our case, we want the *Quote Block* to be made of two fields: one containing the actual quote, and another containing the author.
+Blocks are just a composition of fields, just like ordinary models. In our case, we want the _Quote Block_ to be made of two fields: one containing the actual quote, and another containing the author.
 
-You can click on the "Create new block" button on the bottom left to create a new block. In this case, we'll add a multi-paragraph text field to contain the text of the quote, and a single-line string text to display the name of the quote's author. If this block is used in one of your Models, you will see a notice. For example, we see that our *Quote* block is used in the *Product* modular content field, which is part of the *Article* model.
+You can click on the "Create new block" button on the bottom left to create a new block. In this case, we'll add a multi-paragraph text field to contain the text of the quote, and a single-line string text to display the name of the quote's author. If this block is used in one of your Models, you will see a notice. For example, we see that our _Quote_ block is used in the _Product_ modular content field, which is part of the _Article_ model.
 
 [(Image content)](https://www.datocms-assets.com/205/1715867014-block-used-in-content.png?auto=format&fit=max&w=2000)
 
@@ -2018,29 +1879,20 @@ Managing Modular Content is efficient with common Bulk Actions. You can easily s
 
 Each Modular Content Block includes a checkbox for easy selection, and you can perform bulk actions such as:
 
--   Select All / Invert Selection
-    
--   Expand / Collapse selected blocks
-    
--   Copy multiple blocks
-    
--   Delete selected items
-    
+- Select All / Invert Selection
+- Expand / Collapse selected blocks
+- Copy multiple blocks
+- Delete selected items
 
 (Video content)
 
 The contextual submenu makes managing blocks in the UI equally simple, with an improved flow to:
 
--   Copy & Paste
-    
--   Duplicate
-    
--   Move
-    
--   Delete, and
-    
--   Add Blocks
-    
+- Copy & Paste
+- Duplicate
+- Move
+- Delete, and
+- Add Blocks
 
 ## Reusing block models
 
@@ -2076,12 +1928,9 @@ First, let's create a new type of block model. Let's call it "Bloggable", and de
 
 At this point, in all the "Blog Post," "News Article," and "Product Review" models, we should incorporate a Modular Content (Single block) field. The field should be arranged as follows:
 
--   It should only have "Bloggable" as its associated block model;
-    
--   It should have the Required validation active;
-    
--   The "Frameless" presentation mode should be active.
-    
+- It should only have "Bloggable" as its associated block model;
+- It should have the Required validation active;
+- The "Frameless" presentation mode should be active.
 
 (Video content)
 
@@ -2139,12 +1988,9 @@ Play video »
 
 Structured Text is a field type that enables authors to **create rich text content**.
 
--   It offers a beautiful, Notion-like editor **designed for focus**, with slash commands, a full editing toolbar, markdown/keyboard shortcuts, and drag & drop functionality. Forget the mouse, and just start typing;
-    
--   It allows you to create hyperlinks to other records in your project, and **intersperse textual content with custom blocks** - which can represent galleries, videos, embeds, call-to-actions, etc.
-    
--   It stores the content in a safe, semantic, and readable **JSON format**, representing a tree of well-defined nodes.
-    
+- It offers a beautiful, Notion-like editor **designed for focus**, with slash commands, a full editing toolbar, markdown/keyboard shortcuts, and drag & drop functionality. Forget the mouse, and just start typing;
+- It allows you to create hyperlinks to other records in your project, and **intersperse textual content with custom blocks** - which can represent galleries, videos, embeds, call-to-actions, etc.
+- It stores the content in a safe, semantic, and readable **JSON format**, representing a tree of well-defined nodes.
 
 ## Backstory
 
@@ -2184,12 +2030,9 @@ Structured Text content is stored as a JSON object. We chose [unist](https://git
 
 The `dast` format clearly specifies:
 
--   which nodes are usable within the document;
-    
--   for each node, which are the possible `children` that it can contain;
-    
--   any additional attribute that characterize each node.
-    
+- which nodes are usable within the document;
+- for each node, which are the possible `children` that it can contain;
+- any additional attribute that characterize each node.
 
 Take a look at the [**DatoCMS Abstract Syntax Tree specs**](/docs/structured-text/dast.md) to learn all the details.
 
@@ -2197,10 +2040,8 @@ Take a look at the [**DatoCMS Abstract Syntax Tree specs**](/docs/structured-tex
 
 Structured Text allows hyperlinking DatoCMS records in the flow of text. This allows the following scenarios:
 
--   Using custom link functions, like React Router links, to a DatoCMS record.
-    
--   Rendering a widget such as an image gallery, a product description box, a sign up form, an annotation window, or basically anything else.
-    
+- Using custom link functions, like React Router links, to a DatoCMS record.
+- Rendering a widget such as an image gallery, a product description box, a sign up form, an annotation window, or basically anything else.
 
 The following example demonstrates an hyperlinked record and an inline record:
 
@@ -2218,16 +2059,11 @@ Just like with the Modular content field, when a record is deleted, the blocks c
 
 ### Next steps
 
--   [Structured Text format](/docs/structured-text/dast.md)
-    
--   [Migrating to Structured Text](/docs/structured-text/migrating-content-to-structured-text.md)
-    
--   [Creating Structured Text fields using the CMA](/docs/content-management-api/resources/field/create.md#creating-structured-text-fields)
-    
--   [Creating records with Structured Text fields using the CMA](/docs/content-management-api/resources/item/create.md#structured-text-fields)
-    
--   [Fetching Structured Text using the GraphQL CDA](/docs/content-delivery-api/structured-text-fields.md)
-    
+- [Structured Text format](/docs/structured-text/dast.md)
+- [Migrating to Structured Text](/docs/structured-text/migrating-content-to-structured-text.md)
+- [Creating Structured Text fields using the CMA](/docs/content-management-api/resources/field/create.md#creating-structured-text-fields)
+- [Creating records with Structured Text fields using the CMA](/docs/content-management-api/resources/item/create.md#structured-text-fields)
+- [Fetching Structured Text using the GraphQL CDA](/docs/content-delivery-api/structured-text-fields.md)
 
 ### Video tutorials
 
@@ -2267,14 +2103,12 @@ Play video »
 
 Links are a powerful way to model relationships between content. Models can have link fields which point to other records, for example:
 
--   An article linking to its category (singular relationship).
-    
--   An article linking to related articles (plural relationship).
-    
+- An article linking to its category (singular relationship).
+- An article linking to related articles (plural relationship).
 
 In DatoCMS, you don't need to define a field for the reverse relationship (i.e., the category linking to its articles): during the integration with your website, you can easily perform reverse reference lookups with just a couple of lines of code.
 
-When you add a new field of type **Link** (or **Links**) to a model, DatoCMS requires you to specify within the *Validations* tab the models that can be referenced by the field itself.
+When you add a new field of type **Link** (or **Links**) to a model, DatoCMS requires you to specify within the _Validations_ tab the models that can be referenced by the field itself.
 
 To let editors select one (or more) records to link, DatoCMS will present a dropdown with auto-completion turned on:
 
@@ -2286,7 +2120,7 @@ If you prefer, you can switch any link field to **Expanded view** mode, to provi
 
 [(Image content)](https://www.datocms-assets.com/205/1715002826-screenshot-2024-05-06-at-15-40-13.png?auto=format&fit=max&w=2000)
 
-As with any other field, this setting can be found under the *Presentation* tab of your field:
+As with any other field, this setting can be found under the _Presentation_ tab of your field:
 
 [(Image content)](https://www.datocms-assets.com/205/1715002859-screenshot-2024-05-06-at-15-40-48.png?auto=format&fit=max&w=2000)
 
@@ -2314,16 +2148,11 @@ Here's how it works:
 
 These are all the available fields:
 
--   **Title:** Customize the SEO title for your content.
-    
--   **Description:** Craft a unique meta description to enhance search engine visibility.
-    
--   **Image:** Set the featured image to be displayed in social previews.
-    
--   **No Index:** Control whether the page should be indexed by search engines.
-    
--   **Twitter (X) Card:** Fine-tune the appearance of shared content on X.
-    
+- **Title:** Customize the SEO title for your content.
+- **Description:** Craft a unique meta description to enhance search engine visibility.
+- **Image:** Set the featured image to be displayed in social previews.
+- **No Index:** Control whether the page should be indexed by search engines.
+- **Twitter (X) Card:** Fine-tune the appearance of shared content on X.
 
 > [!PROTIP] Pro tip: Set SEO fallback
 > You can set up fallback options for the SEO title and description for your models in case you don’t add SEO fields to a model or if your editors do not fill in the SEO fields. Just go to the Content area and click “SEO Preferences” in the sidebar.
@@ -2332,11 +2161,11 @@ These are all the available fields:
 
 #### SEO Fields Customization
 
-By navigating to *Edit field > Presentation*, you can tailor the SEO fields that are displayed to editors, by selecting from the options. Select the fields that align with your editorial needs, providing a more focused and efficient editing environment.
+By navigating to _Edit field > Presentation_, you can tailor the SEO fields that are displayed to editors, by selecting from the options. Select the fields that align with your editorial needs, providing a more focused and efficient editing environment.
 
 #### Social Link Previews Customization
 
-By navigating to *Edit field > Presentation*, you can choose which social link previews to show your editors, ensuring your shared content looks compelling and engaging across various platforms. You can choose to display link previews for Google Search, X (Twitter), Facebook, Slack, Telegram and WhatsApp.
+By navigating to _Edit field > Presentation_, you can choose which social link previews to show your editors, ensuring your shared content looks compelling and engaging across various platforms. You can choose to display link previews for Google Search, X (Twitter), Facebook, Slack, Telegram and WhatsApp.
 
 ## Global SEO preferences
 
@@ -2396,7 +2225,7 @@ The nice thing about slug fields is that, if the editor subsequently updates the
 
 ### How to add a slug field to a model
 
-Say you have a "Blog post" model; start by adding a "Title" field, then you can add an automatically-generating Slug field (you can find it under the *SEO* group) by selecting the Title field as its reference, under the *Validations* tab.
+Say you have a "Blog post" model; start by adding a "Title" field, then you can add an automatically-generating Slug field (you can find it under the _SEO_ group) by selecting the Title field as its reference, under the _Validations_ tab.
 
 (Video content)
 
@@ -2416,14 +2245,10 @@ But how can you make the two work together?
 
 There's a little trick that you can use, it's not super handy but will do the job:
 
--   set the video to unlisted, unfortunately you cannot schedule an unlisted video to be listed
-    
--   add the video to DatoCMS
-    
--   set the video to private again and schedule the publication
-    
--   schedule the publication of DatoCMS record together with the YouTube video
-    
+- set the video to unlisted, unfortunately you cannot schedule an unlisted video to be listed
+- add the video to DatoCMS
+- set the video to private again and schedule the publication
+- schedule the publication of DatoCMS record together with the YouTube video
 
 That's it! A bit hackish, but it's a way to work around the limitations of the system.
 
@@ -2465,82 +2290,56 @@ Let's see together all the validations available on DatoCMS for each field.
 
 #### Single line text
 
--   *Required*: field must be present
-    
--   *Unique*: every record of the same model must have different content
-    
--   *Limit character count*: you can specify the number of characters in different ways, i.e. at least 10, between 10 and 20, no more than 20, exactly 20
-    
--   *Match a specific pattern*: text must be a valid URL, email address or match a specified regular expression
-    
--   *Accept only specified values*: you can specify a list of values. **If you do that, the field will display as a dropdown for the editor**
-    
+- _Required_: field must be present
+- _Unique_: every record of the same model must have different content
+- _Limit character count_: you can specify the number of characters in different ways, i.e. at least 10, between 10 and 20, no more than 20, exactly 20
+- _Match a specific pattern_: text must be a valid URL, email address or match a specified regular expression
+- _Accept only specified values_: you can specify a list of values. **If you do that, the field will display as a dropdown for the editor**
 
 #### Multiple-paragraph text
 
--   *Required*: field must be present
-    
--   *Limit character count*: you can specify the number of characters in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20
-    
--   *Match a specific pattern*: text must be a valid URL, email address or match a specified regular expression
-    
+- _Required_: field must be present
+- _Limit character count_: you can specify the number of characters in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20
+- _Match a specific pattern_: text must be a valid URL, email address or match a specified regular expression
 
 #### Modular content field
 
--   *Accept only a specified number of records*: you can specify the number of records part of the modular content in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
-    
+- _Accept only a specified number of records_: you can specify the number of records part of the modular content in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
 
 #### Single asset field
 
--   *Required*: field must be present
-    
--   *Accept only specified file size*: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
-    
--   *Accept only specified extensions*: allow only images, videos, documents or custom file extensions
-    
--   *Accept only specified image dimensions*: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
-    
--   *Require alt and/or title*: you can enforce presence of alt and/or title fields
-    
+- _Required_: field must be present
+- _Accept only specified file size_: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
+- _Accept only specified extensions_: allow only images, videos, documents or custom file extensions
+- _Accept only specified image dimensions_: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
+- _Require alt and/or title_: you can enforce presence of alt and/or title fields
 
 #### Asset gallery field
 
--   *Accept only a specified number of records*: you can specify the number of records part of the asset gallery in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
-    
--   *Accept only specified file size*: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
-    
--   *Accept only specified extensions*: allow only images, videos, documents or custom file extensions
-    
--   *Accept only specified image dimensions*: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
-    
--   *Require alt and/or title*: you can enforce presence of alt and/or title fields
-    
+- _Accept only a specified number of records_: you can specify the number of records part of the asset gallery in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
+- _Accept only specified file size_: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
+- _Accept only specified extensions_: allow only images, videos, documents or custom file extensions
+- _Accept only specified image dimensions_: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
+- _Require alt and/or title_: you can enforce presence of alt and/or title fields
 
 #### External video field
 
--   *Required*: field must be present
-    
+- _Required_: field must be present
 
 #### Date field
 
--   *Required*: field must be present
-    
--   *Accept only specified date range*: the specified date must be in a specified range, e.g. at least 30 March 2020, no more than 21 March 2020, between 21 and 30 March 2020
-    
+- _Required_: field must be present
+- _Accept only specified date range_: the specified date must be in a specified range, e.g. at least 30 March 2020, no more than 21 March 2020, between 21 and 30 March 2020
 
 #### DateTime field
 
--   *Required*: field must be present
-    
--   *Accept only specified date range*: the specified date must be in a specified range, e.g. at least 30 March 2020 12:00, no more than 21 March 2020 18:00, between 21 12:00 and 30 March 2020 18:00
-    
+- _Required_: field must be present
+- _Accept only specified date range_: the specified date must be in a specified range, e.g. at least 30 March 2020 12:00, no more than 21 March 2020 18:00, between 21 12:00 and 30 March 2020 18:00
 
 #### Integer number field
 
--   *Required*: field must be present
-    
--   *Range*: number must be within specified range, e.g. between 1 and 10, at least 5, no more than 10
-    
+- _Required_: field must be present
+- _Range_: number must be within specified range, e.g. between 1 and 10, at least 5, no more than 10
 
 #### Boolean field
 
@@ -2548,53 +2347,39 @@ No validations available
 
 #### Geolocation field
 
--   *Required*: field must be present
-    
+- _Required_: field must be present
 
 #### Color field
 
--   *Required*: field must be present
-    
+- _Required_: field must be present
 
 #### Slug field
 
--   *Reference field*: pick a field from which the slug is automatically pre-filled
-    
--   *Required*: field must be present
-    
--   *Unique*: every record of the same model must have different content
-    
--   *Limit character count*: you can specify the number of characters in different ways, i.e. at least 10, between 10 and 20, no more than 20, exactly 20
-    
+- _Reference field_: pick a field from which the slug is automatically pre-filled
+- _Required_: field must be present
+- _Unique_: every record of the same model must have different content
+- _Limit character count_: you can specify the number of characters in different ways, i.e. at least 10, between 10 and 20, no more than 20, exactly 20
 
 #### SEO meta tags field
 
--   *Required*: field must be present
-    
--   *Accept only specified file size*: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
-    
--   *Accept only specified image dimensions*: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
-    
+- _Required_: field must be present
+- _Accept only specified file size_: enforce a certain asset size in different ways, e.g. between 500KB and 1MB, no more than 10MB, at least 1MB
+- _Accept only specified image dimensions_: enforce dimensions for image assets, e.g. between 500x500px and 1000x1000px or no more than 2000x2000px or at least 500x500px
 
 #### Single link field
 
--   *Accept only specified model*: pick one or more models from which you are allowed to pick links
-    
--   *Required*: field must be present
-    
--   *Unique*: every record of the same model must have different content
-    
+- _Accept only specified model_: pick one or more models from which you are allowed to pick links
+- _Required_: field must be present
+- _Unique_: every record of the same model must have different content
 
 #### Multiple links field
 
--   *Accept only specified model*: pick one or more models from which you are allowed to pick links
-    
--   *Accept only a specified number of records*: you can specify the number of links in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
-    
+- _Accept only specified model_: pick one or more models from which you are allowed to pick links
+- _Accept only a specified number of records_: you can specify the number of links in different ways, e.g. at least 10, between 10 and 20, no more than 20, exactly 20. Moreover you can specify if the number of records must be multiple of a number
 
 #### JSON field
 
--   *Required*: field must be present
+- _Required_: field must be present
 
 ---
 
@@ -2602,14 +2387,11 @@ No validations available
 
 In DatoCMS, you are free to edit your project schema at any time. While this is great news for you, it also complicates the situation quite a bit on our part!
 
-Suppose you have an *Article* model, and you already have a number of articles stored. What happens to these existing articles in one of the following situations?
+Suppose you have an _Article_ model, and you already have a number of articles stored. What happens to these existing articles in one of the following situations?
 
--   You add a new mandatory field.
-    
--   You transform a non-localized field into a localized one (or vice versa).
-    
--   You add a new locale in your project settings.
-    
+- You add a new mandatory field.
+- You transform a non-localized field into a localized one (or vice versa).
+- You add a new locale in your project settings.
 
 Well, the existing articles (including those already published) suddenly become invalid: the data they contain does not comply with the new schema.
 
@@ -2631,21 +2413,16 @@ In addition to field values, every version also keeps track of the editor who ma
 
 Out of all the historical record versions, two are particularly important: the **current version** and the **published version**:
 
--   The current version represents the **latest available version**: every time a record is updated, a new version is generated and marked as the new current version.
-    
--   The published version represents the version **currently marked as published**. It might coincide with the current version, or it might not. It might also not exist at all!
-    
+- The current version represents the **latest available version**: every time a record is updated, a new version is generated and marked as the new current version.
+- The published version represents the version **currently marked as published**. It might coincide with the current version, or it might not. It might also not exist at all!
 
 ##### The status of a record
 
 The status of a record precisely represents the relationship between its current and published versions:
 
--   Record is **in draft**: only has the current version, and no published version;
-    
--   Record is **published**: current version and published version coincide;
-    
--   Record is **updated**: record has both current and published versions, but they differ.
-    
+- Record is **in draft**: only has the current version, and no published version;
+- Record is **published**: current version and published version coincide;
+- Record is **updated**: record has both current and published versions, but they differ.
 
 ### How our APIs expose this data structure
 
@@ -2653,10 +2430,8 @@ All our APIs have been designed to be pragmatic and simplify the lives of develo
 
 When you're pulling data about records through an API, you have the option to specify whether you're referring to the current version or the published version of your records (if you're not actively doing this, a default is implicitly applied):
 
--   With the [Content Delivery API](/docs/content-delivery-api.md) and the [Realtime Updates API](/docs/real-time-updates-api.md), the default is to consider the published versions, but you can request to consider the current versions with the header [`X-Include-Drafts: true`](/docs/content-delivery-api/api-endpoints.md#preview-mode-to-retrieve-draft-contenthttps://www.datocms.com/docs/content-delivery-api/api-endpoints#preview-mode-to-retrieve-draft-content).
-    
--   With the [Content Management API](/docs/content-management-api.md), you can request to consider the published version or the current version with the parameter [`?version=current`](/docs/content-management-api/resources/item/instances.md) or [`?version=published`](/docs/content-management-api/resources/item/instances.md).
-    
+- With the [Content Delivery API](/docs/content-delivery-api.md) and the [Realtime Updates API](/docs/real-time-updates-api.md), the default is to consider the published versions, but you can request to consider the current versions with the header [`X-Include-Drafts: true`](/docs/content-delivery-api/api-endpoints.md#preview-mode-to-retrieve-draft-contenthttps://www.datocms.com/docs/content-delivery-api/api-endpoints#preview-mode-to-retrieve-draft-content).
+- With the [Content Management API](/docs/content-management-api.md), you can request to consider the published version or the current version with the parameter [`?version=current`](/docs/content-management-api/resources/item/instances.md) or [`?version=published`](/docs/content-management-api/resources/item/instances.md).
 
 With this information at hand, all APIs can now represent a record as a single entity, encompassing both the meta-information present at the record level, and the model fields data that is present at the version level. This greatly simplifies the logic of 99% of web projects that interface with DatoCMS, which can therefore work considering a single entity instead of two.
 
@@ -2669,64 +2444,43 @@ What if a specific record does not have a published version, and the APIs are re
 
 DatoCMS maintains two important guarantees:
 
--   The structure of the data contained in any version of a record (even past versions) is guaranteed to be consistent with the settings of its model and fields.
-    
--   The validity of a current/published version always reflects the current validation rules.
-    
+- The structure of the data contained in any version of a record (even past versions) is guaranteed to be consistent with the settings of its model and fields.
+- The validity of a current/published version always reflects the current validation rules.
 
 ### Consequences on the published and current version of a record
 
 It is crucial to understand a significant outcome of these guarantees and data setup: there are cases where **the published version can change without a specific "publish" action** on the record, and **the current version can be modified without a distinct "update" action:**
 
--   Changes in the sort order of a record in the collection are immediately reflected online: it is not possible to keep these changes "in draft" because they are information that live directly at the record level. When the position is changed, the "published" version will also display the updated information. The same applies to other meta-information: creator, creation/publication dates, etc.
-    
--   There are situations where a change to a record/asset can have repercussions on the published and current versions of other records that reference them:
-    
-    -   Imagine a record whose current or published version references an asset in the Media Area, and the field that contains it has validations (i.e., "the asset must be an image"). If the asset is subsequently modified, replacing the asset with a new file, the new file could potentially alter the validity status of the current or published version, which is therefore updated.
-        
-    -   Imagine a record whose current or published version references another record via a Single Link, Multiple Links, or Structured Text field:
-        
-        -   If the field has the setting "When deletion is requested for a record referenced by this field" set to "Try to remove the reference to the deleted record", then the system must respect this setting, altering the current and/or published version.
-            
-        -   Similarly, if the field has the setting "When unpublishing is requested for a record referenced by this field" set to "Try to remove the reference to the unpublished record", then the system must respect this setting, altering the published version.
-            
--   Changing the schema of a model, or the locales of a DatoCMS project can also cause an automatic update of multiple versions because:
-    
-    -   When a new field is added/removed to the model, this field will be immediately added/eliminated in all record versions of that model (including the published and current version).
-        
-    -   If a field that can hold a reference to another record (Single Link, Multiple Links, Structured Text) is altered by removing a model from the list of linkable models, then all record versions of that model will be updated by eliminating any references to those models.
-        
-    -   If a model is deleted, but there are records of that model which are referenced by other records, then all these record versions are updated by eliminating any references to the deleted model.
-        
-    -   The same principle applies to model fields that can hold blocks (Modular Content, Structured Text). If these are altered by removing a block type from the list of embeddable options, then all record versions of that model will be adjusted by eliminating any blocks of that type.
-        
-    -   If a model is modified, enabling the *"All locales required?"* setting, then all previously unspecified locales will be added to all record versions of that model.
-        
-    -   If a field is modified from localized to non-localized (or vice versa), then all record versions of that model will be modified to reflect this change.
-        
-    -   If you add a new validation rule to a field, then all existing record versions of that model will be re-checked against the new validation rules, and potentially marked as invalid.
-        
-    -   If a locale is added/removed from the project, all record versions of all models that contain localized fields will be adjusted accordingly.
-        
+- Changes in the sort order of a record in the collection are immediately reflected online: it is not possible to keep these changes "in draft" because they are information that live directly at the record level. When the position is changed, the "published" version will also display the updated information. The same applies to other meta-information: creator, creation/publication dates, etc.
+- There are situations where a change to a record/asset can have repercussions on the published and current versions of other records that reference them:
+  - Imagine a record whose current or published version references an asset in the Media Area, and the field that contains it has validations (i.e., "the asset must be an image"). If the asset is subsequently modified, replacing the asset with a new file, the new file could potentially alter the validity status of the current or published version, which is therefore updated.
+  - Imagine a record whose current or published version references another record via a Single Link, Multiple Links, or Structured Text field:
+    - If the field has the setting "When deletion is requested for a record referenced by this field" set to "Try to remove the reference to the deleted record", then the system must respect this setting, altering the current and/or published version.
+    - Similarly, if the field has the setting "When unpublishing is requested for a record referenced by this field" set to "Try to remove the reference to the unpublished record", then the system must respect this setting, altering the published version.
+
+- Changing the schema of a model, or the locales of a DatoCMS project can also cause an automatic update of multiple versions because:
+  - When a new field is added/removed to the model, this field will be immediately added/eliminated in all record versions of that model (including the published and current version).
+  - If a field that can hold a reference to another record (Single Link, Multiple Links, Structured Text) is altered by removing a model from the list of linkable models, then all record versions of that model will be updated by eliminating any references to those models.
+  - If a model is deleted, but there are records of that model which are referenced by other records, then all these record versions are updated by eliminating any references to the deleted model.
+  - The same principle applies to model fields that can hold blocks (Modular Content, Structured Text). If these are altered by removing a block type from the list of embeddable options, then all record versions of that model will be adjusted by eliminating any blocks of that type.
+  - If a model is modified, enabling the _"All locales required?"_ setting, then all previously unspecified locales will be added to all record versions of that model.
+  - If a field is modified from localized to non-localized (or vice versa), then all record versions of that model will be modified to reflect this change.
+  - If you add a new validation rule to a field, then all existing record versions of that model will be re-checked against the new validation rules, and potentially marked as invalid.
+  - If a locale is added/removed from the project, all record versions of all models that contain localized fields will be adjusted accordingly.
 
 ### Consequences in Webhooks
 
 Webhooks allow you to be notified of changes to the records in your project. Based on the considerations made so far, it is important to make a few clarifications here:
 
--   The **"Record creation"** event is triggered when a record is generated for the first time (and consequently its current version).
-    
--   The **"Record update"** event is triggered when the current version changes (due to an explicit modification of the record, or for some of the reasons listed above).
-    
--   The **"Record publish"** event is triggered when the published version of a record changes (due to an explicit publication of the record, or for some of the reasons listed above).
-    
--   In the webhook payload, the `meta.status` field of the record entity always reflects the relationship between the current and published versions of the item itself at the moment the webhook is triggered.
-    
+- The **"Record creation"** event is triggered when a record is generated for the first time (and consequently its current version).
+- The **"Record update"** event is triggered when the current version changes (due to an explicit modification of the record, or for some of the reasons listed above).
+- The **"Record publish"** event is triggered when the published version of a record changes (due to an explicit publication of the record, or for some of the reasons listed above).
+- In the webhook payload, the `meta.status` field of the record entity always reflects the relationship between the current and published versions of the item itself at the moment the webhook is triggered.
 
 As a consequence:
 
--   You can still get "Record publish"/"Record update" events without an explicit new publish/update request from an editor or an API call. This occurs when the system automatically needs to adjusts an existing published/current version to keep it consistent with the new schema change.
-    
--   When these automatic adjustments occur, it is completely normal for the `meta.status` of a record in the webhook payload of a "Record Publish" event to be "updated" instead of "published". This is because during the process, a record might be in an "updated" state, and the operation does not change this condition.
+- You can still get "Record publish"/"Record update" events without an explicit new publish/update request from an editor or an API call. This occurs when the system automatically needs to adjusts an existing published/current version to keep it consistent with the new schema change.
+- When these automatic adjustments occur, it is completely normal for the `meta.status` of a record in the webhook payload of a "Record Publish" event to be "updated" instead of "published". This is because during the process, a record might be in an "updated" state, and the operation does not change this condition.
 
 ---
 
@@ -2736,19 +2490,14 @@ DatoCMS offers several different APIs, each optimized for a particular use case.
 
 ## Fetching & Serving Content for your Frontend
 
--   **Start here:** Our [**Content** **Delivery** **API**](/docs/content-delivery-api.md) (CDA) is our recommended way to connect DatoCMS to your frontend. It lets you retrieve only the records and fields you need, using a simple query language called [GraphQL](https://graphql.org/). This is a fast and safe read-only API that makes it easy to use our headless system with any frontend framework.
-    
--   Our [**Site Search API**](/docs/site-search.md) lets you easily add full-text search to your website.
-    
--   Our [**Real-Time Updates API**](/docs/real-time-updates-api.md) allows you to push live updates to your visitors for real-time blogging or other live events. It is also highly beneficial for previewing draft content to your editors as they compose.
-    
+- **Start here:** Our [**Content** **Delivery** **API**](/docs/content-delivery-api.md) (CDA) is our recommended way to connect DatoCMS to your frontend. It lets you retrieve only the records and fields you need, using a simple query language called [GraphQL](https://graphql.org/). This is a fast and safe read-only API that makes it easy to use our headless system with any frontend framework.
+- Our [**Site Search API**](/docs/site-search.md) lets you easily add full-text search to your website.
+- Our [**Real-Time Updates API**](/docs/real-time-updates-api.md) allows you to push live updates to your visitors for real-time blogging or other live events. It is also highly beneficial for previewing draft content to your editors as they compose.
 
 ## Serving Images & Videos
 
--   Our [**Images API**](/docs/asset-api/images.md) serves your images through a CDN and enables powerful URL-based transformations ([cropping, resizing, format conversion, and more](https://docs.imgix.com/apis/rendering/overview)). We partner with Imgix for this system.
-    
--   Our [**Videos API**](/docs/asset-api/videos.md) uses the Mux video CDN to [ensure efficient video streaming](/docs/streaming-videos/how-to-stream-videos-efficiently.md) for users with different devices and connection speeds.
-    
+- Our [**Images API**](/docs/asset-api/images.md) serves your images through a CDN and enables powerful URL-based transformations ([cropping, resizing, format conversion, and more](https://docs.imgix.com/apis/rendering/overview)). We partner with Imgix for this system.
+- Our [**Videos API**](/docs/asset-api/videos.md) uses the Mux video CDN to [ensure efficient video streaming](/docs/streaming-videos/how-to-stream-videos-efficiently.md) for users with different devices and connection speeds.
 
 ## Editing & Managing Your Data
 
@@ -2793,7 +2542,7 @@ One of the major issues of REST is that, in order to get the data you need, you 
 
 > [!PROTIP] Pro tip: DatoCMS, powered by DatoCMS
 > Of course, we drink our own champagne - our website is built on DatoCMS.
-> 
+>
 > Want a peek behind the curtain? The actual source code is available in this [public GitHub repo](https://github.com/datocms/new-website) for you to explore and see how we built it.
 
 ### Want to get started with DatoCMS?
@@ -2928,12 +2677,9 @@ The API contains automatically generated queries to fetch records of a certain m
 
 A few examples for query names:
 
--   Model API identifier: `artist`, query name: `allArtists`
-    
--   Model API identifier: `track`, query name: `allTracks`
-    
--   Model API identifier: `use_case`, query name: `allUseCases`
-    
+- Model API identifier: `artist`, query name: `allArtists`
+- Model API identifier: `track`, query name: `allTracks`
+- Model API identifier: `use_case`, query name: `allUseCases`
 
 A query which fetches the first ten records from the `artist` model — together with the total number of artists — could look like the following:
 
@@ -2944,7 +2690,7 @@ query {
     name
   }
   _allArtistsMeta {
-  count
+    count
   }
 }
 ```
@@ -2963,7 +2709,7 @@ DatoCMS offers a single GraphQL endpoint:
 https://graphql.datocms.com/
 ```
 
-The endpoint remains constant no matter what operation you perform, and it's read only — that is, it does not offer any *mutation operation*. You can use our [Content Management API](/docs/content-management-api.md) for that.
+The endpoint remains constant no matter what operation you perform, and it's read only — that is, it does not offer any _mutation operation_. You can use our [Content Management API](/docs/content-management-api.md) for that.
 
 ### Specifying an environment
 
@@ -2985,26 +2731,26 @@ X-Include-Drafts: true
 
 > [!NOTE] Good to know: X-Include-Drafts cannot be false
 > Please note that this header **must** be set to `**true**` if it's specified at all. If you don't want to see drafts, **exclude the header entirely.** If you attempt to set `X-Include-Drafts:``**false**`, you'll get an error:
-> 
+>
 > ```json
 > {
->     "code": "INVALID_X_INCLUDE_DRAFTS_HEADER",
->     "details": {
->       "message": "X-Include-Drafts header can only be set to `true`"
->     }
+>   "code": "INVALID_X_INCLUDE_DRAFTS_HEADER",
+>   "details": {
+>     "message": "X-Include-Drafts header can only be set to `true`"
+>   }
 > }
 > ```
-> 
+>
 > If you need to conditionally set this header, you can use a pattern like:
-> 
+>
 > ```javascript
 > const headers = {
->   'Authorization': 'Bearer YOUR_API_TOKEN',
+>   Authorization: 'Bearer YOUR_API_TOKEN',
 >   'Content-Type': 'application/json',
->   ...(isStagingEnvironment && {'X-Include-Drafts': true})
+>   ...(isStagingEnvironment && { 'X-Include-Drafts': true }),
 > };
 > ```
-> 
+>
 > This will add the header and set it to true if `isStagingEnvironment == true`. Otherwise, the header will be omitted altogether.
 
 ### Strict-mode for non-nullable GraphQL types
@@ -3017,22 +2763,18 @@ X-Exclude-Invalid: true
 
 In contrast to the `_isValid` filter, this header will also have the effect of **narrowing down GraphQL types**:
 
--   Every field with a "Required?" validation enforced, will be associated with a non-nullable GraphQL type (e.g., `String` becomes `String!`)
-    
--   Asset fields (both single and multiple) that have a "Image transformable by imgix" format validation, will have the following properties associated with a non-nullable type: `focalPoint`, `width`, `height`, `responsiveImage`
-    
--   Asset fields (both single and multiple) that have a "Video" format validation, will have the following properties associated with a non-nullable type: `video`
-    
--   Asset fields (both single and multiple) that have a required alt and/or title validation will have the `alt` and/or `title` properties marked as non-null
-    
+- Every field with a "Required?" validation enforced, will be associated with a non-nullable GraphQL type (e.g., `String` becomes `String!`)
+- Asset fields (both single and multiple) that have a "Image transformable by imgix" format validation, will have the following properties associated with a non-nullable type: `focalPoint`, `width`, `height`, `responsiveImage`
+- Asset fields (both single and multiple) that have a "Video" format validation, will have the following properties associated with a non-nullable type: `video`
+- Asset fields (both single and multiple) that have a required alt and/or title validation will have the `alt` and/or `title` properties marked as non-null
 
 You can read a little bit more about Strict Mode in our [announcement blog post](https://www.datocms.com/blog/introducing-strict-mode-for-graphql-cda-get-the-best-typescript-dx.md).
 
 > [!WARNING] This mode requires migration scripts to be safe!
 > When you add/remove validations to a model that already has a set of records created, DatoCMS is forced to launch a new set of checks to verify that these existing records continue to be valid or not.
-> 
+>
 > If you make a GraphQL request with the `X-Exclude-Invalid` header during this re-validation phase — which depending on the amount of records may take several minutes to complete — **the response will be an error**, because `X-Exclude-Invalid` can only return records that are certain to have been properly checked using the latest validation rules available!
-> 
+>
 > For this reason, we strongly suggest using this header in conjunction with [migration scripts](/docs/scripting-migrations/introduction.md), so that you can make changes to your validation rules inside a sandbox environment, wait for the validation checks to finish, and only after that promote the sandbox environment as primary. This will avoid potential issues and errors for your final visitors.
 
 ### Cache tags
@@ -3064,7 +2806,7 @@ The Content Delivery API uses API Tokens for authentication:
 Authorization: Bearer <YOUR-API-TOKEN>
 ```
 
-You can find your read-only API token in the *Settings > API tokens* section of your administrative area, or generate a new token with more specific permissions:
+You can find your read-only API token in the _Settings > API tokens_ section of your administrative area, or generate a new token with more specific permissions:
 
 (Video content)
 
@@ -3112,15 +2854,15 @@ A **successful** CDA response looks like:
 // It will have a HTTP 200 OK status.
 
 {
-  "data": {
-    "allArticles": [
+  data: {
+    allArticles: [
       {
-        "id": "abcdefghji12345",
-        "title": "This is an example article",
-        "slug": "example-article"
-      }
-    ]
-  }
+        id: 'abcdefghji12345',
+        title: 'This is an example article',
+        slug: 'example-article',
+      },
+    ],
+  },
 }
 ```
 
@@ -3131,40 +2873,32 @@ A **failed** CDA response looks like:
 // Failed queries will ALSO have a HTTP 200 OK status. DO NOT TRUST THAT!
 
 {
-  "errors": [
+  errors: [
     {
-      "message": "Field 'Sku' doesn't exist on type 'ArticleRecord'",
-      "locations": [
+      message: "Field 'Sku' doesn't exist on type 'ArticleRecord'",
+      locations: [
         {
-          "line": 16,
-          "column": 5
-        }
+          line: 16,
+          column: 5,
+        },
       ],
-      "path": [
-        "query",
-        "allArticles",
-        "Sku"
-      ],
-      "extensions": {
-        "code": "undefinedField",
-        "typeName": "ArticleRecord",
-        "fieldName": "Sku"
-      }
-    }
-  ]
+      path: ['query', 'allArticles', 'Sku'],
+      extensions: {
+        code: 'undefinedField',
+        typeName: 'ArticleRecord',
+        fieldName: 'Sku',
+      },
+    },
+  ],
 }
 ```
 
 `**Within an errors[]**` **array**, each object will have the following properties:
 
--   `message`: The human-readable error message.
-    
--   `locations`: The query line and column # where the server thinks the error occurred. Note that because of formatting and line break differences, the precise location may be slightly different in your code.
-    
--   `path`: The attempted GraphQL path (e.g. `query`.`modelName`.`fieldName`) that caused the error.
-    
--   `extensions`: Extended DatoCMS-specific errors that we provide to try to help you diagnose what went wrong. May be different for different kinds of query errors.
-    
+- `message`: The human-readable error message.
+- `locations`: The query line and column # where the server thinks the error occurred. Note that because of formatting and line break differences, the precise location may be slightly different in your code.
+- `path`: The attempted GraphQL path (e.g. `query`.`modelName`.`fieldName`) that caused the error.
+- `extensions`: Extended DatoCMS-specific errors that we provide to try to help you diagnose what went wrong. May be different for different kinds of query errors.
 
 ### HTTP & API Errors
 
@@ -3174,14 +2908,14 @@ An HTTP or API error will have a shape similar to this:
 
 ```json5
 {
-  "id": "abcde12345",
-  "type": "api_error",
-  "attributes": {
-    "code": "INVALID_JSON_BODY", // Machine-parseable code
-    "details": {
-      "message": "The JSON body you submitted is not a valid GraphQL request" // For humans
-    }
-  }
+  id: 'abcde12345',
+  type: 'api_error',
+  attributes: {
+    code: 'INVALID_JSON_BODY', // Machine-parseable code
+    details: {
+      message: 'The JSON body you submitted is not a valid GraphQL request', // For humans
+    },
+  },
 }
 ```
 
@@ -3191,55 +2925,55 @@ An HTTP or API error will have a shape similar to this:
 
 ### List of HTTP & API Error Codes
 
-###### **INVALID\_AUTHORIZATION\_HEADER**
+###### **INVALID_AUTHORIZATION_HEADER**
 
 This error occurs when the provided API Authorization header is invalid or absent. Ensure that the API token used in the request is valid, has appropriate Content Delivery API (CDA) access permissions, and that the header is properly formatted.
 
-###### **INVALID\_ENVIRONMENT**
+###### **INVALID_ENVIRONMENT**
 
 This error occurs when the GraphQL API request targets an environment that doesn’t exist. Check your environment identifier in the request.
 
-###### INVALID\_JSON\_BODY
+###### INVALID_JSON_BODY
 
 The JSON request body is itself malformed or invalid, and our server can't find your query in the request. Perhaps you missed a bracket? Please see [Your first request](/docs/content-delivery-api/your-first-request.md) or use the "Playground" in your project, along with your browser's network inspector, to see what a properly-formed request would look like.
 
-###### **ENVIRONMENT\_NOT\_READY**
+###### **ENVIRONMENT_NOT_READY**
 
 This error occurs when attempting to access an environment that exists but is not in a “ready” state. To resolve this, ensure that the environment you’re targeting has transitioned to “ready” status. You can check the current environment’s status via the DatoCMS interface or API before making modification requests.
 
-###### **DEACTIVATED\_SITE**
+###### **DEACTIVATED_SITE**
 
 This error occurs when attempting to access a site that has been deactivated. To fix this, go to the DatoCMS dashboard and address any pending billing issues.
 
-###### **SITE\_NOT\_READY**
+###### **SITE_NOT_READY**
 
 This error occurs when attempting to access a site that exists but is not in a “ready” state. The site may be initializing. Verify that the desired project is accessible, activated, and ready.
 
-###### **INSUFFICIENT\_PERMISSIONS**
+###### **INSUFFICIENT_PERMISSIONS**
 
 This error occurs when a valid API token exists but lacks the necessary permissions to access the requested environment. The authentication succeeds, but the token doesn’t have the required authorization level for the operation. Ensure your API token has the appropriate role and permission settings for the environment you’re trying to access.
 
-###### **INVALID\_X\_INCLUDE\_DRAFTS\_HEADER**
+###### **INVALID_X_INCLUDE_DRAFTS_HEADER**
 
 This error occurs when the X-Include-Drafts header in your GraphQL API request has an invalid value. The header can only be set to “true” to include draft content in the response. Ensure your API request uses the correct value for this header or omit it entirely if you don’t need draft content.
 
-###### **INVALID\_X\_EXCLUDE\_INVALID\_HEADER**
+###### **INVALID_X_EXCLUDE_INVALID_HEADER**
 
 This error occurs when the X-Exclude-Invalid header in your GraphQL API request has an invalid value. The header can only be set to “true” to exclude invalid content items from the response. Verify that your request uses the correct value for this header or remove it if not needed.
 
-###### **INVALID\_X\_VISUAL\_EDITING\_HEADER**
+###### **INVALID_X_VISUAL_EDITING_HEADER**
 
 **(Enterprise Feature)**
 
 This error occurs when the X-Visual-Editing header is provided, but your site doesn’t have visual editing capabilities, which is an enterprise-only feature. Contact [support@datocms.com](mailto:support@datocms.com) for information about upgrading your plan to access this functionality.
 
-###### **INVALID\_X\_VISUAL\_EDITING\_HEADER**
+###### **INVALID_X_VISUAL_EDITING_HEADER**
 
 **(Invalid Value)**
 
 This error occurs when the X-Visual-Editing header is provided with an invalid value. Currently, the only supported value for this header is “vercel-v1”. Ensure your API request uses the correct value for this header when using visual editing features.
 
-###### **INVALID\_X\_BASE\_EDITING\_URL\_HEADER**
+###### **INVALID_X_BASE_EDITING_URL_HEADER**
 
 This error occurs when the X-Visual-Editing header is specified but the required X-Base-Editing-Url header is missing. When using visual editing features, you must provide the base editing URL to properly generate editing links. Ensure both headers are properly configured in your request.
 
@@ -3254,10 +2988,8 @@ Our shared-service infrastructure is built to maintain steady performance for ev
 
 Here are the technical limits currently in place for the CDA:
 
--   **GraphQL complexity cost**: 10,000,000 ([read more](/docs/content-delivery-api/complexity.md))
-    
--   **Real-time Updates API**: max. 500 concurrent connections per project ([read more](/docs/real-time-updates-api/rate-limiting.md))
-    
+- **GraphQL complexity cost**: 10,000,000 ([read more](/docs/content-delivery-api/complexity.md))
+- **Real-time Updates API**: max. 500 concurrent connections per project ([read more](/docs/real-time-updates-api/rate-limiting.md))
 
 #### CDA Rate Limits
 
@@ -3269,7 +3001,7 @@ For requests that do hit the Content Delivery API we enforce a rate limit of 40 
 
 > [!WARNING] 429 Status Responses in Shared Infrastructure
 > Even if you're operating within your rate limits, there's still a chance of encountering a 429 status code while using the DatoCMS shared infrastructure or medium-density infrastructure during peak system load.
-> 
+>
 > Although this is uncommon, it's wise to be proactive in dealing with this situation. To handle it effectively, it's recommended to implement a retry mechanism. If you receive a 429 status response, wait for a few seconds before attempting the request again.
 
 Cache gets invalidated selectively based on the objects referenced in the query and the payload. As a rule of thumb, when you update a specific model/record/asset, all GraphQL queries that reference those object will get invalidated. Each PoP will then make new requests to the Content Delivery API, and cache the new result for future requests.
@@ -3280,10 +3012,8 @@ If the body of your GraphQL request, after being compressed using gzip, exceeds 
 
 Each CDA response contains two headers that might be helpful to understand if the query is within these limits:
 
--   `X-Cacheable-On-Cdn`:  indicates whether the request can be cached by our CDN (either `true` or `false`)
-    
--   `X-Cacheable-On-Cdn-Query-Length-Limit`: provides the actual size of the compressed body request in bytes (e.g. `273/8192`)
-    
+- `X-Cacheable-On-Cdn`: indicates whether the request can be cached by our CDN (either `true` or `false`)
+- `X-Cacheable-On-Cdn-Query-Length-Limit`: provides the actual size of the compressed body request in bytes (e.g. `273/8192`)
 
 The efficiency of the gzip compression algorithm makes it highly unlikely that requests will exceed the 8KB limit. To give a rough estimate, 99% of our customers will never experience this limitation. However, it is important to be aware of this limitation and check the GraphQL queries if you notice a suspicious number of 429 status codes.
 
@@ -3299,16 +3029,11 @@ For more details, check our [Plans, billing and pricing page](/docs/plans-pricin
 
 Each query hitting our Content Delivery API has a complexity cost based on
 
--   which type of field is present
-    
--   how many fields are present
-    
--   how many filters are present
-    
--   how many sorting parameters are present
-    
--   the page size
-    
+- which type of field is present
+- how many fields are present
+- how many filters are present
+- how many sorting parameters are present
+- the page size
 
 ### Limits
 
@@ -3347,8 +3072,10 @@ Root fields like `allArtists` have a base cost of 100. To this, the cost of filt
 The following query has a cost of 140: 100 (base) + 20 (implicit page size) x 2 (inner fields' cost)
 
 ```graphql
-query { # it returns at max 20 records by default
-  allArtists { # 100
+query {
+  # it returns at max 20 records by default
+  allArtists {
+    # 100
     id # 1
     name # 1
   }
@@ -3361,10 +3088,10 @@ The following query has a cost of 1,175: 100 (base) + 750 (filtering) + 250 (sor
 query {
   allArtists( # 100
     filter: {
-      birth: {gt: "1990-01-01", lt: "2010-01-01"}, # 250 x 2 => 500
-      country: {eq: "DE"} # 250
-    },
-    orderBy: [name_ASC], # 250
+      birth: { gt: "1990-01-01", lt: "2010-01-01" } # 250 x 2 => 500
+      country: { eq: "DE" } # 250
+    }
+    orderBy: [name_ASC] # 250
     first: 25 # explicit page size
   ) {
     id # 1
@@ -3383,7 +3110,7 @@ The following query has a cost of 1,251: 1,000 (base) + 250 (filtering) + 1 (inn
 ```graphql
 query {
   _allArtistsMeta( # 1,000
-    filter: { country: {eq: "NL"} } # 250
+    filter: { country: { eq: "NL" } } # 250
   ) {
     count # 1
   }
@@ -3399,7 +3126,7 @@ The following query has a complexity cost of 301: 50 (base) + 250 (filtering) + 
 ```graphql
 query {
   artist( # 50
-    filter: { id: {eq: "123"} } # 250
+    filter: { id: { eq: "123" } } # 250
   ) {
     name # 1
   }
@@ -3414,7 +3141,8 @@ The following query has a cost of 27: 25 (base) + 2 (inner fields' cost)
 
 ```graphql
 query {
-  contactPage { # 25
+  contactPage {
+    # 25
     phoneNumber # 1
     emailAddress # 1
   }
@@ -3459,55 +3187,35 @@ The following section has a cost of 1,001.
 
 The following GraphQL fields differ from the base cost (1):
 
--   Single asset field: 5
-    
--   Asset gallery field: 5 x inner fields' cost
-    
--   Multiple-paragraph text, when rendering Markdown in HTML: 5
-    
--   JSON field: 5
-    
--   Single link field: 10
-    
--   Multiple links field: 5 x inner fields' cost
-    
--   Modular content field: 5 x inner fields' cost
-    
--   Structured text field
-    
-    -   value: 10
-        
-    -   blocks: 5 x inner fields' cost
-        
-    -   links: 5 x inner fields' cost
-        
--   `children` field (available in tree collections): 5 x inner fields' cost
-    
--   `parent` field (available in tree collections): 25
-    
--   Localized field
-    
-    -   value: number of environment's locales x inner fields' cost
-        
--   SEO field
-    
-    -   image: 5
-        
--   `_seoMetaTags`: 5
-    
+- Single asset field: 5
+- Asset gallery field: 5 x inner fields' cost
+- Multiple-paragraph text, when rendering Markdown in HTML: 5
+- JSON field: 5
+- Single link field: 10
+- Multiple links field: 5 x inner fields' cost
+- Modular content field: 5 x inner fields' cost
+- Structured text field
+  - value: 10
+  - blocks: 5 x inner fields' cost
+  - links: 5 x inner fields' cost
+
+- `children` field (available in tree collections): 5 x inner fields' cost
+- `parent` field (available in tree collections): 25
+- Localized field
+  - value: number of environment's locales x inner fields' cost
+
+- SEO field
+  - image: 5
+
+- `_seoMetaTags`: 5
 
 The following query has a cost of 351, composed by:
 
--   50 (base cost of single record field)
-    
--   250 (filtering)
-    
--   5 + 1 + 5 (photo field)
-    
--   10 + 5 x 1 + 5 x 2 (content field)
-    
--   5 x 3 (movies field)
-    
+- 50 (base cost of single record field)
+- 250 (filtering)
+- 5 + 1 + 5 (photo field)
+- 10 + 5 x 1 + 5 x 2 (content field)
+- 5 x 3 (movies field)
 
 ```graphql
 query {
@@ -3544,9 +3252,10 @@ The modular content field `content` has a complexity cost of 10: 5 x 2
 
 ```graphql
 query {
-  artist(filter: { id: { eq: "123" }}) {
+  artist(filter: { id: { eq: "123" } }) {
     name
-    content { # 5 x max possible union's cost
+    content {
+      # 5 x max possible union's cost
       ... on MovieRecord {
         title # 1
       }
@@ -3571,15 +3280,17 @@ query {
     filter: {
       content: {
         any: {
-          product: { # 1,000,000
+          product: {
+            # 1,000,000
             name: {
               eq: "T-Shirt" # 250
-            },
+            }
             price: {
               gt: 30 # 250
             }
           }
-          cta: { # 1,000,000
+          cta: {
+            # 1,000,000
             title: {
               isPresent: true # 250
             }
@@ -3605,8 +3316,8 @@ The following query has a cost of 801: 100 (base) + 250 (filtering) + 250 (sorti
 ```graphql
 query {
   allUploads( # 100
-    filter: {format: {eq: "jpg"}}, # 250
-    orderBy: [size_DESC], # 250
+    filter: { format: { eq: "jpg" } } # 250
+    orderBy: [size_DESC] # 250
     first: 30 # explicit page size
   ) {
     id # 1
@@ -3625,7 +3336,7 @@ The following query has a cost of 1,251: 1,000 (base) + 250 (filtering) + 1 (inn
 ```graphql
 query {
   _allUploadsMeta( # 1,000
-    filter: {format: {eq: "jpg"}} # 250
+    filter: { format: { eq: "jpg" } } # 250
   ) {
     count # 1
   }
@@ -3641,7 +3352,7 @@ The following query has a complexity cost of 308: 50 (base) + 250 (filtering) + 
 ```graphql
 query {
   upload( # 50
-    filter: {id: {eq: "123"}} # 250
+    filter: { id: { eq: "123" } } # 250
   ) {
     url #1
     title #1
@@ -3655,8 +3366,7 @@ query {
 
 The following GraphQL fields differ from the base cost (1):
 
--   blurUpThumb: 5
-    
+- blurUpThumb: 5
 
 ### Site field
 
@@ -3666,8 +3376,10 @@ The following query has a cost of 13.
 
 ```graphql
 query {
-  _site { # 10
-    globalSeo { # 1
+  _site {
+    # 10
+    globalSeo {
+      # 1
       siteName # 1
       titleSuffix # 1
     }
@@ -3707,10 +3419,8 @@ Pagination allows you to efficiently retrieve large sets of records by breaking 
 
 Control the number of elements returned in a single query using the `first` parameter.
 
--   **Default limit:** 20 records
-    
--   **Maximum limit:** 500 records
-    
+- **Default limit:** 20 records
+- **Maximum limit:** 500 records
 
 The following query returns the first 5 artist records:
 
@@ -3747,12 +3457,12 @@ To determine the total number of records and implement client-side pagination, u
 
 ```graphql
 query {
-  allArtists(filter: { name: { in: [ "Blank Banshee", "Gazelle Twin" ] }}) {
+  allArtists(filter: { name: { in: ["Blank Banshee", "Gazelle Twin"] } }) {
     id
     name
     genre
   }
-  _allArtistsMeta(filter: { name: { in: [ "Blank Banshee", "Gazelle Twin" ] }}) {
+  _allArtistsMeta(filter: { name: { in: ["Blank Banshee", "Gazelle Twin"] } }) {
     count
   }
 }
@@ -3787,11 +3497,7 @@ If you supply exactly one parameter to the filter argument, the query response w
 
 ```graphql
 query {
-  allArtists(
-    filter: {
-      published: { eq: false }
-    }
-  ) {
+  allArtists(filter: { published: { eq: false } }) {
     id
     name
     published
@@ -3803,11 +3509,7 @@ Depending on the type of the field you want to filter by, you have access to dif
 
 ```graphql
 query {
-  allArtists(
-    filter: {
-      name: { in: [ "Blank Banshee", "Gazelle Twin" ] }
-    }
-  ) {
+  allArtists(filter: { name: { in: ["Blank Banshee", "Gazelle Twin"] } }) {
     id
     name
     genre
@@ -3840,7 +3542,7 @@ query {
   allArtists(
     filter: {
       AND: [
-        { name: { matches: { pattern: "Blank" } } },
+        { name: { matches: { pattern: "Blank" } } }
         { name: { matches: { pattern: "Banshee" } } }
       ]
     }
@@ -3858,11 +3560,8 @@ It is also possible to combine AND-like and OR logical expressions. For example,
 query {
   allPois(
     filter: {
-      address: { matches: { pattern: "new york" } },
-      OR: [
-        { rating: { gt: 4 } },
-        { name: { matches: { pattern: "restaurant" } } },
-      ]
+      address: { matches: { pattern: "new york" } }
+      OR: [{ rating: { gt: 4 } }, { name: { matches: { pattern: "restaurant" } } }]
     }
   ) {
     name
@@ -4014,17 +3713,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4053,17 +3749,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4092,17 +3785,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4131,17 +3821,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4170,17 +3857,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4209,17 +3893,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -4558,11 +4239,7 @@ Filter records within the specified radius in meters
 ```graphql
 query {
   allProducts(
-    filter: {
-      latLonField: {
-        near: { latitude: 40.73, longitude: -73.93, radius: 10 }
-      }
-    }
+    filter: { latLonField: { near: { latitude: 40.73, longitude: -73.93, radius: 10 } } }
   ) {
     title
   }
@@ -4778,11 +4455,7 @@ Filter records based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      stringField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { stringField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -4796,11 +4469,7 @@ Exclude records based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      stringField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { stringField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -4900,11 +4569,7 @@ Filter records based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      structuredTextField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { structuredTextField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -4919,9 +4584,7 @@ Exclude records based on a regular expression
 query {
   allProducts(
     filter: {
-      structuredTextField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
+      structuredTextField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } }
     }
   ) {
     title
@@ -4974,11 +4637,7 @@ Filter records based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      textField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { textField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -4992,11 +4651,7 @@ Exclude records based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      textField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { textField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -5078,17 +4733,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5117,17 +4769,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5156,17 +4805,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5195,17 +4841,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5234,17 +4877,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5273,17 +4913,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5326,17 +4963,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5365,17 +4999,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5404,17 +5035,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5443,17 +5071,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5482,17 +5107,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5521,17 +5143,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5588,17 +5207,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5627,17 +5243,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5666,17 +5279,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5705,17 +5315,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5744,17 +5351,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5783,17 +5387,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5836,17 +5437,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5875,17 +5473,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5914,17 +5509,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5953,17 +5545,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -5992,17 +5581,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6031,17 +5617,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6134,17 +5717,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6173,17 +5753,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6212,17 +5789,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6251,17 +5825,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6290,17 +5861,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6329,17 +5897,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6382,17 +5947,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6421,17 +5983,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6460,17 +6019,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6499,17 +6055,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6538,17 +6091,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6577,17 +6127,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -6773,7 +6320,7 @@ To activate the feature, go to a field's editing modal, and enable the deep filt
 
 Once enabled, new filters become available in the GraphQL Content Delivery API for the specified field.
 
-To be precise, there is a second necessary condition to see the newly activated GraphQL filters: the field must accept at least one block type. If the field does not allow embedding any block types within it, then deep filtering is not applicable — *there's nothing to filter!* — and therefore the GraphQL filters relative to deep filtering will not be present.
+To be precise, there is a second necessary condition to see the newly activated GraphQL filters: the field must accept at least one block type. If the field does not allow embedding any block types within it, then deep filtering is not applicable — _there's nothing to filter!_ — and therefore the GraphQL filters relative to deep filtering will not be present.
 
 > [!PROTIP] Pro tip: Explore use cases for deep filtering
 > Check out this [blog entry](https://www.datocms.com/blog/advanced-data-retrieval-with-deep-filtering.md) for an in-depth look at use cases where deep filtering can simplify accessing specific data without multiple API calls, enhancing performance and efficiency.
@@ -6800,7 +6347,7 @@ query {
 }
 ```
 
-In other words, within a field with deep filtering enabled, you can specify an `any` key where, for each block type that the field accepts, you can define one or more filtering conditions. The word "any" can be read as: *"find records where any product block respects these conditions"*.
+In other words, within a field with deep filtering enabled, you can specify an `any` key where, for each block type that the field accepts, you can define one or more filtering conditions. The word "any" can be read as: _"find records where any product block respects these conditions"_.
 
 The filtering conditions are the same ones discussed in the previous section on [Filtering records](/docs/content-delivery-api/filtering-records.md), with the only difference being that since blocks don't have meta fields like ie. `_firstPublishedAt` they cannot be used in this context. The only meta key available for blocks is `id`.
 
@@ -6896,7 +6443,7 @@ query {
 
 ## Structured Text
 
-When deep filtering is *not* enabled on a Structured Text field, its GraphQL filters allow to filter by its textual content only, like this:
+When deep filtering is _not_ enabled on a Structured Text field, its GraphQL filters allow to filter by its textual content only, like this:
 
 ```graphql
 query {
@@ -6934,9 +6481,9 @@ query {
 
 > [!WARNING] This means a breaking change in GraphQL schema!
 > We just saw that enabling deep filtering on a Structured Text field will cause a change to the associated GraphQL filter type. This means that existing GraphQL queries may need to be rewritten in order to avoid errors.
-> 
+>
 > This is another reason why deep filtering is activable or not on a per-field basis: so that you are in control of when (and how) to introduce this change.
-> 
+>
 > To avoid unpleasant surprises in production, it is a good idea to test the switch to deep filtering for Structured Text fields in a a [sandbox environment](/docs/general-concepts/primary-and-sandbox-environments.md) first, and see if it breaks any of your existing GraphQL queries.
 
 All the query possibilities in deep filtering mentioned above for the Modular Content fields also apply to the Structured Text fields.
@@ -6966,21 +6513,19 @@ query {
 ## Known Issues
 
 > [!NOTE] Deep Filtering Technical Limitations
+>
 > #### Depth Limit:
-> 
+>
 > Deep filtering is currently limited to only one level of depth. That is, you cannot filter records based on the content of blocks deeply nested inside other blocks. For example, if you have:
-> 
-> -   A modular content field
->     
->     -   A parent block with a "parent title" field and another modular content field called "child blocks"
->         
->         -   Inside a child block, you have another field called "child title"
->             
-> 
+>
+> - A modular content field
+>   - A parent block with a "parent title" field and another modular content field called "child blocks"
+>     - Inside a child block, you have another field called "child title"
+>
 > You **can** filter by the "parent title" but you **cannot** filter by the "child title".
-> 
+>
 > #### Content Delivery API only:
-> 
+>
 > Deep filtering is currently limited to the Content Delivery API (CDA / GraphQL). You cannot deep filter records in the Content Management API (CMA / REST).
 
 ---
@@ -6993,9 +6538,7 @@ When retrieving records of a specific model you can supply the `orderBy` argumen
 
 ```graphql
 query {
-  allArtists(
-    orderBy: [name_ASC]
-  ) {
+  allArtists(orderBy: [name_ASC]) {
     id
     name
   }
@@ -7039,7 +6582,7 @@ The same `_locales` field can also be used to filter your records. For example, 
 
 ```graphql
 query {
-  allBlogPosts(filter: {_locales: {allIn: [it]}}) {
+  allBlogPosts(filter: { _locales: { allIn: [it] } }) {
     title
   }
 }
@@ -7054,10 +6597,10 @@ When you're fetching the value of a [localized field](/docs/general-concepts/loc
 ```graphql
 query {
   _site {
-   locales # -> ["en", "it"]
- }
+    locales # -> ["en", "it"]
+  }
   allBlogPosts {
-    title  # -> will return the title value in "en" locale
+    title # -> will return the title value in "en" locale
   }
 }
 ```
@@ -7067,7 +6610,7 @@ To change that, you can add a `locale` argument to queries to specify another lo
 ```graphql
 query {
   allBlogPosts(locale: it) {
-    title  # -> will return the title value in "it" locale
+    title # -> will return the title value in "it" locale
   }
 }
 ```
@@ -7154,10 +6697,8 @@ Play video »
 
 Using the Content Delivery API, it is possible to follow such links between records in both directions. Continuing with our example:
 
--   Starting from a blog post, get its author (that's the *direct relationship* expressed by the link field in the blog post record).
-    
--   Starting from a person, get all their blog posts (that's the *inverse relationship*, automatically derived by looking at the value of the author field in every blog post).
-    
+- Starting from a blog post, get its author (that's the _direct relationship_ expressed by the link field in the blog post record).
+- Starting from a person, get all their blog posts (that's the _inverse relationship_, automatically derived by looking at the value of the author field in every blog post).
 
 ## Following a direct relationship
 
@@ -7226,7 +6767,7 @@ If you're interested in only getting blog posts that link to a person via a spec
 ```graphql
 query {
   allPeople {
-    _allReferencingBlogPosts(through: {fields: {anyIn: [blogPost_reviewer]}}) {
+    _allReferencingBlogPosts(through: { fields: { anyIn: [blogPost_reviewer] } }) {
       id
       title
     }
@@ -7252,7 +6793,7 @@ Will only return documentation pages which link to a specific author through the
 
 > [!WARNING] Use the API Explorer to make it easier to write your queries!
 > As you can see from the last example, arguments like `docPage_main__chapter_author` can be tricky to write, and the situation can get much worse when you start considering nested blocks!
-> 
+>
 > Always remember that in GraphQL you can harness the powers of introspection and use the API Explorer in your project to get query intelligent code-completion.
 
 #### Filtering references by locale
@@ -7264,7 +6805,7 @@ To filter references in a specific set of locales, ignoring the others, you can 
 ```graphql
 query {
   allPeople {
-    _allReferencingBlogPosts(through: {locales: {anyIn: [en]}}) {
+    _allReferencingBlogPosts(through: { locales: { anyIn: [en] } }) {
       id
       title
     }
@@ -7277,7 +6818,7 @@ Likewise, if you need to filter references that are coming from non-localized fi
 ```graphql
 query {
   allPeople {
-    _allReferencingBlogPosts(through: {locales: {anyIn: [_nonLocalized]}}) {
+    _allReferencingBlogPosts(through: { locales: { anyIn: [_nonLocalized] } }) {
       id
       title
     }
@@ -7307,7 +6848,7 @@ You can even filter references based on one or more of its fields:
 ```graphql
 query {
   allPeople {
-    _allReferencingBlogPosts(filter: {name: {matches: {pattern: "trip"}}}) {
+    _allReferencingBlogPosts(filter: { name: { matches: { pattern: "trip" } } }) {
       id
       title
     }
@@ -7323,12 +6864,9 @@ If you have [Modular Content fields](/docs/content-modelling/modular-content.md)
 
 Suppose a `blog_post` model has a modular content field called `content`, which in turn accepts the following [block models](/docs/content-modelling/modular-content.md):
 
--   Block `blog_post_text_block`: made of a `text` field (*multi-paragraph text*);
-    
--   Block `blog_post_quote_block`: made of a `quote` field (*multi-paragraph text*) and `author` field (*single-line string*);
-    
--   Block `blog_post_gallery_block`: made of a `gallery` field (*image gallery*);
-    
+- Block `blog_post_text_block`: made of a `text` field (_multi-paragraph text_);
+- Block `blog_post_quote_block`: made of a `quote` field (_multi-paragraph text_) and `author` field (_single-line string_);
+- Block `blog_post_gallery_block`: made of a `gallery` field (_image gallery_);
 
 This GraphQL query will do the work:
 
@@ -7351,7 +6889,9 @@ query {
       ... on BlogPostGalleryBlockRecord {
         id
         _modelApiKey
-        gallery { url }
+        gallery {
+          url
+        }
       }
     }
   }
@@ -7377,7 +6917,9 @@ query {
         author
       }
       ... on BlogPostGalleryBlockRecord {
-        gallery { url }
+        gallery {
+          url
+        }
       }
     }
   }
@@ -7398,12 +6940,9 @@ If you have [Structured Text fields](/docs/content-modelling/structured-text.md)
 
 Suppose a `blog_post` model has a Structured Text field called `content`, which in turn accepts [links](/docs/content-modelling/structured-text.md#linking-records) to other blog posts and the following [embedded blocks](/docs/content-modelling/structured-text.md#embedding-blocks):
 
--   Block `cta_block`: with a `label` and `url` fields (both *Single-line text*)
-    
--   Block `carousel_block`: with an *Asset Gallery* field called `gallery`
-    
--   Block `mention_block`: with a Single-line text field called `username`
-    
+- Block `cta_block`: with a `label` and `url` fields (both _Single-line text_)
+- Block `carousel_block`: with an _Asset Gallery_ field called `gallery`
+- Block `mention_block`: with a Single-line text field called `username`
 
 This GraphQL query will return all the data needed to render it:
 
@@ -7423,7 +6962,9 @@ query {
           url
         }
         ... on CarouselBlockRecord {
-          gallery { url }
+          gallery {
+            url
+          }
         }
       }
       inlineBlocks {
@@ -7454,23 +6995,16 @@ query {
 
 You can then use the result of this query with one of the following libraries to render the result as HTML:
 
--   [`datocms-structured-text-to-plain-text`](https://github.com/datocms/structured-text/tree/main/packages/to-plain-text) to render it as plain text;
-    
--   [`datocms-structured-text-to-html-string`](https://github.com/datocms/structured-text/tree/main/packages/to-html-string) to render it as an HTML string;
-    
--   [`datocms-structured-text-to-dom-nodes`](https://github.com/datocms/structured-text/tree/main/packages/to-dom-nodes) to transform it in a list of DOM nodes;
-    
+- [`datocms-structured-text-to-plain-text`](https://github.com/datocms/structured-text/tree/main/packages/to-plain-text) to render it as plain text;
+- [`datocms-structured-text-to-html-string`](https://github.com/datocms/structured-text/tree/main/packages/to-html-string) to render it as an HTML string;
+- [`datocms-structured-text-to-dom-nodes`](https://github.com/datocms/structured-text/tree/main/packages/to-dom-nodes) to transform it in a list of DOM nodes;
 
 We also have ready-made components for the most popular frontend frameworks:
 
--   [React](https://github.com/datocms/react-datocms#structured-text)
-    
--   [Vue](https://github.com/datocms/vue-datocms#structured-text)
-    
--   [Svelte](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/StructuredText)
-    
--   [Astro](https://github.com/datocms/astro-datocms/tree/main/src/StructuredText)
-    
+- [React](https://github.com/datocms/react-datocms#structured-text)
+- [Vue](https://github.com/datocms/vue-datocms#structured-text)
+- [Svelte](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/StructuredText)
+- [Astro](https://github.com/datocms/astro-datocms/tree/main/src/StructuredText)
 
 ### Filtering records by contained blocks
 
@@ -7484,7 +7018,7 @@ If you have models using [hierarchical sorting](/docs/content-modelling/hierarch
 
 ```graphql
 query {
-  allCategories(filter: {parent: {exists: false}}) {
+  allCategories(filter: { parent: { exists: false } }) {
     name
     children {
       name
@@ -7521,7 +7055,9 @@ Alternatively, a more minimal option is to use the dominant colors to prepare th
     blurhash
     thumbhash
     blurUpThumb
-    colors { hex }
+    colors {
+      hex
+    }
   }
 }
 ```
@@ -7573,21 +7109,16 @@ To read all the details of the `responsiveImage` object head to [the blog post](
 
 > [!WARNING] Use HLS streaming whenever possible
 > In order to save costs and improve visitor UX, we strongly recommend that you serve videos via HLS (HTTP Live Streaming) whenever possible, instead of using the raw MP4 videos.
-> 
+>
 > HLS is easily served with our video components (below). Please see [How to stream videos efficiently: Raw MP4 Downloads vs HLS Streaming](/docs/streaming-videos/how-to-stream-videos-efficiently.md) for a more detailed explanation.
 
 If you chose to upload videos on DatoCMS, thanks to the integration with [Mux](https://www.mux.com/), we augment the CDA `video` objects with:
 
--   The Mux Playback ID, required for our `<VideoPlayer/>` component, or if you're using one of [Mux's players for other platforms](https://www.mux.com/docs/guides/play-your-videos)
-    
--   HLS video streaming URL — we offer `<VideoPlayer />` components for [React](https://github.com/datocms/react-datocms/blob/master/docs/video-player.md), [Vue](https://github.com/datocms/vue-datocms/tree/master/src/components/VideoPlayer) and [Svelte,](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/VideoPlayer) which act as a wrapper around [Mux's video player](https://github.com/muxinc/elements/blob/main/packages/mux-player/README.md) web component. Alternatively, you can learn [how to integrate the Mux video player into your frontend](https://docs.mux.com/guides/player/integrate-in-your-webapp);
-    
--   High, medium and low quality MP4 versions of the video to support legacy browsers that do not support HLS;
-    
--   Duration and frame rate of the video;
-    
--   Thumbnail URL: resizable, croppable and available in JPEG, PNG and GIF format. See [Mux thumbnail query string parameters](https://docs.mux.com/guides/get-images-from-a-video#thumbnail-query-string-parameters) for available transformations.
-    
+- The Mux Playback ID, required for our `<VideoPlayer/>` component, or if you're using one of [Mux's players for other platforms](https://www.mux.com/docs/guides/play-your-videos)
+- HLS video streaming URL — we offer `<VideoPlayer />` components for [React](https://github.com/datocms/react-datocms/blob/master/docs/video-player.md), [Vue](https://github.com/datocms/vue-datocms/tree/master/src/components/VideoPlayer) and [Svelte,](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/VideoPlayer) which act as a wrapper around [Mux's video player](https://github.com/muxinc/elements/blob/main/packages/mux-player/README.md) web component. Alternatively, you can learn [how to integrate the Mux video player into your frontend](https://docs.mux.com/guides/player/integrate-in-your-webapp);
+- High, medium and low quality MP4 versions of the video to support legacy browsers that do not support HLS;
+- Duration and frame rate of the video;
+- Thumbnail URL: resizable, croppable and available in JPEG, PNG and GIF format. See [Mux thumbnail query string parameters](https://docs.mux.com/guides/get-images-from-a-video#thumbnail-query-string-parameters) for available transformations.
 
 #### Example CDA Video Query
 
@@ -7652,8 +7183,10 @@ In most cases, our API will return the correct `width` and `height` for your ima
 However, in some edge cases, like when using the Imgix [`trim`](https://docs.imgix.com/en-US/apis/rendering/trim) operation (and also [padding](https://docs.imgix.com/en-US/apis/rendering/border-and-padding/padding) and [rotation](https://docs.imgix.com/en-US/apis/rendering/rotation)), our API cannot know the true dimensions of the transformed image beforehand. This means that **using those transformations will cause our API to return the incorrect image width and height**, and you must manually calculate and override them on your frontend instead, like:
 
 ```tsx
-{/* Destructure the original responsiveImage object, then override its dimensions */}
-<Image data={{...myQueryResponse.responsiveImage, width: 200, height: 200}} />
+{
+  /* Destructure the original responsiveImage object, then override its dimensions */
+}
+<Image data={{ ...myQueryResponse.responsiveImage, width: 200, height: 200 }} />;
 ```
 
 Alternatively, you can download the transformed image (e.g. `https://www.datocms-assets.com/12345/example.png?trim=color`) and re-upload that transformation back into your DatoCMS media area as a separate file and use that directly.
@@ -7680,7 +7213,7 @@ If you specify multiple conditions, they will be combined as if it was a logical
 
 ```graphql
 query {
-  allUploads(filter: { type: { eq: image }, resolution: { eq: large }}) {
+  allUploads(filter: { type: { eq: image }, resolution: { eq: large } }) {
     blurUpThumb
     url(imgixParams: { w: 100, h: 100, fit: crop })
   }
@@ -7694,13 +7227,13 @@ query {
   allUploads(
     filter: {
       OR: [
-        { type: { eq: image }, resolution: { eq: large }},
-        { type: { eq: video }, tags: { contains: "fun" }}
+        { type: { eq: image }, resolution: { eq: large } }
+        { type: { eq: video }, tags: { contains: "fun" } }
       ]
     }
   ) {
     blurUpThumb
-    url(imgixParams: {w: 100, h: 100, fit: crop})
+    url(imgixParams: { w: 100, h: 100, fit: crop })
   }
 }
 ```
@@ -7730,17 +7263,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7769,17 +7299,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7808,17 +7335,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7847,17 +7371,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7886,17 +7407,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7925,17 +7443,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -7966,17 +7481,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8005,17 +7517,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8044,17 +7553,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8083,17 +7589,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8122,17 +7625,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8161,17 +7661,14 @@ query {
 
 > [!NOTE] Filtering adjacent records
 > Truncation to the nearest minute may cause filters to return unintended records (e.g., `gt: "2025-05-06T09:36:01+02:00"` becomes `gt: "2025-05-06T09:36:00+02:00"` and unexpectedly includes records at `2025-05-06T09:36:01+02:00`).
-> 
+>
 > Add an additional filter condition (like `slug: {neq: $slug}` in the example below) to ensure unintended records are excluded from the results:
-> 
+>
 > ```graphql
 > query NextArticle($slug: String, $firstPublishedAt: DateTime) {
 >   next: article(
 >     orderBy: _firstPublishedAt_ASC
->     filter: {
->       _firstPublishedAt: {gt: $firstPublishedAt},
->       slug: {neq: $slug}
->     }
+>     filter: { _firstPublishedAt: { gt: $firstPublishedAt }, slug: { neq: $slug } }
 >   ) {
 >     title
 >     _firstPublishedAt
@@ -8187,13 +7684,7 @@ Filter uploads based on a regular expression
 
 ```graphql
 query {
-  allProducts(
-    filter: {
-      altField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
-  ) {
+  allProducts(filter: { altField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }) {
     title
   }
 }
@@ -8206,11 +7697,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      altField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { altField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8286,11 +7773,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      authorField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { authorField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8304,11 +7787,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      authorField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { authorField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8336,11 +7815,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      basenameField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { basenameField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8354,11 +7829,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      basenameField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { basenameField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8436,11 +7907,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      copyrightField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { copyrightField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8454,11 +7921,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      copyrightField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { copyrightField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8486,11 +7949,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      filenameField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { filenameField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8504,11 +7963,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      filenameField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { filenameField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8762,11 +8217,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      mimeTypeField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { mimeTypeField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8780,11 +8231,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      mimeTypeField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { mimeTypeField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8848,11 +8295,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      notesField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { notesField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -8866,11 +8309,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      notesField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { notesField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -9172,11 +8611,7 @@ Filter uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      titleField: {
-        matches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { titleField: { matches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -9190,11 +8625,7 @@ Exclude uploads based on a regular expression
 ```graphql
 query {
   allProducts(
-    filter: {
-      titleField: {
-        notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false }
-      }
-    }
+    filter: { titleField: { notMatches: { pattern: "bi(cycl|k)e", caseSensitive: false } } }
   ) {
     title
   }
@@ -9408,11 +8839,11 @@ Meta tags are generated merging the values present in the record's "SEO and Soci
 
 If the record doesn't have a "SEO and Social" field, the method tries to guess reasonable values by inspecting the other fields of the record (single-line strings and images).
 
-**`title,`** **`og:title`****,** **`twitter:title`**
+**`title,`** **`og:title`\*\***,\*\* **`twitter:title`**
 
 These titles can be explicitly set in the "SEO and Social" field, if present. If the record does not have that SEO field, or the title is not specified, the tags will be generated from either the record title or the title provided in the global SEO settings.
 
-The *Title suffix* value from global SEO preferences will also be concatenated to the `title`field, as long as the total length of the title + suffix is 60 characters or less. If the combined length is longer, the suffix will be omitted.
+The _Title suffix_ value from global SEO preferences will also be concatenated to the `title`field, as long as the total length of the title + suffix is 60 characters or less. If the combined length is longer, the suffix will be omitted.
 
 The suffix will NOT be added to the OpenGraph and Twitter titles, since there are already other fields for that (`og:site_name` and `twitter:site`).
 
@@ -9426,11 +8857,11 @@ _site {
 }
 ```
 
-**`description`****,** **`og:description`****,** **`twitter:description`**
+**`description`\*\***,\*\* **`og:description`\*\***,\*\* **`twitter:description`**
 
 These tags are generated using the description field in the "SEO and Social" field. If no such field is present, or the description is not specified, the tags will be generated from the description specified in the global SEO settings.
 
-`**og:image**`**,** `**og:image:width**`**,** `**og:image:height**`**,** **`og:image:alt`****,** `**twitter:image**`**,** `**twitter:image:alt**`
+`**og:image**`**,** `**og:image:width**`**,** `**og:image:height**`**,** **`og:image:alt`\*\***,** `**twitter:image**`**,** `**twitter:image:alt\*\*`
 
 These tags are generated using the image field in the "SEO and Social" field. If no such field is present, or the image is not specified, the tags will be generated from the image specified in the global SEO settings.
 
@@ -9452,19 +8883,19 @@ The tag is generated from the site name attribute (if provided)
 
 **`twitter:site`**
 
-The tag is deduced from the twitter\_account attribute (if provided)
+The tag is deduced from the twitter_account attribute (if provided)
 
 **`twitter:card`**
 
-The tag is generated from using the twitter\_card field in the "SEO and Social" field. If no such field is present, the global SEO settings will be used.
+The tag is generated from using the twitter_card field in the "SEO and Social" field. If no such field is present, the global SEO settings will be used.
 
 **`article:modified_time`**
 
-This tag is generated using the updated\_at meta attribute of the Record
+This tag is generated using the updated_at meta attribute of the Record
 
 **`article:publisher`**
 
-The tag is deduced from the facebook\_page\_url attribute (if provided)
+The tag is deduced from the facebook_page_url attribute (if provided)
 
 ### Favicon meta tags
 
@@ -9516,32 +8947,22 @@ Play video »
 
 ## Record meta fields
 
-Every record has some *meta* fields that are providing some meta information on the records.
+Every record has some _meta_ fields that are providing some meta information on the records.
 
 For example you can get the creation date, the status, etc. All these fields are prefixed with an underscore, let's see them in detail:
 
--   `_createdAt`: date of creation of the record;
-    
--   `_firstPublishedAt`: date of first publication of the record;
-    
--   `_isValid`: is the record valid? This can be false if the schema has changed and the records haven't been updated yet;
-    
--   `_modelApiKey`: the API key of the model;
-    
--   `_publicationScheduledAt`: if the publication of a record is scheduled in the future, this field will hold the publication date;
-    
--   `_seoMetaTags`: it's an object with the SEO meta tags computed from an optional SEO field and the fallback details from the main site settings. It's an object representing the meta tags:
-    
-    -   `attributes`: the meta tag attributes;
-        
-    -   `content`: the meta tag content;
-        
-    -   `tag`: the meta tag name;
-        
--   `_status`: represent the record status: draft/published;
-    
--   `_updatedAt`: it's the date of last update;
-    
+- `_createdAt`: date of creation of the record;
+- `_firstPublishedAt`: date of first publication of the record;
+- `_isValid`: is the record valid? This can be false if the schema has changed and the records haven't been updated yet;
+- `_modelApiKey`: the API key of the model;
+- `_publicationScheduledAt`: if the publication of a record is scheduled in the future, this field will hold the publication date;
+- `_seoMetaTags`: it's an object with the SEO meta tags computed from an optional SEO field and the fallback details from the main site settings. It's an object representing the meta tags:
+  - `attributes`: the meta tag attributes;
+  - `content`: the meta tag content;
+  - `tag`: the meta tag name;
+
+- `_status`: represent the record status: draft/published;
+- `_updatedAt`: it's the date of last update;
 
 All these fields are read-only (also use the CMA) as they either represent an internal state of the record or they are precomputed by our API using other records (e.g., SEO fields).
 
@@ -9549,7 +8970,7 @@ All these fields are read-only (also use the CMA) as they either represent an in
 
 The `_site` object has a site-level meta field:
 
--   `locales`: the list of available locales.
+- `locales`: the list of available locales.
 
 ---
 
@@ -9559,12 +8980,9 @@ DatoCMS Cache Tags help optimize your website or app's caching. They allow devel
 
 The main benefits include:
 
--   **Visitors can instantly view the most updated version of the content**, while maintaining the benefits of completely static and cached content.
-    
--   **Hosting expenses and DatoCMS resource usage can be dramatically reduced** thanks to a precise caching mode that does not rely on time-based invalidation methods, or a total invalidation of the entire site when anything changes.
-    
--   **It entirely relieves the developer of the duty to manage cache invalidation,** a task which is instead taken care of by DatoCMS itself.
-    
+- **Visitors can instantly view the most updated version of the content**, while maintaining the benefits of completely static and cached content.
+- **Hosting expenses and DatoCMS resource usage can be dramatically reduced** thanks to a precise caching mode that does not rely on time-based invalidation methods, or a total invalidation of the entire site when anything changes.
+- **It entirely relieves the developer of the duty to manage cache invalidation,** a task which is instead taken care of by DatoCMS itself.
 
 For a more comprehensive understanding of DatoCMS cache tags and the problem it solves, we recommend reading the [**feature's announcement**](https://www.datocms.com/blog/introducing-datocms-cache-tags.md) which provides some additional background.
 
@@ -9573,11 +8991,8 @@ For a more comprehensive understanding of DatoCMS cache tags and the problem it 
 Implementing cache tags on your app is a three-step process:
 
 1.  Modify your existing GraphQL queries by adding a new `X-Cache-Tags` header;
-    
 2.  Tag your frontend pages with cache tags received from DatoCMS;
-    
 3.  Implement a specific endpoint to invalidate the tags that DatoCMS sends you via webhook.
-    
 
 All three steps are designed to be quite straightforward to implement, allowing you to benefit from the advantages this method offers in a very short time. Let's look at them in detail.
 
@@ -9680,14 +9095,11 @@ If your website or application can define custom HTTP headers in the response on
 
 Tag-based cache invalidation is a method where keywords (tags) can be assigned to cached pages. This technique is provided by all the major content delivery services such as [Netlify](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/), [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys), [Bunny](https://bunny.net/blog/introducing-tag-based-cdn-cache-purging/) and [Cloudflare](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/). In a nutshell:
 
--   **Assign Tags:** When your application delivers a page, it can specify a series of tags in a specific response header (the header's name depends on the CDN). These tags serve as labels, that represent the content within that page.
-    
--   **Caching:** The response is stored in the CDN cache with its primary cache key — the URL — plus the associated tags.
-    
--   **Purging:** If any content linked to a particular tag is updated, instead of searching through all cached pages, the CDN can quickly identify and remove all items associated with that specific tag.
-    
+- **Assign Tags:** When your application delivers a page, it can specify a series of tags in a specific response header (the header's name depends on the CDN). These tags serve as labels, that represent the content within that page.
+- **Caching:** The response is stored in the CDN cache with its primary cache key — the URL — plus the associated tags.
+- **Purging:** If any content linked to a particular tag is updated, instead of searching through all cached pages, the CDN can quickly identify and remove all items associated with that specific tag.
 
-It's important to know that different services use different names for the same underlying concept technology. For example, Fastly refers to cache tags as "Surrogate Keys". The header with which your application can declare the tags to the CDN also varies depending on the service. With Netlify and Cloudflare, the name is `Cache-Tag`, while Bunny refers to it as `CDN-Tag`. What we in this documentation call *"cache invalidation,"* other services refer to as *"cache purge".*
+It's important to know that different services use different names for the same underlying concept technology. For example, Fastly refers to cache tags as "Surrogate Keys". The header with which your application can declare the tags to the CDN also varies depending on the service. With Netlify and Cloudflare, the name is `Cache-Tag`, while Bunny refers to it as `CDN-Tag`. What we in this documentation call _"cache invalidation,"_ other services refer to as _"cache purge"._
 
 Make sure to refer to the specific documentation of your CDN to know the details, format, and any potential limitations.
 
@@ -9715,10 +9127,8 @@ Other cases are less obvious to grasp: suppose that a post can belong to some ca
 
 So, without being able to predict the actual result in terms of hit ratio, it is certainly possible to say this:
 
--   Regardless of the frequency of invalidation, a superior result will still be achieved with DatoCMS Cache Tags, compared to redeploying the entire website, invalidating all pages for each individual content change.
-    
--   The benefits of cache tags increase as the number of pages on a website grows.
-    
+- Regardless of the frequency of invalidation, a superior result will still be achieved with DatoCMS Cache Tags, compared to redeploying the entire website, invalidating all pages for each individual content change.
+- The benefits of cache tags increase as the number of pages on a website grows.
 
 ## Encoding of cache tags
 
@@ -9741,23 +9151,17 @@ All the changes to the Content Delivery API:
 
 ## 2022/06/10 - Add `RecordInterface` and `FileFieldInterface` interfaces
 
--   Every GraphQL type related records/blocks now implement the `RecordInterface` interface;
-    
--   Every GraphQL type related to uploads, single asset or asset gallery fields now implements the `FileFieldInterface` interface.
-    
+- Every GraphQL type related records/blocks now implement the `RecordInterface` interface;
+- Every GraphQL type related to uploads, single asset or asset gallery fields now implements the `FileFieldInterface` interface.
 
 ## 2021/04/12 - Add `isBlank` filter to text fields
 
 To have a simple way to filter empty texts, especially when using a structured text field, we have added a `isBlank` filter to the textual fields.
 
--   **Changes to item fields**
-    
-    -   **Single-line text field** Added boolean filter `isBlank`
-        
-    -   **Multiple-line text field** Added boolean filter `isBlank`
-        
-    -   **Structured text field** Added boolean filter `isBlank`
-        
+- **Changes to item fields**
+  - **Single-line text field** Added boolean filter `isBlank`
+  - **Multiple-line text field** Added boolean filter `isBlank`
+  - **Structured text field** Added boolean filter `isBlank`
 
 ## 2020/05/11 - Changes in GraphQL filtering
 
@@ -9765,167 +9169,102 @@ To make the API more consistent and prevent ambiguous results we have changed ho
 
 This is a big changeset, but should only affect edge cases and the minority of usages, following all the details.
 
--   **Changes to item fields**
-    
-    -   **Boolean field**Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned always an empty array. You can still retrieve fields with `null` value using `{eq: false}`
-        
-    -   **Color field**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. You can use `{exists: false}` from now on.
-        
-    -   **DateTime field**Filtering fields with, for instance `{neq: "2020-04-09T00:00:00+02:00"}` will return *also* items with `null` values. Before this change, the filter would have returned only for `not null` values different from `2020-04-09T00:00:00+02:00`.
-        
-    -   **Date field**Filtering fields with, for instance `{neq: "2020-04-09"}` will return *also* items with `null` values. Before this change, the filter would have returned only for `not null` values different from `2020-04-09`.
-        
-    -   **Upload field**
-        
-        -   Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with, for instance `{neq: "123456"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` uploads ids different from `123456`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-        -   **Important**: Filtering fields with `{in: []}` will return an empty collection. Before this change, the request would have returned all items.
-            
-        -   **Important**: Filtering fields with `{notIn: []}` will return all items. Before this change, the request would have returned an empty collection.
-            
-        -   **Important**: Filtering fields with, for instance `{notIn: ["123456"]}` will return all items having values different from `123456` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `123456`.
-            
-    -   **Float fields**
-        
-        -   Filtering fields with, for instance, `{neq: "2.42"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `2.42`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-    -   **Gallery**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
-    -   **Integer**
-        
-        -   Filtering fields with, for instance, `{neq: "5"}` now will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `5`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-    -   **JSON**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
-    -   **Position (geo points)**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
-    -   **Link**
-        
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-        -   Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with, for instance, `{neq: "123456"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `123456`.
-            
-        -   **Important**: Filtering fields with `{in: []}` will return an empty collection. Before this change, the request would have returned all items.
-            
-        -   **Important**: Filtering fields with `{notIn: []}` will return all items. Before this change, the request would have returned an empty collection.
-            
-        -   Filtering fields with, for instance `{notIn: ["123456"]}` will return all items having values different from `123456` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `123456`.
-            
-    -   **Links**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
-    -   **Seo**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
-    -   **Slug**
-        
-        -   Filtering fields with, for instance, `{neq: "foobar"}` now will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `foobar`.
-            
-    -   **String**
-        
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-        -   Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with, for instance, `{neq: "foobar"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `foobar`.
-            
-    -   **Text**
-        
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-    -   **Video**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-        
--   **Changes to item metas**
-    
-    -   **ID**
-        
-        -   Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
-            
-        -   Filtering fields with `{neq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
-            
-    -   **Parent**
-        
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-        -   Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
-            
-    -   **Position**Filtering fields with, for instance, `{neq: 3}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `3`.
-        
-    -   **Status**
-        
-        -   Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
-            
-        -   Filtering fields with `{neq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
-            
--   **Changes to Upload fields**
-    
-    -   **Alt, Title**
-        
-        -   Added `exist` filter.
-            
-        -   Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
-            
-        -   Filtering fields with, for instance, `{neq: "foobar"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null` values different from `foobar`.
-            
-    -   **Author**
-        
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-    -   **Copyright**
-        
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-    -   **Format**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
-        
-    -   **Height, Width**Filtering fields with, for instance, `{neq: "500"}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `500`.
-        
-    -   **ID**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
-        
-    -   **InUse**Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{eq: false}`. You can use `{eq: false}` from now on.
-        
-    -   **MimeType**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
-        
-    -   **Notes**
-        
-        -   Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return *also* items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
-            
-        -   Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
-            
-    -   **Size**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
-        
-    -   **SmartTags, Tags**Filtering fields with `{contains: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
+- **Changes to item fields**
+  - **Boolean field**Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned always an empty array. You can still retrieve fields with `null` value using `{eq: false}`
+  - **Color field**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. You can use `{exists: false}` from now on.
+  - **DateTime field**Filtering fields with, for instance `{neq: "2020-04-09T00:00:00+02:00"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for `not null` values different from `2020-04-09T00:00:00+02:00`.
+  - **Date field**Filtering fields with, for instance `{neq: "2020-04-09"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for `not null` values different from `2020-04-09`.
+  - **Upload field**
+    - Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with, for instance `{neq: "123456"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` uploads ids different from `123456`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+    - **Important**: Filtering fields with `{in: []}` will return an empty collection. Before this change, the request would have returned all items.
+    - **Important**: Filtering fields with `{notIn: []}` will return all items. Before this change, the request would have returned an empty collection.
+    - **Important**: Filtering fields with, for instance `{notIn: ["123456"]}` will return all items having values different from `123456` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `123456`.
+
+  - **Float fields**
+    - Filtering fields with, for instance, `{neq: "2.42"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `2.42`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+  - **Gallery**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+  - **Integer**
+    - Filtering fields with, for instance, `{neq: "5"}` now will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `5`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+  - **JSON**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+  - **Position (geo points)**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+  - **Link**
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+    - Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with, for instance, `{neq: "123456"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `123456`.
+    - **Important**: Filtering fields with `{in: []}` will return an empty collection. Before this change, the request would have returned all items.
+    - **Important**: Filtering fields with `{notIn: []}` will return all items. Before this change, the request would have returned an empty collection.
+    - Filtering fields with, for instance `{notIn: ["123456"]}` will return all items having values different from `123456` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `123456`.
+
+  - **Links**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+  - **Seo**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+  - **Slug**
+    - Filtering fields with, for instance, `{neq: "foobar"}` now will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `foobar`.
+
+  - **String**
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+    - Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with, for instance, `{neq: "foobar"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null`values different from `foobar`.
+
+  - **Text**
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+
+  - **Video**Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+- **Changes to item metas**
+  - **ID**
+    - Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
+    - Filtering fields with `{neq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
+
+  - **Parent**
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+    - Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
+
+  - **Position**Filtering fields with, for instance, `{neq: 3}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `3`.
+  - **Status**
+    - Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
+    - Filtering fields with `{neq: null}` will return an error message in response payload. Before this change, the filter would have returned an empty result.
+
+- **Changes to Upload fields**
+  - **Alt, Title**
+    - Added `exist` filter.
+    - Filtering fields with `{eq: null}` now has the same effect of using `{exists: false}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with `{neq: null}` now has the same effect of using `{exists: true}`. Before this change, the filter would have returned always an empty array.
+    - Filtering fields with, for instance, `{neq: "foobar"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with, for instance `{notIn: ["foobar"]}` will return all items having values different from `foobar` **OR** equal to `null`. Before this change, the request would have returned only items having `not null` values different from `foobar`.
+
+  - **Author**
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+  - **Copyright**
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+  - **Format**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
+  - **Height, Width**Filtering fields with, for instance, `{neq: "500"}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `500`.
+  - **ID**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
+  - **InUse**Filtering fields with `{eq: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{eq: false}`. You can use `{eq: false}` from now on.
+  - **MimeType**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
+  - **Notes**
+    - Filtering fields with, for instance, `{notMatches: { pattern: "foobar"}}` will return _also_ items with `null` values. Before this change, the filter would have returned only for items with `not null` values different from `foobar`.
+    - Filtering fields with `{exists: null}` will return an error message in response payload. Before this change, the filter would have returned the same result as `{exists: false}`. Please, use `{exists: false}` instead.
+
+  - **Size**Filtering fields with `{eq: null}`, `{neq: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
+  - **SmartTags, Tags**Filtering fields with `{contains: null}`, will now return an error message in response payload. Before this change, the request would have return an empy collection.
 
 ---
 
@@ -9942,14 +9281,12 @@ The Content Management API (CMA) is used to manage the content of your DatoCMS p
 
 The Content Management API features **40+ resources,** for a total of **150+ endpoints**. Check the following sections of this documentation for a complete reference. For each single resource you will find:
 
--   The resource object and its fields, attributes and relationships;
-    
--   The allowed CRUD operations you can perform on the related endpoint with basic examples of the request/response format.
-    
+- The resource object and its fields, attributes and relationships;
+- The allowed CRUD operations you can perform on the related endpoint with basic examples of the request/response format.
 
 > [!WARNING] Some names might be different from what you expect!
 > Due to historical reasons and backward compatibility, the name of some specific resources in the Content Management API is different from what you'll find in the interface of the product.
-> 
+>
 > Specifically, Models are called **Item Types**, Records are called **Items**, and Assets are called **Uploads**.
 
 ### Base endpoint
@@ -10013,10 +9350,8 @@ If you're familiar with Javascript/TypeScript, you can make use of our official 
 
 It offers a number of benefits over making raw requests yourself:
 
--   **The package is written in TypeScript**, so every method is fully typed and offers editor auto-completion and type checks;
-    
--   Tedious tasks like [API rate limits retry](/docs/content-management-api/technical-limits.md), [asyncronous jobs management](/docs/content-management-api/async-jobs.md), [pagination](/docs/content-management-api/pagination.md) and [creation of new assets](/docs/content-management-api/resources/upload/create.md) are either **automatically managed for you, or greatly simplified** with simple methods that hide the inner complexities.
-    
+- **The package is written in TypeScript**, so every method is fully typed and offers editor auto-completion and type checks;
+- Tedious tasks like [API rate limits retry](/docs/content-management-api/technical-limits.md), [asyncronous jobs management](/docs/content-management-api/async-jobs.md), [pagination](/docs/content-management-api/pagination.md) and [creation of new assets](/docs/content-management-api/resources/upload/create.md) are either **automatically managed for you, or greatly simplified** with simple methods that hide the inner complexities.
 
 ### How to install the client
 
@@ -10069,14 +9404,10 @@ const client = buildClient({
 
 The different levels of logging available are:
 
--   `LogLevel.NONE` (the default level): No output is generated;
-    
--   `LogLevel.BASIC`: Logs HTTP requests (method, URL) and responses (status);
-    
--   `LogLevel.BODY`: Logs HTTP requests (method, URL, body) and responses (status, body);
-    
--   `LogLevel.BODY_AND_HEADERS`: Logs HTTP requests (method, URL, headers, body) and responses (status, headers, body).
-    
+- `LogLevel.NONE` (the default level): No output is generated;
+- `LogLevel.BASIC`: Logs HTTP requests (method, URL) and responses (status);
+- `LogLevel.BODY`: Logs HTTP requests (method, URL, body) and responses (status, body);
+- `LogLevel.BODY_AND_HEADERS`: Logs HTTP requests (method, URL, headers, body) and responses (status, headers, body).
 
 ### Entity collections and pagination
 
@@ -10096,7 +9427,7 @@ await client.itemType.rawUpdate(...);
 await client.itemType.rawDestroy(...);
 ```
 
-*"Why the* `*raw*` *prefix on all the methods?"* you might ask. Well, let's take a closer look at one specific method call — in this case, the update of an existing model.
+_"Why the_ `*raw*` _prefix on all the methods?"_ you might ask. Well, let's take a closer look at one specific method call — in this case, the update of an existing model.
 
 As already covered in previous sections, the API follows the `JSON:API` convention, which requires a specific format for the payloads. Every request/response has a `data` attribute, which contains a number of [Resource Objects](https://jsonapi.org/format/#document-resource-objects), which in turn contain different of top-level members (`id`, `type`, `attributes`, `relationships`, `meta`, etc), each with their own semantic:
 
@@ -10112,7 +9443,7 @@ const response = await client.itemTypes.rawUpdate('34532432', {
     relationships: {
       title_field: { data: { id: '451235', type: 'field' } },
     },
-  }
+  },
 });
 
 console.log(`Created model ${response.data.attributes.name}!`);
@@ -10165,7 +9496,7 @@ try {
     name: 'Article',
     api_key: 'article',
   });
-} catch(e) {
+} catch (e) {
   if (e instanceof ApiError) {
     // Information about the failed request
     console.log(e.request.url);
@@ -10198,27 +9529,27 @@ When working with complex operations that require frequent access to schema info
 
 ```typescript
 class SchemaRepository {
-  constructor(client: GenericClient)
+  constructor(client: GenericClient);
 
   // Item Type methods
-  async getAllItemTypes(): Promise<ItemType[]>
-  async getAllModels(): Promise<ItemType[]>
-  async getAllBlockModels(): Promise<ItemType[]>
-  async getItemTypeByApiKey(apiKey: string): Promise<ItemType>
-  async getItemTypeById(id: string): Promise<ItemType>
+  async getAllItemTypes(): Promise<ItemType[]>;
+  async getAllModels(): Promise<ItemType[]>;
+  async getAllBlockModels(): Promise<ItemType[]>;
+  async getItemTypeByApiKey(apiKey: string): Promise<ItemType>;
+  async getItemTypeById(id: string): Promise<ItemType>;
 
   // Field methods
-  async getItemTypeFields(itemType: ItemType): Promise<Field[]>
-  async getItemTypeFieldsets(itemType: ItemType): Promise<Fieldset[]>
+  async getItemTypeFields(itemType: ItemType): Promise<Field[]>;
+  async getItemTypeFieldsets(itemType: ItemType): Promise<Fieldset[]>;
 
   // Plugin methods
-  async getAllPlugins(): Promise<Plugin[]>
-  async getPluginById(id: string): Promise<Plugin>
-  async getPluginByPackageName(packageName: string): Promise<Plugin>
+  async getAllPlugins(): Promise<Plugin[]>;
+  async getPluginById(id: string): Promise<Plugin>;
+  async getPluginByPackageName(packageName: string): Promise<Plugin>;
 
   // Raw variants (return full JSON:API response format)
-  async getAllRawItemTypes(): Promise<RawItemType[]>
-  async getRawItemTypeByApiKey(apiKey: string): Promise<RawItemType>
+  async getAllRawItemTypes(): Promise<RawItemType[]>;
+  async getRawItemTypeByApiKey(apiKey: string): Promise<RawItemType>;
   // ... and more raw variants
 }
 ```
@@ -10243,30 +9574,28 @@ const sameModels = await schemaRepository.getAllModels();
 const sameBlogPost = await schemaRepository.getItemTypeByApiKey('blog_post');
 
 // Pass the repository to utilities that need schema information
-await mapBlocksInNonLocalizedFieldValue(record.content, 'rich_text', schemaRepository, (block, path) => {
-  // The utility will use the cached schema data internally
-});
+await mapBlocksInNonLocalizedFieldValue(
+  record.content,
+  'rich_text',
+  schemaRepository,
+  (block, path) => {
+    // The utility will use the cached schema data internally
+  },
+);
 ```
 
 ###### What's it for
 
--   **Caching schema entities**: Automatically caches item types, fields, fieldsets, and plugins after the first API request
-    
--   **Complex traversal operations**: Essential when using utilities like [`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#recursive-block-operations) that need to repeatedly lookup block models and fields
-    
--   **Bulk operations**: Ideal for scripts that process multiple records of different types
-    
--   **Read-heavy workflows**: Perfect for scenarios where you need to repeatedly access the same schema information
-    
+- **Caching schema entities**: Automatically caches item types, fields, fieldsets, and plugins after the first API request
+- **Complex traversal operations**: Essential when using utilities like [`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#recursive-block-operations) that need to repeatedly lookup block models and fields
+- **Bulk operations**: Ideal for scripts that process multiple records of different types
+- **Read-heavy workflows**: Perfect for scenarios where you need to repeatedly access the same schema information
 
 ###### When NOT to use it
 
--   **Schema modification**: Do NOT use if your script modifies models, fields, fieldsets, or plugins, as the cache will become stale!
-    
--   **Long-running applications**: The cache has no expiration mechanism!
-    
--   **Concurrent schema changes**: No protection against cache inconsistency!
-    
+- **Schema modification**: Do NOT use if your script modifies models, fields, fieldsets, or plugins, as the cache will become stale!
+- **Long-running applications**: The cache has no expiration mechanism!
+- **Concurrent schema changes**: No protection against cache inconsistency!
 
 > [!PROTIP] Pro tip: Best practices
 > Create one instance per script execution, not per operation, and make sure to use `SchemaRepository` consistently throughout your script for maximum cache efficiency!
@@ -10304,21 +9633,15 @@ The guarantee that the Content Management API offers is to **introduce breaking 
 
 It is considered a "breaking change":
 
--   a change in path for an existing endpoint;
-    
--   a change in the format of the request/response payload compared to what stated in this API reference;
-    
+- a change in path for an existing endpoint;
+- a change in the format of the request/response payload compared to what stated in this API reference;
 
 We reserve the right to change the format of payloads **without changing API version** only when:
 
--   an attribute/relationship that previously was mandatory in a HTTP request becomes optional;
-    
--   a new optional attribute/relationship is introduced in a HTTP request;
-    
--   a new attribute/relationship is introduced in a HTTP response;
-    
--   a synchronous endpoint becomes [asynchronous](/docs/content-management-api/async-jobs.md), but the job result has exactly the same signature as the old synchronous endpoint.
-    
+- an attribute/relationship that previously was mandatory in a HTTP request becomes optional;
+- a new optional attribute/relationship is introduced in a HTTP request;
+- a new attribute/relationship is introduced in a HTTP response;
+- a synchronous endpoint becomes [asynchronous](/docs/content-management-api/async-jobs.md), but the job result has exactly the same signature as the old synchronous endpoint.
 
 In other words, **no fields will ever be removed from the responses, but new ones might be added** if they do not break former behaviours.
 
@@ -10326,7 +9649,7 @@ In other words, **no fields will ever be removed from the responses, but new one
 
 # Authentication
 
-In order to make any request to the Content Management API (CMA), you need to first obtain an API token. Enter your project administrative area (ie. `http://your-project.admin.datocms.com`) and go to the *Project Settings > API Tokens* section:
+In order to make any request to the Content Management API (CMA), you need to first obtain an API token. Enter your project administrative area (ie. `http://your-project.admin.datocms.com`) and go to the _Project Settings > API Tokens_ section:
 
 (Video content)
 
@@ -10413,16 +9736,12 @@ Parse its JSON response body and use the detailed error codes below to troublesh
 
 ## CMA Error JSON Body Response Structure
 
-The response body will include an array of **api\_error** entities that provide detailed information about the issue. Each error entity contains the following attributes:
+The response body will include an array of **api_error** entities that provide detailed information about the issue. Each error entity contains the following attributes:
 
--   **`code`**: A unique identifier for the specific error.
-    
--   **`doc_url`**: A link to this documentation page for additional context.
-    
--   **`details`**: Additional information describing the cause of the error.
-    
--   **`transient`** *(optional)*: If set to `true`, this indicates the error is temporary. You can retry the request later as the issue may resolve itself.
-    
+- **`code`**: A unique identifier for the specific error.
+- **`doc_url`**: A link to this documentation page for additional context.
+- **`details`**: Additional information describing the cause of the error.
+- **`transient`** _(optional)_: If set to `true`, this indicates the error is temporary. You can retry the request later as the issue may resolve itself.
 
 As an example, this could be the response for a request that tries to [create a new model](/docs/content-management-api/resources/item-type/create.md), but the provided `api_key` is already used by another model:
 
@@ -10831,10 +10150,8 @@ Some entities (i.e. models) can be retrieved all at once with a single API call,
 
 The pagination that the API offers is offset-based: this means that you can control the results that are returned with the parameters `page[limit]` and `page[offset]`:
 
--   `page[limit]` is the maximum number of entities to be returned
-    
--   `page[offset]` is the (zero-based) offset of the first entity returned in the collection (always defaults to 0)
-    
+- `page[limit]` is the maximum number of entities to be returned
+- `page[offset]` is the (zero-based) offset of the first entity returned in the collection (always defaults to 0)
 
 > [!NOTE] Page limit and maximum values vary by endpoint
 > Both the default value of `page[limit]` and its maximum (that is, the maximum number of items that can be asked per page) vary depending on the specific endpoint. To obtain this information, refer to the specific documentation for the endpoint's `page` query parameter.
@@ -10882,13 +10199,11 @@ You can use this method in an [async iteration statement](https://github.com/tc3
 // We'll be building up an array of all records using an AsyncIterator
 const allRecords = [];
 
-for await (
-  const record of client.items.listPagedIterator(
-    // You can define any query parameter that the endpoint permits,
-    // except for page (refer to the following example for clarification)
-    { filter: { type: "article" } }
-  )
-) {
+for await (const record of client.items.listPagedIterator(
+  // You can define any query parameter that the endpoint permits,
+  // except for page (refer to the following example for clarification)
+  { filter: { type: 'article' } },
+)) {
   allRecords.push(record);
 }
 
@@ -10897,21 +10212,17 @@ console.log(allRecords);
 
 The method `listPagedIterator()` offers a few options to configure its behavior:
 
--   The `concurrency` option determines how many API calls can be performed in parallel (up to a maximum of 10). The default setting is 1, implying that the calls are made sequentially, not in parallel.
-    
--   The `perPage` option specifies the size of the pages in the sub-requests that it will carry out in the background.
-    
+- The `concurrency` option determines how many API calls can be performed in parallel (up to a maximum of 10). The default setting is 1, implying that the calls are made sequentially, not in parallel.
+- The `perPage` option specifies the size of the pages in the sub-requests that it will carry out in the background.
 
 ```javascript
-for await (
-  const record of client.items.listPagedIterator(
-    // You can define any query parameter that the endpoint permits,
-    // except for page
-    { filter: { type: "article" } },
-    // Pagination options
-    { concurrency: 5, perPage: 100 },
-  )
-) {
+for await (const record of client.items.listPagedIterator(
+  // You can define any query parameter that the endpoint permits,
+  // except for page
+  { filter: { type: 'article' } },
+  // Pagination options
+  { concurrency: 5, perPage: 100 },
+)) {
   // ...
 }
 ```
@@ -10924,15 +10235,15 @@ In this example, we query records (`items`) of a certain model type (`page`) usi
 
 ```javascript
 const records = await client.items.rawList({
-        filter: {
-            type: 'page' // API key (that you gave it) or ID (from its URL)
-        },
-        page: {
-            limit: 0 // We don't need any actual records, just the meta
-        }
-    })
+  filter: {
+    type: 'page', // API key (that you gave it) or ID (from its URL)
+  },
+  page: {
+    limit: 0, // We don't need any actual records, just the meta
+  },
+});
 
-console.log(records.meta.total_count) // Returns `11`
+console.log(records.meta.total_count); // Returns `11`
 ```
 
 ---
@@ -11012,18 +10323,13 @@ Our shared-service infrastructure is built to maintain steady performance for ev
 
 Here are the technical limits currently in place for the CMA:
 
--   **Maximum Record size**: 300 KB, including content in nested blocks (assets and linked records do not count toward the limit).
-    
-    -   *Please note that the maximum record size allowed by your plan may exceed the default 300KB limit. To confirm whether your plan supports a larger maximum record size, check the 'Plan and Billing' section in your Account dashboard.*
-        
--   **Number of blocks per record**: 600
-    
--   **Maximum depth for nested blocks**: 5 levels
-    
--   **Number of concurrent editors per record**: 1 (with presence indicator and record locking, [read more](/docs/general-concepts/collaboration-features.md))
-    
--   **Assets upload**: Max size of 1 GB per asset
-    
+- **Maximum Record size**: 300 KB, including content in nested blocks (assets and linked records do not count toward the limit).
+  - _Please note that the maximum record size allowed by your plan may exceed the default 300KB limit. To confirm whether your plan supports a larger maximum record size, check the 'Plan and Billing' section in your Account dashboard._
+
+- **Number of blocks per record**: 600
+- **Maximum depth for nested blocks**: 5 levels
+- **Number of concurrent editors per record**: 1 (with presence indicator and record locking, [read more](/docs/general-concepts/collaboration-features.md))
+- **Assets upload**: Max size of 1 GB per asset
 
 #### CMA Rate Limits
 
@@ -11033,12 +10339,9 @@ By default the Management API enforces rate limits of **60 requests per 3 second
 
 In the following list you can find all the headers returned in every response by the Content Management API which give a client information on rate limiting:
 
--   `X-RateLimit-Limit`: the maximum amount of requests which can be made in 3 seconds.
-    
--   `X-RateLimit-Remaining`: the remaining amount of requests which can be made until the next 3-seconds reset.
-    
--   `X-RateLimit-Reset`: if present, indicates the number of seconds until the next request can be made.
-    
+- `X-RateLimit-Limit`: the maximum amount of requests which can be made in 3 seconds.
+- `X-RateLimit-Remaining`: the remaining amount of requests which can be made until the next 3-seconds reset.
+- `X-RateLimit-Reset`: if present, indicates the number of seconds until the next request can be made.
 
 When a client gets rate limited, the API responds with the `429 Too Many Requests` HTTP status code and sets the value `X-RateLimit-Reset` header to an integer larger than 0 specifying the time before the limit resets and another request will be accepted.
 
@@ -11047,17 +10350,15 @@ When a client gets rate limited, the API responds with the `429 Too Many Request
 
 > [!WARNING] 429 Status Responses in DatoCMS Shared Infrastructure
 > Even when you are operating within your rate limits, there is a possibility of encountering a 429 status code in situations of high system load if your project is hosted on the DatoCMS shared infrastructure or medium-density infrastructure.
-> 
+>
 > Nevertheless, it's essential to acknowledge that this occurrence is rare, and our official clients are equipped with an automatic retry mechanism to seamlessly handle such situations.
 
 #### Reaching your plan monthly API calls limit
 
 Every DatoCMS plan offers a number of API requests per month. What happens you exceed the included quota?
 
--   If your project is under a free plan, API responses will be temporarily disabled until the beginning of the following calendar month, unless you switch to a paid plan.
-    
--   If your project is under a paid plan, you will pay an additional cost for the additional usage you made of the API.
-    
+- If your project is under a free plan, API responses will be temporarily disabled until the beginning of the following calendar month, unless you switch to a paid plan.
+- If your project is under a paid plan, you will pay an additional cost for the additional usage you made of the API.
 
 For more details, check our [Plans, billing and pricing page](/docs/plans-pricing-and-billing.md).
 
@@ -11172,7 +10473,7 @@ These require structured objects:
 The field accepts an object with the following properties, or `null`:
 
 | Property | Required | Type |
-| --- | --- | --- |
+| -------- | -------- | ---- |
 
 | `red` | ✅ | `Integer` between 0 and 255 |
 | `green` | ✅ | `Integer` between 0 and 255 |
@@ -11187,7 +10488,7 @@ The field accepts an object with the following properties, or `null`:
 The field accepts an object with the following properties, or `null`:
 
 | Property | Required | Type |
-| --- | --- | --- |
+| -------- | -------- | ---- |
 
 | `latitude` | ✅ | `Float` between -90.0 to 90 |
 | `longitude` | ✅ | `Float` between -180.0 to 180 |
@@ -11200,13 +10501,13 @@ The field accepts an object with the following properties, or `null`:
 The field accepts an object with the following properties, or `null`:
 
 | Property | Required | Type | Description |
-| --- | --- | --- | --- |
+| -------- | -------- | ---- | ----------- |
 
-| `title` |  | `String` | Title meta tag (max. 320 characters) |
-| `description` |  | `String` | Description meta tag (max. 320 characters) |
-| `image` |  | `Upload ID` | Asset to be used for social shares |
-| `twitter_card` |  | `"summary"`, `"summary_large_image"` | Type of Twitter card to use |
-| `no_index` |  | `Boolean` | Whether the noindex meta tag should be returned |
+| `title` | | `String` | Title meta tag (max. 320 characters) |
+| `description` | | `String` | Description meta tag (max. 320 characters) |
+| `image` | | `Upload ID` | Asset to be used for social shares |
+| `twitter_card` | | `"summary"`, `"summary_large_image"` | Type of Twitter card to use |
+| `no_index` | | `Boolean` | Whether the noindex meta tag should be returned |
 
 </details>
 
@@ -11216,7 +10517,7 @@ The field accepts an object with the following properties, or `null`:
 The field accepts an object with the following properties, or `null`:
 
 | Property | Required | Type | Description | Example |
-| --- | --- | --- | --- | --- |
+| -------- | -------- | ---- | ----------- | ------- |
 
 | `provider` | ✅ | `"youtube"`, `"vimeo"`, `"facebook"` | External video provider | `"youtube"` |
 | `provider_uid` | ✅ | `String` | Unique identifier of the video within the provider | `"vUdGBEb1i9g"` |
@@ -11238,13 +10539,13 @@ These point to other resources (either assets or other records):
 The field accepts an object with the following properties, or `null`:
 
 | Property | Required | Type | Description | Example |
-| --- | --- | --- | --- | --- |
+| -------- | -------- | ---- | ----------- | ------- |
 
 | `upload_id` | ✅ | `Upload ID` | ID of an asset | `"dhVR2HqgRVCTGFi0bWqLqA"` |
-| `title` |  | `String` | Title for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"From my trip to Italy"` |
-| `alt` |  | `String` | Alternate text for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Florence skyline"` |
-| `focal_point` |  | `{ x: Float, y: Float }`, `null` | Focal point for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`). Values must be expressed as `Float` between 0 and 1. Focal point can only be specified for image assets. | `{ "x": 0.34, "y": 0.45 }` |
-| `custom_data` |  | `Record<String, String>` | An object containing custom keys that you can use on your frontend projects | `{ "watermark_image": "true" }` |
+| `title` | | `String` | Title for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"From my trip to Italy"` |
+| `alt` | | `String` | Alternate text for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Florence skyline"` |
+| `focal_point` | | `{ x: Float, y: Float }`, `null` | Focal point for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`). Values must be expressed as `Float` between 0 and 1. Focal point can only be specified for image assets. | `{ "x": 0.34, "y": 0.45 }` |
+| `custom_data` | | `Record<String, String>` | An object containing custom keys that you can use on your frontend projects | `{ "watermark_image": "true" }` |
 
 **API responses**: Always returns asset ID only (use separate asset API for details)
 
@@ -11256,13 +10557,13 @@ The field accepts an object with the following properties, or `null`:
 This field accepts an `Array` of objects with the following properties, or `null`:
 
 | Property | Required | Type | Description | Example |
-| --- | --- | --- | --- | --- |
+| -------- | -------- | ---- | ----------- | ------- |
 
 | `upload_id` | ✅ | `Upload ID` | ID of an asset | `"dhVR2HqgRVCTGFi0bWqLqA"` |
-| `title` |  | `String` | Title for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Gallery Image Title"` |
-| `alt` |  | `String` | Alternate text for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Gallery image description"` |
-| `focal_point` |  | `{ x: Float, y: Float }`, `null` | Focal point for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`). Values must be expressed as `Float` between 0 and 1. Focal point can only be specified for image assets. | `{ "x": 0.34, "y": 0.45 }` |
-| `custom_data` |  | `Record<String, String>` | An object containing custom keys that you can use on your frontend projects | `{ "watermark_image": "true" }` |
+| `title` | | `String` | Title for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Gallery Image Title"` |
+| `alt` | | `String` | Alternate text for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`) | `"Gallery image description"` |
+| `focal_point` | | `{ x: Float, y: Float }`, `null` | Focal point for the asset, if you want to override the asset's default value (see Upload `default_field_metadata`). Values must be expressed as `Float` between 0 and 1. Focal point can only be specified for image assets. | `{ "x": 0.34, "y": 0.45 }` |
+| `custom_data` | | `Record<String, String>` | An object containing custom keys that you can use on your frontend projects | `{ "watermark_image": "true" }` |
 
 **API responses**: Always returns array of asset IDs only
 
@@ -11291,7 +10592,7 @@ This field accepts an `Array<String>` representing the IDs of the linked records
 These are special fields that contain **blocks within records**:
 
 | Field Type | What it contains |
-| --- | --- |
+| ---------- | ---------------- |
 
 | **Modular content** | An array of blocks, perfect for building dynamic page sections |
 | **Single block** | A single block instance or `null` |
@@ -11304,26 +10605,24 @@ Blocks are **records within records** - they're separate items that live inside 
 
 Blocks inside those fields are unique because they can be represented in two different ways depending on the context: as a lightweight reference (an ID) or as a full content object. Understanding this duality is key to working with them effectively:
 
--   **Block ID (Lightweight Reference)**: A simple `String` that uniquely identifies the block (ie. `"dhVR2HqgRVCTGFi_0bWqLqA"`). This is useful when you only need to know *which* block is there, not what's inside it.
-    
--   **Block Object (Full Content)**: The complete record object for the block, containing its own `id`, `type`, `attributes`, and `relationships`. This is used when you need to read or modify the block's actual content.
-    
-    ```json
-    {
-      "id": "dhVR2HqgRVCTGFi_0bWqLqA",
-      "type": "item",
-      "attributes": {
-        "title": "Block Title",
-        "content": "Block content..."
-      },
-      "relationships": {
-        "item_type": {
-          "data": { "id": "BxZ9Y2aKQVeTnM4hP8wLpD", "type": "item_type" }
-        }
+- **Block ID (Lightweight Reference)**: A simple `String` that uniquely identifies the block (ie. `"dhVR2HqgRVCTGFi_0bWqLqA"`). This is useful when you only need to know _which_ block is there, not what's inside it.
+- **Block Object (Full Content)**: The complete record object for the block, containing its own `id`, `type`, `attributes`, and `relationships`. This is used when you need to read or modify the block's actual content.
+
+  ```json
+  {
+    "id": "dhVR2HqgRVCTGFi_0bWqLqA",
+    "type": "item",
+    "attributes": {
+      "title": "Block Title",
+      "content": "Block content..."
+    },
+    "relationships": {
+      "item_type": {
+        "data": { "id": "BxZ9Y2aKQVeTnM4hP8wLpD", "type": "item_type" }
       }
     }
-    ```
-    
+  }
+  ```
 
 <details>
 <summary>Modular Content</summary>
@@ -11334,10 +10633,7 @@ A Modular Content field holds an array of blocks.
 
 ```json
 {
-  "content_blocks": [
-    "dhVR2HqgRVCTGFi_0bWqLqA",
-    "kL9mN3pQrStUvWxYzAbCdE"
-  ]
+  "content_blocks": ["dhVR2HqgRVCTGFi_0bWqLqA", "kL9mN3pQrStUvWxYzAbCdE"]
 }
 ```
 
@@ -11430,7 +10726,7 @@ A Structured Text field can contain blocks within its document structure ([DAST 
       "type": "root",
       "children": [
         {
-        "type": "paragraph",
+          "type": "paragraph",
           "children": [{ "type": "span", "value": "Text before block." }]
         },
         {
@@ -11456,12 +10752,12 @@ A Structured Text field can contain blocks within its document structure ([DAST 
 
 When fetching record data, the API gives you control over how block fields are represented in the response. These two modes, **Regular** and **Nested**, are available on the following endpoints:
 
--   [Retrieve a single record (`GET /items/:id`)](/docs/content-management-api/resources/item/self.md)
+- [Retrieve a single record (`GET /items/:id`)](/docs/content-management-api/resources/item/self.md)
 
--   [Retrieve multiple records (`GET /items`)](/docs/content-management-api/resources/item/instances.md)
--   [Retrieve records referenced by a record (`GET /items/:id/references`)](/docs/content-management-api/resources/item/references.md)
+- [Retrieve multiple records (`GET /items`)](/docs/content-management-api/resources/item/instances.md)
+- [Retrieve records referenced by a record (`GET /items/:id/references`)](/docs/content-management-api/resources/item/references.md)
 
--   [Retrieve records linked to an asset (`GET /upload/:id/references`)](/docs/content-management-api/resources/upload/references.md)
+- [Retrieve records linked to an asset (`GET /upload/:id/references`)](/docs/content-management-api/resources/upload/references.md)
 
 ###### Regular mode (default)
 
@@ -11523,7 +10819,7 @@ GET /items/A4gkL_8pTZmcyJ-IlIEd2w?nested=true
 ###### When to use each mode?
 
 | Use "Regular Mode" when... | Use "Nested Mode" when... |
-| --- | --- |
+| -------------------------- | ------------------------- |
 
 | Listing many records or building navigation. | Displaying or editing block content, as it provides the actual content needed. |
 | You only need to know which blocks exist. | You need to read the actual block content for display or updates. |
@@ -11721,7 +11017,7 @@ Imagine a "Wrapper" block that contains a Modular Content field with "Child" blo
           "attributes": { "title": "Updated Child Block 1" }
         },
         "fG8hI1jKlMnOpQrStUvWxY" // Unchanged nested block, sent as ID
-      ],
+      ]
       // You can skip any attribute that does not need to change
     }
   }
@@ -11892,7 +11188,7 @@ When this setting is enabled, records **must include a key for every defined loc
 Since DatoCMS records don't have a predetermined structure, the JavaScript client cannot provide strict TypeScript types out of the box:
 
 ```typescript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 const record = await client.items.find('dhVR2HqgRVCTGFi0bWqLqA');
@@ -11920,17 +11216,17 @@ import type { ItemTypeDefinition } from '@datocms/cma-client';
 export type Article = ItemTypeDefinition<
   '76hhD-LaS5CM3NPJw0991w', // ID of the Product model
   {
-    name: { type: 'string'; };
-    slug: { type: 'slug'; };
-    accent_color: { type: 'color'; };
-    sections: { type: 'rich_text'; blocks: ArticleSection; };
+    name: { type: 'string' };
+    slug: { type: 'slug' };
+    accent_color: { type: 'color' };
+    sections: { type: 'rich_text'; blocks: ArticleSection };
   }
 >;
 
 export type ArticleSection = ItemTypeDefinition<
   'FJM79jjKRMSVg-fR6k6X2A', // ID of the ProductVariation block
   {
-    title: { type: 'string'; };
+    title: { type: 'string' };
   }
 >;
 ```
@@ -11989,13 +11285,13 @@ Since TypeScript cannot infer types from nested properties like `record.item_typ
 
 ```typescript
 // ❌ This doesn't work because `item_type.id` is a nested property.
-if (item.item_type.id === "BxZ9Y2aKQVeTnM4hP8wLpD") {
+if (item.item_type.id === 'BxZ9Y2aKQVeTnM4hP8wLpD') {
   // TypeScript still sees a generic item type.
   item.attributes.headline; // Error: Property 'headline' is `unknown`
 }
 
 // ✅ This works because `__itemTypeId` is a top-level property.
-if (item.__itemTypeId === "BxZ9Y2aKQVeTnM4hP8wLpD") {
+if (item.__itemTypeId === 'BxZ9Y2aKQVeTnM4hP8wLpD') {
   // TypeScript now correctly infers the type.
   item.attributes.headline; // OK!
 }
@@ -12013,33 +11309,33 @@ type string
 
 Must be exactly `"item"`.
 
-meta.created\_at date-time
+meta.created_at date-time
 
 Date of creation
 
-meta.updated\_at date-time
+meta.updated_at date-time
 
 Last update time
 
-meta.published\_at
+meta.published_at
 
 Date of last publication
 
 Type: null, date-time
 
-meta.first\_published\_at
+meta.first_published_at
 
 Date of first publication
 
 Type: null, date-time
 
-meta.publication\_scheduled\_at
+meta.publication_scheduled_at
 
 Date of future publication
 
 Type: null, date-time
 
-meta.unpublishing\_scheduled\_at
+meta.unpublishing_scheduled_at
 
 Date of future unpublishing
 
@@ -12065,15 +11361,15 @@ published
 
 The record is published
 
-meta.is\_current\_version\_valid null, boolean
+meta.is_current_version_valid null, boolean
 
 Whether the current version of the record is valid or not
 
-meta.is\_published\_version\_valid null, boolean
+meta.is_published_version_valid null, boolean
 
 Whether the published version of record is valid or not
 
-meta.current\_version string
+meta.current_version string
 
 The ID of the current record version
 
@@ -12083,25 +11379,25 @@ meta.stage null, string
 
 Workflow stage in which the item is
 
-meta.has\_children null, boolean
+meta.has_children null, boolean
 
 When the records can be organized in a tree, indicates whether the record has children
 
-item\_type
+item_type
 
 The record's model
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 creator
 
 The entity (account/collaborator/access token/sso user) who created the record
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
 Show deprecated
 
-meta.is\_valid boolean Deprecated
+meta.is_valid boolean Deprecated
 
 Whether the current record is valid or not
 
@@ -12120,9 +11416,9 @@ To retrieve a collection of records, send a GET request to the `/items` endpoint
 
 The `GET /items` endpoint, just like the [single record endpoint](/docs/content-management-api/resources/item/self.md), supports two different response modes that control how block fields are returned in the JSON payload. You can switch between them using the nested query parameter.
 
--   **Regular mode (default)**: This is the most efficient mode for listing multiple records. Any block fields (like Modular Content) will contain an array of **block IDs**, not the full block content. This keeps the response size small and fast.
+- **Regular mode (default)**: This is the most efficient mode for listing multiple records. Any block fields (like Modular Content) will contain an array of **block IDs**, not the full block content. This keeps the response size small and fast.
 
--   **Nested mode (`nested=true`)**: This mode returns the complete content for any block fields. Instead of just IDs, the API will return full **block objects**, including all their attributes. This is useful when you need to display the blocks' content immediately without making additional API calls, or to read existing content and then make an update.
+- **Nested mode (`nested=true`)**: This mode returns the complete content for any block fields. Instead of just IDs, the API will return full **block objects**, including all their attributes. This is useful when you need to display the blocks' content immediately without making additional API calls, or to read existing content and then make an update.
 
 Example Regular mode (default)
 
@@ -12189,6 +11485,7 @@ Showing the default number of results (30 records) from any model
   ├ title: "First Article"
   └ content: "This is the content of the first article."
 ```
+
 Example Nested mode
 
 > [!WARNING] Lower limits apply with Nested Mode
@@ -12327,29 +11624,29 @@ Show object format
 
 ids string
 
-Record (or block record) IDs to fetch, comma separated. If you use this filter, you *must not* use `filter[type]` or `filter[fields]`
+Record (or block record) IDs to fetch, comma separated. If you use this filter, you _must not_ use `filter[type]` or `filter[fields]`
 
 Example: `"c89tCUarTvGKxA37acCEWA,aCiWeOsUT3mxY0KIzUfAhw"`
 
 type string
 
-Model ID or `api_key` to filter. If you use this filter, you *must not* use `filter[ids]`. Comma separated values are accepted, but you *must not* use `filter[fields]` in this case
+Model ID or `api_key` to filter. If you use this filter, you _must not_ use `filter[ids]`. Comma separated values are accepted, but you _must not_ use `filter[fields]` in this case
 
 Example: `"cat,dog"`
 
 query string
 
-Textual query to match. You *must not* use `filter[ids]`. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
+Textual query to match. You _must not_ use `filter[ids]`. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
 
 Example: `"foo"`
 
 fields object
 
-Same as [GraphQL API records filters](/docs/content-delivery-api/filtering-records.md): you must use square brackets to indicate nesting levels. E.g. if you wanna [filter by parent record](/docs/content-delivery-api/filtering-records.md#parent) in a tree of records, you must use `filter[fields][parent][eq]=<ID_VALUE>`. Use snake\_case for fields names. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
+Same as [GraphQL API records filters](/docs/content-delivery-api/filtering-records.md): you must use square brackets to indicate nesting levels. E.g. if you wanna [filter by parent record](/docs/content-delivery-api/filtering-records.md#parent) in a tree of records, you must use `filter[fields][parent][eq]=<ID_VALUE>`. Use snake_case for fields names. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
 
 Example: `{ name: { eq: "Buddy" } }`
 
-only\_valid string
+only_valid string
 
 When set, only valid records are included in the results.
 
@@ -12377,7 +11674,7 @@ limit integer
 
 The maximum number of entities to return (defaults to 30, maximum is 500)
 
-order\_by string
+order_by string
 
 Fields used to order results. You **must** specify also `filter[type]` with one element only to be able use this option. Format: `<field_name>_(ASC|DESC)`, where `<field_name>` can be either the API key of a model's field, or one of the following meta columns: `id`, `_updated_at`, `_created_at`, `_status`, `_published_at`, `_first_published_at`, `_publication_scheduled_at`, `_unpublishing_scheduled_at`, `_is_valid`, `position` (only for sortable models). You can pass multiple comma separated rules.
 
@@ -12466,6 +11763,7 @@ run();
   ├ content: "A comprehensive guide to using the DatoCMS Content Management API."
   └ author: "Alice Engineer"
 ```
+
 Example Fetching all pages
 
 Instead of fetching a single page at a time, sometimes you want to get all the pages together.
@@ -12580,6 +11878,7 @@ Showing all results of `client.items.listPagedIterator()`, from any model
   ├ name: "Wireless Headphones"
   └ price: 99.99
 ```
+
 Example Fetching records by their IDs
 
 You can retrieve a list of records (or blocks) by their record IDs. They can be from the same or different models.
@@ -12664,6 +11963,7 @@ Showing two records from different models: dog and song. The returned record ord
   ├ name: "Buddy"
   └ breed: "Golden Retriever"
 ```
+
 Example Fetching records belonging to a model
 
 You can filter the records by one or more model types. You can use either the model's `api_key` (that you define) or its unique ID (generated by DatoCMS). Multiple comma-separated values are accepted:
@@ -12758,18 +12058,19 @@ run();
   ├ breed: "Persian"
   └ age: 3
 ```
+
 Example Fetching draft or updated records and filtering by publication status
 
 By default, the API only returns published records. Using the `version` parameter, you can choose to also include drafts and updates.
 
-`version: 'current'` will return the *most recent* versions of the queried records. Sometimes this can be the same as the published version, but other times it could be an unpublished draft or update:
+`version: 'current'` will return the _most recent_ versions of the queried records. Sometimes this can be the same as the published version, but other times it could be an unpublished draft or update:
 
--   `draft` means the record has been created and saved, but not yet published (or was unpublished)
+- `draft` means the record has been created and saved, but not yet published (or was unpublished)
 
--   `published` means the record has been published, and there are no later changes (i.e., the published version *is* the most recent version)
--   `updated` means the record was previously published, but there are new changes that have been saved and not yet published (the current version is *ahead* of the published version)
+- `published` means the record has been published, and there are no later changes (i.e., the published version _is_ the most recent version)
+- `updated` means the record was previously published, but there are new changes that have been saved and not yet published (the current version is _ahead_ of the published version)
 
-To get *only* draft, updated, or published records, you can filter on this response's `record.meta.status` property on the client side, *after* the fetch:
+To get _only_ draft, updated, or published records, you can filter on this response's `record.meta.status` property on the client side, _after_ the fetch:
 
 ###### Code
 
@@ -12883,24 +12184,25 @@ There are 4 total records in this model.
   ├ content: "This article was published but then updated with new content."
   └ author: "Bob Editor"
 ```
+
 Example Filtering a model's records by field values and sorting the results
 
 Within a specified model, you can further filter its records by their field values.
 
-You **must** specify a single model using `filter[type]`. You *cannot* filter by field value across multiple models at once.
+You **must** specify a single model using `filter[type]`. You _cannot_ filter by field value across multiple models at once.
 
 Valid filters are documented at [GraphQL API records filters](/docs/content-delivery-api/filtering-records.md), so please check there. However, you **cannot** use [deep filtering](/docs/content-delivery-api/deep-filtering.md) on Modular Content and Structured Text fields at the moment.
 
--   You *may* add an optional `locale` parameter if you are filtering by a localized field.
+- You _may_ add an optional `locale` parameter if you are filtering by a localized field.
 
--   You *may* add an optional `order_by` parameter.
+- You _may_ add an optional `order_by` parameter.
 
 In this example, we are filtering the model `dog` by:
 
--   A single-line string field, `name in ['Buddy','Rex']` (matching `Buddy` OR `Rex`)
+- A single-line string field, `name in ['Buddy','Rex']` (matching `Buddy` OR `Rex`)
 
--   A single-line string field, `breed eq 'mixed'` (matching exactly `mixed`)
--   A date field (`_updated_at`) (and ordering the results by the same)
+- A single-line string field, `breed eq 'mixed'` (matching exactly `mixed`)
+- A date field (`_updated_at`) (and ordering the results by the same)
 
 ###### Code
 
@@ -12986,6 +12288,7 @@ run();
   ├ weight: 30.2
   └ is_trained: false
 ```
+
 Example Fetching records by a textual generic query
 
 You can retrieve a list of records filtered by a textual query match. It will search in block records content too. Set the `nested` parameter to `true` to retrieve embedded block content as well.
@@ -12993,9 +12296,9 @@ You can retrieve a list of records filtered by a textual query match. It will se
 > [!WARNING] Content indexing delay
 > Please note that you need to wait at least 30 seconds after creating or updating content before expecting to see results in textual queries.
 
-You *can* narrow your search to some models by specifying the `filter[type]` parameter. You can use either the model's `api_key` or its unique ID. Multiple comma-separated values are accepted.
+You _can_ narrow your search to some models by specifying the `filter[type]` parameter. You can use either the model's `api_key` or its unique ID. Multiple comma-separated values are accepted.
 
-You *should* specify the `locale` attribute, or the environment's default locale will be used.
+You _should_ specify the `locale` attribute, or the environment's default locale will be used.
 
 Returned records are ordered by rank.
 
@@ -13173,12 +12476,12 @@ This example demonstrates how to create records with various simple field types,
 
 Key considerations when working with different field types:
 
--   **Geo-location fields**: Provide latitude and longitude as an object with both properties
+- **Geo-location fields**: Provide latitude and longitude as an object with both properties
 
--   **Color fields**: Specify RGBA values as an object with red, green, blue, and alpha components
--   **JSON fields**: Must be provided as a JSON-serialized string, not a JavaScript object
+- **Color fields**: Specify RGBA values as an object with red, green, blue, and alpha components
+- **JSON fields**: Must be provided as a JSON-serialized string, not a JavaScript object
 
--   **Date/time fields**: Use ISO 8601 format strings for precise timestamps
+- **Date/time fields**: Use ISO 8601 format strings for precise timestamps
 
 For complete details on field value formats, see the [**Field types overview**](/docs/content-management-api/resources/item.md#field-types-overview) section.
 
@@ -13394,6 +12697,7 @@ run();
       ├ quote: "This product completely transformed our business operations."
       └ author_name: "Sarah Johnson, CEO"
 ```
+
 Example Single block fields
 
 This example shows how to create records with single block fields, which allow you to add exactly one block to a field. Unlike modular content fields that can contain multiple blocks, single block fields hold either a single block instance or `null`.
@@ -13524,6 +12828,7 @@ run();
       └ background_image
         └ upload_id: "JP0pXTl3S0SFP42PYK2Mug"
 ```
+
 Example Structured text fields
 
 This example demonstrates how to create records with structured text fields that combine rich formatted text with embedded blocks. Structured text is perfect for editorial content where you need to mix paragraphs, headings, and interactive elements seamlessly.
@@ -13791,9 +13096,9 @@ This example shows how to create records that include image or file assets. You 
 
 The example demonstrates two approaches:
 
--   **Single asset field**: Reference an upload with optional metadata overrides
+- **Single asset field**: Reference an upload with optional metadata overrides
 
--   **Asset gallery field**: Create arrays of asset objects with custom properties like alt text, title, focal points, and custom data
+- **Asset gallery field**: Create arrays of asset objects with custom properties like alt text, title, focal points, and custom data
 
 You can create new uploads from URLs using `client.uploads.createFromUrl()` or reference existing uploads from your media library. For more upload creation methods, see the [Create a new upload](/docs/content-management-api/resources/upload/create.md) endpoint documentation.
 
@@ -13882,6 +13187,7 @@ run();
       ├ custom_data: {"add_watermark":true}
       └ focal_point: x=30% y=20%
 ```
+
 Example Linking records to other records
 
 This example shows how to create records that reference other existing records through link fields. The process involves first retrieving the records you want to link to, then referencing them by their IDs when creating the new record.
@@ -13954,9 +13260,9 @@ run();
 
 If the record's model contains localized fields, your creation payload must adhere to specific rules:
 
--   All localized fields in a single payload must specify the same set of locales to ensure consistency.
+- All localized fields in a single payload must specify the same set of locales to ensure consistency.
 
--   If the model is configured to require all locales ([`all_locales_required`](/docs/content-management-api/resources/item-type.md#object-payload)), then the payload must include a key for every available locale for each localized field. The value of a field for a locale can be `null`, but the key itself is mandatory.
+- If the model is configured to require all locales ([`all_locales_required`](/docs/content-management-api/resources/item-type.md#object-payload)), then the payload must include a key for every available locale for each localized field. The value of a field for a locale can be `null`, but the key itself is mandatory.
 
 For a full explanation of how to structure localized data, refer to the [localization Guide](/docs/content-management-api/resources/item.md#localization).
 
@@ -14070,25 +13376,25 @@ RFC 4122 UUID of record expressed in URL-safe base64 format
 
 Example: `"hWl-mnkWRYmMCSTq4z_piQ"`
 
-meta.created\_at string Optional
+meta.created_at string Optional
 
 Date of creation
 
-meta.first\_published\_at null, string Optional
+meta.first_published_at null, string Optional
 
 Date of first publication
 
-item\_type Required
+item_type Required
 
 The record's model
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 creator Optional
 
 The entity (account/collaborator/access token/sso user) who created the record
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
 ## Returns
 
@@ -14102,9 +13408,9 @@ This example demonstrates how to create records in tree-structured collections, 
 
 When creating records in tree-like collections, you can specify:
 
--   **`parent_id`**: Links the record to its parent in the hierarchy
+- **`parent_id`**: Links the record to its parent in the hierarchy
 
--   **`position`**: Sets the ordering among sibling records
+- **`position`**: Sets the ordering among sibling records
 
 The example shows how to build a hierarchy by creating records that reference each other:
 
@@ -14198,12 +13504,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "hWl-mnkWRYmMCSTq4z_piQ";
+  const itemId = 'hWl-mnkWRYmMCSTq4z_piQ';
 
   const item = await client.items.duplicate(itemId);
 
@@ -14260,9 +13566,9 @@ The fundamental rules for structuring field values (i.e., strings, numbers, obje
 
 > [!WARNING] ⚠️ Null vs. Omitted Fields
 > There's a crucial difference between omitting a field and explicitly setting it to `null` or an empty value:
-> 
-> -   **Omitted fields** keep their existing values unchanged
-> -   **Fields set to `null` or empty values** (like `[]` for arrays) are cleared/deleted
+>
+> - **Omitted fields** keep their existing values unchanged
+> - **Fields set to `null` or empty values** (like `[]` for arrays) are cleared/deleted
 
 Example Simple update operation
 
@@ -14367,9 +13673,9 @@ The rules for adding, updating, keeping, deleting, and reordering blocks are cov
 
 > [!POSITIVE] 🛠️ Block and Structured Text utilities
 > We provide many utility functions to help you work with blocks and structured text nodes effectively. Check out our helper libraries for common operations:
-> 
-> -   **[Block Utils](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#block-processing-utilities)** - Functions like `buildBlockRecord()`, `duplicateBlockRecord()`, and localization helpers
-> -   **[Structured Text Utils](https://github.com/datocms/structured-text/tree/main/packages/utils#tree-manipulation-utilities)** - Tree manipulation utilities like `mapNodes()`, `filterNodes()`, and `findFirstNode()`
+>
+> - **[Block Utils](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#block-processing-utilities)** - Functions like `buildBlockRecord()`, `duplicateBlockRecord()`, and localization helpers
+> - **[Structured Text Utils](https://github.com/datocms/structured-text/tree/main/packages/utils#tree-manipulation-utilities)** - Tree manipulation utilities like `mapNodes()`, `filterNodes()`, and `findFirstNode()`
 
 Example Managing blocks in existing Modular Content fields
 
@@ -14377,16 +13683,16 @@ This comprehensive example demonstrates many modular content field operations in
 
 The script shows how to:
 
--   **Fetch existing content** using `nested: true` to get full block objects with their attributes
+- **Fetch existing content** using `nested: true` to get full block objects with their attributes
 
--   **Add new blocks** by creating them with [`buildBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#buildblockrecord) and specifying the `item_type` relationship
--   **Duplicate existing blocks** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone blocks (removing all IDs, including nested block IDs) for template reuse
+- **Add new blocks** by creating them with [`buildBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#buildblockrecord) and specifying the `item_type` relationship
+- **Duplicate existing blocks** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone blocks (removing all IDs, including nested block IDs) for template reuse
 
--   **Update existing blocks** by passing the block ID and modified attributes
--   **Remove blocks** by filtering them out of the sections array
+- **Update existing blocks** by passing the block ID and modified attributes
+- **Remove blocks** by filtering them out of the sections array
 
--   **Keep blocks unchanged** by passing just their ID strings
--   **Reorder blocks** by arranging them in the desired sequence within the array
+- **Keep blocks unchanged** by passing just their ID strings
+- **Reorder blocks** by arranging them in the desired sequence within the array
 
 The example demonstrates proper handling of block references (IDs vs full objects) and shows how a single update operation can perform multiple block manipulations simultaneously. For more information about block management, see the [Creating and updating blocks guide](/docs/content-management-api/resources/item.md#creating-and-updating-blocks).
 
@@ -14606,21 +13912,22 @@ function isNonNullable<T>(
       ├ button_text: "Start Your Free Trial"
       └ button_url: "https://www.datocms.com/trial?utm_source=landing_page&utm_medium=cta&utm_camp..."
 ```
+
 Example Managing Single Block fields
 
 This comprehensive example demonstrates all single block field operations in multiple API calls, showing how single block fields can hold exactly one block or be `null`.
 
 The script shows how to:
 
--   **Fetch existing content** using `nested: true` to get the full block object with its attributes
+- **Fetch existing content** using `nested: true` to get the full block object with its attributes
 
--   **Update existing block** by passing the block ID and modified attributes
--   **Duplicate existing block** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone a block (removing all IDs, including nested block IDs) for template reuse
+- **Update existing block** by passing the block ID and modified attributes
+- **Duplicate existing block** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone a block (removing all IDs, including nested block IDs) for template reuse
 
--   **Replace with different block type** by creating a new block with [`buildBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#buildblockrecord) and `item_type` relationship
--   **Remove block** by setting the field value to `null`
+- **Replace with different block type** by creating a new block with [`buildBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#buildblockrecord) and `item_type` relationship
+- **Remove block** by setting the field value to `null`
 
--   **Keep block unchanged** by not including the field in the update payload
+- **Keep block unchanged** by not including the field in the update payload
 
 The example demonstrates proper handling of block references (IDs vs full objects) and shows how single block fields can switch between different block types or be completely removed/added as needed. For more information about block management, see the [Creating and updating blocks guide](/docs/content-management-api/resources/item.md#creating-and-updating-blocks).
 
@@ -14830,18 +14137,19 @@ async function inspectItemWithNestedBlocks(item: ApiTypes.Item) {
   ├ price: 299.99
   └ hero_section: null
 ```
+
 Example Managing Structured Text documents
 
 This example demonstrates common structured text document transformations using DAST tree manipulation utilities for content modernization and consistency workflows.
 
 The script shows how to:
 
--   **Transform heading levels** using [`mapNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#transforming-trees) to demote all h1 headings to h2 for better document structure
+- **Transform heading levels** using [`mapNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#transforming-trees) to demote all h1 headings to h2 for better document structure
 
--   **Update link attributes** by adding `target="_blank"` to all external links and item links for improved user experience
--   **Replace text content** across all span nodes to update brand names or terminology throughout the document (e.g., rebranding from "ZEIT" to "Vercel")
+- **Update link attributes** by adding `target="_blank"` to all external links and item links for improved user experience
+- **Replace text content** across all span nodes to update brand names or terminology throughout the document (e.g., rebranding from "ZEIT" to "Vercel")
 
--   **Clean document structure** using [`filterNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#filtering-trees) to remove empty paragraphs and normalize text
+- **Clean document structure** using [`filterNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#filtering-trees) to remove empty paragraphs and normalize text
 
 The example demonstrates practical DAST manipulation using `datocms-structured-text-utils` for batch content updates, ensuring consistency across large content repositories without manual editing. For more information about structured text manipulation, see the [Structured Text Guide](/docs/structured-text/dast.md).
 
@@ -15026,16 +14334,17 @@ run();
       │ └ span "migration guide"
       └ span " for step-by-step instructions."
 ```
+
 Example Managing blocks in Structured Text fields
 
 This comprehensive example demonstrates structured text field operations using DAST tree manipulation utilities for real-world content auditing and modernization workflows.
 
 The script shows how to:
 
--   **Fetch existing content** using `nested: true` to get full block and inline item objects
+- **Fetch existing content** using `nested: true` to get full block and inline item objects
 
--   **Duplicate existing blocks** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone blocks (removing all IDs, including nested block IDs) and add them as new blocks in the document
--   **Transform blocks** using [`mapNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#transforming-trees) to update embedded blocks while preserving DAST structure
+- **Duplicate existing blocks** using [`duplicateBlockRecord()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#duplicateblockrecord) to clone blocks (removing all IDs, including nested block IDs) and add them as new blocks in the document
+- **Transform blocks** using [`mapNodes()`](https://github.com/datocms/structured-text/tree/main/packages/utils#transforming-trees) to update embedded blocks while preserving DAST structure
 
 The example demonstrates advanced DAST manipulation using `datocms-structured-text-utils` for content operations like URL normalization, affiliate link tracking, block duplication for templates, and text formatting cleanup - common tasks in content management workflows. For more information about block management, see the [Creating and updating blocks guide](/docs/content-management-api/resources/item.md#creating-and-updating-blocks).
 
@@ -15323,24 +14632,24 @@ When you send an update request, the API follows these strict rules.
 
 When you update a translated field, you must provide the **entire object** for that field, including all the languages you want to keep unchanged. You can't just send the one language you're changing.
 
--   **Correct:** To update the Italian title, you send both English and Italian:
-    
-    ```json
-    {
-      "title": {
-        "en": "Hello World",
-        "it": "Ciao a tutti! (Updated)"
-      }
+- **Correct:** To update the Italian title, you send both English and Italian:
+
+  ```json
+  {
+    "title": {
+      "en": "Hello World",
+      "it": "Ciao a tutti! (Updated)"
     }
-    ```
-    
--   **Incorrect:** If you only send the Italian value, the API will assume you want to **delete** the English one!
+  }
+  ```
+
+- **Incorrect:** If you only send the Italian value, the API will assume you want to **delete** the English one!
 
 ###### Rule 2: To add/remove a language, send all translated fields
 
 This is the only time you can't just send the one field you're changing. To add or remove a language from an entire record, you **must include all translated fields** in your request. This is to enforce the **Locale Sync Rule** and ensure all fields remain consistent.
 
--   **Example:** To add French to a blog post that already has a translated `title` and `content`, your request must include both fields with the new `fr` locale.
+- **Example:** To add French to a blog post that already has a translated `title` and `content`, your request must include both fields with the new `fr` locale.
 
 ###### Rule 3: Limited permissions? Only send what you can manage
 
@@ -15351,7 +14660,7 @@ If your API key only has permission for certain languages (e.g., only English), 
 This table shows what happens in different situations. The key takeaway is that your update payload defines the **new final state** for the languages you are allowed to manage.
 
 | Your Role manages | Record currently Has | Your payload sends | Result |
-| --- | --- | --- | --- |
+| ----------------- | -------------------- | ------------------ | ------ |
 
 | English | English | English | ✅ English is updated. |
 | English, Italian | English | English, Italian | ✅ English is updated.  
@@ -15374,7 +14683,7 @@ This table shows what happens in different situations. The key takeaway is that 
 
 ###### Block fields
 
-The rules about localization work in combination with the rules for updating blocks: you use full block objects to create/update and block IDs to leave unchanged, but you do so *within* the object for a specific locale.
+The rules about localization work in combination with the rules for updating blocks: you use full block objects to create/update and block IDs to leave unchanged, but you do so _within_ the object for a specific locale.
 
 <details>
 <summary>Example: Updating a block in one locale</summary>
@@ -15392,10 +14701,7 @@ This payload updates the title of an existing block in the `en` locale, while le
       },
       "kL9mN3pQrStUvWxYzAbCdE"
     ],
-    "it": [
-      "dhVR2HqgRVCTGFi_0bWqLqA",
-      "kL9mN3pQrStUvWxYzAbCdE"
-    ]
+    "it": ["dhVR2HqgRVCTGFi_0bWqLqA", "kL9mN3pQrStUvWxYzAbCdE"]
   }
 }
 ```
@@ -15410,10 +14716,7 @@ This payload adds a new block to the `it` locale only. The `en` locale needs to 
 ```json
 {
   "content_blocks": {
-    "en": [
-      "dhVR2HqgRVCTGFi_0bWqLqA",
-      "kL9mN3pQrStUvWxYzAbCdE"
-    ],
+    "en": ["dhVR2HqgRVCTGFi_0bWqLqA", "kL9mN3pQrStUvWxYzAbCdE"],
     "it": [
       "fG8hI1jKlMnOpQrStUvWxY",
       {
@@ -15440,13 +14743,10 @@ To add a new locale to an existing record, you must provide values for all local
 {
   "title": {
     "en": "English Title",
-    "fr": "Titre Français",
+    "fr": "Titre Français"
   },
   "content_blocks": {
-    "en": [
-      "dhVR2HqgRVCTGFi_0bWqLqA",
-      "kL9mN3pQrStUvWxYzAbCdE"
-    ],
+    "en": ["dhVR2HqgRVCTGFi_0bWqLqA", "kL9mN3pQrStUvWxYzAbCdE"],
     "fr": [
       {
         "type": "item",
@@ -15534,16 +14834,15 @@ run();
     ├ en: "Article content"
     └ it: "Contenuto articolo"
 ```
+
 Example Removing an existing locale
 
 If the [`all_locales_required`](/docs/content-management-api/resources/item-type.md#object-payload) option in a model is turned off, then its records do not need all environment's locales to be defined for localized fields, so you're free to add/remove locales during an update operation.
 
 This example demonstrates two approaches for removing a locale from records:
 
--   **When schema is known:** When you know the exact structure of your models, you can use `ItemTypeDefinition`s to work with full type safety. This approach is ideal for specific, targeted operations.
-    
--   **When schema is unknown:** When you need to work with models dynamically (without knowing their structure ahead of time), you can use [`client.fields.list()`](/docs/content-management-api/resources/field/instances.md) to discover field definitions at runtime. This approach is perfect for bulk operations across multiple models.
-    
+- **When schema is known:** When you know the exact structure of your models, you can use `ItemTypeDefinition`s to work with full type safety. This approach is ideal for specific, targeted operations.
+- **When schema is unknown:** When you need to work with models dynamically (without knowing their structure ahead of time), you can use [`client.fields.list()`](/docs/content-management-api/resources/field/instances.md) to discover field definitions at runtime. This approach is perfect for bulk operations across multiple models.
 
 Both approaches remove the `it` locale by **omitting the unwanted locale** from all localized fields while preserving other locales and non-localized fields.
 
@@ -15694,14 +14993,15 @@ run();
 
 Removed 'it' locale from all records of the model
 ```
+
 Example Copying content from one locale to another
 
 When working with localized content, you may need to duplicate content from one locale to another. This is particularly useful when:
 
--   Adding a new locale and wanting to start with existing content as a baseline
+- Adding a new locale and wanting to start with existing content as a baseline
 
--   Creating region-specific variations (e.g., copying English to Austrian English)
--   Providing fallback content for incomplete translations
+- Creating region-specific variations (e.g., copying English to Austrian English)
+- Providing fallback content for incomplete translations
 
 This example demonstrates how to copy all content from one locale (`en`) to another (`en-AT`) across all models in your project, handling both simple fields and complex nested block structures.
 
@@ -15709,17 +15009,15 @@ The script iterates through all content models, identifies localized fields, and
 
 **Key utilities used:**
 
--   **[`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)**: Transforms localized field values by applying an async function to each locale. This allows you to process each language version independently while maintaining the localized structure.
-    
--   **[`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapblocksinnonlocalizedfieldvalue)**: Recursively processes blocks within the field value, allowing you to transform nested blocks. In this example, it's used to remove IDs from blocks when copying them to a new locale, ensuring new block instances are created rather than referencing existing ones.
-    
+- **[`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)**: Transforms localized field values by applying an async function to each locale. This allows you to process each language version independently while maintaining the localized structure.
+- **[`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapblocksinnonlocalizedfieldvalue)**: Recursively processes blocks within the field value, allowing you to transform nested blocks. In this example, it's used to remove IDs from blocks when copying them to a new locale, ensuring new block instances are created rather than referencing existing ones.
 
 The script is designed to:
 
--   Handle deeply nested blocks correctly by creating new instances for the target locale
+- Handle deeply nested blocks correctly by creating new instances for the target locale
 
--   Preserve existing content in other locales efficiently
--   Work with all field types (Modular Content, Single Block, Structured Text, etc.)
+- Preserve existing content in other locales efficiently
+- Work with all field types (Modular Content, Single Block, Structured Text, etc.)
 
 ###### Code
 
@@ -15927,10 +15225,10 @@ This example demonstrates how to edit specific blocks no matter where they're em
 
 The script shows how to:
 
--   **Target only relevant records** by discovering all models that can (directly or indirectly) embed a given block with [`SchemaRepository.getRawModelsEmbeddingBlocks()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#schemarepository)
+- **Target only relevant records** by discovering all models that can (directly or indirectly) embed a given block with [`SchemaRepository.getRawModelsEmbeddingBlocks()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#schemarepository)
 
--   **Handle localized and non-localized fields uniformly** using [`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
--   **Recursively transform blocks across all block-capable field types** with [`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
+- **Handle localized and non-localized fields uniformly** using [`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
+- **Recursively transform blocks across all block-capable field types** with [`mapBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
 
 This approach ensures that block properties are systematically updated across all content, regardless of how deeply nested they may be within your content structure. In this specific example, CTA blocks get their `style` property automatically set to "primary" for high-intent copy or "muted" for standard copy based on the button text content.
 
@@ -16184,18 +15482,19 @@ AFTER:
       ├ button_url: "/buy"
       └ style: "primary"
 ```
+
 Example Delete blocks across all content
 
 This example demonstrates how to remove specific blocks no matter where they're embedded — in Modular Content, Single Block, or Structured Text fields, including deeply nested structures and localized content.
 
 The script shows how to:
 
--   **Target only relevant records** by discovering all models that can (directly or indirectly) embed a given block with [`SchemaRepository.getRawModelsEmbeddingBlocks()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#schemarepository)
+- **Target only relevant records** by discovering all models that can (directly or indirectly) embed a given block with [`SchemaRepository.getRawModelsEmbeddingBlocks()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#schemarepository)
 
--   **Handle localized and non-localized fields uniformly** using [`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
--   **Recursively filter blocks across all block-capable field types** with [`filterBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
+- **Handle localized and non-localized fields uniformly** using [`mapNormalizedFieldValuesAsync()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
+- **Recursively filter blocks across all block-capable field types** with [`filterBlocksInNonLocalizedFieldValue()`](https://github.com/datocms/js-rest-api-clients/tree/main/packages/cma-client#mapnormalizedfieldvalues--mapnormalizedfieldvaluesasync)
 
--   **Make external decisions** (mocked ecommerce SKU check) to remove invalid blocks
+- **Make external decisions** (mocked ecommerce SKU check) to remove invalid blocks
 
 This approach ensures that deprecated or invalid blocks are systematically removed from all content, regardless of how deeply nested they may be within your content structure.
 
@@ -16543,15 +15842,15 @@ Final record state:
 
 ## Body parameters
 
-meta.created\_at string Optional
+meta.created_at string Optional
 
 Date of creation
 
-meta.first\_published\_at null, string Optional
+meta.first_published_at null, string Optional
 
 Date of first publication
 
-meta.current\_version string Optional
+meta.current_version string Optional
 
 The ID of the current record version (for optimistic locking, see the example)
 
@@ -16561,17 +15860,17 @@ meta.stage string, null Optional
 
 The new stage to move the record to
 
-item\_type Optional
+item_type Optional
 
 The record's model
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 creator Optional
 
 The entity (account/collaborator/access token/sso user) who created the record
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
 ## Returns
 
@@ -16620,12 +15919,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "hWl-mnkWRYmMCSTq4z_piQ";
+  const itemId = 'hWl-mnkWRYmMCSTq4z_piQ';
 
   const items = await client.items.references(itemId);
 
@@ -16684,22 +15983,20 @@ To retrieve a single record, send a GET request to the `/items/:id` endpoint.
 
 The `GET /items/:id` endpoint, just like the [List all records](/docs/content-management-api/resources/item/instances.md) endpoint, supports two different response modes that control how block fields are returned in the JSON payload. You can switch between them using the nested query parameter.
 
--   **Regular mode (default):** This is the most efficient mode for listing records. Any block fields (like Modular Content) will contain an array of **block IDs**, not the full block content. This keeps the response size small and fast.
-    
--   **Nested mode (`nested=true`):** This mode returns the complete content for any block fields. Instead of just IDs, the API will return full **block objects**, including all their attributes. This is useful when you need to display the blocks' content immediately without making additional API calls, or to read existing content and then make an update.
-    
+- **Regular mode (default):** This is the most efficient mode for listing records. Any block fields (like Modular Content) will contain an array of **block IDs**, not the full block content. This keeps the response size small and fast.
+- **Nested mode (`nested=true`):** This mode returns the complete content for any block fields. Instead of just IDs, the API will return full **block objects**, including all their attributes. This is useful when you need to display the blocks' content immediately without making additional API calls, or to read existing content and then make an update.
 
 Example Regular mode (default)
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "hWl-mnkWRYmMCSTq4z_piQ";
+  const itemId = 'hWl-mnkWRYmMCSTq4z_piQ';
 
   const item = await client.items.find(itemId);
 
@@ -16742,22 +16039,23 @@ run();
   item_type: { type: "item_type", id: "DxMaW10UQiCmZcuuA-IkkA" },
 }
 ```
+
 Example Nested mode
 
 Sometimes, you may wish to fetch a record that has embedded blocks inside Modular Content, Single Block or Structured Text fields.
 
-By default, those nested blocks are returned as block IDs (ie. `"dhVR2HqgRVCTGFi_0bWqLqA"`), but if you add the `nested: true` query parameter, we'll embed the blocks content *inline* for you.
+By default, those nested blocks are returned as block IDs (ie. `"dhVR2HqgRVCTGFi_0bWqLqA"`), but if you add the `nested: true` query parameter, we'll embed the blocks content _inline_ for you.
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const records = await client.items.find("FEzWmQhjQgeHsCrUtvlEMw", {
+  const records = await client.items.find('FEzWmQhjQgeHsCrUtvlEMw', {
     nested: true, // Retrieve its nested block content as well
   });
 
@@ -16906,12 +16204,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "hWl-mnkWRYmMCSTq4z_piQ";
+  const itemId = 'hWl-mnkWRYmMCSTq4z_piQ';
 
   const item = await client.items.destroy(itemId);
 
@@ -16959,7 +16257,7 @@ run();
 
 # Publish a record
 
-When the [draft/published system](/docs/general-concepts/draft-published.md) is enabled for a model, records will remain in a *Draft* status until they are *Published*.
+When the [draft/published system](/docs/general-concepts/draft-published.md) is enabled for a model, records will remain in a _Draft_ status until they are _Published_.
 
 When publishing a record, you can choose to either publish the whole record, or just some of its locales / non-localized content. This is similar to how the "Publish" dropdown button in the UI works.
 
@@ -16974,12 +16272,12 @@ Do not include a request body at all — not even an empty object `{}`.
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
-  const client = buildClient({ apiToken: "API_TOKEN" });
+  const client = buildClient({ apiToken: 'API_TOKEN' });
 
-  const itemId = "T4m4tPymSACFzsqbZS65WA";
+  const itemId = 'T4m4tPymSACFzsqbZS65WA';
 
   const publishedRecord = await client.items.publish(itemId);
 
@@ -17025,28 +16323,29 @@ run();
   }
 }
 ```
+
 Example Selective publishing (only specified locales or non-localized content)
 
 Selective publishing is used when you don't want to publish the entire record. Instead, you can publish a combination of:
 
--   Zero or more [specified locales](http://localhost:3000/product-updates/get-locales-list-from-graphql)
+- Zero or more [specified locales](http://localhost:3000/product-updates/get-locales-list-from-graphql)
 
--   And/or all of this record's non-localized fields
+- And/or all of this record's non-localized fields
 
 In this example, we will only publish the `en` locale. The `it` and `es` versions of `localized_title` will not be published, and will retain their previously published titles. `non_localized_field` will also keep its previously published value.
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
-  const client = buildClient({ apiToken: "API_TOKEN" });
+  const client = buildClient({ apiToken: 'API_TOKEN' });
 
-  const itemId = "T4m4tPymSACFzsqbZS65WA";
+  const itemId = 'T4m4tPymSACFzsqbZS65WA';
 
   const publishedRecord = await client.items.publish(itemId, {
-    content_in_locales: ["en"],
+    content_in_locales: ['en'],
     non_localized_content: false,
   });
 
@@ -17103,7 +16402,7 @@ When `recursive` is `true`, if the record belongs to a [tree-like collection](/d
 
 For this endpoint, the body is not required and can be entirely omitted.
 
-content\_in\_locales Required
+content_in_locales Required
 
 Array of [valid locale codes in this project](https://www.datocms.com/product-updates/get-locales-list-from-graphql.md) to publish.
 
@@ -17111,7 +16410,7 @@ Type: Array<string>
 
 Examples: `["en"]` , `["en", "it"]`
 
-non\_localized\_content boolean Required
+non_localized_content boolean Required
 
 Whether non-localized content will be published
 
@@ -17127,20 +16426,20 @@ If you're using the the older, now-deprecated [`datocms-client`](https://www.npm
 
 ```json
 {
-    "data": [
-        {
-            "id": "abcdef",
-            "type": "api_error",
-            "attributes": {
-                "code": "INVALID_FORMAT",
-                "details": {
-                    "messages": [
-                        "#/data: failed schema #/definitions/item/links/13/schema/properties/data: \"id\" is not a permitted key."
-                    ]
-                }
-            }
+  "data": [
+    {
+      "id": "abcdef",
+      "type": "api_error",
+      "attributes": {
+        "code": "INVALID_FORMAT",
+        "details": {
+          "messages": [
+            "#/data: failed schema #/definitions/item/links/13/schema/properties/data: \"id\" is not a permitted key."
+          ]
         }
-    ]
+      }
+    }
+  ]
 }
 ```
 
@@ -17148,11 +16447,11 @@ The workaround is to add `{serializeRequest: false}` as the third parameter of t
 
 ```js
 await client.item.publish(
-    "1234567890", // record ID
-    {}, // body
-    {}, // query string
-    { serializeRequest: false } // this is the actual workaround
-  );
+  '1234567890', // record ID
+  {}, // body
+  {}, // query string
+  { serializeRequest: false }, // this is the actual workaround
+);
 ```
 
 This tells the deprecated client to skip some of its internal serialization rules (which used to work, but no longer) and instead just send the raw syntax that you provide.
@@ -17162,12 +16461,12 @@ While this should allow that method to continue working for the time being, it i
 ###### Code
 
 ```javascript
-import { SiteClient } from "datocms-client";
+import { SiteClient } from 'datocms-client';
 
 async function run() {
   const client = new SiteClient(process.env.DATOCMS_API_TOKEN);
 
-  const itemId = "T4m4tPymSACFzsqbZS65WA";
+  const itemId = 'T4m4tPymSACFzsqbZS65WA';
 
   const publishedRecord = await client.items.publish(
     itemId,
@@ -17219,7 +16518,7 @@ run();
 
 # Unpublish a record
 
-In a model where the [draft/published system](/docs/general-concepts/draft-published.md) is enabled, *Published* records can subsequently be **Unpublished** in order to return them to *Draft* status.
+In a model where the [draft/published system](/docs/general-concepts/draft-published.md) is enabled, _Published_ records can subsequently be **Unpublished** in order to return them to _Draft_ status.
 
 When unpublishing a record, you can choose to either unpublish the whole record, or just some of its locales, similar to how the "Unpublish" dropdown button in the UI sidebar works.
 
@@ -17234,12 +16533,12 @@ Do not include a request body at all — not even an empty object `{}`.
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
-  const client = buildClient({ apiToken: "API_TOKEN" });
+  const client = buildClient({ apiToken: 'API_TOKEN' });
 
-  const itemId = "fyq6ADkeTL6Ryk7s98xmHw";
+  const itemId = 'fyq6ADkeTL6Ryk7s98xmHw';
 
   const unpublishedItem = await client.items.unpublish(itemId);
 
@@ -17360,6 +16659,7 @@ run();
   ]
 }
 ```
+
 Example Selective unpublishing (unpublish specified locales only, keeping others published)
 
 Selective unpublishing is used when you only want to unpublish certain localizations instead of the whole record.
@@ -17369,15 +16669,15 @@ Selective unpublishing is used when you only want to unpublish certain localizat
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
-  const client = buildClient({ apiToken: "API_TOKEN" });
+  const client = buildClient({ apiToken: 'API_TOKEN' });
 
-  const itemId = "fyq6ADkeTL6Ryk7s98xmHw";
+  const itemId = 'fyq6ADkeTL6Ryk7s98xmHw';
 
   const unpublishedItem = await client.items.unpublish(itemId, {
-    content_in_locales: ["it"],
+    content_in_locales: ['it'],
   });
 
   console.log(unpublishedItem);
@@ -17507,7 +16807,7 @@ When `recursive` is `true`, if the record belongs to a [tree-like collection](/d
 
 For this endpoint, the body is not required and can be entirely omitted.
 
-content\_in\_locales Required
+content_in_locales Required
 
 Array of locales to publish. They must be currently published in this record. To unpublish all locales, do NOT use this parameter, but instead unpublish the entire record by leaving the body blank (see example above).
 
@@ -17538,13 +16838,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const item = await client.items.bulkPublish({
-    items: [{ type: "item", id: "hWl-mnkWRYmMCSTq4z_piQ" }],
+    items: [{ type: 'item', id: 'hWl-mnkWRYmMCSTq4z_piQ' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -17557,7 +16857,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -17579,13 +16879,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const item = await client.items.bulkUnpublish({
-    items: [{ type: "item", id: "hWl-mnkWRYmMCSTq4z_piQ" }],
+    items: [{ type: 'item', id: 'hWl-mnkWRYmMCSTq4z_piQ' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -17598,7 +16898,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -17620,13 +16920,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const item = await client.items.bulkDestroy({
-    items: [{ type: "item", id: "hWl-mnkWRYmMCSTq4z_piQ" }],
+    items: [{ type: 'item', id: 'hWl-mnkWRYmMCSTq4z_piQ' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -17639,7 +16939,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -17667,14 +16967,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const item = await client.items.bulkMoveToStage({
-    stage: "in_review",
-    items: [{ type: "item", id: "hWl-mnkWRYmMCSTq4z_piQ" }],
+    stage: 'in_review',
+    items: [{ type: 'item', id: 'hWl-mnkWRYmMCSTq4z_piQ' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -17687,7 +16987,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -17700,7 +17000,7 @@ You can create scheduled publication to publish records in the future
 
 id string
 
-ID of scheduled\_publication
+ID of scheduled_publication
 
 Example: `"34"`
 
@@ -17708,25 +17008,25 @@ type string
 
 Must be exactly `"scheduled_publication"`.
 
-publication\_scheduled\_at date-time
+publication_scheduled_at date-time
 
 The future date for the publication
 
 Example: `"2025-02-10T11:03:42Z"`
 
-selective\_publication null, object
+selective_publication null, object
 
 Specifies which content should be published. If null, the whole record will be published.
 
 Show object format
 
-content\_in\_locales
+content_in_locales
 
 List of locales whose content will be published
 
 Type: Array<string>
 
-non\_localized\_content boolean
+non_localized_content boolean
 
 Whether the non-localized content has to be published or not
 
@@ -17742,31 +17042,31 @@ Type: [ResourceLinkage<"item">](/docs/content-management-api/resources/item.md)
 
 ## Body parameters
 
-publication\_scheduled\_at date-time Required
+publication_scheduled_at date-time Required
 
 The future date for the publication
 
 Example: `"2025-02-10T11:03:42Z"`
 
-selective\_publication null, object Optional
+selective_publication null, object Optional
 
 Specifies which content should be published. If null, the whole record will be published.
 
 Show object format
 
-content\_in\_locales Required
+content_in_locales Required
 
 List of locales whose content will be published
 
 Type: Array<string>
 
-non\_localized\_content boolean Required
+non_localized_content boolean Required
 
 Whether the non-localized content has to be published or not
 
 ## Returns
 
-Returns a resource object of type [scheduled\_publication](/docs/content-management-api/resources/scheduled-publication.md)
+Returns a resource object of type [scheduled_publication](/docs/content-management-api/resources/scheduled-publication.md)
 
 ## Examples
 
@@ -17775,17 +17075,16 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "34";
+  const itemId = '34';
 
-  const scheduledPublication = await client.scheduledPublication.create(
-    itemId,
-    { publication_scheduled_at: "2025-02-10T11:03:42Z" },
-  );
+  const scheduledPublication = await client.scheduledPublication.create(itemId, {
+    publication_scheduled_at: '2025-02-10T11:03:42Z',
+  });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(scheduledPublication);
@@ -17823,15 +17122,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "34";
+  const itemId = '34';
 
-  const scheduledPublication =
-    await client.scheduledPublication.destroy(itemId);
+  const scheduledPublication = await client.scheduledPublication.destroy(itemId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(scheduledPublication);
@@ -17883,7 +17181,7 @@ You can create a scheduled unpublishing to unpublish records in the future
 
 id string
 
-ID of scheduled\_unpublishing
+ID of scheduled_unpublishing
 
 Example: `"34"`
 
@@ -17891,13 +17189,13 @@ type string
 
 Must be exactly `"scheduled_unpublishing"`.
 
-unpublishing\_scheduled\_at date-time
+unpublishing_scheduled_at date-time
 
 The future date for the unpublishing
 
 Example: `"2025-02-10T11:03:42Z"`
 
-content\_in\_locales
+content_in_locales
 
 List of locales whose content will be unpublished, or nil if the whole record needs to be unpublished
 
@@ -17915,13 +17213,13 @@ Type: [ResourceLinkage<"item">](/docs/content-management-api/resources/item.md)
 
 ## Body parameters
 
-unpublishing\_scheduled\_at date-time Required
+unpublishing_scheduled_at date-time Required
 
 The future date for the unpublishing
 
 Example: `"2025-02-10T11:03:42Z"`
 
-content\_in\_locales Optional
+content_in_locales Optional
 
 List of locales whose content will be unpublished, or nil if the whole record needs to be unpublished
 
@@ -17929,7 +17227,7 @@ Type: null, Array<string>
 
 ## Returns
 
-Returns a resource object of type [scheduled\_unpublishing](/docs/content-management-api/resources/scheduled-unpublishing.md)
+Returns a resource object of type [scheduled_unpublishing](/docs/content-management-api/resources/scheduled-unpublishing.md)
 
 ## Examples
 
@@ -17938,17 +17236,16 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "34";
+  const itemId = '34';
 
-  const scheduledUnpublishing = await client.scheduledUnpublishing.create(
-    itemId,
-    { unpublishing_scheduled_at: "2025-02-10T11:03:42Z" },
-  );
+  const scheduledUnpublishing = await client.scheduledUnpublishing.create(itemId, {
+    unpublishing_scheduled_at: '2025-02-10T11:03:42Z',
+  });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(scheduledUnpublishing);
@@ -17983,15 +17280,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "34";
+  const itemId = '34';
 
-  const scheduledUnpublishing =
-    await client.scheduledUnpublishing.destroy(itemId);
+  const scheduledUnpublishing = await client.scheduledUnpublishing.destroy(itemId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(scheduledUnpublishing);
@@ -18129,7 +17425,7 @@ Seconds of duration for the video
 
 Example: `62`
 
-frame\_rate integer, null
+frame_rate integer, null
 
 Frame rate (FPS) for the video
 
@@ -18147,13 +17443,13 @@ Base64 encoded ThumbHash for the asset
 
 Example: `"UhqCDQIkrHOfVG8wBa2v39z7CXeqZWFLdg=="`
 
-mux\_playback\_id string, null
+mux_playback_id string, null
 
 Public Mux playback ID. Used with stream.mux.com to create the source URL for a video player.
 
 Example: `"a1B2c3D4e5F6g7H8i9"`
 
-mux\_mp4\_highest\_res enum, null
+mux_mp4_highest_res enum, null
 
 Maximum quality of MP4 rendition available
 
@@ -18167,29 +17463,29 @@ medium
 
 low
 
-default\_field\_metadata object
+default_field_metadata object
 
 For each of the project's locales, the default metadata to apply if nothing is specified at record's level.
 
 Example: `{ en: { title: "this is the default title", alt: "this is the default alternate text", custom_data: { foo: "bar" }, focal_point: { x: 0.5, y: 0.5 }, }, }`
 
-is\_image boolean
+is_image boolean
 
 Is this upload an image?
 
-created\_at
+created_at
 
 Date of upload
 
 Type: null, date-time
 
-updated\_at
+updated_at
 
 Date of last update
 
 Type: null, date-time
 
-mime\_type null, string
+mime_type null, string
 
 Mime type of upload
 
@@ -18203,7 +17499,7 @@ Type: Array<string>
 
 Example: `["cats"]`
 
-smart\_tags
+smart_tags
 
 Smart tags
 
@@ -18211,7 +17507,7 @@ Type: Array<string>
 
 Example: `["robot-cats"]`
 
-exif\_info object
+exif_info object
 
 Exif information
 
@@ -18255,13 +17551,13 @@ creator
 
 The entity (account/collaborator/access token) who created the asset
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
-upload\_collection
+upload_collection
 
 Upload collection to which the asset belongs
 
-Type: [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md), null
+Type: [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md), null
 
 ---
 
@@ -18276,7 +17572,7 @@ This example shows how to add assets to the Media Area by uploading a local file
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
@@ -18285,18 +17581,18 @@ async function run() {
   // Create upload resource from a local file
   const upload2 = await client.uploads.createFromLocalFile({
     // local path of the file to upload
-    localPath: "./image.png",
+    localPath: './image.png',
     // if you want, you can specify a different base name for the uploaded file
-    filename: "different-image-name.png",
+    filename: 'different-image-name.png',
     // skip the upload and return an existing resource if it's already present in the Media Area:
     skipCreationIfAlreadyExists: true,
     // specify some additional metadata to the upload resource
-    author: "New author!",
-    copyright: "New copyright",
+    author: 'New author!',
+    copyright: 'New copyright',
     default_field_metadata: {
       en: {
-        alt: "New default alt",
-        title: "New default title",
+        alt: 'New default alt',
+        title: 'New default title',
         focal_point: {
           x: 0.3,
           y: 0.6,
@@ -18318,21 +17614,21 @@ run();
 
 ```javascript
 const result = {
-  id: "4124",
+  id: '4124',
   size: 444,
   width: 30,
   height: 30,
-  path: "/45/1496845848-different-image-name.png",
-  basename: "image",
-  url: "https://www.datocms-assets.com/45/1496845848-different-image-name.png",
-  format: "jpg",
-  author: "New author!",
-  copyright: "New copyright",
+  path: '/45/1496845848-different-image-name.png',
+  basename: 'image',
+  url: 'https://www.datocms-assets.com/45/1496845848-different-image-name.png',
+  format: 'jpg',
+  author: 'New author!',
+  copyright: 'New copyright',
   notes: null,
   default_field_metadata: {
     en: {
-      alt: "new default alt",
-      title: "new default title",
+      alt: 'new default alt',
+      title: 'new default title',
       focal_point: {
         x: 0.3,
         y: 0.6,
@@ -18346,6 +17642,7 @@ const result = {
   tags: [],
 };
 ```
+
 Example Node.js: Create an upload from a remote URL
 
 Here's a demonstration of how you can uploading an asset from a remote location, accessible through a URL.
@@ -18353,7 +17650,7 @@ Here's a demonstration of how you can uploading an asset from a remote location,
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
@@ -18362,14 +17659,14 @@ async function run() {
   // Create upload resource from a remote URL
   const upload = await client.uploads.createFromUrl({
     // remote URL to upload
-    url: "https://example.com/image.png",
+    url: 'https://example.com/image.png',
     // if you want, you can specify a different base name for the uploaded file
-    filename: "different-image-name.png",
+    filename: 'different-image-name.png',
     // skip the upload and return an existing resource if it's already present in the Media Area:
     skipCreationIfAlreadyExists: true,
     // specify some additional metadata to the upload resource
-    author: "New author!",
-    copyright: "New copyright",
+    author: 'New author!',
+    copyright: 'New copyright',
   });
 
   console.log(upload);
@@ -18382,21 +17679,21 @@ run();
 
 ```javascript
 const result = {
-  id: "4124",
+  id: '4124',
   size: 444,
   width: 30,
   height: 30,
-  path: "/45/1496845848-different-image-name.png",
-  basename: "image",
-  url: "https://www.datocms-assets.com/45/1496845848-different-image-name.png",
-  format: "jpg",
-  author: "New author!",
-  copyright: "New copyright",
+  path: '/45/1496845848-different-image-name.png',
+  basename: 'image',
+  url: 'https://www.datocms-assets.com/45/1496845848-different-image-name.png',
+  format: 'jpg',
+  author: 'New author!',
+  copyright: 'New copyright',
   notes: null,
   default_field_metadata: {
     en: {
-      alt: "new default alt",
-      title: "new default title",
+      alt: 'new default alt',
+      title: 'new default title',
       focal_point: {
         x: 0.3,
         y: 0.6,
@@ -18410,6 +17707,7 @@ const result = {
   tags: [],
 };
 ```
+
 Example Browser: Create an upload from a File or Blob object
 
 This example shows how to add assets to the Media Area from the browser, starting from a [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) or [`Blob`](https://developer.mozilla.org/en-US/docs/Web/API/Blob) object.
@@ -18471,21 +17769,21 @@ fileInput.addEventListener("change", async (event) => {
 
 ```javascript
 const response = {
-  id: "4124",
+  id: '4124',
   size: 444,
   width: 30,
   height: 30,
-  path: "/45/1496845848-different-image-name.png",
-  basename: "image",
-  url: "https://www.datocms-assets.com/45/1496845848-different-image-name.png",
-  format: "jpg",
-  author: "New author!",
-  copyright: "New copyright",
+  path: '/45/1496845848-different-image-name.png',
+  basename: 'image',
+  url: 'https://www.datocms-assets.com/45/1496845848-different-image-name.png',
+  format: 'jpg',
+  author: 'New author!',
+  copyright: 'New copyright',
   notes: null,
   default_field_metadata: {
     en: {
-      alt: "new default alt",
-      title: "new default title",
+      alt: 'new default alt',
+      title: 'new default title',
       focal_point: {
         x: 0.3,
         y: 0.6,
@@ -18499,6 +17797,7 @@ const response = {
   tags: [],
 };
 ```
+
 Example Monitoring the progress
 
 Regardless of the upload method, you can always get information about the operation's progress by listening to the events that hit the `onProgress` callback.
@@ -18506,14 +17805,14 @@ Regardless of the upload method, you can always get information about the operat
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   await client.uploads.createFromUrl({
-    url: "https://example.com/image.png",
+    url: 'https://example.com/image.png',
     onProgress: ({ type, ...rest }) => {
       // info.type can be one of the following:
       //
@@ -18693,7 +17992,7 @@ Notes
 
 Example: `"Nyan the cat"`
 
-default\_field\_metadata object Optional
+default_field_metadata object Optional
 
 For each of the project's locales, the default metadata to apply if nothing is specified at record's level.
 
@@ -18707,11 +18006,11 @@ Type: Array<string>
 
 Example: `["cats"]`
 
-upload\_collection Optional
+upload_collection Optional
 
 Upload collection to which the asset belongs
 
-Type: [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md), null
+Type: [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md), null
 
 ## Returns
 
@@ -18749,7 +18048,7 @@ Example: `"foobar"`
 
 fields object
 
-Same as [GraphQL API uploads filters](/docs/content-delivery-api/filtering-uploads.md). Use snake\_case for fields names. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
+Same as [GraphQL API uploads filters](/docs/content-delivery-api/filtering-uploads.md). Use snake_case for fields names. If `locale` is defined, search within that locale. Otherwise environment's main locale will be used.
 
 Example: `{ type: { eq: "image" }, size: { gt: 5000000 } }`
 
@@ -18759,7 +18058,7 @@ When `filter[query]` or `field[fields]` is defined, filter by this locale. Defau
 
 Example: `"it"`
 
-order\_by string
+order_by string
 
 Fields used to order results. Format: `<field_name>_<DIRECTION(ASC|DESC)>`. You can pass multiple comma separated rules.
 
@@ -18794,7 +18093,7 @@ The `client.uploads.list()` method returns a single page of records, while if yo
 All the details on how to use `list()` and `listPagedIterator()` are outlined [on this page](/docs/content-management-api/pagination.md#paged-iterators).
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -18808,6 +18107,7 @@ async function run() {
 
 run();
 ```
+
 Example Fetching a filtered list of uploads
 
 You can retrieve a list of uploads filtered by a set of conditions. There are different options and you can combine multiple filters together.
@@ -18817,7 +18117,7 @@ In this example we are filtering by type and size. In particular, we are searchi
 The filtering options are the same as the [GraphQL API uploads filters](/docs/content-delivery-api/filtering-uploads.md). So please check there all the options.
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
@@ -18827,7 +18127,7 @@ async function run() {
     filter: {
       fields: {
         type: {
-          eq: "image",
+          eq: 'image',
         },
         size: {
           gt: 5000000,
@@ -18857,12 +18157,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "q0VNpiNQSkG6z0lif_O1zg";
+  const uploadId = 'q0VNpiNQSkG6z0lif_O1zg';
 
   const upload = await client.uploads.find(uploadId);
 
@@ -18944,12 +18244,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "q0VNpiNQSkG6z0lif_O1zg";
+  const uploadId = 'q0VNpiNQSkG6z0lif_O1zg';
 
   const upload = await client.uploads.destroy(uploadId);
 
@@ -19022,10 +18322,10 @@ run();
 
 Depending on the attributes that you pass, you can use this endpoint to:
 
--   **Update regular attributes** like `author`, `notes`, `copyright`, `default_field_metadata`, etc.;
+- **Update regular attributes** like `author`, `notes`, `copyright`, `default_field_metadata`, etc.;
 
--   **Rename the asset** by passing a different `basename` attribute;
--   **Upload a new version of the asset** by passing a different `path` attribute;
+- **Rename the asset** by passing a different `basename` attribute;
+- **Upload a new version of the asset** by passing a different `path` attribute;
 
 Just like `POST /uploads` endpoint, an asyncronous job ID might be returned instead of the regular response. See the [Create a new upload](/docs/content-management-api/resources/upload.md#create) section for more details.
 
@@ -19071,7 +18371,7 @@ Type: Array<string>
 
 Example: `["cats"]`
 
-default\_field\_metadata object Optional
+default_field_metadata object Optional
 
 For each of the project's locales, the default metadata to apply if nothing is specified at record's level.
 
@@ -19081,13 +18381,13 @@ creator Optional
 
 The entity (account/collaborator/access token) who created the asset
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
-upload\_collection Optional
+upload_collection Optional
 
 Upload collection to which the asset belongs
 
-Type: [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md), null
+Type: [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md), null
 
 ## Returns
 
@@ -19100,25 +18400,22 @@ Example Update/rename assets
 ###### Code
 
 ```javascript
-import {
-  buildClient,
-  uploadLocalFileAndReturnPath,
-} from "@datocms/cma-client-node";
+import { buildClient, uploadLocalFileAndReturnPath } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "4124";
+  const uploadId = '4124';
 
   // we can either update regular attributes:
   await client.uploads.update(uploadId, {
-    author: "New author!",
-    copyright: "New copyright",
+    author: 'New author!',
+    copyright: 'New copyright',
     default_field_metadata: {
       en: {
-        alt: "new default alt",
-        title: "new default title",
+        alt: 'new default alt',
+        title: 'new default title',
         focal_point: {
           x: 0.3,
           y: 0.6,
@@ -19130,15 +18427,15 @@ async function run() {
 
   // associate a new file with the existing upload object:
   await client.uploads.update(uploadId, {
-    path: await uploadLocalFileAndReturnPath(client, "./image.jpg", {
+    path: await uploadLocalFileAndReturnPath(client, './image.jpg', {
       // if you want, you can specify a different base name for the uploaded file
-      filename: "different-image-name.png",
+      filename: 'different-image-name.png',
     }),
   });
 
   // or rename the uploaded file in the CDN (for SEO purposes):
   const updatedUpload = await client.uploads.update(uploadId, {
-    basename: "this-will-be-the-new-file-basename",
+    basename: 'this-will-be-the-new-file-basename',
   });
 
   console.log(updatedUpload);
@@ -19246,12 +18543,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "q0VNpiNQSkG6z0lif_O1zg";
+  const uploadId = 'q0VNpiNQSkG6z0lif_O1zg';
 
   const uploads = await client.uploads.references(uploadId);
 
@@ -19324,14 +18621,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const upload = await client.uploads.bulkTag({
-    tags: ["cats"],
-    uploads: [{ type: "upload", id: "q0VNpiNQSkG6z0lif_O1zg" }],
+    tags: ['cats'],
+    uploads: [{ type: 'upload', id: 'q0VNpiNQSkG6z0lif_O1zg' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -19344,7 +18641,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -19359,11 +18656,11 @@ Assets to assign to the collection
 
 Type: Array<[ResourceLinkage<"upload">](/docs/content-management-api/resources/upload.md)\>
 
-upload\_collection Required
+upload_collection Required
 
 Asset collection to put uploads into
 
-Type: null, [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)
+Type: null, [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)
 
 ## Examples
 
@@ -19372,13 +18669,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const upload = await client.uploads.bulkSetUploadCollection({
-    uploads: [{ type: "upload", id: "q0VNpiNQSkG6z0lif_O1zg" }],
+    uploads: [{ type: 'upload', id: 'q0VNpiNQSkG6z0lif_O1zg' }],
     upload_collection: null,
   });
 
@@ -19392,7 +18689,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -19416,13 +18713,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const upload = await client.uploads.bulkDestroy({
-    uploads: [{ type: "upload", id: "q0VNpiNQSkG6z0lif_O1zg" }],
+    uploads: [{ type: 'upload', id: 'q0VNpiNQSkG6z0lif_O1zg' }],
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -19435,7 +18732,7 @@ run();
 ###### Returned output
 
 ```javascript
-[]
+[];
 ```
 
 ---
@@ -19468,19 +18765,19 @@ The upload id for the favicon
 
 Example: `"123"`
 
-global\_seo object, null
+global_seo object, null
 
 Specifies default global settings
 
 Show object format
 
-site\_name string
+site_name string
 
 Site name, used in social sharing
 
 Example: `"My Awesome Website"`
 
-fallback\_seo object
+fallback_seo object
 
 Show object format
 
@@ -19498,7 +18795,7 @@ The id of the image
 
 Example: `"123"`
 
-twitter\_card null, enum
+twitter_card null, enum
 
 Determines how a Twitter link preview is shown
 
@@ -19510,47 +18807,47 @@ summary
 
 Twitter summary card
 
-summary\_large\_image
+summary_large_image
 
 Twitter summary card with large image
 
-title\_suffix null, string
+title_suffix null, string
 
 Title meta tag suffix
 
 Example: `" - My Awesome Website"`
 
-facebook\_page\_url null, string
+facebook_page_url null, string
 
 URL of facebook page
 
 Example: `"http://facebook.com/awesomewebsite"`
 
-twitter\_account null, string
+twitter_account null, string
 
 Twitter account associated to website
 
 Example: `"@awesomewebsite"`
 
-google\_maps\_api\_token string, null
+google_maps_api_token string, null
 
 Google API Key to be used by the LatLon widget
 
 Example: `"xxxxxxxxxxxxx"`
 
-imgix\_host string, null
+imgix_host string, null
 
 Imgix host
 
 Example: `"www.datocms-assets.com"`
 
-internal\_domain string, null
+internal_domain string, null
 
 DatoCMS internal domain for the administrative area
 
 Example: `"my-website.admin.datocms.com"`
 
-last\_data\_change\_at
+last_data_change_at
 
 Specifies the last time when a change of data occurred
 
@@ -19572,11 +18869,11 @@ Site name
 
 Example: `"My Awesome Website"`
 
-no\_index boolean
+no_index boolean
 
 Whether the website needs to be indexed by search engines or not
 
-require\_2fa boolean
+require_2fa boolean
 
 Specifies whether all users of this site need to authenticate using two-factor authentication
 
@@ -19608,7 +18905,7 @@ If the type is monochromatic, the value will fall between 0 and 359. If it's not
 
 Example: `16`
 
-primary\_color object
+primary_color object
 
 Show object format
 
@@ -19628,7 +18925,7 @@ alpha integer
 
 Example: `128`
 
-light\_color object
+light_color object
 
 Show object format
 
@@ -19648,7 +18945,7 @@ alpha integer
 
 Example: `128`
 
-accent\_color object
+accent_color object
 
 Show object format
 
@@ -19668,7 +18965,7 @@ alpha integer
 
 Example: `128`
 
-dark\_color object
+dark_color object
 
 Show object format
 
@@ -19700,15 +18997,15 @@ Site default timezone
 
 Example: `"Europe/London"`
 
-ip\_tracking\_enabled boolean
+ip_tracking_enabled boolean
 
 Specifies whether you want IPs to be tracked in the Project usages section
 
-force\_use\_of\_sandbox\_environments boolean
+force_use_of_sandbox_environments boolean
 
 If enabled, blocks schema changes of primary environment
 
-assets\_cdn\_default\_settings object
+assets_cdn_default_settings object
 
 Allows setting default parameters for assets served through the CDN
 
@@ -19768,53 +19065,53 @@ Allows setting default parameters for optimizing videos served by the CDN
 
 Show object format
 
-disable\_serving\_raw\_videos boolean
+disable_serving_raw_videos boolean
 
 When true, attempting to retrieve raw video files directly instead of their optimized counterparts will result in a HTTP 422 status code
 
-meta.created\_at date-time
+meta.created_at date-time
 
 Date of project creation
 
-meta.improved\_timezone\_management boolean
+meta.improved_timezone_management boolean
 
 Whether the [Improved API Timezone Management](https://www.datocms.com/product-updates/improved-timezone-management.md) opt-in product update is active or not
 
-meta.improved\_hex\_management boolean
+meta.improved_hex_management boolean
 
 Whether the [Improved API Hex Management](https://www.datocms.com/product-updates/improved-hex-management.md) opt-in product update is active or not
 
-meta.improved\_gql\_multilocale\_fields boolean
+meta.improved_gql_multilocale_fields boolean
 
 Whether the [Improved GraphQL multi-locale fields](https://www.datocms.com/product-updates/improved-gql-multilocale-fields.md) opt-in product update is active or not
 
-meta.improved\_gql\_visibility\_control boolean
+meta.improved_gql_visibility_control boolean
 
 Whether the [Improved GraphQL visibility control](https://www.datocms.com/product-updates/improved-gql-visibility-control.md) opt-in product update is active or not
 
-meta.improved\_boolean\_fields boolean
+meta.improved_boolean_fields boolean
 
 Whether the [Improved boolean fields](https://www.datocms.com/product-updates/improved-boolean-fields.md) opt-in product update is active or not
 
-meta.draft\_mode\_default boolean
+meta.draft_mode_default boolean
 
 The default value for the draft mode option in all the environment's models
 
-meta.improved\_validation\_at\_publishing boolean
+meta.improved_validation_at_publishing boolean
 
 Whether the [Improved validation at publishing](https://www.datocms.com/product-updates/force-validations-on-records-when-publishing.md) opt-in product update is active or not
 
-meta.improved\_exposure\_of\_inline\_blocks\_in\_cda boolean
+meta.improved_exposure_of_inline_blocks_in_cda boolean
 
 Whether the [Improved exposure of inline blocks in the Content Delivery API](https://www.datocms.com/product-updates/improved-exposure-of-inline-blocks-in-cda.md) opt-in product update is active or not
 
-meta.custom\_upload\_storage\_settings boolean
+meta.custom_upload_storage_settings boolean
 
 Whether the site has custom upload storage settings
 
-item\_types
+item_types
 
-Type: Array<[ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)\>
+Type: Array<[ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)\>
 
 owner
 
@@ -19851,7 +19148,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -19916,7 +19213,7 @@ run();
 
 ## Body parameters
 
-no\_index boolean Optional
+no_index boolean Optional
 
 Whether the website needs to be indexed by search engines or not
 
@@ -19926,19 +19223,19 @@ The upload id for the favicon
 
 Example: `"123"`
 
-global\_seo object, null Optional
+global_seo object, null Optional
 
 Specifies default global settings
 
 Show object format
 
-site\_name string Optional
+site_name string Optional
 
 Site name, used in social sharing
 
 Example: `"My Awesome Website"`
 
-fallback\_seo object Optional
+fallback_seo object Optional
 
 Show object format
 
@@ -19956,7 +19253,7 @@ The id of the image
 
 Example: `"123"`
 
-twitter\_card null, enum Optional
+twitter_card null, enum Optional
 
 Determines how a Twitter link preview is shown
 
@@ -19968,23 +19265,23 @@ summary Optional
 
 Twitter summary card
 
-summary\_large\_image Optional
+summary_large_image Optional
 
 Twitter summary card with large image
 
-title\_suffix null, string Optional
+title_suffix null, string Optional
 
 Title meta tag suffix
 
 Example: `" - My Awesome Website"`
 
-facebook\_page\_url null, string Optional
+facebook_page_url null, string Optional
 
 URL of facebook page
 
 Example: `"http://facebook.com/awesomewebsite"`
 
-twitter\_account null, string Optional
+twitter_account null, string Optional
 
 Twitter account associated to website
 
@@ -20012,55 +19309,55 @@ Site default timezone
 
 Example: `"Europe/London"`
 
-require\_2fa boolean Optional
+require_2fa boolean Optional
 
 Specifies whether all users of this site need to authenticate using two-factor authentication
 
-ip\_tracking\_enabled boolean Optional
+ip_tracking_enabled boolean Optional
 
 Specifies whether you want IPs to be tracked in the Project usages section
 
-force\_use\_of\_sandbox\_environments boolean Optional
+force_use_of_sandbox_environments boolean Optional
 
 If enabled, blocks schema changes of primary environment
 
-meta.improved\_timezone\_management boolean Optional
+meta.improved_timezone_management boolean Optional
 
 Whether the [Improved API Timezone Management](https://www.datocms.com/product-updates/improved-timezone-management.md) opt-in product update is active or not
 
-meta.improved\_hex\_management boolean Optional
+meta.improved_hex_management boolean Optional
 
 Whether the [Improved API Hex Management](https://www.datocms.com/product-updates/improved-hex-management.md) opt-in product update is active or not
 
-meta.improved\_gql\_multilocale\_fields boolean Optional
+meta.improved_gql_multilocale_fields boolean Optional
 
 Whether the [Improved GraphQL multi-locale fields](https://www.datocms.com/product-updates/improved-gql-multilocale-fields.md) opt-in product update is active or not
 
-meta.improved\_gql\_visibility\_control boolean Optional
+meta.improved_gql_visibility_control boolean Optional
 
 Whether the [Improved GraphQL visibility control](https://www.datocms.com/product-updates/improved-gql-visibility-control.md) opt-in product update is active or not
 
-meta.improved\_boolean\_fields boolean Optional
+meta.improved_boolean_fields boolean Optional
 
 Whether the [Improved boolean fields](https://www.datocms.com/product-updates/improved-boolean-fields.md) opt-in product update is active or not
 
-meta.draft\_mode\_default boolean Optional
+meta.draft_mode_default boolean Optional
 
 The default value for the draft mode option in all the environment's models
 
-meta.improved\_validation\_at\_publishing boolean Optional
+meta.improved_validation_at_publishing boolean Optional
 
 Whether the [Improved validation at publishing](https://www.datocms.com/product-updates/force-validations-on-records-when-publishing.md) opt-in product update is active or not
 
-meta.custom\_upload\_storage\_settings boolean Optional
+meta.custom_upload_storage_settings boolean Optional
 
 Whether the site has custom upload storage settings
 
-meta.improved\_exposure\_of\_inline\_blocks\_in\_cda boolean Optional
+meta.improved_exposure_of_inline_blocks_in_cda boolean Optional
 
 Whether the [Improved exposure of inline blocks in the Content Delivery API](https://www.datocms.com/product-updates/improved-exposure-of-inline-blocks-in-cda.md) opt-in product update is active or not
 
-sso\_default\_role Optional
+sso_default_role Optional
 
 Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
@@ -20075,7 +19372,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -20158,7 +19455,7 @@ Name of the model
 
 Example: `"Blog post"`
 
-api\_key string
+api_key string
 
 API key of the model
 
@@ -20172,7 +19469,7 @@ sortable boolean
 
 Whether editors can sort records via drag & drop or not
 
-modular\_block boolean
+modular_block boolean
 
 Whether this model is a modular content block or not
 
@@ -20180,7 +19477,7 @@ tree boolean
 
 Whether editors can organize records in a tree or not
 
-ordering\_direction enum, null
+ordering_direction enum, null
 
 If an ordering field is set, this fields specify the sorting direction
 
@@ -20194,39 +19491,39 @@ desc
 
 Descending order
 
-ordering\_meta enum, null
+ordering_meta enum, null
 
-Specifies the model's sorting method. Cannot be set in concurrency with ordering\_field
+Specifies the model's sorting method. Cannot be set in concurrency with ordering_field
 
 Example: `"created_at"`
 
 Show enum values
 
-created\_at
+created_at
 
 Order by date of creation
 
-updated\_at
+updated_at
 
 Order by date of last update
 
-first\_published\_at
+first_published_at
 
 Order by date of first publication
 
-published\_at
+published_at
 
 Order by date of last publication
 
-draft\_mode\_active boolean
+draft_mode_active boolean
 
 Whether draft/published mode is active or not
 
-all\_locales\_required boolean
+all_locales_required boolean
 
 Whether we require all the project locales to be present for each localized field or not
 
-collection\_appearance enum
+collection_appearance enum
 
 The way the model collection should be presented to the editors
 
@@ -20248,19 +19545,19 @@ A hint shown to editors to help them understand the purpose of this model/block
 
 Example: `"Blog posts will be shown in our website under the Blog section"`
 
-inverse\_relationships\_enabled boolean
+inverse_relationships_enabled boolean
 
 Whether inverse relationships fields are expressed in GraphQL or not
 
-draft\_saving\_active boolean
+draft_saving_active boolean
 
 Whether draft records can be saved without satisfying the validations or not
 
-meta.has\_singleton\_item boolean
+meta.has_singleton_item boolean
 
 If this model is single-instance, this tells the single-instance record has already been created or not
 
-singleton\_item
+singleton_item
 
 The item instance related to this item type
 
@@ -20278,37 +19575,37 @@ The list of item type fieldsets
 
 Type: Array<[ResourceLinkage<"fieldset">](/docs/content-management-api/resources/fieldset.md)\>
 
-presentation\_title\_field
+presentation_title_field
 
 The field to use as presentation title
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-presentation\_image\_field
+presentation_image_field
 
 The field to use as presentation image
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-title\_field
+title_field
 
 The field to use as fallback title for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-image\_preview\_field
+image_preview_field
 
 The field to use as fallback image for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-excerpt\_field
+excerpt_field
 
 The field to use as fallback description for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-ordering\_field
+ordering_field
 
 The field upon which the collection is sorted
 
@@ -20322,7 +19619,7 @@ Type: [ResourceLinkage<"workflow">](/docs/content-management-api/resources/workf
 
 Show deprecated
 
-collection\_appeareance enum Deprecated
+collection_appeareance enum Deprecated
 
 The way the model collection should be presented to the editors
 
@@ -20340,7 +19637,7 @@ table
 
 Tabular view
 
-has\_singleton\_item boolean Deprecated
+has_singleton_item boolean Deprecated
 
 If this model is single-instance, this tells the single-instance record has already been created or not
 
@@ -20352,17 +19649,17 @@ This field will be removed in future versions: instead, use the equivalent `has_
 
 ## Query parameters
 
-skip\_menu\_item\_creation boolean
+skip_menu_item_creation boolean
 
 Skip the creation of a menu item linked to the model
 
-menu\_item\_id string
+menu_item_id string
 
 Explicitely specify the ID of the menu item that will be linked to the model
 
 Example: `"FF-P5of6Qp-DD2w0xoaa6Q"`
 
-schema\_menu\_item\_id string
+schema_menu_item_id string
 
 Explicitely specify the ID of the schema menu item that will be linked to the model
 
@@ -20382,7 +19679,7 @@ Name of the model
 
 Example: `"Blog post"`
 
-api\_key string Required
+api_key string Required
 
 API key of the model
 
@@ -20392,7 +19689,7 @@ singleton boolean Optional
 
 Whether the model is single-instance or not
 
-all\_locales\_required boolean Optional
+all_locales_required boolean Optional
 
 Whether we require all the project locales to be present for each localized field or not
 
@@ -20400,15 +19697,15 @@ sortable boolean Optional
 
 Whether editors can sort records via drag & drop or not
 
-modular\_block boolean Optional
+modular_block boolean Optional
 
 Whether this model is a modular content block or not
 
-draft\_mode\_active boolean Optional
+draft_mode_active boolean Optional
 
 Whether draft/published mode is active or not
 
-draft\_saving\_active boolean Optional
+draft_saving_active boolean Optional
 
 Whether draft records can be saved without satisfying the validations or not
 
@@ -20416,7 +19713,7 @@ tree boolean Optional
 
 Whether editors can organize records in a tree or not
 
-ordering\_direction enum, null Optional
+ordering_direction enum, null Optional
 
 If an ordering field is set, this fields specify the sorting direction
 
@@ -20430,31 +19727,31 @@ desc Optional
 
 Descending order
 
-ordering\_meta enum, null Optional
+ordering_meta enum, null Optional
 
-Specifies the model's sorting method. Cannot be set in concurrency with ordering\_field
+Specifies the model's sorting method. Cannot be set in concurrency with ordering_field
 
 Example: `"created_at"`
 
 Show enum values
 
-created\_at Optional
+created_at Optional
 
 Order by date of creation
 
-updated\_at Optional
+updated_at Optional
 
 Order by date of last update
 
-first\_published\_at Optional
+first_published_at Optional
 
 Order by date of first publication
 
-published\_at Optional
+published_at Optional
 
 Order by date of last publication
 
-collection\_appearance enum Optional
+collection_appearance enum Optional
 
 The way the model collection should be presented to the editors
 
@@ -20476,41 +19773,41 @@ A hint shown to editors to help them understand the purpose of this model/block
 
 Example: `"Blog posts will be shown in our website under the Blog section"`
 
-inverse\_relationships\_enabled boolean Optional
+inverse_relationships_enabled boolean Optional
 
 Whether inverse relationships fields are expressed in GraphQL or not
 
-ordering\_field Optional
+ordering_field Optional
 
 The field upon which the collection is sorted
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-presentation\_title\_field Optional
+presentation_title_field Optional
 
 The field to use as presentation title
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-presentation\_image\_field Optional
+presentation_image_field Optional
 
 The field to use as presentation image
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-title\_field Optional
+title_field Optional
 
 The field to use as fallback title for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-image\_preview\_field Optional
+image_preview_field Optional
 
 The field to use as fallback image for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-excerpt\_field Optional
+excerpt_field Optional
 
 The field to use as fallback description for SEO purposes
 
@@ -20524,7 +19821,7 @@ Type: [ResourceLinkage<"workflow">](/docs/content-management-api/resources/workf
 
 Show deprecated
 
-collection\_appeareance enum Deprecated
+collection_appeareance enum Deprecated
 
 The way the model collection should be presented to the editors
 
@@ -20544,7 +19841,7 @@ Tabular view
 
 ## Returns
 
-Returns a resource object of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns a resource object of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -20553,14 +19850,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const itemType = await client.itemTypes.create({
-    name: "Blog post",
-    api_key: "post",
+    name: 'Blog post',
+    api_key: 'post',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -20615,13 +19912,13 @@ Name of the model
 
 Example: `"Blog post"`
 
-api\_key string Optional
+api_key string Optional
 
 API key of the model
 
 Example: `"post"`
 
-collection\_appearance enum Optional
+collection_appearance enum Optional
 
 The way the model collection should be presented to the editors
 
@@ -20641,7 +19938,7 @@ singleton boolean Optional
 
 Whether the model is single-instance or not
 
-all\_locales\_required boolean Optional
+all_locales_required boolean Optional
 
 Whether we require all the project locales to be present for each localized field or not
 
@@ -20649,15 +19946,15 @@ sortable boolean Optional
 
 Whether editors can sort records via drag & drop or not
 
-modular\_block boolean Optional
+modular_block boolean Optional
 
 Whether this model is a modular content block or not
 
-draft\_mode\_active boolean Optional
+draft_mode_active boolean Optional
 
 Whether draft/published mode is active or not
 
-draft\_saving\_active boolean Optional
+draft_saving_active boolean Optional
 
 Whether draft records can be saved without satisfying the validations or not
 
@@ -20665,7 +19962,7 @@ tree boolean Optional
 
 Whether editors can organize records in a tree or not
 
-ordering\_direction enum, null Optional
+ordering_direction enum, null Optional
 
 If an ordering field is set, this fields specify the sorting direction
 
@@ -20679,27 +19976,27 @@ desc Optional
 
 Descending order
 
-ordering\_meta enum, null Optional
+ordering_meta enum, null Optional
 
-Specifies the model's sorting method. Cannot be set in concurrency with ordering\_field
+Specifies the model's sorting method. Cannot be set in concurrency with ordering_field
 
 Example: `"created_at"`
 
 Show enum values
 
-created\_at Optional
+created_at Optional
 
 Order by date of creation
 
-updated\_at Optional
+updated_at Optional
 
 Order by date of last update
 
-first\_published\_at Optional
+first_published_at Optional
 
 Order by date of first publication
 
-published\_at Optional
+published_at Optional
 
 Order by date of last publication
 
@@ -20709,45 +20006,45 @@ A hint shown to editors to help them understand the purpose of this model/block
 
 Example: `"Blog posts will be shown in our website under the Blog section"`
 
-inverse\_relationships\_enabled boolean Optional
+inverse_relationships_enabled boolean Optional
 
 Whether inverse relationships fields are expressed in GraphQL or not
 
-meta.has\_singleton\_item boolean Optional
+meta.has_singleton_item boolean Optional
 
 If this model is single-instance, this tells the single-instance record has already been created or not
 
-ordering\_field Optional
+ordering_field Optional
 
 The field upon which the collection is sorted
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-presentation\_title\_field Optional
+presentation_title_field Optional
 
 The field to use as presentation title
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-presentation\_image\_field Optional
+presentation_image_field Optional
 
 The field to use as presentation image
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-title\_field Optional
+title_field Optional
 
 The field to use as fallback title for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-image\_preview\_field Optional
+image_preview_field Optional
 
 The field to use as fallback image for SEO purposes
 
 Type: [ResourceLinkage<"field">](/docs/content-management-api/resources/field.md), null
 
-excerpt\_field Optional
+excerpt_field Optional
 
 The field to use as fallback description for SEO purposes
 
@@ -20761,7 +20058,7 @@ Type: [ResourceLinkage<"workflow">](/docs/content-management-api/resources/workf
 
 Show deprecated
 
-collection\_appeareance enum Deprecated
+collection_appeareance enum Deprecated
 
 The way the model collection should be presented to the editors
 
@@ -20781,7 +20078,7 @@ Tabular view
 
 ## Returns
 
-Returns a resource object of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns a resource object of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -20790,15 +20087,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const itemType = await client.itemTypes.update(modelIdOrApiKey, {
-    id: "DxMaW10UQiCmZcuuA-IkkA",
+    id: 'DxMaW10UQiCmZcuuA-IkkA',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -20847,7 +20144,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns an array of resource objects of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -20856,7 +20153,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -20911,7 +20208,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns a resource object of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -20920,12 +20217,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const itemType = await client.itemTypes.find(modelIdOrApiKey);
 
@@ -20975,7 +20272,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns a resource object of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -20984,12 +20281,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const itemType = await client.itemTypes.duplicate(modelIdOrApiKey);
 
@@ -21039,13 +20336,13 @@ run();
 
 ## Query parameters
 
-skip\_menu\_items\_deletion boolean
+skip_menu_items_deletion boolean
 
 Skip the deletion of the menu items linked to the model
 
 ## Returns
 
-Returns a resource object of type [item\_type](/docs/content-management-api/resources/item-type.md)
+Returns a resource object of type [item_type](/docs/content-management-api/resources/item-type.md)
 
 ## Examples
 
@@ -21054,12 +20351,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const itemType = await client.itemTypes.destroy(modelIdOrApiKey);
 
@@ -21113,15 +20410,15 @@ DatoCMS offers a number of different fields that you can combine together to cre
 
 When looking at a field resource, you have to pay attention to two particular properties, `validators` and `appearance`.
 
-The `validators` property expresses the set of validations to be performed server-side on a specific field value for it to be considered valid, while the `appearance` property lets you specify *how* the field itself will be presented inside the form to the final editor.
+The `validators` property expresses the set of validations to be performed server-side on a specific field value for it to be considered valid, while the `appearance` property lets you specify _how_ the field itself will be presented inside the form to the final editor.
 
-For both properties, the value to specify depends on the type of field itself. For example, you can add a "Limit character count" validation to a *Single-line string* field, or set its appearence to "Show it as heading", but they won't be accepted for a ie. *Color* field, as it supports different validations and appearance settings.
+For both properties, the value to specify depends on the type of field itself. For example, you can add a "Limit character count" validation to a _Single-line string_ field, or set its appearence to "Show it as heading", but they won't be accepted for a ie. _Color_ field, as it supports different validations and appearance settings.
 
 ### Specifying validations
 
 The `validators` property requires an object whose keys are the validations that you want to be enforced, and the values are objects representing any settings that the validation itself requires. If the validation doesn't have additional settings, you just pass down an empty object.
 
-This is a valid example for a *Single-line string* field:
+This is a valid example for a _Single-line string_ field:
 
 ```js
 {
@@ -21136,7 +20433,7 @@ This is a valid example for a *Single-line string* field:
 
 Below you'll find a summary of all the validators available for each field type with their settings.
 
-Some validators are required for a specific type of field. For example, the *Modular Content* field needs to have a `rich_text_blocks` validator, specifying which types of blocks it can contain.
+Some validators are required for a specific type of field. For example, the _Modular Content_ field needs to have a `rich_text_blocks` validator, specifying which types of blocks it can contain.
 
 ### Specifying the appearance
 
@@ -21144,7 +20441,7 @@ The `appearance` property requires an object with three specific properties: `ed
 
 The `editor` represents the type of editor that the users will see inside the form to change the value of this specific field. Depending on the type of field, DatoCMS offers a number of different editors for you to choose from. The `parameters` property is an object representing any additional settings that the editor itself might require.
 
-This is a valid example for a *Single-line string* field:
+This is a valid example for a _Single-line string_ field:
 
 ```js
 {
@@ -21166,10 +20463,10 @@ If the project contains a plugin that exposes [manual field editors](/docs/plugi
 
 In this case:
 
--   the `editor` property is the plugin's project-specific autogenerated UUID. You can get it from the last part of the plugin's URL within your project's Configuration screen (e.g. `https://your-project.admin.datocms.com/configuration/plugins/PLUGIN_UUID/`), or via API with a [List all plugins](/docs/content-management-api/resources/plugin/instances.md) call.
+- the `editor` property is the plugin's project-specific autogenerated UUID. You can get it from the last part of the plugin's URL within your project's Configuration screen (e.g. `https://your-project.admin.datocms.com/configuration/plugins/PLUGIN_UUID/`), or via API with a [List all plugins](/docs/content-management-api/resources/plugin/instances.md) call.
 
--   the `field_extension` property must be the ID of the specific manual field editor that the plugin exposes. This is set in the plugin's own source code, within a `manualFieldExtension()` call in its entry point (usually something like `index.tsx`).
--   the `parameters` property must provide a configuration object compatible with the [config screen of the manual field extension](/docs/plugin-sdk/manual-field-extensions.md#add-per-field-config-screens-to-manual-field-extensions), or an empty object if it doesn't require any configuration.
+- the `field_extension` property must be the ID of the specific manual field editor that the plugin exposes. This is set in the plugin's own source code, within a `manualFieldExtension()` call in its entry point (usually something like `index.tsx`).
+- the `parameters` property must provide a configuration object compatible with the [config screen of the manual field extension](/docs/plugin-sdk/manual-field-extensions.md#add-per-field-config-screens-to-manual-field-extensions), or an empty object if it doesn't require any configuration.
 
 ```js
 {
@@ -21214,7 +20511,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Single-line string (string)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `string` |
 | Built-in editors for the field | `single_line`, `string_radio_group`, `string_select` |
@@ -21226,7 +20523,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Multi-line text (text)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `text` |
 | Built-in editors for the field | `markdown`, `wysiwyg`, `textarea` |
@@ -21238,7 +20535,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Boolean (boolean)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `boolean` |
 | Built-in editors for the field | `boolean`, `boolean_radio_group` |
@@ -21250,7 +20547,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Integer (integer)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `integer` |
 | Built-in editors for the field | `integer` |
@@ -21262,7 +20559,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Float (float)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `float` |
 | Built-in editors for the field | `float` |
@@ -21274,7 +20571,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Date (date)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `date` |
 | Built-in editors for the field | `date_picker` |
@@ -21286,7 +20583,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Date time (date_time)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `date_time` |
 | Built-in editors for the field | `date_time_picker` |
@@ -21298,7 +20595,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Color (color)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `color` |
 | Built-in editors for the field | `color_picker` |
@@ -21310,7 +20607,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>JSON (json)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `json` |
 | Built-in editors for the field | `json`, `string_multi_select`, `string_checkbox_group` |
@@ -21322,7 +20619,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Location (lat_lon)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `lat_lon` |
 | Built-in editors for the field | `map` |
@@ -21334,7 +20631,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>SEO and Social (seo)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `seo` |
 | Built-in editors for the field | `seo` |
@@ -21346,7 +20643,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Slug (slug)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `slug` |
 | Built-in editors for the field | `slug` |
@@ -21358,7 +20655,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>External video (video)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `video` |
 | Built-in editors for the field | `video` |
@@ -21370,7 +20667,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Single-asset (file)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `file` |
 | Built-in editors for the field | `file` |
@@ -21382,7 +20679,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Asset gallery (gallery)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `gallery` |
 | Built-in editors for the field | `gallery` |
@@ -21394,7 +20691,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Single link (link)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `link` |
 | Built-in editors for the field | `link_select`, `link_embed` |
@@ -21408,7 +20705,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Multiple links (links)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `links` |
 | Built-in editors for the field | `links_select`, `links_embed` |
@@ -21422,7 +20719,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Modular content (rich_text)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `rich_text` |
 | Built-in editors for the field | `rich_text` |
@@ -21435,7 +20732,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Single Block (single_block)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `single_block` |
 | Built-in editors for the field | `framed_single_block`, `frameless_single_block` |
@@ -21448,7 +20745,7 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 <summary>Structured text (structured_text)</summary>
 
 | Property | Value |
-| --- | --- |
+| -------- | ----- |
 
 | Code | `structured_text` |
 | Built-in editors for the field | `structured_text` |
@@ -21465,10 +20762,10 @@ If the project contains plugins that expose [manual field addons](/docs/plugin-s
 Accept dates only inside a specified date range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | ISO 8601 date |  | Minimum date |
-| `max` | ISO 8601 date |  | Maximum date |
+| `min` | ISO 8601 date | | Minimum date |
+| `max` | ISO 8601 date | | Maximum date |
 
 At least one of the parameters must be specified.
 
@@ -21480,10 +20777,10 @@ At least one of the parameters must be specified.
 Accept date times only inside a specified date range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | ISO 8601 datetime |  | Minimum datetime |
-| `max` | ISO 8601 datetime |  | Maximum datetime |
+| `min` | ISO 8601 datetime | | Minimum datetime |
+| `max` | ISO 8601 datetime | | Maximum datetime |
 
 At least one of the parameters must be specified.
 
@@ -21495,7 +20792,7 @@ At least one of the parameters must be specified.
 Only accept a specific set of values
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `values` | `Array<String>` | ✅ | Set of allowed values |
 
@@ -21507,10 +20804,10 @@ Only accept a specific set of values
 Only accept assets with specific file extensions.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `extensions` | `Array<String>` |  | Set of allowed file extensions |
-| `predefined_list` | one of `"image"`, `"transformable_image"`, `"video"`, `"document"` |  | Allowed file type |
+| `extensions` | `Array<String>` | | Set of allowed file extensions |
+| `predefined_list` | one of `"image"`, `"transformable_image"`, `"video"`, `"document"` | | Allowed file type |
 
 Only one of the parameters must be specified.
 
@@ -21522,12 +20819,12 @@ Only one of the parameters must be specified.
 Accept assets only inside a specified date range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min_value` | `Integer` |  | Numeric value for minimum filesize |
-| `min_unit` | one of `"B"`, `"KB"`, `"MB"` |  | Unit for minimum filesize |
-| `max_value` | `Integer` |  | Numeric value for maximum filesize |
-| `max_unit` | one of `"B"`, `"KB"`, `"MB"` |  | Unit for maximum filesize |
+| `min_value` | `Integer` | | Numeric value for minimum filesize |
+| `min_unit` | one of `"B"`, `"KB"`, `"MB"` | | Unit for minimum filesize |
+| `max_value` | `Integer` | | Numeric value for maximum filesize |
+| `max_unit` | one of `"B"`, `"KB"`, `"MB"` | | Unit for maximum filesize |
 
 At least one couple of value/unit must be specified.
 
@@ -21539,7 +20836,7 @@ At least one couple of value/unit must be specified.
 Accepts only strings that match a specified format.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `custom_pattern` | `Regexp` | Optional | Custom regular expression for validation |
 | `predefined_pattern` | `"email"` or `"url"` | Optional | Specifies a pre-defined format (email or URL) |
@@ -21556,10 +20853,10 @@ If `custom_pattern` is used, an additional `description` parameter can be provid
 Only accept slugs having a specific format.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `custom_pattern` | `Regexp` |  | Regular expression to be validated |
-| `predefined_pattern` | `"webpage_slug"` |  | Allowed format |
+| `custom_pattern` | `Regexp` | | Regular expression to be validated |
+| `predefined_pattern` | `"webpage_slug"` | | Allowed format |
 
 Only one of the parameters must be specified.
 
@@ -21571,12 +20868,12 @@ Only one of the parameters must be specified.
 Accept assets only within a specified height and width range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `width_min_value` | `Integer` |  | Numeric value for minimum width |
-| `width_max_value` | `Integer` |  | Numeric value for maximum height |
-| `height_min_value` | `Integer` |  | Numeric value for minimum width |
-| `height_max_value` | `Integer` |  | Numeric value for maximum height |
+| `width_min_value` | `Integer` | | Numeric value for minimum width |
+| `width_max_value` | `Integer` | | Numeric value for maximum height |
+| `height_min_value` | `Integer` | | Numeric value for minimum width |
+| `height_max_value` | `Integer` | | Numeric value for maximum height |
 
 At least one pair of height/width parameters must be specified.
 
@@ -21588,14 +20885,14 @@ At least one pair of height/width parameters must be specified.
 Accept assets only within a specified aspect ratio range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min_ar_numerator` | `Integer` |  | Numerator part of the minimum aspect ratio |
-| `min_ar_denominator` | `Integer` |  | Denominator part of the minimum aspect ratio |
-| `eq_ar_numerator` | `Integer` |  | Numerator part for the required aspect ratio |
-| `eq_ar_denominator` | `Integer` |  | Denominator part for the required aspect ratio |
-| `max_ar_numerator` | `Integer` |  | Numerator part of the maximum aspect ratio |
-| `max_ar_denominator` | `Integer` |  | Denominator part of the maximum aspect ratio |
+| `min_ar_numerator` | `Integer` | | Numerator part of the minimum aspect ratio |
+| `min_ar_denominator` | `Integer` | | Denominator part of the minimum aspect ratio |
+| `eq_ar_numerator` | `Integer` | | Numerator part for the required aspect ratio |
+| `eq_ar_denominator` | `Integer` | | Denominator part for the required aspect ratio |
+| `max_ar_numerator` | `Integer` | | Numerator part of the maximum aspect ratio |
+| `max_ar_denominator` | `Integer` | | Denominator part of the maximum aspect ratio |
 
 At least one pair of numerator/denominator must be specified.
 
@@ -21607,31 +20904,31 @@ At least one pair of numerator/denominator must be specified.
 Only accept references to records of the specified models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Model ID>` | ✅ | Set of allowed model IDs |
-| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) |  | Strategy to apply when a publishing is requested and this field references some unpublished records |
-| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"fail"`) |  | Strategy to apply when unpublishing is requested for a record referenced by this field |
-| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) |  | Strategy to apply when deletion is requested for a record referenced by this field |
+| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) | | Strategy to apply when a publishing is requested and this field references some unpublished records |
+| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"fail"`) | | Strategy to apply when unpublishing is requested for a record referenced by this field |
+| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) | | Strategy to apply when deletion is requested for a record referenced by this field |
 
 Possible values for `on_publish_with_unpublished_references_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"publish_references"`: Publish also the referenced records
+- `"publish_references"`: Publish also the referenced records
 
 Possible values for `on_reference_unpublish_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"unpublish"`: Unpublish also this record
--   `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
+- `"unpublish"`: Unpublish also this record
+- `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
 
 Possible values for `on_reference_delete_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
+- `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
 
 </details>
 
@@ -21641,31 +20938,31 @@ Possible values for `on_reference_delete_strategy`:
 Only accept references to records of the specified models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Model ID>` | ✅ | Set of allowed model IDs |
-| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) |  | Strategy to apply when a publishing is requested and this field references some unpublished records |
-| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"fail"`) |  | Strategy to apply when unpublishing is requested for a record referenced by this field |
-| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) |  | Strategy to apply when deletion is requested for a record referenced by this field |
+| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) | | Strategy to apply when a publishing is requested and this field references some unpublished records |
+| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"fail"`) | | Strategy to apply when unpublishing is requested for a record referenced by this field |
+| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) | | Strategy to apply when deletion is requested for a record referenced by this field |
 
 Possible values for `on_publish_with_unpublished_references_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"publish_references"`: Publish also the referenced records
+- `"publish_references"`: Publish also the referenced records
 
 Possible values for `on_reference_unpublish_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"unpublish"`: Unpublish also this record
--   `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
+- `"unpublish"`: Unpublish also this record
+- `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
 
 Possible values for `on_reference_delete_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
+- `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
 
 </details>
 
@@ -21675,11 +20972,11 @@ Possible values for `on_reference_delete_strategy`:
 Accept strings only with a specified number of characters.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | `Integer` |  | Minimum length |
-| `eq` | `Integer` |  | Expected length |
-| `max` | `Integer` |  | Maximum length |
+| `min` | `Integer` | | Minimum length |
+| `eq` | `Integer` | | Expected length |
+| `max` | `Integer` | | Maximum length |
 
 At least one parameter must be specified.
 
@@ -21691,10 +20988,10 @@ At least one parameter must be specified.
 Accept numbers only inside a specified range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | `Float` |  | Minimum value |
-| `max` | `Float` |  | Maximum value |
+| `min` | `Float` | | Minimum value |
+| `max` | `Float` | | Maximum value |
 
 At least one of the parameters must be specified.
 
@@ -21713,10 +21010,10 @@ Value must be specified or it won't be valid.
 Assets contained in the field are required to specify custom title or alternate text, or they won't be valid.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `title` | `Boolean` |  | Whether the title for the asset must be specified |
-| `alt` | `Boolean` |  | Whether the alternate text for the asset must be specified |
+| `title` | `Boolean` | | Whether the title for the asset must be specified |
+| `alt` | `Boolean` | | Whether the alternate text for the asset must be specified |
 
 At least one of the parameters must be specified.
 
@@ -21728,12 +21025,12 @@ At least one of the parameters must be specified.
 SEO field has to specify one or more properties, or it won't be valid.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `title` | `Boolean` |  | Whether the meta title must be specified |
-| `description` | `Boolean` |  | Whether the meta description must be specified |
-| `image` | `Boolean` |  | Whether the social sharing image must be specified |
-| `twitter_card` | `Boolean` |  | Whether the type of Twitter card must be specified |
+| `title` | `Boolean` | | Whether the meta title must be specified |
+| `description` | `Boolean` | | Whether the meta description must be specified |
+| `image` | `Boolean` | | Whether the social sharing image must be specified |
+| `twitter_card` | `Boolean` | | Whether the type of Twitter card must be specified |
 
 At least one of the parameters must be specified.
 
@@ -21745,10 +21042,10 @@ At least one of the parameters must be specified.
 Limits the length of the title for a SEO field. Search engines usually truncate title tags to 60 character so it is a good practice to keep the title around this length.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | `Integer` |  | Minimum value |
-| `max` | `Integer` |  | Maximum value |
+| `min` | `Integer` | | Minimum value |
+| `max` | `Integer` | | Maximum value |
 
 At least one of the parameters must be specified.
 
@@ -21760,10 +21057,10 @@ At least one of the parameters must be specified.
 Limits the length of the description for a SEO field. Search engines usually truncate description tags to 160 character so it is a good practice to keep the description around this length.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | `Integer` |  | Minimum value |
-| `max` | `Integer` |  | Maximum value |
+| `min` | `Integer` | | Minimum value |
+| `max` | `Integer` | | Maximum value |
 
 At least one of the parameters must be specified.
 
@@ -21775,7 +21072,7 @@ At least one of the parameters must be specified.
 Only accept references to block records of the specified block models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Block Model ID>` | ✅ | Set of allowed Block Model IDs |
 
@@ -21787,7 +21084,7 @@ Only accept references to block records of the specified block models.
 Only accept references to block records of the specified block models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Block Model ID>` | ✅ | Set of allowed Block Model IDs |
 
@@ -21799,7 +21096,7 @@ Only accept references to block records of the specified block models.
 Checks for the presence of malicious cose in HTML fields: content is valid if no dangerous code is present.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `sanitize_before_validation` | `Boolean` | ✅ | Content is actively sanitized before applying the validation |
 
@@ -21811,7 +21108,7 @@ Checks for the presence of malicious cose in HTML fields: content is valid if no
 Only accept references to block records of the specified block models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Block Model ID>` | ✅ | Set of allowed Block Model IDs |
 
@@ -21823,7 +21120,7 @@ Only accept references to block records of the specified block models.
 Only accept references to block records of the specified block models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Block Model ID>` | ✅ | Set of allowed Block Model IDs |
 
@@ -21835,31 +21132,31 @@ Only accept references to block records of the specified block models.
 Only accept `itemLink` to `inlineItem` nodes for records of the specified models.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `item_types` | `Array<Model ID>` | ✅ | Set of allowed model IDs |
-| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) |  | Strategy to apply when a publishing is requested and this field references some unpublished records |
-| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"delete_references"`) |  | Strategy to apply when unpublishing is requested for a record referenced by this field |
-| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) |  | Strategy to apply when deletion is requested for a record referenced by this field |
+| `on_publish_with_unpublished_references_strategy` | `"fail"`, `"publish_references"` (default value: `"fail"`) | | Strategy to apply when a publishing is requested and this field references some unpublished records |
+| `on_reference_unpublish_strategy` | `"fail"`, `"unpublish"`, `"delete_references"` (default value: `"delete_references"`) | | Strategy to apply when unpublishing is requested for a record referenced by this field |
+| `on_reference_delete_strategy` | `"fail"`, `"delete_references"` (default value: `"delete_references"`) | | Strategy to apply when deletion is requested for a record referenced by this field |
 
 Possible values for `on_publish_with_unpublished_references_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"publish_references"`: Publish also the referenced records
+- `"publish_references"`: Publish also the referenced records
 
 Possible values for `on_reference_unpublish_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"unpublish"`: Unpublish also this record
--   `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
+- `"unpublish"`: Unpublish also this record
+- `"delete_references"`: Try to remove the reference to the unpublished record (if the field has a `required` validation it will fail)
 
 Possible values for `on_reference_delete_strategy`:
 
--   `"fail"`: Fail the operation and notify the user
+- `"fail"`: Fail the operation and notify the user
 
--   `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
+- `"delete_references"`: Try to remove the reference to the deleted record (if the field has a `required` validation it will fail)
 
 </details>
 
@@ -21869,12 +21166,12 @@ Possible values for `on_reference_delete_strategy`:
 Only accept a number of items within the specified range.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `min` | `Integer` |  | Minimum length |
-| `eq` | `Integer` |  | Expected length |
-| `max` | `Integer` |  | Maximum length |
-| `multiple_of` | `Integer` |  | The number of items must be multiple of this value |
+| `min` | `Integer` | | Minimum length |
+| `eq` | `Integer` | | Expected length |
+| `max` | `Integer` | | Maximum length |
+| `multiple_of` | `Integer` | | The number of items must be multiple of this value |
 
 At least one parameter must be specified.
 
@@ -21883,10 +21180,10 @@ At least one parameter must be specified.
 <details>
 <summary>slug_title_field</summary>
 
-Specifies the ID of the *Single-line string* field that will be used to generate the slug
+Specifies the ID of the _Single-line string_ field that will be used to generate the slug
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `title_field_id` | `Field ID` | ✅ | The field that will be used to generate the slug |
 
@@ -21906,10 +21203,10 @@ If a field editor is not specified in this table, just pass an empty object `{}`
 <details>
 <summary>boolean_radio_group</summary>
 
-Radio group input for *boolean* fields.
+Radio group input for _boolean_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `positive_radio` | `{ label: string, hint?: string }` | ✅ | Radio input for positive choice (`true`) |
 | `negative_radio` | `{ label: string, hint?: string }` | ✅ | Radio input for negative choice (`false`) |
@@ -21919,10 +21216,10 @@ Radio group input for *boolean* fields.
 <details>
 <summary>string_radio_group</summary>
 
-Radio group input for *string* fields.
+Radio group input for _string_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `radios` | `Array<{ label: string, value: string, hint?: string }>` | ✅ | The different radio options |
 
@@ -21931,10 +21228,10 @@ Radio group input for *string* fields.
 <details>
 <summary>string_select</summary>
 
-Select input for *string* fields.
+Select input for _string_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `options` | `Array<{ label: string, value: string, hint?: string }>` | ✅ | The different select options |
 
@@ -21943,10 +21240,10 @@ Select input for *string* fields.
 <details>
 <summary>string_multi_select</summary>
 
-Select input for *JSON* fields, to edit an array of strings.
+Select input for _JSON_ fields, to edit an array of strings.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `options` | `Array<{ label: string, value: string, hint?: string }>` | ✅ | The different select options |
 
@@ -21955,10 +21252,10 @@ Select input for *JSON* fields, to edit an array of strings.
 <details>
 <summary>string_checkbox_group</summary>
 
-Multiple chechboxes input for *JSON* fields, to edit an array of strings.
+Multiple chechboxes input for _JSON_ fields, to edit an array of strings.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `options` | `Array<{ label: string, value: string, hint?: string }>` | ✅ | The different select options |
 
@@ -21967,23 +21264,23 @@ Multiple chechboxes input for *JSON* fields, to edit an array of strings.
 <details>
 <summary>single_line</summary>
 
-Simple textual input for *Single-line string* fields.
+Simple textual input for _Single-line string_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `heading` | `Boolean` | ✅ | Indicates if the field should be shown bigger, as a field representing a heading |
-| `placeholder` | `String` |  | A placeholder that will be shown in the editor's input to provide editors with an example. |
+| `placeholder` | `String` | | A placeholder that will be shown in the editor's input to provide editors with an example. |
 
 </details>
 
 <details>
 <summary>markdown</summary>
 
-Markdown editor for *Multiple-paragraph text* fields.
+Markdown editor for _Multiple-paragraph text_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `toolbar` | `Array<String>` | ✅ | Specify which buttons the toolbar should have. Valid values: `"heading"`, `"bold"`, `"italic"`, `"strikethrough"`, `"code"`, `"unordered_list"`, `"ordered_list"`, `"quote"`, `"link"`, `"image"`, `"fullscreen"` |
 
@@ -21992,10 +21289,10 @@ Markdown editor for *Multiple-paragraph text* fields.
 <details>
 <summary>wysiwyg</summary>
 
-HTML editor for *Multiple-paragraph text* fields.
+HTML editor for _Multiple-paragraph text_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `toolbar` | `Array<String>` | ✅ | Specify which buttons the toolbar should have. Valid values: `"format"`, `"bold"`, `"italic"`, `"strikethrough"`, `"code"`, `"ordered_list"`, `"unordered_list"`, `"quote"`, `"table"`, `"link"`, `"image"`, `"show_source"`, `"undo"`, `"redo"`, `"align_left"`, `"align_center"`, `"align_right"`, `"align_justify"`, `"outdent"`, `"indent"`, `"fullscreen"` |
 
@@ -22004,22 +21301,22 @@ HTML editor for *Multiple-paragraph text* fields.
 <details>
 <summary>textarea</summary>
 
-Basic textarea editor for *Multiple-paragraph text* fields.
+Basic textarea editor for _Multiple-paragraph text_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `placeholder` | `String` |  | A placeholder that will be shown in the editor's input to provide editors with an example. |
+| `placeholder` | `String` | | A placeholder that will be shown in the editor's input to provide editors with an example. |
 
 </details>
 
 <details>
 <summary>color_picker</summary>
 
-Built-in editor for *Color* fields.
+Built-in editor for _Color_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `enable_alpha` | `Boolean` | ✅ | Should the color picker allow to specify the alpha value? |
 | `preset_colors` | `Array<Hex color string>` | ✅ | List of preset colors to offer to the user |
@@ -22029,23 +21326,23 @@ Built-in editor for *Color* fields.
 <details>
 <summary>slug</summary>
 
-Built-in editor for *Slug* fields.
+Built-in editor for _Slug_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `url_prefix` | `String` |  | A prefix that will be shown in the editor's form to give some context to your editors. |
-| `placeholder` | `String` |  | A placeholder that will be shown in the editor's input to provide editors with an example. |
+| `url_prefix` | `String` | | A prefix that will be shown in the editor's form to give some context to your editors. |
+| `placeholder` | `String` | | A placeholder that will be shown in the editor's input to provide editors with an example. |
 
 </details>
 
 <details>
 <summary>seo</summary>
 
-Built-in editor for *seo* fields.
+Built-in editor for _seo_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `fields` | `Array<String>` | ✅ | Specify which fields of the SEO input should be visible to editors. Valid values: `"title"`, `"description"`, `"image"`, `"no_index"`, `"twitter_card"` |
 | `previews` | `Array<String>` | ✅ | Specify which previews should be visible to editors. Valid values: `"google_search"`, `"twitter"`, `"slack"`, `"whatsapp"`, `"telegram"`, `"facebook"`, `"linkedin"` |
@@ -22055,41 +21352,41 @@ Built-in editor for *seo* fields.
 <details>
 <summary>rich_text</summary>
 
-Built-in editor for *Modular content* fields.
+Built-in editor for _Modular content_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `start_collapsed` | `Boolean` |  | Whether you want block records collapsed by default or not |
+| `start_collapsed` | `Boolean` | | Whether you want block records collapsed by default or not |
 
 </details>
 
 <details>
 <summary>framed_single_block</summary>
 
-Built-in editor for *Single block* fields.
+Built-in editor for _Single block_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `start_collapsed` | `Boolean` |  | Whether you want block record collapsed by default or not |
+| `start_collapsed` | `Boolean` | | Whether you want block record collapsed by default or not |
 
 </details>
 
 <details>
 <summary>structured_text</summary>
 
-Built-in editor for *Structured text* fields.
+Built-in editor for _Structured text_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
 | `nodes` | `Array<String>` | ✅ | Specify which nodes the field should allow. Valid values: `"blockquote"`, `"code"`, `"heading"`, `"link"`, `"list"`, `"thematicBreak"` |
 | `marks` | `Array<String>` | ✅ | Specify which marks the field should allow. Valid values: `"strong"`, `"emphasis"`, `"underline"`, `"strikethrough"`, `"code"`, `"highlight"` |
 | `heading_levels` | `Array<Integer>` | ✅ | If `nodes` includes `"heading"`, specify which heading levels the field should allow. Valid values: numbers between 1 and 6 |
-| `blocks_start_collapsed` | `Boolean` |  | Whether you want block nodes collapsed by default or not |
-| `show_links_target_blank` | `Boolean` |  | Whether you want to show the "Open this link in a new tab?" checkbox, that fills in the `target: "_blank"` meta attribute for links |
-| `show_links_meta_editor` | `Boolean` |  | Whether you want to show the complete meta editor for links |
+| `blocks_start_collapsed` | `Boolean` | | Whether you want block nodes collapsed by default or not |
+| `show_links_target_blank` | `Boolean` | | Whether you want to show the "Open this link in a new tab?" checkbox, that fills in the `target: "_blank"` meta attribute for links |
+| `show_links_meta_editor` | `Boolean` | | Whether you want to show the complete meta editor for links |
 
 </details>
 
@@ -22110,24 +21407,24 @@ Use an expanded view with records' image preview to pick the records to referenc
 <details>
 <summary>integer</summary>
 
-Built-in editor for *Integer* fields.
+Built-in editor for _Integer_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `placeholder` | `String` |  | A placeholder that will be shown in the editor's input to provide editors with an example. |
+| `placeholder` | `String` | | A placeholder that will be shown in the editor's input to provide editors with an example. |
 
 </details>
 
 <details>
 <summary>float</summary>
 
-Built-in editor for *Float* fields.
+Built-in editor for _Float_ fields.
 
 | Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
+| --------- | ---- | -------- | ----------- |
 
-| `placeholder` | `String` |  | A placeholder that will be shown in the editor's input to provide editors with an example. |
+| `placeholder` | `String` | | A placeholder that will be shown in the editor's input to provide editors with an example. |
 
 </details>
 
@@ -22149,7 +21446,7 @@ The label of the field
 
 Example: `"Title"`
 
-field\_type enum
+field_type enum
 
 Type of input
 
@@ -22163,7 +21460,7 @@ color
 
 date
 
-date\_time
+date_time
 
 file
 
@@ -22175,29 +21472,29 @@ integer
 
 json
 
-lat\_lon
+lat_lon
 
 link
 
 links
 
-rich\_text
+rich_text
 
 seo
 
-single\_block
+single_block
 
 slug
 
 string
 
-structured\_text
+structured_text
 
 text
 
 video
 
-api\_key string
+api_key string
 
 Field API key
 
@@ -22225,7 +21522,7 @@ Field hint
 
 Example: `"This field will be used as post title"`
 
-default\_value
+default_value
 
 Default value for Field. When field is localized accepts an object of default values with site locales as keys
 
@@ -22263,23 +21560,23 @@ The ID of a plugin offering a field addon
 
 parameters object
 
-field\_extension string
+field_extension string
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
-field\_extension string
+field_extension string
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
-deep\_filtering\_enabled boolean
+deep_filtering_enabled boolean
 
 Whether deep filtering for block models is enabled in GraphQL or not
 
-item\_type
+item_type
 
 Field item type
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 fieldset
 
@@ -22319,7 +21616,7 @@ The label of the field
 
 Example: `"Title"`
 
-field\_type enum Required
+field_type enum Required
 
 Type of input
 
@@ -22333,7 +21630,7 @@ color Optional
 
 date Optional
 
-date\_time Optional
+date_time Optional
 
 file Optional
 
@@ -22345,29 +21642,29 @@ integer Optional
 
 json Optional
 
-lat\_lon Optional
+lat_lon Optional
 
 link Optional
 
 links Optional
 
-rich\_text Optional
+rich_text Optional
 
 seo Optional
 
-single\_block Optional
+single_block Optional
 
 slug Optional
 
 string Optional
 
-structured\_text Optional
+structured_text Optional
 
 text Optional
 
 video Optional
 
-api\_key string Required
+api_key string Required
 
 Field API key
 
@@ -22413,11 +21710,11 @@ The ID of a plugin offering a field addon
 
 parameters object Required
 
-field\_extension string Optional
+field_extension string Optional
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
-field\_extension string Optional
+field_extension string Optional
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
@@ -22433,7 +21730,7 @@ Field hint
 
 Example: `"This field will be used as post title"`
 
-default\_value Optional
+default_value Optional
 
 Default value for Field. When field is localized accepts an object of default values with site locales as keys
 
@@ -22441,7 +21738,7 @@ Type: boolean, null, string, number, object
 
 Example: `{ en: "A default value", it: "Un valore di default" }`
 
-deep\_filtering\_enabled boolean Optional
+deep_filtering_enabled boolean Optional
 
 Whether deep filtering for block models is enabled in GraphQL or not
 
@@ -22473,22 +21770,22 @@ Returns a resource object of type [field](/docs/content-management-api/resources
 
 Example Basic example
 
-This is a complete example for creating a new localized *Single-line string* field:
+This is a complete example for creating a new localized _Single-line string_ field:
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const field = await client.fields.create(modelIdOrApiKey, {
-    label: "Title",
-    field_type: "string",
-    api_key: "title",
+    label: 'Title',
+    field_type: 'string',
+    api_key: 'title',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -22521,39 +21818,40 @@ run();
   fieldset: null,
 }
 ```
+
 Example Creating Modular Content fields
 
 In this example:
 
--   first we create some [block models](/docs/content-modelling/blocks.md) using the `client.itemTypes.create()` method, making sure to set the `modular_block` attribute to `true` — this tells the API that they're in fact block models, and not regular models;
+- first we create some [block models](/docs/content-modelling/blocks.md) using the `client.itemTypes.create()` method, making sure to set the `modular_block` attribute to `true` — this tells the API that they're in fact block models, and not regular models;
 
--   we then create a [Modular content](/docs/content-modelling/modular-content.md) field, passing down the allowed block models in the `rich_text_blocks` validator:
+- we then create a [Modular content](/docs/content-modelling/modular-content.md) field, passing down the allowed block models in the `rich_text_blocks` validator:
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const modularBlock1 = await client.itemTypes.create({
-    name: "Modular Block 1",
-    api_key: "modular_block1",
+    name: 'Modular Block 1',
+    api_key: 'modular_block1',
     modular_block: true,
   });
 
   const modularBlock2 = await client.itemTypes.create({
-    name: "Modular Block 2",
-    api_key: "modular_block2",
+    name: 'Modular Block 2',
+    api_key: 'modular_block2',
     modular_block: true,
   });
 
-  const field = await client.fields.create("UZyfjdBES8y2W2ruMEHSoA", {
-    label: "Content",
-    field_type: "rich_text",
-    api_key: "content",
+  const field = await client.fields.create('UZyfjdBES8y2W2ruMEHSoA', {
+    label: 'Content',
+    field_type: 'rich_text',
+    api_key: 'content',
     validators: {
       rich_text_blocks: {
         item_types: [modularBlock1.id, modularBlock2.id],
@@ -22590,6 +21888,7 @@ run();
   fieldset: null,
 }
 ```
+
 Example Creating Structured Text fields
 
 [Structured Text](/docs/content-modelling/structured-text.md) fields support both embedded block records and links to other regular records.
@@ -22598,35 +21897,35 @@ For DatoCMS, a block model is just like a regular model, so we'll create them wi
 
 In this example:
 
--   first we create some [block models](/docs/content-modelling/blocks.md) using the `client.itemTypes.create()` method, making sure to set the `modular_block` attribute to `true` — this tells the API that they're in fact block models, and not regular models;
+- first we create some [block models](/docs/content-modelling/blocks.md) using the `client.itemTypes.create()` method, making sure to set the `modular_block` attribute to `true` — this tells the API that they're in fact block models, and not regular models;
 
--   we then create the Structured Text field, passing down the embeddable block models in the `structured_text_blocks` and `structured_text_inline_blocks` validator, and the linkable record models in the `structured_text_links` validator:
+- we then create the Structured Text field, passing down the embeddable block models in the `structured_text_blocks` and `structured_text_inline_blocks` validator, and the linkable record models in the `structured_text_links` validator:
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const modularBlock1 = await client.itemTypes.create({
-    name: "Modular Block 1",
-    api_key: "modular_block1",
+    name: 'Modular Block 1',
+    api_key: 'modular_block1',
     modular_block: true,
   });
 
   const modularBlock2 = await client.itemTypes.create({
-    name: "Modular Block 2",
-    api_key: "modular_block2",
+    name: 'Modular Block 2',
+    api_key: 'modular_block2',
     modular_block: true,
   });
 
-  const field = await client.fields.create("UZyfjdBES8y2W2ruMEHSoA", {
-    label: "Structured content",
-    field_type: "structured_text",
-    api_key: "content",
+  const field = await client.fields.create('UZyfjdBES8y2W2ruMEHSoA', {
+    label: 'Structured content',
+    field_type: 'structured_text',
+    api_key: 'content',
     validators: {
       structured_text_blocks: {
         item_types: [modularBlock1.id, modularBlock2.id],
@@ -22635,7 +21934,7 @@ async function run() {
         item_types: [modularBlock1.id],
       },
       structured_text_links: {
-        item_types: ["UZyfjdBES8y2W2ruMEHSoA"],
+        item_types: ['UZyfjdBES8y2W2ruMEHSoA'],
       },
     },
   });
@@ -22676,7 +21975,7 @@ run();
 
 ## Body parameters
 
-default\_value Optional
+default_value Optional
 
 Default value for Field. When field is localized accepts an object of default values with site locales as keys
 
@@ -22690,7 +21989,7 @@ The label of the field
 
 Example: `"Title"`
 
-api\_key string Optional
+api_key string Optional
 
 Field API key
 
@@ -22736,11 +22035,11 @@ The ID of a plugin offering a field addon
 
 parameters object Required
 
-field\_extension string Optional
+field_extension string Optional
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
-field\_extension string Optional
+field_extension string Optional
 
 The specific field extension to use for the field (only if the editor is a modern plugin)
 
@@ -22750,7 +22049,7 @@ Ordering index
 
 Example: `1`
 
-field\_type enum Optional
+field_type enum Optional
 
 Type of input
 
@@ -22764,7 +22063,7 @@ color Optional
 
 date Optional
 
-date\_time Optional
+date_time Optional
 
 file Optional
 
@@ -22776,23 +22075,23 @@ integer Optional
 
 json Optional
 
-lat\_lon Optional
+lat_lon Optional
 
 link Optional
 
 links Optional
 
-rich\_text Optional
+rich_text Optional
 
 seo Optional
 
-single\_block Optional
+single_block Optional
 
 slug Optional
 
 string Optional
 
-structured\_text Optional
+structured_text Optional
 
 text Optional
 
@@ -22804,7 +22103,7 @@ Field hint
 
 Example: `"This field will be used as post title"`
 
-deep\_filtering\_enabled boolean Optional
+deep_filtering_enabled boolean Optional
 
 Whether deep filtering for block models is enabled in GraphQL or not
 
@@ -22839,15 +22138,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldIdOrApiKey = "blog_post::title";
+  const fieldIdOrApiKey = 'blog_post::title';
 
   const field = await client.fields.update(fieldIdOrApiKey, {
-    id: "Pkg-oztERp6o-Rj76nYKJg",
+    id: 'Pkg-oztERp6o-Rj76nYKJg',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -22896,12 +22195,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const fields = await client.fields.list(modelIdOrApiKey);
 
@@ -22953,12 +22252,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldIdOrApiKey = "blog_post::title";
+  const fieldIdOrApiKey = 'blog_post::title';
 
   const field = await client.fields.find(fieldIdOrApiKey);
 
@@ -23008,12 +22307,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldIdOrApiKey = "blog_post::title";
+  const fieldIdOrApiKey = 'blog_post::title';
 
   const field = await client.fields.destroy(fieldIdOrApiKey);
 
@@ -23063,12 +22362,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldIdOrApiKey = "blog_post::title";
+  const fieldIdOrApiKey = 'blog_post::title';
 
   const field = await client.fields.duplicate(fieldIdOrApiKey);
 
@@ -23143,15 +22442,15 @@ collapsible boolean
 
 Whether the fieldset can be collapsed or not
 
-start\_collapsed boolean
+start_collapsed boolean
 
 When fieldset is collapsible, determines if the default is to start collapsed or not
 
-item\_type
+item_type
 
 Fieldset item type
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 ---
 
@@ -23187,7 +22486,7 @@ collapsible boolean Optional
 
 Whether the fieldset can be collapsed or not
 
-start\_collapsed boolean Optional
+start_collapsed boolean Optional
 
 When fieldset is collapsible, determines if the default is to start collapsed or not
 
@@ -23202,15 +22501,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const fieldset = await client.fieldsets.create(modelIdOrApiKey, {
-    title: "SEO-related fields",
+    title: 'SEO-related fields',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -23262,7 +22561,7 @@ collapsible boolean Optional
 
 Whether the fieldset can be collapsed or not
 
-start\_collapsed boolean Optional
+start_collapsed boolean Optional
 
 When fieldset is collapsible, determines if the default is to start collapsed or not
 
@@ -23277,15 +22576,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldsetId = "93Y1C2sySkG4Eg0atBRIwg";
+  const fieldsetId = '93Y1C2sySkG4Eg0atBRIwg';
 
   const fieldset = await client.fieldsets.update(fieldsetId, {
-    id: "93Y1C2sySkG4Eg0atBRIwg",
+    id: '93Y1C2sySkG4Eg0atBRIwg',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -23324,12 +22623,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const modelIdOrApiKey = "blog_post";
+  const modelIdOrApiKey = 'blog_post';
 
   const fieldsets = await client.fieldsets.list(modelIdOrApiKey);
 
@@ -23371,12 +22670,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldsetId = "93Y1C2sySkG4Eg0atBRIwg";
+  const fieldsetId = '93Y1C2sySkG4Eg0atBRIwg';
 
   const fieldset = await client.fieldsets.find(fieldsetId);
 
@@ -23416,12 +22715,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const fieldsetId = "93Y1C2sySkG4Eg0atBRIwg";
+  const fieldsetId = '93Y1C2sySkG4Eg0atBRIwg';
 
   const fieldset = await client.fieldsets.destroy(fieldsetId);
 
@@ -23464,23 +22763,23 @@ type string
 
 Must be exactly `"item_version"`.
 
-meta.created\_at date-time
+meta.created_at date-time
 
 Date of record version creation
 
-meta.is\_published boolean
+meta.is_published boolean
 
 Whether the record version is the published version or not
 
-meta.is\_current boolean
+meta.is_current boolean
 
 Whether the record version is the most recent version or not
 
-item\_type
+item_type
 
 The record version's model
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 item
 
@@ -23492,11 +22791,11 @@ editor
 
 The entity (account/collaborator/access token/sso user) who made this change to the record
 
-Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access\_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
+Type: [ResourceLinkage<"account">](/docs/content-management-api/resources/account.md), [ResourceLinkage<"access_token">](/docs/content-management-api/resources/access_token.md), [ResourceLinkage<"user">](/docs/content-management-api/resources/user.md), [ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md), [ResourceLinkage<"organization">](/docs/content-management-api/resources/organization.md)
 
 Show deprecated
 
-meta.is\_valid boolean Deprecated
+meta.is_valid boolean Deprecated
 
 Whether the record version is valid or not
 
@@ -23517,12 +22816,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemVersionId = "59JSonvYTCOUDz_b7_6hvA";
+  const itemVersionId = '59JSonvYTCOUDz_b7_6hvA';
 
   const itemVersion = await client.itemVersions.restore(itemVersionId);
 
@@ -23594,24 +22893,22 @@ The maximum number of entities to return (defaults to 15, maximum is 50)
 
 ## Returns
 
-Returns an array of resource objects of type [item\_version](/docs/content-management-api/resources/item-version.md)
+Returns an array of resource objects of type [item_version](/docs/content-management-api/resources/item-version.md)
 
 ## Examples
 
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemId = "59JSonvYTCOUDz_b7_6hvA";
+  const itemId = '59JSonvYTCOUDz_b7_6hvA';
 
   // iterates over every page of results
-  for await (const itemVersion of client.itemVersions.listPagedIterator(
-    itemId,
-  )) {
+  for await (const itemVersion of client.itemVersions.listPagedIterator(itemId)) {
     // Check the 'Returned output' tab for the result ☝️
     console.log(itemVersion);
   }
@@ -23632,7 +22929,7 @@ For Modular Content, Structured Text and Single Block fields, return full payloa
 
 ## Returns
 
-Returns a resource object of type [item\_version](/docs/content-management-api/resources/item-version.md)
+Returns a resource object of type [item_version](/docs/content-management-api/resources/item-version.md)
 
 ## Examples
 
@@ -23641,12 +22938,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemVersionId = "59JSonvYTCOUDz_b7_6hvA";
+  const itemVersionId = '59JSonvYTCOUDz_b7_6hvA';
 
   const itemVersion = await client.itemVersions.find(itemVersionId);
 
@@ -23707,7 +23004,7 @@ The URL to use to upload the file with a raw/binary PUT request
 
 Example: `"https://dato-images.s3-eu-west-1.amazonaws.com/7/1455102967-image.png?X-Amz-Credential=AKIAJDTXTZHHDUCKAUMA%2F20160210"`
 
-request\_headers object
+request_headers object
 
 Specifies the additional headers that need to be included in the direct PUT upload request
 
@@ -23729,7 +23026,7 @@ Example: `"image.png"`
 
 ## Returns
 
-Returns a resource object of type [upload\_request](/docs/content-management-api/resources/upload-request.md)
+Returns a resource object of type [upload_request](/docs/content-management-api/resources/upload-request.md)
 
 ## Examples
 
@@ -23738,7 +23035,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -23798,13 +23095,13 @@ The human-readable name of the track
 
 Example: `"Italiano"`
 
-language\_code string
+language_code string
 
 A valid BCP 47 specification compliant language code
 
 Example: `"it-IT"`
 
-closed\_captions null, boolean
+closed_captions null, boolean
 
 Indicates if the track provides subtitles for the Deaf or Hard-of-hearing (SDH)
 
@@ -23844,7 +23141,7 @@ Type: [ResourceLinkage<"upload">](/docs/content-management-api/resources/upload.
 
 ## Body parameters
 
-url\_or\_upload\_request\_id string Required
+url_or_upload_request_id string Required
 
 Either an URL to download, or the ID of an upload request
 
@@ -23866,7 +23163,7 @@ audio Optional
 
 Audio
 
-language\_code string Required
+language_code string Required
 
 A valid BCP 47 specification compliant language code
 
@@ -23878,13 +23175,13 @@ The human-readable name of the track
 
 Example: `"Italiano"`
 
-closed\_captions null, boolean Optional
+closed_captions null, boolean Optional
 
 Indicates if the track provides subtitles for the Deaf or Hard-of-hearing (SDH)
 
 ## Returns
 
-Returns a resource object of type [upload\_track](/docs/content-management-api/resources/upload-track.md)
+Returns a resource object of type [upload_track](/docs/content-management-api/resources/upload-track.md)
 
 ## Examples
 
@@ -23893,17 +23190,17 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw";
+  const uploadId = 'xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw';
 
   const uploadTrack = await client.uploadTracks.create(uploadId, {
-    url_or_upload_request_id: "/7/1455102967-image.png",
-    type: "subtitles",
-    language_code: "it-IT",
+    url_or_upload_request_id: '/7/1455102967-image.png',
+    type: 'subtitles',
+    language_code: 'it-IT',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -23934,7 +23231,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [upload\_track](/docs/content-management-api/resources/upload-track.md)
+Returns an array of resource objects of type [upload_track](/docs/content-management-api/resources/upload-track.md)
 
 ## Examples
 
@@ -23943,12 +23240,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw";
+  const uploadId = 'xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw';
 
   const uploadTracks = await client.uploadTracks.list(uploadId);
 
@@ -23982,7 +23279,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [upload\_track](/docs/content-management-api/resources/upload-track.md)
+Returns a resource object of type [upload_track](/docs/content-management-api/resources/upload-track.md)
 
 ## Examples
 
@@ -23991,19 +23288,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadId = "xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw";
-  const uploadTrackId =
-    "xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw";
+  const uploadId = 'xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw';
+  const uploadTrackId = 'xBe7u01029ipxBLQhYzZCJ1cke01zCkuUsgnYtH0017nNzbpv2YcsoMDmw';
 
-  const uploadTrack = await client.uploadTracks.destroy(
-    uploadId,
-    uploadTrackId,
-  );
+  const uploadTrack = await client.uploadTracks.destroy(uploadId, uploadTrackId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(uploadTrack);
@@ -24089,14 +23382,14 @@ The maximum number of entities to return (defaults to 50, maximum is 500)
 
 ## Returns
 
-Returns an array of resource objects of type [upload\_tag](/docs/content-management-api/resources/upload-tag.md)
+Returns an array of resource objects of type [upload_tag](/docs/content-management-api/resources/upload-tag.md)
 
 ## Examples
 
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -24125,7 +23418,7 @@ Example: `"Pictures of me"`
 
 ## Returns
 
-Returns a resource object of type [upload\_tag](/docs/content-management-api/resources/upload-tag.md)
+Returns a resource object of type [upload_tag](/docs/content-management-api/resources/upload-tag.md)
 
 ## Examples
 
@@ -24134,12 +23427,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadTag = await client.uploadTags.create({ name: "Pictures of me" });
+  const uploadTag = await client.uploadTags.create({ name: 'Pictures of me' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(uploadTag);
@@ -24216,14 +23509,14 @@ The maximum number of entities to return (defaults to 50, maximum is 500)
 
 ## Returns
 
-Returns an array of resource objects of type [upload\_smart\_tag](/docs/content-management-api/resources/upload-smart-tag.md)
+Returns an array of resource objects of type [upload_smart_tag](/docs/content-management-api/resources/upload-smart-tag.md)
 
 ## Examples
 
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -24272,13 +23565,13 @@ parent
 
 Parent upload collection
 
-Type: null, [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)
+Type: null, [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)
 
 children
 
 Underlying upload collections
 
-Type: Array<[ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)\>
+Type: Array<[ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)\>
 
 ---
 
@@ -24308,11 +23601,11 @@ parent Optional
 
 Parent upload collection
 
-Type: null, [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)
+Type: null, [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)
 
 ## Returns
 
-Returns a resource object of type [upload\_collection](/docs/content-management-api/resources/upload-collection.md)
+Returns a resource object of type [upload_collection](/docs/content-management-api/resources/upload-collection.md)
 
 ## Examples
 
@@ -24321,13 +23614,13 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const uploadCollection = await client.uploadCollections.create({
-    label: "Posts",
+    label: 'Posts',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -24371,17 +23664,17 @@ parent Optional
 
 Parent upload collection
 
-Type: null, [ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)
+Type: null, [ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)
 
 children Optional
 
 Underlying upload collections
 
-Type: Array<[ResourceLinkage<"upload\_collection">](/docs/content-management-api/resources/upload_collection.md)\>
+Type: Array<[ResourceLinkage<"upload_collection">](/docs/content-management-api/resources/upload_collection.md)\>
 
 ## Returns
 
-Returns a resource object of type [upload\_collection](/docs/content-management-api/resources/upload-collection.md)
+Returns a resource object of type [upload_collection](/docs/content-management-api/resources/upload-collection.md)
 
 ## Examples
 
@@ -24390,17 +23683,16 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadCollectionId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const uploadCollectionId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
-  const uploadCollection = await client.uploadCollections.update(
-    uploadCollectionId,
-    { id: "uinr2zfqQLeCo_1O0-ao-Q" },
-  );
+  const uploadCollection = await client.uploadCollections.update(uploadCollectionId, {
+    id: 'uinr2zfqQLeCo_1O0-ao-Q',
+  });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(uploadCollection);
@@ -24439,7 +23731,7 @@ Example: `"42,554"`
 
 ## Returns
 
-Returns an array of resource objects of type [upload\_collection](/docs/content-management-api/resources/upload-collection.md)
+Returns an array of resource objects of type [upload_collection](/docs/content-management-api/resources/upload-collection.md)
 
 ## Examples
 
@@ -24448,7 +23740,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -24482,7 +23774,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [upload\_collection](/docs/content-management-api/resources/upload-collection.md)
+Returns a resource object of type [upload_collection](/docs/content-management-api/resources/upload-collection.md)
 
 ## Examples
 
@@ -24491,15 +23783,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadCollectionId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const uploadCollectionId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
-  const uploadCollection =
-    await client.uploadCollections.find(uploadCollectionId);
+  const uploadCollection = await client.uploadCollections.find(uploadCollectionId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(uploadCollection);
@@ -24526,7 +23817,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [upload\_collection](/docs/content-management-api/resources/upload-collection.md)
+Returns a resource object of type [upload_collection](/docs/content-management-api/resources/upload-collection.md)
 
 ## Examples
 
@@ -24535,15 +23826,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadCollectionId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const uploadCollectionId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
-  const uploadCollection =
-    await client.uploadCollections.destroy(uploadCollectionId);
+  const uploadCollection = await client.uploadCollections.destroy(uploadCollectionId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(uploadCollection);
@@ -24588,7 +23878,7 @@ Title of the page
 
 Example: `"Florence Apartments for Rent | Long Term Student Accommodation Rentals"`
 
-body\_excerpt string
+body_excerpt string
 
 First 200 characters of page body, unformatted
 
@@ -24640,7 +23930,7 @@ fuzzy boolean
 
 When any value is passed, it enables the fuzzy search: the Levenshtein Edit Distance is used to match more results.
 
-build\_trigger\_id string
+build_trigger_id string
 
 The build trigger ID on which the search will be performed. Required if more than one build trigger is present in a project
 
@@ -24670,21 +23960,21 @@ The maximum number of entities to return (defaults to 20, maximum is 100)
 
 ## Returns
 
-Returns an array of resource objects of type [search\_result](/docs/content-management-api/resources/search-result.md)
+Returns an array of resource objects of type [search_result](/docs/content-management-api/resources/search-result.md)
 
 ## Examples
 
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   // iterates over every page of results
   for await (const searchResult of client.searchResults.listPagedIterator({
-    filter: { query: "florence apartments" },
+    filter: { query: 'florence apartments' },
   })) {
     // Check the 'Returned output' tab for the result ☝️
     console.log(searchResult);
@@ -24706,18 +23996,18 @@ Sandbox environments start out as **exact copies of one of the existing environm
 
 Each environment is identified by a name (ie. `master`) and stores the following information:
 
--   Models
+- Models
 
--   Records
--   Uploads
+- Records
+- Uploads
 
--   Plugins
--   Locales and timezone settings
+- Plugins
+- Locales and timezone settings
 
--   UI Theme (colors and logo)
--   Global SEO settings
+- UI Theme (colors and logo)
+- Global SEO settings
 
--   The content navigation bar
+- The content navigation bar
 
 When making changes to any of the aforementioned entities in any environment, including the primary environment, **the data in all other environments isn’t affected** and stays the same.
 
@@ -24753,21 +24043,21 @@ destroying
 
 The environment is being destroyed
 
-meta.fork\_completion\_percentage number
+meta.fork_completion_percentage number
 
 The completion percentage of the fork operation (only present if the status is `creating`)
 
 Example: `95`
 
-meta.read\_only\_mode boolean
+meta.read_only_mode boolean
 
 Is this environment the in read-only mode because of a fast-fork?
 
-meta.created\_at date-time
+meta.created_at date-time
 
 Date of creation
 
-meta.last\_data\_change\_at date-time
+meta.last_data_change_at date-time
 
 Last data change
 
@@ -24775,7 +24065,7 @@ meta.primary boolean
 
 Is this environment the primary for the project?
 
-meta.forked\_from string, null
+meta.forked_from string, null
 
 ID of the environment that's been forked to generate this one
 
@@ -24787,7 +24077,7 @@ Example: `"main"`
 
 ## Query parameters
 
-immediate\_return boolean
+immediate_return boolean
 
 Whether the call should immediately return a pending environment, or wait for the completion of the fork
 
@@ -24818,12 +24108,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const environmentId = "main";
+  const environmentId = 'main';
 
   const environment = await client.environments.fork(environmentId, {});
 
@@ -24865,12 +24155,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const environmentId = "main";
+  const environmentId = 'main';
 
   const environment = await client.environments.promote(environmentId);
 
@@ -24914,15 +24204,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const environmentId = "main";
+  const environmentId = 'main';
 
   const environment = await client.environments.rename(environmentId, {
-    id: "renamed-sandbox",
+    id: 'renamed-sandbox',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -24963,7 +24253,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25010,12 +24300,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const environmentId = "main";
+  const environmentId = 'main';
 
   const environment = await client.environments.find(environmentId);
 
@@ -25057,12 +24347,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const environmentId = "main";
+  const environmentId = 'main';
 
   const environment = await client.environments.destroy(environmentId);
 
@@ -25097,7 +24387,7 @@ run();
 
 id string
 
-ID of maintenance\_mode
+ID of maintenance_mode
 
 Example: `"maintenance_mode"`
 
@@ -25115,7 +24405,7 @@ Whether maintenance mode is currently active or not
 
 ## Returns
 
-Returns a resource object of type [maintenance\_mode](/docs/content-management-api/resources/maintenance-mode.md)
+Returns a resource object of type [maintenance_mode](/docs/content-management-api/resources/maintenance-mode.md)
 
 ## Examples
 
@@ -25124,7 +24414,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25156,7 +24446,7 @@ Force the activation, even if there are collaborators editing some records.
 
 ## Returns
 
-Returns a resource object of type [maintenance\_mode](/docs/content-management-api/resources/maintenance-mode.md)
+Returns a resource object of type [maintenance_mode](/docs/content-management-api/resources/maintenance-mode.md)
 
 ## Examples
 
@@ -25165,7 +24455,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25191,7 +24481,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [maintenance\_mode](/docs/content-management-api/resources/maintenance-mode.md)
+Returns a resource object of type [maintenance_mode](/docs/content-management-api/resources/maintenance-mode.md)
 
 ## Examples
 
@@ -25200,7 +24490,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25250,37 +24540,37 @@ Ordering index
 
 Example: `1`
 
-external\_url null, string
+external_url null, string
 
 The URL to which the menu item points to
 
-open\_in\_new\_tab boolean
+open_in_new_tab boolean
 
 Opens link in new tab (to be used together with `external_url`)
 
-item\_type
+item_type
 
 Item type associated with the menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
-item\_type\_filter
+item_type_filter
 
 Item type filter associated with the menu item (to be used together with `item_type` relationship)
 
-Type: [ResourceLinkage<"item\_type\_filter">](/docs/content-management-api/resources/item_type_filter.md), null
+Type: [ResourceLinkage<"item_type_filter">](/docs/content-management-api/resources/item_type_filter.md), null
 
 parent
 
 Parent menu item
 
-Type: null, [ResourceLinkage<"menu\_item">](/docs/content-management-api/resources/menu_item.md)
+Type: null, [ResourceLinkage<"menu_item">](/docs/content-management-api/resources/menu_item.md)
 
 children
 
 Underlying menu items
 
-Type: Array<[ResourceLinkage<"menu\_item">](/docs/content-management-api/resources/menu_item.md)\>
+Type: Array<[ResourceLinkage<"menu_item">](/docs/content-management-api/resources/menu_item.md)\>
 
 ---
 
@@ -25300,7 +24590,7 @@ The label of the menu item
 
 Example: `"Posts"`
 
-external\_url null, string Optional
+external_url null, string Optional
 
 The URL to which the menu item points to
 
@@ -25310,31 +24600,31 @@ Ordering index
 
 Example: `1`
 
-open\_in\_new\_tab boolean Optional
+open_in_new_tab boolean Optional
 
 Opens link in new tab (to be used together with `external_url`)
 
-item\_type Optional
+item_type Optional
 
 Item type associated with the menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
-item\_type\_filter Optional
+item_type_filter Optional
 
 Item type filter associated with the menu item (to be used together with `item_type` relationship)
 
-Type: [ResourceLinkage<"item\_type\_filter">](/docs/content-management-api/resources/item_type_filter.md), null
+Type: [ResourceLinkage<"item_type_filter">](/docs/content-management-api/resources/item_type_filter.md), null
 
 parent Optional
 
 Parent menu item
 
-Type: null, [ResourceLinkage<"menu\_item">](/docs/content-management-api/resources/menu_item.md)
+Type: null, [ResourceLinkage<"menu_item">](/docs/content-management-api/resources/menu_item.md)
 
 ## Returns
 
-Returns a resource object of type [menu\_item](/docs/content-management-api/resources/menu-item.md)
+Returns a resource object of type [menu_item](/docs/content-management-api/resources/menu-item.md)
 
 ## Examples
 
@@ -25343,12 +24633,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const menuItem = await client.menuItems.create({ label: "Posts" });
+  const menuItem = await client.menuItems.create({ label: 'Posts' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(menuItem);
@@ -25385,7 +24675,7 @@ The label of the menu item
 
 Example: `"Posts"`
 
-external\_url null, string Optional
+external_url null, string Optional
 
 The URL to which the menu item points to
 
@@ -25395,31 +24685,31 @@ Ordering index
 
 Example: `1`
 
-open\_in\_new\_tab boolean Optional
+open_in_new_tab boolean Optional
 
 Opens link in new tab (to be used together with `external_url`)
 
-item\_type Optional
+item_type Optional
 
 Item type associated with the menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
-item\_type\_filter Optional
+item_type_filter Optional
 
 Item type filter associated with the menu item (to be used together with `item_type` relationship)
 
-Type: [ResourceLinkage<"item\_type\_filter">](/docs/content-management-api/resources/item_type_filter.md), null
+Type: [ResourceLinkage<"item_type_filter">](/docs/content-management-api/resources/item_type_filter.md), null
 
 parent Optional
 
 Parent menu item
 
-Type: null, [ResourceLinkage<"menu\_item">](/docs/content-management-api/resources/menu_item.md)
+Type: null, [ResourceLinkage<"menu_item">](/docs/content-management-api/resources/menu_item.md)
 
 ## Returns
 
-Returns a resource object of type [menu\_item](/docs/content-management-api/resources/menu-item.md)
+Returns a resource object of type [menu_item](/docs/content-management-api/resources/menu-item.md)
 
 ## Examples
 
@@ -25428,15 +24718,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const menuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const menuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const menuItem = await client.menuItems.update(menuItemId, {
-    id: "uinr2zfqQLeCo_1O0-ao-Q",
+    id: 'uinr2zfqQLeCo_1O0-ao-Q',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -25480,7 +24770,7 @@ Example: `"42,554"`
 
 ## Returns
 
-Returns an array of resource objects of type [menu\_item](/docs/content-management-api/resources/menu-item.md)
+Returns an array of resource objects of type [menu_item](/docs/content-management-api/resources/menu-item.md)
 
 ## Examples
 
@@ -25489,7 +24779,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25527,7 +24817,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [menu\_item](/docs/content-management-api/resources/menu-item.md)
+Returns a resource object of type [menu_item](/docs/content-management-api/resources/menu-item.md)
 
 ## Examples
 
@@ -25536,12 +24826,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const menuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const menuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const menuItem = await client.menuItems.find(menuItemId);
 
@@ -25574,7 +24864,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [menu\_item](/docs/content-management-api/resources/menu-item.md)
+Returns a resource object of type [menu_item](/docs/content-management-api/resources/menu-item.md)
 
 ## Examples
 
@@ -25583,12 +24873,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const menuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const menuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const menuItem = await client.menuItems.destroy(menuItemId);
 
@@ -25653,27 +24943,27 @@ Example: `"item_type"`
 
 Show enum values
 
-item\_type
+item_type
 
-modular\_block
+modular_block
 
-item\_type
+item_type
 
 Item type associated with the schema menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
 parent
 
 Parent schema menu item
 
-Type: null, [ResourceLinkage<"schema\_menu\_item">](/docs/content-management-api/resources/schema_menu_item.md)
+Type: null, [ResourceLinkage<"schema_menu_item">](/docs/content-management-api/resources/schema_menu_item.md)
 
 children
 
 Underlying schema menu items
 
-Type: Array<[ResourceLinkage<"schema\_menu\_item">](/docs/content-management-api/resources/schema_menu_item.md)\>
+Type: Array<[ResourceLinkage<"schema_menu_item">](/docs/content-management-api/resources/schema_menu_item.md)\>
 
 ---
 
@@ -25701,9 +24991,9 @@ Example: `"item_type"`
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
-modular\_block Optional
+modular_block Optional
 
 position integer Optional
 
@@ -25711,21 +25001,21 @@ Ordering index
 
 Example: `1`
 
-item\_type Optional
+item_type Optional
 
 Item type associated with the menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
 parent Optional
 
 Parent schema menu item
 
-Type: null, [ResourceLinkage<"schema\_menu\_item">](/docs/content-management-api/resources/schema_menu_item.md)
+Type: null, [ResourceLinkage<"schema_menu_item">](/docs/content-management-api/resources/schema_menu_item.md)
 
 ## Returns
 
-Returns a resource object of type [schema\_menu\_item](/docs/content-management-api/resources/schema-menu-item.md)
+Returns a resource object of type [schema_menu_item](/docs/content-management-api/resources/schema-menu-item.md)
 
 ## Examples
 
@@ -25734,14 +25024,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const schemaMenuItem = await client.schemaMenuItems.create({
-    label: "Posts",
-    kind: "item_type",
+    label: 'Posts',
+    kind: 'item_type',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -25791,31 +25081,31 @@ Example: `"item_type"`
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
-modular\_block Optional
+modular_block Optional
 
-item\_type Optional
+item_type Optional
 
 Item type associated with the menu item
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md), null
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md), null
 
 parent Optional
 
 Parent schema menu item
 
-Type: null, [ResourceLinkage<"schema\_menu\_item">](/docs/content-management-api/resources/schema_menu_item.md)
+Type: null, [ResourceLinkage<"schema_menu_item">](/docs/content-management-api/resources/schema_menu_item.md)
 
 children Optional
 
 Underlying schema menu items
 
-Type: Array<[ResourceLinkage<"schema\_menu\_item">](/docs/content-management-api/resources/schema_menu_item.md)\>
+Type: Array<[ResourceLinkage<"schema_menu_item">](/docs/content-management-api/resources/schema_menu_item.md)\>
 
 ## Returns
 
-Returns a resource object of type [schema\_menu\_item](/docs/content-management-api/resources/schema-menu-item.md)
+Returns a resource object of type [schema_menu_item](/docs/content-management-api/resources/schema-menu-item.md)
 
 ## Examples
 
@@ -25824,15 +25114,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const schemaMenuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const schemaMenuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const schemaMenuItem = await client.schemaMenuItems.update(schemaMenuItemId, {
-    id: "uinr2zfqQLeCo_1O0-ao-Q",
+    id: 'uinr2zfqQLeCo_1O0-ao-Q',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -25874,7 +25164,7 @@ Example: `"42,554"`
 
 ## Returns
 
-Returns an array of resource objects of type [schema\_menu\_item](/docs/content-management-api/resources/schema-menu-item.md)
+Returns an array of resource objects of type [schema_menu_item](/docs/content-management-api/resources/schema-menu-item.md)
 
 ## Examples
 
@@ -25883,7 +25173,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -25919,7 +25209,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [schema\_menu\_item](/docs/content-management-api/resources/schema-menu-item.md)
+Returns a resource object of type [schema_menu_item](/docs/content-management-api/resources/schema-menu-item.md)
 
 ## Examples
 
@@ -25928,12 +25218,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const schemaMenuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const schemaMenuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const schemaMenuItem = await client.schemaMenuItems.find(schemaMenuItemId);
 
@@ -25964,7 +25254,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [schema\_menu\_item](/docs/content-management-api/resources/schema-menu-item.md)
+Returns a resource object of type [schema_menu_item](/docs/content-management-api/resources/schema-menu-item.md)
 
 ## Examples
 
@@ -25973,12 +25263,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const schemaMenuItemId = "uinr2zfqQLeCo_1O0-ao-Q";
+  const schemaMenuItemId = 'uinr2zfqQLeCo_1O0-ao-Q';
 
   const schemaMenuItem = await client.schemaMenuItems.destroy(schemaMenuItemId);
 
@@ -26067,7 +25357,7 @@ Whether it's a shared filter or not
 
 ## Returns
 
-Returns a resource object of type [upload\_filter](/docs/content-management-api/resources/upload-filter.md)
+Returns a resource object of type [upload_filter](/docs/content-management-api/resources/upload-filter.md)
 
 ## Examples
 
@@ -26076,14 +25366,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const uploadFilter = await client.uploadFilters.create({
-    name: "Draft posts",
-    filter: { status: { eq: "draft" } },
+    name: 'Draft posts',
+    filter: { status: { eq: 'draft' } },
     shared: true,
   });
 
@@ -26129,7 +25419,7 @@ Whether it's a shared filter or not
 
 ## Returns
 
-Returns a resource object of type [upload\_filter](/docs/content-management-api/resources/upload-filter.md)
+Returns a resource object of type [upload_filter](/docs/content-management-api/resources/upload-filter.md)
 
 ## Examples
 
@@ -26138,17 +25428,17 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadFilterId = "-Lo34LFSTLmgPToamzJLcg";
+  const uploadFilterId = '-Lo34LFSTLmgPToamzJLcg';
 
   const uploadFilter = await client.uploadFilters.update(uploadFilterId, {
-    id: "-Lo34LFSTLmgPToamzJLcg",
-    name: "Draft posts",
-    filter: { status: { eq: "draft" } },
+    id: '-Lo34LFSTLmgPToamzJLcg',
+    name: 'Draft posts',
+    filter: { status: { eq: 'draft' } },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -26175,7 +25465,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [upload\_filter](/docs/content-management-api/resources/upload-filter.md)
+Returns an array of resource objects of type [upload_filter](/docs/content-management-api/resources/upload-filter.md)
 
 ## Examples
 
@@ -26184,7 +25474,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -26217,7 +25507,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [upload\_filter](/docs/content-management-api/resources/upload-filter.md)
+Returns a resource object of type [upload_filter](/docs/content-management-api/resources/upload-filter.md)
 
 ## Examples
 
@@ -26226,12 +25516,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadFilterId = "-Lo34LFSTLmgPToamzJLcg";
+  const uploadFilterId = '-Lo34LFSTLmgPToamzJLcg';
 
   const uploadFilter = await client.uploadFilters.find(uploadFilterId);
 
@@ -26259,7 +25549,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [upload\_filter](/docs/content-management-api/resources/upload-filter.md)
+Returns a resource object of type [upload_filter](/docs/content-management-api/resources/upload-filter.md)
 
 ## Examples
 
@@ -26268,12 +25558,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const uploadFilterId = "-Lo34LFSTLmgPToamzJLcg";
+  const uploadFilterId = '-Lo34LFSTLmgPToamzJLcg';
 
   const uploadFilter = await client.uploadFilters.destroy(uploadFilterId);
 
@@ -26343,7 +25633,7 @@ width number
 
 The percentage width for the column (float, from 0 to 1.0)
 
-order\_by string, null
+order_by string, null
 
 The ordering to apply with this filter, or `null` for the default model ordering. It follows the form of the `order_by` query parameter of the [List all records](/docs/content-management-api/resources/item/instances.md) endpoint.
 
@@ -26353,11 +25643,11 @@ shared boolean
 
 Whether it's a shared filter or not
 
-item\_type
+item_type
 
 Model associated with the filter
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 ---
 
@@ -26401,7 +25691,7 @@ width number Required
 
 The percentage width for the column (float, from 0 to 1.0)
 
-order\_by string, null Optional
+order_by string, null Optional
 
 The ordering to apply with this filter, or `null` for the default model ordering. It follows the form of the `order_by` query parameter of the [List all records](/docs/content-management-api/resources/item/instances.md) endpoint.
 
@@ -26411,15 +25701,15 @@ shared boolean Optional
 
 Whether it's a shared filter or not
 
-item\_type Required
+item_type Required
 
 Model associated with the filter
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 ## Returns
 
-Returns a resource object of type [item\_type\_filter](/docs/content-management-api/resources/item-type-filter.md)
+Returns a resource object of type [item_type_filter](/docs/content-management-api/resources/item-type-filter.md)
 
 ## Examples
 
@@ -26428,14 +25718,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const itemTypeFilter = await client.itemTypeFilters.create({
-    name: "Draft posts",
-    item_type: { type: "item_type", id: "DxMaW10UQiCmZcuuA-IkkA" },
+    name: 'Draft posts',
+    item_type: { type: 'item_type', id: 'DxMaW10UQiCmZcuuA-IkkA' },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -26502,7 +25792,7 @@ width number Required
 
 The percentage width for the column (float, from 0 to 1.0)
 
-order\_by string, null Optional
+order_by string, null Optional
 
 The ordering to apply with this filter, or `null` for the default model ordering. It follows the form of the `order_by` query parameter of the [List all records](/docs/content-management-api/resources/item/instances.md) endpoint.
 
@@ -26518,15 +25808,15 @@ The actual filter. It follows the form of the `filter` query parameter of the [L
 
 Example: `{ query: "foo bar", fields: { _status: { eq: "draft" }, title: { matches: { pattern: "qux", case_sensitive: "false", regexp: "false" }, }, }, }`
 
-item\_type Optional
+item_type Optional
 
 Model associated with the filter
 
-Type: [ResourceLinkage<"item\_type">](/docs/content-management-api/resources/item_type.md)
+Type: [ResourceLinkage<"item_type">](/docs/content-management-api/resources/item_type.md)
 
 ## Returns
 
-Returns a resource object of type [item\_type\_filter](/docs/content-management-api/resources/item-type-filter.md)
+Returns a resource object of type [item_type_filter](/docs/content-management-api/resources/item-type-filter.md)
 
 ## Examples
 
@@ -26535,15 +25825,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemTypeFilterId = "FF-P5of6Qp-DD2w0xoaa6Q";
+  const itemTypeFilterId = 'FF-P5of6Qp-DD2w0xoaa6Q';
 
   const itemTypeFilter = await client.itemTypeFilters.update(itemTypeFilterId, {
-    id: "FF-P5of6Qp-DD2w0xoaa6Q",
+    id: 'FF-P5of6Qp-DD2w0xoaa6Q',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -26586,7 +25876,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [item\_type\_filter](/docs/content-management-api/resources/item-type-filter.md)
+Returns an array of resource objects of type [item_type_filter](/docs/content-management-api/resources/item-type-filter.md)
 
 ## Examples
 
@@ -26595,7 +25885,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -26644,7 +25934,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [item\_type\_filter](/docs/content-management-api/resources/item-type-filter.md)
+Returns a resource object of type [item_type_filter](/docs/content-management-api/resources/item-type-filter.md)
 
 ## Examples
 
@@ -26653,12 +25943,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemTypeFilterId = "FF-P5of6Qp-DD2w0xoaa6Q";
+  const itemTypeFilterId = 'FF-P5of6Qp-DD2w0xoaa6Q';
 
   const itemTypeFilter = await client.itemTypeFilters.find(itemTypeFilterId);
 
@@ -26702,7 +25992,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [item\_type\_filter](/docs/content-management-api/resources/item-type-filter.md)
+Returns a resource object of type [item_type_filter](/docs/content-management-api/resources/item-type-filter.md)
 
 ## Examples
 
@@ -26711,12 +26001,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const itemTypeFilterId = "FF-P5of6Qp-DD2w0xoaa6Q";
+  const itemTypeFilterId = 'FF-P5of6Qp-DD2w0xoaa6Q';
 
   const itemTypeFilter = await client.itemTypeFilters.destroy(itemTypeFilterId);
 
@@ -26796,13 +26086,13 @@ Global plugin configuration. Plugins can persist whatever information they want 
 
 Example: `{ devMode: true }`
 
-package\_name null, string
+package_name null, string
 
 NPM package name of the plugin (or null if it's a private plugin)
 
 Example: `"datocms-plugin-star-rating-editor"`
 
-package\_version null, string
+package_version null, string
 
 The installed version of the plugin (or null if it's a private plugin)
 
@@ -26822,7 +26112,7 @@ Example: `"2"`
 
 Show deprecated
 
-plugin\_type null, enum Deprecated
+plugin_type null, enum Deprecated
 
 The type of field extension a legacy plugin implements
 
@@ -26830,7 +26120,7 @@ This field makes sense for legacy plugins only. Modern plugins declare their cap
 
 Show enum values
 
-field\_editor
+field_editor
 
 Field editor plugin
 
@@ -26838,11 +26128,11 @@ sidebar
 
 Sidebar plugin
 
-field\_addon
+field_addon
 
 Field addon plugin
 
-field\_types Deprecated
+field_types Deprecated
 
 On which types of field in which a legacy plugin can be used
 
@@ -26850,7 +26140,7 @@ This field makes sense for legacy plugins only. Modern plugins declare their cap
 
 Type: null, Array<string>
 
-parameter\_definitions null, object Deprecated
+parameter_definitions null, object Deprecated
 
 The schema for the parameters a legacy plugin can persist
 
@@ -26874,7 +26164,7 @@ RFC 4122 UUID of plugin expressed in URL-safe base64 format
 
 Example: `"RMAMRffBRlmBuDlQsIWZ0g"`
 
-package\_name null, string Optional
+package_name null, string Optional
 
 NPM package name of the public plugin you want to install. For public plugins, that's the only attribute you need to pass.
 
@@ -26906,7 +26196,7 @@ Type: Array<string>
 
 Show deprecated
 
-plugin\_type enum Deprecated
+plugin_type enum Deprecated
 
 The type of field extension this legacy plugin implements. Only to be passed if package name key is not specified.
 
@@ -26916,7 +26206,7 @@ Example: `"field_editor"`
 
 Show enum values
 
-field\_editor Optional
+field_editor Optional
 
 Field editor plugin
 
@@ -26924,11 +26214,11 @@ sidebar Optional
 
 Sidebar plugin
 
-field\_addon Optional
+field_addon Optional
 
 Field addon plugin
 
-field\_types Deprecated
+field_types Deprecated
 
 On which types of field in which this legacy plugin can be used. Only to be passed if package name key is not specified.
 
@@ -26938,7 +26228,7 @@ Type: Array<string>
 
 Example: `["integer", "float"]`
 
-parameter\_definitions object Deprecated
+parameter_definitions object Deprecated
 
 The schema for the parameters this legacy plugin can persist
 
@@ -26963,14 +26253,14 @@ Example Installation of a public plugin from NPM
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const plugin = await client.plugins.create({
-    package_name: "datocms-plugin-star-rating-editor",
+    package_name: 'datocms-plugin-star-rating-editor',
   });
 
   console.log(plugin);
@@ -26983,33 +26273,34 @@ run();
 
 ```javascript
 const result = {
-  type: "plugin",
-  id: "124",
-  name: "5 stars",
-  description: "A better rating experience!",
-  package_name: "datocms-plugin-star-rating-editor",
-  package_version: "0.0.4",
-  url: "https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js",
-  permissions: ["currentUserAccessToken"],
+  type: 'plugin',
+  id: '124',
+  name: '5 stars',
+  description: 'A better rating experience!',
+  package_name: 'datocms-plugin-star-rating-editor',
+  package_version: '0.0.4',
+  url: 'https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js',
+  permissions: ['currentUserAccessToken'],
   parameters: {},
 };
 ```
+
 Example Creation of a private plugin
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const plugin = await client.plugins.create({
-    name: "5 stars",
-    description: "A better rating experience!",
-    url: "https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js",
-    permissions: ["currentUserAccessToken"],
+    name: '5 stars',
+    description: 'A better rating experience!',
+    url: 'https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js',
+    permissions: ['currentUserAccessToken'],
   });
 
   console.log(plugin);
@@ -27022,12 +26313,12 @@ run();
 
 ```javascript
 const result = {
-  type: "plugin",
-  id: "124",
-  name: "5 stars",
-  description: "A better rating experience!",
-  url: "https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js",
-  permissions: ["currentUserAccessToken"],
+  type: 'plugin',
+  id: '124',
+  name: '5 stars',
+  description: 'A better rating experience!',
+  url: 'https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js',
+  permissions: ['currentUserAccessToken'],
   parameters: {},
 };
 ```
@@ -27062,7 +26353,7 @@ Global plugin configuration. Plugins can persist whatever information they want 
 
 Example: `{ devMode: true }`
 
-package\_version null, string Optional
+package_version null, string Optional
 
 The installed version of the plugin (or null if it's a private plugin)
 
@@ -27085,16 +26376,16 @@ Example Update of plugin global parameters (both private and public)
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "124";
+  const pluginId = '124';
 
   const plugin = await client.plugins.update(pluginId, {
-    parameters: { foo: "bar" },
+    parameters: { foo: 'bar' },
   });
 
   console.log(plugin);
@@ -27107,28 +26398,29 @@ run();
 
 ```javascript
 const result = {
-  type: "plugin",
-  id: "124",
-  name: "5 stars",
+  type: 'plugin',
+  id: '124',
+  name: '5 stars',
   /* ... */
-  parameters: { foo: "bar" },
+  parameters: { foo: 'bar' },
 };
 ```
+
 Example Upgrade of a public plugin
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "124";
+  const pluginId = '124';
 
   const plugin = await client.plugins.update(pluginId, {
-    package_version: "2.0.0",
+    package_version: '2.0.0',
   });
 
   console.log(plugin);
@@ -27141,31 +26433,32 @@ run();
 
 ```javascript
 const result = {
-  type: "plugin",
-  id: "124",
-  name: "5 stars",
+  type: 'plugin',
+  id: '124',
+  name: '5 stars',
   /* ... */
-  package_version: "2.0.0",
+  package_version: '2.0.0',
 };
 ```
+
 Example Update of private plugin configuration
 
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "124";
+  const pluginId = '124';
 
   const plugin = await client.plugins.update(pluginId, {
-    name: "5 stars",
-    description: "A better rating experience!",
-    url: "https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js",
-    permissions: ["currentUserAccessToken"],
+    name: '5 stars',
+    description: 'A better rating experience!',
+    url: 'https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js',
+    permissions: ['currentUserAccessToken'],
   });
 
   console.log(plugin);
@@ -27178,15 +26471,15 @@ run();
 
 ```javascript
 const result = {
-  type: "plugin",
-  id: "124",
-  name: "5 stars",
-  description: "A better rating experience!",
+  type: 'plugin',
+  id: '124',
+  name: '5 stars',
+  description: 'A better rating experience!',
   package_name: null,
   package_version: null,
-  url: "https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js",
-  permissions: ["currentUserAccessToken"],
-  parameters: { foo: "bar" },
+  url: 'https://cdn.rawgit.com/datocms/extensions/master/samples/five-stars/extension.js',
+  permissions: ['currentUserAccessToken'],
+  parameters: { foo: 'bar' },
 };
 ```
 
@@ -27205,7 +26498,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -27252,12 +26545,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "RMAMRffBRlmBuDlQsIWZ0g";
+  const pluginId = 'RMAMRffBRlmBuDlQsIWZ0g';
 
   const plugin = await client.plugins.find(pluginId);
 
@@ -27299,12 +26592,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "RMAMRffBRlmBuDlQsIWZ0g";
+  const pluginId = 'RMAMRffBRlmBuDlQsIWZ0g';
 
   const plugin = await client.plugins.destroy(pluginId);
 
@@ -27346,12 +26639,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const pluginId = "RMAMRffBRlmBuDlQsIWZ0g";
+  const pluginId = 'RMAMRffBRlmBuDlQsIWZ0g';
 
   const plugins = await client.plugins.fields(pluginId);
 
@@ -27444,7 +26737,7 @@ initial boolean
 
 Whether this is the initial stage or not
 
-api\_key string
+api_key string
 
 Workflow API key
 
@@ -27500,7 +26793,7 @@ initial boolean Optional
 
 Whether this is the initial stage or not
 
-api\_key string Required
+api_key string Required
 
 Workflow API key
 
@@ -27517,17 +26810,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const workflow = await client.workflows.create({
-    name: "Approval by editors required",
-    stages: [
-      { id: "waiting_for_review", name: "Waiting for review", initial: true },
-    ],
-    api_key: "approval_by_editors",
+    name: 'Approval by editors required',
+    stages: [{ id: 'waiting_for_review', name: 'Waiting for review', initial: true }],
+    api_key: 'approval_by_editors',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -27562,7 +26853,7 @@ The name of the workflow
 
 Example: `"Approval by editors required"`
 
-api\_key string Optional
+api_key string Optional
 
 Workflow API key
 
@@ -27611,15 +26902,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const workflowId = "uJzC2b6YQg-DW2A5edpQYQ";
+  const workflowId = 'uJzC2b6YQg-DW2A5edpQYQ';
 
   const workflow = await client.workflows.update(workflowId, {
-    id: "uJzC2b6YQg-DW2A5edpQYQ",
+    id: 'uJzC2b6YQg-DW2A5edpQYQ',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -27657,7 +26948,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -27701,12 +26992,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const workflowId = "uJzC2b6YQg-DW2A5edpQYQ";
+  const workflowId = 'uJzC2b6YQg-DW2A5edpQYQ';
 
   const workflow = await client.workflows.find(workflowId);
 
@@ -27739,12 +27030,12 @@ run();
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const workflowId = "uJzC2b6YQg-DW2A5edpQYQ";
+  const workflowId = 'uJzC2b6YQg-DW2A5edpQYQ';
   await client.workflows.destroy(workflowId);
 }
 
@@ -27803,7 +27094,7 @@ Example: `{ data: { id: 999, type: "item_type", attributes: { some: "attributes"
 
 ## Returns
 
-Returns a resource object of type [job\_result](/docs/content-management-api/resources/job-result.md)
+Returns a resource object of type [job_result](/docs/content-management-api/resources/job-result.md)
 
 ## Examples
 
@@ -27812,12 +27103,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const jobResultId = "34";
+  const jobResultId = '34';
 
   const jobResult = await client.jobResults.find(jobResultId);
 
@@ -27864,13 +27155,13 @@ Email
 
 Example: `"foo@bar.com"`
 
-first\_name string, null
+first_name string, null
 
 First name
 
 Example: `"Mark"`
 
-last\_name string, null
+last_name string, null
 
 Last name
 
@@ -27936,7 +27227,7 @@ Whether this invitation has expired
 
 Example: `"mark.smith@example.com"`
 
-invitation\_link null, string
+invitation_link null, string
 
 The link to join a DatoCMS project. Shown only on creation and reset
 
@@ -27968,7 +27259,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
 ## Returns
 
-Returns a resource object of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns a resource object of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -27977,14 +27268,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const siteInvitation = await client.siteInvitations.create({
-    email: "mark.smith@example.com",
-    role: { type: "role", id: "34" },
+    email: 'mark.smith@example.com',
+    role: { type: 'role', id: '34' },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -28019,7 +27310,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
 ## Returns
 
-Returns a resource object of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns a resource object of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -28028,15 +27319,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const siteInvitationId = "312";
+  const siteInvitationId = '312';
 
   const siteInvitation = await client.siteInvitations.update(siteInvitationId, {
-    id: "312",
+    id: '312',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -28063,7 +27354,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns an array of resource objects of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -28072,7 +27363,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -28105,7 +27396,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns a resource object of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -28114,12 +27405,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const siteInvitationId = "312";
+  const siteInvitationId = '312';
 
   const siteInvitation = await client.siteInvitations.find(siteInvitationId);
 
@@ -28147,7 +27438,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns a resource object of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -28156,12 +27447,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const siteInvitationId = "312";
+  const siteInvitationId = '312';
 
   const siteInvitation = await client.siteInvitations.destroy(siteInvitationId);
 
@@ -28191,7 +27482,7 @@ Resends the email invitation
 
 ## Returns
 
-Returns a resource object of type [site\_invitation](/docs/content-management-api/resources/site-invitation.md)
+Returns a resource object of type [site_invitation](/docs/content-management-api/resources/site-invitation.md)
 
 ## Examples
 
@@ -28200,12 +27491,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const siteInvitationId = "312";
+  const siteInvitationId = '312';
 
   const siteInvitation = await client.siteInvitations.resend(siteInvitationId);
 
@@ -28251,21 +27542,21 @@ Email
 
 Example: `"mark.smith@example.com"`
 
-is\_2fa\_active boolean
+is_2fa_active boolean
 
 Whether 2-factor authentication is active for this account or not
 
-full\_name string
+full_name string
 
 Full name
 
 Example: `"Mark Smith"`
 
-is\_active boolean
+is_active boolean
 
 Whether the user is active or not
 
-meta.last\_access
+meta.last_access
 
 Date of last reading/interaction
 
@@ -28285,7 +27576,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
 ## Body parameters
 
-is\_active boolean Optional
+is_active boolean Optional
 
 Whether the user is active or not
 
@@ -28306,14 +27597,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const userId = "312";
+  const userId = '312';
 
-  const user = await client.users.update(userId, { id: "312" });
+  const user = await client.users.update(userId, { id: '312' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(user);
@@ -28350,7 +27641,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -28402,12 +27693,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const userId = "312";
+  const userId = '312';
 
   const user = await client.users.find(userId);
 
@@ -28450,7 +27741,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -28483,7 +27774,7 @@ run();
 
 ## Query parameters
 
-destination\_user\_type enum
+destination_user_type enum
 
 New owner for resources previously owned by the deleted user. This argument specifies the new owner type.
 
@@ -28495,11 +27786,11 @@ account
 
 user
 
-access\_token
+access_token
 
-sso\_user
+sso_user
 
-destination\_user\_id string
+destination_user_id string
 
 New owner for resources previously owned by the deleted user. This argument specifies the new owner ID.
 
@@ -28516,12 +27807,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const userId = "312";
+  const userId = '312';
 
   const user = await client.users.destroy(userId);
 
@@ -28569,43 +27860,43 @@ The name of the role
 
 Example: `"Editor"`
 
-can\_edit\_site boolean
+can_edit_site boolean
 
 Can change project global properties
 
-can\_edit\_favicon boolean
+can_edit_favicon boolean
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_schema boolean
+can_edit_schema boolean
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean
+can_manage_menu boolean
 
 Can customize content navigation bar
 
-can\_manage\_users boolean
+can_manage_users boolean
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_shared\_filters boolean
+can_manage_shared_filters boolean
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_upload\_collections boolean
+can_manage_upload_collections boolean
 
 Can create/edit upload collections
 
-can\_manage\_environments boolean
+can_manage_environments boolean
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_webhooks boolean
+can_manage_webhooks boolean
 
 Can create/edit webhooks
 
-environments\_access enum
+environments_access enum
 
 Specifies the environments the user can access
 
@@ -28617,11 +27908,11 @@ all
 
 Grants access to all environments
 
-primary\_only
+primary_only
 
 Grants access exclusively to the primary environment
 
-sandbox\_only
+sandbox_only
 
 Grants access exclusively to sandbox environments
 
@@ -28629,43 +27920,43 @@ none
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_sso boolean
+can_manage_sso boolean
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean
+can_access_audit_log boolean
 
 Can access Audit Log
 
-can\_manage\_workflows boolean
+can_manage_workflows boolean
 
 Can create/edit workflows
 
-can\_edit\_environment boolean
+can_edit_environment boolean
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean
+can_promote_environments boolean
 
 Can promote environments to primary and manage maintenance mode
 
-can\_manage\_build\_triggers boolean
+can_manage_build_triggers boolean
 
 Can create/edit Build triggers
 
-can\_manage\_access\_tokens boolean
+can_manage_access_tokens boolean
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean
+can_perform_site_search boolean
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean
+can_access_build_events_log boolean
 
 Can access the build events log
 
-positive\_item\_type\_permissions
+positive_item_type_permissions
 
 Allowed actions on a model (or all) for a role
 
@@ -28701,21 +27992,21 @@ delete
 
 publish
 
-edit\_creator
+edit_creator
 
-take\_over
+take_over
 
-move\_to\_stage
+move_to_stage
 
-item\_type undefined
+item_type undefined
 
 workflow undefined
 
-on\_stage null, string
+on_stage null, string
 
-to\_stage null, string
+to_stage null, string
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -28735,7 +28026,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -28751,7 +28042,7 @@ localized
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -28761,7 +28052,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions
+negative_item_type_permissions
 
 Prohibited actions on a model (or all) for a role
 
@@ -28797,21 +28088,21 @@ delete
 
 publish
 
-edit\_creator
+edit_creator
 
-take\_over
+take_over
 
-move\_to\_stage
+move_to_stage
 
-item\_type undefined
+item_type undefined
 
 workflow undefined
 
-on\_stage null, string
+on_stage null, string
 
-to\_stage null, string
+to_stage null, string
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -28831,7 +28122,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -28847,7 +28138,7 @@ localized
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -28857,7 +28148,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions
+positive_upload_permissions
 
 Allowed actions on a model (or all) for a role
 
@@ -28883,9 +28174,9 @@ create
 
 delete
 
-edit\_creator
+edit_creator
 
-replace\_asset
+replace_asset
 
 environment string
 
@@ -28893,7 +28184,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -28913,7 +28204,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -28929,7 +28220,7 @@ localized
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -28939,7 +28230,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions
+negative_upload_permissions
 
 Prohibited actions on a model (or all) for a role
 
@@ -28965,9 +28256,9 @@ create
 
 delete
 
-edit\_creator
+edit_creator
 
-replace\_asset
+replace_asset
 
 environment string
 
@@ -28975,7 +28266,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -28995,7 +28286,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -29011,7 +28302,7 @@ localized
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -29021,7 +28312,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions
+positive_build_trigger_permissions
 
 Allowed build triggers for a role
 
@@ -29029,9 +28320,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined
+build_trigger undefined
 
-negative\_build\_trigger\_permissions
+negative_build_trigger_permissions
 
 Prohibited build triggers for a role
 
@@ -29039,43 +28330,43 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined
+build_trigger undefined
 
-meta.final\_permissions object
+meta.final_permissions object
 
 The final set of permissions considering also inherited roles
 
 Show object format
 
-can\_edit\_site boolean
+can_edit_site boolean
 
 Can change project global properties
 
-can\_edit\_favicon boolean
+can_edit_favicon boolean
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_schema boolean
+can_edit_schema boolean
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean
+can_manage_menu boolean
 
 Can customize content navigation bar
 
-can\_manage\_users boolean
+can_manage_users boolean
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_environments boolean
+can_manage_environments boolean
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_webhooks boolean
+can_manage_webhooks boolean
 
 Can create/edit webhooks
 
-environments\_access enum
+environments_access enum
 
 Specifies the environments the user can access
 
@@ -29087,11 +28378,11 @@ all
 
 Grants access to all environments
 
-primary\_only
+primary_only
 
 Grants access exclusively to the primary environment
 
-sandbox\_only
+sandbox_only
 
 Grants access exclusively to sandbox environments
 
@@ -29099,51 +28390,51 @@ none
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_sso boolean
+can_manage_sso boolean
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean
+can_access_audit_log boolean
 
 Can access Audit Log
 
-can\_manage\_workflows boolean
+can_manage_workflows boolean
 
 Can create/edit workflows
 
-can\_edit\_environment boolean
+can_edit_environment boolean
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean
+can_promote_environments boolean
 
 Can promote environments to primary and manage maintenance mode
 
-can\_manage\_shared\_filters boolean
+can_manage_shared_filters boolean
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_build\_triggers boolean
+can_manage_build_triggers boolean
 
 Can create/edit Build triggers
 
-can\_manage\_upload\_collections boolean
+can_manage_upload_collections boolean
 
 Can create/edit upload collections
 
-can\_manage\_access\_tokens boolean
+can_manage_access_tokens boolean
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean
+can_perform_site_search boolean
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean
+can_access_build_events_log boolean
 
 Can access the build events log
 
-positive\_item\_type\_permissions
+positive_item_type_permissions
 
 Allowed actions on a model (or all) for a role
 
@@ -29179,21 +28470,21 @@ delete
 
 publish
 
-edit\_creator
+edit_creator
 
-take\_over
+take_over
 
-move\_to\_stage
+move_to_stage
 
-item\_type undefined
+item_type undefined
 
 workflow undefined
 
-on\_stage null, string
+on_stage null, string
 
-to\_stage null, string
+to_stage null, string
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -29213,7 +28504,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -29229,7 +28520,7 @@ localized
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -29239,7 +28530,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions
+negative_item_type_permissions
 
 Prohibited actions on a model (or all) for a role
 
@@ -29275,21 +28566,21 @@ delete
 
 publish
 
-edit\_creator
+edit_creator
 
-take\_over
+take_over
 
-move\_to\_stage
+move_to_stage
 
-item\_type undefined
+item_type undefined
 
 workflow undefined
 
-on\_stage null, string
+on_stage null, string
 
-to\_stage null, string
+to_stage null, string
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -29309,7 +28600,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -29325,7 +28616,7 @@ localized
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -29335,7 +28626,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions
+positive_upload_permissions
 
 Allowed actions on a model (or all) for a role
 
@@ -29361,9 +28652,9 @@ create
 
 delete
 
-edit\_creator
+edit_creator
 
-replace\_asset
+replace_asset
 
 environment string
 
@@ -29371,7 +28662,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -29391,7 +28682,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -29407,7 +28698,7 @@ localized
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -29417,7 +28708,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions
+negative_upload_permissions
 
 Prohibited actions on a model (or all) for a role
 
@@ -29443,9 +28734,9 @@ create
 
 delete
 
-edit\_creator
+edit_creator
 
-replace\_asset
+replace_asset
 
 environment string
 
@@ -29453,7 +28744,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null
+on_creator enum, null
 
 Permitted creator
 
@@ -29473,7 +28764,7 @@ role
 
 Created by a user with the same role
 
-localization\_scope enum, null
+localization_scope enum, null
 
 Permitted content scope
 
@@ -29489,7 +28780,7 @@ localized
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized
+not_localized
 
 Non-localized content
 
@@ -29499,7 +28790,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions
+positive_build_trigger_permissions
 
 Allowed build triggers for a role
 
@@ -29507,9 +28798,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined
+build_trigger undefined
 
-negative\_build\_trigger\_permissions
+negative_build_trigger_permissions
 
 Prohibited build triggers for a role
 
@@ -29517,9 +28808,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined
+build_trigger undefined
 
-inherits\_permissions\_from
+inherits_permissions_from
 
 The roles from which this role inherits permissions
 
@@ -29535,27 +28826,27 @@ For models you can specify the action that can be done, on which models and on r
 
 The actions that can be performed are:
 
--   `all`: everything
+- `all`: everything
 
--   `read`: read-only
--   `update`: update records, to be used together with `read` if you want to be able to read and update
+- `read`: read-only
+- `update`: update records, to be used together with `read` if you want to be able to read and update
 
--   `create`: create new records
--   `delete`: delete records
+- `create`: create new records
+- `delete`: delete records
 
--   `publish`: mark a record as published
--   `edit_creator`: change the creator of a record
+- `publish`: mark a record as published
+- `edit_creator`: change the creator of a record
 
--   `take_over`: when two people are working on the same record, you can take over the control of the record
+- `take_over`: when two people are working on the same record, you can take over the control of the record
 
 Then you should specify the models on which the actions should be performed.
 
 Finally you have the option to specify if you can perform the allowed actions on records created by:
 
--   `anyone`: meaning every record
+- `anyone`: meaning every record
 
--   `self`: only on records created by the user
--   `role`: only on records created by users with the same role
+- `self`: only on records created by the user
+- `role`: only on records created by users with the same role
 
 The resulting object should look something like this:
 
@@ -29575,31 +28866,31 @@ The name of the role
 
 Example: `"Editor"`
 
-can\_edit\_favicon boolean Optional
+can_edit_favicon boolean Optional
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_site boolean Optional
+can_edit_site boolean Optional
 
 Can change project global properties
 
-can\_edit\_schema boolean Optional
+can_edit_schema boolean Optional
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean Optional
+can_manage_menu boolean Optional
 
 Can customize content navigation bar
 
-can\_edit\_environment boolean Optional
+can_edit_environment boolean Optional
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean Optional
+can_promote_environments boolean Optional
 
 Can promote environments to primary and manage maintenance mode
 
-environments\_access enum Optional
+environments_access enum Optional
 
 Specifies the environments the user can access
 
@@ -29611,11 +28902,11 @@ all Optional
 
 Grants access to all environments
 
-primary\_only Optional
+primary_only Optional
 
 Grants access exclusively to the primary environment
 
-sandbox\_only Optional
+sandbox_only Optional
 
 Grants access exclusively to sandbox environments
 
@@ -29623,55 +28914,55 @@ none Optional
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_users boolean Optional
+can_manage_users boolean Optional
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_shared\_filters boolean Optional
+can_manage_shared_filters boolean Optional
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_upload\_collections boolean Optional
+can_manage_upload_collections boolean Optional
 
 Can create/edit upload collections
 
-can\_manage\_build\_triggers boolean Optional
+can_manage_build_triggers boolean Optional
 
 Can create/edit Build triggers
 
-can\_manage\_webhooks boolean Optional
+can_manage_webhooks boolean Optional
 
 Can create/edit webhooks
 
-can\_manage\_environments boolean Optional
+can_manage_environments boolean Optional
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_sso boolean Optional
+can_manage_sso boolean Optional
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean Optional
+can_access_audit_log boolean Optional
 
 Can access Audit Log
 
-can\_manage\_workflows boolean Optional
+can_manage_workflows boolean Optional
 
 Can create/edit workflows
 
-can\_manage\_access\_tokens boolean Optional
+can_manage_access_tokens boolean Optional
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean Optional
+can_perform_site_search boolean Optional
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean Optional
+can_access_build_events_log boolean Optional
 
 Can access the build events log
 
-positive\_item\_type\_permissions Optional
+positive_item_type_permissions Optional
 
 Allowed actions on a model (or all) for a role
 
@@ -29707,21 +28998,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -29741,7 +29032,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -29757,7 +29048,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -29767,7 +29058,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions Optional
+negative_item_type_permissions Optional
 
 Prohibited actions on a model (or all) for a role
 
@@ -29803,21 +29094,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -29837,7 +29128,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -29853,7 +29144,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -29863,7 +29154,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions Optional
+positive_upload_permissions Optional
 
 Allowed actions on a model (or all) for a role
 
@@ -29889,9 +29180,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -29899,7 +29190,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -29919,7 +29210,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -29935,7 +29226,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -29945,7 +29236,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions Optional
+negative_upload_permissions Optional
 
 Prohibited actions on a model (or all) for a role
 
@@ -29971,9 +29262,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -29981,7 +29272,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30001,7 +29292,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30017,7 +29308,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30027,7 +29318,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions Optional
+positive_build_trigger_permissions Optional
 
 Allowed build triggers for a role
 
@@ -30035,9 +29326,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-negative\_build\_trigger\_permissions Optional
+negative_build_trigger_permissions Optional
 
 Prohibited build triggers for a role
 
@@ -30045,43 +29336,43 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-meta.final\_permissions object Required
+meta.final_permissions object Required
 
 The final set of permissions considering also inherited roles
 
 Show object format
 
-can\_edit\_site boolean Required
+can_edit_site boolean Required
 
 Can change project global properties
 
-can\_edit\_favicon boolean Required
+can_edit_favicon boolean Required
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_schema boolean Required
+can_edit_schema boolean Required
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean Required
+can_manage_menu boolean Required
 
 Can customize content navigation bar
 
-can\_manage\_users boolean Required
+can_manage_users boolean Required
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_environments boolean Required
+can_manage_environments boolean Required
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_webhooks boolean Required
+can_manage_webhooks boolean Required
 
 Can create/edit webhooks
 
-environments\_access enum Required
+environments_access enum Required
 
 Specifies the environments the user can access
 
@@ -30093,11 +29384,11 @@ all Optional
 
 Grants access to all environments
 
-primary\_only Optional
+primary_only Optional
 
 Grants access exclusively to the primary environment
 
-sandbox\_only Optional
+sandbox_only Optional
 
 Grants access exclusively to sandbox environments
 
@@ -30105,51 +29396,51 @@ none Optional
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_sso boolean Required
+can_manage_sso boolean Required
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean Required
+can_access_audit_log boolean Required
 
 Can access Audit Log
 
-can\_manage\_workflows boolean Required
+can_manage_workflows boolean Required
 
 Can create/edit workflows
 
-can\_edit\_environment boolean Required
+can_edit_environment boolean Required
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean Required
+can_promote_environments boolean Required
 
 Can promote environments to primary and manage maintenance mode
 
-can\_manage\_shared\_filters boolean Required
+can_manage_shared_filters boolean Required
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_build\_triggers boolean Required
+can_manage_build_triggers boolean Required
 
 Can create/edit Build triggers
 
-can\_manage\_upload\_collections boolean Required
+can_manage_upload_collections boolean Required
 
 Can create/edit upload collections
 
-can\_manage\_access\_tokens boolean Required
+can_manage_access_tokens boolean Required
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean Required
+can_perform_site_search boolean Required
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean Required
+can_access_build_events_log boolean Required
 
 Can access the build events log
 
-positive\_item\_type\_permissions Required
+positive_item_type_permissions Required
 
 Allowed actions on a model (or all) for a role
 
@@ -30185,21 +29476,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30219,7 +29510,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30235,7 +29526,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30245,7 +29536,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions Required
+negative_item_type_permissions Required
 
 Prohibited actions on a model (or all) for a role
 
@@ -30281,21 +29572,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30315,7 +29606,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30331,7 +29622,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30341,7 +29632,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions Required
+positive_upload_permissions Required
 
 Allowed actions on a model (or all) for a role
 
@@ -30367,9 +29658,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -30377,7 +29668,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30397,7 +29688,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30413,7 +29704,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30423,7 +29714,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions Required
+negative_upload_permissions Required
 
 Prohibited actions on a model (or all) for a role
 
@@ -30449,9 +29740,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -30459,7 +29750,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30479,7 +29770,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30495,7 +29786,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30505,7 +29796,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions Required
+positive_build_trigger_permissions Required
 
 Allowed build triggers for a role
 
@@ -30513,9 +29804,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-negative\_build\_trigger\_permissions Required
+negative_build_trigger_permissions Required
 
 Prohibited build triggers for a role
 
@@ -30523,9 +29814,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-inherits\_permissions\_from Optional
+inherits_permissions_from Optional
 
 The roles from which this role inherits permissions
 
@@ -30542,12 +29833,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const role = await client.roles.create({ name: "Editor" });
+  const role = await client.roles.create({ name: 'Editor' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(role);
@@ -30632,31 +29923,31 @@ The name of the role
 
 Example: `"Editor"`
 
-can\_edit\_favicon boolean Optional
+can_edit_favicon boolean Optional
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_site boolean Optional
+can_edit_site boolean Optional
 
 Can change project global properties
 
-can\_edit\_schema boolean Optional
+can_edit_schema boolean Optional
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean Optional
+can_manage_menu boolean Optional
 
 Can customize content navigation bar
 
-can\_edit\_environment boolean Optional
+can_edit_environment boolean Optional
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean Optional
+can_promote_environments boolean Optional
 
 Can promote environments to primary and manage maintenance mode
 
-environments\_access enum Optional
+environments_access enum Optional
 
 Specifies the environments the user can access
 
@@ -30668,11 +29959,11 @@ all Optional
 
 Grants access to all environments
 
-primary\_only Optional
+primary_only Optional
 
 Grants access exclusively to the primary environment
 
-sandbox\_only Optional
+sandbox_only Optional
 
 Grants access exclusively to sandbox environments
 
@@ -30680,55 +29971,55 @@ none Optional
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_users boolean Optional
+can_manage_users boolean Optional
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_shared\_filters boolean Optional
+can_manage_shared_filters boolean Optional
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_upload\_collections boolean Optional
+can_manage_upload_collections boolean Optional
 
 Can create/edit upload collections
 
-can\_manage\_build\_triggers boolean Optional
+can_manage_build_triggers boolean Optional
 
 Can create/edit Build triggers
 
-can\_manage\_webhooks boolean Optional
+can_manage_webhooks boolean Optional
 
 Can create/edit webhooks
 
-can\_manage\_environments boolean Optional
+can_manage_environments boolean Optional
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_sso boolean Optional
+can_manage_sso boolean Optional
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean Optional
+can_access_audit_log boolean Optional
 
 Can access Audit Log
 
-can\_manage\_workflows boolean Optional
+can_manage_workflows boolean Optional
 
 Can create/edit workflows
 
-can\_manage\_access\_tokens boolean Optional
+can_manage_access_tokens boolean Optional
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean Optional
+can_perform_site_search boolean Optional
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean Optional
+can_access_build_events_log boolean Optional
 
 Can access the build events log
 
-positive\_item\_type\_permissions Optional
+positive_item_type_permissions Optional
 
 Allowed actions on a model (or all) for a role
 
@@ -30764,21 +30055,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30798,7 +30089,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30814,7 +30105,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30824,7 +30115,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions Optional
+negative_item_type_permissions Optional
 
 Prohibited actions on a model (or all) for a role
 
@@ -30860,21 +30151,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30894,7 +30185,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30910,7 +30201,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -30920,7 +30211,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions Optional
+positive_upload_permissions Optional
 
 Allowed actions on a model (or all) for a role
 
@@ -30946,9 +30237,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -30956,7 +30247,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -30976,7 +30267,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -30992,7 +30283,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31002,7 +30293,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions Optional
+negative_upload_permissions Optional
 
 Prohibited actions on a model (or all) for a role
 
@@ -31028,9 +30319,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -31038,7 +30329,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -31058,7 +30349,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -31074,7 +30365,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31084,7 +30375,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions Optional
+positive_build_trigger_permissions Optional
 
 Allowed build triggers for a role
 
@@ -31092,9 +30383,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-negative\_build\_trigger\_permissions Optional
+negative_build_trigger_permissions Optional
 
 Prohibited build triggers for a role
 
@@ -31102,43 +30393,43 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-meta.final\_permissions object Optional
+meta.final_permissions object Optional
 
 The final set of permissions considering also inherited roles
 
 Show object format
 
-can\_edit\_site boolean Required
+can_edit_site boolean Required
 
 Can change project global properties
 
-can\_edit\_favicon boolean Required
+can_edit_favicon boolean Required
 
 Can edit favicon, global SEO settings and no-index policy
 
-can\_edit\_schema boolean Required
+can_edit_schema boolean Required
 
 Can create/edit models and plugins
 
-can\_manage\_menu boolean Required
+can_manage_menu boolean Required
 
 Can customize content navigation bar
 
-can\_manage\_users boolean Required
+can_manage_users boolean Required
 
 Can create/edit roles and invite/remove collaborators
 
-can\_manage\_environments boolean Required
+can_manage_environments boolean Required
 
 Can create/delete sandbox environments and promote them to primary environment
 
-can\_manage\_webhooks boolean Required
+can_manage_webhooks boolean Required
 
 Can create/edit webhooks
 
-environments\_access enum Required
+environments_access enum Required
 
 Specifies the environments the user can access
 
@@ -31150,11 +30441,11 @@ all Optional
 
 Grants access to all environments
 
-primary\_only Optional
+primary_only Optional
 
 Grants access exclusively to the primary environment
 
-sandbox\_only Optional
+sandbox_only Optional
 
 Grants access exclusively to sandbox environments
 
@@ -31162,51 +30453,51 @@ none Optional
 
 No access to any environment. This value is typically used when the role is intended to inherit access settings from other roles
 
-can\_manage\_sso boolean Required
+can_manage_sso boolean Required
 
 Can manage Single Sign-On settings
 
-can\_access\_audit\_log boolean Required
+can_access_audit_log boolean Required
 
 Can access Audit Log
 
-can\_manage\_workflows boolean Required
+can_manage_workflows boolean Required
 
 Can create/edit workflows
 
-can\_edit\_environment boolean Required
+can_edit_environment boolean Required
 
 Can change locales, timezone and UI theme
 
-can\_promote\_environments boolean Required
+can_promote_environments boolean Required
 
 Can promote environments to primary and manage maintenance mode
 
-can\_manage\_shared\_filters boolean Required
+can_manage_shared_filters boolean Required
 
 Can create/edit shared filters (both for models and the media area)
 
-can\_manage\_build\_triggers boolean Required
+can_manage_build_triggers boolean Required
 
 Can create/edit Build triggers
 
-can\_manage\_upload\_collections boolean Required
+can_manage_upload_collections boolean Required
 
 Can create/edit upload collections
 
-can\_manage\_access\_tokens boolean Required
+can_manage_access_tokens boolean Required
 
 Can manage API tokens
 
-can\_perform\_site\_search boolean Required
+can_perform_site_search boolean Required
 
 Can perform Site Search API calls
 
-can\_access\_build\_events\_log boolean Required
+can_access_build_events_log boolean Required
 
 Can access the build events log
 
-positive\_item\_type\_permissions Required
+positive_item_type_permissions Required
 
 Allowed actions on a model (or all) for a role
 
@@ -31242,21 +30533,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -31276,7 +30567,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -31292,7 +30583,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31302,7 +30593,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_item\_type\_permissions Required
+negative_item_type_permissions Required
 
 Prohibited actions on a model (or all) for a role
 
@@ -31338,21 +30629,21 @@ delete Optional
 
 publish Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-take\_over Optional
+take_over Optional
 
-move\_to\_stage Optional
+move_to_stage Optional
 
-item\_type undefined Optional
+item_type undefined Optional
 
 workflow undefined Optional
 
-on\_stage null, string Optional
+on_stage null, string Optional
 
-to\_stage null, string Optional
+to_stage null, string Optional
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -31372,7 +30663,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -31388,7 +30679,7 @@ localized Optional
 
 Content under a specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31398,7 +30689,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_upload\_permissions Required
+positive_upload_permissions Required
 
 Allowed actions on a model (or all) for a role
 
@@ -31424,9 +30715,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -31434,7 +30725,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -31454,7 +30745,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -31470,7 +30761,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31480,7 +30771,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-negative\_upload\_permissions Required
+negative_upload_permissions Required
 
 Prohibited actions on a model (or all) for a role
 
@@ -31506,9 +30797,9 @@ create Optional
 
 delete Optional
 
-edit\_creator Optional
+edit_creator Optional
 
-replace\_asset Optional
+replace_asset Optional
 
 environment string Required
 
@@ -31516,7 +30807,7 @@ ID of environment. Can only contain lowercase letters, numbers and dashes
 
 Example: `"main"`
 
-on\_creator enum, null Optional
+on_creator enum, null Optional
 
 Permitted creator
 
@@ -31536,7 +30827,7 @@ role Optional
 
 Created by a user with the same role
 
-localization\_scope enum, null Optional
+localization_scope enum, null Optional
 
 Permitted content scope
 
@@ -31552,7 +30843,7 @@ localized Optional
 
 Localized content in specific locale (`locale` must be defined)
 
-not\_localized Optional
+not_localized Optional
 
 Non-localized content
 
@@ -31562,7 +30853,7 @@ Permitted localized content in this locale. Required when `localization_scope` i
 
 Example: `"en"`
 
-positive\_build\_trigger\_permissions Required
+positive_build_trigger_permissions Required
 
 Allowed build triggers for a role
 
@@ -31570,9 +30861,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-negative\_build\_trigger\_permissions Required
+negative_build_trigger_permissions Required
 
 Prohibited build triggers for a role
 
@@ -31580,9 +30871,9 @@ Type: Array<object>
 
 Show objects format inside array
 
-build\_trigger undefined Optional
+build_trigger undefined Optional
 
-inherits\_permissions\_from Optional
+inherits_permissions_from Optional
 
 The roles from which this role inherits permissions
 
@@ -31599,14 +30890,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const roleId = "34";
+  const roleId = '34';
 
-  const role = await client.roles.update(roleId, { id: "34" });
+  const role = await client.roles.update(roleId, { id: '34' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(role);
@@ -31694,7 +30985,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -31789,12 +31080,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const roleId = "34";
+  const roleId = '34';
 
   const role = await client.roles.find(roleId);
 
@@ -31884,12 +31175,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const roleId = "34";
+  const roleId = '34';
 
   const role = await client.roles.destroy(roleId);
 
@@ -31979,12 +31270,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const roleId = "34";
+  const roleId = '34';
 
   const role = await client.roles.duplicate(roleId);
 
@@ -32069,7 +31360,7 @@ An API token allows access to our API. It is linked to a Role, which describes w
 
 id string
 
-ID of access\_token
+ID of access_token
 
 Example: `"312"`
 
@@ -32083,17 +31374,17 @@ Name of API token
 
 Example: `"Read-only API token"`
 
-hardcoded\_type null, string
+hardcoded_type null, string
 
-can\_access\_cda boolean
+can_access_cda boolean
 
 Whether this API token can access the Content Delivery API published content endpoint
 
-can\_access\_cda\_preview boolean
+can_access_cda_preview boolean
 
 Whether this API token can access the Content Delivery API draft content endpoint
 
-can\_access\_cma boolean
+can_access_cma boolean
 
 Whether this API token can access the Content Management API
 
@@ -32121,15 +31412,15 @@ Name of API token
 
 Example: `"Read-only API token"`
 
-can\_access\_cda boolean Required
+can_access_cda boolean Required
 
 Whether this API token can access the Content Delivery API published content endpoint
 
-can\_access\_cda\_preview boolean Required
+can_access_cda_preview boolean Required
 
 Whether this API token can access the Content Delivery API draft content endpoint
 
-can\_access\_cma boolean Required
+can_access_cma boolean Required
 
 Whether this API token can access the Content Management API
 
@@ -32141,7 +31432,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md),
 
 ## Returns
 
-Returns a resource object of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns a resource object of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32150,17 +31441,17 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const accessToken = await client.accessTokens.create({
-    name: "Read-only API token",
+    name: 'Read-only API token',
     can_access_cda: true,
     can_access_cda_preview: true,
     can_access_cma: true,
-    role: { type: "role", id: "34" },
+    role: { type: 'role', id: '34' },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -32196,15 +31487,15 @@ Name of API token
 
 Example: `"Read-only API token"`
 
-can\_access\_cda boolean Required
+can_access_cda boolean Required
 
 Whether this API token can access the Content Delivery API published content endpoint
 
-can\_access\_cda\_preview boolean Required
+can_access_cda_preview boolean Required
 
 Whether this API token can access the Content Delivery API draft content endpoint
 
-can\_access\_cma boolean Required
+can_access_cma boolean Required
 
 Whether this API token can access the Content Management API
 
@@ -32216,7 +31507,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md),
 
 ## Returns
 
-Returns a resource object of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns a resource object of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32225,20 +31516,20 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const accessTokenId = "312";
+  const accessTokenId = '312';
 
   const accessToken = await client.accessTokens.update(accessTokenId, {
-    id: "312",
-    name: "Read-only API token",
+    id: '312',
+    name: 'Read-only API token',
     can_access_cda: true,
     can_access_cda_preview: true,
     can_access_cma: true,
-    role: { type: "role", id: "34" },
+    role: { type: 'role', id: '34' },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -32268,7 +31559,7 @@ run();
 
 ## Returns
 
-Returns an array of resource objects of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns an array of resource objects of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32277,7 +31568,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -32313,7 +31604,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns a resource object of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32322,12 +31613,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const accessTokenId = "312";
+  const accessTokenId = '312';
 
   const accessToken = await client.accessTokens.find(accessTokenId);
 
@@ -32358,7 +31649,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns a resource object of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32367,12 +31658,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const accessTokenId = "312";
+  const accessTokenId = '312';
 
   const accessToken = await client.accessTokens.regenerateToken(accessTokenId);
 
@@ -32403,7 +31694,7 @@ run();
 
 ## Query parameters
 
-destination\_user\_type enum
+destination_user_type enum
 
 New owner for resources previously owned by the deleted access token. This argument specifies the new owner type.
 
@@ -32415,11 +31706,11 @@ account
 
 user
 
-access\_token
+access_token
 
-sso\_user
+sso_user
 
-destination\_user\_id string
+destination_user_id string
 
 New owner for resources previously owned by the deleted access token. This argument specifies the new owner ID.
 
@@ -32427,7 +31718,7 @@ Example: `"7865"`
 
 ## Returns
 
-Returns a resource object of type [access\_token](/docs/content-management-api/resources/access-token.md)
+Returns a resource object of type [access_token](/docs/content-management-api/resources/access-token.md)
 
 ## Examples
 
@@ -32436,12 +31727,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const accessTokenId = "312";
+  const accessTokenId = '312';
 
   const accessToken = await client.accessTokens.destroy(accessTokenId);
 
@@ -32512,7 +31803,7 @@ Type: Array<object>
 
 Show objects format inside array
 
-entity\_type enum
+entity_type enum
 
 The subject of webhook triggering
 
@@ -32520,23 +31811,23 @@ Example: `"item"`
 
 Show enum values
 
-item\_type
+item_type
 
 item
 
 upload
 
-build\_trigger
+build_trigger
 
 environment
 
-maintenance\_mode
+maintenance_mode
 
-sso\_user
+sso_user
 
-cda\_cache\_tags
+cda_cache_tags
 
-event\_types
+event_types
 
 Type: Array<string>
 
@@ -32546,53 +31837,53 @@ Type: Array<object>, null
 
 Show objects format inside array
 
-entity\_type enum
+entity_type enum
 
 Show enum values
 
-item\_type
+item_type
 
 item
 
-build\_trigger
+build_trigger
 
 environment
 
-environment\_type
+environment_type
 
-entity\_ids
+entity_ids
 
 Type: Array<string>
 
-http\_basic\_user string, null
+http_basic_user string, null
 
 HTTP Basic Authorization username
 
 Example: `"user"`
 
-http\_basic\_password string, null
+http_basic_password string, null
 
 HTTP Basic Authorization password
 
 Example: `"password"`
 
-custom\_payload string, null
+custom_payload string, null
 
 A custom payload
 
 Example: `'{ "message": "{{event_type}} event triggered on {{entity_type}}!", "entity_id": "{{#entity}}{{id}}{{/entity}}"] }'`
 
-payload\_api\_version string
+payload_api_version string
 
 Specifies which API version to use when serializing entities in the webhook payload
 
 Example: `"3"`
 
-nested\_items\_in\_payload boolean
+nested_items_in_payload boolean
 
 Whether the you want records present in the payload to show blocks expanded or not
 
-auto\_retry boolean
+auto_retry boolean
 
 If enabled, the system will attempt to retry the call several times when the webhook operation fails due to timeouts or errors.
 
@@ -32626,7 +31917,7 @@ Type: Array<object>
 
 Show objects format inside array
 
-entity\_type enum Required
+entity_type enum Required
 
 The subject of webhook triggering
 
@@ -32634,23 +31925,23 @@ Example: `"item"`
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
 item Optional
 
 upload Optional
 
-build\_trigger Optional
+build_trigger Optional
 
 environment Optional
 
-maintenance\_mode Optional
+maintenance_mode Optional
 
-sso\_user Optional
+sso_user Optional
 
-cda\_cache\_tags Optional
+cda_cache_tags Optional
 
-event\_types Required
+event_types Required
 
 Type: Array<string>
 
@@ -32660,37 +31951,37 @@ Type: Array<object>, null
 
 Show objects format inside array
 
-entity\_type enum Required
+entity_type enum Required
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
 item Optional
 
-build\_trigger Optional
+build_trigger Optional
 
 environment Optional
 
-environment\_type Optional
+environment_type Optional
 
-entity\_ids Required
+entity_ids Required
 
 Type: Array<string>
 
-custom\_payload string, null Required
+custom_payload string, null Required
 
 A custom payload
 
 Example: `'{ "message": "{{event_type}} event triggered on {{entity_type}}!", "entity_id": "{{#entity}}{{id}}{{/entity}}"] }'`
 
-http\_basic\_user string, null Required
+http_basic_user string, null Required
 
 HTTP Basic Authorization username
 
 Example: `"user"`
 
-http\_basic\_password string, null Required
+http_basic_password string, null Required
 
 HTTP Basic Authorization password
 
@@ -32700,17 +31991,17 @@ enabled boolean Optional
 
 Whether the webhook is enabled and sending events or not
 
-payload\_api\_version string Optional
+payload_api_version string Optional
 
 Specifies which API version to use when serializing entities in the webhook payload
 
 Example: `"3"`
 
-nested\_items\_in\_payload boolean Optional
+nested_items_in_payload boolean Optional
 
 Whether the you want records present in the payload to show blocks expanded or not
 
-auto\_retry boolean Optional
+auto_retry boolean Optional
 
 If enabled, the system will attempt to retry the call several times when the webhook operation fails due to timeouts or errors.
 
@@ -32725,20 +32016,20 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const webhook = await client.webhooks.create({
-    name: "Item type creation/update",
-    url: "https://www.example.com/webhook",
-    headers: { "X-Foo": "Bar" },
-    events: [{ entity_type: "item", event_types: ["update"] }],
+    name: 'Item type creation/update',
+    url: 'https://www.example.com/webhook',
+    headers: { 'X-Foo': 'Bar' },
+    events: [{ entity_type: 'item', event_types: ['update'] }],
     custom_payload:
       '{ "message": "{{event_type}} event triggered on {{entity_type}}!", "entity_id": "{{#entity}}{{id}}{{/entity}}"] }',
-    http_basic_user: "user",
-    http_basic_password: "password",
+    http_basic_user: 'user',
+    http_basic_password: 'password',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -32785,7 +32076,7 @@ The URL to be called
 
 Example: `"https://www.example.com/webhook"`
 
-custom\_payload string, null Optional
+custom_payload string, null Optional
 
 A custom payload
 
@@ -32803,7 +32094,7 @@ Type: Array<object>
 
 Show objects format inside array
 
-entity\_type enum Required
+entity_type enum Required
 
 The subject of webhook triggering
 
@@ -32811,23 +32102,23 @@ Example: `"item"`
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
 item Optional
 
 upload Optional
 
-build\_trigger Optional
+build_trigger Optional
 
 environment Optional
 
-maintenance\_mode Optional
+maintenance_mode Optional
 
-sso\_user Optional
+sso_user Optional
 
-cda\_cache\_tags Optional
+cda_cache_tags Optional
 
-event\_types Required
+event_types Required
 
 Type: Array<string>
 
@@ -32837,31 +32128,31 @@ Type: Array<object>, null
 
 Show objects format inside array
 
-entity\_type enum Required
+entity_type enum Required
 
 Show enum values
 
-item\_type Optional
+item_type Optional
 
 item Optional
 
-build\_trigger Optional
+build_trigger Optional
 
 environment Optional
 
-environment\_type Optional
+environment_type Optional
 
-entity\_ids Required
+entity_ids Required
 
 Type: Array<string>
 
-http\_basic\_user string, null Optional
+http_basic_user string, null Optional
 
 HTTP Basic Authorization username
 
 Example: `"user"`
 
-http\_basic\_password string, null Optional
+http_basic_password string, null Optional
 
 HTTP Basic Authorization password
 
@@ -32871,17 +32162,17 @@ enabled boolean Optional
 
 Whether the webhook is enabled and sending events or not
 
-payload\_api\_version string Optional
+payload_api_version string Optional
 
 Specifies which API version to use when serializing entities in the webhook payload
 
 Example: `"3"`
 
-nested\_items\_in\_payload boolean Optional
+nested_items_in_payload boolean Optional
 
 Whether the you want records present in the payload to show blocks expanded or not
 
-auto\_retry boolean Optional
+auto_retry boolean Optional
 
 If enabled, the system will attempt to retry the call several times when the webhook operation fails due to timeouts or errors.
 
@@ -32896,14 +32187,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const webhookId = "312";
+  const webhookId = '312';
 
-  const webhook = await client.webhooks.update(webhookId, { id: "312" });
+  const webhook = await client.webhooks.update(webhookId, { id: '312' });
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(webhook);
@@ -32946,7 +32237,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -32996,12 +32287,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const webhookId = "312";
+  const webhookId = '312';
 
   const webhook = await client.webhooks.find(webhookId);
 
@@ -33046,12 +32337,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const webhookId = "312";
+  const webhookId = '312';
 
   const webhook = await client.webhooks.destroy(webhookId);
 
@@ -33099,7 +32390,7 @@ type string
 
 Must be exactly `"webhook_call"`.
 
-entity\_type enum
+entity_type enum
 
 The subject of webhook triggering
 
@@ -33107,23 +32398,23 @@ Example: `"item"`
 
 Show enum values
 
-item\_type
+item_type
 
 item
 
 upload
 
-build\_trigger
+build_trigger
 
 environment
 
-maintenance\_mode
+maintenance_mode
 
-sso\_user
+sso_user
 
-cda\_cache\_tags
+cda_cache_tags
 
-event\_type enum
+event_type enum
 
 The event that triggers the webhook call
 
@@ -33143,71 +32434,71 @@ unpublish
 
 promote
 
-deploy\_started
+deploy_started
 
-deploy\_succeeded
+deploy_succeeded
 
-deploy\_failed
+deploy_failed
 
 change
 
 invalidate
 
-created\_at date-time
+created_at date-time
 
 The moment the event was created
 
 Example: `"2016-09-20T18:50:24.914Z"`
 
-request\_url string
+request_url string
 
 The url that the webhook called
 
 Example: `"https://www.example.com/webhook"`
 
-request\_headers object
+request_headers object
 
 The request's headers
 
 Example: `{ Accept: "*/*", "User-Agent": "DatoCMS (datocms.com)", Authorization: "Basic Y2lhbzptaWFv", "Content-Type": "application/json", }`
 
-request\_payload string
+request_payload string
 
 The webhook's request payload is encoded as a string. Use `JSON.parse()` to parse it.
 
 Example: `'{"webhook_call_id":"103216210","event_triggered_at":"2024-08-26T12:49:16Z","attempted_auto_retries_count":0,"webhook_id":"28374","site_id":"205","environment":"main","is_environment_primary":true,"entity_type":"maintenance_mode","event_type":"change","entity":{"id":"maintenance_mode","type":"maintenance_mode","attributes":{"active":false}},"related_entities":[]}'`
 
-response\_status integer, null
+response_status integer, null
 
 The status of the response
 
 Example: `200`
 
-response\_headers object, null
+response_headers object, null
 
 The response's headers
 
 Example: `{ via: "1.1 vegur, 1.1 37c0945d19329fccc23efb283d01aa06.cloudfront.net (CloudFront)", date: "Fri, 27 Jul 2018 11:59:20 GMT", server: "gunicorn/19.6.0", }`
 
-response\_payload string, null
+response_payload string, null
 
 The body of the response
 
 Example: `"ok"`
 
-attempted\_auto\_retries\_count integer
+attempted_auto_retries_count integer
 
 The number of retries attempted so far
 
 Example: `2`
 
-last\_sent\_at date-time
+last_sent_at date-time
 
 The last moment the call occurred
 
 Example: `"2016-09-20T18:50:24.914Z"`
 
-next\_retry\_at
+next_retry_at
 
 The date when the next retry attempt is scheduled to run. If no retry attempt is scheduled, it is set to null
 
@@ -33281,13 +32572,13 @@ fields object
 
 Show object format
 
-webhook\_id object
+webhook_id object
 
 Show object format
 
 eq string
 
-entity\_type object
+entity_type object
 
 Show object format
 
@@ -33299,23 +32590,23 @@ Example: `"item"`
 
 Show enum values
 
-item\_type
+item_type
 
 item
 
 upload
 
-build\_trigger
+build_trigger
 
 environment
 
-maintenance\_mode
+maintenance_mode
 
-sso\_user
+sso_user
 
-cda\_cache\_tags
+cda_cache_tags
 
-event\_type object
+event_type object
 
 Show object format
 
@@ -33339,11 +32630,11 @@ unpublish
 
 promote
 
-deploy\_started
+deploy_started
 
-deploy\_succeeded
+deploy_succeeded
 
-deploy\_failed
+deploy_failed
 
 change
 
@@ -33377,7 +32668,7 @@ rescheduled
 
 The last delivery attempt failed, a new one will be retried later
 
-last\_sent\_at object
+last_sent_at object
 
 Show object format
 
@@ -33385,7 +32676,7 @@ gt date-time
 
 lt date-time
 
-next\_retry\_at object
+next_retry_at object
 
 Show object format
 
@@ -33393,7 +32684,7 @@ gt date-time
 
 lt date-time
 
-created\_at object
+created_at object
 
 Show object format
 
@@ -33401,7 +32692,7 @@ gt date-time
 
 lt date-time
 
-order\_by enum
+order_by enum
 
 Fields used to order results
 
@@ -33409,25 +32700,25 @@ Example: `"created_at_desc"`
 
 Show enum values
 
-webhook\_id\_asc
+webhook_id_asc
 
-webhook\_id\_desc
+webhook_id_desc
 
-created\_at\_asc
+created_at_asc
 
-created\_at\_desc
+created_at_desc
 
-last\_sent\_at\_asc
+last_sent_at_asc
 
-last\_sent\_at\_desc
+last_sent_at_desc
 
-next\_retry\_at\_asc
+next_retry_at_asc
 
-next\_retry\_at\_desc
+next_retry_at_desc
 
 ## Returns
 
-Returns an array of resource objects of type [webhook\_call](/docs/content-management-api/resources/webhook-call.md)
+Returns an array of resource objects of type [webhook_call](/docs/content-management-api/resources/webhook-call.md)
 
 ## Other examples
 
@@ -33436,7 +32727,7 @@ Example List all calls
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
@@ -33454,10 +32745,11 @@ run();
 ```javascript
 [
   {
-    id: "84033321",
-    type: "webhook_call",
-    request_url: "https://www.example.com/webhook",
-    request_payload: '{ \
+    id: '84033321',
+    type: 'webhook_call',
+    request_url: 'https://www.example.com/webhook',
+    request_payload:
+      '{ \
       "environment": "main", \
       "entity_type": "item", \
       "event_type": "create", \
@@ -33560,27 +32852,28 @@ run();
       ] \
     }',
     request_headers: {
-      Accept: "*/*",
-      "X-Site-Id": "128378",
-      "User-Agent": "DatoCMS (datocms.com)",
-      "Content-Type": "application/json",
-      "X-Webhook-Id": "27321",
-      "X-Environment": "main",
+      Accept: '*/*',
+      'X-Site-Id': '128378',
+      'User-Agent': 'DatoCMS (datocms.com)',
+      'Content-Type': 'application/json',
+      'X-Webhook-Id': '27321',
+      'X-Environment': 'main',
     },
     response_status: 200,
     response_headers: {
-      date: "Wed, 03 Apr 2024 21:47:44 GMT",
-      "content-length": "2",
+      date: 'Wed, 03 Apr 2024 21:47:44 GMT',
+      'content-length': '2',
     },
-    created_at: "2024-04-03T21:47:44.093Z",
-    response_payload: "OK",
-    entity_type: "item",
-    event_type: "create",
-    webhook: { id: "27321", type: "webhook" },
+    created_at: '2024-04-03T21:47:44.093Z',
+    response_payload: 'OK',
+    entity_type: 'item',
+    event_type: 'create',
+    webhook: { id: '27321', type: 'webhook' },
   },
   // etc
-]
+];
 ```
+
 Example Filter webhook calls by environment
 
 The `webhookCalls.list()` method does NOT support serverside filtering.
@@ -33592,14 +32885,14 @@ This example shows how to filter the calls by their environment names.
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   // Make sure the API token has access to the CMA, and is stored securely
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   // Which environment to look for
-  const environmentNameToFilterBy = "main";
+  const environmentNameToFilterBy = 'main';
 
   // Because we can't filter serverside, we'll have to fetch all the calls and then deal with them clientside
   const iterator = await client.webhookCalls.listPagedIterator();
@@ -33630,10 +32923,11 @@ run();
 ```javascript
 [
   {
-    id: "84033321",
-    type: "webhook_call",
-    request_url: "https://www.example.com/webhook",
-    request_payload: '{ \
+    id: '84033321',
+    type: 'webhook_call',
+    request_url: 'https://www.example.com/webhook',
+    request_payload:
+      '{ \
       "environment": "main", \
       "entity_type": "item", \
       "event_type": "create", \
@@ -33736,26 +33030,26 @@ run();
       ] \
     }',
     request_headers: {
-      Accept: "*/*",
-      "X-Site-Id": "128378",
-      "User-Agent": "DatoCMS (datocms.com)",
-      "Content-Type": "application/json",
-      "X-Webhook-Id": "27321",
-      "X-Environment": "main",
+      Accept: '*/*',
+      'X-Site-Id': '128378',
+      'User-Agent': 'DatoCMS (datocms.com)',
+      'Content-Type': 'application/json',
+      'X-Webhook-Id': '27321',
+      'X-Environment': 'main',
     },
     response_status: 200,
     response_headers: {
-      date: "Wed, 03 Apr 2024 21:47:44 GMT",
-      "content-length": "2",
+      date: 'Wed, 03 Apr 2024 21:47:44 GMT',
+      'content-length': '2',
     },
-    created_at: "2024-04-03T21:47:44.093Z",
-    response_payload: "OK",
-    entity_type: "item",
-    event_type: "create",
-    webhook: { id: "27321", type: "webhook" },
+    created_at: '2024-04-03T21:47:44.093Z',
+    response_payload: 'OK',
+    entity_type: 'item',
+    event_type: 'create',
+    webhook: { id: '27321', type: 'webhook' },
   },
   // other calls filtered out, so only this one remains
-]
+];
 ```
 
 ---
@@ -33764,7 +33058,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [webhook\_call](/docs/content-management-api/resources/webhook-call.md)
+Returns a resource object of type [webhook_call](/docs/content-management-api/resources/webhook-call.md)
 
 ## Examples
 
@@ -33773,12 +33067,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const webhookCallId = "42";
+  const webhookCallId = '42';
 
   const webhookCall = await client.webhookCalls.find(webhookCallId);
 
@@ -33829,12 +33123,12 @@ run();
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const webhookCallId = "42";
+  const webhookCallId = '42';
   await client.webhookCalls.resendWebhook(webhookCallId);
 }
 
@@ -33851,7 +33145,7 @@ Configuration for different build triggers. You can have different staging and p
 
 id string
 
-ID of build\_trigger
+ID of build_trigger
 
 Example: `"1822"`
 
@@ -33885,7 +33179,7 @@ vercel
 
 `adapter_settings` must include the following properties: `project_id`, `token`, `branch`, `team_id`, `deploy_hook_url`
 
-circle\_ci
+circle_ci
 
 `adapter_settings` must include the following properties: `project`, `token`, `revision`, `vcs`, `build_parameters`
 
@@ -33897,13 +33191,13 @@ travis
 
 `adapter_settings` must include the following properties: `api_token`, `repo`, `branch`, `config`
 
-adapter\_settings object
+adapter_settings object
 
 Additional settings for the build trigger. The value depends on the `adapter`.
 
 Example: `{ trigger_url: "http://some-url.com/trigger", headers: { Authorization: "Bearer abc123" }, payload: { type: "build_request" }, }`
 
-last\_build\_completed\_at
+last_build_completed_at
 
 Timestamp of the last build
 
@@ -33911,39 +33205,39 @@ Type: date-time, null
 
 Example: `"2017-03-30T09:29:14.872Z"`
 
-build\_status string
+build_status string
 
 Status of last build
 
 Example: `"success"`
 
-webhook\_url string
+webhook_url string
 
 The URL of the webhook your service has to call when the build completes to report it's status (success or error)
 
 Example: `"https://webhooks.datocoms.com/xA1239ajsk123/deploy-results"`
 
-indexing\_status string
+indexing_status string
 
 Status of Site Search for the frontend
 
 Example: `"success"`
 
-frontend\_url string, null
+frontend_url string, null
 
 The public URL of the frontend. If Site Search is enabled (indicated by `indexing_enabled`), this is the starting point from which the website's spidering will start
 
 Example: `"https://www.mywebsite.com/"`
 
-indexing\_enabled boolean
+indexing_enabled boolean
 
 Wether Site Search is enabled or not. With Site Search, everytime the website is built, DatoCMS will respider it to get updated content
 
-autotrigger\_on\_scheduled\_publications boolean
+autotrigger_on_scheduled_publications boolean
 
 Wheter an automatic build request to `webhook_url` should be made on scheduled publications/unpublishings
 
-webhook\_token string
+webhook_token string
 
 Unique token for the webhook (it's the same token present in `webhook_url`)
 
@@ -33955,7 +33249,7 @@ Example: `"xA1239ajsk123"`
 
 ## Returns
 
-Returns an array of resource objects of type [build\_trigger](/docs/content-management-api/resources/build-trigger.md)
+Returns an array of resource objects of type [build_trigger](/docs/content-management-api/resources/build-trigger.md)
 
 ## Examples
 
@@ -33964,7 +33258,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -34008,7 +33302,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [build\_trigger](/docs/content-management-api/resources/build-trigger.md)
+Returns a resource object of type [build_trigger](/docs/content-management-api/resources/build-trigger.md)
 
 ## Examples
 
@@ -34017,12 +33311,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
 
   const buildTrigger = await client.buildTriggers.find(buildTriggerId);
 
@@ -34087,7 +33381,7 @@ vercel Optional
 
 `adapter_settings` must include the following properties: `project_id`, `token`, `branch`, `team_id`, `deploy_hook_url`
 
-circle\_ci Optional
+circle_ci Optional
 
 `adapter_settings` must include the following properties: `project`, `token`, `revision`, `vcs`, `build_parameters`
 
@@ -34099,27 +33393,27 @@ travis Optional
 
 `adapter_settings` must include the following properties: `api_token`, `repo`, `branch`, `config`
 
-indexing\_enabled boolean Required
+indexing_enabled boolean Required
 
 Wether Site Search is enabled or not. With Site Search, everytime the website is built, DatoCMS will respider it to get updated content
 
-frontend\_url string, null Required
+frontend_url string, null Required
 
 The public URL of the frontend. If Site Search is enabled (indicated by `indexing_enabled`), this is the starting point from which the website's spidering will start
 
 Example: `"https://www.mywebsite.com/"`
 
-adapter\_settings object Required
+adapter_settings object Required
 
 Additional settings for the build trigger. The value depends on the `adapter`.
 
 Example: `{ trigger_url: "http://some-url.com/trigger", headers: { Authorization: "Bearer abc123" }, payload: { type: "build_request" }, }`
 
-autotrigger\_on\_scheduled\_publications boolean Required
+autotrigger_on_scheduled_publications boolean Required
 
 Wheter an automatic build request to `webhook_url` should be made on scheduled publications/unpublishings
 
-webhook\_token string Optional
+webhook_token string Optional
 
 Unique token for the webhook (it's the same token present in `webhook_url`)
 
@@ -34127,7 +33421,7 @@ Example: `"xA1239ajsk123"`
 
 ## Returns
 
-Returns a resource object of type [build\_trigger](/docs/content-management-api/resources/build-trigger.md)
+Returns a resource object of type [build_trigger](/docs/content-management-api/resources/build-trigger.md)
 
 ## Examples
 
@@ -34136,20 +33430,20 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
   const buildTrigger = await client.buildTriggers.create({
-    name: "Custom build trigger",
-    adapter: "custom",
+    name: 'Custom build trigger',
+    adapter: 'custom',
     indexing_enabled: true,
-    frontend_url: "https://www.mywebsite.com/",
+    frontend_url: 'https://www.mywebsite.com/',
     adapter_settings: {
-      trigger_url: "http://some-url.com/trigger",
-      headers: { Authorization: "Bearer abc123" },
-      payload: { type: "build_request" },
+      trigger_url: 'http://some-url.com/trigger',
+      headers: { Authorization: 'Bearer abc123' },
+      payload: { type: 'build_request' },
     },
     autotrigger_on_scheduled_publications: true,
   });
@@ -34215,7 +33509,7 @@ vercel Optional
 
 `adapter_settings` must include the following properties: `project_id`, `token`, `branch`, `team_id`, `deploy_hook_url`
 
-circle\_ci Optional
+circle_ci Optional
 
 `adapter_settings` must include the following properties: `project`, `token`, `revision`, `vcs`, `build_parameters`
 
@@ -34227,21 +33521,21 @@ travis Optional
 
 `adapter_settings` must include the following properties: `api_token`, `repo`, `branch`, `config`
 
-indexing\_enabled boolean Optional
+indexing_enabled boolean Optional
 
 Wether Site Search is enabled or not. With Site Search, everytime the website is built, DatoCMS will respider it to get updated content
 
-frontend\_url string, null Optional
+frontend_url string, null Optional
 
 The public URL of the frontend. If Site Search is enabled (indicated by `indexing_enabled`), this is the starting point from which the website's spidering will start
 
 Example: `"https://www.mywebsite.com/"`
 
-autotrigger\_on\_scheduled\_publications boolean Optional
+autotrigger_on_scheduled_publications boolean Optional
 
 Wheter an automatic build request to `webhook_url` should be made on scheduled publications/unpublishings
 
-adapter\_settings object Optional
+adapter_settings object Optional
 
 Additional settings for the build trigger. The value depends on the `adapter`.
 
@@ -34249,7 +33543,7 @@ Example: `{ trigger_url: "http://some-url.com/trigger", headers: { Authorization
 
 ## Returns
 
-Returns a resource object of type [build\_trigger](/docs/content-management-api/resources/build-trigger.md)
+Returns a resource object of type [build_trigger](/docs/content-management-api/resources/build-trigger.md)
 
 ## Examples
 
@@ -34258,15 +33552,15 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
 
   const buildTrigger = await client.buildTriggers.update(buildTriggerId, {
-    id: "1822",
+    id: '1822',
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -34307,12 +33601,12 @@ run();
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
   await client.buildTriggers.trigger(buildTriggerId);
 }
 
@@ -34328,12 +33622,12 @@ run();
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
   await client.buildTriggers.abort(buildTriggerId);
 }
 
@@ -34349,12 +33643,12 @@ run();
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
   await client.buildTriggers.abortIndexing(buildTriggerId);
 }
 
@@ -34372,12 +33666,12 @@ By default a spidering of the site is performed automatically at the end of a de
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
   await client.buildTriggers.reindex(buildTriggerId);
 }
 
@@ -34390,7 +33684,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [build\_trigger](/docs/content-management-api/resources/build-trigger.md)
+Returns a resource object of type [build_trigger](/docs/content-management-api/resources/build-trigger.md)
 
 ## Examples
 
@@ -34399,12 +33693,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildTriggerId = "1822";
+  const buildTriggerId = '1822';
 
   const buildTrigger = await client.buildTriggers.destroy(buildTriggerId);
 
@@ -34455,7 +33749,7 @@ type string
 
 Must be exactly `"build_event"`.
 
-event\_type enum
+event_type enum
 
 The type of activity
 
@@ -34463,39 +33757,39 @@ Example: `"response_success"`
 
 Show enum values
 
-request\_success
+request_success
 
 Build requested successfully
 
-request\_failure
+request_failure
 
 Build request failed
 
-response\_success
+response_success
 
 Successful build notification
 
-response\_failure
+response_failure
 
 Failed build notification
 
-request\_aborted
+request_aborted
 
 Build request aborted by user
 
-response\_unprocessable
+response_unprocessable
 
 Received notification is not valid
 
-indexing\_started
+indexing_started
 
 Site indexing started
 
-indexing\_success
+indexing_success
 
 Site indexing completed successfully
 
-indexing\_failure
+indexing_failure
 
 Site indexing failed
 
@@ -34505,17 +33799,17 @@ Any details regarding the event
 
 Example: `{ request_body: '{"object_kind":"build","ref":"master","tag":false,"before_sha":"0000000000000000000000000000000000000000","sha":"ecfccf5ea28af900c14b499a2b762e029c7492","build_id":10495,"build_name":"build","build_stage":"test","build_status":"success","build_started_at":"2016-09-20 18:49:22 UTC","build_finished_at":"2016-09-20 18:50:24 UTC","build_duration":62.279854524,"build_allow_failure":false,"project_id":195,"project_id":"Stefano Verna / awesome-website","user":{"id":null,"name":null,"email":null},"commit":{"id":6754,"sha":"ecfccf5ea28af900c6614b499a2b762e029c7492","message":"Update gems\\n","author_name":"Stefano Verna","author_email":"s.verna@datocms.com","status":"success","duration":62,"started_at":"2016-09-20 18:49:22 UTC","finished_at":"2016-09-20 18:50:24 UTC"},"repository":{"name":"awesome-website","url":"git@gitlab.com:stefanoverna/awesome-website.git","description":"","visibility_level":0}}', request_headers: { Via: "1.1 vegur", Host: "webhooks.datocms.com", Origin: null, Version: "HTTP/1.1", Connection: "close", "Connect-Time": "0", "X-Request-Id": "5c1beced-0fe3-4c5b-b45d-68ba4a15b5f3", "X-Gitlab-Event": "Build Hook", "X-Forwarded-For": "46.101.135.219", "X-Request-Start": "1474397424903", "Total-Route-Time": "0", "X-Forwarded-Port": "443", "X-Forwarded-Proto": "https", }, }`
 
-created\_at date-time
+created_at date-time
 
 The moment the activity occurred
 
 Example: `"2016-09-20T18:50:24.914Z"`
 
-build\_trigger
+build_trigger
 
 Source build trigger
 
-Type: [ResourceLinkage<"build\_trigger">](/docs/content-management-api/resources/build_trigger.md)
+Type: [ResourceLinkage<"build_trigger">](/docs/content-management-api/resources/build_trigger.md)
 
 ---
 
@@ -34553,13 +33847,13 @@ fields object
 
 Show object format
 
-build\_trigger\_id object
+build_trigger_id object
 
 Show object format
 
 eq string
 
-event\_type object
+event_type object
 
 Show object format
 
@@ -34571,43 +33865,43 @@ Example: `"response_success"`
 
 Show enum values
 
-request\_success
+request_success
 
 Build requested successfully
 
-request\_failure
+request_failure
 
 Build request failed
 
-response\_success
+response_success
 
 Successful build notification
 
-response\_failure
+response_failure
 
 Failed build notification
 
-request\_aborted
+request_aborted
 
 Build request aborted by user
 
-response\_unprocessable
+response_unprocessable
 
 Received notification is not valid
 
-indexing\_started
+indexing_started
 
 Site indexing started
 
-indexing\_success
+indexing_success
 
 Site indexing completed successfully
 
-indexing\_failure
+indexing_failure
 
 Site indexing failed
 
-created\_at object
+created_at object
 
 Show object format
 
@@ -34615,7 +33909,7 @@ gt date-time
 
 lt date-time
 
-order\_by enum
+order_by enum
 
 Fields used to order results
 
@@ -34623,28 +33917,28 @@ Example: `"created_at_desc"`
 
 Show enum values
 
-build\_trigger\_id\_asc
+build_trigger_id_asc
 
-build\_trigger\_id\_desc
+build_trigger_id_desc
 
-created\_at\_asc
+created_at_asc
 
-created\_at\_desc
+created_at_desc
 
-event\_type\_asc
+event_type_asc
 
-event\_type\_desc
+event_type_desc
 
 ## Returns
 
-Returns an array of resource objects of type [build\_event](/docs/content-management-api/resources/build-event.md)
+Returns an array of resource objects of type [build_event](/docs/content-management-api/resources/build-event.md)
 
 ## Examples
 
 Example Basic example
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -34665,7 +33959,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [build\_event](/docs/content-management-api/resources/build-event.md)
+Returns a resource object of type [build_event](/docs/content-management-api/resources/build-event.md)
 
 ## Examples
 
@@ -34674,12 +33968,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const buildEventId = "34";
+  const buildEventId = '34';
 
   const buildEvent = await client.buildEvents.find(buildEventId);
 
@@ -34759,7 +34053,7 @@ Example: `10`
 
 ## Returns
 
-Returns an array of resource objects of type [subscription\_limit](/docs/content-management-api/resources/subscription-limit.md)
+Returns an array of resource objects of type [subscription_limit](/docs/content-management-api/resources/subscription-limit.md)
 
 ## Examples
 
@@ -34768,7 +34062,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -34796,7 +34090,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [subscription\_limit](/docs/content-management-api/resources/subscription-limit.md)
+Returns a resource object of type [subscription_limit](/docs/content-management-api/resources/subscription-limit.md)
 
 ## Examples
 
@@ -34805,15 +34099,14 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const subscriptionLimitId = "locales";
+  const subscriptionLimitId = 'locales';
 
-  const subscriptionLimit =
-    await client.subscriptionLimits.find(subscriptionLimitId);
+  const subscriptionLimit = await client.subscriptionLimits.find(subscriptionLimitId);
 
   // Check the 'Returned output' tab for the result ☝️
   console.log(subscriptionLimit);
@@ -34854,7 +34147,7 @@ enabled boolean
 
 Whether the feature is available on the current project
 
-in\_use boolean
+in_use boolean
 
 Whether the project is currently using the feature
 
@@ -34864,7 +34157,7 @@ Whether the project is currently using the feature
 
 ## Returns
 
-Returns an array of resource objects of type [subscription\_feature](/docs/content-management-api/resources/subscription-feature.md)
+Returns an array of resource objects of type [subscription_feature](/docs/content-management-api/resources/subscription-feature.md)
 
 ## Examples
 
@@ -34873,7 +34166,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -34913,55 +34206,55 @@ type string
 
 Must be exactly `"sso_settings"`.
 
-idp\_saml\_metadata\_url null, string
+idp_saml_metadata_url null, string
 
 URL of Identity Provider SAML Metadata endpoint
 
 Example: `"https://my-org.oktapreview.com/app/XXXX/sso/saml/metadata"`
 
-scim\_base\_url string
+scim_base_url string
 
 DatoCMS SCIM base URL
 
 Example: `"https://sso.datocms.com/scim"`
 
-saml\_acs\_url string
+saml_acs_url string
 
 DatoCMS SAML ACS URL
 
 Example: `"https://sso.datocms.com/XXX/saml/consume"`
 
-sp\_saml\_metadata\_url string
+sp_saml_metadata_url string
 
 DatoCMS SAML Metadata URL
 
 Example: `"https://sso.datocms.com/XXX/saml/metadata"`
 
-sp\_saml\_base\_url string
+sp_saml_base_url string
 
 DatoCMS SAML Base URL
 
 Example: `"https://sso.datocms.com/XXX/saml"`
 
-saml\_token string
+saml_token string
 
 DatoCMS SAML Token
 
 Example: `"a2a24ae5fbb2d955b1b4fa73f2dd58"`
 
-idp\_saml\_metadata\_xml null, string
+idp_saml_metadata_xml null, string
 
 Identity Provider SAML Metadata
 
 Example: `'<?xml version="1.0" encoding="UTF-8"?>...'`
 
-scim\_api\_token string
+scim_api_token string
 
 DatoCMS SCIM API Token
 
 Example: `"as3dasjh1234hj1"`
 
-default\_role
+default_role
 
 The default role assigned to SSO users that do not belong to any SSO group
 
@@ -34973,7 +34266,7 @@ Type: null, [ResourceLinkage<"role">](/docs/content-management-api/resources/rol
 
 ## Returns
 
-Returns a resource object of type [sso\_settings](/docs/content-management-api/resources/sso-settings.md)
+Returns a resource object of type [sso_settings](/docs/content-management-api/resources/sso-settings.md)
 
 ## Examples
 
@@ -34982,7 +34275,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35017,7 +34310,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [sso\_token](/docs/content-management-api/resources/sso-token.md)
+Returns a resource object of type [sso_token](/docs/content-management-api/resources/sso-token.md)
 
 ## Examples
 
@@ -35026,7 +34319,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35052,19 +34345,19 @@ run();
 
 ## Body parameters
 
-idp\_saml\_metadata\_url null, string Optional
+idp_saml_metadata_url null, string Optional
 
 URL of Identity Provider SAML Metadata endpoint
 
 Example: `"https://my-org.oktapreview.com/app/XXXX/sso/saml/metadata"`
 
-idp\_saml\_metadata\_xml null, string Optional
+idp_saml_metadata_xml null, string Optional
 
 Identity Provider SAML Metadata
 
 Example: `'<?xml version="1.0" encoding="UTF-8"?>...'`
 
-default\_role Optional
+default_role Optional
 
 The default role assigned to SSO users that do not belong to any SSO group
 
@@ -35072,7 +34365,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
 ## Returns
 
-Returns a resource object of type [sso\_settings](/docs/content-management-api/resources/sso-settings.md)
+Returns a resource object of type [sso_settings](/docs/content-management-api/resources/sso-settings.md)
 
 ## Examples
 
@@ -35081,7 +34374,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35134,29 +34427,29 @@ Email
 
 Example: `"mark.smith@example.com"`
 
-external\_id string, null
+external_id string, null
 
 Identity provider ID
 
 Example: `"Ja23ekjhsad"`
 
-is\_active boolean
+is_active boolean
 
 Whether this user is active on the identity provider. De-activated users won't be able to login.
 
-first\_name string, null
+first_name string, null
 
 First name
 
 Example: `"Mark"`
 
-last\_name string, null
+last_name string, null
 
 Last name
 
 Example: `"Smith"`
 
-meta.last\_access
+meta.last_access
 
 Date of last reading/interaction
 
@@ -35168,7 +34461,7 @@ groups
 
 All the users's groups
 
-Type: Array<[ResourceLinkage<"sso\_group">](/docs/content-management-api/resources/sso_group.md)\>
+Type: Array<[ResourceLinkage<"sso_group">](/docs/content-management-api/resources/sso_group.md)\>
 
 role
 
@@ -35182,7 +34475,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md),
 
 ## Returns
 
-Returns an array of resource objects of type [sso\_user](/docs/content-management-api/resources/sso-user.md)
+Returns an array of resource objects of type [sso_user](/docs/content-management-api/resources/sso-user.md)
 
 ## Examples
 
@@ -35191,7 +34484,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35229,7 +34522,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [sso\_user](/docs/content-management-api/resources/sso-user.md)
+Returns a resource object of type [sso_user](/docs/content-management-api/resources/sso-user.md)
 
 ## Examples
 
@@ -35238,12 +34531,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const userId = "312";
+  const userId = '312';
 
   const ssoUser = await client.ssoUsers.find(userId);
 
@@ -35278,7 +34571,7 @@ Copy existing users into SSO users
 
 ## Returns
 
-Returns an array of resource objects of type [sso\_user](/docs/content-management-api/resources/sso-user.md)
+Returns an array of resource objects of type [sso_user](/docs/content-management-api/resources/sso-user.md)
 
 ## Examples
 
@@ -35287,7 +34580,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35325,7 +34618,7 @@ run();
 
 ## Query parameters
 
-destination\_user\_type enum
+destination_user_type enum
 
 New owner for resources previously owned by the deleted SSO user. This argument specifies the new owner type.
 
@@ -35337,11 +34630,11 @@ account
 
 user
 
-access\_token
+access_token
 
-sso\_user
+sso_user
 
-destination\_user\_id string
+destination_user_id string
 
 New owner for resources previously owned by the deleted SSO user. This argument specifies the new owner ID.
 
@@ -35349,7 +34642,7 @@ Example: `"7865"`
 
 ## Returns
 
-Returns a resource object of type [sso\_user](/docs/content-management-api/resources/sso-user.md)
+Returns a resource object of type [sso_user](/docs/content-management-api/resources/sso-user.md)
 
 ## Examples
 
@@ -35358,12 +34651,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const userId = "312";
+  const userId = '312';
 
   const ssoUser = await client.ssoUsers.destroy(userId);
 
@@ -35430,7 +34723,7 @@ users
 
 Group members
 
-Type: Array<[ResourceLinkage<"sso\_user">](/docs/content-management-api/resources/sso_user.md)\>
+Type: Array<[ResourceLinkage<"sso_user">](/docs/content-management-api/resources/sso_user.md)\>
 
 ---
 
@@ -35438,7 +34731,7 @@ Type: Array<[ResourceLinkage<"sso\_user">](/docs/content-management-api/resource
 
 ## Returns
 
-Returns an array of resource objects of type [sso\_group](/docs/content-management-api/resources/sso-group.md)
+Returns an array of resource objects of type [sso_group](/docs/content-management-api/resources/sso-group.md)
 
 ## Examples
 
@@ -35447,7 +34740,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35481,7 +34774,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [sso\_group](/docs/content-management-api/resources/sso-group.md)
+Returns a resource object of type [sso_group](/docs/content-management-api/resources/sso-group.md)
 
 ## Examples
 
@@ -35490,12 +34783,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const ssoGroupId = "312";
+  const ssoGroupId = '312';
 
   const ssoGroup = await client.ssoGroups.copyRoles(ssoGroupId);
 
@@ -35538,7 +34831,7 @@ Type: [ResourceLinkage<"role">](/docs/content-management-api/resources/role.md)
 
 ## Returns
 
-Returns a resource object of type [sso\_group](/docs/content-management-api/resources/sso-group.md)
+Returns a resource object of type [sso_group](/docs/content-management-api/resources/sso-group.md)
 
 ## Examples
 
@@ -35547,17 +34840,17 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const ssoGroupId = "312";
+  const ssoGroupId = '312';
 
   const ssoGroup = await client.ssoGroups.update(ssoGroupId, {
-    id: "312",
+    id: '312',
     priority: 1,
-    role: { type: "role", id: "34" },
+    role: { type: 'role', id: '34' },
   });
 
   // Check the 'Returned output' tab for the result ☝️
@@ -35585,7 +34878,7 @@ run();
 
 ## Returns
 
-Returns a resource object of type [sso\_group](/docs/content-management-api/resources/sso-group.md)
+Returns a resource object of type [sso_group](/docs/content-management-api/resources/sso-group.md)
 
 ## Examples
 
@@ -35594,12 +34887,12 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
 
-  const ssoGroupId = "312";
+  const ssoGroupId = '312';
 
   const ssoGroup = await client.ssoGroups.destroy(ssoGroupId);
 
@@ -35640,7 +34933,7 @@ type string
 
 Must be exactly `"white_label_settings"`.
 
-custom\_i18n\_messages\_template\_url null, string
+custom_i18n_messages_template_url null, string
 
 URL of custom I18n messages. The :locale placeholder represents the current DatoCMS UI locale.
 
@@ -35652,7 +34945,7 @@ Example: `"https://my-app-messages.netlify.app/:locale/message.json"`
 
 ## Returns
 
-Returns a resource object of type [white\_label\_settings](/docs/content-management-api/resources/white-label-settings.md)
+Returns a resource object of type [white_label_settings](/docs/content-management-api/resources/white-label-settings.md)
 
 ## Examples
 
@@ -35661,7 +34954,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35690,7 +34983,7 @@ run();
 
 ## Body parameters
 
-custom\_i18n\_messages\_template\_url null, string Optional
+custom_i18n_messages_template_url null, string Optional
 
 URL of custom I18n messages. The :locale placeholder represents the current DatoCMS UI locale.
 
@@ -35698,7 +34991,7 @@ Example: `"https://my-app-messages.netlify.app/:locale/message.json"`
 
 ## Returns
 
-Returns a resource object of type [white\_label\_settings](/docs/content-management-api/resources/white-label-settings.md)
+Returns a resource object of type [white_label_settings](/docs/content-management-api/resources/white-label-settings.md)
 
 ## Examples
 
@@ -35707,7 +35000,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -35748,7 +35041,7 @@ type string
 
 Must be exactly `"audit_log_event"`.
 
-action\_name string
+action_name string
 
 The actual action performed
 
@@ -35870,7 +35163,7 @@ The full HTTP body of the response
 
 Example: `"PUT"`
 
-meta.occurred\_at date-time
+meta.occurred_at date-time
 
 The date of the event
 
@@ -35884,10 +35177,10 @@ The Audit Logs API allows to monitor events happening in an Enterprise project. 
 
 You can use this part of the API to:
 
--   Automatically feed DatoCMS access data into an SIEM or other auditing tool;
+- Automatically feed DatoCMS access data into an SIEM or other auditing tool;
 
--   Proactively monitor for potential security issues or malicious access attempts;
--   Write custom apps to gain insight into how your organization uses DatoCMS.
+- Proactively monitor for potential security issues or malicious access attempts;
+- Write custom apps to gain insight into how your organization uses DatoCMS.
 
 Please note that DatoCMS does not perform any kind of automated intrusion detection. The Audit Logs API will return the data but can not automatically determine or indicate whether an action was appropriate.
 
@@ -35940,19 +35233,19 @@ An SQL-like expression to filter the events
 
 Example: `"id > min_ulid(1624452728)"`
 
-next\_token string Optional
+next_token string Optional
 
-Set this value to get remaining results, if a meta.next\_token was returned in the previous query response
+Set this value to get remaining results, if a meta.next_token was returned in the previous query response
 
 Example: `"E5188+SCXtvvXVUFkqmwtQJd3V3lJIOsZBjHvTYz"`
 
-detailed\_log boolean Optional
+detailed_log boolean Optional
 
 Whether a detailed log complete with full request and response payload must be returned or not
 
 ## Returns
 
-Returns an array of resource objects of type [audit\_log\_event](/docs/content-management-api/resources/audit-log-event.md)
+Returns an array of resource objects of type [audit_log_event](/docs/content-management-api/resources/audit-log-event.md)
 
 ## Examples
 
@@ -35961,7 +35254,7 @@ Example Basic example
 ###### Code
 
 ```javascript
-import { buildClient } from "@datocms/cma-client-node";
+import { buildClient } from '@datocms/cma-client-node';
 
 async function run() {
   const client = buildClient({ apiToken: process.env.DATOCMS_API_TOKEN });
@@ -36011,10 +35304,9 @@ Also, all new projects in are configured with an [automatic image optimization](
 
 > [!NOTE] Should I use the Images API or the CDA with responsiveImage parameters?
 > All your images on DatoCMS go through Imgix, but the same transformations and parameters can be accessed through two related APIs:
-> 
-> -   The Images API (this page) lets you apply image transformations directly via URL parameters, which is good for testing and directly fetching images.
->     
-> -   But most production frontends use our GraphQL-based Content Delivery API (CDA) instead. And in that API, you can directly specify Imgix parameters right inside your query, and our GraphQL will automatically generate the correct Image API URL parameters for you. For more details, please see Content Delivery API: [Images and videos](/docs/content-delivery-api/images-and-videos.md)
+>
+> - The Images API (this page) lets you apply image transformations directly via URL parameters, which is good for testing and directly fetching images.
+> - But most production frontends use our GraphQL-based Content Delivery API (CDA) instead. And in that API, you can directly specify Imgix parameters right inside your query, and our GraphQL will automatically generate the correct Image API URL parameters for you. For more details, please see Content Delivery API: [Images and videos](/docs/content-delivery-api/images-and-videos.md)
 
 ### Powerful transformations at your disposal
 
@@ -36044,14 +35336,10 @@ https://www.datocms-assets.com/205/1570696780-example.jpg?h=200
 
 You can specify any number of parameters. The following URL, for example,
 
--   crops the image to be 800x500px, centering around the second face it recognizes inside the picture;
-    
--   desaturates the image;
-    
--   adds a copyright caption at the bottom;
-    
--   transforms the format to be a PNG;
-    
+- crops the image to be 800x500px, centering around the second face it recognizes inside the picture;
+- desaturates the image;
+- adds a copyright caption at the bottom;
+- transforms the format to be a PNG;
 
 ```plaintext
 https://www.datocms-assets.com/205/1570542926-example.jpg?fit=facearea&faceindex=2&facepad=5&sat=-100&w=800&h=500&fm=png&txt=%C2%A9%20Matheus%20Ferrero&txt-align=bottom,center&txt-color=FFF&txt-size=15&txt-pad=20
@@ -36132,7 +35420,7 @@ You can upload videos in the same way you upload regular assets. Through the int
 
 [(Image content)](https://www.datocms-assets.com/205/1714997210-screenshot-2024-05-06-at-14-06-36.png?auto=format&fit=max&w=2000)
 
-You can add a video to your models using the *Single Asset* or *Asset Gallery* fields.
+You can add a video to your models using the _Single Asset_ or _Asset Gallery_ fields.
 
 ### What gets exposed via API
 
@@ -36224,14 +35512,12 @@ We strongly recommend you read the following documentation thoroughly before imp
 
 > [!NOTE] How are automatic optimization settings applied?
 > The default Automatic Image Optimization settings that you define here will be **combined** with any additional ones you explicitly specify in the URL. For instance, if you have your defaults set to `?auto=format&q=50` (via "Custom settings"), then:
-> 
-> -   Adding `?w=40` to the URL of an image will make the final parameters equal to `auto=format&q=50&w=40`. Even though the default parameters are not explicitly visible, they are still implicitly applied.
->     
-> -   Applying `?auto=enhance` to the URL will behave as `?auto=enhance&q=50`, because the same parameter (`auto`) specified again at the URL level will override the previously set default.
->     
-> 
+>
+> - Adding `?w=40` to the URL of an image will make the final parameters equal to `auto=format&q=50&w=40`. Even though the default parameters are not explicitly visible, they are still implicitly applied.
+> - Applying `?auto=enhance` to the URL will behave as `?auto=enhance&q=50`, because the same parameter (`auto`) specified again at the URL level will override the previously set default.
+>
 > If you ever want to bypass the defaults, you can skip automatic optimization by using the URL parameter `?skip-default-optimizations=true` (or using the argument `skipDefaultOptimizations: true` in your CDA requests).
-> 
+>
 > Therefore, `?auto=enhance&skip-default-optimizations=true` will simply behave as `?auto=enhance`, with no additional parameters (`q=50` will be skipped even though it was specified in the defaults). But please be careful when using the `skip-default-optimizations` parameter, as it could significantly increase your bandwidth costs.
 
 ### Option 1: DatoCMS presets (recommended)
@@ -36254,40 +35540,29 @@ The [`auto` parameter](https://docs.imgix.com/apis/rendering/auto/auto) simplifi
 
 `auto=compress`
 
--   Reduces image size through best-effort techniques, applying aggressive compression.
-    
--   Serves images in AVIF format, with fallbacks to WebP or JPEG based on browser support.
-    
--   Overrides `fm` parameter for non-animated assets when used with `auto=compress`.
-    
+- Reduces image size through best-effort techniques, applying aggressive compression.
+- Serves images in AVIF format, with fallbacks to WebP or JPEG based on browser support.
+- Overrides `fm` parameter for non-animated assets when used with `auto=compress`.
 
 `auto=enhance`
 
--   Improves image quality by enhancing highlights, midtones, and shadows across all RGB channels.
-    
--   Gives images a vibrant appeareance, which is ideal for editorial, stock, and user-generated content.
-    
+- Improves image quality by enhancing highlights, midtones, and shadows across all RGB channels.
+- Gives images a vibrant appeareance, which is ideal for editorial, stock, and user-generated content.
 
 `auto=true`
 
--   Automatically adjusts images by applying additional parameters, starting with `auto=enhance`.
-    
--   If `crop=faces` is set, `auto=true` will triggers `auto=redeye` for red-eye removal.
-    
+- Automatically adjusts images by applying additional parameters, starting with `auto=enhance`.
+- If `crop=faces` is set, `auto=true` will triggers `auto=redeye` for red-eye removal.
 
 `auto=format`
 
--   Determines the optimal image format through automatic content negotiation.
-    
--   Attempts to serve images in AVIF, falling back to WebP, JPEG, or PNG based on browser support.
-    
--   Can be combined with `auto=compress` and/or `fm` to customize fallback logic.
-    
+- Determines the optimal image format through automatic content negotiation.
+- Attempts to serve images in AVIF, falling back to WebP, JPEG, or PNG based on browser support.
+- Can be combined with `auto=compress` and/or `fm` to customize fallback logic.
 
 `auto=redeye`
 
--   Automatically removes red-eye from detected faces, enhancing image quality.
-    
+- Automatically removes red-eye from detected faces, enhancing image quality.
 
 For more details, refer to the [imgix documentation on `auto` parameter](https://docs.imgix.com/apis/rendering/auto/auto).
 
@@ -36295,12 +35570,9 @@ For more details, refer to the [imgix documentation on `auto` parameter](https:/
 
 The [`q` parameter](https://docs.imgix.com/apis/rendering/format/q) controls the output quality of lossy file formats like jpg, webp, avif, or jxr. Key points include:
 
--   Values range from 0 to 100, with 75 set as the default - higher values increase image file size.
-    
--   Quality can often be set lower than default, especially for high-DPR (Device Pixel Ratio) images.
-    
--   When auto=compress is applied, the default is automatically set to 45, unless overridden.
-    
+- Values range from 0 to 100, with 75 set as the default - higher values increase image file size.
+- Quality can often be set lower than default, especially for high-DPR (Device Pixel Ratio) images.
+- When auto=compress is applied, the default is automatically set to 45, unless overridden.
 
 Explore more about the [q parameter in `imgix` documentation](https://docs.imgix.com/apis/rendering/format/q).
 
@@ -36308,14 +35580,10 @@ Explore more about the [q parameter in `imgix` documentation](https://docs.imgix
 
 The [`cs` parameter](https://docs.imgix.com/apis/rendering/format/cs) specifies the color space of the output image. Options include:
 
--   **sRGB**: Default value, standard web color representation.
-    
--   **Adobe RGB (1998)**: Provides accurate color reproduction from digital screens to print.
-    
--   **TinysRGB**: Reduced color space metadata, potentially resulting in a slight color shift.
-    
--   **Strip**: Removes color space for maximum size reduction.
-    
+- **sRGB**: Default value, standard web color representation.
+- **Adobe RGB (1998)**: Provides accurate color reproduction from digital screens to print.
+- **TinysRGB**: Reduced color space metadata, potentially resulting in a slight color shift.
+- **Strip**: Removes color space for maximum size reduction.
 
 Learn more about the [cs parameter in `imgix` documentation](https://docs.imgix.com/apis/rendering/format/cs).
 
@@ -36471,7 +35739,7 @@ On any other JS environment you can use the [`datocms-listen`](https://github.co
 For more info on all the available options, please refer to its [documentation on Github](https://github.com/datocms/datocms-listen):
 
 ```javascript
-import { subscribeToQuery } from "datocms-listen";
+import { subscribeToQuery } from 'datocms-listen';
 
 const unsubscribe = await subscribeToQuery({
   query: `
@@ -36483,7 +35751,7 @@ const unsubscribe = await subscribeToQuery({
     }
   `,
   variables: { first: 10 },
-  token: "YOUR_TOKEN",
+  token: 'YOUR_TOKEN',
   includeDrafts: true,
   onUpdate: (response) => {
     // response is the GraphQL response
@@ -36521,17 +35789,13 @@ The Real-time Content API is built upon and extends the capabilities of the Grap
 
 What's different is the domain you use to perform the POST request:
 
--   Content Delivery API: `https://graphql.datocms.com`
-    
--   **Real-time Content API:** `https://graphql-listen.datocms.com`
-    
+- Content Delivery API: `https://graphql.datocms.com`
+- **Real-time Content API:** `https://graphql-listen.datocms.com`
 
 And of course the response you'll receive:
 
--   a call to the Content Delivery API simply returns a JSON with the response to the requested query, whereas
-    
--   the same call to the Real-time Content API **returns the URL of a persistent channel** implementing the [Server-Sent Events protocol](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
-    
+- a call to the Content Delivery API simply returns a JSON with the response to the requested query, whereas
+- the same call to the Real-time Content API **returns the URL of a persistent channel** implementing the [Server-Sent Events protocol](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events).
 
 Here's a diagram representing the differences between the two:
 
@@ -36578,29 +35842,29 @@ All modern browsers offer a native interface to connect to Server-Sent Events ch
 
 ```javascript
 const eventSource = new EventSource(
-  "https://graphql-listen.datocms.com/channels/e4dae1a0-146e-4956-90e6-076ca9123eeb"
+  'https://graphql-listen.datocms.com/channels/e4dae1a0-146e-4956-90e6-076ca9123eeb',
 );
 
-eventSource.addEventListener("open", () => {
-  console.log("connected to channel!");
+eventSource.addEventListener('open', () => {
+  console.log('connected to channel!');
 });
 ```
 
 Immediately after the connection, the channel will send an `update` event with the result of the GraphQL query. The same event will then be sent every time the result of the query changes due to a change of the underlying content:
 
 ```javascript
-eventSource.addEventListener("update", (event) => {
+eventSource.addEventListener('update', (event) => {
   const result = JSON.parse(event.data);
 
   // result will be something like:  { data: { blogPost: { id: "9721019" } } }
-  console.log("updated graphql result: ", result);
+  console.log('updated graphql result: ', result);
 });
 ```
 
 When something goes wrong, the channel can also send `channelError` events. The cause for the error could be an invalid GraphQL query for example:
 
 ```javascript
-eventSource.addEventListener("channelError", (event) => {
+eventSource.addEventListener('channelError', (event) => {
   const error = JSON.parse(event.data);
 
   // error will be something like:
@@ -36657,14 +35921,10 @@ Where `N` is proportional to the overall number of open connections (the greater
 
 Let's illustrate the count by using an example:
 
--   the home page of a site makes a connection to the Real-time Updates API;
-    
--   the GraphQL query and API token are hard-coded in the code of the webpage, so they're the same for all;
-    
--   the content of the page is modified by editors approx. once every 30 seconds;
-    
--   a total of 500 users is connected at the same time to the homepage in question.
-    
+- the home page of a site makes a connection to the Real-time Updates API;
+- the GraphQL query and API token are hard-coded in the code of the webpage, so they're the same for all;
+- the content of the page is modified by editors approx. once every 30 seconds;
+- a total of 500 users is connected at the same time to the homepage in question.
 
 The number of API calls made to the Content Delivery API every minute will be between 4 and 20.
 
@@ -36688,24 +35948,18 @@ Sandbox environments start out as **exact copies of one of the existing environm
 
 Each environment is identified by a name (e.g., `master`) and stores the following information:
 
--   Models
-    
--   Records
-    
--   Uploads
-    
--   Plugins
-    
--   The content navigation bar
-    
--   Configuration (locales, timezone settings, appearance, SEO preferences)
-    
+- Models
+- Records
+- Uploads
+- Plugins
+- The content navigation bar
+- Configuration (locales, timezone settings, appearance, SEO preferences)
 
 When making changes to any of the aforementioned entities in any environment, including the primary environment, **the data in all other environments remains unaffected**.
 
 ### Creating a new sandbox environment
 
-To manage all your project's environments, head over to the *Project Settings > Environments* section. To create a new sandbox starting from an existing environment, click on the contextual menu > **Fork**, and choose a name for the new environment.
+To manage all your project's environments, head over to the _Project Settings > Environments_ section. To create a new sandbox starting from an existing environment, click on the contextual menu > **Fork**, and choose a name for the new environment.
 
 (Video content)
 
@@ -36747,27 +36001,19 @@ A developer who needs to work on a new feature **should never make direct change
 
 There are multiple reasons for this:
 
--   the changes might **severely interfere with the work of the editors** working on the live website;
-    
--   the changes might modify the format of some API call responses that are required by the live website, and **break the experience for end users**;
-    
--   the changes could be accidentally wrong, and **produce significant loss of data**.
-    
+- the changes might **severely interfere with the work of the editors** working on the live website;
+- the changes might modify the format of some API call responses that are required by the live website, and **break the experience for end users**;
+- the changes could be accidentally wrong, and **produce significant loss of data**.
 
 ## Safely working on a change to the content schema
 
 Using environments, you can instead follow this safe workflow:
 
 1.  **Create a new sandbox environment,** forking the primary one. From now on, exclusively work inside the sandbox — this will safeguard you from all the problems just mentioned above!
-    
 2.  Create a branch in the Git repository of your website/app, and inside it, start **reading content from the sandbox environment** instead of the primary environment;
-    
 3.  **Manually write a migration script (or** [**auto-generate it**](/docs/scripting-migrations/scripting-migrations-with-the-datocms-cli.md#option-2-autogenerate-a-migration-script)**).** As we'll cover thoroughly in the next sections, a [migration script](/docs/scripting-migrations/scripting-migrations-with-the-datocms-cli.md) is just a sequence of API calls to the [Content Management API](/docs/content-management-api.md) that produces changes to the schema of an environment;
-    
 4.  **Run the migration script** on the sandbox environment to apply the changes;
-    
 5.  **Adapt the code of your website/app** to the changes.
-    
 
 If you make any changes to the migration script after running it, you can re-test it by simply repeating steps 1, 3, and 4.
 
@@ -36780,13 +36026,13 @@ As long as you are working in a sandbox environment, you may not even need a mig
 
 The primary environment at this point, however, may have changed significantly; we can't just promote our sandbox environment to primary, because it is stuck at a past snapshot of the primary environment made at the time of the fork, and we would lose all the work done in the primary environment from that point forward.
 
-Having an explicit migration script **makes your changes reproducible**. It allows the *exact same steps* tested in the sandbox environment to be performed on the primary environment itself!
+Having an explicit migration script **makes your changes reproducible**. It allows the _exact same steps_ tested in the sandbox environment to be performed on the primary environment itself!
 
-Let's see exactly *how* in the next section.
+Let's see exactly _how_ in the next section.
 
 > [!POSITIVE] Migration scripts can be auto-generated!
 > By writing migration scripts by hand, you lose one of the core strengths of DatoCMS: the convenience of a graphical interface for editing your content schema.
-> 
+>
 > Fortunately, you can also [auto-generate migration scripts](/docs/scripting-migrations/scripting-migrations-with-the-datocms-cli.md#option-2-autogenerate-a-migration-script)! In this case, you can make the necessary changes to the schema via the UI, and get back a migration script with a sequence of API calls that produce the same results.
 
 ## Safely merging a change to the content schema
@@ -36794,19 +36040,12 @@ Let's see exactly *how* in the next section.
 Once everything is ready to be shipped in production, follow this process — of course, it can be adapted to your specific deployment workflow:
 
 1.  **Turn on** [**Maintenance Mode**](/docs/scripting-migrations/apply-migrations-to-primary-environment.md#step-1-turn-on-maintenance-mode-to-prevent-changes-to-the-primary-environment), so that during the deployment process no one can write new data on the primary environment. Before enabling maintenance mode, DatoCMS will warn you if other collaborators are currently working on some content, so you can decide to postpone the deployment and contact the editors.
-    
 2.  **Merge the Git feature branch** containing the adaptation of your website/app code to the new changes;
-    
 3.  **Fork the primary environment into a new sandbox environment**, and re-run the migration script on it;
-    
 4.  **Promote the sandbox environment to be the new primary**. The old primary environment will in turn become a sandbox, ready to be promoted again **as an instant rollback** in case of errors you might find later on in production. We put no expiration dates on sandbox environments, which means that development teams can potentially create multiple restore points;
-    
 5.  **Deploy your website/app** with the merged changes;
-    
 6.  **Test that everything works** on your live website/app;
-    
 7.  **Turn off maintenance mode** to allow content editors to get back to their regular work on the new primary.
-    
 
 To learn more, visit the [Apply migrations to primary environment](/docs/scripting-migrations/apply-migrations-to-primary-environment.md) guide.
 
@@ -36874,7 +36113,7 @@ git commit -m "Add datocms.config.json file"
 
 > [!POSITIVE] Need to manage multiple DatoCMS projects from the same repo?
 > You can set up additional profiles with the `datocms profile:set <NEW_PROFILE_NAME>` command.
-> 
+>
 > When you have multiple profiles, you can specify the profile to use to run a command with the `--profile` flag (or by exposing a `DATOCMS_PROFILE` environment variable).
 
 ### Specify a DatoCMS API token
@@ -36918,20 +36157,18 @@ For this example, we're starting with a blank DatoCMS project, and then progress
 There are two ways to create a migration script:
 
 1.  By writing it manually, or
-    
 2.  By having the CLI automatically generate it for you.
-    
 
 We'll cover both methods in detail below.
 
 > [!WARNING] Leverage TypeScript to simplify your work!
 > Since our Content Management API client is fully typed, we strongly suggest writing your migration scripts in TypeScript. You will get auto-completion suggestions on every call to an endpoint, and type checks for free.
-> 
+>
 > If your project has a `tsconfig.json` file, the `datocms migrations:new` command will automatically create migration scripts in TypeScript, but you can also manually pass the `--ts` flag to the `migrations:new` command.
 
 ### Option 1: Write a migration script manually
 
-Let's create an *Article* model with a simple *Title* field. With the [CLI tool successfully set up](/docs/scripting-migrations/installing-the-cli.md), run the following command inside your project:
+Let's create an _Article_ model with a simple _Title_ field. With the [CLI tool successfully set up](/docs/scripting-migrations/installing-the-cli.md), run the following command inside your project:
 
 Terminal window
 
@@ -36982,7 +36219,7 @@ module.exports = async (client) => {
     item_type: articleModel,
     title: 'My first article!',
   });
-}
+};
 ```
 
 The script exports an async function with a `client` argument, which is an instance of our [Content Management API client](/docs/content-management-api/using-the-nodejs-clients.md#initialize-the-client).
@@ -37008,14 +36245,12 @@ Here's the result:
 
 Upon execution, the command does the following:
 
--   Forks the primary environment into a new sandbox environment called `feature-branch`;
-    
--   Runs any pending migrations inside the sandbox environment.
-    
+- Forks the primary environment into a new sandbox environment called `feature-branch`;
+- Runs any pending migrations inside the sandbox environment.
 
 > [!POSITIVE] How the CLI keeps track of already-run migrations?
 > To track which migrations have already been run in a specific environment, the CLI creates a special `schema_migration` model in your project. After each migration script completes, it creates a record referencing the name of the script itself.
-> 
+>
 > You can configure the name of the model with the `--migrations-model` flag, or configure your profile accordingly with the `datocms profile:set` command!
 
 To verify that only pending migrations are executed, we can re-run the same command and see the result:
@@ -37051,7 +36286,7 @@ As you can see, no migration gets executed, as our script has already been run i
 
 ### Option 2: Autogenerate a migration script
 
-Let's create a new migration script to add a new *Author* model, and an *Author* field on the article. This time, we're going to use the `--autogenerate` flag on the `migrations:new` command.
+Let's create a new migration script to add a new _Author_ model, and an _Author_ field on the article. This time, we're going to use the `--autogenerate` flag on the `migrations:new` command.
 
 The `--autogenerate` flag takes two environment names as arguments:
 
@@ -37445,11 +36680,8 @@ Managing multiple projects can be time-consuming and error-prone, especially whe
 By following the techniques outlined in this guide, you will be able to:
 
 1.  **Save time and effort:** Rather than starting each project from scratch, you can create a blueprint project with all the necessary configurations, models, and settings. This allows you to duplicate and then customize the blueprint for each client, minimizing the time spent on repetitive tasks.
-    
 2.  **Ensure consistency:** Keeping multiple projects in sync ensures that any updates or improvements made to the blueprint project can be easily propagated to all the client projects. This guarantees consistency in design, functionality, and content management across your portfolio.
-    
 3.  **Maintain scalability:** As your agency grows and takes on more clients, the ability to efficiently manage multiple projects becomes crucial. By adopting a synchronized approach, you can handle a higher workload without sacrificing quality or increasing development time.
-    
 
 In the following sections, we will explore various use cases and provide step-by-step instructions on how to keep your DatoCMS projects in sync. Let's dive in and discover how you can optimize your development workflow!
 
@@ -37458,11 +36690,8 @@ In the following sections, we will explore various use cases and provide step-by
 Creating a blueprint project in DatoCMS is a great way to streamline your development process:
 
 1.  Start by setting up a new project in DatoCMS that will serve as your blueprint. Configure it with all the necessary models, fields, plugins, and settings that you want to replicate across your client projects.
-    
 2.  In parallel to your DatoCMS project, also create a frontend project associated with the blueprint. Use your favorite technology (ie. Next, SvelteKit). Make sure to parameterize the DatoCMS API token using environment variables!
-    
 3.  Once your blueprint project is ready, make sure to thoroughly test it and ensure that everything is working as expected.
-    
 
 ### Duplicating your blueprint project
 
@@ -37570,10 +36799,8 @@ done
 
 Structured Text content is stored as a JSON object consisting of two mandatory keys:
 
--   `document`: the content, expressed as a [`unist`](https://github.com/syntax-tree/unist) tree;
-    
--   `schema`: a string that specifies the unist dialect used inside the `document` itself.
-    
+- `document`: the content, expressed as a [`unist`](https://github.com/syntax-tree/unist) tree;
+- `schema`: a string that specifies the unist dialect used inside the `document` itself.
 
 ```json
 {
@@ -37587,10 +36814,8 @@ Structured Text content is stored as a JSON object consisting of two mandatory k
 
 Generally speaking, you want to set the `schema` key to the `dast` dialect (which stands for **D**atoCMS **A**bstract **S**yntax **T**ree), so that:
 
--   you can take advantage of the default **Structured Text** editor that DatoCMS offers;
-    
--   you can reinforce a number of additional validations to ensure consistency within the document.
-    
+- you can take advantage of the default **Structured Text** editor that DatoCMS offers;
+- you can reinforce a number of additional validations to ensure consistency within the document.
 
 If you would like to to use a custom [unist](https://github.com/syntax-tree/unist) format rather than `dast`, please [let us know!](https://www.datocms.com/support.md?topics=feature-request)
 
@@ -37604,16 +36829,11 @@ Unified is implemented and used as foundation by several popular libraries, such
 
 Just like HTML, a `dast` document is composed of nodes within nodes:
 
--   Each node has a type attributed called `type`
-    
--   The top-level node in the `dast` specification must be of type `root`
-    
--   Most nodes have a `children` attribute to specify the nodes it contains
-    
--   The leaves of the tree are nodes of type `span`, which do not offer a `children` attribute but store the final text as a string in their `value` attribute
-    
--   The specs define exactly which attributes and children each node permits.
-    
+- Each node has a type attributed called `type`
+- The top-level node in the `dast` specification must be of type `root`
+- Most nodes have a `children` attribute to specify the nodes it contains
+- The leaves of the tree are nodes of type `span`, which do not offer a `children` attribute but store the final text as a string in their `value` attribute
+- The specs define exactly which attributes and children each node permits.
 
 Let's look at an example:
 
@@ -37707,30 +36927,21 @@ root[2]
 
 **Conversion utilities**
 
--   [`datocms-html-to-structured-text`](https://github.com/datocms/structured-text/tree/main/packages/html-to-structured-text) — Convert HTML/Markdown into Structured Text
-    
+- [`datocms-html-to-structured-text`](https://github.com/datocms/structured-text/tree/main/packages/html-to-structured-text) — Convert HTML/Markdown into Structured Text
 
 **Rendering utilities**
 
--   [`datocms-structured-text-to-plain-text`](https://github.com/datocms/structured-text/tree/main/packages/to-plain-text) — Render Structured Text as plain text
-    
--   [`datocms-structured-text-to-markdown`](https://github.com/datocms/structured-text/tree/main/packages/to-markdown) — Render Structured Text as Markdown
-    
--   [`datocms-structured-text-to-html-string`](https://github.com/datocms/structured-text/tree/main/packages/to-html-string) — Render Structured Text as an HTML string
-    
--   [`datocms-structured-text-to-dom-nodes`](https://github.com/datocms/structured-text/tree/main/packages/to-dom-nodes) — Transform Structured Text into a list of DOM nodes
-    
+- [`datocms-structured-text-to-plain-text`](https://github.com/datocms/structured-text/tree/main/packages/to-plain-text) — Render Structured Text as plain text
+- [`datocms-structured-text-to-markdown`](https://github.com/datocms/structured-text/tree/main/packages/to-markdown) — Render Structured Text as Markdown
+- [`datocms-structured-text-to-html-string`](https://github.com/datocms/structured-text/tree/main/packages/to-html-string) — Render Structured Text as an HTML string
+- [`datocms-structured-text-to-dom-nodes`](https://github.com/datocms/structured-text/tree/main/packages/to-dom-nodes) — Transform Structured Text into a list of DOM nodes
 
 **Framework components**
 
--   **React** → [`<StructuredText />`](https://github.com/datocms/react-datocms#structured-text)
-    
--   **Vue** → [`<datocms-structured-text />`](https://github.com/datocms/vue-datocms#structured-text)
-    
--   **Svelte / SvelteKit** → [`<StructuredText />`](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/StructuredText)
-    
--   **Astro** → [`<StructuredText />`](https://github.com/datocms/astro-datocms/tree/main/src/StructuredText)
-    
+- **React** → [`<StructuredText />`](https://github.com/datocms/react-datocms#structured-text)
+- **Vue** → [`<datocms-structured-text />`](https://github.com/datocms/vue-datocms#structured-text)
+- **Svelte / SvelteKit** → [`<StructuredText />`](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/StructuredText)
+- **Astro** → [`<StructuredText />`](https://github.com/datocms/astro-datocms/tree/main/src/StructuredText)
 
 ### JSON Schema for `dast`
 
@@ -38082,41 +37293,29 @@ This is the content schema of the cloned project:
 
 The fields we want to convert into Structured Text are the following:
 
--   **HTML Article > Content** (HTML multi-paragraph text);
-    
--   **Markdown Article > Content** (Markdown multi-paragraph text);
-    
--   **Modular Content Article > Content** (Modular content);
-    
+- **HTML Article > Content** (HTML multi-paragraph text);
+- **Markdown Article > Content** (Markdown multi-paragraph text);
+- **Modular Content Article > Content** (Modular content);
 
 To do that, we're going to write three [migration scripts](/docs/scripting-migrations/scripting-migrations-with-the-datocms-cli.md) (one for each model) and test the result inside a [sandbox environment](/docs/scripting-migrations/introduction.md).
 
 For every field, the high-level plan will be the same:
 
 1.  Create a new Structured Text field for the model;
-    
 2.  For every article, take the old content, convert it to Structured Text and save it in the new field;
-    
 3.  Destroy the old field.
-    
 
 Inside the `migrations/utils` directory, we're adding some functions that we're going to use for all three migrations:
 
--   `createStructuredTextFieldFrom` creates a new Structured Text field with the same label and API key as an existing field, but prefixed with `structured_text_` (basically, step 1 of our plan);
-    
--   `getAllRecords` fetches all the records of a specific model using the `nested` option, so that for modular content fields we get the full payload of the inner block records instead of just their ID (that's the first bit of step 2);
-    
--   `swapFields` destroys the old field, and renames the new Structured Text field as the old one (that's step 3 of our plan);
-    
+- `createStructuredTextFieldFrom` creates a new Structured Text field with the same label and API key as an existing field, but prefixed with `structured_text_` (basically, step 1 of our plan);
+- `getAllRecords` fetches all the records of a specific model using the `nested` option, so that for modular content fields we get the full payload of the inner block records instead of just their ID (that's the first bit of step 2);
+- `swapFields` destroys the old field, and renames the new Structured Text field as the old one (that's step 3 of our plan);
 
 Lastly, since:
 
--   some API calls expect the model ID and not the model API key, and
-    
--   model IDs are different on each environment, and
-    
--   we want our migrations to work on any environment
-    
+- some API calls expect the model ID and not the model API key, and
+- model IDs are different on each environment, and
+- we want our migrations to work on any environment
 
 we can avoid hardcoding model IDs writing a `getModelIdsByApiKey` function that returns an object mapping API keys to model IDs:
 
@@ -38131,9 +37330,7 @@ export default async function createStructuredTextFieldFrom(
   fieldApiKey: string,
   modelBlockIds: SimpleSchemaTypes.ItemTypeIdentity[],
 ): Promise<SimpleSchemaTypes.Field> {
-  const legacyField = await client.fields.find(
-    `${modelApiKey}::${fieldApiKey}`,
-  );
+  const legacyField = await client.fields.find(`${modelApiKey}::${fieldApiKey}`);
 
   const newApiKey = `structured_text_${fieldApiKey}`;
   const label = `${legacyField.label} (Structured-text)`;
@@ -38157,10 +37354,7 @@ export default async function createStructuredTextFieldFrom(
 // ./migrations/utils/getAllRecords.ts
 import { Client } from '@datocms/cli/lib/cma-client-node';
 
-export default async function getAllRecords(
-  client: Client,
-  modelApiKey: string,
-) {
+export default async function getAllRecords(client: Client, modelApiKey: string) {
   const records = await client.items.list({
     filter: { type: modelApiKey },
     nested: true,
@@ -38172,15 +37366,9 @@ export default async function getAllRecords(
 // ./migrations/utils/swapFields.ts
 import { Client } from '@datocms/cli/lib/cma-client-node';
 
-export default async function swapFields(
-  client: Client,
-  modelApiKey: string,
-  fieldApiKey: string,
-) {
+export default async function swapFields(client: Client, modelApiKey: string, fieldApiKey: string) {
   const oldField = await client.fields.find(`${modelApiKey}::${fieldApiKey}`);
-  const newField = await client.fields.find(
-    `${modelApiKey}::structured_text_${fieldApiKey}`,
-  );
+  const newField = await client.fields.find(`${modelApiKey}::structured_text_${fieldApiKey}`);
   // destroy the old field
   await client.fields.destroy(oldField.id);
   // rename the new field
@@ -38212,10 +37400,7 @@ export default async function getModelIdsByApiKey(
 import { Client } from '@datocms/cli/lib/cma-client-node';
 import path from 'path';
 
-export default async function findOrCreateUploadWithUrl(
-  client: Client,
-  url: string,
-) {
+export default async function findOrCreateUploadWithUrl(client: Client, url: string) {
   let upload;
 
   if (url.startsWith('https://www.datocms-assets.com')) {
@@ -38261,7 +37446,7 @@ Created migrations/1612281851_convertHtmlArticles.ts
 
 Replace the content of the file with the following skeleton, which uses the utilities we just created:
 
-./migrations/1612281851\_convertHtmlArticles.rs
+./migrations/1612281851_convertHtmlArticles.rs
 
 ```typescript
 import getModelIdsByApiKey from './utils/getModelIdsByApiKey';
@@ -38280,14 +37465,9 @@ type HtmlArticleType = SimpleSchemaTypes.Item & {
 export default async function convertHtmlArticles(client: Client) {
   const modelIds = await getModelIdsByApiKey(client);
 
-  await createStructuredTextFieldFrom(client, 'html_article', 'content', [
-    modelIds.image_block.id,
-  ]);
+  await createStructuredTextFieldFrom(client, 'html_article', 'content', [modelIds.image_block.id]);
 
-  const records = (await getAllRecords(
-    client,
-    'html_article',
-  )) as HtmlArticleType[];
+  const records = (await getAllRecords(client, 'html_article')) as HtmlArticleType[];
 
   for (const record of records) {
     const structuredTextContent = await htmlToStructuredText(
@@ -38308,10 +37488,8 @@ export default async function convertHtmlArticles(client: Client) {
 
 A couple of notes:
 
--   Inside the HTML field there might be image tags (`<img />`). Structured Text does not have a specific node to handle images because it offers `block` nodes, which is a more powerful primitive. This means that, during the transformation process, we'll need to convert those `<img />` tags into block records of type "Image" (that's the same block currently used by the Modular Content field). For this reason, in line 19 we pass the `image_block` model ID to configure the newly created Structured Text field to accept such type of blocks;
-    
--   In the highlighted lines we're going to perform the actual [records update](/docs/content-management-api/resources/item/create.md#structured-text-fields) and make sure we republish updated records (unless they were in draft).
-    
+- Inside the HTML field there might be image tags (`<img />`). Structured Text does not have a specific node to handle images because it offers `block` nodes, which is a more powerful primitive. This means that, during the transformation process, we'll need to convert those `<img />` tags into block records of type "Image" (that's the same block currently used by the Modular Content field). For this reason, in line 19 we pass the `image_block` model ID to configure the newly created Structured Text field to accept such type of blocks;
+- In the highlighted lines we're going to perform the actual [records update](/docs/content-management-api/resources/item/create.md#structured-text-fields) and make sure we republish updated records (unless they were in draft).
 
 So what is left to do is to implement the `htmlToStructuredText()` function.
 
@@ -38336,16 +37514,10 @@ Now we have everything we need to build our `htmlToStructuredText` function:
 
 ```typescript
 import { parse } from 'parse5';
-import {
-  parse5ToStructuredText,
-  Options,
-} from 'datocms-html-to-structured-text';
+import { parse5ToStructuredText, Options } from 'datocms-html-to-structured-text';
 import { validate } from 'datocms-structured-text-utils';
 
-export default async function htmlToStructuredText(
-  html: string,
-  settings: Options,
-) {
+export default async function htmlToStructuredText(html: string, settings: Options) {
   if (!html) {
     return null;
   }
@@ -38378,11 +37550,7 @@ As we already noted before, that's because Structured Text does not have a speci
 ./migrations/utils/convertImgsToBlocks.ts
 
 ```typescript
-import {
-  buildBlockRecord,
-  Client,
-  SimpleSchemaTypes,
-} from '@datocms/cli/lib/cma-client-node';
+import { buildBlockRecord, Client, SimpleSchemaTypes } from '@datocms/cli/lib/cma-client-node';
 import { visit, find } from 'unist-utils-core';
 import {
   HastNode,
@@ -38404,74 +37572,65 @@ export default function convertImgsToBlocks(
       const body = find(
         tree,
         (node: HastNode) =>
-          (node.type === 'element' && node.tagName === 'body') ||
-          node.type === 'root',
+          (node.type === 'element' && node.tagName === 'body') || node.type === 'root',
       );
 
-      visit<HastNode, HastElementNode & { children: HastNode[] }>(
-        body,
-        (node, index, parents) => {
-          if (
-            node.type !== 'element' ||
-            node.tagName !== 'img' ||
-            liftedImages.has(node) ||
-            parents.length === 1
-          ) {
-            return;
-          }
+      visit<HastNode, HastElementNode & { children: HastNode[] }>(body, (node, index, parents) => {
+        if (
+          node.type !== 'element' ||
+          node.tagName !== 'img' ||
+          liftedImages.has(node) ||
+          parents.length === 1
+        ) {
+          return;
+        }
 
-          const imgParent = parents[parents.length - 1];
-          imgParent.children.splice(index, 1);
+        const imgParent = parents[parents.length - 1];
+        imgParent.children.splice(index, 1);
 
-          let i = parents.length;
-          let splitChildrenIndex = index;
-          let childrenAfterSplitPoint: HastNode[] = [];
+        let i = parents.length;
+        let splitChildrenIndex = index;
+        let childrenAfterSplitPoint: HastNode[] = [];
 
-          while (--i > 0) {
-            const parent = parents[i];
-            const parentsParent = parents[i - 1];
+        while (--i > 0) {
+          const parent = parents[i];
+          const parentsParent = parents[i - 1];
 
-            childrenAfterSplitPoint =
-              parent.children.splice(splitChildrenIndex);
-            splitChildrenIndex = parentsParent.children.indexOf(parent);
+          childrenAfterSplitPoint = parent.children.splice(splitChildrenIndex);
+          splitChildrenIndex = parentsParent.children.indexOf(parent);
 
-            let nodeInserted = false;
+          let nodeInserted = false;
 
-            if (i === 1) {
-              splitChildrenIndex += 1;
-              parentsParent.children.splice(splitChildrenIndex, 0, node);
-              liftedImages.add(node);
-
-              nodeInserted = true;
-            }
-
+          if (i === 1) {
             splitChildrenIndex += 1;
+            parentsParent.children.splice(splitChildrenIndex, 0, node);
+            liftedImages.add(node);
 
-            if (childrenAfterSplitPoint.length > 0) {
-              parentsParent.children.splice(splitChildrenIndex, 0, {
-                ...parent,
-                children: childrenAfterSplitPoint,
-              });
-            }
-
-            if (parent.children.length === 0) {
-              splitChildrenIndex -= 1;
-              parentsParent.children.splice(
-                nodeInserted ? splitChildrenIndex - 1 : splitChildrenIndex,
-                1,
-              );
-            }
+            nodeInserted = true;
           }
-        },
-      );
+
+          splitChildrenIndex += 1;
+
+          if (childrenAfterSplitPoint.length > 0) {
+            parentsParent.children.splice(splitChildrenIndex, 0, {
+              ...parent,
+              children: childrenAfterSplitPoint,
+            });
+          }
+
+          if (parent.children.length === 0) {
+            splitChildrenIndex -= 1;
+            parentsParent.children.splice(
+              nodeInserted ? splitChildrenIndex - 1 : splitChildrenIndex,
+              1,
+            );
+          }
+        }
+      });
     },
     // now that images are top-level, convert them into `block` dast nodes
     handlers: {
-      img: async (
-        createNode: CreateNodeFunction,
-        node: HastNode,
-        _context: Context,
-      ) => {
+      img: async (createNode: CreateNodeFunction, node: HastNode, _context: Context) => {
         if (node.type !== 'element' || !node.properties) {
           return;
         }
@@ -38495,12 +37654,9 @@ export default function convertImgsToBlocks(
 
 A couple notes:
 
--   We use the `handlers` option to specify how to convert the `<img />` `hast` nodes tags to [`dast` `block` nodes](/docs/structured-text/dast.md#block) (the default behavior, as we saw, is to simply skip them);
-    
--   The `block` node should contain a block record of type Image (that's the same block currently used by the Modular Content field), which in turn has a single-asset `image` field. In line 79 we create a new asset starting from the `src` tag of the image, to feed it to the `image` field. Luckily, the handlers are async functions, so we can easily perform an asyncronous operation inside of it.
-    
--   Since in the `dast` format, a `block` node can only be at root level, we use the `preprocess` option to tweak the `hast` tree and lift every image node up to the root (in case they're inside paragraphs or other tags).
-    
+- We use the `handlers` option to specify how to convert the `<img />` `hast` nodes tags to [`dast` `block` nodes](/docs/structured-text/dast.md#block) (the default behavior, as we saw, is to simply skip them);
+- The `block` node should contain a block record of type Image (that's the same block currently used by the Modular Content field), which in turn has a single-asset `image` field. In line 79 we create a new asset starting from the `src` tag of the image, to feed it to the `image` field. Luckily, the handlers are async functions, so we can easily perform an asyncronous operation inside of it.
+- Since in the `dast` format, a `block` node can only be at root level, we use the `preprocess` option to tweak the `hast` tree and lift every image node up to the root (in case they're inside paragraphs or other tags).
 
 We can [test the migration](/docs/scripting-migrations/scripting-migrations-with-the-datocms-cli.md) with the following command from the Terminal, which will clone the primary environment into a sandbox, and run the migration:
 
@@ -38522,12 +37678,9 @@ As we just saw, the `datocms-html-to-structured-text` package knows how to conve
 
 Luckily, `hast` is part of the [unified](https://github.com/unifiedjs/unified) ecosystem, which also includes:
 
--   an analogue specification for representing Markdown in a syntax tree called [`mdast`](https://github.com/syntax-tree/mdast);
-    
--   a tool to convert Markdown strings to `mdast`;
-    
--   a tool to convert `mdast` trees to `hast`.
-    
+- an analogue specification for representing Markdown in a syntax tree called [`mdast`](https://github.com/syntax-tree/mdast);
+- a tool to convert Markdown strings to `mdast`;
+- a tool to convert `mdast` trees to `hast`.
 
 Let's install all the packages we need:
 
@@ -38545,17 +37698,10 @@ We can now create a function similar to `htmlToStructuredText` called `markdownT
 import unified from 'unified';
 import toHast from 'mdast-util-to-hast';
 import parse from 'remark-parse';
-import {
-  hastToStructuredText,
-  Options,
-  HastRootNode,
-} from 'datocms-html-to-structured-text';
+import { hastToStructuredText, Options, HastRootNode } from 'datocms-html-to-structured-text';
 import { validate } from 'datocms-structured-text-utils';
 
-export default async function markdownToStructuredText(
-  markdown: string,
-  options: Options,
-) {
+export default async function markdownToStructuredText(markdown: string, options: Options) {
   if (!markdown) {
     return null;
   }
@@ -38585,7 +37731,7 @@ Created migrations/1612340785_convertMarkdownArticles.ts
 
 And basically copy the previous migration, just replacing the name of the model (from `html_article` to `markdown_article`), and the call to `htmlToStructuredText` with a call to `markdownToStructuredText`:
 
-./migrations/1612340785\_convertMarkdownArticles.ts
+./migrations/1612340785_convertMarkdownArticles.ts
 
 ```typescript
 import getModelIdsByApiKey from './utils/getModelIdsByApiKey';
@@ -38607,10 +37753,7 @@ export default async function (client: Client) {
     modelIds.image_block.id,
   ]);
 
-  const records = (await getAllRecords(
-    client,
-    'markdown_article',
-  )) as MdArticleType[];
+  const records = (await getAllRecords(client, 'markdown_article')) as MdArticleType[];
 
   for (const record of records) {
     const structuredTextContent = await markdownToStructuredText(
@@ -38649,16 +37792,13 @@ Let's take a look at the project schema again:
 
 The existing Modular Content field supports three block types:
 
--   Text (which in turn contains a `text` Markdown field);
-    
--   Code (which has two fields, one that contains the actual code and another that stores the language);
-    
--   Image (which, as we already know, it contains a single-asset field called `image`).
-    
+- Text (which in turn contains a `text` Markdown field);
+- Code (which has two fields, one that contains the actual code and another that stores the language);
+- Image (which, as we already know, it contains a single-asset field called `image`).
 
 Here's the code for our migration:
 
-./migrations/1612340785\_convertModularArticles.ts
+./migrations/1612340785_convertModularArticles.ts
 
 ```typescript
 import { Document, Node, validate } from 'datocms-structured-text-utils';
@@ -38678,17 +37818,13 @@ type ModularArticleType = SimpleSchemaTypes.Item & {
 export default async function (client: Client) {
   const modelIds = await getModelIdsByApiKey(client);
 
-  await createStructuredTextFieldFrom(
-    client,
-    'modular_content_article',
-    'content',
-    [modelIds.image_block.id, modelIds.text_block.id, modelIds.code_block.id],
-  );
+  await createStructuredTextFieldFrom(client, 'modular_content_article', 'content', [
+    modelIds.image_block.id,
+    modelIds.text_block.id,
+    modelIds.code_block.id,
+  ]);
 
-  const records = (await getAllRecords(
-    client,
-    'modular_content_article',
-  )) as ModularArticleType[];
+  const records = (await getAllRecords(client, 'modular_content_article')) as ModularArticleType[];
 
   for (const record of records) {
     const rootNode = {
@@ -38705,10 +37841,7 @@ export default async function (client: Client) {
           );
 
           if (markdownSt) {
-            rootNode.children = [
-              ...rootNode.children,
-              ...markdownSt.document.children,
-            ];
+            rootNode.children = [...rootNode.children, ...markdownSt.document.children];
           }
           break;
         }
@@ -38764,12 +37897,9 @@ Every time we need to convert a Modular Content field, we start by creating an e
 
 Then, for every block contained in the modular content (line 38), we're going to accumulate children inside the `root` node:
 
--   If it is a Text block (line 40), we use the `markdownToStructuredText` function to convert its Markdown content into a Dast tree, then take the children of the resulting `root` node and add them to our accumulator;
-    
--   Since Dast supports [nodes of type `code`](https://github.com/datocms/structured-text/blob/main/packages/utils/src/types.ts#L54-L59), if we encounter a Code block (line 55), we simply convert it to `code` node, and add it to the accumulator;
-    
--   If we find an Image block (line 63), we'll wrap the block into a Dast `block` node, and add it to the accumulator as it is.
-    
+- If it is a Text block (line 40), we use the `markdownToStructuredText` function to convert its Markdown content into a Dast tree, then take the children of the resulting `root` node and add them to our accumulator;
+- Since Dast supports [nodes of type `code`](https://github.com/datocms/structured-text/blob/main/packages/utils/src/types.ts#L54-L59), if we encounter a Code block (line 55), we simply convert it to `code` node, and add it to the accumulator;
+- If we find an Image block (line 63), we'll wrap the block into a Dast `block` node, and add it to the accumulator as it is.
 
 ## Wrapping up
 
@@ -38803,12 +37933,9 @@ The first key assurance is that all content within DatoCMS is **accessible throu
 
 To facilitate this, you have multiple options:
 
--   **Use ready-made plugins** from the DatoCMS Marketplace designed for manually exporting your data or managing offline backups/restore functionality, like [(Image content)Project Exporter](https://www.datocms.com/marketplace/plugins/i/datocms-plugin-project-exporter.md) or [(Image content)Export To Google Docs](https://www.datocms.com/marketplace/plugins/i/datocms-plugin-export-to-google-docs.md)
-    
--   **Write a script using our REST API** ( [Content Management API Overview](/docs/content-management-api.md) ) to programmatically export your data
-    
--   **Enterprise customers** can access a [**periodic export feature**](/docs/import-and-export/datocms-site-export-feature.md) managed by DatoCMS, which automatically exports project data to an external cloud provider storage.
-    
+- **Use ready-made plugins** from the DatoCMS Marketplace designed for manually exporting your data or managing offline backups/restore functionality, like [(Image content)Project Exporter](https://www.datocms.com/marketplace/plugins/i/datocms-plugin-project-exporter.md) or [(Image content)Export To Google Docs](https://www.datocms.com/marketplace/plugins/i/datocms-plugin-export-to-google-docs.md)
+- **Write a script using our REST API** ( [Content Management API Overview](/docs/content-management-api.md) ) to programmatically export your data
+- **Enterprise customers** can access a [**periodic export feature**](/docs/import-and-export/datocms-site-export-feature.md) managed by DatoCMS, which automatically exports project data to an external cloud provider storage.
 
 ### A template for a custom export script
 
@@ -38861,8 +37988,8 @@ async function downloadImage(url) {
 
 async function main() {
   const client = buildClient({
-   apiToken: 'YOUR-FULL-ACCESS-API-KEY',
-   environment: 'YOUR-ENVIRONMENT-NAME',
+    apiToken: 'YOUR-FULL-ACCESS-API-KEY',
+    environment: 'YOUR-ENVIRONMENT-NAME',
   });
 
   const site = await client.site.find();
@@ -38884,7 +38011,7 @@ You can then add this script into a cron-job and store the result in a S3 bucket
 Here's a structured comparison table summarizing the key aspects of the two backup scenarios:
 
 | Aspect | Using DatoCMS Environments | External Backup Solutions |
-| --- | --- | --- |
+| ------ | -------------------------- | ------------------------- |
 
 | Ease of setup | Very easy and quick to implement | More complex; requires external tools or scripts |
 | Data storage location | Within DatoCMS infrastructure | Stored outside DatoCMS (e.g., cloud storage, local) |
@@ -38903,38 +38030,27 @@ The **Project Export** feature allows **Enterprise customers** to export all con
 
 > [!POSITIVE] Security and integrity of your data is our top priority!
 > Our [ISO 27001 certification](https://www-draft.datocms.com/blog/iso-27001) ensures that our architecture incorporates internal backups, delivering a dependable safeguard against data loss. In other words, you can be confident that we adhere to best practices for keeping your data secure.
-> 
+>
 > This Enterprise functionality serves as an additional layer of protection to ensure your safety and should be utilized as a last resort.
 
 ### Key Points to Consider
 
--   **Enterprise Only**: This feature is available exclusively to Enterprise customers.
-    
--   **Not a Backup Solution**: The export does not offer a one-click restoration process.
-    
--   **Primary Environment Only**: Only the primary project environment is included in the export.
-    
--   **Automated and Scheduled**: Exports occur on a predefined schedule, with a minimum frequency of **once per month** and a maximum of **once per day**.
-    
--   **AWS S3 Storage Required**: Customers must configure their own S3 bucket to receive the exported data.
-    
+- **Enterprise Only**: This feature is available exclusively to Enterprise customers.
+- **Not a Backup Solution**: The export does not offer a one-click restoration process.
+- **Primary Environment Only**: Only the primary project environment is included in the export.
+- **Automated and Scheduled**: Exports occur on a predefined schedule, with a minimum frequency of **once per month** and a maximum of **once per day**.
+- **AWS S3 Storage Required**: Customers must configure their own S3 bucket to receive the exported data.
 
 ## What is Included in the Export?
 
 The exported data includes:
 
--   **Schema Models**: Fields and fieldsets.
-    
--   **Schema Blocks**: Block definitions and fields.
-    
--   **Records**: Current and published versions, including block records.
-    
--   **Uploads**: Metadata and references for uploaded assets.
-    
--   **Project Settings**: Locales, SEO settings, workflows, and installed plugins.
-    
--   **Asset Files**: All uploaded files from the media area.
-    
+- **Schema Models**: Fields and fieldsets.
+- **Schema Blocks**: Block definitions and fields.
+- **Records**: Current and published versions, including block records.
+- **Uploads**: Metadata and references for uploaded assets.
+- **Project Settings**: Locales, SEO settings, workflows, and installed plugins.
+- **Asset Files**: All uploaded files from the media area.
 
 ### JSON Snapshots vs. Asset Syncing
 
@@ -38944,40 +38060,27 @@ While JSON snapshots are periodic and remain unchanged once created, assets are 
 
 The export **does not** include:
 
--   Record revision history
-    
--   API tokens, webhooks, and build triggers
-    
--   Collaborators, roles, and permissions
-    
--   Audit logs and usage statistics
-    
--   SSO settings and user accounts
-    
--   Any additional metadata not explicitly listed
-    
+- Record revision history
+- API tokens, webhooks, and build triggers
+- Collaborators, roles, and permissions
+- Audit logs and usage statistics
+- SSO settings and user accounts
+- Any additional metadata not explicitly listed
 
 ## How to enable Project Export
 
 This feature **cannot be enabled by customers directly**. To set up an export, you must [**contact DatoCMS support**](https://www.datocms.com/support.md?topics=business-partnerships%2Fgeneral-requests) and provide the following AWS S3 details:
 
--   **S3 Bucket Name**
-    
--   **AWS Region**
-    
--   **S3 Access Key ID**
-    
--   **S3 Secret Access Key**
-    
+- **S3 Bucket Name**
+- **AWS Region**
+- **S3 Access Key ID**
+- **S3 Secret Access Key**
 
 Additionally, you must configure your AWS S3 bucket with:
 
--   **Public access blocked** (mandatory for security)
-    
--   **Bucket versioning enabled** (recommended for data recovery)
-    
--   **Lifecycle rules** (optional, for automatic cleanup of old snapshots)
-    
+- **Public access blocked** (mandatory for security)
+- **Bucket versioning enabled** (recommended for data recovery)
+- **Lifecycle rules** (optional, for automatic cleanup of old snapshots)
 
 Our support team will give you detailed instructions on how to setup everything correctly.
 
@@ -39021,62 +38124,58 @@ The `data` key contains the `item_type` resource. `Fields` and `fieldsets` are r
 
 ```json5
 {
-  "data": {
-    "id": "UVP2y5QPToWPXqJbMszyFg",
-    "type": "item_type",
-    "attributes": {
-      "api_key": "article",
-      "name": "Article",
+  data: {
+    id: 'UVP2y5QPToWPXqJbMszyFg',
+    type: 'item_type',
+    attributes: {
+      api_key: 'article',
+      name: 'Article',
       // ... the rest of item_type attributes
     },
-    "relationships": {
-      "fields": {
-        "data": [
-          { "id": "InMbgf7BSo2TDG4HYGb2Ug", "type": "field" }
-        ]
+    relationships: {
+      fields: {
+        data: [{ id: 'InMbgf7BSo2TDG4HYGb2Ug', type: 'field' }],
       },
-      "fieldsets": {
-        "data": [
-          { "id": "bwk17lanRYCOvXKztPp5PA", "type": "fieldset" }
-        ]
+      fieldsets: {
+        data: [{ id: 'bwk17lanRYCOvXKztPp5PA', type: 'fieldset' }],
       },
-      "workflow": {
-        "data": { "id": "MQLtfJv4Q22nKUoHEQ3b9A", "type": "workflow" }
-      }
+      workflow: {
+        data: { id: 'MQLtfJv4Q22nKUoHEQ3b9A', type: 'workflow' },
+      },
     },
-    "meta": { "has_singleton_item": false }
+    meta: { has_singleton_item: false },
   },
-  "included": [
+  included: [
     {
-      "id": "InMbgf7BSo2TDG4HYGb2Ug",
-      "type": "field",
-      "attributes": {
-        "label": "Content",
+      id: 'InMbgf7BSo2TDG4HYGb2Ug',
+      type: 'field',
+      attributes: {
+        label: 'Content',
         // ... the rest of field attributes
       },
-      "relationships": {
-        "item_type": {
-          "data": { "id": "UVP2y5QPToWPXqJbMszyFg", "type": "item_type" }
+      relationships: {
+        item_type: {
+          data: { id: 'UVP2y5QPToWPXqJbMszyFg', type: 'item_type' },
         },
-        "fieldset": {
-          "data": { "id": "bwk17lanRYCOvXKztPp5PA", "type": "fieldset" }
-        }
-      }
+        fieldset: {
+          data: { id: 'bwk17lanRYCOvXKztPp5PA', type: 'fieldset' },
+        },
+      },
     },
     {
-      "id": "bwk17lanRYCOvXKztPp5PA",
-      "type": "fieldset",
-      "attributes": {
-        "title": "Group 1",
+      id: 'bwk17lanRYCOvXKztPp5PA',
+      type: 'fieldset',
+      attributes: {
+        title: 'Group 1',
         // ... the rest of fieldset attributes
       },
-      "relationships": {
-        "item_type": {
-          "data": { "id": "UVP2y5QPToWPXqJbMszyFg", "type": "item_type" }
-        }
-      }
-    }
-  ]
+      relationships: {
+        item_type: {
+          data: { id: 'UVP2y5QPToWPXqJbMszyFg', type: 'item_type' },
+        },
+      },
+    },
+  ],
 }
 ```
 
@@ -39108,48 +38207,48 @@ Each `batch_XXX.json` contains several versions under the `data` key and their o
 
 ```json5
 {
-  "data": [
+  data: [
     {
-      "id": "ZrKQnn5AQBiZ4CTX8eyu8Q",
-      "type": "item",
-      "attributes": {
-        "title": "A trip to Florence!",
-        "content": {
-          "en": [
+      id: 'ZrKQnn5AQBiZ4CTX8eyu8Q',
+      type: 'item',
+      attributes: {
+        title: 'A trip to Florence!',
+        content: {
+          en: [
             {
-              "type": "item",
-              "attributes": {
-                "text": "Beautiful!"
+              type: 'item',
+              attributes: {
+                text: 'Beautiful!',
                 // ... the rest of block record attributes
               },
-              "relationships": {
-                "item_type": {
-                  "data": {
-                    "id": "JfkKRx-FRJONbco_hHOS5Q",
-                    "type": "item_type"
-                  }
-                }
+              relationships: {
+                item_type: {
+                  data: {
+                    id: 'JfkKRx-FRJONbco_hHOS5Q',
+                    type: 'item_type',
+                  },
+                },
               },
-              "id": "afzDcUT0RHOduJbr8L_ZmA"
-            }
-          ]
-        }
+              id: 'afzDcUT0RHOduJbr8L_ZmA',
+            },
+          ],
+        },
         // ... the rest of record attributes
       },
-      "relationships": {
-        "item_type": {
-          "data": { "id": "UVP2y5QPToWPXqJbMszyFg", "type": "item_type" }
+      relationships: {
+        item_type: {
+          data: { id: 'UVP2y5QPToWPXqJbMszyFg', type: 'item_type' },
         },
-        "creator": { "data": { "id": "24527", "type": "account" } }
+        creator: { data: { id: '24527', type: 'account' } },
       },
-      "meta": {
+      meta: {
         // ...
-      }
+      },
     },
     {
       // .. other current versions
-    }
-  ]
+    },
+  ],
 }
 ```
 
@@ -39183,15 +38282,15 @@ datocms plugins:install @datocms/cli-plugin-contentful
 
 To copy your Contentful space to DatoCMS, you will need the following information:
 
-**Your Contentful Space ID:** you can find it under *Settings > General settings*:
+**Your Contentful Space ID:** you can find it under _Settings > General settings_:
 
 [(Image content)](https://www.datocms-assets.com/205/1716220233-contentful-space-id.png?auto=format&fit=max&w=2000)
 
-A **Contentful content management token**: you can create one under *Settings > API keys* and then clicking the *Add API key* button:
+A **Contentful content management token**: you can create one under _Settings > API keys_ and then clicking the _Add API key_ button:
 
 [(Image content)](https://www.datocms-assets.com/205/1716220432-contentful-add-api-key.png?auto=format&fit=max&w=2000)
 
-Your **DatoCMS full-access API token**: first create a new project, then go to *Project settings > API tokens*, click on **"Add a new access token"**, and choose or create a **role** with read-write permissions. You can select the default *Admin* role, or create a more granular one, depending on your needs.
+Your **DatoCMS full-access API token**: first create a new project, then go to _Project settings > API tokens_, click on **"Add a new access token"**, and choose or create a **role** with read-write permissions. You can select the default _Admin_ role, or create a more granular one, depending on your needs.
 
 [(Image content)](https://www.datocms-assets.com/205/1744723545-datocms-docs-2025-04-15-at-15-25-16.png?auto=format&fit=max&w=2000)
 
@@ -39236,13 +38335,10 @@ datocms contentful:import --help
 
 Although highly compatible, there are some minor differences between the types of fields that Contentful offers compared to DatoCMS, so the tool will follow these migration rules:
 
--   DatoCMS doesn't provide an array of strings field, so data of this kind will be converted in a single string field with comma separated values;
-    
--   Contentful API doesn't expose presentation settings for fields, so all text fields will be set as Markdown editors (you will be able to change the presentation mode later from the DatoCMS interface);
-    
--   DatoCMS doesn't allow a multi-paragraph text field to be the Model title, so if that's the case, no title field will be set;
-    
--   While Contentful's reference field allows not specifying the list of content types that can be referenced, DatoCMS instead requires an explicit list. Therefore, in these cases, the task will set the entire catalog of models as the explicit list.
+- DatoCMS doesn't provide an array of strings field, so data of this kind will be converted in a single string field with comma separated values;
+- Contentful API doesn't expose presentation settings for fields, so all text fields will be set as Markdown editors (you will be able to change the presentation mode later from the DatoCMS interface);
+- DatoCMS doesn't allow a multi-paragraph text field to be the Model title, so if that's the case, no title field will be set;
+- While Contentful's reference field allows not specifying the list of content types that can be referenced, DatoCMS instead requires an explicit list. Therefore, in these cases, the task will set the entire catalog of models as the explicit list.
 
 ---
 
@@ -39273,11 +38369,8 @@ $ datocms plugins:install @datocms/cli-plugin-wordpress
 To copy your WordPress content to DatoCMS, you will need the following information:
 
 1.  Your WordPress user name and password with **admin privileges**
-    
 2.  Your WordPress site URL
-    
-3.  Your DatoCMS full-access API token: first create a new project, then go to *Project settings > API tokens*, click on **"Add a new API token"**, and choose or create a **role** with read-write permissions. You can select the default *Admin* role, or create a more granular one, depending on your needs.
-    
+3.  Your DatoCMS full-access API token: first create a new project, then go to _Project settings > API tokens_, click on **"Add a new API token"**, and choose or create a **role** with read-write permissions. You can select the default _Admin_ role, or create a more granular one, depending on your needs.
 
 [(Image content)](https://www.datocms-assets.com/205/1744723545-datocms-docs-2025-04-15-at-15-25-16.png?auto=format&fit=max&w=2000)
 
@@ -39302,11 +38395,9 @@ That's it! The importer will create the standard Wordpress models: articles, pag
 
 ### Known limitations
 
--   Our importer only copies pages and posts: custom post types won't be imported;
-    
--   There are many different plugins to manage localizations in WordPress-land. For now, if you have a multi-lingual website, we’ll currently only import the content created for the main language.
-    
--   Same thing goes for SEO, sliders and other web elements managed by plugins. They won’t be imported.
+- Our importer only copies pages and posts: custom post types won't be imported;
+- There are many different plugins to manage localizations in WordPress-land. For now, if you have a multi-lingual website, we’ll currently only import the content created for the main language.
+- Same thing goes for SEO, sliders and other web elements managed by plugins. They won’t be imported.
 
 ---
 
@@ -39320,25 +38411,18 @@ In this guide we will cover how to do a one-time import from an external data so
 
 **What are some common external sources?** An external data source can come in a wide range of different formats made available on different transport layers. Here's a few examples:
 
--   The REST API of your old CMS
-    
--   A text file with comma separated values (CSV)
-    
--   A SQL database
-    
--   A JSON file or newline delimited JSON (NDJSON) file
-    
+- The REST API of your old CMS
+- A text file with comma separated values (CSV)
+- A SQL database
+- A JSON file or newline delimited JSON (NDJSON) file
 
 ### The anatomy of an external data import
 
 No matter what kind of source you are reading from, an external import can be split into three discrete steps:
 
--   Read data from the external source
-    
--   Transform the data to DatoCMS records(s) matching your data model
-    
--   Save the records to your DatoCMS project
-    
+- Read data from the external source
+- Transform the data to DatoCMS records(s) matching your data model
+- Save the records to your DatoCMS project
 
 We will cover each of these in order
 
@@ -39398,42 +38482,27 @@ Now, let's say the following is the DatoCMS schema we want our imported data to 
 
 ##### Model "Category"
 
--   ID: `552`
-    
--   API key: `category`
-    
--   Fields:
-    
-    -   Name (API key: `name`): string
-        
+- ID: `552`
+- API key: `category`
+- Fields:
+  - Name (API key: `name`): string
 
 ##### Model "Dog breed"
 
--   ID: `730`
-    
--   API key: `dog_breed`
-    
--   Model fields:
-    
-    -   Name (API key: `name`): string
-        
-    -   Category (API key: `category`): link to model `category`
-        
-    -   Breed for (API key: `breed_for`): string
-        
-    -   Description (API key: `description`): text
-        
-    -   Image (API key: `image`): file
-        
+- ID: `730`
+- API key: `dog_breed`
+- Model fields:
+  - Name (API key: `name`): string
+  - Category (API key: `category`): link to model `category`
+  - Breed for (API key: `breed_for`): string
+  - Description (API key: `description`): text
+  - Image (API key: `image`): file
 
 If you look carefully, you'll see that the source data doesn't map 1:1 to the schema model. There's a few differences to note here:
 
--   The `breed` field is called `name` in our DatoCMS model
-    
--   Instead of importing `category` directly as text inside the breed, we want to create a separate record for them, and have the `category` field be a reference to it instead;
-    
--   The `life_span` field from the external API isn't relevant to us, and we don't want to import it at all;
-    
+- The `breed` field is called `name` in our DatoCMS model
+- Instead of importing `category` directly as text inside the breed, we want to create a separate record for them, and have the `category` field be a reference to it instead;
+- The `life_span` field from the external API isn't relevant to us, and we don't want to import it at all;
 
 This can roughly be codified to the following transform function:
 
@@ -39464,7 +38533,7 @@ async function importDogBreeds() {
   const response = await fetch('https://something.now.sh/dog-breeds');
   const dogBreeds = await response.json();
 
-  const categories = dogBreeds.map(dogBreed => dogBreed.category)
+  const categories = dogBreeds.map((dogBreed) => dogBreed.category);
   const uniqueCategories = uniq(categories);
 }
 ```
@@ -39478,7 +38547,7 @@ First we need to configure our [DatoCMS client](/docs/content-management-api/usi
 ```javascript
 import { Client } from '@datocms/cma-client-node';
 
-const client = new Client({ apiToken: '<YOUR-TOKEN-WITH-WRITE-ACCESS>' })
+const client = new Client({ apiToken: '<YOUR-TOKEN-WITH-WRITE-ACCESS>' });
 ```
 
 In order to give this client write access, we need to generate an access token. You can generate an access token under the "API token" section of your project's settings.
@@ -39493,7 +38562,7 @@ const categoryNameToRecord = {};
 for (let categoryName of uniqueCategories) {
   categoryNameToRecord[name] = await client.items.create({
     item_type: { type: 'item_type', id: '552' }, // <- that's the ID of our category model
-    name
+    name,
   });
 }
 ```
@@ -39557,14 +38626,10 @@ A huge variety of enhancements to the DatoCMS web app are possible. From small f
 
 Some common use cases are:
 
--   adding custom field editors to improve the editor experience;
-    
--   managing content versions for running A/B tests on structured content using personalization tools;
-    
--   tailoring the default entry editor to suit your specific needs;
-    
--   seamlessly integrating DatoCMS with third-party software and services.
-    
+- adding custom field editors to improve the editor experience;
+- managing content versions for running A/B tests on structured content using personalization tools;
+- tailoring the default entry editor to suit your specific needs;
+- seamlessly integrating DatoCMS with third-party software and services.
 
 For some real-world examples, you can take a look at our [Marketplace](https://www.datocms.com/marketplace/plugins.md), which already offers 100+ open-source plugins.
 
@@ -39576,12 +38641,9 @@ The SDK provides a set of locations where plugins can intervene by adding functi
 
 Hooks serve three main purposes:
 
--   **Declare the plugin intentions** (e.g., "I want to add a tab in the top navigation bar of DatoCMS that points to a custom page X").
-    
--   **Render the content for the** `**iframe**` associated with the declared custom locations (e.g., "when the user enters custom page X, let me render my stuff")
-    
--   **Intercept specific events** happening on the interface, and execute custom code, or change the way the regular interface behaves.
-    
+- **Declare the plugin intentions** (e.g., "I want to add a tab in the top navigation bar of DatoCMS that points to a custom page X").
+- **Render the content for the** `**iframe**` associated with the declared custom locations (e.g., "when the user enters custom page X, let me render my stuff")
+- **Intercept specific events** happening on the interface, and execute custom code, or change the way the regular interface behaves.
 
 You can read in detail about all the hooks and locations provided in the following sections of the guide.
 
@@ -39637,18 +38699,12 @@ The demo plugin we're about to build is called **Record Metrics**. It will enhan
 
 In order to successfully complete this tutorial:
 
--   You'll need the latest LTS version of [Node.js](https://nodejs.org/en/) installed on your machine. If you don't have `Node.js` installed, you can download it [here](https://nodejs.org/en/download/).
-    
--   You should be comfortable using your computer’s command line and text editor.
-    
--   You’ll need to be able to read and write HTML, CSS, and JavaScript.
-    
--   You should be familiar with installing software using [NPM](https://www.npmjs.com/).
-    
--   You'll need a free DatoCMS account and a project. You can sign up [here](https://dashboard.datocms.com/signup).
-    
--   You'll need either Firefox or Chrome. Safari currently does not work due to a limitation in how it handles insecure iframes pointing to `localhost`.
-    
+- You'll need the latest LTS version of [Node.js](https://nodejs.org/en/) installed on your machine. If you don't have `Node.js` installed, you can download it [here](https://nodejs.org/en/download/).
+- You should be comfortable using your computer’s command line and text editor.
+- You’ll need to be able to read and write HTML, CSS, and JavaScript.
+- You should be familiar with installing software using [NPM](https://www.npmjs.com/).
+- You'll need a free DatoCMS account and a project. You can sign up [here](https://dashboard.datocms.com/signup).
+- You'll need either Firefox or Chrome. Safari currently does not work due to a limitation in how it handles insecure iframes pointing to `localhost`.
 
 # Tools
 
@@ -39706,12 +38762,9 @@ Enter your project, and go to **Configuration** **\>** **Plugins**. Click on "**
 
 In the modal, provide details about your plugin:
 
--   Provide a name and (optionally) a description for your plugin. This can be whatever you want; we chose **Record Metrics** for this tutorial.
-    
--   Enter the *Entry point URL*. This is the URL where our app is running. Since we are running our app locally during development, the URL is `http://localhost:5173`. (Later, once you [deploy](/docs/plugin-sdk/build-your-first-plugin.md#deployment) your plugin, you can change the entry point to another location.)
-    
--   Specify any [special permission](/docs/plugin-sdk/additional-permissions.md) you want to grant to the plugin. For this tutorial, we don't need any of them.
-    
+- Provide a name and (optionally) a description for your plugin. This can be whatever you want; we chose **Record Metrics** for this tutorial.
+- Enter the _Entry point URL_. This is the URL where our app is running. Since we are running our app locally during development, the URL is `http://localhost:5173`. (Later, once you [deploy](/docs/plugin-sdk/build-your-first-plugin.md#deployment) your plugin, you can change the entry point to another location.)
+- Specify any [special permission](/docs/plugin-sdk/additional-permissions.md) you want to grant to the plugin. For this tutorial, we don't need any of them.
 
 Then submit the form to create the plugin. Congrats, your plugin is now installed in your current project and environment! 🎉
 
@@ -39731,7 +38784,7 @@ Save the file and watch the config screen update in real time:
 
 > [!PROTIP] Pro tip: Use <ContextInspector />
 > Inside the `src/entrypoints/ConfigScreen.tsx` file you'll notice the use of `<ContextInspector />` , which is a component made available by `datocms-react-ui` to get an instant overview of all the information/methods available within any SDK hook.
-> 
+>
 > Remember to use it during development, it's very convenient to avoid going back and forth in the documentation!
 
 # Add the sidebar panel
@@ -39795,12 +38848,9 @@ npm install stream util --save-dev
 
 We can use the `ctx` object, which gets passed into every hook, to interact with DatoCMS:
 
--   The `ctx.fields` object holds all the currently loaded fields for the current project;
-    
--   The `ctx.itemType` object holds the model for the current record;
-    
--   The `ctx.formValues` object holds the current values present in the record form;
-    
+- The `ctx.fields` object holds all the currently loaded fields for the current project;
+- The `ctx.itemType` object holds the model for the current record;
+- The `ctx.formValues` object holds the current values present in the record form;
 
 We can use this information to get the values of all the text fields present in the record, concatenate them in a single string and then call the `readingTime` function, which will calculate our desired metrics. It will do all the heavy lifting for us and return an object which holds the word count and the time to read.
 
@@ -39827,9 +38877,7 @@ export default function SidebarMetrics({ ctx }: PropTypes) {
     ['text', 'string'].includes(field.attributes.field_type),
   );
 
-  const allText = textFields
-    .map((field) => ctx.formValues[field.attributes.api_key])
-    .join(' ');
+  const allText = textFields.map((field) => ctx.formValues[field.attributes.api_key]).join(' ');
 
   const stats = readingTime(allText || '');
 
@@ -39890,7 +38938,7 @@ Luckily, most of the plugins published in the [Marketplace](https://www.datocms.
 
 > [!WARNING] Be careful what you read!
 > Be careful, because some of the plugins in the Marketplace may have been built using a legacy version of the SDK, **so they might not be a good example to follow!**
-> 
+>
 > Always check in the `package.json` that they're requiring the `datocms-plugin-sdk` NPM package, and not the legacy one (which is called `datocms-plugins-sdk`, with `plugins` in plural form).
 
 ## Always up-to-date official plugins
@@ -39935,18 +38983,12 @@ A number of different hooks are made available by the SDK, each with a specific 
 
 You can read in detail about all the hooks in the following sections of the guide, but to give an overall view, a plugin can implement hooks to:
 
--   [Manage their config screen and user settings](/docs/plugin-sdk/config-screen.md)
-    
--   [Render custom pages and link them from the DatoCMS navigation bars](/docs/plugin-sdk/custom-pages.md)
-    
--   [Show custom sidebar panels when editing a record](/docs/plugin-sdk/sidebar-panels.md)
-    
--   [Tweak/enhance the way fields can be edited](/docs/plugin-sdk/field-extensions.md)
-    
--   [Open custom modals](/docs/plugin-sdk/modals.md)
-    
--   [Intercept specific events happening on the interface, and execute custom code, or change the way the regular interface behaves.](/docs/plugin-sdk/event-hooks.md)
-    
+- [Manage their config screen and user settings](/docs/plugin-sdk/config-screen.md)
+- [Render custom pages and link them from the DatoCMS navigation bars](/docs/plugin-sdk/custom-pages.md)
+- [Show custom sidebar panels when editing a record](/docs/plugin-sdk/sidebar-panels.md)
+- [Tweak/enhance the way fields can be edited](/docs/plugin-sdk/field-extensions.md)
+- [Open custom modals](/docs/plugin-sdk/modals.md)
+- [Intercept specific events happening on the interface, and execute custom code, or change the way the regular interface behaves.](/docs/plugin-sdk/event-hooks.md)
 
 Other hooks will be made available in future versions of the SDK, to let plugins intervene in other places of the DatoCMS interface.
 
@@ -39997,11 +39039,7 @@ type PropTypes = {
 };
 
 function ConfigScreen({ ctx }: PropTypes) {
-  return (
-    <Canvas ctx={ctx}>
-      Hello from the config screen!
-    </Canvas>
-  );
+  return <Canvas ctx={ctx}>Hello from the config screen!</Canvas>;
 }
 ```
 
@@ -40045,10 +39083,8 @@ export default function ConfigScreen({ ctx }: PropTypes) {
 
 The important things to notice are that:
 
--   we can access the currently saved configuration object through `ctx.plugin.attributes.parameters`
-    
--   we can call `ctx.updatePluginParameters()` to save a new configuration object.
-    
+- we can access the currently saved configuration object through `ctx.plugin.attributes.parameters`
+- we can call `ctx.updatePluginParameters()` to save a new configuration object.
 
 Once saved, settings are always available as `ctx.plugin.attributes.parameters` in any of the other hooks, so that your plugin can have different behaviours based on them.
 
@@ -40060,14 +39096,7 @@ We recommend [react-final-form](https://github.com/final-form/react-final-form),
 
 ```tsx
 import { RenderConfigScreenCtx } from 'datocms-plugin-sdk';
-import {
-  Button,
-  Canvas,
-  SwitchField,
-  TextField,
-  Form,
-  FieldGroup,
-} from 'datocms-react-ui';
+import { Button, Canvas, SwitchField, TextField, Form, FieldGroup } from 'datocms-react-ui';
 import { Form as FormHandler, Field } from 'react-final-form';
 
 type PropTypes = {
@@ -40165,10 +39194,8 @@ For example, the [Custom Page](https://www.datocms.com/marketplace/plugins/i/dat
 
 A page is nothing more than an iframe, inside of which the plugin developer can render what they prefer, while also having the possibility to:
 
--   access a series of information related to the project in which the plugin is installed or the logged-in user;
-    
--   make calls to DatoCMS to produce various effects and interacting with the main application (ie. navigate to other pages, trigger notifications, opening modals, etc.);
-    
+- access a series of information related to the project in which the plugin is installed or the logged-in user;
+- make calls to DatoCMS to produce various effects and interacting with the main application (ie. navigate to other pages, trigger notifications, opening modals, etc.);
 
 ### Adding a link to the custom page
 
@@ -40255,9 +39282,9 @@ It is also possible to add new sections in the sidebar present in the "Settings"
 import { connect, SettingsAreaSidebarItemGroupsCtx } from 'datocms-plugin-sdk';
 
 const labels: Record<string, string> = {
-  "en": 'Settings',
-  "it": 'Impostazioni',
-  "es": 'Configuración',
+  en: 'Settings',
+  it: 'Impostazioni',
+  es: 'Configuración',
 };
 
 connect({
@@ -40327,15 +39354,11 @@ import { RenderPageCtx } from 'datocms-plugin-sdk';
 import { Canvas } from 'datocms-react-ui';
 
 type PropTypes = {
-  ctx: RenderPageCtx,
+  ctx: RenderPageCtx;
 };
 
 function WelcomePage({ ctx }: PropTypes) {
-  return (
-    <Canvas ctx={ctx}>
-      Hi there!
-    </Canvas>
-  );
+  return <Canvas ctx={ctx}>Hi there!</Canvas>;
 }
 ```
 
@@ -40398,7 +39421,6 @@ The following properties and methods are available in the `ctx` argument:
 
 ---
 
-
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -40426,12 +39448,9 @@ Outlets are essentially iframes where plugin developers can render custom conten
 
 Outlets offer the ability to:
 
--   Access information related to records, projects, or logged-in users
-    
--   Make calls to DatoCMS to produce various effects and interact with the main application (e.g., changing values, navigating, triggering notifications, opening modals)
-    
--   Customize the user interface to fit specific workflow needs
-    
+- Access information related to records, projects, or logged-in users
+- Make calls to DatoCMS to produce various effects and interact with the main application (e.g., changing values, navigating, triggering notifications, opening modals)
+- Customize the user interface to fit specific workflow needs
 
 If you prefer, a form outlet can also be completely hidden from the interface (setting his height to zero), and work under the cover to tweak the default behaviour of DatoCMS.
 
@@ -40512,17 +39531,13 @@ A plugin might render different types of form outlets, so we can use the `outlet
 import { Canvas } from 'datocms-react-ui';
 
 function MyCustomOutlet({ ctx }) {
-  return (
-    <Canvas ctx={ctx}>
-      Hello from the record form outlet!
-    </Canvas>
-  );
+  return <Canvas ctx={ctx}>Hello from the record form outlet!</Canvas>;
 }
 ```
 
 > [!WARNING] Always use the canvas!
 > If you want to render something inside the outlet, it is important to wrap the content inside the `Canvas` component, so that the iframe will continuously auto-adjust its size based on the content we're rendering, and to give our app the look and feel of the DatoCMS web app.
-> 
+>
 > If you want the outlet to be hidden from the interface, just return `null` and set an `initialHeight: 0` in the `itemFormOutlets` hook.
 
 # Record Collection Outlets
@@ -40535,10 +39550,8 @@ Record collection outlets allow you to add custom areas to the page that display
 
 The implementation is exactly the same as the one we just saw for the Record Form Outlets. The only thing that changes is the hooks to be used:
 
--   To declare the intention to offer Record Collection Outlets, use [`itemCollectionOutlets`](/docs/plugin-sdk/form-outlets.md#itemCollectionOutlets);
-    
--   To actually render the outlets, use [`renderItemCollectionOutlet`](/docs/plugin-sdk/form-outlets.md#renderItemCollectionOutlet).
-    
+- To declare the intention to offer Record Collection Outlets, use [`itemCollectionOutlets`](/docs/plugin-sdk/form-outlets.md#itemCollectionOutlets);
+- To actually render the outlets, use [`renderItemCollectionOutlet`](/docs/plugin-sdk/form-outlets.md#renderItemCollectionOutlet).
 
 Here's a full example:
 
@@ -40661,10 +39674,7 @@ Hides/shows a specific field in the form. Please be aware that when a field is h
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L68)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.toggleField(fieldPath, true);
 ```
@@ -40678,10 +39688,7 @@ Disables/re-enables a specific field in the form.
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L83)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.disableField(fieldPath, true);
 ```
@@ -40695,10 +39702,7 @@ Smoothly navigates to a specific field in the form. If the field is localized it
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L100)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.scrollToField(fieldPath);
 ```
@@ -40712,10 +39716,7 @@ Changes a specific path of the `formValues` object.
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L115)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.setFieldValue(fieldPath, 'new value');
 ```
@@ -40875,10 +39876,8 @@ They operate on top of a particular field, replacing the default field editor th
 
 The use cases are varied, and many examples are already on our marketplace, ready to be installed on your project:
 
--   The Shopify product plugin can be hooked into string fields and completely changes the interface to allow you to browse the products in your Shopify store, then save the ID of the selected product in the string field itself;
-    
--   The Hidden field plugin simply hides a specific field from the editor's eyes, while the Conditional fields plugin shows/hides a number of fields when you toggle a particular checkbox field.
-    
+- The Shopify product plugin can be hooked into string fields and completely changes the interface to allow you to browse the products in your Shopify store, then save the ID of the selected product in the string field itself;
+- The Hidden field plugin simply hides a specific field from the editor's eyes, while the Conditional fields plugin shows/hides a number of fields when you toggle a particular checkbox field.
 
 ###### Field editors as sidebar panels
 
@@ -40908,10 +39907,7 @@ import { connect, Field, FieldIntentCtx } from 'datocms-plugin-sdk';
 
 connect({
   overrideFieldExtensions(field: Field, ctx: FieldIntentCtx) {
-    if (
-      field.attributes.field_type === 'integer' &&
-      field.attributes.api_key === 'rating'
-    ) {
+    if (field.attributes.field_type === 'integer' && field.attributes.api_key === 'rating') {
       return {
         editor: { id: 'starRating' },
       };
@@ -41032,21 +40028,16 @@ Here's the final result:
 
 You might have noticed that our plugin is currently hardcoding some choices, namely:
 
--   the rules that decide when to apply both our "star rating" and "lorem ipsum" extensions;
-    
--   the maximum number of stars to show;
-    
--   the length of the "lorem ipsum" text we're generating;
-    
+- the rules that decide when to apply both our "star rating" and "lorem ipsum" extensions;
+- the maximum number of stars to show;
+- the length of the "lorem ipsum" text we're generating;
 
-If we want, we could make these settings configurable by the user, either by implementing some [global plugin settings](/docs/plugin-sdk/config-screen.md), or by transforming our field extensions into ["manual" extensions](https://www.datocms.com/docs/plugin-sdk/manual-field-extensions.md "/docs/plugin-sdk/sdk/manual-field-extensions").
+If we want, we could make these settings configurable by the user, either by implementing some [global plugin settings](/docs/plugin-sdk/config-screen.md), or by transforming our field extensions into ["manual" extensions](https://www.datocms.com/docs/plugin-sdk/manual-field-extensions.md '/docs/plugin-sdk/sdk/manual-field-extensions').
 
 When to use one strategy or the other is completely up to you, and each has its own advantages/disadvanges.
 
--   Manual field extensions are, well, manually hooked by the end-user on each field, and for each installation different configuration options can be specified. Given that our star rating extension will most likely be used in a few specific places rather than in all integer fields of the project, manual fields might be the best choice.
-    
--   On the other hand, our Lorem Ipsum generator may be convenient in all text fields, so requiring the end user to manually install it everywhere would be unnecessarily tedious. In this case, the choice to force the addon on all fields with the [`overrideFieldExtensions`](/docs/plugin-sdk/field-extensions.md#overrideFieldExtensions) hook is probably the right one.
-    
+- Manual field extensions are, well, manually hooked by the end-user on each field, and for each installation different configuration options can be specified. Given that our star rating extension will most likely be used in a few specific places rather than in all integer fields of the project, manual fields might be the best choice.
+- On the other hand, our Lorem Ipsum generator may be convenient in all text fields, so requiring the end user to manually install it everywhere would be unnecessarily tedious. In this case, the choice to force the addon on all fields with the [`overrideFieldExtensions`](/docs/plugin-sdk/field-extensions.md#overrideFieldExtensions) hook is probably the right one.
 
 In the [next section](/docs/plugin-sdk/manual-field-extensions.md) we're going to take a much more detailed look at manual field extensions, and we're going to convert our star rating editor into a manual extension.
 
@@ -41057,7 +40048,7 @@ This table lists the internal names of different DatoCMS field types. It is usef
 For more details on the different DatoCMS field types, please see the [CMA documentation on Fields](/docs/content-management-api/resources/field.md#available-field-types).
 
 | Field Type | Internal Name (for `attributes.field_type`) |
-| --- | --- |
+| ---------- | ------------------------------------------- |
 
 | Single-line string | `string` |
 | Multi-line text | `text` |
@@ -41194,10 +40185,7 @@ Hides/shows a specific field in the form. Please be aware that when a field is h
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L68)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.toggleField(fieldPath, true);
 ```
@@ -41211,10 +40199,7 @@ Disables/re-enables a specific field in the form.
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L83)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.disableField(fieldPath, true);
 ```
@@ -41228,10 +40213,7 @@ Smoothly navigates to a specific field in the form. If the field is localized it
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L100)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.scrollToField(fieldPath);
 ```
@@ -41245,10 +40227,7 @@ Changes a specific path of the `formValues` object.
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/ctx/commonExtras/itemForm.ts#L115)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.setFieldValue(fieldPath, 'new value');
 ```
@@ -41407,14 +40386,11 @@ The arbitrary `parameters` of the field extension.
 
 > [!WARNING]
 > In the [previous chapter](/docs/plugin-sdk/field-extensions.md):
-> 
-> -   we saw the different types of field extensions we can create ([editors](/docs/plugin-sdk/field-extensions.md#field-editor-extensions) and [addons](/docs/plugin-sdk/field-extensions.md#field-addon-field-extensions));
->     
-> -   we've seen how we can programmatically associate a particular extension to one (or multiple) fields;
->     
-> -   we used the [`renderFieldExtension`](/docs/plugin-sdk/field-extensions.md#rendering-the-field-extension) hook to actually render our extensions.
->     
-> 
+>
+> - we saw the different types of field extensions we can create ([editors](/docs/plugin-sdk/field-extensions.md#field-editor-extensions) and [addons](/docs/plugin-sdk/field-extensions.md#field-addon-field-extensions));
+> - we've seen how we can programmatically associate a particular extension to one (or multiple) fields;
+> - we used the [`renderFieldExtension`](/docs/plugin-sdk/field-extensions.md#rendering-the-field-extension) hook to actually render our extensions.
+>
 > If you haven't read the chapter, we encourage you to do it, as we're going to build up on the same examples!
 
 ### Manual field extensions vs `overrideFieldExtensions`
@@ -41422,7 +40398,12 @@ The arbitrary `parameters` of the field extension.
 So far, we have used the [`overrideFieldExtensions`](/docs/plugin-sdk/field-extensions.md#how-to-hook-field-extensions-to-a-field) hook to programmatically apply our extensions to fields. There is an alternative way of working with field extensions that passes through a second hook that you can implement, namely [`manualFieldExtensions`](/docs/plugin-sdk/manual-field-extensions.md#manualFieldExtensions):
 
 ```typescript
-import { connect, Field, ManualFieldExtensionsCtx, OverrideFieldExtensionsCtx } from 'datocms-plugin-sdk';
+import {
+  connect,
+  Field,
+  ManualFieldExtensionsCtx,
+  OverrideFieldExtensionsCtx,
+} from 'datocms-plugin-sdk';
 
 connect({
   manualFieldExtensions(ctx: ManualFieldExtensionsCtx) {
@@ -41455,10 +40436,8 @@ At this point a question may arise... when does it make sense to force an extens
 
 Let's try to think about the extensions we have developed so far, and see what would be the best strategy for them:
 
--   Given that the "Star rating" extension will most likely be used in a few specific spots, rather than in all integer fields of the project, letting the user manually apply it when needed feels like the best choice.
-    
--   On the other hand, our "Lorem Ipsum generator" is probably convenient in all text fields: requiring the end user to manually install it everywhere could be unnecessarily tedious, so the choice to programmatically force the addon on all text fields is probably the right one.
-    
+- Given that the "Star rating" extension will most likely be used in a few specific spots, rather than in all integer fields of the project, letting the user manually apply it when needed feels like the best choice.
+- On the other hand, our "Lorem Ipsum generator" is probably convenient in all text fields: requiring the end user to manually install it everywhere could be unnecessarily tedious, so the choice to programmatically force the addon on all text fields is probably the right one.
 
 If we feel that a carpet-bombing strategy for the "Lorem ipsum" extension might bee too much, and we wanted to make the installation more granular but still automatic, we could add some [global settings](/docs/plugin-sdk/config-screen.md) to the plugin to allow the user to configure some application rules (ie. "only add the addon if the API key of the text field ends with `_main_content`"):
 
@@ -41483,7 +40462,12 @@ overrideFieldExtensions(field: Field, ctx: OverrideFieldExtensionsCtx) {
 If you can't make up your mind on the best strategy for your field extension, there's always a third option: let the end user be in charge of the decision! Plugin settings are always available in every hook, so you can read the user preference and act accordingly:
 
 ```typescript
-import { connect, Field, ManualFieldExtensionsCtx, OverrideFieldExtensionsCtx } from 'datocms-plugin-sdk';
+import {
+  connect,
+  Field,
+  ManualFieldExtensionsCtx,
+  OverrideFieldExtensionsCtx,
+} from 'datocms-plugin-sdk';
 
 connect({
   manualFieldExtensions(ctx: ManualFieldExtensionsCtx) {
@@ -41521,10 +40505,7 @@ connect({
       };
     }
 
-    if (
-      field.attributes.field_type === 'integer' &&
-      field.attributes.api_key === 'rating'
-    ) {
+    if (field.attributes.field_type === 'integer' && field.attributes.api_key === 'rating') {
       return {
         editor: { id: 'starRating' },
       };
@@ -41563,7 +40544,7 @@ Just like global plugin settings, these per-field configuration parameters are *
 
 > [!WARNING] Don't use form management libraries!
 > Unlike the global config screen, where we manage the form ourselves, here **we are "guests" inside the field edit form**. That is, the submit button in the modal triggers the saving not only of our settings, but also of all the other field configurations, which we do not control.
-> 
+>
 > The SDK, in this location, provides a set of very simple primitives to integrate with the form managed by the DatoCMS application, including validations. The use of React form management libraries is not suitable in this hook, as most of them are designed to "control" the form.
 
 The hook provided to render the config screen is [`renderManualFieldExtensionConfigScreen`](/docs/plugin-sdk/manual-field-extensions.md#renderManualFieldExtensionConfigScreen), and it will be called by DatoCMS when the user adds the extension on a particular field.
@@ -41648,10 +40629,8 @@ function StarRatingConfigScreen({ ctx }: PropTypes) {
 
 Here's how it works:
 
--   we use `ctx.parameters` as the initial value for our internal state `formValues`;
-    
--   as the user changes values for the inputs, we're use `ctx.setParameters()` to propagate the change to the main DatoCMS application (as well as updating our internal state).
-    
+- we use `ctx.parameters` as the initial value for our internal state `formValues`;
+- as the user changes values for the inputs, we're use `ctx.setParameters()` to propagate the change to the main DatoCMS application (as well as updating our internal state).
 
 > [!WARNING] Always use the canvas!
 > It is important to wrap the content inside the `Canvas` component, so that the iframe will continuously auto-adjust its size based on the content we're rendering, and to give our app the look and feel of the DatoCMS web app.
@@ -41760,7 +40739,6 @@ The function must return: `Record<string, unknown> | Promise<Record<string, unkn
 
 ---
 
-
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -41779,7 +40757,6 @@ The function must return: `Record<string, unknown> | Promise<Record<string, unkn
 </html>
 
 ---
-
 
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -41913,8 +40890,7 @@ You can also optionally specify some metadata to associate with the newly create
 ```typescript
 ctx.select({
   resource: {
-    url:
-      'https://images.unsplash.com/photo-1416339306562-f3d12fefd36f',
+    url: 'https://images.unsplash.com/photo-1416339306562-f3d12fefd36f',
     filename: 'man-drinking-coffee.jpg',
   },
   copyright: 'Royalty free (Unsplash)',
@@ -42169,10 +41145,7 @@ A function to be called by the plugin to close the modal. The `openModal` call w
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/hooks/renderModal.ts#L40)
 
 ```ts
-const returnValue = prompt(
-  'Please specify the value to return to the caller:',
-  'success',
-);
+const returnValue = prompt('Please specify the value to return to the caller:', 'success');
 
 await ctx.resolve(returnValue);
 ```
@@ -42201,7 +41174,7 @@ import { connect } from 'datocms-plugin-sdk';
 connect({
   async onBoot(ctx) {
     ctx.notice('Hi there!');
-  }
+  },
 });
 ```
 
@@ -42211,14 +41184,10 @@ Inside this hook there is no point in rendering anything, because it won't be di
 
 Another useful group of event hooks can be used to intercept when the user wants to perform a specific action on one (or multiple) records:
 
--   [`onBeforeItemUpsert`](/docs/plugin-sdk/event-hooks.md#onBeforeItemUpsert): called when the user wants to save a record (both creation or update);
-    
--   [`onBeforeItemsDestroy`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsDestroy): called when the user wants to delete one (or more) records;
-    
--   [`onBeforeItemsPublish`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsPublish): called when the user wants to publish one (or more) records;
-    
--   [`onBeforeItemsUnpublish`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsUnpublish): called when the user wants to unpublish one (or more) records;
-    
+- [`onBeforeItemUpsert`](/docs/plugin-sdk/event-hooks.md#onBeforeItemUpsert): called when the user wants to save a record (both creation or update);
+- [`onBeforeItemsDestroy`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsDestroy): called when the user wants to delete one (or more) records;
+- [`onBeforeItemsPublish`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsPublish): called when the user wants to publish one (or more) records;
+- [`onBeforeItemsUnpublish`](/docs/plugin-sdk/event-hooks.md#onBeforeItemsUnpublish): called when the user wants to unpublish one (or more) records;
 
 All these hooks can return the value `false` to stop the relative action from happening.
 
@@ -42232,7 +41201,9 @@ connect({
     const item = createOrUpdateItemPayload.data;
 
     // get the ID of the Article model
-    const articleItemTypeId = Object.values(ctx.itemTypes).find(itemType => itemType.attributes.api_key === 'article').id;
+    const articleItemTypeId = Object.values(ctx.itemTypes).find(
+      (itemType) => itemType.attributes.api_key === 'article',
+    ).id;
 
     // fast return for any record that's not an Article
     if (item.relationships.item_type.data.id !== articleItemTypeId) {
@@ -42248,9 +41219,7 @@ connect({
       title: 'Mark Article as highlighted?',
       content: 'Highlighted articles are displayed on the homepage of the site!',
       cancel: { label: 'Cancel', value: false },
-      choices: [
-        { label: 'Yes, save as highlighted', value: true, intent: 'negative' },
-      ],
+      choices: [{ label: 'Yes, save as highlighted', value: true, intent: 'negative' }],
     });
 
     if (!confirmation) {
@@ -42258,7 +41227,7 @@ connect({
       // returning false blocks the action
       return false;
     }
-  }
+  },
 });
 ```
 
@@ -42275,7 +41244,7 @@ connect({
       cancel: { label: 'Cancel', value: false },
       choices: [{ label: 'Yes, publish', value: true }],
     });
-  }
+  },
 });
 ```
 
@@ -42354,10 +41323,7 @@ Smoothly navigates to a specific field in the form. If the field is localized it
 [View on Github](https://github.com/datocms/plugins-sdk/blob/master/packages/sdk/src/hooks/onBeforeItemUpsert.ts#L47)
 
 ```ts
-const fieldPath = prompt(
-  'Please insert the path of a field in the form',
-  ctx.fieldPath,
-);
+const fieldPath = prompt('Please insert the path of a field in the form', ctx.fieldPath);
 
 await ctx.scrollToField(fieldPath);
 ```
@@ -42367,7 +41333,6 @@ await ctx.scrollToField(fieldPath);
 </details>
 
 ---
-
 
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -42401,12 +41366,8 @@ import { Canvas } from 'datocms-react-ui';
 import 'datocms-react-ui/styles.css';
 
 const MyComponent = ({ ctx }) => {
-  return (
-    <Canvas ctx={ctx}>
-      Place your content here!
-    </Canvas>
-  );
-}
+  return <Canvas ctx={ctx}>Place your content here!</Canvas>;
+};
 ```
 
 The `Canvas` component needs the `ctx` object that is passed as an argument to all the hooks.
@@ -42422,15 +41383,13 @@ const MyComponent = ({ ctx }) => {
       <Inner />
     </Canvas>
   );
-}
+};
 
 const Inner = () => {
   const ctx = useCtx();
 
-  return (
-    <div>Hi!</div>
-  );
-}
+  return <div>Hi!</div>;
+};
 ```
 
 # Color palette CSS variables
@@ -42733,9 +41692,7 @@ Typography is a foundational element in UI design. Good typography establishes a
           <code>--font-size-xxs</code>
         </td>
         <td>
-          <div style={{ fontSize: 'var(--font-size-xxs)' }}>
-            Size XXS
-          </div>
+          <div style={{ fontSize: 'var(--font-size-xxs)' }}>Size XXS</div>
         </td>
       </tr>
       <tr>
@@ -42930,7 +41887,6 @@ The following CSS variables are available as well, to mimick the spacing between
 
 ---
 
-
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -42983,10 +41939,7 @@ The following CSS variables are available as well, to mimick the spacing between
 <Canvas ctx={ctx}>
   <Dropdown
     renderTrigger={({ open, onClick }) => (
-      <Button
-        onClick={onClick}
-        rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}
-      >
+      <Button onClick={onClick} rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}>
         Options
       </Button>
     )}
@@ -43015,10 +41968,7 @@ The following CSS variables are available as well, to mimick the spacing between
 <Canvas ctx={ctx}>
   <Dropdown
     renderTrigger={({ open, onClick }) => (
-      <Button
-        onClick={onClick}
-        rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}
-      >
+      <Button onClick={onClick} rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}>
         Fields
       </Button>
     )}
@@ -43027,20 +41977,12 @@ The following CSS variables are available as well, to mimick the spacing between
       <DropdownOption>
         First option
         <DropdownOptionAction icon={<PlusIcon />} onClick={() => {}} />
-        <DropdownOptionAction
-          red
-          icon={<TrashIcon />}
-          onClick={() => {}}
-        />
+        <DropdownOptionAction red icon={<TrashIcon />} onClick={() => {}} />
       </DropdownOption>
       <DropdownOption>
         Second option
         <DropdownOptionAction icon={<PlusIcon />} onClick={() => {}} />
-        <DropdownOptionAction
-          red
-          icon={<TrashIcon />}
-          onClick={() => {}}
-        />
+        <DropdownOptionAction red icon={<TrashIcon />} onClick={() => {}} />
       </DropdownOption>
     </DropdownMenu>
   </Dropdown>
@@ -43057,10 +41999,7 @@ The following CSS variables are available as well, to mimick the spacing between
 <Canvas ctx={ctx}>
   <Dropdown
     renderTrigger={({ open, onClick }) => (
-      <Button
-        onClick={onClick}
-        rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}
-      >
+      <Button onClick={onClick} rightIcon={open ? <CaretUpIcon /> : <CaretDownIcon />}>
         Fields
       </Button>
     )}
@@ -43376,7 +42315,14 @@ The `onChange` prop of all field components always returns the new value as firs
           Main content
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--border-color)' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          borderLeft: '1px solid var(--border-color)',
+        }}
+      >
         <Toolbar>
           <ToolbarStack stackSize="l">
             <ToolbarTitle>Secondary</ToolbarTitle>
@@ -43427,7 +42373,14 @@ The `onChange` prop of all field components always returns the new value as firs
           Sidebar
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--border-color)' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          borderLeft: '1px solid var(--border-color)',
+        }}
+      >
         <Toolbar>
           <ToolbarStack stackSize="l">
             <ToolbarTitle>Primary</ToolbarTitle>
@@ -43457,65 +42410,65 @@ The `onChange` prop of all field components always returns the new value as firs
 ###### Code
 
 ```js
-  <Canvas ctx={ctx}>
-   <div style={{ height: 500, position: 'relative' }}>
-     <StateManager initial={true}>
-       {(isCollapsed, setCollapsed) => (
-         <VerticalSplit
-           primaryPane="left"
-           size="25%"
-           minSize={220}
-           isSecondaryCollapsed={isCollapsed}
-           onSecondaryToggle={setCollapsed}
-         >
-           <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-             <Toolbar>
-               <ToolbarStack stackSize="l">
-                 <ToolbarTitle>Primary</ToolbarTitle>
-               </ToolbarStack>
-             </Toolbar>
-             <div
-               style={{
-                 flex: '1',
-                 display: 'flex',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 height: '150px',
-               }}
-             >
-               Main content
-             </div>
-           </div>
-           <div
-             style={{
-               display: 'flex',
-               flexDirection: 'column',
-               height: '100%',
-               borderLeft: '1px solid var(--border-color)',
-             }}
-           >
-             <Toolbar>
-               <ToolbarStack stackSize="l">
-                 <ToolbarTitle>Secondary</ToolbarTitle>
-               </ToolbarStack>
-             </Toolbar>
-             <div
-               style={{
-                 flex: '1',
-                 display: 'flex',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 height: '150px',
-               }}
-             >
-               Sidebar
-             </div>
-           </div>
-         </VerticalSplit>
-       )}
-     </StateManager>
-   </div>
- </Canvas>
+<Canvas ctx={ctx}>
+  <div style={{ height: 500, position: 'relative' }}>
+    <StateManager initial={true}>
+      {(isCollapsed, setCollapsed) => (
+        <VerticalSplit
+          primaryPane="left"
+          size="25%"
+          minSize={220}
+          isSecondaryCollapsed={isCollapsed}
+          onSecondaryToggle={setCollapsed}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <Toolbar>
+              <ToolbarStack stackSize="l">
+                <ToolbarTitle>Primary</ToolbarTitle>
+              </ToolbarStack>
+            </Toolbar>
+            <div
+              style={{
+                flex: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '150px',
+              }}
+            >
+              Main content
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              borderLeft: '1px solid var(--border-color)',
+            }}
+          >
+            <Toolbar>
+              <ToolbarStack stackSize="l">
+                <ToolbarTitle>Secondary</ToolbarTitle>
+              </ToolbarStack>
+            </Toolbar>
+            <div
+              style={{
+                flex: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '150px',
+              }}
+            >
+              Sidebar
+            </div>
+          </div>
+        </VerticalSplit>
+      )}
+    </StateManager>
+  </div>
+</Canvas>
 ```
 
 # Overlay mode
@@ -43525,66 +42478,66 @@ The `onChange` prop of all field components always returns the new value as firs
 ###### Code
 
 ```js
-  <Canvas ctx={ctx}>
-   <div style={{ height: 500, position: 'relative' }}>
-     <StateManager initial={true}>
-       {(isCollapsed, setCollapsed) => (
-         <VerticalSplit
-           mode="overlay"
-           primaryPane="left"
-           size="25%"
-           minSize={220}
-           isSecondaryCollapsed={isCollapsed}
-           onSecondaryToggle={setCollapsed}
-         >
-           <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-             <Toolbar>
-               <ToolbarStack stackSize="l">
-                 <ToolbarTitle>Primary</ToolbarTitle>
-               </ToolbarStack>
-             </Toolbar>
-             <div
-               style={{
-                 flex: '1',
-                 display: 'flex',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 height: '150px',
-               }}
-             >
-               Main content
-             </div>
-           </div>
-           <div
-             style={{
-               display: 'flex',
-               flexDirection: 'column',
-               height: '100%',
-               borderLeft: '1px solid var(--border-color)',
-             }}
-           >
-             <Toolbar>
-               <ToolbarStack stackSize="l">
-                 <ToolbarTitle>Secondary</ToolbarTitle>
-               </ToolbarStack>
-             </Toolbar>
-             <div
-               style={{
-                 flex: '1',
-                 display: 'flex',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 height: '150px',
-               }}
-             >
-               Sidebar
-             </div>
-           </div>
-         </VerticalSplit>
-       )}
-     </StateManager>
-   </div>
- </Canvas>
+<Canvas ctx={ctx}>
+  <div style={{ height: 500, position: 'relative' }}>
+    <StateManager initial={true}>
+      {(isCollapsed, setCollapsed) => (
+        <VerticalSplit
+          mode="overlay"
+          primaryPane="left"
+          size="25%"
+          minSize={220}
+          isSecondaryCollapsed={isCollapsed}
+          onSecondaryToggle={setCollapsed}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <Toolbar>
+              <ToolbarStack stackSize="l">
+                <ToolbarTitle>Primary</ToolbarTitle>
+              </ToolbarStack>
+            </Toolbar>
+            <div
+              style={{
+                flex: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '150px',
+              }}
+            >
+              Main content
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              borderLeft: '1px solid var(--border-color)',
+            }}
+          >
+            <Toolbar>
+              <ToolbarStack stackSize="l">
+                <ToolbarTitle>Secondary</ToolbarTitle>
+              </ToolbarStack>
+            </Toolbar>
+            <div
+              style={{
+                flex: '1',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '150px',
+              }}
+            >
+              Sidebar
+            </div>
+          </div>
+        </VerticalSplit>
+      )}
+    </StateManager>
+  </div>
+</Canvas>
 ```
 
 ---
@@ -43612,10 +42565,7 @@ import { useMemo, useEffect } from 'react';
 connect({
   renderPage(pageId, { ctx }) {
     const client = useMemo(() => {
-      return new SiteClient(
-        ctx.currentUserAccessToken,
-        { environment: ctx.environment },
-      );
+      return new SiteClient(ctx.currentUserAccessToken, { environment: ctx.environment });
     }, [ctx.currentUserAccessToken]);
 
     useEffect(async () => {
@@ -43721,7 +42671,7 @@ As you know, modular content fields contain [blocks](/docs/content-modelling/blo
     "itemId": "39830695",
     "itemTypeId": "810886",
     "social": "twitter",
-    "url": "https://twitter.com/datocms",
+    "url": "https://twitter.com/datocms"
   },
   {
     "itemId": "39830696",
@@ -43750,24 +42700,21 @@ But you can also remove some blocks:
 ```typescript
 await ctx.setFieldValue(
   'my_modular_content',
-  currentValue.filter(block => block.social !== 'linkedin'),
+  currentValue.filter((block) => block.social !== 'linkedin'),
 );
 ```
 
 Or even add new blocks to the field:
 
 ```typescript
-await ctx.setFieldValue(
-  'my_modular_content',
-  [
-    ...currentValue,
-    {
-      "itemTypeId": "810886",
-      "social": "twitter",
-      "url": "https://twitter.com/datocms",
-    },
-  ],
-);
+await ctx.setFieldValue('my_modular_content', [
+  ...currentValue,
+  {
+    itemTypeId: '810886',
+    social: 'twitter',
+    url: 'https://twitter.com/datocms',
+  },
+]);
 ```
 
 Pay attention to the missing `itemId` attribute here: when the record will be eventually saved, a new `itemId` will be generated by the DatoCMS API.
@@ -43815,10 +42762,8 @@ If you inspect the value of a Structured Text field from `ctx.formValues`, you'l
 
 Even with this tiny one-paragraph example, you'll notice that this format is quite different from the [`dast` format](/docs/structured-text/dast.md) that both CMA and CDA offers:
 
--   There's no [`root`](/docs/structured-text/dast.md#root) node: the value is directly an array of root children;
-    
--   Nodes of type [`span`](/docs/structured-text/dast.md#span) have no `type` attribute, the `value` attribute is called `text`, and `marks` are applied as boolean keys directly on the node itself.
-    
+- There's no [`root`](/docs/structured-text/dast.md#root) node: the value is directly an array of root children;
+- Nodes of type [`span`](/docs/structured-text/dast.md#span) have no `type` attribute, the `value` attribute is called `text`, and `marks` are applied as boolean keys directly on the node itself.
 
 To offer a comparison, this would be the `dast` version of the same content:
 
@@ -43838,9 +42783,7 @@ To offer a comparison, this would be the `dast` version of the same content:
             },
             {
               "type": "span",
-              "marks": [
-                "highlight"
-              ],
+              "marks": ["highlight"],
               "value": "the best way"
             },
             {
@@ -43866,13 +42809,11 @@ import { slateToDast } from 'datocms-structured-text-slate-utils';
 import groupBy from 'lodash-es/groupBy';
 
 const allFieldsByItemTypeId = groupBy(
-  Object.values(ctx.fields), field => field.relationships.item_type.data.id
+  Object.values(ctx.fields),
+  (field) => field.relationships.item_type.data.id,
 );
 
-const dast = slateToDast(
-  ctx.formValues['my_structured_text_field'],
-  allFieldsByItemTypeId,
-);
+const dast = slateToDast(ctx.formValues['my_structured_text_field'], allFieldsByItemTypeId);
 
 // result will be something like:
 //
@@ -43983,29 +42924,23 @@ Structured text fields can contain both references to other records via its [`it
 
 As you can see:
 
--   Both `itemLink` and `inlineItem` nodes have `item` and `itemTypeId` attributes that point to the referenced record;
-    
--   Both `inlineItem` and `block` nodes need to have a `children` attribute always containing an empty span;
-    
--   Blocks have the `blockModelId` attribute containing to the ID of the block model and the `id` attribute with the ID of the block, while all the other attributes depend on the actual fields of the block model itself.
-    
+- Both `itemLink` and `inlineItem` nodes have `item` and `itemTypeId` attributes that point to the referenced record;
+- Both `inlineItem` and `block` nodes need to have a `children` attribute always containing an empty span;
+- Blocks have the `blockModelId` attribute containing to the ID of the block model and the `id` attribute with the ID of the block, while all the other attributes depend on the actual fields of the block model itself.
 
 You can create/remove/change these nodes like any other one by keeping their formats correct. In this example, we're adding a new block node at the end of the content:
 
 ```typescript
-ctx.setFieldValue(
-  'my_structured_text_field',
-  [
-    ...ctx.formValues['my_structured_text_field'],
-    {
-      type: 'block',
-      key: `${new Date().getTime()}`,
-      blockModelId: '810933',
-      title: 'Foobar',
-      children: [{ text: '' }],
-    },
-  ]
-);
+ctx.setFieldValue('my_structured_text_field', [
+  ...ctx.formValues['my_structured_text_field'],
+  {
+    type: 'block',
+    key: `${new Date().getTime()}`,
+    blockModelId: '810933',
+    title: 'Foobar',
+    children: [{ text: '' }],
+  },
+]);
 ```
 
 Pay attention to the `key` attribute here: to create new block nodes, you need to fill it with an unique string. When the record will be eventually saved, a new ID will be generated by the DatoCMS API, the `id` attribute will appear in the node, and the `key` attribute will be removed.
@@ -44044,35 +42979,22 @@ To release a plugin, you need to make sure to fill the `package.json` with these
 
 The following table describes the properties that can be set on the file:
 
--   `name` (required): NPM package name
-    
--   `version` (required): Plugin version
-    
--   `description` (required): Short description of what the plugin does
-    
--   `keywords` (required): Plugin keywords, useful to help users find your plugin
-    
--   `homepage`: URL of the plugin homepage, will be shown in the Marketplace
-    
--   `datoCmsPlugin.title` (required): Plugin title
-    
--   `datoCmsPlugin.entryPoint` (required): Relative path to the plugin entry point
-    
--   `datoCmsPlugin.previewImage`: Relative path to a video/image showing the plugin in action (better if it's a MP4 video)
-    
--   `datoCmsPlugin.coverImage`: Relative path to a cover image that will be used in the [Marketplace](https://www.datocms.com/marketplace/plugins.md)
-    
--   `datoCmsPlugin.permissions` (required): [Additional permissions](/docs/plugin-sdk/additional-permissions.md) your plugin needs to work
-    
+- `name` (required): NPM package name
+- `version` (required): Plugin version
+- `description` (required): Short description of what the plugin does
+- `keywords` (required): Plugin keywords, useful to help users find your plugin
+- `homepage`: URL of the plugin homepage, will be shown in the Marketplace
+- `datoCmsPlugin.title` (required): Plugin title
+- `datoCmsPlugin.entryPoint` (required): Relative path to the plugin entry point
+- `datoCmsPlugin.previewImage`: Relative path to a video/image showing the plugin in action (better if it's a MP4 video)
+- `datoCmsPlugin.coverImage`: Relative path to a cover image that will be used in the [Marketplace](https://www.datocms.com/marketplace/plugins.md)
+- `datoCmsPlugin.permissions` (required): [Additional permissions](/docs/plugin-sdk/additional-permissions.md) your plugin needs to work
 
 Make sure to strictly follow these rules, otherwise the plugin won't be visible in the Marketplace:
 
--   `name` MUST start with `datocms-plugin-`;
-    
--   `entryPoint`, `previewImage` and `coverImage` MUST be files contained in the package, and need to be defined as paths relative to the package root (ie. `docs/image.png`);
-    
--   `keywords` MUST contain the `datocms-plugin` keyword;
-    
+- `name` MUST start with `datocms-plugin-`;
+- `entryPoint`, `previewImage` and `coverImage` MUST be files contained in the package, and need to be defined as paths relative to the package root (ie. `docs/image.png`);
+- `keywords` MUST contain the `datocms-plugin` keyword;
 
 ### Publishing the plugin
 
@@ -44169,25 +43091,25 @@ type EmptyConfig = {};
 // Plugin v1 version saves config in this format:
 type V1Config = {
   someOption: 'yes' | 'no';
-}
+};
 
 // Current version changes the format for `someOption`, and adds `newOption`:
 type V2Config = {
   someOption: boolean;
   newOption: string;
-}
+};
 
 const isEmptyConfig = (parameters: Config): parameters is EmptyConfig => {
   return Object.keys(parameters).length === 0;
-}
+};
 
 const isV1Config = (parameters: Config): parameters is V1Config => {
   return 'someOption' in parameters;
-}
+};
 
 const isV2Config = (parameters: Config): parameters is V1Config => {
   return 'newOption' in parameters;
-}
+};
 ```
 
 In this example, new and old config formats are somewhat compatible, so we can use the [`onBoot`](/docs/plugin-sdk/event-hooks.md) hook — which gets called as soon as the DatoCMS application loads, or the plugin is installed for the first time — to silently update the plugin configuration to the new format or, if it's the first installation for the plugin, to provide some default configuration:
@@ -44212,9 +43134,7 @@ connect({
     }
 
     if (ctx.currentRole.meta.final_permissions.can_edit_schema) {
-      ctx.updatePluginParameters(
-        normalizeConfig(ctx.plugin.attributes.parameters as Config),
-      );
+      ctx.updatePluginParameters(normalizeConfig(ctx.plugin.attributes.parameters as Config));
     }
   },
   renderPage(pageId, ctx) {
@@ -44270,10 +43190,8 @@ connect({
 
 Let's review what this code is doing:
 
--   every hook that needs to read the configuration object (`renderPage` in this example) can use the `isConfigValid()` function to test if it can execute normally, or it needs to fast return to avoid errors due to incompatible settings;
-    
--   the `onBoot` hook shows a notification to the end user telling that the configuration needs to be manually fixed, or the plugin won't work.
-    
+- every hook that needs to read the configuration object (`renderPage` in this example) can use the `isConfigValid()` function to test if it can execute normally, or it needs to fast return to avoid errors due to incompatible settings;
+- the `onBoot` hook shows a notification to the end user telling that the configuration needs to be manually fixed, or the plugin won't work.
 
 ## Migrating old manual Field Extension settings
 
@@ -44281,10 +43199,8 @@ A very similar approach can also be used to handle changes in manual field exten
 
 If the new configuration is compatible with the old one:
 
--   the `renderFieldExtension` hook uses a `normalizeParameters()` function to convert older configuration objects into the latest format;
-    
--   the `onBoot` hook first needs to determine if it needs to do the migration: to do that, it can look into `ctx.plugin.attributes.parameters` and see if ie. global settings have already some flag. Then it fetches all the fields that are hooked to our plugin using `ctx.loadFieldsUsingPlugin()`, and for each of them it uses the `ctx.updateFieldAppearance()` function to silently update the field extension to the new format.
-    
+- the `renderFieldExtension` hook uses a `normalizeParameters()` function to convert older configuration objects into the latest format;
+- the `onBoot` hook first needs to determine if it needs to do the migration: to do that, it can look into `ctx.plugin.attributes.parameters` and see if ie. global settings have already some flag. Then it fetches all the fields that are hooked to our plugin using `ctx.loadFieldsUsingPlugin()`, and for each of them it uses the `ctx.updateFieldAppearance()` function to silently update the field extension to the new format.
 
 ```typescript
 connect({
@@ -44391,10 +43307,8 @@ The data storage format is now also completely custom, as well as the interface 
 
 The old options:
 
--   "Type of plugin" (field editor, field add-on or sidebar widget), and
-    
--   "Types of field" (specifying where it's possible to use the legacy plugin)
-    
+- "Type of plugin" (field editor, field add-on or sidebar widget), and
+- "Types of field" (specifying where it's possible to use the legacy plugin)
 
 do not have to be declared in the `package.json` anymore, but are configurable through the [`manualFieldExtensions` hook](/docs/plugin-sdk/manual-field-extensions.md). The old "sidebar widget" plugin type is nothing but an additional `asSidebarPanel` option you can pass to the new `ManualFieldExtension` type:
 
@@ -44464,10 +43378,12 @@ connect({
     await Promise.all(
       fields.map(async (field) => {
         // set the fieldExtensionId to be the new one
-        await ctx.updateFieldAppearance(field.id, [{
-          operation: 'updateEditor',
-          newFieldExtensionId: 'myExtension',
-        }]);
+        await ctx.updateFieldAppearance(field.id, [
+          {
+            operation: 'updateEditor',
+            newFieldExtensionId: 'myExtension',
+          },
+        ]);
       }),
     );
 
@@ -44549,9 +43465,7 @@ This guide will walk you through the process of streaming videos using DatoCMS. 
 DatoCMS offers two main ways to stream videos:
 
 1.  Adaptive bitrate streaming using HTTP Live Streaming (HLS)
-    
 2.  Serving raw MP4 files for direct download
-    
 
 These are described in more detail below.
 
@@ -44573,12 +43487,9 @@ To implement this method on your frontend, you have two options.
 
 We offer an easy-to-use `<VideoPlayer/>` component for:
 
--   [React/Next.js/Remix](/docs/next-js/displaying-videos.md)
-    
--   [Vue, Nuxt](/docs/nuxt.md)
-    
--   [Svelte/SvelteKit](/docs/svelte/displaying-videos.md)
-    
+- [React/Next.js/Remix](/docs/next-js/displaying-videos.md)
+- [Vue, Nuxt](/docs/nuxt.md)
+- [Svelte/SvelteKit](/docs/svelte/displaying-videos.md)
 
 Our player is a thin wrapper around [Mux's own implementation](https://www.mux.com/player), but ours is specifically designed for DatoCMS and makes it easy to display videos straight from your GraphQL queries.
 
@@ -44587,11 +43498,8 @@ Our player is a thin wrapper around [Mux's own implementation](https://www.mux.c
 If you prefer more control or are using a different framework, you can implement the video player manually using the data returned from the API:
 
 1.  Use the `muxPlaybackId` to construct the HLS streaming URL: `https://stream.mux.com/{PLAYBACK_ID}.m3u8`
-    
 2.  Implement a video player that supports HLS (e.g., video.js, Plyr, or hls.js)
-    
 3.  For fallback support, use the provided MP4 URLs (high, medium, and low quality)
-    
 
 #### **Option 2: Serving the MP4 file directly (NOT recommended)**
 
@@ -44633,13 +43541,11 @@ Here, you can see a breakdown of how much you are being charged for streaming mi
 
 To determine which type of charge you are incurring, look under the specific categories:
 
--   **Streaming Minutes**: This section shows the total time your videos have been streamed using HLS.
-    
+- **Streaming Minutes**: This section shows the total time your videos have been streamed using HLS.
 
 (Image content)
 
--   **Bandwidth**: This section details the data transferred for videos served directly via MP4. You can check the **top assets by traffic**, as well as the **top referrers for assets**, while the graph highlights in purple all the traffic generated by your projects' assets.
-    
+- **Bandwidth**: This section details the data transferred for videos served directly via MP4. You can check the **top assets by traffic**, as well as the **top referrers for assets**, while the graph highlights in purple all the traffic generated by your projects' assets.
 
 (Image content)
 
@@ -44649,22 +43555,17 @@ To determine which type of charge you are incurring, look under the specific cat
 
 If you notice a spike in your overages and usage metrics, it’s essential to investigate and address the root cause. A common issue is high bandwidth usage due to serving MP4 videos directly. To troubleshoot this:
 
--   Audit your site for `<video>` tags and switch them to HLS streaming if they are currently set to serve MP4 files directly.
-    
--   Use the network tab in your browser’s developer tools to ensure videos are being served from `stream.mux.com` and not `datocms-assets.com`
-    
+- Audit your site for `<video>` tags and switch them to HLS streaming if they are currently set to serve MP4 files directly.
+- Use the network tab in your browser’s developer tools to ensure videos are being served from `stream.mux.com` and not `datocms-assets.com`
 
 #### Looping auto-play background videos
 
 Here are some suggestions for optimizing the scenario where you want to use a looping video as a background in your page layout:
 
--   **Use Short Clips**: Keep the video short enough to fit within the browser’s memory cache (typically less than 10 seconds). This prevents Mux from re-downloading the video each time it loops, reducing streaming costs.
-    
--   **Optimize Quality and Size**: Balance video quality with file size to minimize data usage without sacrificing user experience. In some cases, using a lower resolution MP4 might be more cost-effective than HLS streaming if the browser can reliably cache it.
-    
--   **Alternative Hosting**: Consider hosting the video on a third-party CDN if their bandwidth costs are lower. This approach can bypass both Mux and DatoCMS CDNs, potentially reducing expenses further, especially if you have a preexisting contract with them that includes high amounts of bandwidth. You would be billed separately by the third-party host.
-    
--   **Static Asset on Your Frontend**: If your file is small enough and you have a sufficient plan with your frontend's current host & CDN, consider adding the file to your frontend repo and serving directly from there, alongside your favicons, decorative images, fonts, etc. This is similar to the previous option of hosting the video on an alternative host, but this saves you the trouble of needing a seperate account & plan just for hosting these videos. Please check with your frontend host to see how this would affect your billing.
+- **Use Short Clips**: Keep the video short enough to fit within the browser’s memory cache (typically less than 10 seconds). This prevents Mux from re-downloading the video each time it loops, reducing streaming costs.
+- **Optimize Quality and Size**: Balance video quality with file size to minimize data usage without sacrificing user experience. In some cases, using a lower resolution MP4 might be more cost-effective than HLS streaming if the browser can reliably cache it.
+- **Alternative Hosting**: Consider hosting the video on a third-party CDN if their bandwidth costs are lower. This approach can bypass both Mux and DatoCMS CDNs, potentially reducing expenses further, especially if you have a preexisting contract with them that includes high amounts of bandwidth. You would be billed separately by the third-party host.
+- **Static Asset on Your Frontend**: If your file is small enough and you have a sufficient plan with your frontend's current host & CDN, consider adding the file to your frontend repo and serving directly from there, alongside your favicons, decorative images, fonts, etc. This is similar to the previous option of hosting the video on an alternative host, but this saves you the trouble of needing a seperate account & plan just for hosting these videos. Please check with your frontend host to see how this would affect your billing.
 
 ---
 
@@ -44721,12 +43622,9 @@ Ensure that you're serving videos using HLS (HTTP Live Streaming), not the raw .
 
 If you're not yet using our `<VideoPlayer/>` component, follow one of these guides to set it up on your frontend:
 
--   [<VideoPlayer/> component for React & Next.js](/docs/next-js/displaying-videos.md)
-    
--   [<VideoPlayer/> component for Vue & Nuxt](/docs/nuxt/displaying-videos.md)
-    
--   [<VideoPlayer/> component for Svelte & SvelteKit](/docs/svelte/displaying-videos.md)
-    
+- [<VideoPlayer/> component for React & Next.js](/docs/next-js/displaying-videos.md)
+- [<VideoPlayer/> component for Vue & Nuxt](/docs/nuxt/displaying-videos.md)
+- [<VideoPlayer/> component for Svelte & SvelteKit](/docs/svelte/displaying-videos.md)
 
 If you prefer, you can also use the official `mux-player` instead: [https://www.mux.com/docs/guides/mux-player-web](https://www.mux.com/docs/guides/mux-player-web)
 
@@ -44768,7 +43666,7 @@ Now that you have your env key (it should be an 8-digit alphanumeric key like `a
 
 For an example, please see [this Stackblitz demo](https://stackblitz.com/~/github.com/arcataroger/mux-data-test).
 
-*See also:* [*Mux Player API Reference*](https://www.mux.com/docs/guides/player-api-reference) *for a list of all accepted parameters*
+_See also:_ [_Mux Player API Reference_](https://www.mux.com/docs/guides/player-api-reference) _for a list of all accepted parameters_
 
 ##### Viewing your Mux Data Analytics
 
@@ -44778,7 +43676,7 @@ If the setup succeeded, try viewing your video for a few seconds. Analytics shou
 
 Mux Data Dashboard
 
-If you enabled `debug={true}`, you'll also see these logging attempts in the browser console as they're sent, which can be especially useful if the analytics *aren't* showing up as expected (probably because of adblock; see the troubleshooting section below).
+If you enabled `debug={true}`, you'll also see these logging attempts in the browser console as they're sent, which can be especially useful if the analytics _aren't_ showing up as expected (probably because of adblock; see the troubleshooting section below).
 
 ## Documentation and Troubleshooting
 
@@ -44841,12 +43739,9 @@ Once the "augmented strings" from DatoCMS are used on your pages, Vercel can loc
 
 Currently, the metadata required to show a clickable link on Vercel is added in the following parts of the GraphQL response:
 
--   **Text fields** (both Single-line Strings and Multi-paragraph Text) that are not empty and with no format validation: the metadata will be appended at the end of the original string;
-    
--   **Structured Text fields**: the metadata will be appended at the end of the [last `span` node](/docs/structured-text/dast.md#span) contained in the first [`paragraph`](/docs/structured-text/dast.md#paragraph), [`heading`](/docs/structured-text/dast.md#heading), [`list`](/docs/structured-text/dast.md#list), [`code`](/docs/structured-text/dast.md#code) or [`blockquote`](/docs/structured-text/dast.md#blockquote) node found in the document;
-    
--   **The** `**alt**` **field of any** `**Upload**` **referenced in the response:** the metadata will be appended at the end of the original string;
-    
+- **Text fields** (both Single-line Strings and Multi-paragraph Text) that are not empty and with no format validation: the metadata will be appended at the end of the original string;
+- **Structured Text fields**: the metadata will be appended at the end of the [last `span` node](/docs/structured-text/dast.md#span) contained in the first [`paragraph`](/docs/structured-text/dast.md#paragraph), [`heading`](/docs/structured-text/dast.md#heading), [`list`](/docs/structured-text/dast.md#list), [`code`](/docs/structured-text/dast.md#code) or [`blockquote`](/docs/structured-text/dast.md#blockquote) node found in the document;
+- **The** `**alt**` **field of any** `**Upload**` **referenced in the response:** the metadata will be appended at the end of the original string;
 
 We've been conservative in deciding in which cases to embed hidden metadata, so your website should not break when enabling Content Link, but still, it's crucial that you test it thoroughly. If you encounter any problem, please refer to the **Troubleshooting** section of this guide.
 
@@ -44862,29 +43757,29 @@ If you're an Enterprise customer of DatoCMS and a paid customer of Vercel, pleas
 
 To communicate to DatoCMS's Content Delivery API that you want Content Link metadata included in your responses, **you must add two headers to your API requests**:
 
--   `X-Visual-Editing` is the header that enables the feature, and it must be set to `vercel-v1`;
-    
--   `X-Base-Editing-Url` is required to generate the right link to your DatoCMS project: it's the base URL of the project on the CMS, and unless you're using a custom domain, it looks like `https://example-project.admin.datocms.com`
-    
+- `X-Visual-Editing` is the header that enables the feature, and it must be set to `vercel-v1`;
+- `X-Base-Editing-Url` is required to generate the right link to your DatoCMS project: it's the base URL of the project on the CMS, and unless you're using a custom domain, it looks like `https://example-project.admin.datocms.com`
 
 Here is an example of how to add the headers when using the standard `fetch` API. In this case, we're going to enable Content Link on every preview deployment of the website:
 
 ```javascript
-const visualEditingHeaders = process.env.VERCEL_ENV === "preview" ? {
-  "X-Visual-Editing": "vercel-v1",
-  "X-Base-Editing-Url": "https://<YOUR-PROJECT-NAME>.admin.datocms.com"
-} : {}
+const visualEditingHeaders =
+  process.env.VERCEL_ENV === 'preview'
+    ? {
+        'X-Visual-Editing': 'vercel-v1',
+        'X-Base-Editing-Url': 'https://<YOUR-PROJECT-NAME>.admin.datocms.com',
+      }
+    : {};
 
-const response = await fetch(
-  "https://graphql-staging.datocms.com/",
-  {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer <API-KEY>",
-      ...visualEditingHeaders,
+const response = await fetch('https://graphql-staging.datocms.com/', {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer <API-KEY>',
+    ...visualEditingHeaders,
   },
   body: JSON.stringify({
-    query, variables
+    query,
+    variables,
   }),
 });
 ```
@@ -44946,23 +43841,16 @@ DatoCMS Site Search is a way to **deliver tailored search results to your websit
 
 There are many third-party services out there that fill this need (like [SwiftType](https://swiftype.com/), [Algolia](https://www.algolia.com/), and [Cludo](https://www.cludo.com/)). Our solution seeks to be a great option for plenty of websites:
 
--   Extremely easy to integrate with your static website
-    
--   Completely customizable in terms of look & feel
-    
--   Minimal configuration needed
-    
--   Handles multilingual websites nicely
-    
--   included in the price of DatoCMS with no additional charges
-    
+- Extremely easy to integrate with your static website
+- Completely customizable in terms of look & feel
+- Minimal configuration needed
+- Handles multilingual websites nicely
+- included in the price of DatoCMS with no additional charges
 
 #### How it works
 
--   Every time your website finishes being deployed, **we'll crawl it to fetch updated content.**
-    
--   From your frontend, you can [**make AJAX requests to our Content Management API**](/docs/site-search/base-integration.md#performing-searches) **to present relevant results to your visitors**. We also provide [**React**](/docs/site-search/widget.md) **and** [**Vue**](/docs/site-search/vue-search-widget.md) **search widgets** that simplify the process.
-    
+- Every time your website finishes being deployed, **we'll crawl it to fetch updated content.**
+- From your frontend, you can [**make AJAX requests to our Content Management API**](/docs/site-search/base-integration.md#performing-searches) **to present relevant results to your visitors**. We also provide [**React**](/docs/site-search/widget.md) **and** [**Vue**](/docs/site-search/vue-search-widget.md) **search widgets** that simplify the process.
 
 > [!PROTIP] Pro tip: Integrating Algolia and DatoCMS
 > If you prefer to integrate a search provider like Algolia, [this guide](https://www.datocms.com/blog/algolia-nextjs-how-to-add-algolia-instantsearch.md) demonstrates setting up a Next.js project, configuring Algolia, and creating custom search components. While the guide focuses on Algolia Intellisearch, the process for setting up other third-party services like Meilisearch, Typesense, or ElasticSearch should be relatively similar.
@@ -44984,9 +43872,7 @@ Since the content of a DatoCMS project can be read and used on multiple frontend
 Once a build trigger is configured, it is possible to:
 
 1.  **Command the rebuild of a frontend** directly from the DatoCMS interface;
-    
 2.  **Activate Site Search**, so that each time the frontend is rebuilt, the crawling of the site and re-indexing of its pages starts;
-    
 
 The configuration of the build trigger actually depends on the hosting solution you choose for the frontend, so please refer to the various guides inside our [Marketplace](https://www.datocms.com/marketplace/hosting.md).
 
@@ -44996,19 +43882,16 @@ Once you have created and properly configured a build trigger, you can activate 
 
 [(Image content)](https://www.datocms-assets.com/205/1716297781-enable-site-search-in-cms.png?auto=format&fit=max&w=2000)
 
--   Go to the *Project Settings > Build triggers* section of your project and select a build trigger;
-    
--   Check the **Site search** option and specify your **Website frontend URL**: that's the address from which crawling will begin;
-    
--   Press the **Publish changes** button. This will start the rebuild of the frontend, and subsequently a website spidering.
-    
+- Go to the _Project Settings > Build triggers_ section of your project and select a build trigger;
+- Check the **Site search** option and specify your **Website frontend URL**: that's the address from which crawling will begin;
+- Press the **Publish changes** button. This will start the rebuild of the frontend, and subsequently a website spidering.
 
 > [!POSITIVE] Respider a website without triggering a rebuild
 > Anytime you want, you can also trigger a respidering of your frontend [using a specific CMA endpoint](/docs/content-management-api/resources/build-trigger/reindex.md).
 
 ### Inspecting crawling results
 
-Once the publishing of the website ends, in the *Project Settings > Deployment > Activity log* section you will see that DatoCMS will start spidering your website. When the spidering ends (it may take a while, depending on the size of your website), you'll see a **Site spidering completed with success** event in your log.
+Once the publishing of the website ends, in the _Project Settings > Deployment > Activity log_ section you will see that DatoCMS will start spidering your website. When the spidering ends (it may take a while, depending on the size of your website), you'll see a **Site spidering completed with success** event in your log.
 
 Clicking on the **Show details** link will present you the complete list of spidered pages.
 
@@ -45056,12 +43939,9 @@ Disallow: /
 Allow: /other/
 ```
 
--   `/blog/my-article`, `/blog/2/`, etc. will be crawled
-    
--   `/other/my-page` will NOT be crawled, even though it's `Allow`ed, **because it would've first matched the** `**Disallow: /**` **line right above it**
-    
--   **In other words, ALL paths not starting with** **`/blog`** **will be skipped** because of the `Disallow: /` rule. This is counterintuitive because it is the **order** of the directives, not their specificity, that our crawler respects.
-    
+- `/blog/my-article`, `/blog/2/`, etc. will be crawled
+- `/other/my-page` will NOT be crawled, even though it's `Allow`ed, **because it would've first matched the** `**Disallow: /**` **line right above it**
+- **In other words, ALL paths not starting with** **`/blog`** **will be skipped** because of the `Disallow: /` rule. This is counterintuitive because it is the **order** of the directives, not their specificity, that our crawler respects.
 
 If you wish to allow both `/blog/` and `/other/`, then you MUST place their `Allow` directives first, like:
 
@@ -45076,10 +43956,8 @@ Allow: /other/
 Disallow: /
 ```
 
--   This way, everything under `/blog/` and `/other/` will be crawled
-    
--   Everything else will be skipped
-    
+- This way, everything under `/blog/` and `/other/` will be crawled
+- Everything else will be skipped
 
 ### Sitemaps
 
@@ -45108,15 +43986,9 @@ To do that, you can simply add a `data-datocms-noindex` attribute to the HTML el
 
 ```html
 <body>
-  <div class="header" data-datocms-noindex>
-    ...
-  </div>
-  <div class="main-content">
-    ...
-  </div>
-  <div class="footer" data-datocms-noindex>
-    ...
-  </div>
+  <div class="header" data-datocms-noindex>...</div>
+  <div class="main-content">...</div>
+  <div class="footer" data-datocms-noindex>...</div>
 </body>
 ```
 
@@ -45134,7 +44006,7 @@ Once you've configured the build trigger, we can start performing search request
 
 #### Obtaining an API token
 
-To do that, first you need to generate an API token with the proper permissions. Go to *Settings > Roles* and create a new role with just the *Can perform Site Search API calls* permission checked.
+To do that, first you need to generate an API token with the proper permissions. Go to _Settings > Roles_ and create a new role with just the _Can perform Site Search API calls_ permission checked.
 
 [(Image content)](https://www.datocms-assets.com/205/1716298104-screenshot-2024-05-21-alle-15-27-11.png?auto=format&fit=max&w=2000)
 
@@ -45176,7 +44048,7 @@ console.log(JSON.stringify(searchResults, null, 2));
 > If you have multiple build triggers, you need to specify the `filter: { build_trigger_id }` parameter. You can find the build trigger ID as the last number of the build trigger URL on the dashboard. While, technically speaking, you can omit this parameter if you only have one build trigger, it is strongly suggested to always pass it.
 
 > [!WARNING] Want more results? Activate fuzzy search
-> When the `fuzzy` parameter is passed, our search engine will find strings that *approximately* match the query provided. For instance, strings like *florence* will be matched, even if the query is *flor****a****nce*.
+> When the `fuzzy` parameter is passed, our search engine will find strings that _approximately_ match the query provided. For instance, strings like _florence_ will be matched, even if the query is _flor\***\*a\*\***nce_.
 
 Let's take a look at how a search result looks like:
 
@@ -45190,12 +44062,8 @@ Let's take a look at how a search result looks like:
     "url": "http://www.website.com/some-page",
     "score": 11.3,
     "highlight": {
-      "title": [
-        "[h]Florence[/h] Apartments for Rent | Long Term Student Accommodation Rentals"
-      ],
-      "body": [
-        "All our student accommodation and apartments in [h]Florence[/h] are fully"
-      ]
+      "title": ["[h]Florence[/h] Apartments for Rent | Long Term Student Accommodation Rentals"],
+      "body": ["All our student accommodation and apartments in [h]Florence[/h] are fully"]
     }
   }
 }
@@ -45207,7 +44075,7 @@ You can easily replace the `[h]` tag with a proper HTML tag of your choice like 
 
 ```javascript
 function highlightMatches(string, highlight) {
-  return string.replace(/\[h\](.+?)\[\/h\]/g, function(a, b) {
+  return string.replace(/\[h\](.+?)\[\/h\]/g, function (a, b) {
     var div = document.createElement('div');
     div.innerHTML = highlight;
     div.children[0].innerText = b;
@@ -45253,11 +44121,7 @@ const { state, error, data } = useSiteSearch({
   initialState: { locale: 'en' },
   // optional: to configure how to present the part of page title/content that matches the query
   highlightMatch: (text, key, context) =>
-    context === 'title' ? (
-      <strong key={key}>{text}</strong>
-    ) : (
-      <mark key={key}>{text}</mark>
-    ),
+    context === 'title' ? <strong key={key}>{text}</strong> : <mark key={key}>{text}</mark>,
   // optional: defaults to 8 search results per page
   resultsPerPage: 10,
 });
@@ -45295,11 +44159,7 @@ function App() {
           state.setQuery(query);
         }}
       >
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} />
         <select
           value={state.locale}
           onChange={(e) => {
@@ -45374,7 +44234,7 @@ const { state, error, data } = useSiteSearch({
   initialState: { locale: 'en' },
   // optional: defaults to 8 search results per page
   resultsPerPage: 10,
-})
+});
 ```
 
 Please follow the `vue-datocms` documentation to read more about at the [configuration options](https://github.com/datocms/vue-datocms/tree/master/src/composables/useSiteSearch#initialization-options) and the [data returned by the hook](https://github.com/datocms/vue-datocms/tree/master/src/composables/useSiteSearch#returned-data).
@@ -45385,31 +44245,34 @@ The following example shows a search page, including a very simple home-made pag
 
 ```html
 <script setup lang="ts">
+  import { useSiteSearch } from 'vue-datocms';
 
-import { useSiteSearch } from 'vue-datocms'
+  import { buildClient } from '@datocms/cma-client-browser';
 
-import { buildClient } from '@datocms/cma-client-browser';
+  const client = buildClient({ apiToken: 'YOUR_API_TOKEN' });
 
-const client = buildClient({ apiToken: 'YOUR_API_TOKEN' });
-
-const { state, error, data } = useSiteSearch({
-  client,
-  buildTriggerId: '7497',
-  // optional: by default fuzzy-search is not active
-  fuzzySearch: true,
-  // optional: you can omit it you only have one locale, or you want to find results in every locale
-  initialState: { locale: 'en' },
-  // optional: defaults to 8 search results per page
-  resultsPerPage: 9,
-})
-
+  const { state, error, data } = useSiteSearch({
+    client,
+    buildTriggerId: '7497',
+    // optional: by default fuzzy-search is not active
+    fuzzySearch: true,
+    // optional: you can omit it you only have one locale, or you want to find results in every locale
+    initialState: { locale: 'en' },
+    // optional: defaults to 8 search results per page
+    resultsPerPage: 9,
+  });
 </script>
 
 <template>
   <div>
     <div class="bg-slate-200 py-4">
       <div class="container mx-auto">
-        <input class="py-3 px-5 block w-full border-gray-200 rounded-full text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400" type="text" v-model="state.query" placeholder="Search: try something like &quot;vue&quot; or &quot;dato&quot;... " />
+        <input
+          class="py-3 px-5 block w-full border-gray-200 rounded-full text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
+          type="text"
+          v-model="state.query"
+          placeholder='Search: try something like "vue" or "dato"... '
+        />
       </div>
     </div>
     <div class="bg-slate-100 py-4">
@@ -45445,10 +44308,18 @@ const { state, error, data } = useSiteSearch({
       </div>
       <div class="container mx-auto py-4">
         <div class="flex">
-          <button v-if="state.page > 0" @click="state.page = state.page - 1" class="flex items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+          <button
+            v-if="state.page > 0"
+            @click="state.page = state.page - 1"
+            class="flex items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200"
+          >
             Previous
           </button>
-          <button v-if="state.page < data.totalPages" @click="state.page = state.page + 1" class="flex items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200">
+          <button
+            v-if="state.page < data.totalPages"
+            @click="state.page = state.page + 1"
+            class="flex items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200"
+          >
             Next
           </button>
         </div>
@@ -45473,52 +44344,35 @@ DatoCMS projects on the Professional and Free plans use the shared domain name `
 #### Requirements
 
 1.  Custom domain names are **only available for DatoCMS Enterprise customers**, not Professional or Free users. See our [plan comparison](https://www.datocms.com/pricing.md).
-    
 2.  Assets must be hosted on a **customer-provided** [**AWS S3**](https://www.datocms.com/marketplace/enterprise/aws-s3.md)**,** [**Azure Blob**](https://www.datocms.com/marketplace/enterprise/azure-blob-storage.md)**,** [**Google Cloud Storage**](https://www.datocms.com/marketplace/enterprise/google-cloud-storage.md)**,** or [**Cloudflare R2**](https://www.datocms.com/marketplace/enterprise/cloudflare-r2.md) bucket under a **separate subscription** directly with that cloud vendor, existing or new.
-    
 3.  An [**Imgix Premium Plan with custom SSL**](https://docs.imgix.com/en-US/getting-started/setup/creating-sources/advanced-settings#custom-domains) is also required. This will also be a **separate account** you subscribe to directly through Imgix.
-    
 
 #### Pricing
 
 This service is included as part of DatoCMS Enterprise plans. However, you may need to separately subscribe to and pay for:
 
--   Cloud storage costs with an external provider
-    
--   An Imgix premium plan with custom SSL
-    
--   Bandwidth charges to/from the cloud storage (their ingress/egress fees)
-    
--   Bandwidth charges from Imgix to your visitors (depending on your plan with them)
-    
+- Cloud storage costs with an external provider
+- An Imgix premium plan with custom SSL
+- Bandwidth charges to/from the cloud storage (their ingress/egress fees)
+- Bandwidth charges from Imgix to your visitors (depending on your plan with them)
 
 #### Additional Info
 
--   At this time, we cannot provide custom domain names for assets on our own cloud storage. You must use one of the external storage options and an Imgix premium plan. Please see [Requirements](/docs/custom-asset-domains.md#requirements) above for details.
-    
--   Your editors' user experience inside the media area should not change. This is a backend configuration change only.
-    
--   If you already have existing assets (uploaded files) in your media area, we can help you migrate them over to a new storage service.
-    
--   Nearly all [Imgix URL parameters](https://docs.imgix.com/en-US/apis/rendering/overview) will continue to work as before, with the notable exception of the [DatoCMS-specific `skip-default-optimizations` parameter](/docs/asset-api/asset-cdn-settings.md#automatic-image-optimization). Instead, you can [specify your own default parameters](https://docs.imgix.com/en-US/getting-started/setup/creating-sources/advanced-settings#default-parameters) on your Imgix source.
-    
+- At this time, we cannot provide custom domain names for assets on our own cloud storage. You must use one of the external storage options and an Imgix premium plan. Please see [Requirements](/docs/custom-asset-domains.md#requirements) above for details.
+- Your editors' user experience inside the media area should not change. This is a backend configuration change only.
+- If you already have existing assets (uploaded files) in your media area, we can help you migrate them over to a new storage service.
+- Nearly all [Imgix URL parameters](https://docs.imgix.com/en-US/apis/rendering/overview) will continue to work as before, with the notable exception of the [DatoCMS-specific `skip-default-optimizations` parameter](/docs/asset-api/asset-cdn-settings.md#automatic-image-optimization). Instead, you can [specify your own default parameters](https://docs.imgix.com/en-US/getting-started/setup/creating-sources/advanced-settings#default-parameters) on your Imgix source.
 
 ### Next steps: Enabling Custom Domains
 
 1.  If you're not already on an Enterprise plan, please see our [pricing page](https://www.datocms.com/pricing.md) for details and then [contact our Sales team](https://www.datocms.com/contact.md) to sign up.
-    
 2.  Then, please choose a cloud storage provider and follow instructions below to set it up as your new Imgix asset source:
-    
-    -   [AWS S3 bucket](https://www.datocms.com/marketplace/enterprise/aws-s3.md)
-        
-    -   [Azure Blob](https://www.datocms.com/marketplace/enterprise/azure-blob-storage.md)
-        
-    -   [Google Cloud Storage](https://www.datocms.com/marketplace/enterprise/google-cloud-storage.md)
-        
-    -   [Cloudflare R2](https://www.datocms.com/marketplace/enterprise/cloudflare-r2.md)
-        
+    - [AWS S3 bucket](https://www.datocms.com/marketplace/enterprise/aws-s3.md)
+    - [Azure Blob](https://www.datocms.com/marketplace/enterprise/azure-blob-storage.md)
+    - [Google Cloud Storage](https://www.datocms.com/marketplace/enterprise/google-cloud-storage.md)
+    - [Cloudflare R2](https://www.datocms.com/marketplace/enterprise/cloudflare-r2.md)
+
 3.  Once step 2 is complete, please email [support@datocms.com](mailto:support@datocms.com) so we can help you finalize the setup.
-    
 
 ### **Questions?**
 
@@ -45626,10 +44480,8 @@ npm run dev
 
 When it comes to fetching data, Next recommends the following:
 
--   [perform the fetch on the Server](https://nextjs.org/docs/app/building-your-application/data-fetching#fetching-data-on-the-server), to reduce the back-and-forth communication between client and server;
-    
--   [use Next.js `fetch` API](https://nextjs.org/docs/app/building-your-application/data-fetching#the-fetch-api), and call it whenever you need it, be it a layout, a page or a specific component.
-    
+- [perform the fetch on the Server](https://nextjs.org/docs/app/building-your-application/data-fetching#fetching-data-on-the-server), to reduce the back-and-forth communication between client and server;
+- [use Next.js `fetch` API](https://nextjs.org/docs/app/building-your-application/data-fetching#the-fetch-api), and call it whenever you need it, be it a layout, a page or a specific component.
 
 Let's start by installing `@datocms/cda-client`, a lightweight, TypeScript-ready package that offers various helpers around the native Fetch API to perform GraphQL requests towards [DatoCMS Content Delivery API](/docs/content-delivery-api/api-endpoints.md):
 
@@ -45652,7 +44504,7 @@ export const performRequest = (query, options) => {
     token: process.env.NEXT_DATOCMS_API_TOKEN,
     environment: process.env.NEXT_DATOCMS_ENVIRONMENT,
   });
-}
+};
 ```
 
 > [!WARNING] Enhanced Data Fetching
@@ -45698,12 +44550,10 @@ Although the Next.js `fetch` API has (almost) the same interface as the regular 
 
 By default, Next.js [automatically does static fetches](https://nextjs.org/docs/app/building-your-application/data-fetching#static-and-dynamic-data-fetching):
 
--   For `fetch` calls happening in Server Components, this means that the data will be **fetched at build time, cached, and reused indefinitely on each request until your next deploy.**
-    
--   For `fetch` calls happening in Client Components, the cache **lasts the duration of a session** (which could include multiple client-side re-renders) before a full page reload.
-    
+- For `fetch` calls happening in Server Components, this means that the data will be **fetched at build time, cached, and reused indefinitely on each request until your next deploy.**
+- For `fetch` calls happening in Client Components, the cache **lasts the duration of a session** (which could include multiple client-side re-renders) before a full page reload.
 
-Caching requests is generally a good idea, as it minimizes the number of requests made to DatoCMS. However, if you want to always fetch the latest data, you can mark requests as *dynamic* and fetch data on each request without caching.
+Caching requests is generally a good idea, as it minimizes the number of requests made to DatoCMS. However, if you want to always fetch the latest data, you can mark requests as _dynamic_ and fetch data on each request without caching.
 
 ### GraphQL calls need to be manually deduped
 
@@ -45770,7 +44620,7 @@ npm install react-datocms
 Then, inside your page, feed content coming from a [`responsiveImage` query](/docs/content-delivery-api/images-and-videos.md#responsive-images) directly into the `<Image />` component:
 
 ```jsx
-import { Image as DatoImage, RSCImage as DatoSRCImage } from "react-datocms";
+import { Image as DatoImage, RSCImage as DatoSRCImage } from 'react-datocms';
 import { performRequest } from '../lib/datocms';
 
 const PAGE_CONTENT_QUERY = `query HomePage($limit: IntType) {
@@ -45798,7 +44648,7 @@ export default async function Home() {
 
   return (
     <div>
-      {data.allBlogPosts.map(blogPost => (
+      {data.allBlogPosts.map((blogPost) => (
         <article key={blogPost.id}>
           {/* client component with custom lazy-loading via IntersectionObserver */}
           <DatoImage data={blogPost.coverImage.responsiveImage} />
@@ -45816,10 +44666,8 @@ export default async function Home() {
 
 Even though their purpose is the same, there are some significant differences between these two components. Depending on your specific needs, you can choose to use one or the other:
 
--   `<SRCImage />` is a [React Server Component](https://nextjs.org/docs/app/building-your-application/rendering/server-components), so it can be rendered and optionally cached on the server. It doesn't create any JS footprint. It generates a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself. Be careful: the placeholder is not removed when the image loads, so it's not recommended to use this component if you anticipate that the image may have an alpha channel with transparencies.
-    
--   `<Image />` is a [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components). Since it runs on the browser, it has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
-    
+- `<SRCImage />` is a [React Server Component](https://nextjs.org/docs/app/building-your-application/rendering/server-components), so it can be rendered and optionally cached on the server. It doesn't create any JS footprint. It generates a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself. Be careful: the placeholder is not removed when the image loads, so it's not recommended to use this component if you anticipate that the image may have an alpha channel with transparencies.
+- `<Image />` is a [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components). Since it runs on the browser, it has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
 
 We recommend that you delve deeper into the topic in the [documentation of the components themselves](https://github.com/datocms/react-datocms/blob/master/docs/image.md).
 
@@ -45840,7 +44688,7 @@ npm install react-datocms
 Then, inside your page, feed content coming from a `video` query directly into the `<VideoPlayer />` component:
 
 ```javascript
-import { VideoPlayer } from "react-datocms";
+import { VideoPlayer } from 'react-datocms';
 import { performRequest } from '../lib/datocms';
 
 const PAGE_CONTENT_QUERY = `query HomePage($limit: IntType) {
@@ -45866,7 +44714,7 @@ export default async function Home() {
 
   return (
     <div>
-      {data.allBlogPosts.map(blogPost => (
+      {data.allBlogPosts.map((blogPost) => (
         <article key={blogPost.id}>
           <VideoPlayer data={blogPost.coverVideo.video} />
           <h2>{blogPost.title}</h2>
@@ -45920,7 +44768,7 @@ npm install react-datocms
 Then, inside your page, make a [GraphQL query to fetch a Structured Text field](/docs/content-delivery-api/structured-text-fields.md), and feed the result to the `data` prop of a `<StructuredText />` component:
 
 ```jsx
-import { StructuredText } from "react-datocms";
+import { StructuredText } from 'react-datocms';
 import { performRequest } from 'lib/datocms';
 
 const PAGE_CONTENT_QUERY = `
@@ -45936,12 +44784,12 @@ const PAGE_CONTENT_QUERY = `
 
 export default async function Home() {
   const pageContent = await performRequest(PAGE_CONTENT_QUERY, {
-    variables: { limit: 10 }
+    variables: { limit: 10 },
   });
 
   return (
     <div>
-      {data.allBlogPosts.map(blogPost => (
+      {data.allBlogPosts.map((blogPost) => (
         <article key={blogPost.id}>
           <h2>{blogPost.title}</h2>
           <StructuredText data={blogPost.content} />
@@ -45956,14 +44804,10 @@ export default async function Home() {
 
 Other than "regular" formatting nodes (paragraphs, lists, etc.), Structured Text documents can contain three special types of node:
 
--   [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
-    
--   [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
-    
--   [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
-    
--   [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
-    
+- [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
+- [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
+- [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
+- [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
 
 If a Structured Text document contains one of these nodes, then we need to change the GraphQL query, so that we also fetch all the records and blocks it references. As an example, if the field can link to other Blog posts, and can embed blocks of type "Image block" and "Mention block", then the query should change like this:
 
@@ -46015,7 +44859,7 @@ return (
     data={blogPost.content}
     renderInlineRecord={({ record }) => {
       switch (record.__typename) {
-        case "BlogPostRecord":
+        case 'BlogPostRecord':
           return <a href={`/blog/${record.slug}`}>{record.title}</a>;
         default:
           return null;
@@ -46023,7 +44867,7 @@ return (
     }}
     renderLinkToRecord={({ record, children }) => {
       switch (record.__typename) {
-        case "BlogPostRecord":
+        case 'BlogPostRecord':
           return <a href={`/blog/${record.slug}`}>{children}</a>;
         default:
           return null;
@@ -46031,7 +44875,7 @@ return (
     }}
     renderBlock={({ record }) => {
       switch (record.__typename) {
-        case "ImageBlockRecord":
+        case 'ImageBlockRecord':
           return <img src={record.image.url} alt={record.image.alt} />;
         default:
           return null;
@@ -46039,7 +44883,7 @@ return (
     }}
     renderInlineBlock={({ record }) => {
       switch (record.__typename) {
-        case "MentionBlockRecord":
+        case 'MentionBlockRecord':
           return <code>@{record.username}</code>;
         default:
           return null;
@@ -46196,7 +45040,9 @@ import { draftMode } from 'next/headers';
 export default async function Page() {
   const { isEnabled } = draftMode();
 
-  const { data: { homepage } } = await performRequest(PAGE_CONTENT_QUERY, {
+  const {
+    data: { homepage },
+  } = await performRequest(PAGE_CONTENT_QUERY, {
     includeDrafts: isEnabled,
   });
 
@@ -46212,10 +45058,8 @@ You can read more details regarding draft mode on [Next.js docs page](https://ne
 
 Live updates can be extremely useful both for content editors and regular visitors of your app/website:
 
--   Content-editors in Draft Mode can **see their work-in-progress directly in the production website**, without having to refresh the page;
-    
--   Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (e.g., live-news coverage).
-    
+- Content-editors in Draft Mode can **see their work-in-progress directly in the production website**, without having to refresh the page;
+- Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (e.g., live-news coverage).
 
 (Video content)
 
@@ -46236,7 +45080,7 @@ const PAGE_CONTENT_QUERY = `{
 export default async function Page() {
   const data = await performRequest(PAGE_CONTENT_QUERY);
 
-  return <LatestBlogPosts data={data} />
+  return <LatestBlogPosts data={data} />;
 }
 ```
 
@@ -46282,7 +45126,7 @@ In this case, the page component will change a bit, as we need to check draft mo
 
 ```jsx
 function fetchContent({ includeDrafts }) {
-  return ;
+  return;
 }
 
 export default async function Page() {
@@ -46303,24 +45147,21 @@ export default async function Page() {
     );
   }
 
-  return <LatestBlogPosts data={data} />
+  return <LatestBlogPosts data={data} />;
 }
 ```
 
 In summary, the pattern to follow on every page is this:
 
 1.  Do not place the actual content of the page directly inside the `Page` component, but in a secondary component (ie. `<Content />`);
-    
 2.  Create a real-time wrapper component (ie. `<Realtime />`) that utilizes the `useQuerySubscription` hook, and then renders the `<Content />`;
-    
 3.  Create the actual Page component and have it return either `<Realtime />`, or `<Content />` based on whether draft mode is active or not.
-    
 
 ### DRYing everything up
 
 Repeating this pattern for each page can become repetitive and prone to errors, but it is possible to make the code extremely compact and DRY (Don't Repeat Yourself) by using helper functions that generate both the `<Page />` and `<Realtime />` components for you. This way, you can focus solely on the `<Content />` component, which is what actually contains the content of your page.
 
-To see an example of these helper functions, we recommend you take a look at the code of one of our Next.js Starter Kit — for instance, [this is a page component](https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/\(base-layout\)/real-time-updates/page.tsx), [this is a real-time component](https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/\(base-layout\)/real-time-updates/RealTime.tsx), while [this is the actual content](https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/\(base-layout\)/real-time-updates/Content.tsx) — but of course, you can customize them as you prefer to best fit them into your project.
+To see an example of these helper functions, we recommend you take a look at the code of one of our Next.js Starter Kit — for instance, [this is a page component](<https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/(base-layout)/real-time-updates/page.tsx>), [this is a real-time component](<https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/(base-layout)/real-time-updates/RealTime.tsx>), while [this is the actual content](<https://github.com/datocms/nextjs-starter-kit/blob/main/src/app/(base-layout)/real-time-updates/Content.tsx>) — but of course, you can customize them as you prefer to best fit them into your project.
 
 If, however, you want to directly see the end result and the experience for editors, we recommend launching the starter from here:
 
@@ -46348,7 +45189,7 @@ This diagram provides a summary of the essential steps for understanding [On-Dem
 
 (Image content)
 
-When the browser requests a page, Next.js by default, responds with a `Cache-Control: public, max-age=0, must-revalidate` header. This tells the browser to always verify from the server if a newer version of the page is available. If there's no change, the server responds with the status  [304](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304), therefore saving bandwidth and time. This is referred to as the "revalidate" pattern.
+When the browser requests a page, Next.js by default, responds with a `Cache-Control: public, max-age=0, must-revalidate` header. This tells the browser to always verify from the server if a newer version of the page is available. If there's no change, the server responds with the status [304](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/304), therefore saving bandwidth and time. This is referred to as the "revalidate" pattern.
 
 The first time the browser requests a page, both the **Full route cache** and the **Data cache** will be empty, resulting in two `MISS` answers that trigger the `fetch()` requests contained in your routes. The results of those `fetch()` calls will be stored and tagged in Next.js Data Cache. After that, the entire page will be stored in the Next.js Full Route Cache, and marked with the same set of cache tags.
 
@@ -46366,22 +45207,16 @@ To circumvent the problem, there is an alternative solution, which however requi
 
 Before we delve into the details, let's focus on the pattern we're aiming for:
 
--   Implement a function — i.e., `executeQuery()` — responsible for executing a GraphQL query using the DatoCMS Content Delivery API, and caching the result.
-    
-    1.  To be able to invalidate this request later, the `fetch()` needs to tag the request. We'll use a single tag and call it "Query ID", as it will be unique for each query.
-        
-    2.  Before returning the result of the query, `executeQuery()` needs to read the `X-Cache-Tags` header in the response, and save the "Query ID to DatoCMS Cache Tags" mappings in the DB.
-        
--   Implement a route handler listening for ["Cache Tag Invalidation" events](/docs/content-delivery-api/cache-tags.md#step-3-implement-the-invalidate-cache-tag-webhook). The route needs to:
-    
-    1.  Take from the webhook payload the DatoCMS Cache Tags that need to be invalidated;
-        
-    2.  Search the DB for all the Query IDs linked to these cache tags;
-        
-    3.  Use [`revalidateTag()`](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) to invalidate all the identified Query IDs.
-        
--   In each route that uses `executeQuery()`, set up `dynamic = 'force-static'` as [Route Segment Config](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config).
-    
+- Implement a function — i.e., `executeQuery()` — responsible for executing a GraphQL query using the DatoCMS Content Delivery API, and caching the result.
+  1.  To be able to invalidate this request later, the `fetch()` needs to tag the request. We'll use a single tag and call it "Query ID", as it will be unique for each query.
+  2.  Before returning the result of the query, `executeQuery()` needs to read the `X-Cache-Tags` header in the response, and save the "Query ID to DatoCMS Cache Tags" mappings in the DB.
+
+- Implement a route handler listening for ["Cache Tag Invalidation" events](/docs/content-delivery-api/cache-tags.md#step-3-implement-the-invalidate-cache-tag-webhook). The route needs to:
+  1.  Take from the webhook payload the DatoCMS Cache Tags that need to be invalidated;
+  2.  Search the DB for all the Query IDs linked to these cache tags;
+  3.  Use [`revalidateTag()`](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) to invalidate all the identified Query IDs.
+
+- In each route that uses `executeQuery()`, set up `dynamic = 'force-static'` as [Route Segment Config](https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config).
 
 ### The actual code
 
@@ -46474,8 +45309,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // set by NUXT_DATOCMS_API_TOKEN env variable
     datocmsApiToken: '',
-  }
-})
+  },
+});
 ```
 
 To create an API token for a DatoCMS project, go in the "Settings > API Tokens" section, making sure you only give it permission to access the (read-only) Content Delivery API.
@@ -46529,10 +45364,10 @@ First, change the `nuxt.config.ts` file to expose the current environment:
 export default defineNuxtConfig({
   runtimeConfig: {
     public: {
-      env: process.env.NODE_ENV
-    }
-  }
-})
+      env: process.env.NODE_ENV,
+    },
+  },
+});
 ```
 
 Then, in the pages you can check the environment to decide to include draft records or not:
@@ -46577,30 +45412,30 @@ Then, inside your Nuxt page, feed content coming from a [`responsiveImage` query
 
 ```html
 <script setup>
-import { Image as DatocmsImage } from "vue-datocms";
+  import { Image as DatocmsImage } from "vue-datocms";
 
-const QUERY = `query HomePage($limit: IntType) {
-  allBlogPosts(first: $limit) {
-    id
-    title
-    coverImage {
-      responsiveImage(imgixParams: { fit: crop, w: 300, h: 300, auto: format }) {
-        srcSet
-        webpSrcSet
-        sizes
-        src
-        width
-        height
-        aspectRatio
-        alt
-        title
-        base64
+  const QUERY = `query HomePage($limit: IntType) {
+    allBlogPosts(first: $limit) {
+      id
+      title
+      coverImage {
+        responsiveImage(imgixParams: { fit: crop, w: 300, h: 300, auto: format }) {
+          srcSet
+          webpSrcSet
+          sizes
+          src
+          width
+          height
+          aspectRatio
+          alt
+          title
+          base64
+        }
       }
     }
-  }
-}`;
+  }`;
 
-const { data, error } = await useQuery(QUERY);
+  const { data, error } = await useQuery(QUERY);
 </script>
 
 <template>
@@ -46635,25 +45470,25 @@ Then, inside your page, feed content coming from a `video` query directly into t
 
 ```html
 <script setup>
-import { VideoPlayer } from "vue-datocms";
+  import { VideoPlayer } from "vue-datocms";
 
-const QUERY = `query HomePage($limit: IntType) {
-  allBlogPosts(first: $limit) {
-    id
-    title
-    coverVideo {
-      video {
-        muxPlaybackId
-        title
-        width
-        height
-        blurUpThumb
+  const QUERY = `query HomePage($limit: IntType) {
+    allBlogPosts(first: $limit) {
+      id
+      title
+      coverVideo {
+        video {
+          muxPlaybackId
+          title
+          width
+          height
+          blurUpThumb
+        }
       }
     }
-  }
-}`;
+  }`;
 
-const { data } = await useQuery(QUERY);
+  const { data } = await useQuery(QUERY);
 </script>
 
 <template>
@@ -46710,19 +45545,19 @@ Then, inside your page, make a [GraphQL query to fetch a Structured Text field](
 
 ```html
 <script setup>
-import { StructuredText as DatocmsStructuredText } from "vue-datocms";
+  import { StructuredText as DatocmsStructuredText } from "vue-datocms";
 
-const QUERY = `query HomePage($limit: IntType) {
-  allBlogPosts(first: $limit) {
-    id
-    title
-    content {
-      value
+  const QUERY = `query HomePage($limit: IntType) {
+    allBlogPosts(first: $limit) {
+      id
+      title
+      content {
+        value
+      }
     }
-  }
-}`;
+  }`;
 
-const { data } = await useQuery(QUERY);
+  const { data } = await useQuery(QUERY);
 </script>
 
 <template>
@@ -46739,14 +45574,10 @@ const { data } = await useQuery(QUERY);
 
 Other than "regular" formatting nodes (paragraphs, lists, etc.), Structured Text documents can contain three particular types of nodes:
 
--   [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
-    
--   [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
-    
--   [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
-    
--   [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
-    
+- [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
+- [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
+- [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
+- [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
 
 If a Structured Text document contains one of these nodes, then we need to change the GraphQL query, so that we also fetch all the records and blocks it references. As an example, if the field can link to other Blog posts, and can embed blocks of type "Image block" and "Mention block", then the query should change like this:
 
@@ -46790,37 +45621,37 @@ We also need to tell `<StructuredText />` how you want such nodes to be rendered
 
 ```html
 <script setup>
-import { h } from 'vue'
+  import { h } from 'vue';
 
-const renderInlineRecord = ({ record }) => {
-  if (record.__typename === 'BlogPostRecord') {
-    return h('a', { href: `/blog/${record.slug}` }, [record.title]);
-  }
-  return null;
-};
+  const renderInlineRecord = ({ record }) => {
+    if (record.__typename === 'BlogPostRecord') {
+      return h('a', { href: `/blog/${record.slug}` }, [record.title]);
+    }
+    return null;
+  };
 
-const renderLinkToRecord = ({ record, children }) => {
-  if (record.__typename === 'BlogPostRecord') {
-    return h('a', { href: `/blog/${record.slug}` }, children);
-  }
-  return null;
-};
+  const renderLinkToRecord = ({ record, children }) => {
+    if (record.__typename === 'BlogPostRecord') {
+      return h('a', { href: `/blog/${record.slug}` }, children);
+    }
+    return null;
+  };
 
-const renderBlock = ({ record, key }) => {
-  if (record.__typename === 'ImageBlockRecord') {
-    return h(DatocmsImage, { key, props: { data: record.image.responsiveImage } });
-  }
-  return null;
-};
+  const renderBlock = ({ record, key }) => {
+    if (record.__typename === 'ImageBlockRecord') {
+      return h(DatocmsImage, { key, props: { data: record.image.responsiveImage } });
+    }
+    return null;
+  };
 
-const renderInlineBlock = ({ record, key }) => {
-  if (record.__typename === 'MentionBlockRecord') {
-    return h('code', { key }, `@${record.username}`);
-  }
-  return null;
-};
+  const renderInlineBlock = ({ record, key }) => {
+    if (record.__typename === 'MentionBlockRecord') {
+      return h('code', { key }, `@${record.username}`);
+    }
+    return null;
+  };
 
-// ...
+  // ...
 </script>
 
 <template>
@@ -46884,32 +45715,32 @@ Then, inside your page, feed content coming from a `faviconMetaTags` or `_seoMet
 
 ```html
 <script setup>
-import { toHead } from "vue-datocms";
+  import { toHead } from "vue-datocms";
 
-const QUERY = `query {
-  site: _site {
-    favicon: faviconMetaTags {
-      attributes
-      content
-      tag
+  const QUERY = `query {
+    site: _site {
+      favicon: faviconMetaTags {
+        attributes
+        content
+        tag
+      }
     }
-  }
-  blog {
-    seo: _seoMetaTags {
-      attributes
-      content
-      tag
+    blog {
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
     }
-  }
-}`;
+  }`;
 
-const { data } = await useQuery(QUERY);
+  const { data } = await useQuery(QUERY);
 
-useHead(() => {
-  if (!data.value) return {}
+  useHead(() => {
+    if (!data.value) return {}
 
-  return toHead(data.value.blog.seo, data.value.site.favicon)
-})
+    return toHead(data.value.blog.seo, data.value.site.favicon)
+  })
 </script>
 ```
 
@@ -46931,10 +45762,8 @@ Play video »
 
 Live updates are useful both for content editors and the regular visitors of your app/website:
 
--   Content-editors in can **see drafts directly in the website**, without having to refresh the page;
-    
--   Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
-    
+- Content-editors in can **see drafts directly in the website**, without having to refresh the page;
+- Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
 
 (Video content)
 
@@ -46948,17 +45777,17 @@ The following code shows a complete example that **activates real-time updates f
 
 ```html
 <script setup>
-import { useQuerySubscription } from "vue-datocms";
+  import { useQuerySubscription } from 'vue-datocms';
 
-const statusMessage = {
-  connecting: 'Connecting to DatoCMS...',
-  connected: 'Connected to DatoCMS, receiving live updates!',
-  closed: 'Connection closed',
-};
+  const statusMessage = {
+    connecting: 'Connecting to DatoCMS...',
+    connected: 'Connected to DatoCMS, receiving live updates!',
+    closed: 'Connection closed',
+  };
 
-const runtimeConfig = useRuntimeConfig();
+  const runtimeConfig = useRuntimeConfig();
 
-const QUERY = `
+  const QUERY = `
   query {
     blogPost {
       title
@@ -46966,10 +45795,10 @@ const QUERY = `
   }
 `;
 
-const { status, error, data } = useQuerySubscription({
-  query: QUERY,
-  token: config.datocmsApiToken
-});
+  const { status, error, data } = useQuerySubscription({
+    query: QUERY,
+    token: config.datocmsApiToken,
+  });
 </script>
 
 <template>
@@ -47022,7 +45851,7 @@ export const performRequest = (query, options) => {
     ...options,
     token: privateEnv.PRIVATE_DATOCMS_CDA_TOKEN,
   });
-}
+};
 ```
 
 Make sure you set `PRIVATE_DATOCMS_CDA_TOKEN` as an actual API token of your DatoCMS project. You can create a new one under "Settings > API Tokens".
@@ -47053,7 +45882,7 @@ src/routes/+page.svelte
 
 ```html
 <script>
-export let data;
+  export let data;
 </script>
 
 <article>
@@ -47147,12 +45976,12 @@ src/routes/+page.svelte
 
 ```html
 <script>
-import { Image } from '@datocms/svelte';
+  import { Image } from '@datocms/svelte';
 
-export let data;
+  export let data;
 </script>
 
-<Image data={data.blogPost.cover.responsiveImage} />
+<image data="{data.blogPost.cover.responsiveImage}" />
 ```
 
 The [`@datocms/svelte`](https://github.com/datocms/datocms-svelte) package also offer a `<NakedImage />` component which generates minimum JS footprint, outputs a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). You can refer to the package [README](https://github.com/datocms/datocms-svelte/tree/main/src/lib/components/Image) to learn more.
@@ -47290,14 +46119,14 @@ src/routes/+page.svelte
 
 ```html
 <script>
-import { StructuredText } from '@datocms/svelte';
+  import { StructuredText } from '@datocms/svelte';
 
-export let data;
+  export let data;
 </script>
 
 <article>
   <h1>{{ data.blogPost.title }}</h1>
-  <StructuredText data={data.blogPost.content} />
+  <StructuredText data="{data.blogPost.content}" />
 </article>
 ```
 
@@ -47305,14 +46134,10 @@ export let data;
 
 Other than "regular" formatting nodes (paragraphs, lists, etc.), Structured Text documents can contain three special types of node:
 
--   [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
-    
--   [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
-    
--   [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
-    
--   [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
-    
+- [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
+- [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
+- [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
+- [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
 
 If a Structured Text document contains one of these nodes, then we need to change the GraphQL query, so that we also fetch all the records and blocks it references. As an example, if the field can link to other Blog posts, and can embed blocks of type "Image block" and "Mention block", then the query should change like this:
 
@@ -47356,7 +46181,7 @@ const query = `query HomeQuery {
 }`;
 ```
 
-You must also tell `<StructuredText />` how to render such nodes. By using the `components` prop, you can declare an array of tuples composed of a predicate (a *predicate* is a function that takes one item as input and returns either true or false based on whether the item satisfies some condition) and a component: the predicate receives a node, and when it returns true, the custom component declared will be used to render the node:
+You must also tell `<StructuredText />` how to render such nodes. By using the `components` prop, you can declare an array of tuples composed of a predicate (a _predicate_ is a function that takes one item as input and returns either true or false based on whether the item satisfies some condition) and a component: the predicate receives a node, and when it returns true, the custom component declared will be used to render the node:
 
 ```jsx
 <script>
@@ -47462,7 +46287,7 @@ src/routes/+page.svelte
   export let data;
 </script>
 
-<Head data={[...data.page.seo, ...data.site.favicon]} />
+<head data="{[...data.page.seo," ...data.site.favicon]} />
 ```
 
 Want to know more about SEO customization in DatoCMS? Check out this video tutorial:
@@ -47483,10 +46308,8 @@ Play video »
 
 Live updates can be extremely useful both for content editors and the regular visitors of your app/website:
 
--   Content-editors in Preview Mode can **see drafts directly in the production website**, without having to refresh the page;
-    
--   Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
-    
+- Content-editors in Preview Mode can **see drafts directly in the production website**, without having to refresh the page;
+- Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
 
 (Video content)
 
@@ -47533,8 +46356,8 @@ We can now create a function we can use in all of our pages and components that 
 Create a new directory called `lib`, and inside of it, add a file called `datocms.js`:
 
 ```javascript
-import { executeQuery as libExecuteQuery } from "@datocms/cda-client";
-import { DATOCMS_CDA_TOKEN } from "astro:env/server";
+import { executeQuery as libExecuteQuery } from '@datocms/cda-client';
+import { DATOCMS_CDA_TOKEN } from 'astro:env/server';
 
 export async function executeQuery(query, options) {
   return await libExecuteQuery(query, {
@@ -47803,14 +46626,10 @@ const data = await executeQuery(query);
 
 Other than "regular" formatting nodes (paragraphs, lists, etc.), Structured Text documents can contain three special types of node:
 
--   [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
-    
--   [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
-    
--   [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
-    
--   [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
-    
+- [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
+- [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) lets you directly embed a reference to a record in-between regular text;
+- [`block` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular paragraphs;
+- [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
 
 If a Structured Text document contains one of these nodes, then we need to change the GraphQL query, so that we also fetch all the records and blocks it references. As an example, if the field can link to other Blog posts, and can embed blocks of type "Image block" and "Mention block", then the query should change like this:
 
@@ -47887,11 +46706,9 @@ import LinkToBlogPost from '~/components/LinkToBlogPost/index.astro';
 
 The following rules will apply:
 
--   Astro components passed in `blockComponents` and `inlineBlockComponents` will be used to render blocks and will receive a `block` prop containing the actual block data.
-    
--   Astro components passed in `inlineRecordComponents` will be used to render inline records and will receive a `record` prop containing the actual record.
-    
--   Astro components passed in `linkToRecordComponents` will be used to render links to records and will receive the following props: `node` (the actual `'inlineItem'` node), `record` (the record linked to the node), and `attrs` (the custom attributes for the link specified by the node).
+- Astro components passed in `blockComponents` and `inlineBlockComponents` will be used to render blocks and will receive a `block` prop containing the actual block data.
+- Astro components passed in `inlineRecordComponents` will be used to render inline records and will receive a `record` prop containing the actual record.
+- Astro components passed in `linkToRecordComponents` will be used to render links to records and will receive the following props: `node` (the actual `'inlineItem'` node), `record` (the record linked to the node), and `attrs` (the custom attributes for the link specified by the node).
 
 ---
 
@@ -48092,7 +46909,7 @@ export const load = (query, options) => {
     token: process.env.DATOCMS_READONLY_TOKEN,
     environment: process.env.DATOCMS_ENVIRONMENT,
   });
-}
+};
 ```
 
 We want to store inside environment variables both the API token and the name of the DatoCMS environment we want to fetch content from to hide them from the code, and so that we'll be able to modify them later without touching the code. Read [this tutorial](https://remix.run/docs/en/v1/guides/envvars#server-environment-variables) to know more on how to set server environment variables in Remix.
@@ -48151,9 +46968,9 @@ npm i react-datocms --save
 Inside any of your pages, you can now feed the data coming from a [`responsiveImage` query](/docs/content-delivery-api/images-and-videos.md#responsive-images) directly into the `<Image />` component that this package offers.
 
 ```jsx
-import { load } from "~/lib/datocms";
-import { Image } from "react-datocms";
-import { useLoaderData } from "remix";
+import { load } from '~/lib/datocms';
+import { Image } from 'react-datocms';
+import { useLoaderData } from 'remix';
 
 const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
   posts: allBlogPosts(first: $limit) {
@@ -48178,7 +46995,7 @@ const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
 
 export async function loader() {
   return load(HOMEPAGE_QUERY, {
-    variables: { limit: 10 }
+    variables: { limit: 10 },
   });
 }
 
@@ -48187,7 +47004,7 @@ export default function Home() {
 
   return (
     <div>
-      {posts.map(blogPost => (
+      {posts.map((blogPost) => (
         <article key={blogPost.id}>
           <Image data={blogPost.coverImage.responsiveImage} />
           <h6>{blogPost.title}</h6>
@@ -48200,13 +47017,10 @@ export default function Home() {
 
 With so little code, the image component:
 
--   Generates multiple smaller images so smartphones and tablets don’t download desktop-sized images;
-    
--   Efficiently lazy-loads images to speed initial page load and save precious bandwidth;
-    
--   Holds the image position so your page doesn’t jump while images load;
-    
--   Uses blur-up techniques to show a preview of the image while it's still loading;
+- Generates multiple smaller images so smartphones and tablets don’t download desktop-sized images;
+- Efficiently lazy-loads images to speed initial page load and save precious bandwidth;
+- Holds the image position so your page doesn’t jump while images load;
+- Uses blur-up techniques to show a preview of the image while it's still loading;
 
 ---
 
@@ -48227,9 +47041,9 @@ npm install react-datocms
 Then, inside your page, feed content coming from a `video` query directly into the `<VideoPlayer />` component:
 
 ```jsx
-import { load } from "~/lib/datocms";
-import { VideoPlayer } from "react-datocms";
-import { useLoaderData } from "remix";
+import { load } from '~/lib/datocms';
+import { VideoPlayer } from 'react-datocms';
+import { useLoaderData } from 'remix';
 
 const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
   posts: allBlogPosts(first: $limit) {
@@ -48249,7 +47063,7 @@ const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
 
 export async function loader() {
   return load(HOMEPAGE_QUERY, {
-    variables: { limit: 10 }
+    variables: { limit: 10 },
   });
 }
 
@@ -48257,7 +47071,7 @@ export default function Home() {
   const { posts } = useLoaderData();
   return (
     <div>
-      {posts.map(blogPost => (
+      {posts.map((blogPost) => (
         <article key={blogPost.id}>
           <VideoPlayer data={blogPost.coverVideo.video} />
           <h6>{blogPost.title}</h6>
@@ -48310,9 +47124,9 @@ npm i --save react-datocms
 Then, inside your page, make a [GraphQL query to fetch a Structured Text field](/docs/content-delivery-api/structured-text-fields.md), and feed the result to the `data` prop of a `<StructuredText />` component:
 
 ```jsx
-import { load } from "~/lib/datocms";
-import { StructuredText } from "react-datocms";
-import { useLoaderData } from "remix";
+import { load } from '~/lib/datocms';
+import { StructuredText } from 'react-datocms';
+import { useLoaderData } from 'remix';
 
 const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
   posts: allBlogPosts(first: $limit) {
@@ -48326,7 +47140,7 @@ const HOMEPAGE_QUERY = `query HomePage($limit: IntType) {
 
 export async function loader() {
   return load(HOMEPAGE_QUERY, {
-    variables: { limit: 10 }
+    variables: { limit: 10 },
   });
 }
 
@@ -48335,7 +47149,7 @@ export default function Home() {
 
   return (
     <div>
-      {posts.map(blogPost => (
+      {posts.map((blogPost) => (
         <article key={blogPost.id}>
           <h6>{blogPost.title}</h6>
           <StructuredText data={blogPost.content} />
@@ -48350,14 +47164,10 @@ export default function Home() {
 
 Other than “regular” formatting nodes — paragraphs, headings, lists, etc. — Structured Text documents can contain three special types of node:
 
--   [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
-    
--   [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) let you directly embed a reference to a record in-between regular text;
-    
--   [`block` nodes](/docs/structured-text/dast.md#block) let you embed a DatoCMS block record in-between regular paragraphs;
-    
--   [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
-    
+- [`itemLink` nodes](/docs/structured-text/dast.md#itemLink) are just like regular HTML hyperlinks, but point to other records instead of URLs;
+- [`inlineItem` nodes](/docs/structured-text/dast.md#inlineItem) let you directly embed a reference to a record in-between regular text;
+- [`block` nodes](/docs/structured-text/dast.md#block) let you embed a DatoCMS block record in-between regular paragraphs;
+- [`inlineBlock` nodes](/docs/structured-text/dast.md#block) lets you embed a DatoCMS block record in-between regular text;
 
 If a Structured Text document contains one of these nodes, then we need to change the GraphQL query, so that we also fetch all the records and blocks it references.
 
@@ -48411,7 +47221,7 @@ return (
     data={blogPost.content}
     renderInlineRecord={({ record }) => {
       switch (record.__typename) {
-        case "BlogPostRecord":
+        case 'BlogPostRecord':
           return <a href={`/blog/${record.slug}`}>{record.title}</a>;
         default:
           return null;
@@ -48419,7 +47229,7 @@ return (
     }}
     renderLinkToRecord={({ record, children }) => {
       switch (record.__typename) {
-        case "BlogPostRecord":
+        case 'BlogPostRecord':
           return <a href={`/blog/${record.slug}`}>{children}</a>;
         default:
           return null;
@@ -48427,7 +47237,7 @@ return (
     }}
     renderBlock={({ record }) => {
       switch (record.__typename) {
-        case "ImageBlockRecord":
+        case 'ImageBlockRecord':
           return <img src={record.image.url} alt={record.image.alt} />;
         default:
           return null;
@@ -48435,7 +47245,7 @@ return (
     }}
     renderInlineBlock={({ record }) => {
       switch (record.__typename) {
-        case "MentionBlockRecord":
+        case 'MentionBlockRecord':
           return <code>@{record.username}</code>;
         default:
           return null;
@@ -48499,9 +47309,9 @@ export function meta({ data }) {
 With DatoCMS you can feed content coming from a [`_seoMetaTags` query](/docs/content-delivery-api/seo-and-favicon.md) directly into Remix by using the `toRemixMeta` function, which generates a compatible object for Remix's `meta` function:
 
 ```jsx
-import { request } from "../lib/datocms";
-import { toRemixMeta } from "react-datocms";
-import { useLoaderData } from "remix";
+import { request } from '../lib/datocms';
+import { toRemixMeta } from 'react-datocms';
+import { useLoaderData } from 'remix';
 
 const HOMEPAGE_QUERY = `
   {
@@ -48516,13 +47326,13 @@ const HOMEPAGE_QUERY = `
 
 export async function loader() {
   return request(HOMEPAGE_QUERY, {
-    variables: { limit: 10 }
+    variables: { limit: 10 },
   });
 }
 
 export function meta({ data }) {
   return toRemixMeta(data.blog.seo);
-};
+}
 
 export default function Home() {
   // ...
@@ -48614,16 +47424,15 @@ First, we need to create a couple of [API routes](https://remix.run/docs/en/v1.1
 First step is to actually create the session manager. Create a new file under `app/sessions.js`:
 
 ```javascript
-import { createCookieSessionStorage } from "remix";
+import { createCookieSessionStorage } from 'remix';
 
-const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage({
-    cookie: {
-      name: "__session",
-      maxAge: 604_800,
-      path: '/',
-    }
-  });
+const { getSession, commitSession, destroySession } = createCookieSessionStorage({
+  cookie: {
+    name: '__session',
+    maxAge: 604_800,
+    path: '/',
+  },
+});
 
 export { getSession, commitSession, destroySession };
 ```
@@ -48745,10 +47554,8 @@ export default function Home() {
 
 Live updates can be extremely useful both for content editors and the regular visitors of your app/website:
 
--   Content-editors in Preview Mode can **see drafts directly in the production website**, without having to refresh the page;
-    
--   Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
-    
+- Content-editors in Preview Mode can **see drafts directly in the production website**, without having to refresh the page;
+- Visitors can **immediately see new content as it gets published**, allowing all kinds of real-time interactions with your website/app (ie. live-news coverage).
 
 (Video content)
 
@@ -48763,7 +47570,7 @@ The hook works by streaming any changes present to the response of a GraphQL que
 The following code shows a complete example that **activates real-time updates for any visitor** of your website:
 
 ```jsx
-import { useQuerySubscription } from "react-datocms";
+import { useQuerySubscription } from 'react-datocms';
 import { load } from '~/lib/datocms';
 
 const BLOG_POST_QUERY = `query HomePage {
@@ -48799,14 +47606,10 @@ export default function Home({ subscription }) {
         <div>
           <h1>Error: {error.code}</h1>
           <div>{error.message}</div>
-          {error.response && (
-            <pre>{JSON.stringify(error.response, null, 2)}</pre>
-          )}
+          {error.response && <pre>{JSON.stringify(error.response, null, 2)}</pre>}
         </div>
       )}
-      {data && (
-        <div>{JSON.stringify(data, null, 2)}</div>
-      )}
+      {data && <div>{JSON.stringify(data, null, 2)}</div>}
     </div>
   );
 }
@@ -48820,10 +47623,8 @@ Another common scenario is being able to activate real-time updates of draft con
 
 In this case, you don't want to expose your API token or pass down additional arguments to regular users, so:
 
--   Make sure to pass the `includeDrafts: true` option only if Preview Mode is active (that is, if `context.preview` is true), so that only content editors [will see draft content;](/docs/content-delivery-api/api-endpoints.md)
-    
--   If Preview Mode is off, fill in the `subscription` prop with just `initialData` and `enabled: false` options, without any additional clutter.
-    
+- Make sure to pass the `includeDrafts: true` option only if Preview Mode is active (that is, if `context.preview` is true), so that only content editors [will see draft content;](/docs/content-delivery-api/api-endpoints.md)
+- If Preview Mode is off, fill in the `subscription` prop with just `initialData` and `enabled: false` options, without any additional clutter.
 
 Here's an example snippet:
 
@@ -48886,10 +47687,8 @@ DatoCMS and Remix make the perfect couple to provide a great user experience: us
 
 The whole recipe is made of two parts:
 
--   Obtain cache tags from DatoCMS and use them to instruct the CDN;
-    
--   Invalidate cache entries through the use of a webhook.
-    
+- Obtain cache tags from DatoCMS and use them to instruct the CDN;
+- Invalidate cache entries through the use of a webhook.
 
 ## Step 1: Retrieve and apply cache tags
 
@@ -48917,7 +47716,7 @@ X-Cache-Tags: BQD?* 2.a*q f7e N*r;L 6-KZ@ t#k[uP t#k[ub t#k[uU
 ```
 
 > [!POSITIVE] Cache tags are not readable, and that's a good thing!
-> DatoCMS provides cache tags that are intentionally opaque, to prevent misinterpretation and misuse on your end. Cache invalidation is a complicated process with a high possibility of errors and overlooking specific edge-cases. Our cache tags help us handle these complexities for you.  Their non-transparent nature also allows us the flexibility to improve our tagging strategies in the future, without necessitating changes on your frontend.
+> DatoCMS provides cache tags that are intentionally opaque, to prevent misinterpretation and misuse on your end. Cache invalidation is a complicated process with a high possibility of errors and overlooking specific edge-cases. Our cache tags help us handle these complexities for you. Their non-transparent nature also allows us the flexibility to improve our tagging strategies in the future, without necessitating changes on your frontend.
 
 The actual code to use to perform your queries should be something like this:
 
@@ -48925,15 +47724,12 @@ The actual code to use to perform your queries should be something like this:
 import { rawExecuteQuery } from '@datocms/cda-client';
 
 export async function executeQuery(query, options) {
-  const [data, response] = await rawExecuteQuery(
-    query,
-    {
-      ...options,
-      returnCacheTags: true,
-    },
-  );
+  const [data, response] = await rawExecuteQuery(query, {
+    ...options,
+    returnCacheTags: true,
+  });
 
-  const cacheTags = response.headers.get("x-cache-tags");
+  const cacheTags = response.headers.get('x-cache-tags');
 
   return { data, cacheTags };
 }
@@ -48941,18 +47737,16 @@ export async function executeQuery(query, options) {
 
 We've highlighted two elements in the code above:
 
--   with `returnCacheTags`, we set `X-Cache-Tags: true` instructing DatoCMS to return cache tags;
-    
--   once the API responds, we retrieve cache tags with `response.headers.get("x-cache-tags")`.
-    
+- with `returnCacheTags`, we set `X-Cache-Tags: true` instructing DatoCMS to return cache tags;
+- once the API responds, we retrieve cache tags with `response.headers.get("x-cache-tags")`.
 
 Then, we return the data from the GraphQL query and the cache tags string.
 
 Once we have this function to fetch content from DatoCMS, we need to export two functions from the Remix route files where we want to support cache tags, `loader()` and `headers()`:
 
 ```javascript
-import { json } from "@remix-run/node";
-import { executeQuery } from "lib/fetch-contents";
+import { json } from '@remix-run/node';
+import { executeQuery } from 'lib/fetch-contents';
 
 export const loader = async () => {
   const { data, cacheTags } = await executeQuery(SOME_GRAQHQL_QUERY);
@@ -48962,18 +47756,18 @@ export const loader = async () => {
     {
       headers: cacheTags
         ? {
-            "Surrogate-Key": cacheTags,
-            "Surrogate-Control": "max-age=31536000",
+            'Surrogate-Key': cacheTags,
+            'Surrogate-Control': 'max-age=31536000',
           }
         : {},
-    }
+    },
   );
 };
 
 export const headers = ({ loaderHeaders }) => {
   const headers = new Headers();
 
-  for (const header of ["surrogate-key", "surrogate-control"]) {
+  for (const header of ['surrogate-key', 'surrogate-control']) {
     const value = loaderHeaders.get(header);
 
     if (value) {
@@ -48988,26 +47782,21 @@ export const headers = ({ loaderHeaders }) => {
 The `loader()` function instructs Remix on how to fetch the data required to generate a page: we utilize the `json()` helper to return the result of our query so that it's available in our React component, but most importantly, we pass the headers options to configure how this data will be cached by the CDN (in our case, Fastly):
 
 1.  `Surrogate-Control` instructs Fastly to cache this data for a year;
-    
 2.  `Surrogate-Key` instructs Fastly to mark this response with the tags coming from DatoCMS.
-    
 
 The `headers()` function is used to specify the headers that will be associated not with the data, but with the actual page. Instead of repeating a new query to DatoCMS, we take the headers we just returned from the loader, and set them as part of the response.
 
 > [!WARNING] Headers can change depending on your CDN!
 > Different CDNs use different names for the same concepts.
-> 
-> What we call *cache tags* are *surrogate keys* among some providers (like for Fastly, which we're using in this example) ; instead of *invalidate*, many use *purge*. Examples: [Netlify](https://docs.netlify.com/platform/caching/#purge-by-cache-tag), [Cloudflare](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/), [Fastly](https://docs.fastly.com/en/guides/purging-with-surrogate-keys).
-> 
+>
+> What we call _cache tags_ are _surrogate keys_ among some providers (like for Fastly, which we're using in this example) ; instead of _invalidate_, many use _purge_. Examples: [Netlify](https://docs.netlify.com/platform/caching/#purge-by-cache-tag), [Cloudflare](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/), [Fastly](https://docs.fastly.com/en/guides/purging-with-surrogate-keys).
+>
 > Similarly, the names of the headers, or the format of the associated value, change from service to service: be sure to check the exact header name in the provider's documentation. Some examples:
-> 
-> -   [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys) uses `Surrogate-Key` with a space-separated list of tags;
->     
-> -   [CloudFlare](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/#add-cache-tag-http-response-headers) uses the `Cache-Tag` header with comma-separated tags;
->     
-> -   [Netlify](https://docs.netlify.com/platform/caching/#add-cache-tags) has Netlify-Cache-Tag with a comma-separated tag string.
->     
-> 
+>
+> - [Fastly](https://docs.fastly.com/en/guides/working-with-surrogate-keys) uses `Surrogate-Key` with a space-separated list of tags;
+> - [CloudFlare](https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/#add-cache-tag-http-response-headers) uses the `Cache-Tag` header with comma-separated tags;
+> - [Netlify](https://docs.netlify.com/platform/caching/#add-cache-tags) has Netlify-Cache-Tag with a comma-separated tag string.
+>
 > Also, be mindful of potential constraints regarding the length of the header. We strive to minimize tags as much as we can (for instance, we utilize an alphabet of 83 symbols), but the quantity and size of tags are contingent on the query.
 
 ## Step 2: Implement the "Invalidate cache tag" webhook
@@ -49039,26 +47828,26 @@ Content-Type: application/json
 To process this request, you need to add an API endpoint in Remix that receives it and calls the CDN to request the invalidation of the cache associated with the tags:
 
 ```typescript
-import { json } from "@remix-run/node";
+import { json } from '@remix-run/node';
 
 async function invalidateFastlySurrogateKeys(serviceId, fastlyKey, keys) {
   return fetch(`https://api.fastly.com/service/${serviceId}/purge`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "fastly-key": fastlyKey,
-      "content-type": "application/json",
+      'fastly-key': fastlyKey,
+      'content-type': 'application/json',
     },
     body: JSON.stringify({ surrogate_keys: keys }),
   });
 }
 
 export const action = async ({ request }) => {
-  if (request.method !== "POST") {
+  if (request.method !== 'POST') {
     return json({ success: false }, 404);
   }
 
   if (
-    request.headers.get("authorization") !==
+    request.headers.get('authorization') !==
     `Bearer ${process.env.CACHE_INVALIDATION_WEBHOOK_TOKEN}`
   ) {
     return json({ success: false }, 401);
@@ -49071,7 +47860,7 @@ export const action = async ({ request }) => {
   const response = await invalidateFastlySurrogateKeys(
     process.env.FASTLY_SERVICE_ID,
     process.env.FASTLY_KEY,
-    tags
+    tags,
   );
 
   if (!response.ok) {
@@ -49086,12 +47875,10 @@ export const action = async ({ request }) => {
 
 > [!WARNING] The method of invalidating the cache varies depending on your CDN!
 > The example above is again based on Fastly: depending on the service you're using, you'll have to use a slightly different method for invalidating the cache. Some examples:
-> 
-> -   [How to purge via surrogate keys on Fastly](https://docs.fastly.com/en/guides/purging-with-surrogate-keys)
->     
-> -   [Cloudflare approach](https://developers.cloudflare.com/api/operations/zone-purge)
->     
-> -   [Netlify's way](https://docs.netlify.com/platform/caching/#purge-by-cache-tag)
+>
+> - [How to purge via surrogate keys on Fastly](https://docs.fastly.com/en/guides/purging-with-surrogate-keys)
+> - [Cloudflare approach](https://developers.cloudflare.com/api/operations/zone-purge)
+> - [Netlify's way](https://docs.netlify.com/platform/caching/#purge-by-cache-tag)
 
 #### Invalidating on deploy
 
@@ -49113,16 +47900,11 @@ To be a part of the program, is necessary to comply with a few requirements. You
 
 Enrolling in the program gives your agency access to exclusive advantages and benefits:
 
--   **Special plans and discounts, both for you and your clients:** have access to customized plans, designed specifically for the needs of agencies, with the ability to [make them also available to your clients' accounts](/docs/agency-partner-program/partners-dashboard.md#enabling-special-plans-to-clients);
-    
--   **Automatic access to your clients' projects:** assign your staff members a [special "developer" role](/docs/agency-partner-program/partners-dashboard.md#developer-and-projects-manager-roles), allowing them to have [full access to all your — and your clients' — projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects), even when they reside on separate accounts;
-    
--   **Dedicated partner account manager:** gain access to constant support from our Partner Team to tackle any questions you (or your customers) might have;
-    
--   **Co-marketing opportunities:** our marketing relies on real success stories — and we know that our Partners will provide some great ones. We’ll promote your projects, create case studies and articles, and feature your logo on our website;
-    
--   **DatoCMS partner listing:** we’ll get you in front of new potential clients by featuring your agency and your projects as part of our [Partners](https://www.datocms.com/partners.md) page. Teams in need of development resources go there to find the right level of support for their projects.
-    
+- **Special plans and discounts, both for you and your clients:** have access to customized plans, designed specifically for the needs of agencies, with the ability to [make them also available to your clients' accounts](/docs/agency-partner-program/partners-dashboard.md#enabling-special-plans-to-clients);
+- **Automatic access to your clients' projects:** assign your staff members a [special "developer" role](/docs/agency-partner-program/partners-dashboard.md#developer-and-projects-manager-roles), allowing them to have [full access to all your — and your clients' — projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects), even when they reside on separate accounts;
+- **Dedicated partner account manager:** gain access to constant support from our Partner Team to tackle any questions you (or your customers) might have;
+- **Co-marketing opportunities:** our marketing relies on real success stories — and we know that our Partners will provide some great ones. We’ll promote your projects, create case studies and articles, and feature your logo on our website;
+- **DatoCMS partner listing:** we’ll get you in front of new potential clients by featuring your agency and your projects as part of our [Partners](https://www.datocms.com/partners.md) page. Teams in need of development resources go there to find the right level of support for their projects.
 
 You can explore the effect these benefits have on your DatoCMS dashboard in the [Partners dashboard](/docs/agency-partner-program/partners-dashboard.md) section of this guide.
 
@@ -49139,10 +47921,8 @@ As a DatoCMS Agency Partner, you can connect your organization with your clients
 
 Agency mandates unlock **special plans and discounts** on your client's organization, and allows your staff to **enter all your client's projects with full privileges**, without using any additional collaborator seat!
 
--   From the **Projects** section, [you will be able to see your clients projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects), and enter them with full privileges;
-    
--   From the **Clients** section, you will be able to see the current plan active in the client's organization, and [enable special discounts and plans](/docs/agency-partner-program/partners-dashboard.md#enabling-special-plans-to-clients) on their end:
-    
+- From the **Projects** section, [you will be able to see your clients projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects), and enter them with full privileges;
+- From the **Clients** section, you will be able to see the current plan active in the client's organization, and [enable special discounts and plans](/docs/agency-partner-program/partners-dashboard.md#enabling-special-plans-to-clients) on their end:
 
 (Video content)
 
@@ -49204,10 +47984,8 @@ In the **Projects** section of your dashboard, you can easily distinguish your c
 
 Once you [set up an agency mandate](/docs/agency-partner-program/agency-mandates.md) with a client, you can also unlock exclusive pricing opportunities for them:
 
--   If they purchase one of the [public DatoCMS plans](https://www.datocms.com/pricing.md), **a special discount gets automatically applied during the checkout process**, without having to insert any referral code. Be aware that the discount applies only to the regular plan price, and not on monthly overages (extra collaborators, API calls, traffic, etc.);
-    
--   You can also **enable special plans on their organization**. These plans are only available if you are enrolled in the Agency Partner Program.
-    
+- If they purchase one of the [public DatoCMS plans](https://www.datocms.com/pricing.md), **a special discount gets automatically applied during the checkout process**, without having to insert any referral code. Be aware that the discount applies only to the regular plan price, and not on monthly overages (extra collaborators, API calls, traffic, etc.);
+- You can also **enable special plans on their organization**. These plans are only available if you are enrolled in the Agency Partner Program.
 
 In the **Clients** section of your dashboard, you can monitor the current plan active on all your client's organizations, and activate special plans.
 
@@ -49226,15 +48004,15 @@ As the name suggests, **Developer** can be an useful role for developers/content
 The table below summarizes the available authorizations for each role:
 
 | Permission | Owner | Projects Manager | Developer | Viewer |
-| --- | --- | --- | --- | --- |
+| ---------- | ----- | ---------------- | --------- | ------ |
 
 | Read-only access to everything | ✅ | ✅ | ✅ | ✅ |
-| Enter all projects with full proviledges (client's projects included) | ✅ | ✅ | ✅ |  |
-| Create/edit/delete projects | ✅ | ✅ |  |  |
-| Transfer projects | ✅ | ✅ |  |  |
-| Manage members/roles | ✅ |  |  |  |
-| Manage plan and billing | ✅ |  |  |  |
-| Any other action | ✅ |  |  |  |
+| Enter all projects with full proviledges (client's projects included) | ✅ | ✅ | ✅ | |
+| Create/edit/delete projects | ✅ | ✅ | | |
+| Transfer projects | ✅ | ✅ | | |
+| Manage members/roles | ✅ | | | |
+| Manage plan and billing | ✅ | | | |
+| Any other action | ✅ | | | |
 
 ---
 
@@ -49244,7 +48022,7 @@ After joining the partner program, it is necessary to comply with certain requir
 
 > [!WARNING] Compliance deadline is 3 months away from enrollment!
 > As a rule of thumb, **requirements must be met within 3 months of joining the partner program**. Periodic emails will be sent to the owners of your organisation to remind you to meet the requirements in time.
-> 
+>
 > Exceptions to this deadline may be allowed in special cases. Consult our Partners Team at least one week before the final deadline if you need an extension!
 
 Let's see what those requirements are in detail.
@@ -49263,7 +48041,7 @@ If it is normally not your agency that pays for DatoCMS, but your customers, the
 
 ### 3\. Your agency profile must be published
 
-Once you are selected as eligible, go to your organization's dashboard and click on "Agency profile" to create your agency's entry on DatoCMS website. Fill in all the details about your agency, and, when you are ready, change the workflow stage from *Edit* to *Request Review from DatoCMS*. After our team approval, your agency page will be published on DatoCMS's website! ([example](https://www.datocms.com/partners/cantiere-creativo.md))
+Once you are selected as eligible, go to your organization's dashboard and click on "Agency profile" to create your agency's entry on DatoCMS website. Fill in all the details about your agency, and, when you are ready, change the workflow stage from _Edit_ to _Request Review from DatoCMS_. After our team approval, your agency page will be published on DatoCMS's website! ([example](https://www.datocms.com/partners/cantiere-creativo.md))
 
 ### 4\. At least one case study must be presented
 
@@ -49282,15 +48060,11 @@ Throughout your stay in the partner program, you can keep your profile up-to-dat
 
 If you request us to exit the Agency Partner Program, or due to non-compliance with the minimum requirements for membership, the following effects will occur:
 
--   Any active [agency mandate](/docs/agency-partner-program/agency-mandates.md) will be revoked;
-    
--   You will no longer be able to [access your clients' projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects) from your organization;
-    
--   It will no longer be possible for your organization, or those of your clients, to access the Partner Program's special discounts and plans;
-    
--   The [Developer and Projects Manager roles](https://www.datocms.com/partner-program.md#developer-and-projects-manager-roles) will no longer be available in your organization. If any members were using them, they will be assigned to the Viewer role;
-    
--   Your agency profile and any published case study present in our marketing website will be removed.
+- Any active [agency mandate](/docs/agency-partner-program/agency-mandates.md) will be revoked;
+- You will no longer be able to [access your clients' projects](/docs/agency-partner-program/partners-dashboard.md#automatic-access-to-your-clients-projects) from your organization;
+- It will no longer be possible for your organization, or those of your clients, to access the Partner Program's special discounts and plans;
+- The [Developer and Projects Manager roles](https://www.datocms.com/partner-program.md#developer-and-projects-manager-roles) will no longer be available in your organization. If any members were using them, they will be assigned to the Viewer role;
+- Your agency profile and any published case study present in our marketing website will be removed.
 
 ---
 
@@ -49363,14 +48137,10 @@ Projects in monthly plans follow the completion date of the billing profile. You
 
 While your subscription renewal follows a monthly or yearly schedule from the date in which you started, the overages are reset on the 1st day of the month. Going over the monthly quota of resources incur an overage charge as outlined in your plan. Overages are not invoiced immediately though. To leave some room for manual intervention we issue invoices on the second working day of the month, so we can still do manual adjustments or check if necessary. Also we have some rules in place to minimize the number of payments that we process and documents that we generate. The rules are:
 
--   overages are billed only if they are more than €100, otherwise they will be added as "unbilled charges" that you might see in your dashboard
-    
--   unbilled charges are then added automatically to the following subscription invoice, or they are billed when they go over the above threshold
-    
--   on the invoice that you will receive for the overages, we'll show the date in which the overages are computed, which is always on the month following the one on which the overages are computed. For example if you see Oct 2nd it refers to the overages of September.
-    
--   if you have existing credit, for example due to a plan change that generates credit, and the overages are fully paid by the credits, then the invoice is generated immediately even if below the €100 threshold
-    
+- overages are billed only if they are more than €100, otherwise they will be added as "unbilled charges" that you might see in your dashboard
+- unbilled charges are then added automatically to the following subscription invoice, or they are billed when they go over the above threshold
+- on the invoice that you will receive for the overages, we'll show the date in which the overages are computed, which is always on the month following the one on which the overages are computed. For example if you see Oct 2nd it refers to the overages of September.
+- if you have existing credit, for example due to a plan change that generates credit, and the overages are fully paid by the credits, then the invoice is generated immediately even if below the €100 threshold
 
 ### Plan adjustments
 
@@ -49392,17 +48162,13 @@ Project deactivation will only happen if the subscription payment itself fails, 
 
 In detail, this is how we handle notifications:
 
--   **Invoices**: All invoices are sent exclusively to the **billing email** associated with the account or organization.
-    
--   **Failed Overage Payments**: Notifications regarding failed payments for overage charges are also sent solely to the **billing email**. Failed overage payments will not cause project deactivation.
-    
--   **Critical Payment Issues**: If there is a payment issue with the subscription plan (not overages) that could lead to the **cancellation of your subscription and project deactivation**, we send notifications to the **billing email** and **project/organization owners**\*. These are sent as soon as payment fails, giving you time to resolve the issue before service is impacted.
-    
--   **Subscription Deactivation & Reactivation**: If critical payment issues are not resolved in a timely manner, our system will automatically pause the subscription and deactivate your projects. These deactivation confirmation emails are sent to the **billing email** and **project/organization owners**\*. They will also get another email once billing is resolved and projects are reactivated.
-    
+- **Invoices**: All invoices are sent exclusively to the **billing email** associated with the account or organization.
+- **Failed Overage Payments**: Notifications regarding failed payments for overage charges are also sent solely to the **billing email**. Failed overage payments will not cause project deactivation.
+- **Critical Payment Issues**: If there is a payment issue with the subscription plan (not overages) that could lead to the **cancellation of your subscription and project deactivation**, we send notifications to the **billing email** and **project/organization owners**\*. These are sent as soon as payment fails, giving you time to resolve the issue before service is impacted.
+- **Subscription Deactivation & Reactivation**: If critical payment issues are not resolved in a timely manner, our system will automatically pause the subscription and deactivate your projects. These deactivation confirmation emails are sent to the **billing email** and **project/organization owners**\*. They will also get another email once billing is resolved and projects are reactivated.
 
 | Notification Type | Billing Email | Project & Org Owner(s)\* | Org Viewers | Collaborators in Projects |
-| --- | --- | --- | --- | --- |
+| ----------------- | ------------- | ------------------------ | ----------- | ------------------------- |
 
 | Invoices | ✅ | ❌ | ❌ | ❌ |
 | Failed Overage Payments | ✅ | ❌ | ❌ | ❌ |
@@ -49447,37 +48213,29 @@ Advertised plans include the following monthly usage limits:
 
 The number of requests made to both our Content Management and Content Delivery APIs.
 
--   **Developer plan:** 100,000 calls
-    
--   **Professional plan:** 1,000,000 calls
-    
+- **Developer plan:** 100,000 calls
+- **Professional plan:** 1,000,000 calls
 
 ##### Bandwidth
 
 The amount of asset data transferred between our Asset CDN and GraphQL Content Delivery API and content consumers.
 
--   **Developer plan:** 10GB
-    
--   **Professional plan:** 1TB
-    
+- **Developer plan:** 10GB
+- **Professional plan:** 1TB
 
 ##### Video streaming
 
 The amount of streaming time produced by videos that are part of your project.
 
--   **Developer plan:** 2 hours
-    
--   **Professional plan:** 150 hours
-    
+- **Developer plan:** 2 hours
+- **Professional plan:** 150 hours
 
 ##### Video encoding
 
 The cumulative running time of the videos you have uploaded inside the Media area of DatoCMS.
 
--   **Developer plan:** 30 minutes
-    
--   **Professional plan:** 180 minutes
-    
+- **Developer plan:** 30 minutes
+- **Professional plan:** 180 minutes
 
 Please note that monthly limits are reset on the 1st of each month. Details about overage billing are found in the [billing section](/docs/plans-pricing-and-billing/billing-and-pricing.md).
 
@@ -49493,12 +48251,9 @@ Located in the "Plan and Billing" page, this panel serves as a health indicator 
 
 Here's what the different status colors mean:
 
--   🟢 **So far, so good**: You are within your plan's limits.
-    
--   🟡 **Your attention is needed**: You are approaching your plan's limits and may face overage charges if exceeded.
-    
--   🔴 **Limits exceeded**: You have surpassed your plan's limits, and additional usage will be billed.
-    
+- 🟢 **So far, so good**: You are within your plan's limits.
+- 🟡 **Your attention is needed**: You are approaching your plan's limits and may face overage charges if exceeded.
+- 🔴 **Limits exceeded**: You have surpassed your plan's limits, and additional usage will be billed.
 
 If your plan is in a "yellow" or "red" state, we'll also give you a heads up by showing a notification badge next to the Plan and Billing link in the navigation.
 
@@ -49514,14 +48269,10 @@ This page provides detailed charts displaying your usage trends over time.
 
 Here's what you can expect:
 
--   **Usage Segmentation:** View data by resource type, either aggregated or by individual project.
-    
--   **Time Comparison:** Compare current usage with the previous month.
-    
--   **Historical Data:** Access your data history to review long-term trends.
-    
--   **Forecasting:** Get predictions of end-of-month usage to proactively manage your resources and prevent overages.
-    
+- **Usage Segmentation:** View data by resource type, either aggregated or by individual project.
+- **Time Comparison:** Compare current usage with the previous month.
+- **Historical Data:** Access your data history to review long-term trends.
+- **Forecasting:** Get predictions of end-of-month usage to proactively manage your resources and prevent overages.
 
 If you have the appropriate permissions, you'll find direct links to the **Project Usage Page** for a granular look at each project's consumption.
 
@@ -49539,14 +48290,10 @@ For projects that are part of a paid plan, exceeding the limits does not lead to
 
 The current overage rates are as follows:
 
--   **API calls**: €9 per additional 250k operations
-    
--   **Bandwidth**: €29 per additional 150GB
-    
--   **Video streaming**: €9 every 150 hours of extra video streaming time
-    
--   **Video encoding**: €9 per additional 180 minutes of extra uploaded videos
-    
+- **API calls**: €9 per additional 250k operations
+- **Bandwidth**: €29 per additional 150GB
+- **Video streaming**: €9 every 150 hours of extra video streaming time
+- **Video encoding**: €9 per additional 180 minutes of extra uploaded videos
 
 Details about overage billing are found in the [billing section](/docs/plans-pricing-and-billing/billing-and-pricing.md).
 
@@ -49581,7 +48328,7 @@ The `max_resolution` parameter can be set to `720p`, `1080p`, `1440p`, or `2160p
 
 # Transfer project
 
-Let's have a look at the *Danger zone* that you'll find at the bottom of the project description in your dashboard if you are the project owner:
+Let's have a look at the _Danger zone_ that you'll find at the bottom of the project description in your dashboard if you are the project owner:
 
 (Image content)
 
@@ -49621,7 +48368,7 @@ If you instead need to transfer the project to another account still on a per-si
 
 # Duplicate or delete project
 
-In the *Danger zone* that you can find at the bottom of the project description in your dashboard if you are the project owner, you'll see the actions to duplicate or delete a project.
+In the _Danger zone_ that you can find at the bottom of the project description in your dashboard if you are the project owner, you'll see the actions to duplicate or delete a project.
 
 (Image content)
 
@@ -49641,16 +48388,11 @@ When deleting the project we immediately delete all your content from our databa
 
 If you are on a discontinued pricing plan and you want to switch to the current Professional plan, these are the steps that you should take:
 
--   change the email address of your current account to a variation such as *email+old@yourdomain.com.*
-    
--   create a new account with your primary email, which is *email@yourdomain.com.*
-    
--   buy the new Professional plan.
-    
--   transfer your projects from your old account to the new one.
-    
--   [get in touch](https://www.datocms.com/support.md) with us to refund the remaining credit of your old account.
-    
+- change the email address of your current account to a variation such as *email+old@yourdomain.com.*
+- create a new account with your primary email, which is *email@yourdomain.com.*
+- buy the new Professional plan.
+- transfer your projects from your old account to the new one.
+- [get in touch](https://www.datocms.com/support.md) with us to refund the remaining credit of your old account.
 
 As in the previous model you could have multiple billing accounts per project we cannot transfer the credits automatically, so we'll need to go through this process.
 
@@ -49683,10 +48425,14 @@ Every field type follows a consistent pattern providing:
 
 ```typescript
 import { isLatLonFieldValue, isLocalizedLatLonFieldValue } from '@datocms/cma-client';
-import type { LatLonFieldValue, LatLonFieldValidators, LatLonFieldAppearance } from '@datocms/cma-client';
+import type {
+  LatLonFieldValue,
+  LatLonFieldValidators,
+  LatLonFieldAppearance,
+} from '@datocms/cma-client';
 
 // Field value type - object with latitude/longitude or null
-const value: LatLonFieldValue = { latitude: 45.4642, longitude: 9.1900 };
+const value: LatLonFieldValue = { latitude: 45.4642, longitude: 9.19 };
 
 // Type guard functions for validation
 if (isLatLonFieldValue(someValue)) {
@@ -49701,6 +48447,7 @@ if (isLocalizedLatLonFieldValue(localizedValue)) {
 type Validators = LatLonFieldValidators;
 type Appearance = LatLonFieldAppearance;
 ```
+
 </details>
 
 ### Context-Dependent field types
@@ -49724,21 +48471,21 @@ import {
   isFileFieldValue,
   isFileFieldValueInRequest,
   isGalleryFieldValue,
-  isGalleryFieldValueInRequest
+  isGalleryFieldValueInRequest,
 } from '@datocms/cma-client';
 
 // API Response format - all metadata fields present with defaults
 const fileResponse: FileFieldValue = {
-  upload_id: "12345",
-  alt: null,           // Always present (default: null)
-  title: null,         // Always present (default: null)
-  custom_data: {},     // Always present (default: {})
-  focal_point: null    // Always present (default: null)
+  upload_id: '12345',
+  alt: null, // Always present (default: null)
+  title: null, // Always present (default: null)
+  custom_data: {}, // Always present (default: {})
+  focal_point: null, // Always present (default: null)
 };
 
 // API Request format - metadata fields are optional
 const fileRequest: FileFieldValueInRequest = {
-  upload_id: "12345"
+  upload_id: '12345',
   // alt, title, custom_data, focal_point are optional
 };
 
@@ -49751,6 +48498,7 @@ if (isGalleryFieldValue(someGalleryValue)) {
   // someGalleryValue is array of files with all metadata present
 }
 ```
+
 </details>
 
 #### "Nested Mode" Response variations
@@ -49768,63 +48516,71 @@ import {
   // Type guards for all variations (also available for single_block and rich_text)
   isStructuredTextFieldValue,
   isStructuredTextFieldValueInRequest,
-  isStructuredTextFieldValueInNestedResponse
+  isStructuredTextFieldValueInNestedResponse,
 } from '@datocms/cma-client';
 
 // Regular response - blocks as string IDs
 const standard: StructuredTextFieldValue = {
   document: {
-    type: "root",
+    type: 'root',
     children: [
       {
-        type: "block",
+        type: 'block',
         // String ID reference
-        item: "IdMLV2GJTXyQ0Bfns7R4IQ"
-      }
-    ]
-  }
+        item: 'IdMLV2GJTXyQ0Bfns7R4IQ',
+      },
+    ],
+  },
 };
 
 // Nested Mode response (?nested=true) - blocks as full objects
 const nested: StructuredTextFieldValueInNestedResponse = {
   document: {
-    type: "root",
+    type: 'root',
     children: [
       {
-        type: "block",
+        type: 'block',
         // Always full block object
         item: {
-          id: "IdMLV2GJTXyQ0Bfns7R4IQ",
-          type: "item",
-          attributes: { /* ... */ },
-          relationships: { /* ... */ }
-        }
-      }
-    ]
-  }
+          id: 'IdMLV2GJTXyQ0Bfns7R4IQ',
+          type: 'item',
+          attributes: {
+            /* ... */
+          },
+          relationships: {
+            /* ... */
+          },
+        },
+      },
+    ],
+  },
 };
 
 // Request format - flexible block representation
 const request: StructuredTextFieldValueInRequest = {
   document: {
-    type: "root",
+    type: 'root',
     children: [
       {
-        type: "block",
+        type: 'block',
         // Can be string ID, to keep block unchanged...
-        item: "FicV5CxCSQ6yOrgfwRoiKA"
+        item: 'FicV5CxCSQ6yOrgfwRoiKA',
       },
       {
-        type: "block",
+        type: 'block',
         // ...or full block object (to create new blocks or update existing ones)
         item: {
-          type: "item",
-          attributes: { /* ... */ },
-          relationships: { /* ... */ }
-        }
-      }
-    ]
-  }
+          type: 'item',
+          attributes: {
+            /* ... */
+          },
+          relationships: {
+            /* ... */
+          },
+        },
+      },
+    ],
+  },
 };
 
 // Runtime validation for different contexts
@@ -49836,6 +48592,7 @@ if (isStructuredTextFieldValueInRequest(requestData)) {
   // requestData allows flexible block representations
 }
 ```
+
 </details>
 
 These variants ensure type safety across different API contexts while maintaining the same conceptual data structure. All localized variants also have corresponding type guards (e.g., `isLocalizedStructuredTextFieldValueInRequest`, `isLocalizedStructuredTextFieldValueInNestedResponse`, etc.).
@@ -49851,9 +48608,11 @@ import type { MyArticle, MyArticleSection } from './schema';
 // Fully typed structured text with specific block types
 const content: StructuredTextFieldValueInRequest<MyArticleSection> = {
   document: {
-    type: "root",
-    children: [/* ... */]
-  }
+    type: 'root',
+    children: [
+      /* ... */
+    ],
+  },
 };
 
 // Type guard with generic for precise validation
@@ -49861,6 +48620,7 @@ if (isStructuredTextFieldValueInNestedResponse<MyArticleSection>(value)) {
   // value is now typed with your specific block schema
 }
 ```
+
 </details>
 
 ## Block Processing Utilities
@@ -49877,18 +48637,17 @@ Formats a DatoCMS item (record or block) as a visual tree structure, showing all
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
-function inspectItem(
-  item: Item,
-  options?: InspectItemOptions
-): string
+function inspectItem(item: Item, options?: InspectItemOptions): string;
 
 type InspectItemOptions = {
   maxWidth?: number; // Maximum width for text fields before truncation (default: 80)
-}
+};
 ```
 
 **Parameters:**
+
 - `item`: Any DatoCMS item, including records, blocks, or items in create/update format
 - `options`: Optional configuration object
   - `maxWidth`: Maximum characters to display for text fields before truncating with "..."
@@ -49896,6 +48655,7 @@ type InspectItemOptions = {
 **Returns:** A formatted string representation of the item as a tree structure
 
 **Usage Example:**
+
 ```typescript
 import { inspectItem } from '@datocms/cma-client';
 
@@ -49910,6 +48670,7 @@ console.log(inspectItem(record));
 //    ├─ en: "This is the English content..."
 //    └─ it: "Questo è il contenuto italiano..."
 ```
+
 </details>
 
 ### Creating and Duplicating Blocks
@@ -49922,16 +48683,19 @@ Converts a block data object into the proper format for API requests.
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 function buildBlockRecord<D extends ItemTypeDefinition>(
-  body: ItemUpdateSchema<ToItemDefinitionInRequest<D>>
-): NewBlockInRequest<ToItemDefinitionInRequest<D>>
+  body: ItemUpdateSchema<ToItemDefinitionInRequest<D>>,
+): NewBlockInRequest<ToItemDefinitionInRequest<D>>;
 ```
 
 **Parameters:**
+
 - `body`: Block data in update schema format
 
 **Returns:** Formatted block record ready for API requests
+
 </details>
 
 #### duplicateBlockRecord()
@@ -49942,18 +48706,21 @@ Creates a deep copy of a block record, including all nested blocks, removing IDs
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function duplicateBlockRecord<D extends ItemTypeDefinition>(
   existingBlock: ItemWithOptionalIdAndMeta<ToItemDefinitionInNestedResponse<D>>,
-  schemaRepository: SchemaRepository
-): Promise<NewBlockInRequest<ToItemDefinitionInRequest<D>>>
+  schemaRepository: SchemaRepository,
+): Promise<NewBlockInRequest<ToItemDefinitionInRequest<D>>>;
 ```
 
 **Parameters:**
+
 - `existingBlock`: The block to duplicate
 - `schemaRepository`: Repository for schema lookups
 
 **Returns:** New block record without IDs, ready to be created
+
 </details>
 
 ### Recursive Block Operations
@@ -49968,16 +48735,18 @@ Visit every block in a non-localized field value recursively, including blocks n
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function visitBlocksInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   visitor: (item: BlockInRequest, path: TreePath) => void | Promise<void>,
-): Promise<void>
+): Promise<void>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
@@ -49992,22 +48761,25 @@ Transform all blocks in a non-localized field value recursively, including neste
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function mapBlocksInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   mapper: (item: BlockInRequest, path: TreePath) => BlockInRequest | Promise<BlockInRequest>,
-): Promise<unknown>
+): Promise<unknown>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
 - `mapper`: Function that transforms each block
 
 **Returns:** New field value
+
 </details>
 
 #### filterBlocksInNonLocalizedFieldValue()
@@ -50018,16 +48790,18 @@ Filter blocks recursively, removing blocks at any nesting level that don't match
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function filterBlocksInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   predicate: (item: BlockInRequest, path: TreePath) => boolean | Promise<boolean>,
-): Promise<unknown>
+): Promise<unknown>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value to filter
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
@@ -50036,15 +48810,17 @@ async function filterBlocksInNonLocalizedFieldValue(
 **Returns:** New field value with filtered blocks
 
 **Usage Example:**
+
 ```typescript
 // Remove all video blocks at any nesting level
 const noVideos = await filterBlocksInNonLocalizedFieldValue(
   schemaRepository,
   field,
   fieldValue,
-  (block) => block.relationships.item_type.data.id !== 'video_block'
+  (block) => block.relationships.item_type.data.id !== 'video_block',
 );
 ```
+
 </details>
 
 #### findAllBlocksInNonLocalizedFieldValue()
@@ -50055,22 +48831,25 @@ Find all blocks that match the predicate, searching recursively through nested b
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function findAllBlocksInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   predicate: (item: BlockInRequest, path: TreePath) => boolean | Promise<boolean>,
-): Promise<Array<{ item: BlockInRequest; path: TreePath }>>
+): Promise<Array<{ item: BlockInRequest; path: TreePath }>>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value to search
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
 - `predicate`: Function that tests each block
 
 **Returns:** Array of all matching blocks with their paths
+
 </details>
 
 #### reduceBlocksInNonLocalizedFieldValue()
@@ -50081,6 +48860,7 @@ Reduce all blocks recursively to a single value.
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function reduceBlocksInNonLocalizedFieldValue<R>(
   nonLocalizedFieldValue: unknown,
@@ -50088,10 +48868,11 @@ async function reduceBlocksInNonLocalizedFieldValue<R>(
   schemaRepository: SchemaRepository,
   reducer: (accumulator: R, item: BlockInRequest, path: TreePath) => R | Promise<R>,
   initialValue: R,
-): Promise<R>
+): Promise<R>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value to reduce
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
@@ -50099,6 +48880,7 @@ async function reduceBlocksInNonLocalizedFieldValue<R>(
 - `initialValue`: Initial accumulator value
 
 **Returns:** The final accumulated value
+
 </details>
 
 #### someBlocksInNonLocalizedFieldValue()
@@ -50109,22 +48891,25 @@ Check if any block (including nested) matches the predicate.
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function someBlocksInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   predicate: (item: BlockInRequest, path: TreePath) => boolean | Promise<boolean>,
-): Promise<boolean>
+): Promise<boolean>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value to test
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
 - `predicate`: Function that tests each block
 
 **Returns:** True if any block matches
+
 </details>
 
 #### everyBlockInNonLocalizedFieldValue()
@@ -50135,22 +48920,25 @@ Check if every block (including nested) matches the predicate.
 <summary>View details</summary>
 
 **TypeScript Signature:**
+
 ```typescript
 async function everyBlockInNonLocalizedFieldValue(
   nonLocalizedFieldValue: unknown,
   fieldType: string,
   schemaRepository: SchemaRepository,
   predicate: (item: BlockInRequest, path: TreePath) => boolean | Promise<boolean>,
-): Promise<boolean>
+): Promise<boolean>;
 ```
 
 **Parameters:**
+
 - `nonLocalizedFieldValue`: The non-localized field value to test
 - `fieldType`: The type of DatoCMS field (ie. `string`, `rich_text`, etc.)
 - `schemaRepository`: Repository for caching schema lookups
 - `predicate`: Function that tests each block
 
 **Returns:** True if all blocks match
+
 </details>
 
 ## Unified Field Processing (Localized & Non-Localized)
@@ -50165,26 +48953,29 @@ Apply a transformation function to field values, handling both localized and non
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function mapNormalizedFieldValues<TInput, TOutput>(
   localizedOrNonLocalizedFieldValue: TInput | LocalizedFieldValue<TInput>,
   field: Field,
-  mapFn: (locale: string | undefined, localeValue: TInput) => TOutput
-): TOutput | LocalizedFieldValue<TOutput>
+  mapFn: (locale: string | undefined, localeValue: TInput) => TOutput,
+): TOutput | LocalizedFieldValue<TOutput>;
 
 async function mapNormalizedFieldValuesAsync<TInput, TOutput>(
   localizedOrNonLocalizedFieldValue: TInput | LocalizedFieldValue<TInput>,
   field: Field,
-  mapFn: (locale: string | undefined, localeValue: TInput) => Promise<TOutput>
-): Promise<TOutput | LocalizedFieldValue<TOutput>>
+  mapFn: (locale: string | undefined, localeValue: TInput) => Promise<TOutput>,
+): Promise<TOutput | LocalizedFieldValue<TOutput>>;
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`: The field value (localized or non-localized)
 - `field`: The DatoCMS field definition
 - `mapFn`: Function to transform each value (receives locale for localized fields, undefined for non-localized)
 
 **Returns:** Transformed value maintaining the same structure
+
 </details>
 
 #### filterNormalizedFieldValues() / filterNormalizedFieldValuesAsync()
@@ -50195,26 +48986,29 @@ Filter field values based on a predicate, handling both localized and non-locali
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function filterNormalizedFieldValues<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  filterFn: (locale: string | undefined, localeValue: T) => boolean
-): T | LocalizedFieldValue<T> | undefined
+  filterFn: (locale: string | undefined, localeValue: T) => boolean,
+): T | LocalizedFieldValue<T> | undefined;
 
 async function filterNormalizedFieldValuesAsync<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  filterFn: (locale: string | undefined, localeValue: T) => Promise<boolean>
-): Promise<T | LocalizedFieldValue<T> | undefined>
+  filterFn: (locale: string | undefined, localeValue: T) => Promise<boolean>,
+): Promise<T | LocalizedFieldValue<T> | undefined>;
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`: The field value to filter
 - `field`: The DatoCMS field definition
 - `filterFn`: Predicate function for filtering
 
 **Returns:** Filtered value or undefined if all filtered out
+
 </details>
 
 #### visitNormalizedFieldValues() / visitNormalizedFieldValuesAsync()
@@ -50225,21 +49019,23 @@ Visit each value in a field, handling both localized and non-localized fields.
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function visitNormalizedFieldValues<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  visitFn: (locale: string | undefined, localeValue: T) => void
-): void
+  visitFn: (locale: string | undefined, localeValue: T) => void,
+): void;
 
 async function visitNormalizedFieldValuesAsync<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  visitFn: (locale: string | undefined, localeValue: T) => Promise<void>
-): Promise<void>
+  visitFn: (locale: string | undefined, localeValue: T) => Promise<void>,
+): Promise<void>;
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`: The field value to visit
 - `field`: The DatoCMS field definition
 - `visitFn`: Function called for each value
@@ -50253,26 +49049,29 @@ Check if at least one field value passes the test.
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function someNormalizedFieldValues<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  testFn: (locale: string | undefined, localeValue: T) => boolean
-): boolean
+  testFn: (locale: string | undefined, localeValue: T) => boolean,
+): boolean;
 
 async function someNormalizedFieldValuesAsync<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  testFn: (locale: string | undefined, localeValue: T) => Promise<boolean>
-): Promise<boolean>
+  testFn: (locale: string | undefined, localeValue: T) => Promise<boolean>,
+): Promise<boolean>;
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`: The field value to test
 - `field`: The DatoCMS field definition
 - `testFn`: Predicate function
 
 **Returns:** True if any value passes the test
+
 </details>
 
 #### everyNormalizedFieldValue() / everyNormalizedFieldValueAsync()
@@ -50283,26 +49082,29 @@ Check if all field values pass the test.
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function everyNormalizedFieldValue<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  testFn: (locale: string | undefined, localeValue: T) => boolean
-): boolean
+  testFn: (locale: string | undefined, localeValue: T) => boolean,
+): boolean;
 
 async function everyNormalizedFieldValueAsync<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
   field: Field,
-  testFn: (locale: string | undefined, localeValue: T) => Promise<boolean>
-): Promise<boolean>
+  testFn: (locale: string | undefined, localeValue: T) => Promise<boolean>,
+): Promise<boolean>;
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`: The field value to test
 - `field`: The DatoCMS field definition
 - `testFn`: Predicate function
 
 **Returns:** True if all values pass the test
+
 </details>
 
 #### toNormalizedFieldValueEntries() / fromNormalizedFieldValueEntries()
@@ -50313,30 +49115,33 @@ Convert field values to/from a normalized entry format for uniform processing.
 <summary>View details</summary>
 
 **TypeScript Signatures:**
+
 ```typescript
 function toNormalizedFieldValueEntries<T>(
   localizedOrNonLocalizedFieldValue: T | LocalizedFieldValue<T>,
-  field: Field
-): NormalizedFieldValueEntry<T>[]
+  field: Field,
+): NormalizedFieldValueEntry<T>[];
 
 function fromNormalizedFieldValueEntries<T>(
   entries: NormalizedFieldValueEntry<T>[],
-  field: Field
-): T | LocalizedFieldValue<T>
+  field: Field,
+): T | LocalizedFieldValue<T>;
 
 type NormalizedFieldValueEntry<T> = {
   locale: string | undefined;
   value: T;
-}
+};
 ```
 
 **Parameters:**
+
 - `localizedOrNonLocalizedFieldValue`/`entries`: Value to convert from/to
 - `field`: The DatoCMS field definition
 
 **Returns:** Normalized entries array or reconstructed field value
 
 **Usage Example:**
+
 ```typescript
 // Convert to entries for processing
 const entries = toNormalizedFieldValueEntries(fieldValue, field);
@@ -50344,12 +49149,13 @@ const entries = toNormalizedFieldValueEntries(fieldValue, field);
 // Process entries uniformly
 const processed = entries.map(({ locale, value }) => ({
   locale,
-  value: processValue(value)
+  value: processValue(value),
 }));
 
 // Convert back to field value format
 const result = fromNormalizedFieldValueEntries(processed, field);
 ```
+
 </details>
 
 ## SchemaRepository
@@ -50383,58 +49189,60 @@ const sameFields = await schemaRepository.getItemTypeFields(blogPost);
 await mapBlocksInNonLocalizedFieldValue(
   fieldValue,
   fieldType,
-  schemaRepository,  // share cached lookups
+  schemaRepository, // share cached lookups
   async (block) => {
     // transform block here
-  }
+  },
 );
 ```
+
 </details>
 
 **When to Use**
 
-* Traversing relationships that repeatedly query schema
-* Bulk record processing scripts
-* Block-processing utilities that need frequent lookups
-* Any script where reducing API calls matters
+- Traversing relationships that repeatedly query schema
+- Bulk record processing scripts
+- Block-processing utilities that need frequent lookups
+- Any script where reducing API calls matters
 
 **When Not to Use**
 
-* Scripts that modify schema (models, fields, etc.)
-* Long-running applications (cache never expires)
-* Situations where the schema might change during execution
+- Scripts that modify schema (models, fields, etc.)
+- Long-running applications (cache never expires)
+- Situations where the schema might change during execution
 
 <details><summary><strong>Class signature</strong></summary>
 
 ```typescript
 class SchemaRepository {
-  constructor(client: GenericClient)
+  constructor(client: GenericClient);
 
   // Item Type methods
-  async getAllItemTypes(): Promise<ItemType[]>
-  async getAllModels(): Promise<ItemType[]>
-  async getAllBlockModels(): Promise<ItemType[]>
-  async getItemTypeByApiKey(apiKey: string): Promise<ItemType>
-  async getItemTypeById(id: string): Promise<ItemType>
+  async getAllItemTypes(): Promise<ItemType[]>;
+  async getAllModels(): Promise<ItemType[]>;
+  async getAllBlockModels(): Promise<ItemType[]>;
+  async getItemTypeByApiKey(apiKey: string): Promise<ItemType>;
+  async getItemTypeById(id: string): Promise<ItemType>;
 
   // Field methods
-  async getItemTypeFields(itemType: ItemType): Promise<Field[]>
-  async getItemTypeFieldsets(itemType: ItemType): Promise<Fieldset[]>
+  async getItemTypeFields(itemType: ItemType): Promise<Field[]>;
+  async getItemTypeFieldsets(itemType: ItemType): Promise<Fieldset[]>;
 
   // Higher-level utilities
-  async getModelsEmbeddingBlocks(blocks: ItemType[]): Promise<ItemType[]>
+  async getModelsEmbeddingBlocks(blocks: ItemType[]): Promise<ItemType[]>;
 
   // Plugin methods
-  async getAllPlugins(): Promise<Plugin[]>
-  async getPluginById(id: string): Promise<Plugin>
-  async getPluginByPackageName(packageName: string): Promise<Plugin>
+  async getAllPlugins(): Promise<Plugin[]>;
+  async getPluginById(id: string): Promise<Plugin>;
+  async getPluginByPackageName(packageName: string): Promise<Plugin>;
 
   // Raw variants (return API response format)
-  async getAllRawItemTypes(): Promise<RawItemType[]>
-  async getRawItemTypeByApiKey(apiKey: string): Promise<RawItemType>
+  async getAllRawItemTypes(): Promise<RawItemType[]>;
+  async getRawItemTypeByApiKey(apiKey: string): Promise<RawItemType>;
   // ... and more raw variants
 }
 ```
+
 </details>
 
 ## Contributing
@@ -50446,7 +49254,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/datocm
 The package is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 ---
-
 
 # @datocms/cda-client
 
@@ -50461,7 +49268,7 @@ This package is built with TypeScript and provides type definitions out of the b
 ### Basic Query Execution
 
 ```typescript
-import { executeQuery } from "@datocms/cda-client";
+import { executeQuery } from '@datocms/cda-client';
 
 const query = `
   query {
@@ -50473,7 +49280,7 @@ const query = `
 `;
 
 const result = await executeQuery(query, {
-  token: "your-api-token-here",
+  token: 'your-api-token-here',
 });
 
 console.log(result);
@@ -50482,11 +49289,11 @@ console.log(result);
 ### Using with TypeScript and GraphQL Code Generator
 
 ```typescript
-import { executeQuery } from "@datocms/cda-client";
-import { AllArticlesQuery } from "./generated/graphql";
+import { executeQuery } from '@datocms/cda-client';
+import { AllArticlesQuery } from './generated/graphql';
 
 const result = await executeQuery(AllArticlesQuery, {
-  token: "your-api-token-here",
+  token: 'your-api-token-here',
   variables: {
     limit: 10,
   },
@@ -50510,7 +49317,7 @@ This package provides several utility functions to help you interact with the Da
 The main function to execute a GraphQL query against the DatoCMS Content Delivery API.
 
 ```typescript
-import { executeQuery } from "@datocms/cda-client";
+import { executeQuery } from '@datocms/cda-client';
 
 const result = await executeQuery(query, options);
 ```
@@ -50541,13 +49348,13 @@ const result = await executeQuery(query, options);
 Similar to `executeQuery`, but returns both the query result and the full response object. This can be handy when used together with returnCacheTags to actually retrieve the cache tags.
 
 ```typescript
-import { rawExecuteQuery } from "@datocms/cda-client";
+import { rawExecuteQuery } from '@datocms/cda-client';
 
 const [result, response] = await rawExecuteQuery(query, {
-  token: "your-api-token-here",
+  token: 'your-api-token-here',
   returnCacheTags: true,
 });
-const cacheTags = response.headers.get("x-cache-tags");
+const cacheTags = response.headers.get('x-cache-tags');
 ```
 
 ### `executeQueryWithAutoPagination`
@@ -50558,7 +49365,7 @@ it's possible to get a collection of records that is longer than Content Deliver
 That is done with a single API call, in a transparent way.
 
 ```typescript
-import { executeQueryWithAutoPagination } from "@datocms/cda-client";
+import { executeQueryWithAutoPagination } from '@datocms/cda-client';
 
 const result = await executeQueryWithAutoPagination(query, options);
 ```
@@ -50628,7 +49435,7 @@ Once executed, the results get collected and recomposed as if nothing happened.
 
 #### Limitations
 
-`executeQueryWithAutoPagination` works only when the query contains only one selection that has 
+`executeQueryWithAutoPagination` works only when the query contains only one selection that has
 an oversized `first:` argument (i.e. `first:` argument surpasses the Content Delivery API's result limit).
 If two or more fields have oversiaed patination, the function triggers an error.
 
@@ -50640,13 +49447,13 @@ As for `executeQuery`, also `executeQueryWithAutoPagination` has a pair raw vers
 This can be handy when used together with returnCacheTags to actually retrieve the cache tags.
 
 ```typescript
-import { rawExecuteQueryWithAutoPagination } from "@datocms/cda-client";
+import { rawExecuteQueryWithAutoPagination } from '@datocms/cda-client';
 
 const [result, response] = await rawExecuteQueryWithAutoPagination(query, {
-  token: "your-api-token-here",
+  token: 'your-api-token-here',
   returnCacheTags: true,
 });
-const cacheTags = response.headers.get("x-cache-tags");
+const cacheTags = response.headers.get('x-cache-tags');
 ```
 
 ### `buildRequestHeaders`
@@ -50654,7 +49461,7 @@ const cacheTags = response.headers.get("x-cache-tags");
 Builds request headers for a GraphQL query towards the DatoCMS Content Delivery API.
 
 ```typescript
-import { buildRequestHeaders } from "@datocms/cda-client";
+import { buildRequestHeaders } from '@datocms/cda-client';
 
 const headers = buildRequestHeaders(options);
 ```
@@ -50668,7 +49475,7 @@ The `buildRequestHeaders` function accepts the same options as `executeQuery`, e
 Builds the request initialization object for a GraphQL query towards the DatoCMS Content Delivery API.
 
 ```typescript
-import { buildRequestInit } from "@datocms/cda-client";
+import { buildRequestInit } from '@datocms/cda-client';
 
 const requestInit = buildRequestInit(query, options);
 ```
@@ -50685,7 +49492,7 @@ In case a query fails (either with an HTTP status code outside of the 2xx range,
 ### Example
 
 ```typescript
-import { executeQuery, ApiError } from "@datocms/cda-client";
+import { executeQuery, ApiError } from '@datocms/cda-client';
 
 const query = `
   query {
@@ -50698,7 +49505,7 @@ const query = `
 
 try {
   const result = await executeQuery(query, {
-    token: "your-api-token-here",
+    token: 'your-api-token-here',
   });
   console.log(result);
 } catch (e) {
@@ -50727,8 +49534,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License.
 
-
-
 ---
 
 # DatoCMS CLI
@@ -50736,9 +49541,10 @@ This project is licensed under the MIT License.
 DatoCMS CLI tool for managing DatoCMS projects, environments and schemas.
 
 <!-- toc -->
-* [DatoCMS CLI](#datocms-cli)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [DatoCMS CLI](#datocms-cli)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 <br /><br />
@@ -50767,33 +49573,34 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`datocms autocomplete [SHELL]`](#datocms-autocomplete-shell)
-* [`datocms environments:destroy ENVIRONMENT_ID`](#datocms-environmentsdestroy-environment_id)
-* [`datocms environments:fork SOURCE_ENVIRONMENT_ID NEW_ENVIRONMENT_ID`](#datocms-environmentsfork-source_environment_id-new_environment_id)
-* [`datocms environments:index`](#datocms-environmentsindex)
-* [`datocms environments:list`](#datocms-environmentslist)
-* [`datocms environments:primary`](#datocms-environmentsprimary)
-* [`datocms environments:promote ENVIRONMENT_ID`](#datocms-environmentspromote-environment_id)
-* [`datocms environments:rename ENVIRONMENT_ID NEW_ENVIRONMENT_ID`](#datocms-environmentsrename-environment_id-new_environment_id)
-* [`datocms help [COMMAND]`](#datocms-help-command)
-* [`datocms maintenance:off`](#datocms-maintenanceoff)
-* [`datocms maintenance:on`](#datocms-maintenanceon)
-* [`datocms migrations:new NAME`](#datocms-migrationsnew-name)
-* [`datocms migrations:run`](#datocms-migrationsrun)
-* [`datocms plugins`](#datocms-plugins)
-* [`datocms plugins:add PLUGIN`](#datocms-pluginsadd-plugin)
-* [`datocms plugins:available`](#datocms-pluginsavailable)
-* [`datocms plugins:inspect PLUGIN...`](#datocms-pluginsinspect-plugin)
-* [`datocms plugins:install PLUGIN`](#datocms-pluginsinstall-plugin)
-* [`datocms plugins:link PATH`](#datocms-pluginslink-path)
-* [`datocms plugins:remove [PLUGIN]`](#datocms-pluginsremove-plugin)
-* [`datocms plugins:reset`](#datocms-pluginsreset)
-* [`datocms plugins:uninstall [PLUGIN]`](#datocms-pluginsuninstall-plugin)
-* [`datocms plugins:unlink [PLUGIN]`](#datocms-pluginsunlink-plugin)
-* [`datocms plugins:update`](#datocms-pluginsupdate)
-* [`datocms profile:remove PROFILE_ID`](#datocms-profileremove-profile_id)
-* [`datocms profile:set PROFILE_ID`](#datocms-profileset-profile_id)
-* [`datocms schema:generate FILENAME`](#datocms-schemagenerate-filename)
+
+- [`datocms autocomplete [SHELL]`](#datocms-autocomplete-shell)
+- [`datocms environments:destroy ENVIRONMENT_ID`](#datocms-environmentsdestroy-environment_id)
+- [`datocms environments:fork SOURCE_ENVIRONMENT_ID NEW_ENVIRONMENT_ID`](#datocms-environmentsfork-source_environment_id-new_environment_id)
+- [`datocms environments:index`](#datocms-environmentsindex)
+- [`datocms environments:list`](#datocms-environmentslist)
+- [`datocms environments:primary`](#datocms-environmentsprimary)
+- [`datocms environments:promote ENVIRONMENT_ID`](#datocms-environmentspromote-environment_id)
+- [`datocms environments:rename ENVIRONMENT_ID NEW_ENVIRONMENT_ID`](#datocms-environmentsrename-environment_id-new_environment_id)
+- [`datocms help [COMMAND]`](#datocms-help-command)
+- [`datocms maintenance:off`](#datocms-maintenanceoff)
+- [`datocms maintenance:on`](#datocms-maintenanceon)
+- [`datocms migrations:new NAME`](#datocms-migrationsnew-name)
+- [`datocms migrations:run`](#datocms-migrationsrun)
+- [`datocms plugins`](#datocms-plugins)
+- [`datocms plugins:add PLUGIN`](#datocms-pluginsadd-plugin)
+- [`datocms plugins:available`](#datocms-pluginsavailable)
+- [`datocms plugins:inspect PLUGIN...`](#datocms-pluginsinspect-plugin)
+- [`datocms plugins:install PLUGIN`](#datocms-pluginsinstall-plugin)
+- [`datocms plugins:link PATH`](#datocms-pluginslink-path)
+- [`datocms plugins:remove [PLUGIN]`](#datocms-pluginsremove-plugin)
+- [`datocms plugins:reset`](#datocms-pluginsreset)
+- [`datocms plugins:uninstall [PLUGIN]`](#datocms-pluginsuninstall-plugin)
+- [`datocms plugins:unlink [PLUGIN]`](#datocms-pluginsunlink-plugin)
+- [`datocms plugins:update`](#datocms-pluginsupdate)
+- [`datocms profile:remove PROFILE_ID`](#datocms-profileremove-profile_id)
+- [`datocms profile:set PROFILE_ID`](#datocms-profileset-profile_id)
+- [`datocms schema:generate FILENAME`](#datocms-schemagenerate-filename)
 
 ## `datocms autocomplete [SHELL]`
 
@@ -51580,8 +50387,8 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/schema/generate.ts](https://github.com/datocms/cli/blob/v3.1.5/packages/cli/src/commands/schema/generate.ts)_
-<!-- commandsstop -->
 
+<!-- commandsstop -->
 
 ---
 
@@ -51591,10 +50398,11 @@ DatoCMS CLI plugin to import a Contentful project into a DatoCMS project.
 Read a more detailed documentation [on the website](https://www.datocms.com/docs/import-and-export/import-space-from-contentful)
 
 <!-- toc -->
-* [DatoCMS Contentful Import CLI](#datocms-contentful-import-cli)
-* [Usage](#usage)
-* [Commands](#commands)
-* [Test](#test)
+
+- [DatoCMS Contentful Import CLI](#datocms-contentful-import-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Test](#test)
 <!-- tocstop -->
 
 <br /><br />
@@ -51614,7 +50422,8 @@ $ datocms contentful:import --help
 # Commands
 
 <!-- commands -->
-* [`@datocms/cli-plugin-contentful contentful:import`](#datocmscli-plugin-contentful-contentfulimport)
+
+- [`@datocms/cli-plugin-contentful contentful:import`](#datocmscli-plugin-contentful-contentfulimport)
 
 ## `@datocms/cli-plugin-contentful contentful:import`
 
@@ -51655,6 +50464,7 @@ DESCRIPTION
 ```
 
 _See code: [lib/commands/contentful/import.js](https://github.com/datocms/cli/blob/v3.1.4/packages/cli-plugin-contentful/lib/commands/contentful/import.js)_
+
 <!-- commandsstop -->
 
 # Test
@@ -51669,7 +50479,6 @@ CONTENTFUL_TOKEN=xxx npm run test
 
 You can get the `CONTENTFUL_TOKEN` from the password management service
 
-
 ---
 
 # DatoCMS WordPress Import CLI
@@ -51677,10 +50486,11 @@ You can get the `CONTENTFUL_TOKEN` from the password management service
 DatoCMS CLI plugin to import a WordPress site into a DatoCMS project.
 
 <!-- toc -->
-* [DatoCMS WordPress Import CLI](#datocms-wordpress-import-cli)
-* [Usage](#usage)
-* [Commands](#commands)
-* [Development](#development)
+
+- [DatoCMS WordPress Import CLI](#datocms-wordpress-import-cli)
+- [Usage](#usage)
+- [Commands](#commands)
+- [Development](#development)
 <!-- tocstop -->
 
 <br /><br />
@@ -51700,7 +50510,8 @@ $ datocms wordpress:import --help
 # Commands
 
 <!-- commands -->
-* [`@datocms/cli-plugin-wordpress wordpress:import`](#datocmscli-plugin-wordpress-wordpressimport)
+
+- [`@datocms/cli-plugin-wordpress wordpress:import`](#datocmscli-plugin-wordpress-wordpressimport)
 
 ## `@datocms/cli-plugin-wordpress wordpress:import`
 
@@ -51739,6 +50550,7 @@ DESCRIPTION
 ```
 
 _See code: [lib/commands/wordpress/import.js](https://github.com/datocms/cli/blob/v3.1.4/packages/cli-plugin-wordpress/lib/commands/wordpress/import.js)_
+
 <!-- commandsstop -->
 
 # Development
@@ -51763,9 +50575,7 @@ To save a new dump:
 docker-compose exec db mysqldump -uwordpress -pwordpress wordpress > wp_test_data/mysql/dump.sql
 ```
 
-
 ---
-
 
 # DatoCMS plugins repository
 
@@ -51788,10 +50598,7 @@ This repository provides samples of DatoCMS plugins developed using the [Plugins
 - [Table editor](https://github.com/datocms/plugins/tree/master/table-editor/): A plugin that transforms any JSON field into a table editor
 - [Web Previews](https://github.com/datocms/plugins/tree/master/web-previews/): Shows links to the matching webpage previews on selected records
 
-
-
 ---
-
 
 # react-datocms
 
@@ -51809,12 +50616,12 @@ npm install react-datocms
 
 This package offers different components and hooks. Please refer to one of the following pages to learn more about a specific area of interest:
 
-* [`<SRCImage />` and `<Image />` components for responsive/progressive images](./docs/image.md)
-* [`<StructuredText />` component](./docs/structured-text.md)
-* [`<VideoPlayer />` component](./docs/video-player.md)
-* [`useQuerySubscription()` hook for live, real-time updates of content](./docs/live-real-time-updates.md)
-* [`useSiteSearch()` hook to render a DatoCMS Site Search form widget](./docs/site-search.md)
-* [`renderMetaTags()` and other helpers to render social share, SEO and Favicon meta tags](./docs/meta-tags.md)
+- [`<SRCImage />` and `<Image />` components for responsive/progressive images](./docs/image.md)
+- [`<StructuredText />` component](./docs/structured-text.md)
+- [`<VideoPlayer />` component](./docs/video-player.md)
+- [`useQuerySubscription()` hook for live, real-time updates of content](./docs/live-real-time-updates.md)
+- [`useSiteSearch()` hook to render a DatoCMS Site Search form widget](./docs/site-search.md)
+- [`renderMetaTags()` and other helpers to render social share, SEO and Favicon meta tags](./docs/meta-tags.md)
 
 # Demos
 
@@ -51831,8 +50638,6 @@ cd examples
 npm setup
 npm run start
 ```
-
-
 
 ---
 
@@ -51874,7 +50679,6 @@ npm run start
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 ## Installation
 
 ```
@@ -51885,9 +50689,8 @@ npm install --save react-datocms
 
 Even though their purpose is the same, there are some significant differences between these two components. Depending on your specific needs, you can choose to use one or the other:
 
-* `<SRCImage />` is a [React Server Component](https://nextjs.org/docs/app/building-your-application/rendering/server-components), so it can be rendered and optionally cached on the server. It doesn't create any JS footprint. It generates a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself. Be careful: the placeholder is not removed when the image loads, so it's not recommended to use this component if you anticipate that the image may have an alpha channel with transparencies.
-* `<Image />` is a [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components). Since it runs on the browser, it has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
-
+- `<SRCImage />` is a [React Server Component](https://nextjs.org/docs/app/building-your-application/rendering/server-components), so it can be rendered and optionally cached on the server. It doesn't create any JS footprint. It generates a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself. Be careful: the placeholder is not removed when the image loads, so it's not recommended to use this component if you anticipate that the image may have an alpha channel with transparencies.
+- `<Image />` is a [Client Component](https://nextjs.org/docs/app/building-your-application/rendering/client-components). Since it runs on the browser, it has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
 
 ## Usage
 
@@ -51974,14 +50777,13 @@ Here's a complete recap of what `responsiveImage` offers:
 | srcSet     | string  | :x:                | The HTML5 `srcSet` attribute for the image (can be omitted, the Image component knows how to build it based on `src`)                                                                          |
 | webpSrcSet | string  | :x:                | The HTML5 `srcSet` attribute for the image in WebP format (deprecated, it's better to use the [`auto=format`](https://docs.imgix.com/apis/rendering/auto/auto#format) Imgix transform instead) |
 
-
 ## `<SRCImage>`
 
 ### Props
 
 | prop             | type                     | required                     | description                                                                                                                                          | default                                                                                                                                              |
 | ---------------- | ------------------------ | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data             | `ResponsiveImage` object | :white_check_mark:           | The actual response you get from a DatoCMS `responsiveImage` GraphQL query                            ****                                           |                                                                                                                                                      |
+| data             | `ResponsiveImage` object | :white_check_mark:           | The actual response you get from a DatoCMS `responsiveImage` GraphQL query \*\*\*\*                                                                  |                                                                                                                                                      |
 | pictureClassName | string                   | :x:                          | Additional className for the root `<picture>` tag                                                                                                    | null                                                                                                                                                 |
 | pictureStyle     | CSS properties           | :x:                          | Additional CSS rules to add to the root `<picture>` tag                                                                                              | null                                                                                                                                                 |
 | imgClassName     | string                   | :x:                          | Additional className for the `<img>` tag                                                                                                             | null                                                                                                                                                 |
@@ -52033,12 +50835,7 @@ Example for `layout="fill"` (useful also for background images):
 
 ```jsx
 <div style={{ position: 'relative', width: 200, height: 500 }}>
-  <Image
-    data={imageData}
-    layout="fill"
-    objectFit="cover"
-    objectPosition="50% 50%"
-  />
+  <Image data={imageData} layout="fill" objectFit="cover" objectPosition="50% 50%" />
 </div>
 ```
 
@@ -52047,16 +50844,10 @@ Example for `layout="fill"` (useful also for background images):
 If the `data` prop changes over time, this component works like a regular `<img />` in a browser: the new image won't appear until it loads, while the old image stays visible. If you want the old image to disappear while loading, you can use a `key=` so that React sees the changing image as a new `<img />` instead of just changing the src attribute:
 
 ```jsx
-<Image
-  key={imageData.src}
-  data={imageData}
-/>
+<Image key={imageData.src} data={imageData} />
 ```
 
 ---
-
-
-
 
 # Structured text
 
@@ -52074,7 +50865,6 @@ If the `data` prop changes over time, this component works like a regular `<img 
 - [Props](#props)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## Installation
 
@@ -52250,11 +51040,7 @@ const Page = ({ data }) => {
         renderInlineBlock={({ record }) => {
           switch (record.__typename) {
             case 'MentionRecord':
-              return (
-                <code>
-                  @{record.username}
-                </code>
-              );
+              return <code>@{record.username}</code>;
             default:
               return null;
           }
@@ -52366,25 +51152,22 @@ import SyntaxHighlight from 'components/SyntaxHighlight';
     }),
 
     // Apply different formatting to top-level paragraphs
-    renderNodeRule(
-      isParagraph,
-      ({ adapter: { renderNode }, node, children, key, ancestors }) => {
-        if (isRoot(ancestors[0])) {
-          // If this paragraph node is a top-level one, give it a special class
-          return renderNode(
-            'p',
-            { key, className: 'top-level-paragraph-container-example' },
-            children,
-          );
-        } else {
-          // Proceed with default paragraph rendering...
-          // return renderNode('p', { key }, children);
+    renderNodeRule(isParagraph, ({ adapter: { renderNode }, node, children, key, ancestors }) => {
+      if (isRoot(ancestors[0])) {
+        // If this paragraph node is a top-level one, give it a special class
+        return renderNode(
+          'p',
+          { key, className: 'top-level-paragraph-container-example' },
+          children,
+        );
+      } else {
+        // Proceed with default paragraph rendering...
+        // return renderNode('p', { key }, children);
 
-          // Or even completely remove the paragraph and directly render the inner children:
-          return <React.Fragment key={key}>{children}</React.Fragment>;
-        }
-      },
-    ),
+        // Or even completely remove the paragraph and directly render the inner children:
+        return <React.Fragment key={key}>{children}</React.Fragment>;
+      }
+    }),
   ]}
   customMarkRules={[
     // convert "strong" marks into <b> tags
@@ -52410,7 +51193,6 @@ Note: if you override the rules for `inlineItem`, `itemLink`, `block` or `inline
 | customNodeRules    | `Array<RenderRule>`                                             | :x:                                                    | Customize how nodes are converted in JSX (use `renderNodeRule()` to generate rules)              | `null`                                                                                                               |
 | customMarkRules    | `Array<RenderMarkRule>`                                         | :x:                                                    | Customize how marks are converted in JSX (use `renderMarkRule()` to generate rules)              | `null`                                                                                                               |
 | renderText         | `(text: string, key: string) => ReactElement \| string \| null` | :x:                                                    | Convert a simple string text into React                                                          | `(text) => text`                                                                                                     |
-
 
 ---
 
@@ -52571,7 +51353,6 @@ This `<VideoPlayer/>` component can OPTIONALLY collect clientside [playback and 
 These analytics are **disabled** by default. To enable them, you must opt in to [Mux Data](https://www.mux.com/data) integration by creating a Mux Data account (free) and providing its `envKey` to the component.
 
 For details and setup instructions, please see our documentation on **[Streaming Video Analytics with Mux Data](https://www.datocms.com/docs/streaming-videos/streaming-video-analytics-with-mux-data)**.
-
 
 ---
 
@@ -52738,7 +51519,7 @@ export default function Home() {
 }
 ```
 
-**This one is not**, because the new function that is generated every time the component is rendered triggers another render: 
+**This one is not**, because the new function that is generated every time the component is rendered triggers another render:
 
 ```js
 export default function Home() {
@@ -52759,7 +51540,6 @@ export default function Home() {
   return ...
 }
 ```
-
 
 ---
 
@@ -52808,11 +51588,7 @@ const { state, error, data } = useSiteSearch({
   initialState: { locale: 'en' },
   // optional: to configure how to present the part of page title/content that matches the query
   highlightMatch: (text, key, context) =>
-    context === 'title' ? (
-      <strong key={key}>{text}</strong>
-    ) : (
-      <mark key={key}>{text}</mark>
-    ),
+    context === 'title' ? <strong key={key}>{text}</strong> : <mark key={key}>{text}</mark>,
   // optional: defaults to 8 search results per page
   resultsPerPage: 10,
 });
@@ -52887,11 +51663,7 @@ function App() {
     client,
     initialState: { locale: 'en' },
     highlightMatch: (text, key, context) =>
-      context === 'title' ? (
-        <strong key={key}>{text}</strong>
-      ) : (
-        <mark key={key}>{text}</mark>
-      ),
+      context === 'title' ? <strong key={key}>{text}</strong> : <mark key={key}>{text}</mark>,
     buildTriggerId: '7497',
     resultsPerPage: 10,
   });
@@ -52904,11 +51676,7 @@ function App() {
           state.setQuery(query);
         }}
       >
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
+        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} />
         <select
           value={state.locale}
           onChange={(e) => {
@@ -52947,7 +51715,6 @@ function App() {
 }
 ```
 
-
 ---
 
 # Social share, SEO and Favicon meta tags
@@ -52968,7 +51735,6 @@ Just like for the [image component](./image.md) this package offers a number of 
 - [`toNextMetadata()`](#tonextmetadata)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## Installation
 
@@ -53023,9 +51789,7 @@ import { renderMetaTags } from 'react-datocms';
 function Page({ data }) {
   return (
     <div>
-      <Helmet>
-        {renderMetaTags([...data.page.seo, ...data.site.favicon])}
-      </Helmet>
+      <Helmet>{renderMetaTags([...data.page.seo, ...data.site.favicon])}</Helmet>
     </div>
   );
 }
@@ -53123,14 +51887,12 @@ This function generates a `Metadata` object, compatibile with the [`generateMeta
 ```js
 export async function generateMetadata(): Promise<Metadata> {
   const { homepage } = await getHomepageContent()
- 
+
   return toNextMetadata(homepage?._seoMetaTags || [])
 }
 ```
 
-
 ---
-
 
 # vue-datocms
 
@@ -53188,6 +51950,7 @@ For fully working examples take a look at our [examples directory](https://githu
 Live demo: [https://vue-datocms-example.netlify.com/](https://vue-datocms-example.netlify.com/)
 
 ```
+
 ## Development
 
 This repository contains a number of demos/examples. You can use them to locally test your changes.
@@ -53197,8 +51960,6 @@ cd examples
 npm setup
 npm run dev
 ```
-
-
 
 ---
 
@@ -53240,7 +52001,6 @@ npm run dev
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
 ## Setup
 
 You can register the components globally so they are available in your app:
@@ -53270,9 +52030,8 @@ export default {
 
 Even though their purpose is the same, there are some significant differences between these two components. Depending on your specific needs, you can choose to use one or the other:
 
-* `<datocms-naked-image />` generates minimum JS footprint, outputs a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself.
-* `<datocms-image />` has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
-
+- `<datocms-naked-image />` generates minimum JS footprint, outputs a single `<picture />` element and implements lazy-loading using the native [`loading="lazy"` attribute](https://web.dev/articles/browser-level-image-lazy-loading). The placeholder is set as the background to the image itself.
+- `<datocms-image />` has the ability to set a cross-fade effect between the placeholder and the original image, but at the cost of generating more complex HTML output composed of multiple elements around the main `<picture />` element. It also implements lazy-loading through `IntersectionObserver`, which allows customization of the thresholds at which lazy loading occurs.
 
 ## Usage
 
@@ -53354,7 +52113,7 @@ The `data` prop of both components expects an object with the same shape as the 
 - We strongly to suggest to always specify [`{ auto: format }`](https://docs.imgix.com/apis/rendering/auto/auto#format) in your `imgixParams`, instead of requesting `webpSrcSet`, so that you can also take advantage of more performant optimizations (AVIF), without increasing GraphQL response size;
 - If you request both the `bgColor` and `base64` property, the latter will take precedence, so just avoid querying both fields at the same time, as it will only make the GraphQL response bigger :wink:;
 - You can avoid requesting `sizes` and directly pass a `sizes` prop to the component to reduce the GraphQL response size;
-Here's a complete recap of what `responsiveImage` offers:
+  Here's a complete recap of what `responsiveImage` offers:
 
 | property    | type    | required           | description                                                                                                                                                                                    |
 | ----------- | ------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -53370,14 +52129,13 @@ Here's a complete recap of what `responsiveImage` offers:
 | webpSrcSet  | string  | :x:                | The HTML5 `srcSet` attribute for the image in WebP format (deprecated, it's better to use the [`auto=format`](https://docs.imgix.com/apis/rendering/auto/auto#format) Imgix transform instead) |
 | aspectRatio | float   | :x:                | The aspect ratio (width/height) of the image                                                                                                                                                   |
 
-
 ## `<datocms-naked-image>`
 
 ### Props
 
 | prop               | type                     | default                            | required           | description                                                                                                                                          |
 | ------------------ | ------------------------ | ---------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data               | `ResponsiveImage` object |                                    | :white_check_mark: | The actual response you get from a DatoCMS `responsiveImage` GraphQL query                            ****                                           |
+| data               | `ResponsiveImage` object |                                    | :white_check_mark: | The actual response you get from a DatoCMS `responsiveImage` GraphQL query \*\*\*\*                                                                  |
 | picture-class      | string                   | null                               | :x:                | Additional CSS class for the root `<picture>` tag                                                                                                    |
 | picture-style      | CSS properties           | null                               | :x:                | Additional CSS rules to add to the root `<picture>` tag                                                                                              |
 | img-class          | string                   | null                               | :x:                | Additional CSS class for the `<img>` tag                                                                                                             |
@@ -53431,14 +52189,12 @@ Here's a complete recap of what `responsiveImage` offers:
 | ----- | ------------------------------------------- |
 | @load | Emitted when the image has finished loading |
 
-
 ### Exposed public properties
 
 | prop     | type               | description              |
 | -------- | ------------------ | ------------------------ |
 | rootRef  | `HTMLDivElement`   | `ref()` to the root node |
 | imageRef | `HTMLImageElement` | `ref()` to the img node  |
-
 
 ### Layout mode
 
@@ -53451,7 +52207,6 @@ With the `layout` property, you can configure the behavior of the image as the v
   - This is usually paired with the `objectFit` and `objectPosition` properties.
   - Ensure the parent element has `position: relative` in their stylesheet.
 
-
 ---
 
 # `<VideoPlayer/>` component for easy video integration.
@@ -53463,7 +52218,7 @@ sites.
 [q]: https://www.datocms.com/docs/content-delivery-api/images-and-videos#videos
 
 To stream videos, DatoCMS partners with MUX, a video CDN that serves optimized
-streams to your users. Our component is a wrapper around 
+streams to your users. Our component is a wrapper around
 [MUX's video player][mvp] [web component][wc]. It takes care of the details for you, and this
 is our recommended way to serve optimal videos to your users.
 
@@ -53482,6 +52237,7 @@ is our recommended way to serve optimal videos to your users.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [Installation](#installation)
@@ -53491,7 +52247,6 @@ is our recommended way to serve optimal videos to your users.
 - [Opt-in Viewer Analytics](#opt-in-viewer-analytics)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 
 ## Installation
 
@@ -53801,9 +52556,7 @@ const query = gql`
           }
           ... on ImageRecord {
             image {
-              responsiveImage(
-                imgixParams: { fit: crop, w: 300, h: 300, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, w: 300, h: 300, auto: format }) {
                 srcSet
                 webpSrcSet
                 sizes
@@ -53854,11 +52607,7 @@ export default {
     renderLinkToRecord: ({ record, children, transformedMeta }) => {
       switch (record.__typename) {
         case 'TeamMemberRecord':
-          return h(
-            'a',
-            { ...transformedMeta, href: `/team/${record.slug}` },
-            children,
-          );
+          return h('a', { ...transformedMeta, href: `/team/${record.slug}` }, children);
         default:
           return null;
       }
@@ -54036,7 +52785,6 @@ Note: if you override the rules for `inlineItem`, `itemLink`, `block` or `inline
 | customMarkRules    | `Array<RenderMarkRule>`                                    | :x:                                                    | Customize how marks are converted in JSX (use `renderMarkRule()` to generate)                    | `null`                                                                                                               |
 | renderText         | `(text: string, key: string) => VNode \| string \| null`   | :x:                                                    | Convert a simple string text into a VNode                                                        | `(text) => text`                                                                                                     |
 
-
 ---
 
 # Live real-time updates
@@ -54122,7 +52870,6 @@ The `status` property represents the state of the server-sent events connection.
 
 See the query-subscription [`App.vue`](/examples/query-subscription/src/App.vue) for a usage example.
 
-
 ---
 
 # Site Search composable
@@ -54142,7 +52889,7 @@ The hook only handles the form logic: you are in complete and full control of ho
   - [Initialization options](#initialization-options)
   - [Returned data](#returned-data)
   - [Complete example](#complete-example)
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+  <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
 
@@ -54219,12 +52966,12 @@ The hook returns an object with the following shape:
 `titleHighlights` and `bodyHighlights` have the following shape:
 
 ```typescript
-type ResultHighlight = HighlightPiece[]
+type ResultHighlight = HighlightPiece[];
 
 type HighlightPiece = {
   text: string;
   isMatch: boolean;
-}
+};
 ```
 
 - The `state` property reflects the current state of the form (the current `query`, `page`, and `locale`), and offers a number of functions to change the state itself. As soon as the state of the form changes, a new API request is made to fetch the new search results;
@@ -54235,13 +52982,11 @@ type HighlightPiece = {
 
 See a more complete [`site search example`](/examples/src/SiteSearch/index.vue) for usage.
 
-
 ---
 
 404: Not Found
 
 ---
-
 
 # @datocms/astro
 
@@ -54272,8 +53017,6 @@ A set of TypeScript-ready components and utilities to work faster with [DatoCMS]
 ```
 npm install @datocms/astro
 ```
-
-
 
 ---
 
@@ -54403,7 +53146,6 @@ Here's a complete recap of what `responsiveImage` offers:
 | srcSetCandidates | Array<number>            | [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4] | :x:                | If `data` does not contain `srcSet`, the candidates for the `srcset` attribute of the image will be auto-generated based on these width multipliers  |
 | referrerPolicy   | string                   | `no-referrer-when-downgrade`       | :x:                | Defines which referrer is sent when fetching the image. Defaults to `no-referrer-when-downgrade` to give more useful stats in DatoCMS Project Usages |
 
-
 ---
 
 # Social share, SEO and Favicon meta tags
@@ -54463,7 +53205,6 @@ const result = await executeQuery(query, { token: '<YOUR-API-TOKEN>' });
 
 <Seo data={[...result.page.seo, ...result.site.favicon]} />
 ```
-
 
 ---
 
@@ -54679,7 +53420,6 @@ import { StructuredText, ensureValidStructuredTextProps } from '@datocms/astro/S
 | nodeOverrides          | `Record<string, AstroComponent>` |                    | An object in which the keys are the types of DAST nodes to override, and the values are the Astro components                  |
 | markOverrides          | `Record<string, AstroComponent>` |                    | An object in which the keys are the types of `span` node marks to override, and the values are the Astro components           |
 
-
 ---
 
 # Live real-time updates
@@ -54750,9 +53490,7 @@ const data = await executeQuery(query, { token: '<YOUR-API-TOKEN>' });
 | reconnectionPeriod | number                                                                                     | :x:                | In case of network errors, the period (in ms) to wait to reconnect                               | 1000                                 |
 | baseUrl            | string                                                                                     | :x:                | The base URL to use to perform the query                                                         | `https://graphql-listen.datocms.com` |
 
-
 ---
-
 
 # @datocms/svelte
 
@@ -54769,10 +53507,10 @@ A set of components to work faster with [DatoCMS](https://www.datocms.com/) in S
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [Features](#features)
-  - [Installation](#installation)
-  - [Development](#development)
-  - [Building](#building)
+- [Features](#features)
+- [Installation](#installation)
+- [Development](#development)
+- [Building](#building)
 - [What is DatoCMS?](#what-is-datocms)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -54814,8 +53552,6 @@ To create a production version of this library:
 npm run build
 ```
 
-
-
 ---
 
 # Progressive responsive image
@@ -54839,7 +53575,7 @@ npm run build
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [Setup](#setup)
+- [Setup](#setup)
 - [Usage](#usage)
 - [`<Image />` vs `<NakedImage />`](#image--vs-nakedimage-)
 - [Example](#example)
@@ -55045,7 +53781,6 @@ With the `layout` property, you can configure the behavior of the image as the v
 
 If `IntersectionObserver` object is not available, the component treats the image as it's always visible in the viewport. Feel free to add a [polyfill](https://www.npmjs.com/package/intersection-observer) so that it will also 100% work on older versions of iOS and IE11.
 
-
 ---
 
 # `<VideoPlayer/>` component for easy video integration.
@@ -55211,7 +53946,7 @@ For details and setup instructions, please see our documentation on **[Streaming
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-  - [Setup](#setup)
+- [Setup](#setup)
 - [Basic usage](#basic-usage)
 - [Customization](#customization)
   - [Custom components for blocks](#custom-components-for-blocks)
@@ -55400,7 +54135,6 @@ In this case, you can easily override default rendering rules with the `componen
 | data       | `StructuredText \| DastNode`                                                                                | :white_check_mark:                                                                      | The actual [field value](https://www.datocms.com/docs/structured-text/dast) you get from DatoCMS |         |
 | components | [`PredicateComponentTuple[] \| null`](https://github.com/datocms/datocms-svelte/blob/main/src/lib/index.ts) | Only required if data contains `block`, `inlineBlock`, `inlineItem` or `itemLink` nodes | Array of tuples formed by a predicate function and custom component                              | `[]`    |
 
-
 ---
 
 # Social share, SEO and Favicon meta tags
@@ -55476,7 +54210,6 @@ Here is an example:
 
 <Head {data} />
 ```
-
 
 ---
 
@@ -55590,7 +54323,6 @@ const statusMessage = {
   </ul>
 {/if}
 ```
-
 
 ---
 
@@ -55761,9 +54493,7 @@ function isCode(node: Node): node is Code {}
 function isLink(node: Node): node is Link {}
 function isItemLink(node: Node): node is ItemLink {}
 function isInlineItem(node: Node): node is InlineItem {}
-function isCdaStructuredTextValue(
-  object: any,
-): object is CdaStructuredTextValue {}
+function isCdaStructuredTextValue(object: any): object is CdaStructuredTextValue {}
 ```
 
 ## Tree Manipulation Utilities
@@ -55803,13 +54533,7 @@ await forEachNodeAsync(structuredText, async (node, parent, path) => {
 Transform nodes while preserving the tree structure:
 
 ```javascript
-import {
-  mapNodes,
-  mapNodesAsync,
-  isHeading,
-  isSpan,
-  isBlock,
-} from 'datocms-structured-text-utils';
+import { mapNodes, mapNodesAsync, isHeading, isSpan, isBlock } from 'datocms-structured-text-utils';
 
 // Transform heading levels for better hierarchy
 const enhanced = mapNodes(structuredText, (node) => {
@@ -55877,12 +54601,7 @@ const strongText = collectNodes(
 Remove nodes that don't match a predicate:
 
 ```javascript
-import {
-  filterNodes,
-  filterNodesAsync,
-  isCode,
-  isBlock,
-} from 'datocms-structured-text-utils';
+import { filterNodes, filterNodesAsync, isCode, isBlock } from 'datocms-structured-text-utils';
 
 // Remove all code blocks
 const withoutCode = filterNodes(structuredText, (node) => !isCode(node));
@@ -56086,7 +54805,6 @@ console.log(tree);
   └ span "Content after block"
 ```
 
-
 ---
 
 ![Node.js CI](https://github.com/datocms/structured-text/workflows/Node.js%20CI/badge.svg)
@@ -56209,7 +54927,6 @@ render(document, options);
 //    [Image http://www.datocms-assets.com/1312/image.png]
 ```
 
-
 ---
 
 ![Node.js CI](https://github.com/datocms/structured-text/workflows/Node.js%20CI/badge.svg)
@@ -56298,7 +55015,7 @@ The renderer supports all DatoCMS Structured Text nodes and converts them to Com
 
 ## Behavior Notes
 
-- **Escaping strategy**: `renderText` escapes `` \`*_{}[]()#+|<> `` to avoid accidental formatting or unintended HTML. For bespoke sanitization, supply a custom `renderText` implementation.
+- **Escaping strategy**: `renderText` escapes ``\`*_{}[]()#+|<>`` to avoid accidental formatting or unintended HTML. For bespoke sanitization, supply a custom `renderText` implementation.
 - **Ordered list markers**: Every numbered list item is rendered as `1.`. CommonMark parsers expand these into the correct numeric sequence automatically and this keeps the output stable even when items are reordered.
 - **Blockquote attribution**: When a blockquote contains an `attribution` field, the renderer appends a final line formatted as `— Author`. This mirrors the DOM renderer's output but is not part of the Markdown core spec.
 
@@ -56325,17 +55042,10 @@ import { isHeading } from 'datocms-structured-text-utils';
 const options = {
   renderText: (text) => text.toUpperCase(),
   customNodeRules: [
-    renderNodeRule(
-      isHeading,
-      ({ node, children, adapter: { renderFragment } }) => {
-        // Custom heading with decoration
-        return renderFragment([
-          `${'='.repeat(node.level)} `,
-          ...(children || []),
-          '\n\n',
-        ]);
-      },
-    ),
+    renderNodeRule(isHeading, ({ node, children, adapter: { renderFragment } }) => {
+      // Custom heading with decoration
+      return renderFragment([`${'='.repeat(node.level)} `, ...(children || []), '\n\n']);
+    }),
   ],
 };
 
@@ -56474,7 +55184,6 @@ Converts a Structured Text document to a Markdown string.
 
 A Markdown string, or `null` if the input is empty.
 
-
 ---
 
 ![Node.js CI](https://github.com/datocms/structured-text/workflows/Node.js%20CI/badge.svg)
@@ -56567,12 +55276,9 @@ const structuredText = {
 const options = {
   renderText: (text) => text.replace(/Hello/, 'Howdy'),
   customNodeRules: [
-    renderNodeRule(
-      isHeading,
-      ({ adapter: { renderNode }, node, children, key }) => {
-        return renderNode(`h${node.level + 1}`, { key }, children);
-      },
-    ),
+    renderNodeRule(isHeading, ({ adapter: { renderNode }, node, children, key }) => {
+      return renderNode(`h${node.level + 1}`, { key }, children);
+    }),
   ],
   customMarkRules: [
     renderMarkRule('strong', ({ adapter: { renderNode }, children, key }) => {
@@ -56655,7 +55361,6 @@ render(document, options);
 // -> <p>A <a href="/blog/foo">record hyperlink</a> and an inline record: <a href="/blog/foo">Foo</a></p>
 //    <figure><img src="http://www.datocms-assets.com/1312/image.png" /></figure>
 ```
-
 
 ---
 
@@ -56753,12 +55458,9 @@ const structuredText = {
 const options = {
   renderText: (text) => text.replace(/Hello/, 'Howdy'),
   customNodeRules: [
-    renderNodeRule(
-      isHeading,
-      ({ adapter: { renderNode }, node, children, key }) => {
-        return renderNode(`h${node.level + 1}`, { key }, children);
-      },
-    ),
+    renderNodeRule(isHeading, ({ adapter: { renderNode }, node, children, key }) => {
+      return renderNode(`h${node.level + 1}`, { key }, children);
+    }),
   ],
   customMarkRules: [
     renderMarkRule('strong', ({ adapter: { renderNode }, children, key }) => {
@@ -56843,7 +55545,6 @@ render(document, options);
 //      <figure><img src="http://www.datocms-assets.com/1312/image.png" /></figure>
 //    ]
 ```
-
 
 ---
 
@@ -57104,9 +55805,7 @@ const dast = await htmlToStructuredText(html, {
         const /* div */ parentsParent = parents[i - 1];
 
         // Delete the siblings after the image and save them in a variable
-        childrenAfterSplitPoint /* [ 'h1.2' ] */ = parent.children.splice(
-          splitChildrenIndex,
-        );
+        childrenAfterSplitPoint /* [ 'h1.2' ] */ = parent.children.splice(splitChildrenIndex);
         // parent.children is now == [ 'h1.1' ]
 
         // parentsParent.children = [ 'h1' ]
@@ -57203,7 +55902,6 @@ To work with `hast` and `dast` trees we recommend using the [unist-utils-core](h
 
 MIT
 
-
 ---
 
 # `datocms-structured-text-slate-utils`
@@ -57224,9 +55922,7 @@ Using [yarn](https://yarnpkg.com/):
 yarn add datocms-structured-text-slate-utils
 ```
 
-
 ---
-
 
 # datocms-listen
 
@@ -57245,7 +55941,7 @@ npm install datocms-listen
 Import `subscribeToQuery` from `datocms-listen` and use it inside your components like this:
 
 ```js
-import { subscribeToQuery } from "datocms-listen";
+import { subscribeToQuery } from 'datocms-listen';
 
 const unsubscribe = await subscribeToQuery({
   query: `
@@ -57257,7 +55953,7 @@ const unsubscribe = await subscribeToQuery({
     }
   `,
   variables: { first: 10 },
-  token: "YOUR_TOKEN",
+  token: 'YOUR_TOKEN',
   includeDrafts: true,
   onUpdate: (update) => {
     // response is the GraphQL response

@@ -1,23 +1,139 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionIntro from '~/components/SectionIntro.astro';
+import AuthorCard from '~/components/AuthorCard.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { graphql } from '~/lib/datocms/graphql';
+import { toPlainText } from '~/lib/text';
+import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 
 export const prerender = true;
 
-const seo = withFallbackSeo([], {
-  title: 'Autori | Multimage',
-  description:
-    'A breve verranno pubblicate le schede autore e i contributi presenti nell’archivio storico.',
+const AUTHORS_PAGE_QUERY = graphql(/* GraphQL */ `
+  query AuthorsPage {
+    authorsIndex {
+      title
+      subtitle
+      _seoMetaTags {
+        tag
+        attributes
+        content
+      }
+    }
+    allAuthors(orderBy: sortBy_ASC, first: 500) {
+      id
+      fullName
+      slug
+      alias
+      country
+      biography
+      sortBy
+      picture {
+        url
+        alt
+        width
+        height
+      }
+    }
+    allBooks(first: 500) {
+      id
+      authors {
+        id
+      }
+    }
+  }
+`);
+
+type SeoMetaTag = {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: string | null;
+};
+
+type AuthorsPageQueryResult = {
+  authorsIndex: {
+    title: string | null;
+    subtitle: string | null;
+    _seoMetaTags: SeoMetaTag[] | null;
+  } | null;
+  allAuthors: Array<{
+    id: string;
+    fullName: string | null;
+    slug: string | null;
+    alias: string | null;
+    country: string | null;
+    biography: string | null;
+    sortBy: string | null;
+    picture: {
+      url: string;
+      alt: string | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+  }>;
+  allBooks: Array<{
+    id: string;
+    authors: Array<{
+      id: string;
+    }>;
+  }>;
+};
+
+const data = (await executeQuery(AUTHORS_PAGE_QUERY)) as AuthorsPageQueryResult;
+
+const heroTitle = data.authorsIndex?.title ?? 'Autori';
+const heroSubtitle = toPlainText(data.authorsIndex?.subtitle ?? null);
+const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+const seo = withFallbackSeo(data.authorsIndex?._seoMetaTags, {
+  title: heroTitle,
+  description: heroDescription,
 });
+
+const bookCounts = new Map<string, number>();
+for (const book of data.allBooks ?? []) {
+  for (const author of book.authors ?? []) {
+    if (!author?.id) {
+      continue;
+    }
+    bookCounts.set(author.id, (bookCounts.get(author.id) ?? 0) + 1);
+  }
+}
+
+const sortedAuthors = sortAuthorsForIndex(data.allAuthors ?? []);
+const authorCards = mapAuthorsToCards(sortedAuthors, { bookCounts }).filter(
+  (author) => author.slug.length > 0,
+);
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-6">
-    <h1>Autori</h1>
-    <p>
-      A breve qui verranno pubblicate le schede autore e i contributi presenti nell’archivio
-      storico. L’obiettivo è mantenere le stesse gerarchie di navigazione del sito originale.
-    </p>
-    <span class="chip">Work in progress</span>
+  <section class="space-y-12">
+    <div class="mx-auto max-w-5xl">
+      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
+    </div>
+
+    {
+      authorCards.length === 0 ? (
+        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+          Gli autori saranno disponibili a breve.
+        </p>
+      ) : (
+        <div class="mx-auto max-w-6xl">
+          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {authorCards.map((author) => (
+              <AuthorCard
+                name={author.name}
+                slug={author.slug}
+                alias={author.alias}
+                country={author.country}
+                summary={author.summary}
+                booksCount={author.booksCount}
+                picture={author.picture}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
   </section>
 </BaseLayout>
