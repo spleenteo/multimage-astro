@@ -10,6 +10,11 @@ type NavLink = {
 
 type Props = {
   currentPath: string;
+  infoPages?: Array<{
+    id: string;
+    label: string;
+    href: string;
+  }>;
 };
 
 type TopLink = {
@@ -57,38 +62,31 @@ const TOP_LINKS: TopLink[] = [
   },
 ] as const;
 
-const PRIMARY_LINKS: NavLink[] = [
-  {
-    label: 'Libri',
-    children: [
-      { label: 'Collane', href: '/collane' },
-      { label: 'In evidenza', href: '/libri/highlights' },
-      { label: 'Catalogo', href: '/libri' },
-      { label: 'Ebooks', href: '/libri/ebooks' },
-      { label: 'Fuori catalogo', href: '/libri/archivio' },
-    ],
-  },
-  { label: 'Autrici/Autori', href: '/autori' },
-  { label: 'Distributori', href: '/distributori' },
-  {
-    label: 'Informazioni',
-    children: [
-      { label: 'Chi siamo?', href: '/info/chi-siamo' },
-      { label: 'La storia', href: '/info/la-storia' },
-      { label: 'Adesioni', href: '/info/adesioni' },
-      { label: 'Sostieni Multimage!', href: '/info/sostieni-multimage' },
-      { label: 'Ordinare', href: '/info/ordinare' },
-      { label: 'Partecipare', href: '/info/partecipare' },
-      { label: 'Pubblicazioni', href: '/info/pubblicazioni' },
-      { label: 'Contatti', href: '/info/contatti' },
-      { label: 'Eirenefest', href: '/info/eirenefest' },
-      { label: 'Libri Amici', href: '/info/libri-amici' },
-      { label: 'Sviluppo web', href: '/info/sviluppo-web' },
-      { label: 'Carta Etica', href: '/info/carta-etica' },
-      { label: 'Vai bene così', href: '/info/vai-bene-cosi' },
-    ],
-  },
-] as const;
+function buildPrimaryLinks(infoPages: Array<{ label: string; href: string }>): NavLink[] {
+  const infoChildren = infoPages.length > 0 ? infoPages : [];
+
+  return [
+    {
+      label: 'Libri',
+      children: [
+        { label: 'Collane', href: '/collane' },
+        { label: 'In evidenza', href: '/libri/highlights' },
+        { label: 'Catalogo', href: '/libri' },
+        { label: 'Ebooks', href: '/libri/ebooks' },
+        { label: 'Fuori catalogo', href: '/libri/archivio' },
+      ],
+    },
+    { label: 'Autrici/Autori', href: '/autori' },
+    { label: 'Distributori', href: '/distributori' },
+    {
+      label: 'Informazioni',
+      children: infoChildren.map((page) => ({
+        label: page.label,
+        href: page.href,
+      })),
+    },
+  ];
+}
 
 const toneClassMap: Record<string, string> = {
   instagram: 'bg-social-instagram hover:bg-social-instagram/80 text-white',
@@ -101,7 +99,8 @@ const toneClassMap: Record<string, string> = {
 const socialBaseClass =
   'inline-flex items-center gap-2 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-wider transition';
 
-const { currentPath }: Props = Astro.props;
+const { currentPath, infoPages = [] }: Props = Astro.props;
+const PRIMARY_LINKS = buildPrimaryLinks(infoPages);
 
 const normalizedPath =
   currentPath.endsWith('/') && currentPath !== '/' ? currentPath.slice(0, -1) : currentPath;

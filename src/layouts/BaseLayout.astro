@@ -6,7 +6,7 @@ import '../styles/global.css';
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
 import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import type { SeoMetaTag } from '~/lib/datocms/types';
+import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 const { seo = [] }: { seo?: TitleMetaLinkTag[] } = Astro.props;
 
@@ -18,6 +18,11 @@ const SITE_QUERY = /* GraphQL */ `
         ...TagFragment
       }
     }
+    allPages(filter: { menu: { eq: true } }, orderBy: position_ASC, first: 100) {
+      id
+      slug
+      label
+    }
   }
 `;
 
@@ -25,11 +30,27 @@ type SiteMetaResult = {
   _site: {
     faviconMetaTags: SeoMetaTag[] | null;
   } | null;
+  allPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
 };
 
-const { _site } = await executeQuery<SiteMetaResult>(SITE_QUERY);
+const { _site, allPages } = await executeQuery<SiteMetaResult>(SITE_QUERY);
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
+
+const infoPages = (allPages ?? [])
+  .map((page) => {
+    const slug = page.slug?.trim();
+    const label = page.label?.trim();
+    if (!slug || !label) {
+      return null;
+    }
+    return {
+      id: page.id,
+      label,
+      href: `/info/${slug}`,
+    };
+  })
+  .filter((entry): entry is { id: string; label: string; href: string } => Boolean(entry));
 ---
 
 <!doctype html>
@@ -46,7 +67,7 @@ const currentPath = Astro.url.pathname;
       is:inline></script>
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
-    <Header currentPath={currentPath} />
+    <Header currentPath={currentPath} infoPages={infoPages} />
     <main class="flex-1 bg-white">
       <div class="container py-12 md:py-16">
         <slot />
