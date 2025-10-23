@@ -1,0 +1,353 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import BookCard from '~/components/BookCard.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { graphql } from '~/lib/datocms/graphql';
+import { mapBooksToCards } from '~/lib/books';
+import { toPlainText, truncateToLength } from '~/lib/text';
+import { withFallbackSeo } from '~/lib/seo';
+
+export const prerender = true;
+
+const AUTHOR_DETAIL_QUERY = graphql(/* GraphQL */ `
+  query AuthorDetailPage($slug: String) {
+    author(filter: { slug: { eq: $slug } }) {
+      id
+      fullName
+      alias
+      country
+      biography
+      note
+      picture {
+        url
+        alt
+        width
+        height
+      }
+      pseudonyms {
+        id
+        fullName
+        slug
+      }
+      _seoMetaTags {
+        tag
+        attributes
+        content
+      }
+    }
+  }
+`);
+
+const AUTHOR_RELATED_BOOKS_QUERY = graphql(/* GraphQL */ `
+  query AuthorRelatedBooks($authorIds: [ItemId!]) {
+    _allBooksMeta(filter: { authors: { anyIn: $authorIds } }) {
+      count
+    }
+    allBooks(filter: { authors: { anyIn: $authorIds } }, orderBy: printYear_DESC, first: 60) {
+      id
+      title
+      subtitle
+      slug
+      promo
+      description
+      coverImage {
+        url
+        alt
+        colors {
+          hex
+        }
+        width
+        height
+      }
+      authors {
+        id
+        fullName
+      }
+      license {
+        name
+        code
+      }
+      format
+      price
+      archive
+    }
+  }
+`);
+
+type SeoMetaTag = {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: string | null;
+};
+
+type AuthorDetailResult = {
+  author: {
+    id: string;
+    fullName: string | null;
+    alias: string | null;
+    country: string | null;
+    biography: string | null;
+    note: string | null;
+    picture: {
+      url: string;
+      alt: string | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    pseudonyms: Array<{
+      id: string;
+      fullName: string | null;
+      slug: string | null;
+    }>;
+    _seoMetaTags: SeoMetaTag[] | null;
+  } | null;
+};
+
+type AuthorRelatedBooksResult = {
+  _allBooksMeta: {
+    count: number;
+  } | null;
+  allBooks: Array<{
+    id: string;
+    title: string;
+    subtitle: string | null;
+    slug: string;
+    promo: string | null;
+    description: string | null;
+    coverImage: {
+      url: string;
+      alt: string | null;
+      colors?: Array<{ hex: string }>;
+      width: number | null;
+      height: number | null;
+    } | null;
+    authors: Array<{
+      id: string;
+      fullName: string | null;
+    }>;
+    license: {
+      name: string | null;
+      code: string | null;
+    } | null;
+    format: string | null;
+    price: number | null;
+    archive: boolean | null;
+  }>;
+};
+
+type AuthorSlugsResult = {
+  allAuthors: Array<{
+    slug: string | null;
+  }>;
+};
+
+export async function getStaticPaths() {
+  const slugsQuery = graphql(/* GraphQL */ `
+    query AuthorSlugsForStaticPaths {
+      allAuthors(orderBy: sortBy_ASC, first: 500) {
+        slug
+      }
+    }
+  `);
+
+  const data = (await executeQuery(slugsQuery)) as AuthorSlugsResult;
+
+  return (data.allAuthors ?? [])
+    .map((author) => author.slug)
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing author slug');
+}
+
+const detailData = (await executeQuery(AUTHOR_DETAIL_QUERY, {
+  variables: { slug },
+})) as AuthorDetailResult;
+
+const author = detailData.author;
+
+if (!author) {
+  throw new Error(`Author not found for slug: ${slug}`);
+}
+
+const relatedData = (await executeQuery(AUTHOR_RELATED_BOOKS_QUERY, {
+  variables: { authorIds: [author.id] },
+})) as AuthorRelatedBooksResult;
+
+const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
+const relatedBooks = mapBooksToCards(relatedData.allBooks);
+
+const biographyParagraphs = (author.biography ?? '')
+  .split(/\r?\n\s*\r?\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter((paragraph) => paragraph.length > 0);
+
+const noteParagraphs = (author.note ?? '')
+  .split(/\r?\n\s*\r?\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter((paragraph) => paragraph.length > 0);
+
+const [leadParagraph] = biographyParagraphs;
+const leadSummary = leadParagraph ? truncateToLength(leadParagraph, 220) : null;
+const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
+
+const pseudonyms = (author.pseudonyms ?? []).filter(
+  (person) => person.fullName && person.fullName.trim().length > 0,
+);
+
+const fallbackDescription = leadParagraph
+  ? leadParagraph
+  : toPlainText(author.biography ?? author.note ?? null);
+const seo = withFallbackSeo(author._seoMetaTags, {
+  title: `${author.fullName ?? 'Autore'} | Multimage`,
+  description: fallbackDescription || undefined,
+});
+
+const pictureAlt = author.picture?.alt?.trim() || author.fullName || 'Autore';
+const pictureWidth = author.picture?.width ?? 640;
+const pictureHeight = author.picture?.height ?? Math.round(pictureWidth * 1.1);
+---
+
+<BaseLayout seo={seo}>
+  <article class="space-y-12">
+    <section
+      class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start"
+    >
+      <div class="overflow-hidden bg-white/95 shadow-soft">
+        <div class="bg-brand-mist">
+          {
+            author.picture?.url ? (
+              <img
+                src={`${author.picture.url}?auto=compress&fit=crop&w=960&h=960`}
+                alt={pictureAlt}
+                width={pictureWidth}
+                height={pictureHeight}
+                loading="lazy"
+                sizes="(min-width: 1024px) 320px, 60vw"
+                class="h-auto w-full object-cover"
+              />
+            ) : (
+              <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">
+                Ritratto in arrivo
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      <div class="border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12">
+        <div class="flex flex-col gap-4">
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
+              Autori Multimage
+            </p>
+            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">
+              {author.fullName ?? 'Autore'}
+            </h1>
+            {
+              author.alias || author.country ? (
+                <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
+                  {[author.alias, author.country].filter(Boolean).join(' · ')}
+                </p>
+              ) : null
+            }
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">{booksLabel}</p>
+          </div>
+
+          {
+            leadSummary ? (
+              <p class="text-base italic leading-relaxed text-brand-charcoal/80">{leadSummary}</p>
+            ) : null
+          }
+
+          {
+            pseudonyms.length > 0 ? (
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
+                  Pseudonimi:
+                </span>
+                {pseudonyms.map((person) =>
+                  person.slug ? (
+                    <a href={`/autori/${person.slug}`} class="chip chip-outline">
+                      {person.fullName}
+                    </a>
+                  ) : (
+                    <span class="chip chip-outline">{person.fullName}</span>
+                  ),
+                )}
+              </div>
+            ) : null
+          }
+        </div>
+      </div>
+    </section>
+
+    {
+      biographyParagraphs.length > 0 ? (
+        <section class="mx-auto max-w-4xl space-y-6 bg-white/95 p-8 shadow-soft">
+          <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
+          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90">
+            {biographyParagraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ) : null
+    }
+
+    {
+      noteParagraphs.length > 0 ? (
+        <section class="mx-auto max-w-4xl space-y-6 border border-white/70 bg-white/95 p-8 shadow-soft">
+          <h2 class="text-3xl font-serif text-brand-navy">Approfondimenti</h2>
+          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90">
+            {noteParagraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      ) : null
+    }
+
+    <section class="space-y-6">
+      <div class="mx-auto max-w-6xl">
+        <div class="border border-white/70 bg-white/95 p-8 text-center shadow-soft">
+          <h2 class="text-3xl font-serif text-brand-navy">
+            Libri di {author.fullName ?? 'questo autore'}
+          </h2>
+        </div>
+      </div>
+
+      {
+        relatedBooks.length === 0 ? (
+          <p class="mx-auto max-w-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+            Nessun libro pubblicato in catalogo per questo autore.
+          </p>
+        ) : (
+          <div class="mx-auto max-w-6xl">
+            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+              {relatedBooks.map((book) => (
+                <BookCard
+                  title={book.title}
+                  slug={book.slug}
+                  subtitle={book.subtitle}
+                  summary={book.summary}
+                  coverImage={book.coverImage}
+                  authors={book.authors}
+                  license={book.license}
+                  format={book.format}
+                  price={book.price}
+                  isArchived={book.isArchived}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </section>
+  </article>
+</BaseLayout>

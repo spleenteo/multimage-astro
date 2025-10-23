@@ -1,0 +1,66 @@
+---
+type Props = {
+  name: string;
+  slug: string;
+  alias?: string | null;
+  country?: string | null;
+  summary?: string | null;
+  booksCount: number;
+  picture?: {
+    url?: string | null;
+    alt?: string | null;
+    width?: number | null;
+    height?: number | null;
+  } | null;
+};
+
+const { name, slug, alias, country, summary, booksCount, picture }: Props = Astro.props;
+const aliasLabel = alias?.trim() ?? null;
+const countryLabel = country?.trim() ?? null;
+const metaLabel = [aliasLabel, countryLabel].filter(Boolean).join(' · ');
+const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
+const summaryText = summary?.trim() ?? 'Biografia in aggiornamento.';
+const imageAlt = picture?.alt?.trim() || name;
+---
+
+<a
+  href={`/autori/${slug}`}
+  class="group flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2"
+>
+  {
+    picture?.url ? (
+      <div class="relative h-72 w-full overflow-hidden bg-brand-mist/60">
+        <img
+          src={`${picture.url}?auto=compress&fit=crop&w=640&h=480`}
+          alt={imageAlt}
+          loading="lazy"
+          width={picture.width ?? 640}
+          height={picture.height ?? 480}
+          class="h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]"
+        />
+      </div>
+    ) : (
+      <div class="flex h-72 w-full items-center justify-center bg-brand-mist/70 px-6 text-center text-xs font-semibold uppercase tracking-[0.24em] text-brand-slate">
+        Ritratto in arrivo
+      </div>
+    )
+  }
+
+  <article class="flex flex-1 flex-col gap-4 px-6 pb-8 pt-6 text-left">
+    <div class="space-y-2">
+      <h3 class="text-2xl font-serif text-brand-navy">{name}</h3>
+      {
+        metaLabel ? (
+          <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
+            {metaLabel}
+          </p>
+        ) : null
+      }
+      <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">{booksLabel}</p>
+    </div>
+
+    <p class="text-sm leading-relaxed text-brand-charcoal/80">{summaryText}</p>
+
+    <p class="text-sm font-medium text-brand-sky">Scopri il profilo →</p>
+  </article>
+</a>
