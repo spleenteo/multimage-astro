@@ -3,15 +3,15 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SectionIntro from '~/components/SectionIntro.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
-import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
+import type { BookRecordForCard } from '~/lib/books';
+import type { HighlightsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const HIGHLIGHTS_PAGE_QUERY = graphql(/* GraphQL */ `
+const HIGHLIGHTS_PAGE_QUERY = /* GraphQL */ `
   query HighlightsPage {
     highlightsIndex {
       title
@@ -56,10 +56,13 @@ const HIGHLIGHTS_PAGE_QUERY = graphql(/* GraphQL */ `
       archive
     }
   }
-`);
-type HighlightsPageQueryResult = ResultOf<typeof HIGHLIGHTS_PAGE_QUERY>;
+`;
+type HighlightsPageQueryResult = {
+  highlightsIndex: (HighlightsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  allBooks: BookRecordForCard[];
+};
 
-const data: HighlightsPageQueryResult = await executeQuery(HIGHLIGHTS_PAGE_QUERY);
+const data = await executeQuery<HighlightsPageQueryResult>(HIGHLIGHTS_PAGE_QUERY);
 
 const heroTitle = data.highlightsIndex?.title ?? 'In evidenza';
 const heroSubtitle = toPlainText(data.highlightsIndex?.subtitle ?? null);

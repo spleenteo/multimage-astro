@@ -3,14 +3,17 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SectionIntro from '~/components/SectionIntro.astro';
 import CollectionCard from '~/components/CollectionCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
-import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
+import type {
+  CollectionSummaryRecord,
+  CollectionsIndexRecord,
+  SeoMetaTag,
+} from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const COLLECTIONS_QUERY = graphql(/* GraphQL */ `
+const COLLECTIONS_QUERY = /* GraphQL */ `
   query CollectionsPage {
     collectionsIndex {
       title
@@ -38,10 +41,21 @@ const COLLECTIONS_QUERY = graphql(/* GraphQL */ `
       }
     }
   }
-`);
-type CollectionsQueryResult = ResultOf<typeof COLLECTIONS_QUERY>;
+`;
+type CollectionsQueryResult = {
+  collectionsIndex: (CollectionsIndexRecord & { seoMetaTags: SeoMetaTag[] | null }) | null;
+  allCollections: Array<
+    Pick<CollectionSummaryRecord, 'id' | 'name' | 'slug' | 'description' | 'logo'>
+  >;
+  allBooks: Array<{
+    id: string;
+    collection: {
+      id: string | null;
+    } | null;
+  }>;
+};
 
-const data: CollectionsQueryResult = await executeQuery(COLLECTIONS_QUERY);
+const data = await executeQuery<CollectionsQueryResult>(COLLECTIONS_QUERY);
 
 const heroTitle = data.collectionsIndex?.title ?? 'Collane';
 const heroSubtitle = toPlainText(data.collectionsIndex?.subtitle ?? null);
@@ -60,14 +74,23 @@ for (const book of data.allBooks ?? []) {
   bookCounts.set(collectionId, (bookCounts.get(collectionId) ?? 0) + 1);
 }
 
-const collections = (data.allCollections ?? []).map((collection) => ({
-  id: collection.id,
-  name: collection.name,
-  slug: collection.slug,
-  description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
-  logo: collection.logo,
-  booksCount: bookCounts.get(collection.id) ?? 0,
-}));
+const collections = (data.allCollections ?? [])
+  .map((collection) => {
+    const name = collection.name ?? 'Collana senza titolo';
+    const slug = collection.slug ?? '';
+    if (!slug) {
+      return null;
+    }
+
+    return {
+      name,
+      slug,
+      description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
+      logo: collection.logo,
+      booksCount: bookCounts.get(collection.id) ?? 0,
+    };
+  })
+  .filter((collection): collection is NonNullable<typeof collection> => Boolean(collection));
 ---
 
 <BaseLayout seo={seo}>

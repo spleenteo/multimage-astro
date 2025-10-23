@@ -13,7 +13,7 @@
 This project aims to be a great starting point for your Astro projects that need to interact with DatoCMS.
 
 - 🔍 **Fully commented code** — Every file is commented and explained in detail, it will be impossible to get lost!
-- 💯 **100% TypeScript** — Thanks to [gql.tada](https://gql-tada.0no.co/) every GraphQL query is fully typed, and your IDE will help you complete the GraphQL queries.
+- 💯 **100% TypeScript** — GraphQL queries are typed against DatoCMS' generated `schema.ts`, so the IDE can still assist with field names and result shapes.
 - 🛠️ **Minimal boilerplate** — The project is minimal and exposes only what is necessary to get started, without complicated models that need to be removed.
 - 🚫 **Zero CSS** — There is only one CSS import, which you can remove to use your preferred CSS tool.
 - 📝 **Full support for Draft Mode** — Your editors can always view the latest draft version of the content.
@@ -69,7 +69,7 @@ Your website should be up and running on [http://localhost:4321](http://localhos
 
 ## VS Code
 
-It is highly recommended to follow [these instructions](https://gql-tada.0no.co/get-started/installation#vscode-setup) for an optimal experience with Visual Studio Code, including features like diagnostics, auto-completions, and type hovers for GraphQL.
+The repository relies on the DatoCMS CLI to regenerate `schema.ts`; rerun `npm run generate-schema` after schema changes to keep type helpers up to date.
 
 ## <!--datocms-autoinclude-footer start-->
 

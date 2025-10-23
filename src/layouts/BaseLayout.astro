@@ -4,26 +4,30 @@ import Footer from '~/components/Footer.astro';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
-import { TagFragment } from '~/lib/datocms/commonFragments';
+import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
+import type { SeoMetaTag } from '~/lib/datocms/types';
 
 const { seo = [] }: { seo?: TitleMetaLinkTag[] } = Astro.props;
 
-const siteQuery = graphql(
-  /* GraphQL */ `
-    query SiteMeta {
-      _site {
-        faviconMetaTags {
-          ...TagFragment
-        }
+const SITE_QUERY = /* GraphQL */ `
+  ${TAG_FRAGMENT}
+  query SiteMeta {
+    _site {
+      faviconMetaTags {
+        ...TagFragment
       }
     }
-  `,
-  [TagFragment],
-);
+  }
+`;
 
-const { _site } = await executeQuery(siteQuery);
+type SiteMetaResult = {
+  _site: {
+    faviconMetaTags: SeoMetaTag[] | null;
+  } | null;
+};
+
+const { _site } = await executeQuery<SiteMetaResult>(SITE_QUERY);
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
 ---

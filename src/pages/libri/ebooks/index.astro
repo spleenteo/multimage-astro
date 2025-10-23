@@ -3,15 +3,15 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SectionIntro from '~/components/SectionIntro.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
-import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
+import type { BookRecordForCard } from '~/lib/books';
+import type { EbooksIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const EBOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
+const EBOOKS_PAGE_QUERY = /* GraphQL */ `
   query EbooksPage {
     ebooksIndex {
       title
@@ -56,10 +56,13 @@ const EBOOKS_PAGE_QUERY = graphql(/* GraphQL */ `
       archive
     }
   }
-`);
-type EbooksPageQueryResult = ResultOf<typeof EBOOKS_PAGE_QUERY>;
+`;
+type EbooksPageQueryResult = {
+  ebooksIndex: (EbooksIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  allBooks: BookRecordForCard[];
+};
 
-const data: EbooksPageQueryResult = await executeQuery(EBOOKS_PAGE_QUERY);
+const data = await executeQuery<EbooksPageQueryResult>(EBOOKS_PAGE_QUERY);
 
 const heroTitle = data.ebooksIndex?.title ?? 'Ebook';
 const heroSubtitle = toPlainText(data.ebooksIndex?.subtitle ?? null);

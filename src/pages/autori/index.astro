@@ -3,15 +3,14 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SectionIntro from '~/components/SectionIntro.astro';
 import AuthorCard from '~/components/AuthorCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
-import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
+import type { AuthorSummaryRecord, AuthorsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const AUTHORS_PAGE_QUERY = graphql(/* GraphQL */ `
+const AUTHORS_PAGE_QUERY = /* GraphQL */ `
   query AuthorsPage {
     authorsIndex {
       title
@@ -44,11 +43,20 @@ const AUTHORS_PAGE_QUERY = graphql(/* GraphQL */ `
       }
     }
   }
-`);
+`;
 
-type AuthorsPageQueryResult = ResultOf<typeof AUTHORS_PAGE_QUERY>;
+type AuthorsPageQueryResult = {
+  authorsIndex: (AuthorsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  allAuthors: AuthorSummaryRecord[];
+  allBooks: Array<{
+    id: string;
+    authors: Array<{
+      id: string;
+    }>;
+  }>;
+};
 
-const data: AuthorsPageQueryResult = await executeQuery(AUTHORS_PAGE_QUERY);
+const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY);
 
 const heroTitle = data.authorsIndex?.title ?? 'Autori';
 const heroSubtitle = toPlainText(data.authorsIndex?.subtitle ?? null);

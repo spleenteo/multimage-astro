@@ -1,14 +1,12 @@
-import { graphql } from '~/lib/datocms/graphql';
-
 /*
- * This file lists a series of fragments not related to any specific Vue
- * component, but necessary in various parts of the code.
+ * This file lists a series of fragments not related to any specific component,
+ * but necessary in various parts of the codebase.
  */
 
-export const TagFragment = graphql(`
-  fragment TagFragment on Tag @_unmask {
+export const TAG_FRAGMENT = /* GraphQL */ `
+  fragment TagFragment on Tag {
     tag
     attributes
     content
   }
-`);
+`;

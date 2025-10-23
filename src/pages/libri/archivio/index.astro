@@ -3,15 +3,15 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SectionIntro from '~/components/SectionIntro.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { graphql } from '~/lib/datocms/graphql';
-import type { ResultOf } from '~/lib/datocms/graphql';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
+import type { BookRecordForCard } from '~/lib/books';
+import type { ArchiveIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const ARCHIVE_PAGE_QUERY = graphql(/* GraphQL */ `
+const ARCHIVE_PAGE_QUERY = /* GraphQL */ `
   query ArchivePage {
     archiveIndex {
       title
@@ -56,10 +56,13 @@ const ARCHIVE_PAGE_QUERY = graphql(/* GraphQL */ `
       archive
     }
   }
-`);
-type ArchivePageQueryResult = ResultOf<typeof ARCHIVE_PAGE_QUERY>;
+`;
+type ArchivePageQueryResult = {
+  archiveIndex: (ArchiveIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  allBooks: BookRecordForCard[];
+};
 
-const data: ArchivePageQueryResult = await executeQuery(ARCHIVE_PAGE_QUERY);
+const data = await executeQuery<ArchivePageQueryResult>(ARCHIVE_PAGE_QUERY);
 
 const heroTitle = data.archiveIndex?.title ?? 'Fuori catalogo';
 const heroSubtitle = toPlainText(data.archiveIndex?.subtitle ?? null);
