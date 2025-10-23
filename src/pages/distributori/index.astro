@@ -1,23 +1,146 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import SectionIntro from '~/components/SectionIntro.astro';
+import SupplierCard from '~/components/SupplierCard.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
+import { toPlainText } from '~/lib/text';
+import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
+import type { SupplierRecord } from '~/lib/suppliers';
+import type { SeoMetaTag } from '~/lib/datocms/types';
+import type { ToItemAttributes } from '@datocms/cma-client';
+import type { Supplier, SuppliersIndex } from '~/schema';
 
 export const prerender = true;
 
-const seo = withFallbackSeo([], {
-  title: 'Distribuzione | Multimage',
-  description:
-    'La sezione illustrerà canali di vendita, librerie e partner commerciali dedicati alla casa editrice.',
+const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
+  query SuppliersPage {
+    suppliersIndex {
+      title
+      subtitle
+      _seoMetaTags {
+        tag
+        attributes
+        content
+      }
+    }
+    allSuppliers(
+      first: 300
+      orderBy: [region_ASC, city_ASC, name_ASC]
+      filter: { _status: { eq: published } }
+    ) {
+      id
+      name
+      region
+      city
+      address
+      telephone
+      email
+      url
+      description
+      map {
+        latitude
+        longitude
+      }
+      logo {
+        url
+        alt
+        width
+        height
+      }
+    }
+  }
+`;
+
+type SuppliersPageQueryResult = {
+  suppliersIndex: (ToItemAttributes<SuppliersIndex> & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  allSuppliers: SupplierRecord[];
+};
+
+const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY);
+
+const heroTitle = data.suppliersIndex?.title ?? 'Distributori';
+const heroSubtitleRaw = toPlainText(data.suppliersIndex?.subtitle ?? null);
+const heroDescription = heroSubtitleRaw.length > 0 ? heroSubtitleRaw : undefined;
+
+const seo = withFallbackSeo(data.suppliersIndex?._seoMetaTags, {
+  title: heroTitle,
+  description: heroDescription,
 });
+
+const suppliers = mapSuppliersToCards(data.allSuppliers);
+const supplierGroups = groupSuppliersByRegion(suppliers);
+
+function buildAnchorId(label: string) {
+  const normalized = label.normalize('NFD').replace(/[^\p{L}0-9]+/gu, '-');
+  const trimmed = normalized.replace(/^-+|-+$/g, '');
+  return `region-${trimmed.toLowerCase() || 'altre'}`;
+}
+
+const supplierSections = supplierGroups.map((group) => ({
+  ...group,
+  anchorId: buildAnchorId(group.region),
+}));
+
+const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anchorId }));
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-6">
-    <h1>Distribuzione</h1>
-    <p>
-      La sezione illustrerà canali di vendita, librerie e partner commerciali. Useremo componenti
-      Tailwind per tabelle responsive e call to action dedicate ai distributori.
-    </p>
-    <span class="chip">Prossimo step</span>
+  <section class="space-y-12">
+    <div class="mx-auto max-w-5xl">
+      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
+    </div>
+
+    {
+      suppliers.length === 0 ? (
+        <p class="mx-auto max-w-4xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+          I nostri distributori saranno disponibili a breve.
+        </p>
+      ) : (
+        <div class="mx-auto max-w-5xl space-y-12">
+          {regionMenu.length > 1 ? (
+            <>
+              <div id="region-menu" class="sr-only" aria-hidden="true" />
+              <nav
+                class="sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate shadow-soft backdrop-blur-sm"
+                aria-label="Indice distributori per regione"
+              >
+                {regionMenu.map(({ region, anchorId }) => (
+                  <a href={`#${anchorId}`} class="transition duration-150 hover:text-brand-navy">
+                    {region}
+                  </a>
+                ))}
+              </nav>
+            </>
+          ) : null}
+
+          <div class="space-y-16">
+            {supplierSections.map(({ region, suppliers: items, anchorId }) => (
+              <section id={anchorId} class="space-y-8">
+                <div class="flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft">
+                  <h2 class="text-2xl font-serif uppercase tracking-[0.2em] text-brand-navy">
+                    {region}
+                  </h2>
+                  {regionMenu.length > 1 ? (
+                    <a
+                      href="#region-menu"
+                      class="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy"
+                    >
+                      Torna al menu
+                    </a>
+                  ) : null}
+                </div>
+
+                <div class="space-y-8">
+                  {items.map((supplier) => (
+                    <SupplierCard {...supplier} key={supplier.id} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </section>
 </BaseLayout>
