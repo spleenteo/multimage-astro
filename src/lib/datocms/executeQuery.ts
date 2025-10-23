@@ -9,10 +9,7 @@ import { DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN } from 'astro:env/server';
 export async function executeQuery<
   Result = unknown,
   Variables extends Record<string, unknown> = Record<string, unknown>,
->(
-  query: string,
-  options?: ExecuteQueryOptions<Variables>,
-) {
+>(query: string, options?: ExecuteQueryOptions<Variables>) {
   const result = await libExecuteQuery<Result, Variables>(query, {
     variables: options?.variables,
     excludeInvalid: true,

@@ -5,10 +5,7 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import type {
-  AuthorDetailRecord,
-  SeoMetaTag,
-} from '~/lib/datocms/types';
+import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
 
 export const prerender = true;
@@ -128,12 +125,9 @@ if (!author) {
   throw new Error(`Author not found for slug: ${slug}`);
 }
 
-const relatedData = await executeQuery<AuthorRelatedBooksResult>(
-  AUTHOR_RELATED_BOOKS_QUERY,
-  {
-    variables: { authorIds: [author.id] },
-  },
-);
+const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_BOOKS_QUERY, {
+  variables: { authorIds: [author.id] },
+});
 
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
 const relatedBooks = mapBooksToCards(relatedData.allBooks);

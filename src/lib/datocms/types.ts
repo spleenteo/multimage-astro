@@ -1,4 +1,3 @@
-
 export type SeoMetaTag = {
   tag: string;
   attributes: Record<string, string> | null;
