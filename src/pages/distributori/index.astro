@@ -7,9 +7,7 @@ import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
 import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
 import type { SupplierRecord } from '~/lib/suppliers';
-import type { SeoMetaTag } from '~/lib/datocms/types';
-import type { ToItemAttributes } from '@datocms/cma-client';
-import type { Supplier, SuppliersIndex } from '~/schema';
+import type { SuppliersIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
@@ -53,7 +51,7 @@ const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
 `;
 
 type SuppliersPageQueryResult = {
-  suppliersIndex: (ToItemAttributes<SuppliersIndex> & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  suppliersIndex: (SuppliersIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
   allSuppliers: SupplierRecord[];
 };
 
@@ -133,7 +131,7 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
 
                 <div class="space-y-8">
                   {items.map((supplier) => (
-                    <SupplierCard {...supplier} key={supplier.id} />
+                    <SupplierCard {...supplier} />
                   ))}
                 </div>
               </section>

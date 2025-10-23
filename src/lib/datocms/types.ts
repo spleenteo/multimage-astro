@@ -80,3 +80,9 @@ export type CollectionsIndexRecord = {
   subtitle: string | null;
   seo: SeoMetaTag[] | null;
 };
+
+export type SuppliersIndexRecord = {
+  title: string | null;
+  subtitle: string | null;
+  seo: SeoMetaTag[] | null;
+};

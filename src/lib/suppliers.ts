@@ -1,4 +1,4 @@
-import type { ToItemAttributes } from '@datocms/cma-client';
+import type { ToItemAttributes } from '@datocms/cma-client-node';
 
 import type { Supplier } from '~/schema';
 import { toRichTextHtml } from './text';
