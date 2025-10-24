@@ -150,7 +150,6 @@ const noteHtml = toRichTextHtml(author.note ?? null);
 const notePlain = toPlainText(author.note ?? null);
 
 const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
-const leadSummary = summarySource.length > 0 ? truncateToLength(summarySource, 220) : null;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
 const pseudonyms = (author.pseudonyms ?? [])

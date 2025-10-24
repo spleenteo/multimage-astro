@@ -246,8 +246,8 @@ const heroImageData = heroResponsiveImage
   : null;
 
 const bannerBlocks = home?.banners ?? [];
-const homeBannerEntries: HomeBannerEntry[] = bannerBlocks
-  .map((block) => {
+const homeBannerEntries = bannerBlocks
+  .map<HomeBannerEntry | null>((block) => {
     if (block?.__typename === 'BannerRecord') {
       const trimmedTitle = block.title?.trim() ?? null;
       const contentHtml = toRichTextHtml(block.content) ?? null;
