@@ -476,6 +476,9 @@ export type Banner = ItemTypeDefinition<
     link: {
       type: 'string';
     };
+    image_position: {
+      type: 'string';
+    };
   }
 >;
 export type Image = ItemTypeDefinition<

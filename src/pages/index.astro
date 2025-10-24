@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import FeaturedBookHighlight from '~/components/FeaturedBookHighlight.astro';
+import BannerSection from '~/components/bannerSection.astro';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
@@ -9,7 +10,7 @@ import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { toBookCard, formatBookPrice } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { BookRecordForCard } from '~/lib/books';
-import type { HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
+import type { AssetColor, HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
@@ -92,6 +93,26 @@ const HOME_QUERY = /* GraphQL */ `
       _seoMetaTags {
         ...TagFragment
       }
+      banners {
+        __typename
+        ... on BannerRecord {
+          id
+          title
+          content
+          link
+          imagePosition
+          featuredImage {
+            alt
+            title
+            colors {
+              hex
+            }
+            responsiveImage(imgixParams: { fit: max, w: 600, auto: format }) {
+              ...ResponsiveImageFragment
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -125,11 +146,37 @@ type HighlightBookRecord = BookRecordForCard & {
   } | null;
 };
 
+type HomeBannerBlockRecord = {
+  __typename: 'BannerRecord';
+  id: string;
+  title: string | null;
+  content: string | null;
+  link: string | null;
+  imagePosition: 'left' | 'right' | null;
+  featuredImage: {
+    alt: string | null;
+    title: string | null;
+    colors: AssetColor[] | null;
+    responsiveImage: ResponsiveImage | null;
+  } | null;
+};
+
+type HomeBannerSectionData = {
+  id: string;
+  title: string | null;
+  contentHtml: string | null;
+  link: string | null;
+  imagePosition: 'left' | 'right';
+  image: (ResponsiveImage & { title?: string | null }) | null;
+  colors: AssetColor[] | null;
+};
+
 type HomeQueryResult = {
   home:
     | (HomeRecord & {
         _seoMetaTags: SeoMetaTag[] | null;
         highlight: HighlightBookRecord | null;
+        banners: HomeBannerBlockRecord[] | null;
       })
     | null;
 };
@@ -160,10 +207,13 @@ const heroClaimText = toPlainText(heroClaimHtml);
 
 const heroResponsiveImage = home?.heroImage?.responsiveImage ?? null;
 const heroImageAlt = home?.heroImage?.alt?.trim() ?? `${heroTitle} | Multimage`;
-const heroImageTitle = home?.heroImage?.title?.trim() ?? heroTitle;
 
 const heroImageData = heroResponsiveImage
-  ? { ...heroResponsiveImage, alt: heroResponsiveImage.alt ?? heroImageAlt, title: heroImageTitle }
+  ? {
+      ...heroResponsiveImage,
+      alt: heroResponsiveImage.alt ?? heroImageAlt,
+      title: heroResponsiveImage.title ?? heroTitle,
+    }
   : null;
 
 const highlightRaw = home?.highlight ?? null;
@@ -226,6 +276,37 @@ const highlightAuthorProfile = highlightAuthorName
     }
   : null;
 const highlightCoverColors = highlightBook?.coverImage?.colors ?? null;
+
+const bannerBlocks = home?.banners ?? [];
+const homeBannerSections: HomeBannerSectionData[] = bannerBlocks
+  .filter((block): block is HomeBannerBlockRecord => block?.__typename === 'BannerRecord')
+  .map((block) => {
+    const trimmedTitle = block.title?.trim() ?? null;
+    const contentHtml = toRichTextHtml(block.content) ?? null;
+    const link = block.link?.trim() ?? null;
+    const position = block.imagePosition === 'left' ? 'left' : 'right';
+    const featuredImage = block.featuredImage ?? null;
+    const responsiveImage = featuredImage?.responsiveImage ?? null;
+    const fallbackAlt = featuredImage?.alt?.trim() ?? trimmedTitle ?? 'Illustrazione';
+    const fallbackTitle = featuredImage?.title?.trim() ?? trimmedTitle ?? fallbackAlt;
+    const image = responsiveImage
+      ? {
+          ...responsiveImage,
+          alt: responsiveImage.alt ?? fallbackAlt,
+          title: responsiveImage.title ?? fallbackTitle,
+        }
+      : null;
+
+    return {
+      id: block.id,
+      title: trimmedTitle,
+      contentHtml,
+      link,
+      imagePosition: position,
+      image,
+      colors: featuredImage?.colors ?? null,
+    };
+  });
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
@@ -302,6 +383,16 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
           }
           coverColors={highlightCoverColors}
         />
+      ) : null
+    }
+
+    {
+      homeBannerSections.length > 0 ? (
+        <div class="space-y-10">
+          {homeBannerSections.map((banner) => (
+            <BannerSection {...banner} />
+          ))}
+        </div>
       ) : null
     }
 

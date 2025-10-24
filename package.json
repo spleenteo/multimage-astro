@@ -9,7 +9,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-schema": "node ./scripts/generate-schema.mjs",
+    "generate-schema": "npx datocms schema:generate schema.ts",
     "lint": "prettier --check .",
     "format": "npx prettier . --write"
   },
