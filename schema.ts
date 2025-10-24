@@ -11,6 +11,15 @@ export type Video = ItemTypeDefinition<
     };
   }
 >;
+export type SingleBook = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ErrM9cdtQ3u-NUZT_49EdA',
+  {
+    book: {
+      type: 'link';
+    };
+  }
+>;
 export type Book = ItemTypeDefinition<
   EnvironmentSettings,
   '70450',
@@ -646,14 +655,14 @@ export type Home = ItemTypeDefinition<
     };
     banners: {
       type: 'rich_text';
-      blocks: Banner;
+      blocks: Banner | SingleBook;
     };
     seo: {
       type: 'seo';
     };
   }
 >;
-export type AnyBlock = Video | Banner | Image | Section | Reprint;
+export type AnyBlock = Video | SingleBook | Banner | Image | Section | Reprint;
 export type AnyModel =
   | Book
   | BlogPostOld
