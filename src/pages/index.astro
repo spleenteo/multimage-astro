@@ -225,6 +225,7 @@ const highlightAuthorProfile = highlightAuthorName
       pictureAlt: highlightAuthorPictureAlt,
     }
   : null;
+const highlightCoverColors = highlightBook?.coverImage?.colors ?? null;
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
@@ -300,6 +301,7 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
                 }
               : null
           }
+          coverColors={highlightCoverColors}
         />
       ) : null
     }
