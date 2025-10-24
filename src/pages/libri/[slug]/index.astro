@@ -488,20 +488,19 @@ const seo = withFallbackSeo(book.seo, {
             }
             <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
               <span>{authorPrefix}</span>
-              {authorSegments.map((segment) =>
-                segment.type === 'text' ? (
-                  <span>{segment.value}</span>
-                ) : segment.href ? (
-                  <a
-                    href={segment.href}
-                    class="text-brand-sky hover:text-brand-navy"
-                  >
-                    {segment.label}
-                  </a>
-                ) : (
-                  <span>{segment.label}</span>
-                ),
-              )}
+              {
+                authorSegments.map((segment) =>
+                  segment.type === 'text' ? (
+                    <span>{segment.value}</span>
+                  ) : segment.href ? (
+                    <a href={segment.href} class="text-brand-sky hover:text-brand-navy">
+                      {segment.label}
+                    </a>
+                  ) : (
+                    <span>{segment.label}</span>
+                  ),
+                )
+              }
             </p>
           </div>
 
