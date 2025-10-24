@@ -23,6 +23,7 @@ export type ResponsiveImage = {
 export type AssetImage = {
   url?: string | null;
   alt: string | null;
+  title?: string | null;
   width: number | null;
   height: number | null;
   colors?: AssetColor[] | null;
@@ -59,6 +60,13 @@ export type BooksIndexRecord = {
   title: string | null;
   subtitle: string | null;
   seo: SeoMetaTag[] | null;
+};
+
+export type HomeRecord = {
+  title: string | null;
+  claim: string | null;
+  seo: SeoMetaTag[] | null;
+  heroImage: AssetImage | null;
 };
 
 export type ArchiveIndexRecord = {
