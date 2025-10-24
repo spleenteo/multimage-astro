@@ -4,6 +4,15 @@
 
 Whenever you need information about DatoCMS, you can always trust the `DATOCMS.md`that contains the entire documentation with examples.
 
+Consider the paragraphs from `DATOCMS.md`focused on Astro: DatoCMS Overview, Images and video management, Accessing draft/updated content, Managing images, Displaying videos, Structured Text fields, SEO Management, Real-time updates
+
+If you need real working examples, you can rely on these repos to get inspired, considering them as best practices:
+
+* https://github.com/datocms/astro-starter-kit/tree/main
+* https://github.com/voorhoede/head-start
+* https://github.com/datocms/astro-website
+
+
 ## Project Structure & Module Organization
 
 `src/` contains all Astro source files: `src/pages/` for routed pages (e.g., `libri/`, `autori/`, `info/`), `src/components/` for reusable UI such as `BookCard.astro`, and `src/lib/` for shared utilities, DatoCMS query helpers, and layout logic. Asset originals live in `public/`. Automation scripts (including the DatoCMS schema generator) reside in `scripts/`. The root `DATOCMS.md` documents content models and should be treated as the canonical data reference.
@@ -29,4 +38,19 @@ Commit messages in this repo are short, imperative descriptions (e.g., “Fix im
 
 ## DatoCMS & Configuration Tips
 
-Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` or `schema.graphql` manually—always regenerate with `npm run generate-schema`. Never update `DATOCMS.md` this is a downloaded file to access DatoCMS's documentation in a super fast way.
+Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `DATOCMS.md` this is a downloaded file to access DatoCMS's documentation in a super fast way.
+
+# Next tasks to be done (unordered)
+- [] Home page components
+- [] Upgrade Astro to latest version
+- [] Enable preview mode for live draft editing
+- [] Search engine for static website
+- [] Move to structured text
+- [] UI refinery for header and footer
+- [] Page composer with blocks
+- [] LLMs.txt
+- [] Ecommerce cart integration
+- [] Newsletter section
+- [] CTAs sections
+
+
