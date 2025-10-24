@@ -5,7 +5,7 @@ import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
 import { getAuthorDisplayName } from '~/lib/authors';
-import { toPlainText, toRichTextHtml, truncateToLength } from '~/lib/text';
+import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';

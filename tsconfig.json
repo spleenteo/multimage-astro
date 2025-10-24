@@ -15,5 +15,5 @@
       }
     ]
   },
-  "exclude": ["tmp-next", "node_modules"]
+  "exclude": ["tmp-next", "node_modules", "dist"]
 }
