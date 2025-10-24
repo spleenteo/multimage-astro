@@ -52,8 +52,8 @@ const config = {
         soft: '0 18px 45px rgba(0, 72, 129, 0.08)',
       },
       letterSpacing: {
-        wide: '0.08em',
-        wider: '0.12em',
+        wide: '0em',
+        wider: '0em',
       },
     },
   },

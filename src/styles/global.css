@@ -26,7 +26,7 @@
   h4,
   h5,
   h6 {
-    @apply font-serif text-brand-navy font-semibold leading-tight tracking-wide;
+    @apply font-serif text-brand-navy font-semibold leading-tight;
   }
 
   h1 {
@@ -69,14 +69,14 @@
 
 @layer components {
   .chip {
-    @apply inline-flex items-center bg-brand-mist px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-charcoal;
+    @apply inline-flex items-center bg-brand-mist px-3 py-1 text-xs font-semibold uppercase text-brand-charcoal;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-brand-orange px-5 py-2 text-sm font-semibold uppercase tracking-wider text-white shadow-soft transition hover:bg-brand-crimson;
+    @apply inline-flex items-center justify-center gap-2 bg-brand-orange px-5 py-2 text-sm font-semibold uppercase text-white shadow-soft transition hover:bg-brand-crimson;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-brand-orange px-5 py-2 text-sm font-semibold uppercase tracking-wider text-brand-orange transition hover:bg-brand-orange hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 border border-brand-orange px-5 py-2 text-sm font-semibold uppercase text-brand-orange transition hover:bg-brand-orange hover:text-white;
   }
 }

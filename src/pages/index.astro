@@ -53,43 +53,6 @@ const HOME_QUERY = /* GraphQL */ `
           ...ResponsiveImageFragment
         }
       }
-      highlight {
-        id
-        title
-        subtitle
-        slug
-        promo
-        description
-        coverImage {
-          url
-          alt
-          colors {
-            hex
-          }
-          responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-            ...ResponsiveImageFragment
-          }
-        }
-        authors {
-          id
-          fullName
-          alias
-          slug
-        }
-        license {
-          name
-          code
-        }
-        format
-        price
-        printYear
-        archive
-        collection {
-          id
-          name
-          slug
-        }
-      }
       _seoMetaTags {
         ...TagFragment
       }
@@ -112,41 +75,61 @@ const HOME_QUERY = /* GraphQL */ `
             }
           }
         }
-      }
-    }
-  }
-`;
-
-const HIGHLIGHT_AUTHOR_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query HighlightAuthorDetails($authorId: ItemId) {
-    author(filter: { id: { eq: $authorId } }) {
-      id
-      fullName
-      alias
-      slug
-      picture {
-        alt
-        responsiveImage(imgixParams: { fit: crop, w: 220, h: 220, auto: format, crop: faces }) {
-          ...ResponsiveImageFragment
+        ... on SingleBookRecord {
+          id
+          book {
+            id
+            title
+            subtitle
+            slug
+            promo
+            description
+            coverImage {
+              url
+              alt
+              title
+              colors {
+                hex
+              }
+              responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+                ...ResponsiveImageFragment
+              }
+            }
+            authors {
+              id
+              fullName
+              alias
+              slug
+              picture {
+                alt
+                responsiveImage(
+                  imgixParams: { fit: crop, w: 220, h: 220, auto: format, crop: faces }
+                ) {
+                  ...ResponsiveImageFragment
+                }
+              }
+            }
+            license {
+              name
+              code
+            }
+            format
+            price
+            printYear
+            archive
+            collection {
+              id
+              name
+              slug
+            }
+          }
         }
       }
     }
-    booksCount: _allBooksMeta(filter: { authors: { anyIn: [$authorId] } }) {
-      count
-    }
   }
 `;
 
-type HighlightBookRecord = BookRecordForCard & {
-  collection?: {
-    id: string;
-    name: string | null;
-    slug: string | null;
-  } | null;
-};
-
-type HomeBannerBlockRecord = {
+type HomeBannerBannerBlockRecord = {
   __typename: 'BannerRecord';
   id: string;
   title: string | null;
@@ -161,6 +144,38 @@ type HomeBannerBlockRecord = {
   } | null;
 };
 
+type HomeSingleBookBlockRecord = {
+  __typename: 'SingleBookRecord';
+  id: string;
+  book:
+    | (BookRecordForCard & {
+        collection?: {
+          id: string;
+          name: string | null;
+          slug: string | null;
+        } | null;
+        coverImage: {
+          alt: string | null;
+          title: string | null;
+          colors: AssetColor[] | null;
+          responsiveImage: ResponsiveImage | null;
+        } | null;
+        authors: Array<{
+          id: string;
+          fullName: string | null;
+          alias: string | null;
+          slug: string | null;
+          picture: {
+            alt: string | null;
+            responsiveImage: ResponsiveImage | null;
+          } | null;
+        }> | null;
+      })
+    | null;
+};
+
+type HomeBannerBlockRecord = HomeBannerBannerBlockRecord | HomeSingleBookBlockRecord;
+
 type HomeBannerSectionData = {
   id: string;
   title: string | null;
@@ -171,30 +186,44 @@ type HomeBannerSectionData = {
   colors: AssetColor[] | null;
 };
 
+type HomeSingleBookHighlightData = {
+  book: {
+    title: string;
+    subtitle?: string | null;
+    summary?: string | null;
+    priceLabel?: string | null;
+    format?: string | null;
+    printYear?: string | null;
+    isArchived?: boolean;
+    link?: string | null;
+    authorsLabel?: string | null;
+  };
+  coverImage: (ResponsiveImage & { title?: string | null }) | null;
+  coverColors: AssetColor[] | null;
+  collectionLabel: string | null;
+  collectionHref: string | null;
+  label: string | null;
+  author: {
+    name: string;
+    slug?: string | null;
+    link?: string | null;
+    booksCount?: number | null;
+    picture?: ResponsiveImage | null;
+    pictureAlt?: string | null;
+  } | null;
+};
+
+type HomeBannerEntry =
+  | { kind: 'banner'; id: string; data: HomeBannerSectionData }
+  | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData };
+
 type HomeQueryResult = {
   home:
     | (HomeRecord & {
         _seoMetaTags: SeoMetaTag[] | null;
-        highlight: HighlightBookRecord | null;
         banners: HomeBannerBlockRecord[] | null;
       })
     | null;
-};
-
-type HighlightAuthorQueryResult = {
-  author: {
-    id: string;
-    fullName: string | null;
-    alias: string | null;
-    slug: string | null;
-    picture: {
-      alt: string | null;
-      responsiveImage: ResponsiveImage | null;
-    } | null;
-  } | null;
-  booksCount: {
-    count: number;
-  } | null;
 };
 
 const { home } = await executeQuery<HomeQueryResult>(HOME_QUERY);
@@ -216,97 +245,115 @@ const heroImageData = heroResponsiveImage
     }
   : null;
 
-const highlightRaw = home?.highlight ?? null;
-const highlightPrimaryAuthorRaw = highlightRaw?.authors?.[0] ?? null;
-
-let highlightAuthorData: HighlightAuthorQueryResult | null = null;
-if (highlightPrimaryAuthorRaw?.id) {
-  highlightAuthorData = await executeQuery<HighlightAuthorQueryResult>(HIGHLIGHT_AUTHOR_QUERY, {
-    variables: { authorId: highlightPrimaryAuthorRaw.id },
-  });
-}
-
-const highlightAuthorDetails = highlightAuthorData?.author ?? null;
-const highlightAuthorBooksCount = highlightAuthorData?.booksCount?.count ?? null;
-
-const highlightBook = highlightRaw ? toBookCard(highlightRaw) : null;
-const highlightCollection = highlightRaw?.collection ?? null;
-const highlightCollectionName = highlightCollection?.name?.trim() ?? null;
-const highlightCollectionSlug = highlightCollection?.slug?.trim() ?? null;
-const highlightCollectionHref = highlightCollectionSlug
-  ? `/collane/${highlightCollectionSlug}`
-  : null;
-const highlightCollectionLabel = highlightCollectionName
-  ? `Collana ${highlightCollectionName}`
-  : null;
-const highlightAuthors = highlightBook?.authors ?? [];
-const highlightAuthorsLabel = formatAuthorNames(highlightAuthors);
-const highlightSummary = highlightBook?.summary ?? null;
-const highlightPriceLabel = formatBookPrice(highlightBook?.price ?? null);
-const highlightFormat = highlightBook?.format?.trim() ?? null;
-const highlightPrintYear = highlightBook?.printYear ?? null;
-const highlightIsArchived = highlightBook?.isArchived === true;
-const highlightResponsiveImage = highlightBook?.coverImage?.responsiveImage ?? null;
-const highlightCoverAlt = highlightBook?.coverImage?.alt ?? highlightBook?.title ?? 'Copertina';
-const highlightImageData = highlightResponsiveImage
-  ? { ...highlightResponsiveImage, alt: highlightResponsiveImage.alt ?? highlightCoverAlt }
-  : null;
-const highlightLink = highlightBook ? `/libri/${highlightBook.slug}` : null;
-const highlightAuthorName = highlightAuthorDetails
-  ? getAuthorDisplayName(highlightAuthorDetails)
-  : highlightPrimaryAuthorRaw
-    ? getAuthorDisplayName(highlightPrimaryAuthorRaw)
-    : null;
-const highlightAuthorSlug = highlightAuthorDetails?.slug ?? highlightPrimaryAuthorRaw?.slug ?? null;
-const highlightAuthorPicture = highlightAuthorDetails?.picture?.responsiveImage ?? null;
-const highlightAuthorPictureAlt =
-  highlightAuthorDetails?.picture?.alt ??
-  highlightAuthorDetails?.fullName ??
-  highlightAuthorName ??
-  'Ritratto autore';
-const highlightAuthorLink = highlightAuthorSlug ? `/autori/${highlightAuthorSlug}` : null;
-const highlightAuthorProfile = highlightAuthorName
-  ? {
-      name: highlightAuthorName,
-      slug: highlightAuthorSlug,
-      link: highlightAuthorLink,
-      booksCount: highlightAuthorBooksCount,
-      picture: highlightAuthorPicture,
-      pictureAlt: highlightAuthorPictureAlt,
-    }
-  : null;
-const highlightCoverColors = highlightBook?.coverImage?.colors ?? null;
-
 const bannerBlocks = home?.banners ?? [];
-const homeBannerSections: HomeBannerSectionData[] = bannerBlocks
-  .filter((block): block is HomeBannerBlockRecord => block?.__typename === 'BannerRecord')
+const homeBannerEntries: HomeBannerEntry[] = bannerBlocks
   .map((block) => {
-    const trimmedTitle = block.title?.trim() ?? null;
-    const contentHtml = toRichTextHtml(block.content) ?? null;
-    const link = block.link?.trim() ?? null;
-    const position = block.imagePosition === 'left' ? 'left' : 'right';
-    const featuredImage = block.featuredImage ?? null;
-    const responsiveImage = featuredImage?.responsiveImage ?? null;
-    const fallbackAlt = featuredImage?.alt?.trim() ?? trimmedTitle ?? 'Illustrazione';
-    const fallbackTitle = featuredImage?.title?.trim() ?? trimmedTitle ?? fallbackAlt;
-    const image = responsiveImage
-      ? {
-          ...responsiveImage,
-          alt: responsiveImage.alt ?? fallbackAlt,
-          title: responsiveImage.title ?? fallbackTitle,
-        }
-      : null;
+    if (block?.__typename === 'BannerRecord') {
+      const trimmedTitle = block.title?.trim() ?? null;
+      const contentHtml = toRichTextHtml(block.content) ?? null;
+      const link = block.link?.trim() ?? null;
+      const position = block.imagePosition === 'left' ? 'left' : 'right';
+      const featuredImage = block.featuredImage ?? null;
+      const responsiveImage = featuredImage?.responsiveImage ?? null;
+      const fallbackAlt = featuredImage?.alt?.trim() ?? trimmedTitle ?? 'Illustrazione';
+      const fallbackTitle = featuredImage?.title?.trim() ?? trimmedTitle ?? fallbackAlt;
+      const image = responsiveImage
+        ? {
+            ...responsiveImage,
+            alt: responsiveImage.alt ?? fallbackAlt,
+            title: responsiveImage.title ?? fallbackTitle,
+          }
+        : null;
 
-    return {
-      id: block.id,
-      title: trimmedTitle,
-      contentHtml,
-      link,
-      imagePosition: position,
-      image,
-      colors: featuredImage?.colors ?? null,
-    };
-  });
+      return {
+        kind: 'banner',
+        id: block.id,
+        data: {
+          id: block.id,
+          title: trimmedTitle,
+          contentHtml,
+          link,
+          imagePosition: position,
+          image,
+          colors: featuredImage?.colors ?? null,
+        },
+      } satisfies HomeBannerEntry;
+    }
+
+    if (block?.__typename === 'SingleBookRecord') {
+      const singleBook = block.book ? toBookCard(block.book) : null;
+      if (!singleBook) {
+        return null;
+      }
+
+      const collection = block.book?.collection ?? null;
+      const collectionName = collection?.name?.trim() ?? null;
+      const collectionSlug = collection?.slug?.trim() ?? null;
+      const collectionHref = collectionSlug ? `/collane/${collectionSlug}` : null;
+      const collectionLabel = collectionName ? `Collana ${collectionName}` : null;
+      const priceLabel = formatBookPrice(singleBook.price ?? null);
+      const authorsLabel = formatAuthorNames(singleBook.authors ?? []);
+      const bookLink = `/libri/${singleBook.slug}`;
+      const responsiveImage = block.book?.coverImage?.responsiveImage ?? null;
+      const fallbackAlt = block.book?.coverImage?.alt?.trim() ?? singleBook.title;
+      const fallbackTitle = block.book?.coverImage?.title?.trim() ?? fallbackAlt;
+      const coverImage = responsiveImage
+        ? {
+            ...responsiveImage,
+            alt: responsiveImage.alt ?? fallbackAlt,
+            title: responsiveImage.title ?? fallbackTitle,
+          }
+        : null;
+      const primaryAuthorSource = block.book?.authors?.[0] ?? null;
+      const authorName = primaryAuthorSource ? getAuthorDisplayName(primaryAuthorSource) : null;
+      const authorPicture = primaryAuthorSource?.picture?.responsiveImage ?? null;
+      const authorPictureAlt =
+        primaryAuthorSource?.picture?.alt ??
+        primaryAuthorSource?.fullName ??
+        authorName ??
+        'Ritratto autore';
+      const author =
+        authorName && primaryAuthorSource
+          ? {
+              name: authorName,
+              slug: primaryAuthorSource.slug ?? null,
+              link: primaryAuthorSource.slug ? `/autori/${primaryAuthorSource.slug}` : null,
+              booksCount: null,
+              picture: authorPicture,
+              pictureAlt: authorPictureAlt,
+            }
+          : null;
+      const formatValue = singleBook.format?.trim() ?? null;
+      const printYear = singleBook.printYear ?? null;
+
+      return {
+        kind: 'singleBook',
+        id: block.id,
+        data: {
+          book: {
+            title: singleBook.title,
+            subtitle: singleBook.subtitle ?? null,
+            summary: singleBook.summary ?? undefined,
+            priceLabel: priceLabel ?? undefined,
+            format: formatValue ?? undefined,
+            printYear: printYear ?? undefined,
+            isArchived: singleBook.isArchived,
+            link: bookLink,
+            authorsLabel,
+          },
+          coverImage,
+          coverColors: block.book?.coverImage?.colors ?? null,
+          collectionLabel,
+          collectionHref,
+          label: 'Libro consigliato',
+          author,
+        },
+      } satisfies HomeBannerEntry;
+    }
+
+    return null;
+  })
+  .filter((entry): entry is HomeBannerEntry => entry !== null);
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
@@ -353,45 +400,23 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
     </section>
 
     {
-      highlightBook ? (
-        <FeaturedBookHighlight
-          book={{
-            title: highlightBook.title,
-            subtitle: highlightBook.subtitle ?? null,
-            summary: highlightSummary ?? undefined,
-            priceLabel: highlightPriceLabel ?? undefined,
-            format: highlightFormat ?? undefined,
-            printYear: highlightPrintYear ?? undefined,
-            isArchived: highlightIsArchived,
-            link: highlightLink ?? undefined,
-            authorsLabel: highlightAuthorsLabel,
-          }}
-          coverImage={highlightImageData}
-          collectionLabel={highlightCollectionLabel}
-          collectionHref={highlightCollectionHref}
-          author={
-            highlightAuthorProfile
-              ? {
-                  name: highlightAuthorProfile.name,
-                  link: highlightAuthorProfile.link,
-                  slug: highlightAuthorProfile.slug ?? null,
-                  booksCount: highlightAuthorProfile.booksCount ?? null,
-                  picture: highlightAuthorProfile.picture ?? null,
-                  pictureAlt: highlightAuthorProfile.pictureAlt,
-                }
-              : null
-          }
-          coverColors={highlightCoverColors}
-        />
-      ) : null
-    }
-
-    {
-      homeBannerSections.length > 0 ? (
+      homeBannerEntries.length > 0 ? (
         <div class="space-y-10">
-          {homeBannerSections.map((banner) => (
-            <BannerSection {...banner} />
-          ))}
+          {homeBannerEntries.map((entry) =>
+            entry.kind === 'banner' ? (
+              <BannerSection {...entry.data} />
+            ) : (
+              <FeaturedBookHighlight
+                book={entry.data.book}
+                coverImage={entry.data.coverImage}
+                collectionLabel={entry.data.collectionLabel ?? undefined}
+                collectionHref={entry.data.collectionHref ?? undefined}
+                label={entry.data.label ?? undefined}
+                author={entry.data.author ?? undefined}
+                coverColors={entry.data.coverColors}
+              />
+            ),
+          )}
         </div>
       ) : null
     }
