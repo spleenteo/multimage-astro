@@ -67,6 +67,9 @@ export type HomeRecord = {
   claim: string | null;
   seo: SeoMetaTag[] | null;
   heroImage: AssetImage | null;
+  highlight?: {
+    id: string;
+  } | null;
 };
 
 export type ArchiveIndexRecord = {

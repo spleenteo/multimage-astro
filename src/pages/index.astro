@@ -5,6 +5,8 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
+import { toBookCard, formatBookPrice } from '~/lib/books';
+import type { BookRecordForCard } from '~/lib/books';
 import type { HomeRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
@@ -49,6 +51,41 @@ const HOME_QUERY = /* GraphQL */ `
           ...ResponsiveImageFragment
         }
       }
+      highlight {
+        id
+        title
+        subtitle
+        slug
+        promo
+        description
+        coverImage {
+          url
+          alt
+          colors {
+            hex
+          }
+          responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+            ...ResponsiveImageFragment
+          }
+        }
+        authors {
+          id
+          fullName
+        }
+        license {
+          name
+          code
+        }
+        format
+        price
+        printYear
+        archive
+        collection {
+          id
+          name
+          slug
+        }
+      }
       _seoMetaTags {
         ...TagFragment
       }
@@ -56,10 +93,19 @@ const HOME_QUERY = /* GraphQL */ `
   }
 `;
 
+type HighlightBookRecord = BookRecordForCard & {
+  collection?: {
+    id: string;
+    name: string | null;
+    slug: string | null;
+  } | null;
+};
+
 type HomeQueryResult = {
   home:
     | (HomeRecord & {
         _seoMetaTags: SeoMetaTag[] | null;
+        highlight: HighlightBookRecord | null;
       })
     | null;
 };
@@ -79,6 +125,37 @@ const heroImageTitle = home?.heroImage?.title?.trim() ?? heroTitle;
 const heroImageData = heroResponsiveImage
   ? { ...heroResponsiveImage, alt: heroResponsiveImage.alt ?? heroImageAlt, title: heroImageTitle }
   : null;
+
+const highlightRaw = home?.highlight ?? null;
+const highlightBook = highlightRaw ? toBookCard(highlightRaw) : null;
+const highlightCollection = highlightRaw?.collection ?? null;
+const highlightCollectionName = highlightCollection?.name?.trim() ?? null;
+const highlightCollectionSlug = highlightCollection?.slug?.trim() ?? null;
+const highlightCollectionHref = highlightCollectionSlug
+  ? `/collane/${highlightCollectionSlug}`
+  : null;
+const highlightCollectionLabel = highlightCollectionName
+  ? `Collana ${highlightCollectionName}`
+  : null;
+const highlightAuthors = highlightBook?.authors ?? [];
+const highlightAuthorsLabel =
+  highlightAuthors.length > 0
+    ? highlightAuthors
+        .map((author) => author.fullName?.trim())
+        .filter((name): name is string => Boolean(name))
+        .join(', ')
+    : 'Autore in aggiornamento';
+const highlightSummary = highlightBook?.summary ?? null;
+const highlightPriceLabel = formatBookPrice(highlightBook?.price ?? null);
+const highlightFormat = highlightBook?.format?.trim() ?? null;
+const highlightPrintYear = highlightBook?.printYear ?? null;
+const highlightIsArchived = highlightBook?.isArchived === true;
+const highlightResponsiveImage = highlightBook?.coverImage?.responsiveImage ?? null;
+const highlightCoverAlt = highlightBook?.coverImage?.alt ?? highlightBook?.title ?? 'Copertina';
+const highlightImageData = highlightResponsiveImage
+  ? { ...highlightResponsiveImage, alt: highlightResponsiveImage.alt ?? highlightCoverAlt }
+  : null;
+const highlightLink = highlightBook ? `/libri/${highlightBook.slug}` : null;
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
@@ -123,6 +200,102 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
         }
       </div>
     </section>
+
+    {
+      highlightBook ? (
+        <section class="rounded-3xl border border-white/70 bg-white/95 shadow-soft">
+          <div class="flex flex-col overflow-hidden md:flex-row">
+            <div class="bg-brand-mist/60 md:w-[38%] md:max-w-md">
+              {highlightImageData ? (
+                <Image
+                  data={highlightImageData}
+                  sizes="(min-width: 1024px) 360px, 80vw"
+                  pictureClass="block h-full w-full"
+                  imgClass="h-full w-full object-contain"
+                  imgStyle={{ objectFit: 'cover', width: '100%', height: '100%', maxWidth: 'none' }}
+                />
+              ) : (
+                <div class="flex min-h-[280px] items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-brand-slate">
+                  Copertina in arrivo
+                </div>
+              )}
+            </div>
+            <div class="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10 md:py-12">
+              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wider text-brand-slate">
+                  <span>In evidenza</span>
+                  {highlightCollectionHref ? (
+                    <a
+                      href={highlightCollectionHref}
+                      class="inline-flex items-center gap-2 text-brand-navy transition hover:text-brand-sky"
+                    >
+                      <iconify-icon
+                        icon="iconoir:bookmark-book"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                      />
+                      <span>{highlightCollectionLabel}</span>
+                    </a>
+                  ) : highlightCollectionLabel ? (
+                    <span class="text-brand-charcoal">{highlightCollectionLabel}</span>
+                  ) : null}
+                </div>
+                {highlightIsArchived ? (
+                  <span class="inline-flex items-center bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white">
+                    Fuori catalogo
+                  </span>
+                ) : null}
+              </div>
+
+              <div class="space-y-2 text-left">
+                <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">
+                  {highlightBook.title}
+                </h2>
+                {highlightBook.subtitle ? (
+                  <p class="text-lg font-medium text-brand-charcoal/80">{highlightBook.subtitle}</p>
+                ) : null}
+                <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+                  {highlightAuthorsLabel}
+                </p>
+              </div>
+
+              {highlightSummary ? (
+                <p class="text-base leading-relaxed text-brand-charcoal/80">{highlightSummary}</p>
+              ) : null}
+
+              <div class="flex flex-wrap items-center gap-4 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
+                {highlightPriceLabel ? <span>Prezzo {highlightPriceLabel}</span> : null}
+                {highlightFormat ? <span>Formato {highlightFormat}</span> : null}
+                {highlightPrintYear ? <span>Anno {highlightPrintYear}</span> : null}
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                {highlightLink ? (
+                  <a href={highlightLink} class="btn-primary">
+                    Scopri il libro
+                  </a>
+                ) : null}
+                {highlightCollectionHref ? (
+                  <a
+                    href={highlightCollectionHref}
+                    class="inline-flex items-center gap-2 border border-brand-navy px-5 py-2 text-xs font-semibold uppercase tracking-widest text-brand-navy transition hover:bg-brand-navy hover:text-white"
+                  >
+                    <span>Vai alla collana</span>
+                    <iconify-icon
+                      icon="iconoir:nav-arrow-right"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    />
+                  </a>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null
+    }
 
     <section class="space-y-6">
       <h2>Prossime integrazioni</h2>
