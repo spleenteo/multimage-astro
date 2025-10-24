@@ -42,7 +42,6 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 # Next tasks to be done (unordered)
 
 - [] Home page components
-- [] Upgrade Astro to latest version
 - [] Enable preview mode for live draft editing
 - [] Search engine for static website
 - [] Move to structured text
