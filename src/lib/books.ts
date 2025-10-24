@@ -4,6 +4,7 @@ import { toPlainText, truncateToLength } from './text';
 type BookAuthor = {
   id: string;
   fullName?: string | null;
+  slug?: string | null;
 };
 
 type BookLicense = {

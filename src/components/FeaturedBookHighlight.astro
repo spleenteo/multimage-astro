@@ -1,0 +1,279 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImage } from '~/lib/datocms/types';
+
+type HighlightBookProps = {
+  title: string;
+  subtitle?: string | null;
+  summary?: string | null;
+  priceLabel?: string | null;
+  format?: string | null;
+  printYear?: string | null;
+  isArchived?: boolean;
+  link?: string | null;
+  authorsLabel?: string | null;
+};
+
+type HighlightAuthorProps = {
+  name: string;
+  slug?: string | null;
+  link?: string | null;
+  booksCount?: number | null;
+  picture?: ResponsiveImage | null;
+  pictureAlt?: string | null;
+};
+
+type Props = {
+  book: HighlightBookProps;
+  coverImage?: ResponsiveImage | null;
+  coverAlt?: string | null;
+  collectionLabel?: string | null;
+  collectionHref?: string | null;
+  label?: string | null;
+  author?: HighlightAuthorProps | null;
+};
+
+const {
+  book,
+  coverImage = null,
+  coverAlt = 'Copertina',
+  collectionLabel = null,
+  collectionHref = null,
+  label = 'In evidenza',
+  author = null,
+}: Props = Astro.props;
+
+const metaItems = [
+  book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
+  book.format ? `Formato ${book.format}` : null,
+  book.printYear ? `Anno ${book.printYear}` : null,
+].filter((value): value is string => Boolean(value));
+
+const metaLabel = metaItems.length > 0 ? metaItems.join(' · ') : null;
+
+const authorLink = author?.link ?? (author?.slug ? `/autori/${author.slug}` : null);
+const authorBooksCount = author?.booksCount ?? null;
+const authorBooksLabel =
+  authorBooksCount == null
+    ? null
+    : authorBooksCount === 0
+      ? 'Nessun libro pubblicato'
+      : authorBooksCount === 1
+        ? '1 libro pubblicato'
+        : `${authorBooksCount} libri pubblicati`;
+
+const authorThumbnail = author?.picture ?? null;
+const authorThumbnailAlt = author?.pictureAlt ?? author?.name ?? 'Ritratto autore';
+const authorInitials =
+  author?.name
+    ?.split(/\s+/)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2) ?? 'A';
+const showArrow = Boolean(authorLink);
+const coverImageData = coverImage
+  ? { ...coverImage, alt: coverAlt ?? coverImage.alt ?? null }
+  : null;
+const authorImageData = authorThumbnail
+  ? { ...authorThumbnail, alt: authorThumbnailAlt ?? authorThumbnail.alt ?? null }
+  : null;
+const authorCardClasses =
+  'group inline-flex items-center gap-4 rounded-full bg-white/90 px-4 py-3 shadow-soft ring-1 ring-brand-navy/10 transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2';
+---
+
+<section class="rounded-3xl border border-white/70 bg-white/95 shadow-soft">
+  <div class="flex flex-col overflow-hidden md:flex-row">
+    <div class="bg-brand-mist/60 md:w-[38%] md:max-w-md">
+      {
+        coverImageData ? (
+          <Image
+            data={coverImageData}
+            sizes="(min-width: 1024px) 360px, 80vw"
+            pictureClass="block h-full w-full"
+            imgClass="h-full w-full object-contain"
+            imgStyle={{ objectFit: 'cover', width: '100%', height: '100%', maxWidth: 'none' }}
+          />
+        ) : (
+          <div class="flex min-h-[280px] items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-brand-slate">
+            Copertina in arrivo
+          </div>
+        )
+      }
+    </div>
+    <div class="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10 md:py-12">
+      <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div
+          class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate"
+        >
+          <span
+            class="inline-flex items-center rounded-full bg-brand-navy px-4 py-1 text-white shadow-soft"
+          >
+            {label}
+          </span>
+          {
+            collectionHref ? (
+              <a
+                href={collectionHref}
+                class="inline-flex items-center gap-2 rounded-full bg-brand-mist/70 px-4 py-1 text-brand-navy transition hover:bg-brand-mist hover:text-brand-sky"
+              >
+                <iconify-icon
+                  icon="iconoir:bookmark-book"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                />
+                <span>{collectionLabel}</span>
+              </a>
+            ) : collectionLabel ? (
+              <span class="inline-flex items-center rounded-full bg-brand-mist/70 px-4 py-1 text-brand-charcoal">
+                {collectionLabel}
+              </span>
+            ) : null
+          }
+        </div>
+        {
+          book.isArchived ? (
+            <span class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white shadow-soft">
+              Fuori catalogo
+            </span>
+          ) : null
+        }
+      </div>
+
+      <div class="space-y-2 text-left">
+        <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">{book.title}</h2>
+        {
+          book.subtitle ? (
+            <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
+          ) : null
+        }
+        {
+          book.authorsLabel ? (
+            <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+              {book.authorsLabel}
+            </p>
+          ) : null
+        }
+      </div>
+
+      {
+        book.summary ? (
+          <p class="text-base leading-relaxed text-brand-charcoal/80">{book.summary}</p>
+        ) : null
+      }
+
+      {
+        metaLabel ? (
+          <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
+            {metaLabel}
+          </p>
+        ) : null
+      }
+
+      <div class="flex flex-wrap items-center gap-3 pt-2">
+        {
+          book.link ? (
+            <a href={book.link} class="btn-primary">
+              Scopri il libro
+            </a>
+          ) : null
+        }
+        {
+          collectionHref ? (
+            <a
+              href={collectionHref}
+              class="inline-flex items-center gap-2 border border-brand-navy px-5 py-2 text-xs font-semibold uppercase tracking-widest text-brand-navy transition hover:bg-brand-navy hover:text-white"
+            >
+              <span>Vai alla collana</span>
+              <iconify-icon
+                icon="iconoir:nav-arrow-right"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              />
+            </a>
+          ) : null
+        }
+      </div>
+
+      {
+        author ? (
+          <div class="mt-auto flex justify-end">
+            {authorLink ? (
+              <a href={authorLink} class={authorCardClasses}>
+                <div class="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/80 shadow-soft">
+                  {authorImageData ? (
+                    <Image
+                      data={authorImageData}
+                      sizes="80px"
+                      pictureClass="block h-full w-full"
+                      imgClass="h-full w-full object-cover"
+                      imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  ) : (
+                    <div class="flex h-full w-full items-center justify-center bg-brand-mist text-lg font-semibold text-brand-navy">
+                      {authorInitials}
+                    </div>
+                  )}
+                </div>
+                <div class="text-left">
+                  <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
+                    Autore
+                  </p>
+                  <p class="text-lg font-serif text-brand-navy transition group-hover:text-brand-sky">
+                    {author?.name ?? 'Autore in evidenza'}
+                  </p>
+                  {authorBooksLabel ? (
+                    <p class="text-xs font-medium uppercase tracking-wide text-brand-charcoal/70">
+                      {authorBooksLabel}
+                    </p>
+                  ) : null}
+                </div>
+                {showArrow ? (
+                  <iconify-icon
+                    icon="iconoir:nav-arrow-right"
+                    width="20"
+                    height="20"
+                    aria-hidden="true"
+                    class="text-brand-navy/70 transition group-hover:text-brand-navy"
+                  />
+                ) : null}
+              </a>
+            ) : (
+              <div class={authorCardClasses}>
+                <div class="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/80 shadow-soft">
+                  {authorImageData ? (
+                    <Image
+                      data={authorImageData}
+                      sizes="80px"
+                      pictureClass="block h-full w-full"
+                      imgClass="h-full w-full object-cover"
+                      imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  ) : (
+                    <div class="flex h-full w-full items-center justify-center bg-brand-mist text-lg font-semibold text-brand-navy">
+                      {authorInitials}
+                    </div>
+                  )}
+                </div>
+                <div class="text-left">
+                  <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
+                    Autore
+                  </p>
+                  <p class="text-lg font-serif text-brand-navy">
+                    {author?.name ?? 'Autore in evidenza'}
+                  </p>
+                  {authorBooksLabel ? (
+                    <p class="text-xs font-medium uppercase tracking-wide text-brand-charcoal/70">
+                      {authorBooksLabel}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : null
+      }
+    </div>
+  </div>
+</section>

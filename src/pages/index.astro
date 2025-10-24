@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import FeaturedBookHighlight from '~/components/FeaturedBookHighlight.astro';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
@@ -7,7 +8,7 @@ import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { toBookCard, formatBookPrice } from '~/lib/books';
 import type { BookRecordForCard } from '~/lib/books';
-import type { HomeRecord, SeoMetaTag } from '~/lib/datocms/types';
+import type { HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
@@ -71,6 +72,7 @@ const HOME_QUERY = /* GraphQL */ `
         authors {
           id
           fullName
+          slug
         }
         license {
           name
@@ -93,6 +95,26 @@ const HOME_QUERY = /* GraphQL */ `
   }
 `;
 
+const HIGHLIGHT_AUTHOR_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
+  query HighlightAuthorDetails($authorId: ItemId) {
+    author(filter: { id: { eq: $authorId } }) {
+      id
+      fullName
+      slug
+      picture {
+        alt
+        responsiveImage(imgixParams: { fit: crop, w: 220, h: 220, auto: format, crop: faces }) {
+          ...ResponsiveImageFragment
+        }
+      }
+    }
+    booksCount: _allBooksMeta(filter: { authors: { anyIn: [$authorId] } }) {
+      count
+    }
+  }
+`;
+
 type HighlightBookRecord = BookRecordForCard & {
   collection?: {
     id: string;
@@ -108,6 +130,21 @@ type HomeQueryResult = {
         highlight: HighlightBookRecord | null;
       })
     | null;
+};
+
+type HighlightAuthorQueryResult = {
+  author: {
+    id: string;
+    fullName: string | null;
+    slug: string | null;
+    picture: {
+      alt: string | null;
+      responsiveImage: ResponsiveImage | null;
+    } | null;
+  } | null;
+  booksCount: {
+    count: number;
+  } | null;
 };
 
 const { home } = await executeQuery<HomeQueryResult>(HOME_QUERY);
@@ -127,6 +164,18 @@ const heroImageData = heroResponsiveImage
   : null;
 
 const highlightRaw = home?.highlight ?? null;
+const highlightPrimaryAuthorRaw = highlightRaw?.authors?.[0] ?? null;
+
+let highlightAuthorData: HighlightAuthorQueryResult | null = null;
+if (highlightPrimaryAuthorRaw?.id) {
+  highlightAuthorData = await executeQuery<HighlightAuthorQueryResult>(HIGHLIGHT_AUTHOR_QUERY, {
+    variables: { authorId: highlightPrimaryAuthorRaw.id },
+  });
+}
+
+const highlightAuthorDetails = highlightAuthorData?.author ?? null;
+const highlightAuthorBooksCount = highlightAuthorData?.booksCount?.count ?? null;
+
 const highlightBook = highlightRaw ? toBookCard(highlightRaw) : null;
 const highlightCollection = highlightRaw?.collection ?? null;
 const highlightCollectionName = highlightCollection?.name?.trim() ?? null;
@@ -156,6 +205,26 @@ const highlightImageData = highlightResponsiveImage
   ? { ...highlightResponsiveImage, alt: highlightResponsiveImage.alt ?? highlightCoverAlt }
   : null;
 const highlightLink = highlightBook ? `/libri/${highlightBook.slug}` : null;
+const highlightAuthorName =
+  highlightAuthorDetails?.fullName?.trim() ?? highlightPrimaryAuthorRaw?.fullName?.trim() ?? null;
+const highlightAuthorSlug = highlightAuthorDetails?.slug ?? highlightPrimaryAuthorRaw?.slug ?? null;
+const highlightAuthorPicture = highlightAuthorDetails?.picture?.responsiveImage ?? null;
+const highlightAuthorPictureAlt =
+  highlightAuthorDetails?.picture?.alt ??
+  highlightAuthorDetails?.fullName ??
+  highlightAuthorName ??
+  'Ritratto autore';
+const highlightAuthorLink = highlightAuthorSlug ? `/autori/${highlightAuthorSlug}` : null;
+const highlightAuthorProfile = highlightAuthorName
+  ? {
+      name: highlightAuthorName,
+      slug: highlightAuthorSlug,
+      link: highlightAuthorLink,
+      booksCount: highlightAuthorBooksCount,
+      picture: highlightAuthorPicture,
+      pictureAlt: highlightAuthorPictureAlt,
+    }
+  : null;
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
@@ -203,97 +272,35 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
 
     {
       highlightBook ? (
-        <section class="rounded-3xl border border-white/70 bg-white/95 shadow-soft">
-          <div class="flex flex-col overflow-hidden md:flex-row">
-            <div class="bg-brand-mist/60 md:w-[38%] md:max-w-md">
-              {highlightImageData ? (
-                <Image
-                  data={highlightImageData}
-                  sizes="(min-width: 1024px) 360px, 80vw"
-                  pictureClass="block h-full w-full"
-                  imgClass="h-full w-full object-contain"
-                  imgStyle={{ objectFit: 'cover', width: '100%', height: '100%', maxWidth: 'none' }}
-                />
-              ) : (
-                <div class="flex min-h-[280px] items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-brand-slate">
-                  Copertina in arrivo
-                </div>
-              )}
-            </div>
-            <div class="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10 md:py-12">
-              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <div class="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wider text-brand-slate">
-                  <span>In evidenza</span>
-                  {highlightCollectionHref ? (
-                    <a
-                      href={highlightCollectionHref}
-                      class="inline-flex items-center gap-2 text-brand-navy transition hover:text-brand-sky"
-                    >
-                      <iconify-icon
-                        icon="iconoir:bookmark-book"
-                        width="16"
-                        height="16"
-                        aria-hidden="true"
-                      />
-                      <span>{highlightCollectionLabel}</span>
-                    </a>
-                  ) : highlightCollectionLabel ? (
-                    <span class="text-brand-charcoal">{highlightCollectionLabel}</span>
-                  ) : null}
-                </div>
-                {highlightIsArchived ? (
-                  <span class="inline-flex items-center bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white">
-                    Fuori catalogo
-                  </span>
-                ) : null}
-              </div>
-
-              <div class="space-y-2 text-left">
-                <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">
-                  {highlightBook.title}
-                </h2>
-                {highlightBook.subtitle ? (
-                  <p class="text-lg font-medium text-brand-charcoal/80">{highlightBook.subtitle}</p>
-                ) : null}
-                <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-                  {highlightAuthorsLabel}
-                </p>
-              </div>
-
-              {highlightSummary ? (
-                <p class="text-base leading-relaxed text-brand-charcoal/80">{highlightSummary}</p>
-              ) : null}
-
-              <div class="flex flex-wrap items-center gap-4 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
-                {highlightPriceLabel ? <span>Prezzo {highlightPriceLabel}</span> : null}
-                {highlightFormat ? <span>Formato {highlightFormat}</span> : null}
-                {highlightPrintYear ? <span>Anno {highlightPrintYear}</span> : null}
-              </div>
-
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                {highlightLink ? (
-                  <a href={highlightLink} class="btn-primary">
-                    Scopri il libro
-                  </a>
-                ) : null}
-                {highlightCollectionHref ? (
-                  <a
-                    href={highlightCollectionHref}
-                    class="inline-flex items-center gap-2 border border-brand-navy px-5 py-2 text-xs font-semibold uppercase tracking-widest text-brand-navy transition hover:bg-brand-navy hover:text-white"
-                  >
-                    <span>Vai alla collana</span>
-                    <iconify-icon
-                      icon="iconoir:nav-arrow-right"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    />
-                  </a>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        </section>
+        <FeaturedBookHighlight
+          book={{
+            title: highlightBook.title,
+            subtitle: highlightBook.subtitle ?? null,
+            summary: highlightSummary ?? undefined,
+            priceLabel: highlightPriceLabel ?? undefined,
+            format: highlightFormat ?? undefined,
+            printYear: highlightPrintYear ?? undefined,
+            isArchived: highlightIsArchived,
+            link: highlightLink ?? undefined,
+            authorsLabel: highlightAuthorsLabel,
+          }}
+          coverImage={highlightImageData}
+          coverAlt={highlightCoverAlt}
+          collectionLabel={highlightCollectionLabel}
+          collectionHref={highlightCollectionHref}
+          author={
+            highlightAuthorProfile
+              ? {
+                  name: highlightAuthorProfile.name,
+                  link: highlightAuthorProfile.link,
+                  slug: highlightAuthorProfile.slug ?? null,
+                  booksCount: highlightAuthorProfile.booksCount ?? null,
+                  picture: highlightAuthorProfile.picture ?? null,
+                  pictureAlt: highlightAuthorProfile.pictureAlt,
+                }
+              : null
+          }
+        />
       ) : null
     }
 
