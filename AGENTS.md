@@ -8,10 +8,9 @@ Consider the paragraphs from `DATOCMS.md`focused on Astro: DatoCMS Overview, Ima
 
 If you need real working examples, you can rely on these repos to get inspired, considering them as best practices:
 
-* https://github.com/datocms/astro-starter-kit/tree/main
-* https://github.com/voorhoede/head-start
-* https://github.com/datocms/astro-website
-
+- https://github.com/datocms/astro-starter-kit/tree/main
+- https://github.com/voorhoede/head-start
+- https://github.com/datocms/astro-website
 
 ## Project Structure & Module Organization
 
@@ -41,6 +40,7 @@ Commit messages in this repo are short, imperative descriptions (e.g., “Fix im
 Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `DATOCMS.md` this is a downloaded file to access DatoCMS's documentation in a super fast way.
 
 # Next tasks to be done (unordered)
+
 - [] Home page components
 - [] Upgrade Astro to latest version
 - [] Enable preview mode for live draft editing
@@ -52,5 +52,3 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - [] Ecommerce cart integration
 - [] Newsletter section
 - [] CTAs sections
-
-
