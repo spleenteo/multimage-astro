@@ -25,7 +25,7 @@ If you need real working examples, you can rely on these repos to get inspired, 
 
 ## Coding Style & Naming Conventions
 
-Write components in Astro/TypeScript with 2-space indentation. Favor TypeScript types from `schema.ts` or the view-model helpers in `src/lib/datocms/types.ts`; avoid re-declaring GraphQL shapes. Use the DatoCMS `<Image>` component for CMS-driven images, mirroring the implementations in `BookCard.astro` and `AuthorCard.astro`. Run Prettier before committing to keep code style consistent.
+Write components in Astro/TypeScript with 2-space indentation. Favor TypeScript types from `schema.ts` or the view-model helpers in `src/lib/datocms/types.ts`; avoid re-declaring GraphQL shapes. Use the shared color helpers in `src/lib/colors.ts` anytime you need to derive palette-based backgrounds/shadows from DatoCMS assets, rather than re-implementing them inside components. Use the DatoCMS `<Image>` component for CMS-driven images, mirroring the implementations in `BookCard.astro` and `AuthorCard.astro`. Run Prettier before committing to keep code style consistent.
 
 ## Testing Guidelines
 

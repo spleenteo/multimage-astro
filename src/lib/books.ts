@@ -4,6 +4,7 @@ import { toPlainText, truncateToLength } from './text';
 type BookAuthor = {
   id: string;
   fullName?: string | null;
+  alias?: string | null;
   slug?: string | null;
 };
 

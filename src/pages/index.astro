@@ -7,6 +7,7 @@ import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFra
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { toBookCard, formatBookPrice } from '~/lib/books';
+import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { BookRecordForCard } from '~/lib/books';
 import type { HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 
@@ -22,17 +23,16 @@ const FEATURE_LINKS = [
   },
   {
     href: '/autori',
-    title: 'Autori e autrici',
+    title: 'Autrici e autori',
     icon: 'iconoir:community',
     description:
-      'Approfondimenti biografici, interviste e opere dei protagonisti della collana Multimage.',
+      'Approfondimenti biografici, interviste e opere dei protagonisti del catalogo Multimage.',
   },
   {
     href: '/collane',
     title: 'Collane editoriali',
     icon: 'iconoir:bookmark-book',
-    description:
-      'Percorsi tematici e serie storiche, presto disponibili con filtri e navigazione dinamica.',
+    description: 'Percorsi tematici. serie storiche, raccolte e.',
   },
 ] as const;
 
@@ -72,6 +72,7 @@ const HOME_QUERY = /* GraphQL */ `
         authors {
           id
           fullName
+          alias
           slug
         }
         license {
@@ -101,6 +102,7 @@ const HIGHLIGHT_AUTHOR_QUERY = /* GraphQL */ `
     author(filter: { id: { eq: $authorId } }) {
       id
       fullName
+      alias
       slug
       picture {
         alt
@@ -136,6 +138,7 @@ type HighlightAuthorQueryResult = {
   author: {
     id: string;
     fullName: string | null;
+    alias: string | null;
     slug: string | null;
     picture: {
       alt: string | null;
@@ -187,13 +190,7 @@ const highlightCollectionLabel = highlightCollectionName
   ? `Collana ${highlightCollectionName}`
   : null;
 const highlightAuthors = highlightBook?.authors ?? [];
-const highlightAuthorsLabel =
-  highlightAuthors.length > 0
-    ? highlightAuthors
-        .map((author) => author.fullName?.trim())
-        .filter((name): name is string => Boolean(name))
-        .join(', ')
-    : 'Autore in aggiornamento';
+const highlightAuthorsLabel = formatAuthorNames(highlightAuthors);
 const highlightSummary = highlightBook?.summary ?? null;
 const highlightPriceLabel = formatBookPrice(highlightBook?.price ?? null);
 const highlightFormat = highlightBook?.format?.trim() ?? null;
@@ -205,8 +202,11 @@ const highlightImageData = highlightResponsiveImage
   ? { ...highlightResponsiveImage, alt: highlightResponsiveImage.alt ?? highlightCoverAlt }
   : null;
 const highlightLink = highlightBook ? `/libri/${highlightBook.slug}` : null;
-const highlightAuthorName =
-  highlightAuthorDetails?.fullName?.trim() ?? highlightPrimaryAuthorRaw?.fullName?.trim() ?? null;
+const highlightAuthorName = highlightAuthorDetails
+  ? getAuthorDisplayName(highlightAuthorDetails)
+  : highlightPrimaryAuthorRaw
+    ? getAuthorDisplayName(highlightPrimaryAuthorRaw)
+    : null;
 const highlightAuthorSlug = highlightAuthorDetails?.slug ?? highlightPrimaryAuthorRaw?.slug ?? null;
 const highlightAuthorPicture = highlightAuthorDetails?.picture?.responsiveImage ?? null;
 const highlightAuthorPictureAlt =
@@ -286,7 +286,6 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
             authorsLabel: highlightAuthorsLabel,
           }}
           coverImage={highlightImageData}
-          coverAlt={highlightCoverAlt}
           collectionLabel={highlightCollectionLabel}
           collectionHref={highlightCollectionHref}
           author={
@@ -307,11 +306,10 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
     }
 
     <section class="space-y-6">
-      <h2>Prossime integrazioni</h2>
+      <h2>Cosa cerchi?</h2>
       <p>
-        Stiamo portando nel progetto tutte le sezioni presenti nella copia statica: catalogo libri,
-        schede autore, collane editoriali e pagine informative. Le schede sottostanti anticipano la
-        struttura che verrà popolata con contenuti reali.
+        Le sezioni principali di una casa di edtrice sono senza dubbio i Libri, le autrici/autori e
+        le collane editoriali che componono il nostro catalogo.
       </p>
       <div class="grid gap-6 md:grid-cols-3">
         {
@@ -330,7 +328,7 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
                 <p>{description}</p>
               </div>
               <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-sky group-hover:text-brand-navy">
-                <span>Apri sezione</span>
+                <span>Scopri sezione</span>
                 <iconify-icon
                   icon="iconoir:nav-arrow-right"
                   width="16"

@@ -1,3 +1,5 @@
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+
 export type SeoMetaTag = {
   tag: string;
   attributes: Record<string, string> | null;
@@ -8,17 +10,7 @@ export type AssetColor = {
   hex?: string | null;
 };
 
-export type ResponsiveImage = {
-  src: string;
-  width: number;
-  height: number;
-  srcSet?: string | null;
-  sizes?: string | null;
-  alt?: string | null;
-  title?: string | null;
-  base64?: string | null;
-  bgColor?: string | null;
-};
+export type ResponsiveImage = ResponsiveImageType;
 
 export type AssetImage = {
   url?: string | null;
@@ -46,6 +38,7 @@ export type AuthorDetailRecord = AuthorSummaryRecord & {
   pseudonyms: Array<{
     id: string;
     fullName: string | null;
+    alias?: string | null;
     slug: string | null;
   }>;
 };

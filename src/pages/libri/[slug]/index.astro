@@ -15,6 +15,7 @@ import {
   formatOrdinal,
   normalizeText,
 } from '~/lib/books';
+import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AssetImage, SeoMetaTag } from '~/lib/datocms/types';
@@ -52,6 +53,7 @@ const BOOK_DETAIL_QUERY = /* GraphQL */ `
       authors {
         id
         fullName
+        alias
         slug
         biography
         picture {
@@ -85,6 +87,7 @@ const BOOK_DETAIL_QUERY = /* GraphQL */ `
       layoutArtist
       dimensions
       illustrator
+      editedBy
       seo: _seoMetaTags {
         tag
         attributes
@@ -144,6 +147,7 @@ type BookDetailRecord = {
   authors: Array<{
     id: string;
     fullName: string | null;
+    alias: string | null;
     slug: string | null;
     biography: string | null;
     picture: AssetImage | null;
@@ -169,6 +173,7 @@ type BookDetailRecord = {
   layoutArtist: string | null;
   dimensions: string | null;
   illustrator: string | null;
+  editedBy: boolean | null;
   seo: SeoMetaTag[] | null;
 };
 
@@ -276,10 +281,8 @@ const alternateFormatsData = await executeQuery<BookAlternateFormatsResult>(
   },
 );
 
-const authorsNames = authors
-  .map((author) => author.fullName?.trim())
-  .filter((name): name is string => Boolean(name))
-  .join(', ');
+const authorSegments = buildAuthorSegments(authors);
+const authorPrefix = book.editedBy ? 'A cura di ' : 'Di ';
 
 const licenseLabel = buildLicenseLabel(book.license);
 const formattedPrice = formatBookPrice(book.price);
@@ -317,7 +320,7 @@ const alternateFormats = alternateFormatsRaw
 const limitedAlternateFormats = alternateFormats.slice(0, 3);
 
 const authorsCards = authors.map((author) => {
-  const name = author.fullName?.trim() || 'Autore in aggiornamento';
+  const name = getAuthorDisplayName(author);
   const biographyPlain = toPlainText(author.biography);
   const biographyExcerpt =
     biographyPlain.length > 0
@@ -483,13 +486,23 @@ const seo = withFallbackSeo(book.seo, {
                 <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
               ) : null
             }
-            {
-              authorsNames ? (
-                <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-                  {authorsNames}
-                </p>
-              ) : null
-            }
+            <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+              <span>{authorPrefix}</span>
+              {authorSegments.map((segment) =>
+                segment.type === 'text' ? (
+                  <span>{segment.value}</span>
+                ) : segment.href ? (
+                  <a
+                    href={segment.href}
+                    class="text-brand-sky hover:text-brand-navy"
+                  >
+                    {segment.label}
+                  </a>
+                ) : (
+                  <span>{segment.label}</span>
+                ),
+              )}
+            </p>
           </div>
 
           {promoText ? <p class="text-base italic text-brand-charcoal/80">{promoText}</p> : null}

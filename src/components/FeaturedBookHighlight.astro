@@ -1,8 +1,10 @@
 ---
 import { Image } from '@datocms/astro/Image';
-import type { ResponsiveImage, AssetColor } from '~/lib/datocms/types';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+import type { AssetColor } from '~/lib/datocms/types';
+import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
 
-type HighlightBookProps = {
+type HighlightBook = {
   title: string;
   subtitle?: string | null;
   summary?: string | null;
@@ -14,30 +16,28 @@ type HighlightBookProps = {
   authorsLabel?: string | null;
 };
 
-type HighlightAuthorProps = {
+type HighlightAuthor = {
   name: string;
   slug?: string | null;
   link?: string | null;
   booksCount?: number | null;
-  picture?: ResponsiveImage | null;
+  picture?: ResponsiveImageType | null;
   pictureAlt?: string | null;
 };
 
 type Props = {
-  book: HighlightBookProps;
-  coverImage?: ResponsiveImage | null;
-  coverAlt?: string | null;
+  book: HighlightBook;
+  coverImage?: ResponsiveImageType | null;
   collectionLabel?: string | null;
   collectionHref?: string | null;
   label?: string | null;
-  author?: HighlightAuthorProps | null;
+  author?: HighlightAuthor | null;
   coverColors?: AssetColor[] | null;
 };
 
 const {
   book,
   coverImage = null,
-  coverAlt = 'Copertina',
   collectionLabel = null,
   collectionHref = null,
   label = 'In evidenza',
@@ -45,15 +45,10 @@ const {
   coverColors = null,
 }: Props = Astro.props;
 
-const metaItems = [
-  book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
-  book.format ? `Formato ${book.format}` : null,
-  book.printYear ? `Anno ${book.printYear}` : null,
-].filter((value): value is string => Boolean(value));
+const baseColor = pickBaseColor(coverColors);
+const backdropColor = lightenColor(baseColor, 0.16);
+const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
 
-const metaLabel = metaItems.length > 0 ? metaItems.join(' · ') : null;
-
-const authorLink = author?.link ?? (author?.slug ? `/autori/${author.slug}` : null);
 const authorBooksCount = author?.booksCount ?? null;
 const authorBooksLabel =
   authorBooksCount == null
@@ -64,83 +59,24 @@ const authorBooksLabel =
         ? '1 libro pubblicato'
         : `${authorBooksCount} libri pubblicati`;
 
-const authorThumbnail = author?.picture ?? null;
-const authorThumbnailAlt = author?.pictureAlt ?? author?.name ?? 'Ritratto autore';
 const authorInitials =
   author?.name
     ?.split(/\s+/)
     .map((part) => part.charAt(0).toUpperCase())
     .join('')
     .slice(0, 2) ?? 'A';
-const showArrow = Boolean(authorLink);
-const coverImageData = coverImage
-  ? { ...coverImage, alt: coverAlt ?? coverImage.alt ?? null }
+
+const coverImageData = coverImage;
+const authorImageData = author?.picture
+  ? {
+      ...author.picture,
+      alt: author.picture.alt ?? author.pictureAlt ?? author.name,
+    }
   : null;
-const authorImageData = authorThumbnail
-  ? { ...authorThumbnail, alt: authorThumbnailAlt ?? authorThumbnail.alt ?? null }
-  : null;
+
+const authorLink = author?.link ?? (author?.slug ? `/autori/${author.slug}` : null);
 const authorCardClasses =
   'group inline-flex items-center gap-4 rounded-full bg-white/90 px-4 py-3 shadow-soft ring-1 ring-brand-navy/10 transition hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2';
-
-function pickBaseColor(colors: AssetColor[] | null | undefined) {
-  if (!colors || colors.length === 0) {
-    return '#E8EEF5';
-  }
-  const source = colors.slice(0, 3).find((color) => color?.hex) ?? colors[0];
-  return source?.hex ?? '#E8EEF5';
-}
-
-function clamp(amount: number, min = 0, max = 1) {
-  return Math.min(Math.max(amount, min), max);
-}
-
-function lightenColor(hex: string, amount = 0.18) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return '#F5F7FA';
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  const blend = (component: number) => Math.round(component + (255 - component) * clamp(amount));
-  const newR = blend(r).toString(16).padStart(2, '0');
-  const newG = blend(g).toString(16).padStart(2, '0');
-  const newB = blend(b).toString(16).padStart(2, '0');
-  return `#${newR}${newG}${newB}`;
-}
-
-function darkenColor(hex: string, amount = 0.35) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return '#041C43';
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  const blend = (component: number) => Math.round(component * (1 - clamp(amount)));
-  const newR = blend(r).toString(16).padStart(2, '0');
-  const newG = blend(g).toString(16).padStart(2, '0');
-  const newB = blend(b).toString(16).padStart(2, '0');
-  return `#${newR}${newG}${newB}`;
-}
-
-function hexToRgba(hex: string, alpha = 1) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return `rgba(4, 28, 67, ${alpha})`;
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-const baseColor = pickBaseColor(coverColors);
-const backdropColor = lightenColor(baseColor, 0.16);
-const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
 ---
 
 <section class="rounded-3xl border border-white/70 bg-white/95 shadow-soft">
@@ -219,13 +155,6 @@ const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
             <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
           ) : null
         }
-        {
-          book.authorsLabel ? (
-            <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-              {book.authorsLabel}
-            </p>
-          ) : null
-        }
       </div>
 
       {
@@ -235,9 +164,17 @@ const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
       }
 
       {
-        metaLabel ? (
+        [book.priceLabel, book.format, book.printYear].filter((value): value is string =>
+          Boolean(value),
+        ).length > 0 ? (
           <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
-            {metaLabel}
+            {[
+              book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
+              book.format ? `Formato ${book.format}` : null,
+              book.printYear ? `Anno ${book.printYear}` : null,
+            ]
+              .filter(Boolean)
+              .join(' · ')}
           </p>
         ) : null
       }
@@ -273,27 +210,25 @@ const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
           <div class="mt-auto flex justify-end">
             {authorLink ? (
               <a href={authorLink} class={authorCardClasses}>
-                <div class="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/80 shadow-soft">
-                  {authorImageData ? (
-                    <Image
-                      data={authorImageData}
-                      sizes="80px"
-                      pictureClass="block h-full w-full"
-                      imgClass="h-full w-full object-cover"
-                      imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                    />
-                  ) : (
-                    <div class="flex h-full w-full items-center justify-center bg-brand-mist text-lg font-semibold text-brand-navy">
-                      {authorInitials}
-                    </div>
-                  )}
-                </div>
+                {authorImageData ? (
+                  <Image
+                    data={authorImageData}
+                    sizes="50px"
+                    pictureClass="block h-full w-full"
+                    imgClass="h-full w-full object-cover"
+                    imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  />
+                ) : (
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-mist text-lg font-semibold text-brand-navy">
+                    {authorInitials}
+                  </div>
+                )}
                 <div class="text-left">
                   <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
                     Autore
                   </p>
                   <p class="text-lg font-serif text-brand-navy transition group-hover:text-brand-sky">
-                    {author?.name ?? 'Autore in evidenza'}
+                    {author.name}
                   </p>
                   {authorBooksLabel ? (
                     <p class="text-xs font-medium uppercase tracking-wide text-brand-charcoal/70">
@@ -301,40 +236,34 @@ const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
                     </p>
                   ) : null}
                 </div>
-                {showArrow ? (
-                  <iconify-icon
-                    icon="iconoir:nav-arrow-right"
-                    width="20"
-                    height="20"
-                    aria-hidden="true"
-                    class="text-brand-navy/70 transition group-hover:text-brand-navy"
-                  />
-                ) : null}
+                <iconify-icon
+                  icon="iconoir:nav-arrow-right"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                  class="text-brand-navy/70 transition group-hover:text-brand-navy"
+                />
               </a>
             ) : (
               <div class={authorCardClasses}>
-                <div class="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/80 shadow-soft">
-                  {authorImageData ? (
-                    <Image
-                      data={authorImageData}
-                      sizes="80px"
-                      pictureClass="block h-full w-full"
-                      imgClass="h-full w-full object-cover"
-                      imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                    />
-                  ) : (
-                    <div class="flex h-full w-full items-center justify-center bg-brand-mist text-lg font-semibold text-brand-navy">
-                      {authorInitials}
-                    </div>
-                  )}
-                </div>
+                {authorImageData ? (
+                  <Image
+                    data={authorImageData}
+                    sizes="40px"
+                    pictureClass="block h-full w-full"
+                    imgClass="h-full w-full object-cover"
+                    imgStyle={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  />
+                ) : (
+                  <div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-mist text-lg font-semibold text-brand-navy">
+                    {authorInitials}
+                  </div>
+                )}
                 <div class="text-left">
                   <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
                     Autore
                   </p>
-                  <p class="text-lg font-serif text-brand-navy">
-                    {author?.name ?? 'Autore in evidenza'}
-                  </p>
+                  <p class="text-lg font-serif text-brand-navy">{author.name}</p>
                   {authorBooksLabel ? (
                     <p class="text-xs font-medium uppercase tracking-wide text-brand-charcoal/70">
                       {authorBooksLabel}

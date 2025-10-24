@@ -2,6 +2,8 @@
 import { Image } from '@datocms/astro/Image';
 import { formatEuro } from '~/lib/currency';
 import type { AssetColor, AssetImage } from '~/lib/datocms/types';
+import { formatAuthorNames } from '~/lib/authors';
+import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
 
 type Props = {
   title: string;
@@ -40,69 +42,10 @@ const {
 
 const destination = href ?? `/libri/${slug}`;
 
-const authorNames = authors
-  .map((author) => author.fullName?.trim())
-  .filter((name): name is string => Boolean(name));
-const authorsLabel = authorNames.length > 0 ? authorNames.join(', ') : 'Autore in aggiornamento';
+const authorsLabel = formatAuthorNames(authors);
 const normalizedFormat = format?.trim() ?? null;
 const showFormatRibbon = normalizedFormat ? normalizedFormat.toLowerCase() !== 'cartaceo' : false;
 const formatLabel = normalizedFormat ? normalizedFormat.toUpperCase() : null;
-
-function pickBaseColor(colors: AssetColor[] | null | undefined) {
-  if (!colors || colors.length === 0) {
-    return '#E8EEF5';
-  }
-  const source = colors.slice(0, 3).find((color) => color?.hex) ?? colors[0];
-  return source?.hex ?? '#E8EEF5';
-}
-
-function clamp(amount: number, min = 0, max = 1) {
-  return Math.min(Math.max(amount, min), max);
-}
-
-function lightenColor(hex: string, amount = 0.2) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return '#F5F7FA';
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  const blend = (component: number) => Math.round(component + (255 - component) * clamp(amount));
-  const newR = blend(r).toString(16).padStart(2, '0');
-  const newG = blend(g).toString(16).padStart(2, '0');
-  const newB = blend(b).toString(16).padStart(2, '0');
-  return `#${newR}${newG}${newB}`;
-}
-
-function darkenColor(hex: string, amount = 0.35) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return '#041C43';
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  const blend = (component: number) => Math.round(component * (1 - clamp(amount)));
-  const newR = blend(r).toString(16).padStart(2, '0');
-  const newG = blend(g).toString(16).padStart(2, '0');
-  const newB = blend(b).toString(16).padStart(2, '0');
-  return `#${newR}${newG}${newB}`;
-}
-
-function hexToRgba(hex: string, alpha = 1) {
-  if (!/^#?[0-9A-Fa-f]{6}$/.test(hex)) {
-    return `rgba(4, 28, 67, ${alpha})`;
-  }
-  const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
-  const num = Number.parseInt(normalized, 16);
-  const r = (num >> 16) & 0xff;
-  const g = (num >> 8) & 0xff;
-  const b = num & 0xff;
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 const baseColor = pickBaseColor(coverImage?.colors);
 const backgroundColor = lightenColor(baseColor, 0.18);

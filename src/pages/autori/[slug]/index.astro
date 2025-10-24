@@ -4,6 +4,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
+import { getAuthorDisplayName } from '~/lib/authors';
 import { toPlainText, toRichTextHtml, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
@@ -32,6 +33,7 @@ const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
       pseudonyms {
         id
         fullName
+        alias
         slug
       }
       _seoMetaTags {
@@ -69,6 +71,8 @@ const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
       authors {
         id
         fullName
+        alias
+        slug
       }
       license {
         name
@@ -138,6 +142,8 @@ const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
 const relatedBooks = mapBooksToCards(relatedData.allBooks);
 
+const authorDisplayName = getAuthorDisplayName(author);
+
 const biographyHtml = toRichTextHtml(author.biography ?? null);
 const biographyPlain = toPlainText(author.biography ?? null);
 const noteHtml = toRichTextHtml(author.note ?? null);
@@ -147,20 +153,24 @@ const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
 const leadSummary = summarySource.length > 0 ? truncateToLength(summarySource, 220) : null;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
-const pseudonyms = (author.pseudonyms ?? []).filter(
-  (person) => person.fullName && person.fullName.trim().length > 0,
-);
+const pseudonyms = (author.pseudonyms ?? [])
+  .map((person) => ({
+    id: person.id,
+    name: getAuthorDisplayName(person),
+    slug: person.slug ?? null,
+  }))
+  .filter((person) => person.name.length > 0);
 
 const fallbackDescription = summarySource.length > 0 ? summarySource : undefined;
 const seo = withFallbackSeo(author._seoMetaTags, {
-  title: `${author.fullName ?? 'Autore'} | Multimage`,
+  title: `${authorDisplayName} | Multimage`,
   description: fallbackDescription || undefined,
 });
 
 const pictureResponsiveImage = author.picture?.responsiveImage
   ? {
       ...author.picture.responsiveImage,
-      alt: author.picture.responsiveImage.alt ?? author.fullName ?? 'Autore',
+      alt: author.picture.responsiveImage.alt ?? authorDisplayName,
     }
   : null;
 ---
@@ -194,9 +204,7 @@ const pictureResponsiveImage = author.picture?.responsiveImage
             <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
               Autori Multimage
             </p>
-            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">
-              {author.fullName ?? 'Autore'}
-            </h1>
+            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{authorDisplayName}</h1>
             {
               author.alias || author.country ? (
                 <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
@@ -209,12 +217,6 @@ const pictureResponsiveImage = author.picture?.responsiveImage
           </div>
 
           {
-            leadSummary ? (
-              <p class="text-base italic leading-relaxed text-brand-charcoal/80">{leadSummary}</p>
-            ) : null
-          }
-
-          {
             pseudonyms.length > 0 ? (
               <div class="flex flex-wrap gap-2">
                 <span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
@@ -223,10 +225,10 @@ const pictureResponsiveImage = author.picture?.responsiveImage
                 {pseudonyms.map((person) =>
                   person.slug ? (
                     <a href={`/autori/${person.slug}`} class="chip chip-outline">
-                      {person.fullName}
+                      {person.name}
                     </a>
                   ) : (
-                    <span class="chip chip-outline">{person.fullName}</span>
+                    <span class="chip chip-outline">{person.name}</span>
                   ),
                 )}
               </div>
@@ -263,9 +265,7 @@ const pictureResponsiveImage = author.picture?.responsiveImage
     <section class="space-y-6">
       <div class="mx-auto max-w-6xl">
         <div class="border border-white/70 bg-white/95 p-8 text-center shadow-soft">
-          <h2 class="text-3xl font-serif text-brand-navy">
-            Libri di {author.fullName ?? 'questo autore'}
-          </h2>
+          <h2 class="text-3xl font-serif text-brand-navy">Libri di {authorDisplayName}</h2>
         </div>
       </div>
 
