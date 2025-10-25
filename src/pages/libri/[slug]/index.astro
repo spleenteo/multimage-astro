@@ -123,9 +123,7 @@ const isArchived = book.archive === true;
 const isEbookFormat = formatValue?.toLowerCase() === 'ebook';
 
 const primaryCtaLabel = [
-  formattedPrice,
-  formatValue ? `Formato ${formatValue}` : null,
-  isEbookFormat ? 'Scarica' : 'Ordina',
+  isEbookFormat ? 'Ordina' : 'Ordina',
 ]
   .filter(Boolean)
   .join(' · ');
