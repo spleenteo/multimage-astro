@@ -100,9 +100,7 @@ const isArchived = archivedFlag === true;
     <div class={styles.body}>
       <div class="space-y-1">
         <h3 class={styles.title}>{title}</h3>
-        {
-          subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null
-        }
+        {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
       </div>
 
       <AuthorNames authors={authors} class={styles.authors} />

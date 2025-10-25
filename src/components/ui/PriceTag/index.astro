@@ -9,12 +9,7 @@ type Props = {
   class?: string;
 };
 
-const {
-  value,
-  label = 'Prezzo',
-  muted = false,
-  class: className = '',
-}: Props = Astro.props;
+const { value, label = 'Prezzo', muted = false, class: className = '' }: Props = Astro.props;
 
 const formatted = typeof value === 'number' ? formatEuro(value) : null;
 ---

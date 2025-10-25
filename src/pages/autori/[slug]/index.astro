@@ -74,7 +74,10 @@ const seo = withFallbackSeo(author._seoMetaTags, {
 });
 
 const pictureResponsiveImage = author.picture?.responsiveImage
-  ? { ...author.picture.responsiveImage, alt: author.picture.responsiveImage.alt ?? authorDisplayName }
+  ? {
+      ...author.picture.responsiveImage,
+      alt: author.picture.responsiveImage.alt ?? authorDisplayName,
+    }
   : null;
 ---
 
@@ -103,7 +106,6 @@ const pictureResponsiveImage = author.picture?.responsiveImage
           <h1 class={styles.name}>{authorDisplayName}</h1>
           <p class={styles.booksLabel}>{booksLabel}</p>
         </div>
-
 
         {
           pseudonyms.length > 0 ? (

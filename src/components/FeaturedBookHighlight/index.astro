@@ -73,10 +73,7 @@ const authorBooksLabel =
 ---
 
 <section
-  class:list={[
-    'rounded-3xl border border-white/70 bg-white/95 shadow-soft',
-    styles.highlight,
-  ]}
+  class:list={['rounded-3xl border border-white/70 bg-white/95 shadow-soft', styles.highlight]}
 >
   <div class="flex flex-col overflow-hidden md:flex-row">
     <div class:list={['md:w-[38%] md:max-w-md', styles.mediaPanel]}>
@@ -184,11 +181,7 @@ const authorBooksLabel =
         {book.link ? <Button href={book.link}>Scopri il libro</Button> : null}
         {
           collectionHref ? (
-            <Button
-              href={collectionHref}
-              variant="outline"
-              icon="iconoir:nav-arrow-right"
-            >
+            <Button href={collectionHref} variant="outline" icon="iconoir:nav-arrow-right">
               Vai alla collana
             </Button>
           ) : null
@@ -207,13 +200,11 @@ const authorBooksLabel =
                 link={authorLink ?? undefined}
                 image={authorImageData ?? undefined}
               />
-              {
-                authorBooksLabel ? (
-                  <span class="text-xs font-semibold uppercase tracking-widest text-brand-charcoal/60">
-                    {authorBooksLabel}
-                  </span>
-                ) : null
-              }
+              {authorBooksLabel ? (
+                <span class="text-xs font-semibold uppercase tracking-widest text-brand-charcoal/60">
+                  {authorBooksLabel}
+                </span>
+              ) : null}
             </div>
           </div>
         ) : null

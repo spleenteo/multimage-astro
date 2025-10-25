@@ -15,9 +15,10 @@ If you need real working examples, you can rely on these repos to get inspired, 
 ## Project Structure & Module Organization
 
 Il progetto deve avere una struttura simile a https://github.com/datocms/astro-website/tree/main/src/components/blocks/ShowcaseProjectBlock o https://github.com/datocms/astro-website/tree/main/src/pages/partners/%5BpartnerSlug%5D in cui ogni componente o ogni rotta ha:
-* Un file style.module.css per gli stili Tailwind custom da importare
-* Un file _graphql.ts in cui si trova la graphql dedicata
-* un file index.astro che rappresenta il contenuto
+
+- Un file style.module.css per gli stili Tailwind custom da importare
+- Un file \_graphql.ts in cui si trova la graphql dedicata
+- un file index.astro che rappresenta il contenuto
 
 dopodiché ogni query richiama i fragments necessari
 
@@ -62,6 +63,7 @@ Commit messages in this repo are short, imperative descriptions (e.g., “Fix im
 Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `DATOCMS.md` this is a downloaded file to access DatoCMS's documentation in a super fast way.
 
 # Components Overview
+
 - `AlternateFormatsList` — renders links to additional book formats with pricing and external/ internal routing.
 - `AuthorCard` — displays author metadata (name, portrait, book count) linking to the author detail page.
 - `AuthorChip` — compact author pill with avatar, used inside highlights or stacked metadata.
@@ -85,6 +87,7 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - `Header` — global navigation header with search/menu controls.
 
 # Utility Modules
+
 - `lib/authors.ts` — helpers for normalising author names, sorting, and building view models.
 - `lib/books.ts` — book formatting utilities (price, edition, licence labels, etc.).
 - `lib/colors.ts` — color palette helpers for deriving accent/background colours.
@@ -95,6 +98,7 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - `lib/seo.ts` — utilities for merging SEO metadata with sensible fallbacks.
 - `lib/suppliers.ts` — mapping/grouping helpers for supplier/distributor records.
 - `lib/text.ts` — text normalisation utilities (plain text extraction, truncation, etc.).
+
 # Next tasks to be done (unordered)
 
 - [] Home page components

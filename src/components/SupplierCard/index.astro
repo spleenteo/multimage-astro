@@ -71,21 +71,11 @@ const logoResponsiveImage = logo?.responsiveImage
 <article class:list={[styles.card, className]}>
   <div class={styles.body}>
     <div class={styles.descriptionBlock}>
-      {
-        locationLabel ? (
-          <p class={styles.location}>
-            {locationLabel}
-          </p>
-        ) : null
-      }
+      {locationLabel ? <p class={styles.location}>{locationLabel}</p> : null}
 
       <h3 class={styles.name}>{name}</h3>
 
-      {
-        hasDescription ? (
-          <div class={styles.description} set:html={descriptionHtml} />
-        ) : null
-      }
+      {hasDescription ? <div class={styles.description} set:html={descriptionHtml} /> : null}
 
       {
         hasAddress ? (
@@ -156,7 +146,11 @@ const logoResponsiveImage = logo?.responsiveImage
       logoResponsiveImage ? (
         <div class={styles.logoOuter}>
           <div class={styles.logoFrame}>
-            <Image data={logoResponsiveImage} sizes="(min-width: 1024px) 180px, 40vw" imgClass={styles.logoImage} />
+            <Image
+              data={logoResponsiveImage}
+              sizes="(min-width: 1024px) 180px, 40vw"
+              imgClass={styles.logoImage}
+            />
           </div>
         </div>
       ) : null

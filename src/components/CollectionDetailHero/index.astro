@@ -19,7 +19,6 @@ const booksLabel =
 const logoResponsiveImage = logo?.responsiveImage
   ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
   : null;
-
 ---
 
 <div class:list={[styles.root, className]}>
@@ -31,7 +30,11 @@ const logoResponsiveImage = logo?.responsiveImage
     {
       logoResponsiveImage ? (
         <div class={styles.logoWrapper}>
-          <Image data={logoResponsiveImage} sizes="(min-width: 1024px) 220px, 40vw" imgClass={styles.logoImage} />
+          <Image
+            data={logoResponsiveImage}
+            sizes="(min-width: 1024px) 220px, 40vw"
+            imgClass={styles.logoImage}
+          />
         </div>
       ) : null
     }

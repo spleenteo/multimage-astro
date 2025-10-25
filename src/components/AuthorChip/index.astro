@@ -59,9 +59,7 @@ const hasLink = Wrapper === 'a';
     <div class="flex flex-col gap-1 text-left">
       <p class={styles.copyLabel}>{label}</p>
       <p class={styles.name}>{name}</p>
-      {
-        booksLabel ? <p class={styles.booksLabel}>{booksLabel}</p> : null
-      }
+      {booksLabel ? <p class={styles.booksLabel}>{booksLabel}</p> : null}
     </div>
     {
       hasLink ? (
