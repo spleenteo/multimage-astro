@@ -78,6 +78,7 @@ function buildPrimaryLinks(infoPages: Array<{ label: string; href: string }>): N
     },
     { label: 'Autrici/Autori', href: '/autori' },
     { label: 'Distributori', href: '/distributori' },
+    { label: 'Magazine', href: '/magazine' },
     {
       label: 'Informazioni',
       children: infoChildren.map((page) => ({
@@ -111,6 +112,10 @@ function linkIsActive(link: NavLink, pathname: string) {
       return (
         pathname.startsWith('/libri') || pathname.startsWith('/collane') || pathname === '/collane'
       );
+    }
+
+    if (link.label === 'Magazine') {
+      return pathname.startsWith('/magazine');
     }
 
     if (link.label === 'Informazioni') {
