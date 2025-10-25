@@ -1,0 +1,81 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+
+type BannerData = {
+  title?: string | null;
+  content?: string | null;
+  link?: string | null;
+  imagePosition?: string | null;
+  featuredImage?: {
+    responsiveImage?:
+      | ({
+          alt?: string | null;
+        } & Record<string, unknown>)
+      | null;
+  } | null;
+};
+
+type Props = {
+  block: BannerData;
+};
+
+const { block }: Props = Astro.props;
+
+const title = block.title ?? 'In evidenza';
+const link = block.link ?? null;
+const imagePosition = (block.imagePosition ?? 'right').toLowerCase() === 'left' ? 'left' : 'right';
+const image = (block.featuredImage?.responsiveImage as ResponsiveImageType | null) ?? null;
+const alt = image?.alt ?? title;
+const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
+const paragraphs = (block.content ?? '')
+  .split(/\r?\n\s*\r?\n/)
+  .map((item) => item.trim())
+  .filter((item) => item.length > 0);
+---
+
+<section class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/50 bg-brand-mist/20 shadow-soft">
+  <div
+    class:list={[
+      'flex flex-col gap-6 md:gap-12',
+      imagePosition === 'left' ? 'md:flex-row' : 'md:flex-row-reverse',
+    ]}
+  >
+    {
+      imageData ? (
+        <div class="flex w-full flex-shrink-0 items-center justify-center bg-brand-mist/60 p-6 md:w-1/2">
+          <Image
+            data={imageData}
+            sizes="(min-width: 1024px) 40vw, 90vw"
+            pictureClass="block"
+            imgClass="h-auto w-full max-w-xl rounded-xl object-contain"
+          />
+        </div>
+      ) : null
+    }
+
+    <div class="flex w-full flex-col gap-4 px-6 pb-8 pt-6 md:w-1/2 md:px-10 md:py-12">
+      <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
+      {
+        paragraphs.length > 0 ? (
+          <div class="space-y-3 text-base leading-relaxed text-brand-charcoal/90">
+            {paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </div>
+        ) : null
+      }
+      {link ? (
+        <div>
+          <a
+            href={link}
+            class="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
+          >
+            Scopri di più
+            <iconify-icon icon="iconoir:nav-arrow-right" width="18" height="18" aria-hidden="true" />
+          </a>
+        </div>
+      ) : null}
+    </div>
+  </div>
+</section>

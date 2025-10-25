@@ -1,5 +1,6 @@
 ---
 import { Image } from '@datocms/astro/Image';
+import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AlternateFormatsList from '~/components/AlternateFormatsList';
 import DetailList from '~/components/DetailList';
@@ -7,6 +8,8 @@ import AuthorsSection from '~/components/AuthorsSection';
 import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, truncateToLength } from '~/lib/text';
+import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import { defaultBlockComponents, defaultLinkToRecordComponents } from '~/lib/datocms/structuredTextComponents';
 import {
   buildLicenseLabel,
   extractYear,
@@ -106,7 +109,10 @@ const formattedPrice = formatBookPrice(book.price);
 const formattedEdition = formatEdition(book.edition);
 const formattedPrintYear = extractYear(book.printYear);
 const descriptionHtml = book.description;
-const reviewHtml = book.review && book.review !== book.description ? book.review : null;
+const reviewContent = hasStructuredTextContent(book.review) ? book.review : null;
+const reviewPlain = structuredTextToPlainText(reviewContent);
+const descriptionPlain = toPlainText(book.description ?? null);
+const showReview = Boolean(reviewContent && reviewPlain !== descriptionPlain);
 const promoText = toPlainText(book.promo);
 
 const formatValue = normalizeText(book.format);
@@ -152,7 +158,7 @@ const limitedAlternateFormats = alternateFormats.slice(0, 3);
 
 const authorsCards = authors.map((author) => {
   const name = getAuthorDisplayName(author);
-  const biographyPlain = toPlainText(author.biography);
+  const biographyPlain = structuredTextToPlainText(author.biography);
   const biographyExcerpt =
     biographyPlain.length > 0
       ? truncateToLength(biographyPlain, 220)
@@ -398,13 +404,16 @@ const seo = withFallbackSeo(book.seo, {
     </div>
 
     {
-      reviewHtml ? (
+      showReview && reviewContent ? (
         <section class={styles.reviewSection}>
           <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
-          <div
-            class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
-            set:html={reviewHtml}
-          />
+          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal">
+            <StructuredText
+              data={reviewContent as any}
+              blockComponents={defaultBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          </div>
         </section>
       ) : null
     }

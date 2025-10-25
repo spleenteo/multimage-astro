@@ -1,0 +1,83 @@
+---
+import { getAuthorDisplayName } from '~/lib/authors';
+
+type RecordData = {
+  __typename: string;
+  [key: string]: unknown;
+};
+
+type Props = {
+  block: RecordData;
+};
+
+const { block }: Props = Astro.props;
+
+if (!block || typeof block !== 'object') {
+  return null;
+}
+
+const type = block.__typename;
+
+let title: string | null = null;
+let description: string | null = null;
+let href: string | null = null;
+
+switch (type) {
+  case 'AuthorRecord': {
+    const author = block as {
+      fullName?: string | null;
+      alias?: string | null;
+      slug?: string | null;
+    };
+    title = getAuthorDisplayName(author);
+    href = author.slug ? `/autori/${author.slug}` : null;
+    break;
+  }
+  case 'CollectionRecord': {
+    const collection = block as { name?: string | null; slug?: string | null };
+    title = collection.name ?? 'Collana';
+    href = collection.slug ? `/collane/${collection.slug}` : null;
+    break;
+  }
+  case 'PageRecord': {
+    const page = block as { title?: string | null; slug?: string | null };
+    title = page.title ?? 'Pagina';
+    href = page.slug ? `/info/${page.slug}` : null;
+    break;
+  }
+  case 'BookRecord': {
+    const book = block as { title?: string | null; slug?: string | null; subtitle?: string | null };
+    title = book.title ?? 'Libro';
+    description = book.subtitle ?? null;
+    href = book.slug ? `/libri/${book.slug}` : null;
+    break;
+  }
+  case 'BlogPostRecord': {
+    const post = block as { title?: string | null; slug?: string | null };
+    title = post.title ?? 'Articolo';
+    href = post.slug ? `/blog/${post.slug}` : null;
+    break;
+  }
+  default:
+    title = 'Contenuto correlato';
+}
+
+if (!title) {
+  return null;
+}
+---
+
+<article class="not-prose my-4 rounded-lg border border-brand-mist/60 bg-white/90 p-4 shadow-soft">
+  <h3 class="text-lg font-semibold text-brand-navy">
+    {
+      href ? (
+        <a href={href} class="hover:text-brand-sky focus:text-brand-sky">
+          {title}
+        </a>
+      ) : (
+        title
+      )
+    }
+  </h3>
+  {description ? <p class="mt-1 text-sm text-brand-charcoal/80">{description}</p> : null}
+</article>

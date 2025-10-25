@@ -2,6 +2,83 @@ import { ItemTypeDefinition } from '@datocms/cma-client';
 type EnvironmentSettings = {
   locales: 'it';
 };
+export type Author = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70445',
+  {
+    full_name: {
+      type: 'string';
+    };
+    sort_by: {
+      type: 'string';
+    };
+    alias: {
+      type: 'string';
+    };
+    pseudonyms: {
+      type: 'links';
+    };
+    country: {
+      type: 'string';
+    };
+    biography: {
+      type: 'structured_text';
+    };
+    picture: {
+      type: 'file';
+    };
+    slug: {
+      type: 'slug';
+    };
+    email: {
+      type: 'string';
+    };
+    phone: {
+      type: 'string';
+    };
+    note: {
+      type: 'text';
+    };
+  }
+>;
+export type Page = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70448',
+  {
+    menu: {
+      type: 'boolean';
+    };
+    label: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    body: {
+      type: 'structured_text';
+      blocks: Video | SingleBook | SingleAuthor | Banner | Image | Section;
+      inline_blocks: Author | Collection | Page | Book | BlogPost;
+    };
+    layout: {
+      type: 'string';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
 export type Video = ItemTypeDefinition<
   EnvironmentSettings,
   '184828',
@@ -45,11 +122,11 @@ export type Book = ItemTypeDefinition<
     price: {
       type: 'float';
     };
-    pages: {
-      type: 'integer';
-    };
     description: {
       type: 'text';
+    };
+    pages: {
+      type: 'integer';
     };
     promo: {
       type: 'string';
@@ -72,11 +149,11 @@ export type Book = ItemTypeDefinition<
     epub_url: {
       type: 'string';
     };
-    review: {
-      type: 'text';
-    };
     print_year: {
       type: 'date';
+    };
+    review: {
+      type: 'structured_text';
     };
     archive: {
       type: 'boolean';
@@ -96,10 +173,10 @@ export type Book = ItemTypeDefinition<
     first_print_year: {
       type: 'integer';
     };
-    format: {
+    cover_designer: {
       type: 'string';
     };
-    cover_designer: {
+    format: {
       type: 'string';
     };
     cover_image: {
@@ -212,45 +289,6 @@ export type BlogPost = ItemTypeDefinition<
     };
   }
 >;
-export type Author = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70445',
-  {
-    full_name: {
-      type: 'string';
-    };
-    sort_by: {
-      type: 'string';
-    };
-    alias: {
-      type: 'string';
-    };
-    pseudonyms: {
-      type: 'links';
-    };
-    country: {
-      type: 'string';
-    };
-    biography: {
-      type: 'text';
-    };
-    picture: {
-      type: 'file';
-    };
-    slug: {
-      type: 'slug';
-    };
-    email: {
-      type: 'string';
-    };
-    phone: {
-      type: 'string';
-    };
-    note: {
-      type: 'text';
-    };
-  }
->;
 export type Supplier = ItemTypeDefinition<
   EnvironmentSettings,
   '70444',
@@ -332,42 +370,6 @@ export type HighlightsIndex = ItemTypeDefinition<
     };
     seo: {
       type: 'seo';
-    };
-  }
->;
-export type Page = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70448',
-  {
-    menu: {
-      type: 'boolean';
-    };
-    label: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    body: {
-      type: 'text';
-    };
-    layout: {
-      type: 'string';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-    position: {
-      type: 'integer';
     };
   }
 >;
@@ -663,17 +665,24 @@ export type Home = ItemTypeDefinition<
     };
   }
 >;
-export type AnyBlock = Video | SingleBook | SingleAuthor | Banner | Image | Section | Reprint;
+export type AnyBlock =
+  | Video
+  | SingleBook
+  | SingleAuthor
+  | Banner
+  | Image
+  | Section
+  | Reprint;
 export type AnyModel =
+  | Author
+  | Page
   | Book
   | BlogPostOld
   | BlogPost
-  | Author
   | Supplier
   | SuppliersIndex
   | CollectionsIndex
   | HighlightsIndex
-  | Page
   | BlogTag
   | BlogCategory
   | Collection

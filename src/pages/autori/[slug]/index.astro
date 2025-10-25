@@ -1,11 +1,11 @@
 ---
 import { Image } from '@datocms/astro/Image';
+import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
 import { getAuthorDisplayName } from '~/lib/authors';
-import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import {
@@ -16,6 +16,12 @@ import {
   type AuthorRelatedBooksResult,
   type AuthorSlugsResult,
 } from './_graphql';
+import {
+  structuredTextToPlainText,
+  hasStructuredTextContent,
+} from '~/lib/datocms/structuredText';
+import { defaultBlockComponents, defaultLinkToRecordComponents } from '~/lib/datocms/structuredTextComponents';
+import { toPlainText, toRichTextHtml } from '~/lib/text';
 
 export const prerender = true;
 
@@ -52,10 +58,11 @@ const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.leng
 const relatedBooks = mapBooksToCards(relatedData.allBooks);
 
 const authorDisplayName = getAuthorDisplayName(author);
-const biographyHtml = toRichTextHtml(author.biography ?? null);
-const biographyPlain = toPlainText(author.biography ?? null);
+const biographyHasContent = hasStructuredTextContent(author.biography);
+const biographyPlain = structuredTextToPlainText(author.biography ?? null);
 const noteHtml = toRichTextHtml(author.note ?? null);
 const notePlain = toPlainText(author.note ?? null);
+const noteHasContent = typeof noteHtml === 'string' && noteHtml.length > 0;
 const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
@@ -130,16 +137,20 @@ const pictureResponsiveImage = author.picture?.responsiveImage
 
     <section class={styles.contentSection}>
       {
-        biographyHtml ? (
+        biographyHasContent && author.biography ? (
           <div class={styles.contentBlock}>
             <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
-            <div set:html={biographyHtml} />
+            <StructuredText
+              data={author.biography as any}
+              blockComponents={defaultBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
           </div>
         ) : null
       }
 
       {
-        noteHtml ? (
+        noteHasContent && typeof noteHtml === 'string' ? (
           <div class={styles.contentBlock}>
             <h2 class="text-3xl font-serif text-brand-navy">Note</h2>
             <div set:html={noteHtml} />

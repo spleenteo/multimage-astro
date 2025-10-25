@@ -1,0 +1,31 @@
+---
+type Props = {
+  block: {
+    title?: string | null;
+    body?: string | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const title = block.title ?? null;
+const body = block.body ?? null;
+const paragraphs = body
+  ? body
+      .split(/\r?\n\s*\r?\n/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0)
+  : [];
+---
+
+<section class="not-prose my-6 rounded-xl border border-brand-mist/60 bg-white/90 p-6 shadow-soft">
+  {title ? <h3 class="text-2xl font-serif text-brand-navy">{title}</h3> : null}
+  {
+    paragraphs.length > 0 ? (
+      <div class="mt-3 space-y-3 text-base leading-relaxed text-brand-charcoal/90">
+        {paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    ) : null
+  }
+</section>

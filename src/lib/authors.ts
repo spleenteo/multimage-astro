@@ -1,5 +1,7 @@
 import type { AssetImage } from './datocms/types';
-import { toPlainText, truncateToLength } from './text';
+import { truncateToLength } from './text';
+import type { StructuredTextField } from './datocms/types';
+import { structuredTextToPlainText } from './datocms/structuredText';
 
 export type AuthorRecordForCard = {
   id: string;
@@ -7,7 +9,7 @@ export type AuthorRecordForCard = {
   slug?: string | null;
   alias?: string | null;
   country?: string | null;
-  biography?: string | null;
+  biography?: StructuredTextField;
   sortBy?: string | null;
   picture?: AssetImage | null;
 };
@@ -173,7 +175,7 @@ export function mapAuthorsToCards(
   const { bookCounts } = options;
 
   return authors.map((author) => {
-    const biographyPlain = toPlainText(author.biography ?? null);
+    const biographyPlain = structuredTextToPlainText(author.biography ?? null);
     const summary = biographyPlain.length > 0 ? truncateToLength(biographyPlain, 200) : undefined;
 
     const booksCount = bookCounts?.get(author.id) ?? 0;

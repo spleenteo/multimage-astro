@@ -22,13 +22,23 @@ export type AssetImage = {
   responsiveImage?: ResponsiveImage | null;
 };
 
+export type StructuredTextField = {
+  value: {
+    schema: 'dast';
+    document: unknown;
+  } | null;
+  blocks?: Array<Record<string, unknown>>;
+  links?: Array<Record<string, unknown>>;
+  inlineBlocks?: Array<Record<string, unknown>>;
+} | null;
+
 export type AuthorSummaryRecord = {
   id: string;
   fullName: string | null;
   slug: string | null;
   alias: string | null;
   country: string | null;
-  biography: string | null;
+  biography: StructuredTextField;
   sortBy: string | null;
   picture: AssetImage | null;
 };
@@ -109,7 +119,7 @@ export type PageRecord = {
   title: string | null;
   subtitle: string | null;
   slug: string | null;
-  body: string | null;
+  body: StructuredTextField;
   label: string | null;
   menu: boolean | null;
   seo: SeoMetaTag[] | null;

@@ -20,7 +20,9 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
       slug
       alias
       country
-      biography
+      biography {
+        value
+      }
       sortBy
       picture {
         url

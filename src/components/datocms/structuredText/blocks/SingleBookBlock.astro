@@ -1,0 +1,75 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+
+type BookData = {
+  id: string;
+  title: string | null;
+  subtitle?: string | null;
+  slug?: string | null;
+  coverImage?: {
+    responsiveImage?:
+      | ({
+          alt?: string | null;
+        } & Record<string, unknown>)
+      | null;
+  } | null;
+};
+
+type Props = {
+  block: {
+    book?: BookData | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const book = block.book ?? null;
+
+if (!book) {
+  return null;
+}
+
+const href = book.slug ? `/libri/${book.slug}` : null;
+const title = book.title ?? 'Titolo in arrivo';
+const subtitle = book.subtitle ?? null;
+const image = (book.coverImage?.responsiveImage as ResponsiveImageType | null) ?? null;
+const alt = image?.alt ?? title;
+const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
+---
+
+<article class="not-prose my-6 flex gap-4 rounded-xl border border-brand-mist/60 bg-white/90 p-4 shadow-soft">
+  {
+    imageData ? (
+      <div class="hidden max-w-[160px] flex-shrink-0 md:block">
+        <Image
+          data={imageData}
+          sizes="160px"
+          pictureClass="block"
+          imgClass="h-auto w-full rounded-lg object-cover"
+        />
+      </div>
+    ) : null
+  }
+  <div class="flex flex-col justify-center gap-2">
+    <h3 class="text-xl font-semibold text-brand-navy">
+      {
+        href ? (
+          <a href={href} class="hover:text-brand-sky focus:text-brand-sky">
+            {title}
+          </a>
+        ) : (
+          title
+        )
+      }
+    </h3>
+    {subtitle ? <p class="text-sm text-brand-charcoal/80">{subtitle}</p> : null}
+    {href ? (
+      <a
+        href={href}
+        class="text-sm font-semibold uppercase tracking-wide text-brand-sky hover:text-brand-navy"
+      >
+        Scopri il libro →
+      </a>
+    ) : null}
+  </div>
+</article>

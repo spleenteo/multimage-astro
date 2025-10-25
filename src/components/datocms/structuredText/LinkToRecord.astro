@@ -1,0 +1,68 @@
+---
+type LinkProps = {
+  node: Record<string, unknown>;
+  record: {
+    __typename: string;
+    [key: string]: unknown;
+  };
+  attrs: Record<string, string>;
+};
+
+const { record, attrs } = Astro.props as LinkProps;
+
+const type = record.__typename;
+
+let href: string | null = null;
+
+switch (type) {
+  case 'AuthorRecord': {
+    const author = record as { slug?: string | null };
+    href = author.slug ? `/autori/${author.slug}` : null;
+    break;
+  }
+  case 'CollectionRecord': {
+    const collection = record as { slug?: string | null };
+    href = collection.slug ? `/collane/${collection.slug}` : null;
+    break;
+  }
+  case 'PageRecord': {
+    const page = record as { slug?: string | null };
+    href = page.slug ? `/info/${page.slug}` : null;
+    break;
+  }
+  case 'BookRecord': {
+    const book = record as { slug?: string | null };
+    href = book.slug ? `/libri/${book.slug}` : null;
+    break;
+  }
+  case 'BlogPostRecord': {
+    const post = record as { slug?: string | null };
+    href = post.slug ? `/blog/${post.slug}` : null;
+    break;
+  }
+  default:
+    href = attrs?.href ?? null;
+}
+
+const target = attrs?.target ?? undefined;
+const rel = attrs?.rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined);
+const title = attrs?.title ?? undefined;
+
+const hasLink = Boolean(href);
+---
+
+{
+  hasLink ? (
+    <a
+      href={href}
+      target={target}
+      rel={rel}
+      title={title}
+      class="text-brand-sky underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
+    >
+      <slot />
+    </a>
+  ) : (
+    <slot />
+  )
+}

@@ -10,7 +10,9 @@ export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
       fullName
       alias
       country
-      biography
+      biography {
+        value
+      }
       note
       picture {
         url

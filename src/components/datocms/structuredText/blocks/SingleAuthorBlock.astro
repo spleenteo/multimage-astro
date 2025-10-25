@@ -1,0 +1,74 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+import { getAuthorDisplayName } from '~/lib/authors';
+
+type AuthorData = {
+  id: string;
+  fullName?: string | null;
+  alias?: string | null;
+  slug?: string | null;
+  picture?: {
+    responsiveImage?:
+      | ({
+          alt?: string | null;
+        } & Record<string, unknown>)
+      | null;
+  } | null;
+};
+
+type Props = {
+  block: {
+    author?: AuthorData | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const author = block.author ?? null;
+
+if (!author) {
+  return null;
+}
+
+const name = getAuthorDisplayName(author);
+const href = author.slug ? `/autori/${author.slug}` : null;
+const image = (author.picture?.responsiveImage as ResponsiveImageType | null) ?? null;
+const alt = image?.alt ?? name;
+const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
+---
+
+<article class="not-prose my-6 flex gap-4 rounded-xl border border-brand-mist/60 bg-white/90 p-4 shadow-soft">
+  {
+    imageData ? (
+      <div class="hidden max-w-[140px] flex-shrink-0 md:block">
+        <Image
+          data={imageData}
+          sizes="140px"
+          pictureClass="block"
+          imgClass="h-auto w-full rounded-full object-cover"
+        />
+      </div>
+    ) : null
+  }
+  <div class="flex flex-col justify-center gap-2">
+    <h3 class="text-xl font-semibold text-brand-navy">
+      {
+        href ? (
+          <a href={href} class="hover:text-brand-sky focus:text-brand-sky">
+            {name}
+          </a>
+        ) : (
+          name
+        )
+      }
+    </h3>
+    {href ? (
+      <a
+        href={href}
+        class="text-sm font-semibold uppercase tracking-wide text-brand-sky hover:text-brand-navy"
+      >
+        Scopri l’autore →
+      </a>
+    ) : null}
+  </div>
+</article>

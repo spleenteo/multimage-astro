@@ -1,5 +1,5 @@
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { AssetImage, SeoMetaTag } from '~/lib/datocms/types';
+import type { AssetImage, SeoMetaTag, StructuredTextField } from '~/lib/datocms/types';
 
 export const BOOK_DETAIL_QUERY = /* GraphQL */ `
   ${RESPONSIVE_IMAGE_FRAGMENT}
@@ -11,7 +11,9 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       slug
       promo
       description
-      review
+      review {
+        value
+      }
       isbn
       edition
       pages
@@ -34,7 +36,9 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
         fullName
         alias
         slug
-        biography
+        biography {
+          value
+        }
         picture {
           url
           alt
@@ -121,7 +125,7 @@ export type BookDetailRecord = {
   slug: string;
   promo: string | null;
   description: string | null;
-  review: string | null;
+  review: StructuredTextField;
   isbn: string | null;
   edition: number | null;
   pages: number | null;
@@ -138,7 +142,7 @@ export type BookDetailRecord = {
     fullName: string | null;
     alias: string | null;
     slug: string | null;
-    biography: string | null;
+    biography: StructuredTextField;
     picture: AssetImage | null;
   }>;
   license: {

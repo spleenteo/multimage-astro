@@ -1,11 +1,14 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import { StructuredText } from '@datocms/astro/StructuredText';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { toPlainText, toRichTextHtml } from '~/lib/text';
+import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import { INFO_PAGE_QUERY, INFO_PAGE_SLUGS_QUERY } from './_graphql';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
+import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import { defaultBlockComponents, defaultLinkToRecordComponents } from '~/lib/datocms/structuredTextComponents';
 
 export const prerender = true;
 
@@ -47,7 +50,7 @@ if (!page) {
 const heroTitle = page.title ?? 'Info';
 const heroSubtitle = toPlainText(page.subtitle ?? null);
 const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-const bodyHtml = toRichTextHtml(page.body ?? null);
+const hasBodyContent = hasStructuredTextContent(page.body);
 const sectionLabel = toPlainText(page.label ?? null) || 'Info Multimage';
 
 const seo = withFallbackSeo(page._seoMetaTags, {
@@ -68,8 +71,14 @@ const seo = withFallbackSeo(page._seoMetaTags, {
 
     <section class={styles.bodySection}>
       {
-        bodyHtml ? (
-          <div class={styles.bodyContent} set:html={bodyHtml} />
+        hasBodyContent && page.body ? (
+          <div class={styles.bodyContent}>
+            <StructuredText
+              data={page.body as any}
+              blockComponents={defaultBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          </div>
         ) : (
           <p class="text-sm text-brand-slate">
             I contenuti di questa pagina saranno disponibili a breve.

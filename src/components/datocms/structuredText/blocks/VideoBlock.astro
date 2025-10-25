@@ -1,0 +1,57 @@
+---
+type VideoData = {
+  title?: string | null;
+  url?: string | null;
+  thumbnailUrl?: string | null;
+  provider?: string | null;
+  providerUid?: string | null;
+};
+
+type Props = {
+  block: {
+    video?: VideoData | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const video = block.video ?? null;
+
+if (!video) {
+  return null;
+}
+
+const sourceUrl = video.url ?? null;
+const poster = video.thumbnailUrl ?? undefined;
+const title = video.title ?? 'Contenuto multimediale';
+const provider = video.provider ?? null;
+const isEmbedProvider = provider === 'youtube' || provider === 'vimeo';
+---
+
+{
+  sourceUrl ? (
+    <figure class="not-prose my-6 space-y-3 rounded-xl bg-brand-mist/40 p-4 text-center">
+      {
+        isEmbedProvider ? (
+          <iframe
+            src={sourceUrl}
+            title={title}
+            loading="lazy"
+            class="mx-auto aspect-video h-auto w-full max-w-4xl rounded-lg"
+            allowfullscreen
+          />
+        ) : (
+          <video
+            controls
+            preload="metadata"
+            poster={poster}
+            class="mx-auto h-auto max-h-[540px] w-full max-w-4xl rounded-lg bg-black"
+          >
+            <source src={sourceUrl} />
+            Il tuo browser non supporta la riproduzione di questo video.
+          </video>
+        )
+      }
+      <figcaption class="text-sm text-brand-charcoal/80">{title}</figcaption>
+    </figure>
+  ) : null
+}

@@ -1,0 +1,35 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+
+type Props = {
+  block: {
+    image?: {
+      responsiveImage?:
+        | ({
+            alt?: string | null;
+          } & Record<string, unknown>)
+        | null;
+    } | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const image = (block.image?.responsiveImage as ResponsiveImageType | null) ?? null;
+
+if (!image) {
+  return null;
+}
+
+const alt = image.alt ?? 'Immagine';
+const imageData = { ...image, alt } as ResponsiveImageType;
+---
+
+<figure class="not-prose my-6">
+  <Image
+    data={imageData}
+    sizes="(min-width: 1024px) 70vw, 100vw"
+    pictureClass="block"
+    imgClass="h-auto w-full rounded-xl"
+  />
+</figure>
