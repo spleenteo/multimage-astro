@@ -35,9 +35,9 @@ const showCaption = caption.length > 0;
     pictureClass="block"
     imgClass="h-auto w-full rounded-xl"
   />
-  {showCaption ? (
-    <figcaption class="text-sm italic text-brand-charcoal/70">
-      {caption}
-    </figcaption>
-  ) : null}
+  {
+    showCaption ? (
+      <figcaption class="text-sm italic text-brand-charcoal/70">{caption}</figcaption>
+    ) : null
+  }
 </figure>
