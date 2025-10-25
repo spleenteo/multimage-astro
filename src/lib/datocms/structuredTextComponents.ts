@@ -3,7 +3,6 @@ import SingleBookBlock from '~/components/datocms/structuredText/blocks/SingleBo
 import SingleAuthorBlock from '~/components/datocms/structuredText/blocks/SingleAuthorBlock.astro';
 import BannerBlock from '~/components/datocms/structuredText/blocks/BannerBlock.astro';
 import ImageBlock from '~/components/datocms/structuredText/blocks/ImageBlock.astro';
-import SectionBlock from '~/components/datocms/structuredText/blocks/SectionBlock.astro';
 import CtaButtonWithImageBlock from '~/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro';
 import InlineRecordBlock from '~/components/datocms/structuredText/InlineRecordBlock.astro';
 import LinkToRecord from '~/components/datocms/structuredText/LinkToRecord.astro';
@@ -15,8 +14,7 @@ export const defaultBlockComponents: StructuredTextComponentMap = {
   SingleBookRecord: SingleBookBlock,
   SingleAuthorRecord: SingleAuthorBlock,
   BannerRecord: BannerBlock,
-  ImageRecord: ImageBlock,
-  SectionRecord: SectionBlock,
+  ImageBlockRecord: ImageBlock,
   CtaButtonWithImageRecord: CtaButtonWithImageBlock,
 };
 

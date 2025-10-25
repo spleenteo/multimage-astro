@@ -11,6 +11,7 @@ type Props = {
           } & Record<string, unknown>)
         | null;
     } | null;
+    caption?: string | null;
   };
 };
 
@@ -23,13 +24,20 @@ if (!image) {
 
 const alt = image.alt ?? 'Immagine';
 const imageData = { ...image, alt } as ResponsiveImageType;
+const caption = typeof block.caption === 'string' ? block.caption.trim() : '';
+const showCaption = caption.length > 0;
 ---
 
-<figure class="not-prose my-6">
+<figure class="not-prose my-6 space-y-3">
   <Image
     data={imageData}
     sizes="(min-width: 1024px) 70vw, 100vw"
     pictureClass="block"
     imgClass="h-auto w-full rounded-xl"
   />
+  {showCaption ? (
+    <figcaption class="text-sm italic text-brand-charcoal/70">
+      {caption}
+    </figcaption>
+  ) : null}
 </figure>

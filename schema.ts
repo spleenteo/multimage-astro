@@ -41,44 +41,6 @@ export type Author = ItemTypeDefinition<
     };
   }
 >;
-export type Page = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70448',
-  {
-    menu: {
-      type: 'boolean';
-    };
-    label: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    body: {
-      type: 'structured_text';
-      blocks: Video | SingleBook | SingleAuthor | Banner | Image | Section;
-      inline_blocks: Author | Collection | Page | Book | BlogPost;
-    };
-    layout: {
-      type: 'string';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
 export type FaqSection = ItemTypeDefinition<
   EnvironmentSettings,
   'QkR2_FyOQrKHP2IdQYmRWw',
@@ -156,15 +118,6 @@ export type Button = ItemTypeDefinition<
     };
     primary: {
       type: 'boolean';
-    };
-  }
->;
-export type Video = ItemTypeDefinition<
-  EnvironmentSettings,
-  '184828',
-  {
-    video: {
-      type: 'video';
     };
   }
 >;
@@ -376,11 +329,76 @@ export type BlogPost = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks: CtaButtonWithImage | Video | SingleBook | SingleAuthor | Banner | Image;
+      blocks:
+        | CtaButtonWithImage
+        | Video
+        | SingleBook
+        | SingleAuthor
+        | Banner
+        | ImageBlock;
       inline_blocks: Author | Page | Book | BlogPost;
     };
     keywords: {
       type: 'links';
+    };
+  }
+>;
+export type ImageBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184826',
+  {
+    image: {
+      type: 'file';
+    };
+    caption: {
+      type: 'string';
+    };
+  }
+>;
+export type Video = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184828',
+  {
+    video: {
+      type: 'video';
+    };
+  }
+>;
+export type Page = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70448',
+  {
+    menu: {
+      type: 'boolean';
+    };
+    label: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    body: {
+      type: 'structured_text';
+      blocks: ImageBlock | Video | Banner | SingleBook | SingleAuthor;
+      inline_blocks: Author | Collection | Page | Book | BlogPost;
+    };
+    layout: {
+      type: 'string';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    position: {
+      type: 'integer';
     };
   }
 >;
@@ -588,15 +606,6 @@ export type Banner = ItemTypeDefinition<
     };
   }
 >;
-export type Image = ItemTypeDefinition<
-  EnvironmentSettings,
-  '184826',
-  {
-    image: {
-      type: 'file';
-    };
-  }
->;
 export type BooksIndex = ItemTypeDefinition<
   EnvironmentSettings,
   '171774',
@@ -766,20 +775,20 @@ export type AnyBlock =
   | NewsletterSubscription
   | CtaButtonWithImage
   | Button
-  | Video
   | SingleBook
   | SingleAuthor
+  | ImageBlock
+  | Video
   | Banner
-  | Image
   | Section
   | Reprint;
 export type AnyModel =
   | Author
-  | Page
   | MagazineIndex
   | Book
   | BlogPostOld
   | BlogPost
+  | Page
   | Supplier
   | SuppliersIndex
   | CollectionsIndex

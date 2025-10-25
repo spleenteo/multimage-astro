@@ -66,18 +66,14 @@ export const INFO_PAGE_QUERY = /* GraphQL */ `
               }
             }
           }
-          ... on ImageRecord {
+          ... on ImageBlockRecord {
             id
             image {
               responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }
-          }
-          ... on SectionRecord {
-            id
-            title
-            body
+            caption
           }
         }
         links {
