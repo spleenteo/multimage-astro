@@ -74,29 +74,33 @@ const seo = withFallbackSeo(post._seoMetaTags, {
         <p class={styles.label}>{label}</p>
         <h1 class={styles.title}>{heroTitle}</h1>
         {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
-        {formattedDate || authorName ? (
-          <div class={styles.meta}>
-            {formattedDate ? (
-              <time datetime={publishedAt ?? undefined} class={styles.metaItem}>
-                {formattedDate}
-              </time>
-            ) : null}
-            {authorName ? <span class={styles.metaItem}>Di {authorName}</span> : null}
-          </div>
-        ) : null}
+        {
+          formattedDate || authorName ? (
+            <div class={styles.meta}>
+              {formattedDate ? (
+                <time datetime={publishedAt ?? undefined} class={styles.metaItem}>
+                  {formattedDate}
+                </time>
+              ) : null}
+              {authorName ? <span class={styles.metaItem}>Di {authorName}</span> : null}
+            </div>
+          ) : null
+        }
       </div>
     </section>
 
-    {heroImage ? (
-      <div class={styles.featuredImage}>
-        <Image
-          data={heroImage}
-          sizes="(min-width: 1280px) 60vw, 95vw"
-          pictureClass="block"
-          imgClass="h-full w-full object-cover"
-        />
-      </div>
-    ) : null}
+    {
+      heroImage ? (
+        <div class={styles.featuredImage}>
+          <Image
+            data={heroImage}
+            sizes="(min-width: 1280px) 60vw, 95vw"
+            pictureClass="block"
+            imgClass="h-full w-full object-cover"
+          />
+        </div>
+      ) : null
+    }
 
     <section class={styles.bodySection}>
       {

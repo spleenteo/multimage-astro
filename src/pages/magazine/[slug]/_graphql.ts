@@ -64,9 +64,7 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
             link
             imagePosition
             featuredImage {
-              responsiveImage(
-                imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }
@@ -74,9 +72,7 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
           ... on ImageRecord {
             id
             image {
-              responsiveImage(
-                imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }
@@ -87,9 +83,7 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
             subtitle
             buttonLabel
             image {
-              responsiveImage(
-                imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }
@@ -163,9 +157,11 @@ export const MAGAZINE_POST_SLUGS_QUERY = /* GraphQL */ `
 `;
 
 export type MagazinePostQueryResult = {
-  blogPost: (BlogPostRecord & {
-    _seoMetaTags: SeoMetaTag[] | null;
-  }) | null;
+  blogPost:
+    | (BlogPostRecord & {
+        _seoMetaTags: SeoMetaTag[] | null;
+      })
+    | null;
 };
 
 export type MagazinePostSlugsResult = {

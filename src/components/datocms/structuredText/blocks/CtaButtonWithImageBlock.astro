@@ -30,7 +30,8 @@ type Props = {
 
 const { block }: Props = Astro.props;
 
-const title = typeof block.title === 'string' && block.title.length > 0 ? block.title : 'Scopri di più';
+const title =
+  typeof block.title === 'string' && block.title.length > 0 ? block.title : 'Scopri di più';
 const subtitleRaw = typeof block.subtitle === 'string' ? block.subtitle : null;
 const paragraphs = subtitleRaw
   ? subtitleRaw
@@ -44,18 +45,18 @@ const buttonLabel =
     ? block.buttonLabel
     : null) ??
   (typeof (block as Record<string, unknown>).button_label === 'string'
-    ? ((block as Record<string, string>).button_label.length > 0
-        ? (block as Record<string, string>).button_label
-        : null)
+    ? (block as Record<string, string>).button_label.length > 0
+      ? (block as Record<string, string>).button_label
+      : null
     : null);
 
 const explicitUrl =
   typeof block.buttonUrl === 'string' && block.buttonUrl.length > 0
     ? block.buttonUrl
     : typeof (block as Record<string, unknown>).button_url === 'string'
-      ? ((block as Record<string, string>).button_url.length > 0
-          ? (block as Record<string, string>).button_url
-          : null)
+      ? (block as Record<string, string>).button_url.length > 0
+        ? (block as Record<string, string>).button_url
+        : null
       : null;
 
 const linkedButton = block.button ?? null;
@@ -74,8 +75,10 @@ const imageData = block.image?.responsiveImage as ResponsiveImageType | null;
 const showButton = Boolean(buttonLabel && buttonHref);
 ---
 
-<section class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/40 bg-brand-mist/10 shadow-soft">
-  <div class:list={["flex flex-col gap-6 md:flex-row"]}>
+<section
+  class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/40 bg-brand-mist/10 shadow-soft"
+>
+  <div class:list={['flex flex-col gap-6 md:flex-row']}>
     {
       imageData ? (
         <div class="flex w-full flex-shrink-0 items-center justify-center bg-brand-mist/40 p-6 md:w-2/5">
@@ -103,12 +106,12 @@ const showButton = Boolean(buttonLabel && buttonHref);
       {
         showButton ? (
           <div>
-            <Button href={buttonHref!}>
-              {buttonLabel}
-            </Button>
+            <Button href={buttonHref!}>{buttonLabel}</Button>
           </div>
         ) : buttonLabel ? (
-          <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy/70">{buttonLabel}</p>
+          <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy/70">
+            {buttonLabel}
+          </p>
         ) : null
       }
     </div>

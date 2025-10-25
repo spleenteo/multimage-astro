@@ -376,13 +376,7 @@ export type BlogPost = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks:
-        | CtaButtonWithImage
-        | Video
-        | SingleBook
-        | SingleAuthor
-        | Banner
-        | Image;
+      blocks: CtaButtonWithImage | Video | SingleBook | SingleAuthor | Banner | Image;
       inline_blocks: Author | Page | Book | BlogPost;
     };
     keywords: {
