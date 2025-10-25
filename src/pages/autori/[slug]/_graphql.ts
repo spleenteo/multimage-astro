@@ -15,7 +15,7 @@ export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
       picture {
         url
         alt
-        responsiveImage(imgixParams: { fit: crop, w: 960, h: 960, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, h: 960, auto: format }) {
           ...ResponsiveImageFragment
         }
       }
@@ -53,7 +53,7 @@ export const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
         colors {
           hex
         }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 520, auto: format }) {
           ...ResponsiveImageFragment
         }
       }

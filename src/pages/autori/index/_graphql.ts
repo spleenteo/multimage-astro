@@ -25,7 +25,7 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
       picture {
         url
         alt
-        responsiveImage(imgixParams: { fit: crop, w: 600, h: 600, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }) {
           ...ResponsiveImageFragment
         }
       }

@@ -7,7 +7,7 @@ export const COLLECTION_CARD_FRAGMENT = /* GraphQL */ `
     logo {
       url
       alt
-      responsiveImage(imgixParams: { fit: max, w: 320, auto: format }) {
+      responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 320, auto: format }) {
         ...ResponsiveImageFragment
       }
     }

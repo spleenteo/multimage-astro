@@ -13,7 +13,7 @@ export const COLLECTION_DETAIL_QUERY = /* GraphQL */ `
       logo {
         url
         alt
-        responsiveImage(imgixParams: { fit: max, w: 320, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 320, auto: format }) {
           ...ResponsiveImageFragment
         }
       }
@@ -45,7 +45,7 @@ export const COLLECTION_RELATED_BOOKS_QUERY = /* GraphQL */ `
         colors {
           hex
         }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 520, auto: format }) {
           ...ResponsiveImageFragment
         }
       }

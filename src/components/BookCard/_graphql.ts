@@ -13,7 +13,7 @@ export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
       colors {
         hex
       }
-      responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
+      responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 520, auto: format }) {
         ...ResponsiveImageFragment
       }
     }

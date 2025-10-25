@@ -11,7 +11,7 @@ export const BANNER_SECTION_FRAGMENT = /* GraphQL */ `
       colors {
         hex
       }
-      responsiveImage(imgixParams: { fit: max, w: 600, auto: format }) {
+      responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 600, auto: format }) {
         ...ResponsiveImageFragment
       }
     }

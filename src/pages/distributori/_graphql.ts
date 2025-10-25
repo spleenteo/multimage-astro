@@ -37,7 +37,7 @@ export const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
         alt
         width
         height
-        responsiveImage(imgixParams: { fit: max, w: 280, auto: format }) {
+        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 280, auto: format }) {
           ...ResponsiveImageFragment
         }
       }
