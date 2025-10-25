@@ -1,0 +1,31 @@
+@tailwind components;
+
+@layer components {
+  .root {
+    @apply space-y-4;
+  }
+
+  .title {
+    @apply text-2xl font-serif text-brand-charcoal;
+  }
+
+  .empty {
+    @apply bg-brand-mist/40 p-4 text-sm text-brand-slate;
+  }
+
+  .list {
+    @apply space-y-3;
+  }
+
+  .term {
+    @apply text-xs font-semibold uppercase tracking-wider text-brand-slate;
+  }
+
+  .definition {
+    @apply text-base text-brand-charcoal;
+  }
+
+  .link {
+    @apply hover:text-brand-navy;
+  }
+}

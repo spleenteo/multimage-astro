@@ -1,71 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import BookCard from '~/components/BookCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { BookRecordForCard } from '~/lib/books';
-import type { HighlightsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './_style.module.css';
+import { HIGHLIGHTS_PAGE_QUERY, type HighlightsPageQueryResult } from './_graphql';
 
 export const prerender = true;
-
-const HIGHLIGHTS_PAGE_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query HighlightsPage {
-    highlightsIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allBooks(
-      orderBy: printYear_DESC
-      first: 500
-      filter: { _status: { eq: published }, archive: { eq: false }, highlight: { eq: true } }
-    ) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      printYear
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      price
-      archive
-    }
-  }
-`;
-type HighlightsPageQueryResult = {
-  highlightsIndex: (HighlightsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-  allBooks: BookRecordForCard[];
-};
 
 const data = await executeQuery<HighlightsPageQueryResult>(HIGHLIGHTS_PAGE_QUERY);
 
@@ -77,23 +21,21 @@ const seo = withFallbackSeo(data.highlightsIndex?._seoMetaTags, {
   description: heroDescription,
 });
 
-const highlights = mapBooksToCards(data.allBooks);
+const highlights = mapBooksToCards(data.allBooks ?? []);
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
-    <div class="mx-auto max-w-5xl">
+  <section class={styles.section}>
+    <div class={styles.intro}>
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
     {
       highlights.length === 0 ? (
-        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-          Stiamo selezionando i titoli in evidenza.
-        </p>
+        <p class={styles.empty}>Stiamo selezionando i titoli in evidenza.</p>
       ) : (
-        <div class="mx-auto max-w-6xl">
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div class={styles.gridWrapper}>
+          <div class={styles.booksGrid}>
             {highlights.map((book) => (
               <BookCard
                 title={book.title}

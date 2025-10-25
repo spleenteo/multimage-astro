@@ -1,0 +1,67 @@
+@tailwind components;
+
+@layer components {
+  .root {
+    @apply flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  }
+
+  .heroPanel {
+    @apply relative flex w-full justify-center p-16 transition duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-soft;
+  }
+
+  .formatRibbon {
+    @apply pointer-events-none absolute left-6 top-6 z-10 inline-flex -rotate-12;
+  }
+
+  .archiveRibbon {
+    @apply pointer-events-none absolute right-6 top-6 z-10 inline-flex rotate-12;
+  }
+
+  .badge {
+    @apply bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft;
+  }
+
+  .archiveBadge {
+    @apply bg-brand-slate px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft;
+  }
+
+  .coverWrapper {
+    @apply relative flex items-center justify-center;
+  }
+
+  .coverImage {
+    @apply relative z-10 mx-auto h-56 w-auto max-w-[240px] object-contain;
+  }
+
+  .coverFallback {
+    @apply flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate;
+  }
+
+  .dropShadow {
+    @apply pointer-events-none absolute left-1/2 top-full z-0 h-12 w-64 -translate-x-1/2 -translate-y-6 blur-[30px] transition duration-300 ease-out group-hover:opacity-10;
+  }
+
+  .body {
+    @apply flex flex-1 flex-col gap-3 px-6 pb-6 pt-8 text-left;
+  }
+
+  .title {
+    @apply text-2xl font-serif text-brand-navy;
+  }
+
+  .subtitle {
+    @apply text-sm font-medium uppercase tracking-wide text-brand-slate;
+  }
+
+  .authors {
+    @apply text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80;
+  }
+
+  .summary {
+    @apply text-sm leading-relaxed text-brand-charcoal/70;
+  }
+
+  .price {
+    @apply text-sm font-semibold uppercase tracking-wide text-brand-navy;
+  }
+}

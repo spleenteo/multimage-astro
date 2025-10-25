@@ -1,0 +1,35 @@
+@tailwind components;
+
+@layer components {
+  .layout {
+    @apply space-y-12;
+  }
+
+  .menu {
+    @apply sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate shadow-soft backdrop-blur-sm;
+  }
+
+  .menuLink {
+    @apply transition duration-150 hover:text-brand-navy;
+  }
+
+  .sectionWrapper {
+    @apply mx-auto max-w-5xl space-y-16;
+  }
+
+  .regionHeader {
+    @apply flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft;
+  }
+
+  .regionTitle {
+    @apply text-2xl font-serif uppercase tracking-[0.2em] text-brand-navy;
+  }
+
+  .backLink {
+    @apply text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy;
+  }
+
+  .regionList {
+    @apply space-y-8;
+  }
+}

@@ -1,9 +1,10 @@
 ---
 import { Image } from '@datocms/astro/Image';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import AlternateFormatsList from '~/components/AlternateFormatsList.astro';
-import DetailList from '~/components/DetailList.astro';
-import AuthorsSection from '~/components/AuthorsSection.astro';
+import AlternateFormatsList from '~/components/AlternateFormatsList';
+import DetailList from '~/components/DetailList';
+import AuthorsSection from '~/components/AuthorsSection';
+import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import {
@@ -17,206 +18,22 @@ import {
 } from '~/lib/books';
 import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { AssetImage, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './_style.module.css';
+import {
+  BOOK_DETAIL_QUERY,
+  BOOK_AUTHORS_BOOKS_QUERY,
+  BOOK_ALTERNATE_FORMATS_QUERY,
+  BOOK_SLUGS_QUERY,
+  type BookDetailQueryResult,
+  type BookAuthorsBooksResult,
+  type BookAlternateFormatsResult,
+  type BookSlugsResult,
+} from './_graphql';
 
 export const prerender = true;
 
-const BOOK_DETAIL_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query BookDetailPage($slug: String) {
-    book(filter: { slug: { eq: $slug } }) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      review
-      isbn
-      edition
-      pages
-      format
-      price
-      printYear
-      firstPrintYear
-      coverDesigner
-      epubUrl
-      archive
-      coverImage {
-        url
-        alt
-        responsiveImage(imgixParams: { fit: max, w: 960, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      authors {
-        id
-        fullName
-        alias
-        slug
-        biography
-        picture {
-          url
-          alt
-          responsiveImage(imgixParams: { fit: crop, w: 640, h: 640, auto: format }) {
-            ...ResponsiveImageFragment
-          }
-        }
-      }
-      license {
-        name
-        code
-      }
-      collection {
-        id
-        name
-        slug
-      }
-      reprints {
-        __typename
-        ... on ReprintRecord {
-          number
-          circulation
-          year
-        }
-      }
-      originalLang
-      originalTitle
-      translator
-      layoutArtist
-      dimensions
-      illustrator
-      editedBy
-      seo: _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-  }
-`;
-
-const BOOK_AUTHORS_BOOKS_QUERY = /* GraphQL */ `
-  query BookAuthorsBooks($authorIds: [ItemId!]) {
-    allBooks(filter: { authors: { anyIn: $authorIds } }, first: 500) {
-      id
-      authors {
-        id
-      }
-    }
-  }
-`;
-
-const BOOK_ALTERNATE_FORMATS_QUERY = /* GraphQL */ `
-  query BookAlternateFormats($title: String, $excludeSlug: SlugFilter) {
-    allBooks(
-      filter: { title: { eq: $title }, slug: $excludeSlug }
-      orderBy: format_ASC
-      first: 12
-    ) {
-      id
-      title
-      slug
-      format
-      price
-      epubUrl
-    }
-  }
-`;
-
-type BookDetailRecord = {
-  id: string;
-  title: string;
-  subtitle: string | null;
-  slug: string;
-  promo: string | null;
-  description: string | null;
-  review: string | null;
-  isbn: string | null;
-  edition: number | null;
-  pages: number | null;
-  format: string | null;
-  price: number | null;
-  printYear: string | null;
-  firstPrintYear: number | null;
-  coverDesigner: string | null;
-  epubUrl: string | null;
-  archive: boolean | null;
-  coverImage: AssetImage | null;
-  authors: Array<{
-    id: string;
-    fullName: string | null;
-    alias: string | null;
-    slug: string | null;
-    biography: string | null;
-    picture: AssetImage | null;
-  }>;
-  license: {
-    name: string | null;
-    code: string | null;
-  } | null;
-  collection: {
-    id: string;
-    name: string | null;
-    slug: string | null;
-  } | null;
-  reprints: Array<{
-    __typename: string;
-    number: number | null;
-    circulation: number | null;
-    year: string | null;
-  }>;
-  originalLang: string | null;
-  originalTitle: string | null;
-  translator: string | null;
-  layoutArtist: string | null;
-  dimensions: string | null;
-  illustrator: string | null;
-  editedBy: boolean | null;
-  seo: SeoMetaTag[] | null;
-};
-
-type BookDetailQueryResult = {
-  book: BookDetailRecord | null;
-};
-
-type BookAuthorsBooksResult = {
-  allBooks: Array<{
-    id: string;
-    authors: Array<{
-      id: string;
-    }>;
-  }>;
-};
-
-type BookAlternateFormatsResult = {
-  allBooks: Array<{
-    id: string;
-    title: string;
-    slug: string;
-    format: string | null;
-    price: number | null;
-    epubUrl: string | null;
-  }>;
-};
-
-type BookSlugsResult = {
-  allBooks: Array<{
-    slug: string | null;
-  }>;
-};
-
 export async function getStaticPaths() {
-  const slugsQuery = /* GraphQL */ `
-    query BookSlugsForStaticPaths {
-      allBooks(orderBy: title_ASC, first: 500) {
-        slug
-      }
-    }
-  `;
-
-  const data = await executeQuery<BookSlugsResult>(slugsQuery);
+  const data = await executeQuery<BookSlugsResult>(BOOK_SLUGS_QUERY);
 
   return (data.allBooks ?? [])
     .map((book) => book.slug)
@@ -295,6 +112,20 @@ const promoText = toPlainText(book.promo);
 const formatValue = normalizeText(book.format);
 const isArchived = book.archive === true;
 const isEbookFormat = formatValue?.toLowerCase() === 'ebook';
+
+const primaryCtaLabel = [
+  formattedPrice,
+  formatValue ? `Formato ${formatValue}` : null,
+  isEbookFormat ? 'Scarica' : 'Ordina',
+]
+  .filter(Boolean)
+  .join(' · ');
+
+const primaryCtaHref = isEbookFormat && book.epubUrl ? book.epubUrl : '/info/ordinare';
+const primaryCtaTarget = isEbookFormat && book.epubUrl ? '_blank' : undefined;
+const primaryCtaRel = isEbookFormat && book.epubUrl ? 'noopener noreferrer' : undefined;
+const showPrimaryCta =
+  (isEbookFormat && Boolean(book.epubUrl)) || (!isEbookFormat && (formattedPrice || formatValue));
 
 const alternateFormatsRaw = (alternateFormatsData.allBooks ?? []).filter(
   (alt) => alt.slug !== book.slug,
@@ -455,9 +286,9 @@ const seo = withFallbackSeo(book.seo, {
 
 <BaseLayout seo={seo}>
   <article class="space-y-12">
-    <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start">
-      <div class="overflow-hidden bg-white/95 shadow-soft">
-        <div class="bg-brand-mist">
+    <div class={styles.heroGrid}>
+      <div class={styles.coverPanel}>
+        <div class={styles.coverFrame}>
           {
             coverResponsiveImage ? (
               <Image
@@ -474,7 +305,7 @@ const seo = withFallbackSeo(book.seo, {
         </div>
       </div>
 
-      <div class="border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12">
+      <div class={styles.detailCard}>
         <div class="flex flex-col gap-4">
           <div class="space-y-2">
             <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
@@ -535,33 +366,25 @@ const seo = withFallbackSeo(book.seo, {
                   ) : null}
 
                   <div class="flex flex-wrap gap-3">
-                    {(isEbookFormat && book.epubUrl) ||
-                    (!isEbookFormat && (formattedPrice || formatValue)) ? (
-                      <a
-                        href={isEbookFormat && book.epubUrl ? book.epubUrl : '/info/ordinare'}
-                        target={isEbookFormat && book.epubUrl ? '_blank' : undefined}
-                        rel={isEbookFormat && book.epubUrl ? 'noopener noreferrer' : undefined}
-                        class="btn-primary"
+                    {showPrimaryCta && primaryCtaLabel.length > 0 ? (
+                      <Button
+                        href={primaryCtaHref}
+                        target={primaryCtaTarget ?? undefined}
+                        rel={primaryCtaRel ?? undefined}
                       >
-                        {[
-                          formattedPrice,
-                          formatValue ? `Formato ${formatValue}` : null,
-                          isEbookFormat ? 'Scarica' : 'Ordina',
-                        ]
-                          .filter(Boolean)
-                          .join(' · ')}
-                      </a>
+                        {primaryCtaLabel}
+                      </Button>
                     ) : null}
 
                     {!isEbookFormat && book.epubUrl ? (
-                      <a
+                      <Button
                         href={book.epubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="btn-outline"
+                        variant="outline"
                       >
                         Scarica eBook
-                      </a>
+                      </Button>
                     ) : null}
                   </div>
 
@@ -576,7 +399,7 @@ const seo = withFallbackSeo(book.seo, {
 
     {
       reviewHtml ? (
-        <section class="mx-auto max-w-4xl space-y-6 bg-white/95 p-8 shadow-soft">
+        <section class={styles.reviewSection}>
           <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
           <div
             class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
@@ -588,13 +411,11 @@ const seo = withFallbackSeo(book.seo, {
 
     <AuthorsSection title={authorsSectionTitle} authors={authorsCards} />
 
-    <section
-      class="mx-auto max-w-6xl overflow-hidden border border-white/70 bg-white/95 shadow-soft"
-    >
+    <section class={styles.detailsSection}>
       <div class="bg-brand-mist/60 px-6 py-6 text-center sm:px-12">
         <h2 class="text-3xl font-serif text-brand-navy">Dettagli</h2>
       </div>
-      <div class="grid gap-8 px-6 py-10 sm:px-12 md:grid-cols-2">
+      <div class={styles.detailsGrid}>
         <DetailList title="Dettagli edizione" items={editionDetails} />
         <DetailList title="Dettagli grafica" items={graphicsDetails} />
       </div>

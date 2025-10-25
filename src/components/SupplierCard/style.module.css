@@ -1,0 +1,47 @@
+@tailwind components;
+
+@layer components {
+  .card {
+    @apply flex flex-col gap-6 rounded-[2rem] border border-white/70 bg-white/95 px-6 py-8 shadow-soft transition duration-150 ease-out hover:-translate-y-1 hover:shadow-xl md:px-10 md:py-10;
+  }
+
+  .body {
+    @apply flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10;
+  }
+
+  .descriptionBlock {
+    @apply flex-1 space-y-5;
+  }
+
+  .location {
+    @apply text-xs font-semibold uppercase tracking-[0.4em] text-brand-sky;
+  }
+
+  .name {
+    @apply text-3xl font-serif uppercase tracking-[0.08em] text-brand-navy;
+  }
+
+  .description {
+    @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal;
+  }
+
+  .addressRow {
+    @apply flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-brand-charcoal/75;
+  }
+
+  .contactsRow {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-charcoal/70;
+  }
+
+  .logoOuter {
+    @apply flex shrink-0 items-start justify-end;
+  }
+
+  .logoFrame {
+    @apply rounded-3xl bg-white/80 px-4 py-3 shadow-inner;
+  }
+
+  .logoImage {
+    @apply h-24 w-36 max-w-[220px] object-contain;
+  }
+}

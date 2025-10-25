@@ -1,0 +1,31 @@
+.heroSection {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  max-width: none;
+  transform: translateX(-50%);
+  overflow: hidden;
+  margin-top: -3rem;
+}
+
+@media (min-width: 768px) {
+  .heroSection {
+    margin-top: -4rem;
+  }
+}
+
+.heroContent {
+  backdrop-filter: blur(1px);
+}
+
+.featureCard {
+  transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+}
+
+.featureIcon {
+  box-shadow: 0 20px 36px rgba(15, 24, 42, 0.18);
+}

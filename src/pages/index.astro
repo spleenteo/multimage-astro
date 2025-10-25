@@ -1,16 +1,22 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import FeaturedBookHighlight from '~/components/FeaturedBookHighlight.astro';
-import BannerSection from '~/components/bannerSection.astro';
+import BannerSection from '~/components/BannerSection';
+import FeaturedBookHighlight from '~/components/FeaturedBookHighlight';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { toBookCard, formatBookPrice } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
-import type { BookRecordForCard } from '~/lib/books';
-import type { AssetColor, HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
+import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
+import styles from './index/_style.module.css';
+import {
+  HOME_PAGE_QUERY,
+  type HomeBannerBannerBlockRecord,
+  type HomeSingleBookBlockRecord,
+  type HomeBannerBlockRecord,
+  type HomePageQueryResult,
+} from './index/_graphql';
 
 export const prerender = true;
 
@@ -36,145 +42,6 @@ const FEATURE_LINKS = [
     description: 'Percorsi tematici. serie storiche, raccolte e.',
   },
 ] as const;
-
-const HOME_QUERY = /* GraphQL */ `
-  ${TAG_FRAGMENT}
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query HomePage {
-    home {
-      title
-      claim
-      heroImage {
-        alt
-        title
-        responsiveImage(
-          imgixParams: { fit: crop, w: 1920, h: 1080, auto: format, crop: focalpoint }
-        ) {
-          ...ResponsiveImageFragment
-        }
-      }
-      _seoMetaTags {
-        ...TagFragment
-      }
-      banners {
-        __typename
-        ... on BannerRecord {
-          id
-          title
-          content
-          link
-          imagePosition
-          featuredImage {
-            alt
-            title
-            colors {
-              hex
-            }
-            responsiveImage(imgixParams: { fit: max, w: 600, auto: format }) {
-              ...ResponsiveImageFragment
-            }
-          }
-        }
-        ... on SingleBookRecord {
-          id
-          book {
-            id
-            title
-            subtitle
-            slug
-            promo
-            description
-            coverImage {
-              url
-              alt
-              title
-              colors {
-                hex
-              }
-              responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-                ...ResponsiveImageFragment
-              }
-            }
-            authors {
-              id
-              fullName
-              alias
-              slug
-              picture {
-                alt
-                responsiveImage(
-                  imgixParams: { fit: crop, w: 220, h: 220, auto: format, crop: faces }
-                ) {
-                  ...ResponsiveImageFragment
-                }
-              }
-            }
-            license {
-              name
-              code
-            }
-            format
-            price
-            printYear
-            archive
-            collection {
-              id
-              name
-              slug
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-type HomeBannerBannerBlockRecord = {
-  __typename: 'BannerRecord';
-  id: string;
-  title: string | null;
-  content: string | null;
-  link: string | null;
-  imagePosition: 'left' | 'right' | null;
-  featuredImage: {
-    alt: string | null;
-    title: string | null;
-    colors: AssetColor[] | null;
-    responsiveImage: ResponsiveImage | null;
-  } | null;
-};
-
-type HomeSingleBookBlockRecord = {
-  __typename: 'SingleBookRecord';
-  id: string;
-  book:
-    | (BookRecordForCard & {
-        collection?: {
-          id: string;
-          name: string | null;
-          slug: string | null;
-        } | null;
-        coverImage: {
-          alt: string | null;
-          title: string | null;
-          colors: AssetColor[] | null;
-          responsiveImage: ResponsiveImage | null;
-        } | null;
-        authors: Array<{
-          id: string;
-          fullName: string | null;
-          alias: string | null;
-          slug: string | null;
-          picture: {
-            alt: string | null;
-            responsiveImage: ResponsiveImage | null;
-          } | null;
-        }> | null;
-      })
-    | null;
-};
-
-type HomeBannerBlockRecord = HomeBannerBannerBlockRecord | HomeSingleBookBlockRecord;
 
 type HomeBannerSectionData = {
   id: string;
@@ -217,16 +84,8 @@ type HomeBannerEntry =
   | { kind: 'banner'; id: string; data: HomeBannerSectionData }
   | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData };
 
-type HomeQueryResult = {
-  home:
-    | (HomeRecord & {
-        _seoMetaTags: SeoMetaTag[] | null;
-        banners: HomeBannerBlockRecord[] | null;
-      })
-    | null;
-};
+const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY);
 
-const { home } = await executeQuery<HomeQueryResult>(HOME_QUERY);
 const defaultTitle = 'La casa editrice dei diritti umani';
 const defaultClaimHtml = `<p>Multimage promuove libri, autori e iniziative che raccontano i diritti umani, la nonviolenza e le storie spesso dimenticate. Questa nuova applicazione Astro riprende colori e tipografia dell'esperienza originale per offrire una base moderna e accessibile.</p>`;
 
@@ -245,15 +104,16 @@ const heroImageData = heroResponsiveImage
     }
   : null;
 
-const bannerBlocks = home?.banners ?? [];
+const bannerBlocks: HomeBannerBlockRecord[] = home?.banners ?? [];
 const homeBannerEntries = bannerBlocks
   .map<HomeBannerEntry | null>((block) => {
     if (block?.__typename === 'BannerRecord') {
-      const trimmedTitle = block.title?.trim() ?? null;
-      const contentHtml = toRichTextHtml(block.content) ?? null;
-      const link = block.link?.trim() ?? null;
-      const position = block.imagePosition === 'left' ? 'left' : 'right';
-      const featuredImage = block.featuredImage ?? null;
+      const bannerBlock = block as HomeBannerBannerBlockRecord;
+      const trimmedTitle = bannerBlock.title?.trim() ?? null;
+      const contentHtml = toRichTextHtml(bannerBlock.content) ?? null;
+      const link = bannerBlock.link?.trim() ?? null;
+      const position = bannerBlock.imagePosition === 'left' ? 'left' : 'right';
+      const featuredImage = bannerBlock.featuredImage ?? null;
       const responsiveImage = featuredImage?.responsiveImage ?? null;
       const fallbackAlt = featuredImage?.alt?.trim() ?? trimmedTitle ?? 'Illustrazione';
       const fallbackTitle = featuredImage?.title?.trim() ?? trimmedTitle ?? fallbackAlt;
@@ -267,9 +127,9 @@ const homeBannerEntries = bannerBlocks
 
       return {
         kind: 'banner',
-        id: block.id,
+        id: bannerBlock.id,
         data: {
-          id: block.id,
+          id: bannerBlock.id,
           title: trimmedTitle,
           contentHtml,
           link,
@@ -281,12 +141,13 @@ const homeBannerEntries = bannerBlocks
     }
 
     if (block?.__typename === 'SingleBookRecord') {
-      const singleBook = block.book ? toBookCard(block.book) : null;
+      const singleBookBlock = block as HomeSingleBookBlockRecord;
+      const singleBook = singleBookBlock.book ? toBookCard(singleBookBlock.book) : null;
       if (!singleBook) {
         return null;
       }
 
-      const collection = block.book?.collection ?? null;
+      const collection = singleBookBlock.book?.collection ?? null;
       const collectionName = collection?.name?.trim() ?? null;
       const collectionSlug = collection?.slug?.trim() ?? null;
       const collectionHref = collectionSlug ? `/collane/${collectionSlug}` : null;
@@ -294,9 +155,9 @@ const homeBannerEntries = bannerBlocks
       const priceLabel = formatBookPrice(singleBook.price ?? null);
       const authorsLabel = formatAuthorNames(singleBook.authors ?? []);
       const bookLink = `/libri/${singleBook.slug}`;
-      const responsiveImage = block.book?.coverImage?.responsiveImage ?? null;
-      const fallbackAlt = block.book?.coverImage?.alt?.trim() ?? singleBook.title;
-      const fallbackTitle = block.book?.coverImage?.title?.trim() ?? fallbackAlt;
+      const responsiveImage = singleBookBlock.book?.coverImage?.responsiveImage ?? null;
+      const fallbackAlt = singleBookBlock.book?.coverImage?.alt?.trim() ?? singleBook.title;
+      const fallbackTitle = singleBookBlock.book?.coverImage?.title?.trim() ?? fallbackAlt;
       const coverImage = responsiveImage
         ? {
             ...responsiveImage,
@@ -304,7 +165,7 @@ const homeBannerEntries = bannerBlocks
             title: responsiveImage.title ?? fallbackTitle,
           }
         : null;
-      const primaryAuthorSource = block.book?.authors?.[0] ?? null;
+      const primaryAuthorSource = singleBookBlock.book?.authors?.[0] ?? null;
       const authorName = primaryAuthorSource ? getAuthorDisplayName(primaryAuthorSource) : null;
       const authorPicture = primaryAuthorSource?.picture?.responsiveImage ?? null;
       const authorPictureAlt =
@@ -328,7 +189,7 @@ const homeBannerEntries = bannerBlocks
 
       return {
         kind: 'singleBook',
-        id: block.id,
+        id: singleBookBlock.id,
         data: {
           book: {
             title: singleBook.title,
@@ -342,7 +203,7 @@ const homeBannerEntries = bannerBlocks
             authorsLabel,
           },
           coverImage,
-          coverColors: block.book?.coverImage?.colors ?? null,
+          coverColors: singleBookBlock.book?.coverImage?.colors ?? null,
           collectionLabel,
           collectionHref,
           label: 'Libro consigliato',
@@ -364,7 +225,10 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
 <BaseLayout seo={seo}>
   <div class="space-y-12">
     <section
-      class="relative left-1/2 w-screen max-w-none -translate-x-1/2 overflow-hidden bg-brand-charcoal text-white shadow-soft min-h-[45vh] mt-[-3rem] md:mt-[-4rem]"
+      class:list={[
+        styles.heroSection,
+        'relative overflow-hidden bg-brand-charcoal text-white shadow-soft min-h-[45vh]',
+      ]}
     >
       {
         heroImageData ? (
@@ -382,7 +246,10 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
       }
       <div class="absolute inset-0 bg-black/45" aria-hidden="true"></div>
       <div
-        class="relative z-10 mx-auto flex min-h-[360px] w-full max-w-5xl flex-col items-center justify-center gap-6 px-6 py-24 text-center md:min-h-[45vh] md:px-12"
+        class:list={[
+          'relative z-10 mx-auto flex min-h-[360px] w-full max-w-5xl flex-col items-center justify-center gap-6 px-6 py-24 text-center md:min-h-[45vh] md:px-12',
+          styles.heroContent,
+        ]}
       >
         <h1 class="text-4xl font-serif tracking-tight text-white md:text-5xl lg:text-6xl">
           {heroTitle}
@@ -432,10 +299,18 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
           FEATURE_LINKS.map(({ href, title, description, icon }) => (
             <a
               href={href}
-              class="group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:-translate-y-1 hover:bg-white"
+              class:list={[
+                styles.featureCard,
+                'group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:bg-white',
+              ]}
             >
               <div class="space-y-3">
-                <span class="inline-flex h-12 w-12 items-center justify-center bg-white text-brand-navy shadow-soft">
+                <span
+                  class:list={[
+                    styles.featureIcon,
+                    'inline-flex h-12 w-12 items-center justify-center bg-white text-brand-navy',
+                  ]}
+                >
                   <iconify-icon icon={icon} width="24" height="24" aria-hidden="true" />
                 </span>
                 <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">

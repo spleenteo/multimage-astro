@@ -1,0 +1,165 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { SupplierCardViewModel } from '~/lib/suppliers';
+import styles from './style.module.css';
+
+type Props = SupplierCardViewModel & {
+  className?: string;
+};
+
+const {
+  name,
+  region,
+  city,
+  address,
+  googleMapsUrl,
+  telephone,
+  email,
+  website,
+  descriptionHtml,
+  logo,
+  className = '',
+}: Props = Astro.props;
+
+const locationLabel = [region, city].filter((value) => value && value.length > 0).join(', ');
+const hasAddress = Boolean(address);
+const hasContacts = Boolean(
+  (telephone ?? '').length > 0 || (email ?? '').length > 0 || (website ?? '').length > 0,
+);
+const hasDescription = Boolean(descriptionHtml);
+
+function normalizeWebsite(raw: string | null) {
+  if (!raw) {
+    return null;
+  }
+
+  const trimmed = raw.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return `https://${trimmed}`;
+}
+
+const websiteHref = normalizeWebsite(website);
+
+function buildWebsiteLabel(url: string | null) {
+  if (!url) {
+    return null;
+  }
+
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.replace(/^www\./i, '').toUpperCase();
+  } catch (error) {
+    return url.replace(/^https?:\/\//i, '').toUpperCase();
+  }
+}
+
+const websiteLabel = buildWebsiteLabel(websiteHref);
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
+---
+
+---
+
+<article class:list={[styles.card, className]}>
+  <div class={styles.body}>
+    <div class={styles.descriptionBlock}>
+      {
+        locationLabel ? (
+          <p class={styles.location}>
+            {locationLabel}
+          </p>
+        ) : null
+      }
+
+      <h3 class={styles.name}>{name}</h3>
+
+      {
+        hasDescription ? (
+          <div class={styles.description} set:html={descriptionHtml} />
+        ) : null
+      }
+
+      {
+        hasAddress ? (
+          <div class={styles.addressRow}>
+            <iconify-icon
+              icon="iconoir:pin-alt"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              class="text-brand-sky"
+            />
+            {googleMapsUrl ? (
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-brand-sky transition hover:text-brand-navy"
+              >
+                <span>{address}</span>
+                <iconify-icon
+                  icon="iconoir:external-link"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                />
+              </a>
+            ) : (
+              <span>{address}</span>
+            )}
+          </div>
+        ) : null
+      }
+
+      {
+        hasContacts ? (
+          <div class={styles.contactsRow}>
+            <iconify-icon
+              icon="iconoir:link"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              class="text-brand-sky"
+            />
+            {telephone ? <span>{telephone}</span> : null}
+            {telephone && (email || websiteHref) ? <span class="text-brand-slate">•</span> : null}
+            {email ? (
+              <a href={`mailto:${email}`} class="text-brand-sky transition hover:text-brand-navy">
+                {email}
+              </a>
+            ) : null}
+            {email && websiteHref ? <span class="text-brand-slate">•</span> : null}
+            {websiteHref ? (
+              <a
+                href={websiteHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-brand-sky transition hover:text-brand-navy"
+              >
+                {websiteLabel ?? 'SITO WEB'}
+              </a>
+            ) : null}
+          </div>
+        ) : null
+      }
+    </div>
+
+    {
+      logoResponsiveImage ? (
+        <div class={styles.logoOuter}>
+          <div class={styles.logoFrame}>
+            <Image data={logoResponsiveImage} sizes="(min-width: 1024px) 180px, 40vw" imgClass={styles.logoImage} />
+          </div>
+        </div>
+      ) : null
+    }
+  </div>
+</article>

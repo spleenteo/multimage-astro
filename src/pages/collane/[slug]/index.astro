@@ -1,108 +1,25 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import CollectionDetailHero from '~/components/CollectionDetailHero.astro';
-import BookCard from '~/components/BookCard.astro';
+import CollectionDetailHero from '~/components/CollectionDetailHero';
+import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { BookRecordForCard } from '~/lib/books';
-import type { CollectionSummaryRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './_style.module.css';
+import {
+  COLLECTION_DETAIL_QUERY,
+  COLLECTION_RELATED_BOOKS_QUERY,
+  COLLECTION_SLUGS_QUERY,
+  type CollectionDetailResult,
+  type CollectionRelatedBooksResult,
+  type CollectionSlugsResult,
+} from './_graphql';
 
 export const prerender = true;
 
-const COLLECTION_DETAIL_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query CollectionDetailPage($slug: String) {
-    collection(filter: { slug: { eq: $slug } }) {
-      id
-      name
-      description
-      slug
-      logo {
-        url
-        alt
-        responsiveImage(imgixParams: { fit: max, w: 320, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-  }
-`;
-
-const COLLECTION_RELATED_BOOKS_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query CollectionRelatedBooks($collectionId: ItemId) {
-    _allBooksMeta(filter: { collection: { eq: $collectionId } }) {
-      count
-    }
-    allBooks(filter: { collection: { eq: $collectionId } }, orderBy: title_ASC, first: 60) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      price
-      archive
-    }
-  }
-`;
-
-type CollectionDetailResult = {
-  collection: (CollectionSummaryRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-};
-
-type CollectionRelatedBooksResult = {
-  _allBooksMeta: {
-    count: number;
-  } | null;
-  allBooks: BookRecordForCard[];
-};
-
-type CollectionSlugsResult = {
-  allCollections: Array<{
-    slug: string | null;
-  }>;
-};
-
 export async function getStaticPaths() {
-  const slugsQuery = /* GraphQL */ `
-    query CollectionSlugsForStaticPaths {
-      allCollections(orderBy: name_ASC) {
-        slug
-      }
-    }
-  `;
-
-  const data = await executeQuery<CollectionSlugsResult>(slugsQuery);
+  const data = await executeQuery<CollectionSlugsResult>(COLLECTION_SLUGS_QUERY);
 
   return (data.allCollections ?? [])
     .map((collection) => collection.slug)
@@ -145,7 +62,7 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
 ---
 
 <BaseLayout seo={seo}>
-  <article class="space-y-12">
+  <article class={styles.layout}>
     <CollectionDetailHero
       name={collectionName}
       booksCount={booksCount}
@@ -153,27 +70,29 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
       logo={collection.logo}
     />
 
-    {
-      relatedBooks.length === 0 ? (
-        <p class="text-brand-slate">Nessun libro presente in questa collana.</p>
-      ) : (
-        <div class="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-          {relatedBooks.map((book) => (
-            <BookCard
-              title={book.title}
-              slug={book.slug}
-              subtitle={book.subtitle}
-              summary={book.summary}
-              coverImage={book.coverImage}
-              authors={book.authors}
-              license={book.license}
-              format={book.format}
-              price={book.price}
-              isArchived={book.isArchived}
-            />
-          ))}
-        </div>
-      )
-    }
+    <section class={styles.booksSection}>
+      {
+        relatedBooks.length === 0 ? (
+          <p class="text-sm text-brand-slate">Nessun libro presente in questa collana.</p>
+        ) : (
+          <div class={styles.booksGrid}>
+            {relatedBooks.map((book) => (
+              <BookCard
+                title={book.title}
+                slug={book.slug}
+                subtitle={book.subtitle}
+                summary={book.summary}
+                coverImage={book.coverImage}
+                authors={book.authors}
+                license={book.license}
+                format={book.format}
+                price={book.price}
+                isArchived={book.isArchived}
+              />
+            ))}
+          </div>
+        )
+      }
+    </section>
   </article>
 </BaseLayout>

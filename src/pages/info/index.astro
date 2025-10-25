@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import InfoSection from '~/components/InfoSection.astro';
+import InfoSection from '~/components/InfoSection';
 import { withFallbackSeo } from '~/lib/seo';
+import styles from './_style.module.css';
 
 export const prerender = true;
 
@@ -13,11 +14,13 @@ const seo = withFallbackSeo([], {
 ---
 
 <BaseLayout seo={seo}>
-  <InfoSection
-    title="Info"
-    paragraphs={[
-      'Qui centralizzeremo le pagine istituzionali (chi siamo, contatti, carta etica) attualmente presenti nella copia statica. I contenuti verranno portati in formato Markdown o CMS.',
-    ]}
-    chip="Coming soon"
-  />
+  <div class={styles.wrapper}>
+    <InfoSection
+      title="Info"
+      paragraphs={[
+        'Qui centralizzeremo le pagine istituzionali (chi siamo, contatti, carta etica) attualmente presenti nella copia statica. I contenuti verranno portati in formato Markdown o CMS.',
+      ]}
+      chip="Coming soon"
+    />
+  </div>
 </BaseLayout>

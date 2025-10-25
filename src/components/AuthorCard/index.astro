@@ -1,0 +1,53 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import styles from './style.module.css';
+
+type Props = {
+  name: string;
+  slug: string;
+  alias?: string | null;
+  country?: string | null;
+  summary?: string | null;
+  booksCount: number;
+  picture?: AssetImage | null;
+};
+
+const { name, slug, alias, country, summary, booksCount, picture }: Props = Astro.props;
+const aliasLabel = alias?.trim() ?? null;
+const countryLabel = country?.trim() ?? null;
+const metaLabel = [aliasLabel, countryLabel].filter(Boolean).join(' · ');
+const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
+const summaryText = summary?.trim() ?? 'Biografia in aggiornamento.';
+const pictureResponsiveImage = picture?.responsiveImage
+  ? { ...picture.responsiveImage, alt: picture.responsiveImage.alt ?? name }
+  : null;
+---
+
+<a href={`/autori/${slug}`} class:list={[styles.root, 'group']}>
+  {
+    pictureResponsiveImage ? (
+      <div class={styles.imageWrapper}>
+        <Image
+          data={pictureResponsiveImage}
+          sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
+          imgClass={styles.image}
+        />
+      </div>
+    ) : (
+      <div class={styles.fallback}>Ritratto in arrivo</div>
+    )
+  }
+
+  <article class={styles.body}>
+    <div class="space-y-2">
+      <h3 class={styles.title}>{name}</h3>
+      {metaLabel ? <p class={styles.meta}>{metaLabel}</p> : null}
+      <p class={styles.books}>{booksLabel}</p>
+    </div>
+
+    <p class={styles.summary}>{summaryText}</p>
+
+    <p class={styles.cta}>Scopri il profilo →</p>
+  </article>
+</a>

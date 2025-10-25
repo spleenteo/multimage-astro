@@ -1,0 +1,78 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+import styles from './style.module.css';
+
+type Props = {
+  name: string;
+  label?: string;
+  booksLabel?: string | null;
+  link?: string | null;
+  image?: ResponsiveImageType | null;
+  imageAlt?: string | null;
+  class?: string;
+};
+
+const {
+  name,
+  label = 'Autore',
+  booksLabel = null,
+  link = null,
+  image = null,
+  imageAlt = name,
+  class: className = '',
+}: Props = Astro.props;
+
+const Wrapper = link ? 'a' : 'div';
+const wrapperProps =
+  Wrapper === 'a'
+    ? {
+        href: link ?? undefined,
+      }
+    : {};
+
+const authorInitials = name
+  .split(/\s+/)
+  .map((part) => part.charAt(0).toUpperCase())
+  .join('')
+  .slice(0, 2);
+const hasLink = Wrapper === 'a';
+---
+
+<Wrapper class:list={[styles.root, 'group', className]} {...wrapperProps}>
+  <div class={styles.avatar}>
+    {
+      image ? (
+        <Image
+          data={{ ...image, alt: image.alt ?? imageAlt ?? name }}
+          sizes="96px"
+          pictureClass="block h-full w-full"
+          imgClass="h-full w-full object-cover"
+        />
+      ) : (
+        <div class={styles.placeholder}>{authorInitials}</div>
+      )
+    }
+  </div>
+
+  <div class="flex flex-1 items-center justify-between gap-4 md:gap-6">
+    <div class="flex flex-col gap-1 text-left">
+      <p class={styles.copyLabel}>{label}</p>
+      <p class={styles.name}>{name}</p>
+      {
+        booksLabel ? <p class={styles.booksLabel}>{booksLabel}</p> : null
+      }
+    </div>
+    {
+      hasLink ? (
+        <iconify-icon
+          icon="iconoir:nav-arrow-right"
+          width="20"
+          height="20"
+          aria-hidden="true"
+          class={styles.icon}
+        />
+      ) : null
+    }
+  </div>
+</Wrapper>

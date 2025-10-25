@@ -1,0 +1,15 @@
+.highlight {
+  backdrop-filter: blur(8px);
+}
+
+.mediaPanel {
+  min-height: 280px;
+}
+
+.label {
+  letter-spacing: 0.2em;
+}
+
+.actions {
+  gap: 0.75rem;
+}

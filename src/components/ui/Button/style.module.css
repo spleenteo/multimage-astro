@@ -1,0 +1,23 @@
+@tailwind components;
+
+@layer components {
+  .root {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .primary {
+    @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange/40 hover:bg-brand-crimson;
+  }
+
+  .outline {
+    @apply border border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white focus-visible:ring-brand-orange/40;
+  }
+
+  .ghost {
+    @apply bg-transparent text-brand-navy hover:bg-brand-mist/70 focus-visible:ring-brand-navy/40;
+  }
+
+  .fullWidth {
+    @apply w-full;
+  }
+}

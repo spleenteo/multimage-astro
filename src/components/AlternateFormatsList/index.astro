@@ -1,0 +1,40 @@
+---
+import styles from './style.module.css';
+
+type AlternateFormat = {
+  id: string;
+  format: string;
+  price?: string | null;
+  href: string;
+  isExternal?: boolean;
+};
+
+type Props = {
+  formats: AlternateFormat[];
+};
+
+const { formats }: Props = Astro.props;
+---
+
+{
+  formats.length === 0 ? null : (
+    <div class={styles.root}>
+      <span class={styles.label}>Disponibile anche in</span>
+      <ul class={styles.list}>
+        {formats.map((format) => (
+          <li>
+            <a
+              href={format.href}
+              target={format.isExternal ? '_blank' : undefined}
+              rel={format.isExternal ? 'noopener noreferrer' : undefined}
+              class={styles.link}
+            >
+              {format.format}
+              {format.price ? ` (${format.price})` : null}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

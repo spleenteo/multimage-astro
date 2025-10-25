@@ -3,57 +3,24 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
+import styles from './_style.module.css';
+import { INFO_PAGE_QUERY, INFO_PAGE_SLUGS_QUERY } from './_graphql';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const prerender = true;
 
-const PAGE_DETAIL_QUERY = /* GraphQL */ `
-  query InfoPage($slug: String) {
-    page(filter: { slug: { eq: $slug } }) {
-      id
-      title
-      subtitle
-      slug
-      body
-      label
-      menu
-      seo {
-        title
-        description
-        image {
-          url
-          alt
-        }
-      }
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-  }
-`;
-
-type InfoPageQueryResult = {
+export type InfoPageQueryResult = {
   page: (PageRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
 };
 
-type InfoPageSlugsResult = {
+export type InfoPageSlugsResult = {
   allPages: Array<{
     slug: string | null;
   }>;
 };
 
 export async function getStaticPaths() {
-  const SLUGS_QUERY = /* GraphQL */ `
-    query InfoPageSlugs {
-      allPages(first: 200) {
-        slug
-      }
-    }
-  `;
-
-  const data = await executeQuery<InfoPageSlugsResult>(SLUGS_QUERY);
+  const data = await executeQuery<InfoPageSlugsResult>(INFO_PAGE_SLUGS_QUERY);
 
   return (data.allPages ?? [])
     .map((entry) => entry.slug)
@@ -67,7 +34,7 @@ if (!slug) {
   throw new Error('Missing info page slug');
 }
 
-const data = await executeQuery<InfoPageQueryResult>(PAGE_DETAIL_QUERY, {
+const data = await executeQuery<InfoPageQueryResult>(INFO_PAGE_QUERY, {
   variables: { slug },
 });
 
@@ -80,9 +47,7 @@ if (!page) {
 const heroTitle = page.title ?? 'Info';
 const heroSubtitle = toPlainText(page.subtitle ?? null);
 const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-
 const bodyHtml = toRichTextHtml(page.body ?? null);
-
 const sectionLabel = toPlainText(page.label ?? null) || 'Info Multimage';
 
 const seo = withFallbackSeo(page._seoMetaTags, {
@@ -92,28 +57,19 @@ const seo = withFallbackSeo(page._seoMetaTags, {
 ---
 
 <BaseLayout seo={seo}>
-  <article class="space-y-12">
-    <section class="border border-white/70 bg-white/95 py-12 shadow-soft">
-      <div class="mx-auto flex max-w-4xl flex-col gap-4 px-6 text-center md:gap-6">
-        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate">
-          {sectionLabel}
-        </p>
-        <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{heroTitle}</h1>
-        {
-          heroDescription ? (
-            <p class="text-base leading-relaxed text-brand-charcoal/80">{heroDescription}</p>
-          ) : null
-        }
+  <article class={styles.layout}>
+    <section class={styles.heroSection}>
+      <div class={styles.heroContent}>
+        <p class={styles.label}>{sectionLabel}</p>
+        <h1 class={styles.title}>{heroTitle}</h1>
+        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
       </div>
     </section>
 
-    <section class="mx-auto max-w-4xl space-y-6 bg-white/95 px-6 py-10 shadow-soft">
+    <section class={styles.bodySection}>
       {
         bodyHtml ? (
-          <div
-            class="space-y-5 text-base leading-relaxed text-brand-charcoal/90 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-serif [&_h2]:text-brand-navy [&_h3]:mt-8 [&_h3]:text-2xl [&_h3]:font-serif [&_h3]:text-brand-navy [&_h4]:mt-6 [&_h4]:text-xl [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:pl-4 [&_blockquote]:italic"
-            set:html={bodyHtml}
-          />
+          <div class={styles.bodyContent} set:html={bodyHtml} />
         ) : (
           <p class="text-sm text-brand-slate">
             I contenuti di questa pagina saranno disponibili a breve.

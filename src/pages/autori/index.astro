@@ -1,63 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import AuthorCard from '~/components/AuthorCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import AuthorCard from '~/components/AuthorCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { AuthorSummaryRecord, AuthorsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './index/_style.module.css';
+import { AUTHORS_PAGE_QUERY, type AuthorsPageQueryResult } from './index/_graphql';
 
 export const prerender = true;
-
-const AUTHORS_PAGE_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query AuthorsPage {
-    authorsIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allAuthors(orderBy: sortBy_ASC, first: 500) {
-      id
-      fullName
-      slug
-      alias
-      country
-      biography
-      sortBy
-      picture {
-        url
-        alt
-        responsiveImage(imgixParams: { fit: crop, w: 600, h: 600, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-    }
-    allBooks(first: 500) {
-      id
-      authors {
-        id
-      }
-    }
-  }
-`;
-
-type AuthorsPageQueryResult = {
-  authorsIndex: (AuthorsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-  allAuthors: AuthorSummaryRecord[];
-  allBooks: Array<{
-    id: string;
-    authors: Array<{
-      id: string;
-    }>;
-  }>;
-};
 
 const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY);
 
@@ -72,9 +24,7 @@ const seo = withFallbackSeo(data.authorsIndex?._seoMetaTags, {
 const bookCounts = new Map<string, number>();
 for (const book of data.allBooks ?? []) {
   for (const author of book.authors ?? []) {
-    if (!author?.id) {
-      continue;
-    }
+    if (!author?.id) continue;
     bookCounts.set(author.id, (bookCounts.get(author.id) ?? 0) + 1);
   }
 }
@@ -107,7 +57,6 @@ for (const author of authorCards) {
   if (!authorGroupsMap.has(letter)) {
     authorGroupsMap.set(letter, { letter, anchorId, authors: [] as AuthorCardItem[] });
   }
-
   authorGroupsMap.get(letter)?.authors.push(author);
 }
 
@@ -116,45 +65,37 @@ const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, 
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
-    <div class="mx-auto max-w-5xl">
+  <section class={styles.section}>
+    <div class={styles.intro}>
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
     {
       authorCards.length === 0 ? (
-        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-          Gli autori saranno disponibili a breve.
-        </p>
+        <p class={styles.empty}>Gli autori saranno disponibili a breve.</p>
       ) : (
-        <div class="mx-auto max-w-6xl">
+        <div class={styles.container}>
           <div id="char-menu" class="sr-only" aria-hidden="true" />
 
-          <nav
-            class="sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.4em] text-brand-slate shadow-soft backdrop-blur-sm"
-            aria-label="Indice alfabetico autori"
-          >
+          <nav class={styles.nav} aria-label="Indice alfabetico autori">
             {navigationAnchors.map(({ letter, anchorId }) => (
-              <a href={`#${anchorId}`} class="transition duration-150 hover:text-brand-navy">
+              <a href={`#${anchorId}`} class={styles.navLink}>
                 {letter}
               </a>
             ))}
           </nav>
 
-          <div class="space-y-16">
+          <div class={styles.groupList}>
             {authorGroups.map(({ letter, anchorId, authors }) => (
               <section id={anchorId} class="space-y-8">
-                <div class="flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft">
-                  <h2 class="text-3xl font-serif text-brand-navy">{letter}</h2>
-                  <a
-                    href="#char-menu"
-                    class="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy"
-                  >
+                <div class={styles.groupHeader}>
+                  <h2 class={styles.groupTitle}>{letter}</h2>
+                  <a href="#char-menu" class={styles.backLink}>
                     Torna al menu
                   </a>
                 </div>
 
-                <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+                <div class={styles.authorsGrid}>
                   {authors.map((author) => (
                     <AuthorCard
                       name={author.name}

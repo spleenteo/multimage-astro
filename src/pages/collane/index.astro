@@ -1,66 +1,17 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import CollectionCard from '~/components/CollectionCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import CollectionCard from '~/components/CollectionCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, truncateToLength } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type {
-  CollectionSummaryRecord,
-  CollectionsIndexRecord,
-  SeoMetaTag,
-} from '~/lib/datocms/types';
+import type { CollectionSummaryRecord } from '~/lib/datocms/types';
+import styles from './index/_style.module.css';
+import { COLLECTIONS_PAGE_QUERY, type CollectionsQueryResult } from './index/_graphql';
 
 export const prerender = true;
 
-const COLLECTIONS_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query CollectionsPage {
-    collectionsIndex {
-      title
-      subtitle
-      seoMetaTags: _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allCollections(orderBy: name_ASC) {
-      id
-      name
-      slug
-      description
-      logo {
-        url
-        alt
-        responsiveImage(imgixParams: { fit: max, w: 320, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-    }
-    allBooks(first: 500) {
-      id
-      collection {
-        id
-      }
-    }
-  }
-`;
-type CollectionsQueryResult = {
-  collectionsIndex: (CollectionsIndexRecord & { seoMetaTags: SeoMetaTag[] | null }) | null;
-  allCollections: Array<
-    Pick<CollectionSummaryRecord, 'id' | 'name' | 'slug' | 'description' | 'logo'>
-  >;
-  allBooks: Array<{
-    id: string;
-    collection: {
-      id: string | null;
-    } | null;
-  }>;
-};
-
-const data = await executeQuery<CollectionsQueryResult>(COLLECTIONS_QUERY);
+const data = await executeQuery<CollectionsQueryResult>(COLLECTIONS_PAGE_QUERY);
 
 const heroTitle = data.collectionsIndex?.title ?? 'Collane';
 const heroSubtitle = toPlainText(data.collectionsIndex?.subtitle ?? null);
@@ -73,42 +24,46 @@ const seo = withFallbackSeo(data.collectionsIndex?.seoMetaTags, {
 const bookCounts = new Map<string, number>();
 for (const book of data.allBooks ?? []) {
   const collectionId = book.collection?.id;
-  if (!collectionId) {
-    continue;
-  }
+  if (!collectionId) continue;
   bookCounts.set(collectionId, (bookCounts.get(collectionId) ?? 0) + 1);
 }
 
-const collections = (data.allCollections ?? [])
-  .map((collection) => {
-    const name = collection.name ?? 'Collana senza titolo';
-    const slug = collection.slug ?? '';
-    if (!slug) {
-      return null;
-    }
+const collections: Array<{
+  name: string;
+  slug: string;
+  description: string | null;
+  logo: CollectionSummaryRecord['logo'];
+  booksCount: number;
+}> = [];
 
-    return {
-      name,
-      slug,
-      description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
-      logo: collection.logo,
-      booksCount: bookCounts.get(collection.id) ?? 0,
-    };
-  })
-  .filter((collection): collection is NonNullable<typeof collection> => Boolean(collection));
+for (const collection of data.allCollections ?? []) {
+  const name = collection.name ?? 'Collana senza titolo';
+  const slug = collection.slug ?? '';
+  if (!slug) {
+    continue;
+  }
+
+  collections.push({
+    name,
+    slug,
+    description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
+    logo: collection.logo,
+    booksCount: bookCounts.get(collection.id) ?? 0,
+  });
+}
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
-    <div class="mx-auto max-w-5xl">
+  <section class={styles.section}>
+    <div class={styles.intro}>
       <SectionIntro title={heroTitle} description={heroDescription} />
     </div>
 
     {
       collections.length === 0 ? (
-        <p class="text-brand-slate">Nessuna collana pubblicata trovata.</p>
+        <p class={styles.empty}>Nessuna collana pubblicata trovata.</p>
       ) : (
-        <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div class={styles.collectionsGrid}>
           {collections.map((collection) => (
             <CollectionCard {...collection} />
           ))}

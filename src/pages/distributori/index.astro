@@ -1,64 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import SupplierCard from '~/components/SupplierCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import SupplierCard from '~/components/SupplierCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
 import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { SupplierRecord } from '~/lib/suppliers';
-import type { SuppliersIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './_style.module.css';
+import { SUPPLIERS_PAGE_QUERY, type SuppliersPageQueryResult } from './_graphql';
 
 export const prerender = true;
-
-const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query SuppliersPage {
-    suppliersIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allSuppliers(
-      first: 300
-      orderBy: [region_ASC, city_ASC, name_ASC]
-      filter: { _status: { eq: published } }
-    ) {
-      id
-      name
-      region
-      city
-      address
-      telephone
-      email
-      url
-      description
-      map {
-        latitude
-        longitude
-      }
-      logo {
-        url
-        alt
-        width
-        height
-        responsiveImage(imgixParams: { fit: max, w: 280, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-    }
-  }
-`;
-
-type SuppliersPageQueryResult = {
-  suppliersIndex: (SuppliersIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-  allSuppliers: SupplierRecord[];
-};
 
 const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY);
 
@@ -89,7 +40,7 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
+  <section class={styles.layout}>
     <div class="mx-auto max-w-5xl">
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
@@ -100,16 +51,13 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
           I nostri distributori saranno disponibili a breve.
         </p>
       ) : (
-        <div class="mx-auto max-w-5xl space-y-12">
+        <div class={styles.sectionWrapper}>
           {regionMenu.length > 1 ? (
             <>
               <div id="region-menu" class="sr-only" aria-hidden="true" />
-              <nav
-                class="sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate shadow-soft backdrop-blur-sm"
-                aria-label="Indice distributori per regione"
-              >
+              <nav class={styles.menu} aria-label="Indice distributori per regione">
                 {regionMenu.map(({ region, anchorId }) => (
-                  <a href={`#${anchorId}`} class="transition duration-150 hover:text-brand-navy">
+                  <a href={`#${anchorId}`} class={styles.menuLink}>
                     {region}
                   </a>
                 ))}
@@ -120,21 +68,16 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
           <div class="space-y-16">
             {supplierSections.map(({ region, suppliers: items, anchorId }) => (
               <section id={anchorId} class="space-y-8">
-                <div class="flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft">
-                  <h2 class="text-2xl font-serif uppercase tracking-[0.2em] text-brand-navy">
-                    {region}
-                  </h2>
+                <div class={styles.regionHeader}>
+                  <h2 class={styles.regionTitle}>{region}</h2>
                   {regionMenu.length > 1 ? (
-                    <a
-                      href="#region-menu"
-                      class="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy"
-                    >
+                    <a href="#region-menu" class={styles.backLink}>
                       Torna al menu
                     </a>
                   ) : null}
                 </div>
 
-                <div class="space-y-8">
+                <div class={styles.regionList}>
                   {items.map((supplier) => (
                     <SupplierCard {...supplier} />
                   ))}

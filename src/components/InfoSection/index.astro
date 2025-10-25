@@ -1,0 +1,19 @@
+---
+import styles from './style.module.css';
+
+type Props = {
+  title: string;
+  paragraphs: string[];
+  chip?: string;
+};
+
+const { title, paragraphs, chip }: Props = Astro.props;
+---
+
+<section class={styles.section}>
+  <h1 class={styles.title}>{title}</h1>
+  {paragraphs.map((text) => (
+    <p class={styles.paragraph}>{text}</p>
+  ))}
+  {chip ? <span class="chip">{chip}</span> : null}
+</section>

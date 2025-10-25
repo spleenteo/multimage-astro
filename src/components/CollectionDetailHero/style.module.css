@@ -1,0 +1,35 @@
+@tailwind components;
+
+@layer components {
+  .root {
+    @apply relative overflow-hidden border border-white/70 bg-white/95 px-6 py-12 text-center shadow-soft backdrop-blur-sm sm:px-12 sm:py-16;
+  }
+
+  .background {
+    @apply pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-mist/70 via-white/60 to-brand-sand/70;
+  }
+
+  .content {
+    @apply relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-8;
+  }
+
+  .label {
+    @apply text-sm font-semibold uppercase tracking-wide text-brand-slate;
+  }
+
+  .title {
+    @apply text-4xl font-serif text-brand-navy md:text-5xl;
+  }
+
+  .logoWrapper {
+    @apply flex h-36 w-36 items-center justify-center bg-brand-mist/40 p-4 shadow-inner;
+  }
+
+  .logoImage {
+    @apply h-full w-full object-contain;
+  }
+
+  .description {
+    @apply text-base leading-relaxed text-brand-charcoal/80 md:text-lg;
+  }
+}

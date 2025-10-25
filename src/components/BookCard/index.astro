@@ -1,0 +1,115 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
+import AuthorNames from '~/components/ui/AuthorNames';
+import PriceTag from '~/components/ui/PriceTag';
+import styles from './style.module.css';
+
+type Props = {
+  title: string;
+  slug: string;
+  href?: string;
+  subtitle?: string | null;
+  summary?: string | null;
+  format?: string | null;
+  coverImage?: AssetImage | null;
+  authors?: Array<{
+    id: string;
+    fullName?: string | null;
+  }>;
+  license?: {
+    name?: string | null;
+    code?: string | null;
+  } | null;
+  price?: number | null;
+  className?: string;
+  isArchived?: boolean | null;
+};
+
+const {
+  title,
+  slug,
+  href,
+  subtitle,
+  summary,
+  format,
+  coverImage,
+  authors = [],
+  price,
+  className = '',
+  isArchived: archivedFlag = false,
+}: Props = Astro.props;
+
+const destination = href ?? `/libri/${slug}`;
+
+const normalizedFormat = format?.trim() ?? null;
+const showFormatRibbon = normalizedFormat ? normalizedFormat.toLowerCase() !== 'cartaceo' : false;
+const formatLabel = normalizedFormat ? normalizedFormat.toUpperCase() : null;
+
+const baseColor = pickBaseColor(coverImage?.colors);
+const backgroundColor = lightenColor(baseColor, 0.18);
+const shadowColorHex = darkenColor(baseColor, 0.55);
+const shadowColor = hexToRgba(shadowColorHex, 0.42);
+const coverResponsiveImage = coverImage?.responsiveImage ?? null;
+const isArchived = archivedFlag === true;
+---
+
+<a href={destination} class:list={[styles.root, 'group', className]}>
+  <article class="flex h-full flex-col">
+    <div class="relative w-full">
+      <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
+        {
+          showFormatRibbon && formatLabel ? (
+            <div class={styles.formatRibbon}>
+              <span class={styles.badge}>{formatLabel}</span>
+            </div>
+          ) : null
+        }
+
+        {
+          isArchived ? (
+            <div class={styles.archiveRibbon}>
+              <span class={styles.archiveBadge}>Fuori catalogo</span>
+            </div>
+          ) : null
+        }
+
+        {
+          coverResponsiveImage ? (
+            <div class={styles.coverWrapper}>
+              <div
+                class={styles.dropShadow}
+                style={`background: ${shadowColor};`}
+                aria-hidden="true"
+              />
+              <Image
+                data={coverResponsiveImage}
+                sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
+                imgClass={styles.coverImage}
+                imgStyle={{ filter: `drop-shadow(26px 36px 48px ${shadowColor})` }}
+              />
+            </div>
+          ) : (
+            <div class={styles.coverFallback}>Copertina in arrivo</div>
+          )
+        }
+      </div>
+    </div>
+
+    <div class={styles.body}>
+      <div class="space-y-1">
+        <h3 class={styles.title}>{title}</h3>
+        {
+          subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null
+        }
+      </div>
+
+      <AuthorNames authors={authors} class={styles.authors} />
+
+      {summary ? <p class={styles.summary}>{summary}</p> : null}
+
+      <PriceTag value={price ?? null} class={styles.price} />
+    </div>
+  </article>
+</a>

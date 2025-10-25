@@ -1,71 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import BookCard from '~/components/BookCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { BookRecordForCard } from '~/lib/books';
-import type { ArchiveIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './_style.module.css';
+import { ARCHIVE_PAGE_QUERY, type ArchivePageQueryResult } from './_graphql';
 
 export const prerender = true;
-
-const ARCHIVE_PAGE_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query ArchivePage {
-    archiveIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allBooks(
-      orderBy: printYear_DESC
-      first: 500
-      filter: { _status: { eq: published }, archive: { eq: true } }
-    ) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      printYear
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      price
-      archive
-    }
-  }
-`;
-type ArchivePageQueryResult = {
-  archiveIndex: (ArchiveIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-  allBooks: BookRecordForCard[];
-};
 
 const data = await executeQuery<ArchivePageQueryResult>(ARCHIVE_PAGE_QUERY);
 
@@ -77,23 +21,23 @@ const seo = withFallbackSeo(data.archiveIndex?._seoMetaTags, {
   description: heroDescription,
 });
 
-const archiveBooks = mapBooksToCards(data.allBooks);
+const archiveBooks = mapBooksToCards(data.allBooks ?? []);
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
-    <div class="mx-auto max-w-5xl">
+  <section class={styles.section}>
+    <div class={styles.intro}>
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
     {
       archiveBooks.length === 0 ? (
-        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        <p class={styles.empty}>
           Stiamo completando la digitalizzazione dei titoli fuori catalogo.
         </p>
       ) : (
-        <div class="mx-auto max-w-6xl">
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div class={styles.gridWrapper}>
+          <div class={styles.booksGrid}>
             {archiveBooks.map((book) => (
               <BookCard
                 title={book.title}

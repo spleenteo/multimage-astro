@@ -1,0 +1,81 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import styles from './style.module.css';
+
+type AuthorCard = {
+  id: string;
+  name: string;
+  slug?: string | null;
+  biography: string;
+  booksLabel: string;
+  picture?: AssetImage | null;
+};
+
+type Props = {
+  title: string;
+  authors: AuthorCard[];
+};
+
+const { title, authors }: Props = Astro.props;
+---
+
+{
+  authors.length === 0
+    ? null
+    : (
+        <section class={styles.section}>
+          <div class={styles.header}>
+            <h2 class={styles.title}>{title}</h2>
+          </div>
+          <div class={styles.list}>
+            {authors.map((author) => {
+              const picture = author.picture?.responsiveImage ?? null;
+              const imageAlt = picture?.alt ?? author.name;
+
+              const CardWrapper = author.slug ? 'a' : 'div';
+              const cardProps =
+                CardWrapper === 'a'
+                  ? {
+                      href: `/autori/${author.slug}`,
+                    }
+                  : {};
+
+              return (
+                <CardWrapper
+                  {...cardProps}
+                  class:list={[
+                    styles.cardBase,
+                    author.slug ? styles.cardLink : null,
+                    author.slug ? 'group' : null,
+                  ]}
+                >
+                  <article class={styles.cardArticle}>
+                    {picture ? (
+                      <div class={styles.imageWrapper}>
+                        <Image
+                          data={{ ...picture, alt: imageAlt }}
+                          sizes="(min-width: 1024px) 300px, (min-width: 768px) 40vw, 90vw"
+                          imgClass={author.slug ? styles.image : styles.imageStatic}
+                        />
+                      </div>
+                    ) : (
+                      <div class={styles.imageFallback}>Ritratto in arrivo</div>
+                    )}
+
+                    <div class={styles.content}>
+                      <div class="space-y-2">
+                        <h3 class={styles.name}>{author.name}</h3>
+                        <p class={styles.books}>{author.booksLabel}</p>
+                      </div>
+                      <p class={styles.bio}>{author.biography}</p>
+                      {author.slug ? <p class={styles.cta}>Scopri il profilo →</p> : null}
+                    </div>
+                  </article>
+                </CardWrapper>
+              );
+            })}
+          </div>
+        </section>
+      )
+}

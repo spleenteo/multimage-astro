@@ -1,0 +1,19 @@
+@tailwind components;
+
+@layer components {
+  .section {
+    @apply space-y-12;
+  }
+
+  .intro {
+    @apply mx-auto max-w-5xl;
+  }
+
+  .collectionsGrid {
+    @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .empty {
+    @apply text-brand-slate;
+  }
+}

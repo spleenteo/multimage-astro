@@ -1,0 +1,33 @@
+---
+import { formatAuthorNames } from '~/lib/authors';
+import styles from './style.module.css';
+
+type AuthorLike = {
+  alias?: string | null;
+  fullName?: string | null;
+};
+
+type Props = {
+  authors: AuthorLike[];
+  fallback?: string;
+  class?: string;
+  prefix?: string | null;
+  suffix?: string | null;
+};
+
+const {
+  authors,
+  fallback,
+  class: className = '',
+  prefix = null,
+  suffix = null,
+}: Props = Astro.props;
+
+const label = formatAuthorNames(authors, { fallback });
+---
+
+<span class:list={[styles.root, className]}>
+  {prefix ? <span>{prefix}</span> : null}
+  <span>{label}</span>
+  {suffix ? <span>{suffix}</span> : null}
+</span>

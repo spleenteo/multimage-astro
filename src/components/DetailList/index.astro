@@ -1,0 +1,42 @@
+---
+import styles from './style.module.css';
+
+type DetailItem = {
+  label: string;
+  value: string;
+  href?: string | null;
+};
+
+type Props = {
+  title: string;
+  items: DetailItem[];
+};
+
+const { title, items }: Props = Astro.props;
+---
+
+<div class={styles.root}>
+  <h3 class={styles.title}>{title}</h3>
+  {
+    items.length === 0 ? (
+      <p class={styles.empty}>Informazioni in aggiornamento.</p>
+    ) : (
+      <dl class={styles.list}>
+        {items.map((item) => (
+          <div class="space-y-1">
+            <dt class={styles.term}>{item.label}</dt>
+            <dd class={styles.definition}>
+              {item.href ? (
+                <a href={item.href} class={styles.link}>
+                  {item.value}
+                </a>
+              ) : (
+                <span>{item.value}</span>
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+</div>

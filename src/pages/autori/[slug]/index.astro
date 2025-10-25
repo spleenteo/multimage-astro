@@ -1,117 +1,26 @@
 ---
 import { Image } from '@datocms/astro/Image';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import BookCard from '~/components/BookCard.astro';
+import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { mapBooksToCards } from '~/lib/books';
 import { getAuthorDisplayName } from '~/lib/authors';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';
-import type { BookRecordForCard } from '~/lib/books';
+import styles from './_style.module.css';
+import {
+  AUTHOR_DETAIL_QUERY,
+  AUTHOR_RELATED_BOOKS_QUERY,
+  AUTHOR_SLUGS_QUERY,
+  type AuthorDetailResult,
+  type AuthorRelatedBooksResult,
+  type AuthorSlugsResult,
+} from './_graphql';
 
 export const prerender = true;
 
-const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query AuthorDetailPage($slug: String) {
-    author(filter: { slug: { eq: $slug } }) {
-      id
-      fullName
-      alias
-      country
-      biography
-      note
-      picture {
-        url
-        alt
-        responsiveImage(imgixParams: { fit: crop, w: 960, h: 960, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      pseudonyms {
-        id
-        fullName
-        alias
-        slug
-      }
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-  }
-`;
-
-const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query AuthorRelatedBooks($authorIds: [ItemId!]) {
-    _allBooksMeta(filter: { authors: { anyIn: $authorIds } }) {
-      count
-    }
-    allBooks(filter: { authors: { anyIn: $authorIds } }, orderBy: printYear_DESC, first: 60) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      price
-      archive
-    }
-  }
-`;
-
-type AuthorDetailResult = {
-  author: (AuthorDetailRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-};
-
-type AuthorRelatedBooksResult = {
-  _allBooksMeta: {
-    count: number;
-  } | null;
-  allBooks: BookRecordForCard[];
-};
-
-type AuthorSlugsResult = {
-  allAuthors: Array<{
-    slug: string | null;
-  }>;
-};
-
 export async function getStaticPaths() {
-  const slugsQuery = /* GraphQL */ `
-    query AuthorSlugsForStaticPaths {
-      allAuthors(orderBy: sortBy_ASC, first: 500) {
-        slug
-      }
-    }
-  `;
-
-  const data = await executeQuery<AuthorSlugsResult>(slugsQuery);
+  const data = await executeQuery<AuthorSlugsResult>(AUTHOR_SLUGS_QUERY);
 
   return (data.allAuthors ?? [])
     .map((author) => author.slug)
@@ -143,12 +52,10 @@ const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.leng
 const relatedBooks = mapBooksToCards(relatedData.allBooks);
 
 const authorDisplayName = getAuthorDisplayName(author);
-
 const biographyHtml = toRichTextHtml(author.biography ?? null);
 const biographyPlain = toPlainText(author.biography ?? null);
 const noteHtml = toRichTextHtml(author.note ?? null);
 const notePlain = toPlainText(author.note ?? null);
-
 const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
@@ -167,20 +74,15 @@ const seo = withFallbackSeo(author._seoMetaTags, {
 });
 
 const pictureResponsiveImage = author.picture?.responsiveImage
-  ? {
-      ...author.picture.responsiveImage,
-      alt: author.picture.responsiveImage.alt ?? authorDisplayName,
-    }
+  ? { ...author.picture.responsiveImage, alt: author.picture.responsiveImage.alt ?? authorDisplayName }
   : null;
 ---
 
 <BaseLayout seo={seo}>
-  <article class="space-y-12">
-    <section
-      class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start"
-    >
-      <div class="overflow-hidden bg-white/95 shadow-soft">
-        <div class="bg-brand-mist">
+  <article class={styles.layout}>
+    <section class={styles.heroGrid}>
+      <div class={styles.portraitPanel}>
+        <div class={styles.portraitFrame}>
           {
             pictureResponsiveImage ? (
               <Image
@@ -189,108 +91,82 @@ const pictureResponsiveImage = author.picture?.responsiveImage
                 imgClass="h-auto w-full object-cover"
               />
             ) : (
-              <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">
-                Ritratto in arrivo
-              </div>
+              <div class={styles.portraitFallback}>Ritratto in arrivo</div>
             )
           }
         </div>
       </div>
 
-      <div class="border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12">
-        <div class="flex flex-col gap-4">
-          <div class="space-y-3">
-            <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
-              Autori Multimage
-            </p>
-            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{authorDisplayName}</h1>
-            {
-              author.alias || author.country ? (
-                <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
-                  {[author.alias, author.country].filter(Boolean).join(' · ')}
-                </p>
-              ) : null
-            }
+      <div class={styles.detailCard}>
+        <div class="space-y-3">
+          {author.country ? <p class={styles.metaLabel}>{author.country}</p> : null}
+          <h1 class={styles.name}>{authorDisplayName}</h1>
+          <p class={styles.booksLabel}>{booksLabel}</p>
+        </div>
 
-            <p class="text-sm font-semibold uppercase tracking-wide text-brand-sky">{booksLabel}</p>
-          </div>
 
-          {
-            pseudonyms.length > 0 ? (
-              <div class="flex flex-wrap gap-2">
-                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate">
-                  Pseudonimi:
-                </span>
+        {
+          pseudonyms.length > 0 ? (
+            <div class="space-y-2 pt-4">
+              <p class={styles.metaLabel}>Pseudonimi</p>
+              <div class={styles.pseudonyms}>
                 {pseudonyms.map((person) =>
                   person.slug ? (
-                    <a href={`/autori/${person.slug}`} class="chip chip-outline">
+                    <a href={`/autori/${person.slug}`} class={styles.pseudonymLink}>
                       {person.name}
                     </a>
                   ) : (
-                    <span class="chip chip-outline">{person.name}</span>
+                    <span>{person.name}</span>
                   ),
                 )}
               </div>
-            ) : null
-          }
-        </div>
+            </div>
+          ) : null
+        }
       </div>
     </section>
 
-    {
-      biographyHtml ? (
-        <section class="mx-auto max-w-4xl space-y-6 bg-white/95 p-8 shadow-soft">
-          <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
-          <div
-            class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
-            set:html={biographyHtml}
-          />
-        </section>
-      ) : null
-    }
-
-    {
-      noteHtml ? (
-        <section class="mx-auto max-w-4xl space-y-6 border border-white/70 bg-white/95 p-8 shadow-soft">
-          <h2 class="text-3xl font-serif text-brand-navy">Approfondimenti</h2>
-          <div
-            class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
-            set:html={noteHtml}
-          />
-        </section>
-      ) : null
-    }
-
-    <section class="space-y-6">
-      <div class="mx-auto max-w-6xl">
-        <div class="border border-white/70 bg-white/95 p-8 text-center shadow-soft">
-          <h2 class="text-3xl font-serif text-brand-navy">Libri di {authorDisplayName}</h2>
-        </div>
-      </div>
+    <section class={styles.contentSection}>
+      {
+        biographyHtml ? (
+          <div class={styles.contentBlock}>
+            <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
+            <div set:html={biographyHtml} />
+          </div>
+        ) : null
+      }
 
       {
+        noteHtml ? (
+          <div class={styles.contentBlock}>
+            <h2 class="text-3xl font-serif text-brand-navy">Note</h2>
+            <div set:html={noteHtml} />
+          </div>
+        ) : null
+      }
+    </section>
+
+    <section class={styles.booksSection}>
+      <h2 class={styles.booksHeader}>Libri pubblicati</h2>
+      {
         relatedBooks.length === 0 ? (
-          <p class="mx-auto max-w-3xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-            Nessun libro pubblicato in catalogo per questo autore.
-          </p>
+          <p class="text-sm text-brand-slate">Nessun libro ancora associato a questo autore.</p>
         ) : (
-          <div class="mx-auto max-w-6xl">
-            <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-              {relatedBooks.map((book) => (
-                <BookCard
-                  title={book.title}
-                  slug={book.slug}
-                  subtitle={book.subtitle}
-                  summary={book.summary}
-                  coverImage={book.coverImage}
-                  authors={book.authors}
-                  license={book.license}
-                  format={book.format}
-                  price={book.price}
-                  isArchived={book.isArchived}
-                />
-              ))}
-            </div>
+          <div class={styles.booksGrid}>
+            {relatedBooks.map((book) => (
+              <BookCard
+                title={book.title}
+                slug={book.slug}
+                subtitle={book.subtitle}
+                summary={book.summary}
+                coverImage={book.coverImage}
+                authors={book.authors}
+                license={book.license}
+                format={book.format}
+                price={book.price}
+                isArchived={book.isArchived}
+              />
+            ))}
           </div>
         )
       }

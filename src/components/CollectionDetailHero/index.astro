@@ -1,0 +1,41 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import styles from './style.module.css';
+
+type Props = {
+  name: string;
+  booksCount: number;
+  description?: string | null;
+  logo?: AssetImage | null;
+  className?: string;
+};
+
+const { name, booksCount, description, logo, className = '' }: Props = Astro.props;
+const booksLabel =
+  booksCount === 1
+    ? 'Collana editoriale con 1 libro'
+    : `Collana editoriale con ${booksCount} libri`;
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
+
+---
+
+<div class:list={[styles.root, className]}>
+  <div class={styles.background}></div>
+  <div class={styles.content}>
+    <p class={styles.label}>{booksLabel}</p>
+    <h1 class={styles.title}>{name}</h1>
+
+    {
+      logoResponsiveImage ? (
+        <div class={styles.logoWrapper}>
+          <Image data={logoResponsiveImage} sizes="(min-width: 1024px) 220px, 40vw" imgClass={styles.logoImage} />
+        </div>
+      ) : null
+    }
+
+    {description ? <p class={styles.description}>{description}</p> : null}
+  </div>
+</div>

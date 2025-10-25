@@ -1,0 +1,70 @@
+---
+import styles from './style.module.css';
+
+type Props = {
+  href?: string | null;
+  variant?: 'primary' | 'outline' | 'ghost';
+  icon?: string | null;
+  iconPosition?: 'left' | 'right';
+  ariaLabel?: string;
+  class?: string;
+  fullWidth?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+  target?: string | null;
+  rel?: string | null;
+};
+
+const {
+  href = null,
+  variant = 'primary',
+  icon = null,
+  iconPosition = 'right',
+  ariaLabel,
+  class: className = '',
+  fullWidth = false,
+  type = 'button',
+  target = null,
+  rel = null,
+}: Props = Astro.props;
+
+const baseClasses = [styles.root, styles[variant] ?? styles.primary];
+if (fullWidth) {
+  baseClasses.push(styles.fullWidth);
+}
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      aria-label={ariaLabel}
+      class:list={[...baseClasses, className]}
+      data-variant={variant}
+      target={target ?? undefined}
+      rel={rel ?? undefined}
+    >
+      {icon && iconPosition === 'left' ? (
+        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+      ) : null}
+      <slot />
+      {icon && iconPosition === 'right' ? (
+        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+      ) : null}
+    </a>
+  ) : (
+    <button
+      type={type}
+      aria-label={ariaLabel}
+      class:list={[...baseClasses, className]}
+      data-variant={variant}
+    >
+      {icon && iconPosition === 'left' ? (
+        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+      ) : null}
+      <slot />
+      {icon && iconPosition === 'right' ? (
+        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+      ) : null}
+    </button>
+  )
+}

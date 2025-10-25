@@ -1,0 +1,35 @@
+@tailwind components;
+
+@layer components {
+  .layout {
+    @apply space-y-12;
+  }
+
+  .heroSection {
+    @apply border border-white/70 bg-white/95 py-12 shadow-soft;
+  }
+
+  .heroContent {
+    @apply mx-auto flex max-w-4xl flex-col gap-4 px-6 text-center md:gap-6;
+  }
+
+  .label {
+    @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+  }
+
+  .title {
+    @apply text-4xl font-serif text-brand-navy md:text-5xl;
+  }
+
+  .subtitle {
+    @apply text-base leading-relaxed text-brand-charcoal/80;
+  }
+
+  .bodySection {
+    @apply mx-auto max-w-4xl space-y-6 bg-white/95 px-6 py-10 shadow-soft;
+  }
+
+  .bodyContent {
+    @apply space-y-5 text-base leading-relaxed text-brand-charcoal/90 [&_h2]:mt-10 [&_h2]:text-3xl [&_h2]:font-serif [&_h2]:text-brand-navy [&_h3]:mt-8 [&_h3]:text-2xl [&_h3]:font-serif [&_h3]:text-brand-navy [&_h4]:mt-6 [&_h4]:text-xl [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:pl-4 [&_blockquote]:italic;
+  }
+}

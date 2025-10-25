@@ -1,0 +1,54 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import styles from './style.module.css';
+
+type Props = {
+  name: string;
+  slug: string;
+  description?: string | null;
+  booksCount: number;
+  logo?: AssetImage | null;
+};
+
+const { name, slug, description, booksCount, logo }: Props = Astro.props;
+const booksLabel = booksCount === 1 ? 'Libro' : 'Libri';
+const logoResponsiveImage = logo?.responsiveImage
+  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
+  : null;
+---
+
+<a href={`/collane/${slug}`} class:list={[styles.root, 'group']}>
+  <article class={styles.card}>
+    <div class="flex flex-1 flex-col items-center gap-6">
+      {
+        logoResponsiveImage ? (
+          <div class={styles.media}>
+            <Image
+              data={logoResponsiveImage}
+              sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 80vw"
+              imgClass={styles.mediaImage}
+            />
+          </div>
+        ) : (
+          <div class={styles.mediaFallback}>Logo in arrivo</div>
+        )
+      }
+
+      <div class={styles.content}>
+        <h3 class={styles.title}>{name}</h3>
+        <p class={styles.count}>
+          {booksCount}
+          {booksLabel}
+        </p>
+        {
+          description ? (
+            <p class={styles.description}>{description}</p>
+          ) : (
+            <p class={styles.descriptionFallback}>Descrizione in aggiornamento.</p>
+          )
+        }
+      </div>
+    </div>
+  </article>
+</a>

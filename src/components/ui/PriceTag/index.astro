@@ -1,0 +1,29 @@
+---
+import { formatEuro } from '~/lib/currency';
+import styles from './style.module.css';
+
+type Props = {
+  value: number | null | undefined;
+  label?: string;
+  muted?: boolean;
+  class?: string;
+};
+
+const {
+  value,
+  label = 'Prezzo',
+  muted = false,
+  class: className = '',
+}: Props = Astro.props;
+
+const formatted = typeof value === 'number' ? formatEuro(value) : null;
+---
+
+{
+  formatted ? (
+    <span class:list={[styles.root, muted ? styles.muted : null, className]}>
+      <span>{label}</span>
+      <span>{formatted}</span>
+    </span>
+  ) : null
+}

@@ -1,71 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro.astro';
-import BookCard from '~/components/BookCard.astro';
+import SectionIntro from '~/components/SectionIntro';
+import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import { mapBooksToCards } from '~/lib/books';
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { BookRecordForCard } from '~/lib/books';
-import type { BooksIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import styles from './index/_style.module.css';
+import { BOOKS_PAGE_QUERY, type BooksPageQueryResult } from './index/_graphql';
 
 export const prerender = true;
-
-const BOOKS_PAGE_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
-  query BooksPage {
-    booksIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
-    }
-    allBooks(
-      orderBy: printYear_DESC
-      first: 500
-      filter: { _status: { eq: published }, archive: { eq: false } }
-    ) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      printYear
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: max, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      price
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      archive
-    }
-  }
-`;
-type BooksPageQueryResult = {
-  booksIndex: (BooksIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
-  allBooks: BookRecordForCard[];
-};
 
 const data = await executeQuery<BooksPageQueryResult>(BOOKS_PAGE_QUERY);
 
@@ -77,23 +21,21 @@ const seo = withFallbackSeo(data.booksIndex?._seoMetaTags, {
   description: heroDescription,
 });
 
-const books = mapBooksToCards(data.allBooks);
+const books = mapBooksToCards(data.allBooks ?? []);
 ---
 
 <BaseLayout seo={seo}>
-  <section class="space-y-12">
-    <div class="mx-auto max-w-5xl">
+  <section class={styles.section}>
+    <div class={styles.intro}>
       <SectionIntro title={heroTitle} description={heroDescription} align="center" />
     </div>
 
     {
       books.length === 0 ? (
-        <p class="bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-          Il catalogo sarà disponibile a breve.
-        </p>
+        <p class={styles.empty}>Il catalogo sarà disponibile a breve.</p>
       ) : (
-        <div class="mx-auto max-w-6xl">
-          <div class="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div class={styles.gridWrapper}>
+          <div class={styles.booksGrid}>
             {books.map((book) => (
               <BookCard
                 title={book.title}

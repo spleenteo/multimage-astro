@@ -1,0 +1,15 @@
+@tailwind components;
+
+@layer components {
+  .section {
+    @apply space-y-6;
+  }
+
+  .title {
+    @apply text-3xl font-serif text-brand-navy;
+  }
+
+  .paragraph {
+    @apply text-base leading-relaxed text-brand-charcoal/90;
+  }
+}

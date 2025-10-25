@@ -1,0 +1,67 @@
+@tailwind components;
+
+@layer components {
+  .section {
+    @apply mx-auto max-w-6xl overflow-hidden border border-white/70 bg-white/95 shadow-soft;
+  }
+
+  .header {
+    @apply bg-brand-mist/60 px-6 py-6 text-center sm:px-12;
+  }
+
+  .title {
+    @apply text-3xl font-serif text-brand-navy;
+  }
+
+  .list {
+    @apply space-y-8 px-6 py-10 sm:px-12;
+  }
+
+  .cardBase {
+    @apply block overflow-hidden border border-brand-mist/60 bg-white/95 p-6 shadow-soft;
+  }
+
+  .cardLink {
+    @apply transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  }
+
+  .cardArticle {
+    @apply flex flex-col gap-6 sm:flex-row sm:items-start;
+  }
+
+  .imageWrapper {
+    @apply relative h-52 w-full overflow-hidden bg-brand-mist/60 sm:h-56 sm:w-56;
+  }
+
+  .image {
+    @apply h-full w-full object-cover transition duration-200 group-hover:scale-[1.02];
+  }
+
+  .imageStatic {
+    @apply h-full w-full object-cover;
+  }
+
+  .imageFallback {
+    @apply flex h-52 w-full items-center justify-center bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56;
+  }
+
+  .content {
+    @apply flex flex-1 flex-col gap-4;
+  }
+
+  .name {
+    @apply text-3xl font-serif text-brand-charcoal;
+  }
+
+  .books {
+    @apply text-sm font-semibold uppercase tracking-wide text-brand-sky;
+  }
+
+  .bio {
+    @apply text-base leading-relaxed text-brand-charcoal/80;
+  }
+
+  .cta {
+    @apply text-sm font-medium text-brand-sky;
+  }
+}

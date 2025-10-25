@@ -1,0 +1,43 @@
+@tailwind components;
+
+@layer components {
+  .root {
+    @apply block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  }
+
+  .card {
+    @apply flex h-full flex-col bg-white/95 p-8 text-center shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out group-hover:-translate-y-1 group-hover:shadow-2xl;
+  }
+
+  .media {
+    @apply flex h-32 w-full items-center justify-center bg-brand-mist/50 p-10;
+  }
+
+  .mediaImage {
+    @apply h-full w-auto object-contain;
+  }
+
+  .mediaFallback {
+    @apply flex h-32 w-full items-center justify-center bg-brand-mist/50 p-4 text-sm uppercase tracking-wide text-brand-slate;
+  }
+
+  .content {
+    @apply flex flex-1 flex-col gap-3;
+  }
+
+  .title {
+    @apply text-2xl font-serif text-brand-navy;
+  }
+
+  .count {
+    @apply text-sm font-semibold uppercase tracking-wide text-brand-navy;
+  }
+
+  .description {
+    @apply text-sm leading-relaxed text-brand-charcoal/80;
+  }
+
+  .descriptionFallback {
+    @apply text-sm leading-relaxed text-brand-charcoal/60;
+  }
+}

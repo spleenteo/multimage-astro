@@ -165,49 +165,50 @@ export type BlogPostOld = ItemTypeDefinition<
     };
   }
 >;
+export type SingleAuthor = ItemTypeDefinition<
+  EnvironmentSettings,
+  'VdpvBBQAR0ykrmM4yRYhlQ',
+  {
+    author: {
+      type: 'link';
+    };
+  }
+>;
 export type BlogPost = ItemTypeDefinition<
   EnvironmentSettings,
   '184824',
   {
-    sticky: {
-      type: 'boolean';
-    };
-    featured_image: {
-      type: 'file';
+    slug: {
+      type: 'slug';
     };
     title: {
       type: 'string';
     };
-    abstract: {
-      type: 'text';
+    sticky: {
+      type: 'boolean';
     };
-    content: {
-      type: 'rich_text';
-      blocks: Section | Image | Video;
-    };
-    category: {
-      type: 'link';
+    seo: {
+      type: 'seo';
     };
     author: {
       type: 'link';
     };
-    tags: {
+    featured_image: {
+      type: 'file';
+    };
+    abstract: {
+      type: 'text';
+    };
+    category: {
+      type: 'link';
+    };
+    body: {
+      type: 'structured_text';
+      blocks: Image | Video | Banner | SingleBook | SingleAuthor;
+      inline_blocks: Author | Page | Book | BlogPost;
+    };
+    keywords: {
       type: 'links';
-    };
-    related_posts: {
-      type: 'links';
-    };
-    related_books: {
-      type: 'links';
-    };
-    related_authors: {
-      type: 'links';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
     };
   }
 >;
@@ -617,8 +618,8 @@ export type Home = ItemTypeDefinition<
   EnvironmentSettings,
   '152502',
   {
-    hero_title: {
-      type: 'string';
+    highlight: {
+      type: 'link';
     };
     newsletter_title: {
       type: 'string';
@@ -629,11 +630,11 @@ export type Home = ItemTypeDefinition<
     title: {
       type: 'string';
     };
-    banner: {
-      type: 'file';
-    };
     claim: {
       type: 'text';
+    };
+    hero_title: {
+      type: 'string';
     };
     newsletter_body: {
       type: 'text';
@@ -644,25 +645,32 @@ export type Home = ItemTypeDefinition<
     hero_image: {
       type: 'file';
     };
-    banner_url: {
-      type: 'string';
-    };
-    highlight: {
-      type: 'link';
-    };
-    hero_body: {
-      type: 'text';
-    };
     banners: {
       type: 'rich_text';
       blocks: Banner | SingleBook;
+    };
+    banner: {
+      type: 'file';
+    };
+    banner_url: {
+      type: 'string';
+    };
+    hero_body: {
+      type: 'text';
     };
     seo: {
       type: 'seo';
     };
   }
 >;
-export type AnyBlock = Video | SingleBook | Banner | Image | Section | Reprint;
+export type AnyBlock =
+  | Video
+  | SingleBook
+  | SingleAuthor
+  | Banner
+  | Image
+  | Section
+  | Reprint;
 export type AnyModel =
   | Book
   | BlogPostOld
