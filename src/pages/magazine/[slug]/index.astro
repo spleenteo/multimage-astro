@@ -1,0 +1,120 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { StructuredText } from '@datocms/astro/StructuredText';
+import { Image } from '@datocms/astro/Image';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { withFallbackSeo } from '~/lib/seo';
+import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import styles from './_style.module.css';
+import {
+  MAGAZINE_POST_QUERY,
+  MAGAZINE_POST_SLUGS_QUERY,
+  type MagazinePostQueryResult,
+  type MagazinePostSlugsResult,
+} from './_graphql';
+import {
+  defaultBlockComponents,
+  defaultInlineBlockComponents,
+  defaultLinkToRecordComponents,
+} from '~/lib/datocms/structuredTextComponents';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const data = await executeQuery<MagazinePostSlugsResult>(MAGAZINE_POST_SLUGS_QUERY);
+
+  return (data.allBlogPosts ?? [])
+    .map((entry) => entry.slug)
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing magazine post slug');
+}
+
+const data = await executeQuery<MagazinePostQueryResult>(MAGAZINE_POST_QUERY, {
+  variables: { slug },
+});
+
+const post = data.blogPost;
+
+if (!post) {
+  throw new Error(`Magazine post not found for slug: ${slug}`);
+}
+
+const heroTitle = post.title ?? 'Articolo';
+const heroSubtitle = post.abstract?.trim() ?? '';
+const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+const label = post.category?.name ?? 'Magazine';
+const publishedAt = post.createdAt ?? null;
+const formattedDate = publishedAt
+  ? new Intl.DateTimeFormat('it-IT', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(publishedAt))
+  : null;
+const authorName = post.author?.name?.trim()?.length ? post.author.name.trim() : null;
+const heroImage = post.featuredImage?.responsiveImage ?? null;
+const hasBodyContent = hasStructuredTextContent(post.body);
+
+const seo = withFallbackSeo(post._seoMetaTags, {
+  title: `${heroTitle} | Multimage`,
+  description: heroDescription,
+});
+---
+
+<BaseLayout seo={seo}>
+  <article class={styles.layout}>
+    <section class={styles.heroSection}>
+      <div class={styles.heroContent}>
+        <p class={styles.label}>{label}</p>
+        <h1 class={styles.title}>{heroTitle}</h1>
+        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
+        {formattedDate || authorName ? (
+          <div class={styles.meta}>
+            {formattedDate ? (
+              <time datetime={publishedAt ?? undefined} class={styles.metaItem}>
+                {formattedDate}
+              </time>
+            ) : null}
+            {authorName ? <span class={styles.metaItem}>Di {authorName}</span> : null}
+          </div>
+        ) : null}
+      </div>
+    </section>
+
+    {heroImage ? (
+      <div class={styles.featuredImage}>
+        <Image
+          data={heroImage}
+          sizes="(min-width: 1280px) 60vw, 95vw"
+          pictureClass="block"
+          imgClass="h-full w-full object-cover"
+        />
+      </div>
+    ) : null}
+
+    <section class={styles.bodySection}>
+      {
+        hasBodyContent && post.body ? (
+          <div class={styles.bodyContent}>
+            <StructuredText
+              data={post.body as any}
+              blockComponents={defaultBlockComponents as any}
+              inlineBlockComponents={defaultInlineBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          </div>
+        ) : (
+          <p class="text-sm text-brand-slate">
+            I contenuti di questo articolo saranno disponibili a breve.
+          </p>
+        )
+      }
+    </section>
+  </article>
+</BaseLayout>

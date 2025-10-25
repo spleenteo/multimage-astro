@@ -1,0 +1,88 @@
+---
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImage } from '~/lib/datocms/types';
+import { truncateToLength } from '~/lib/text';
+import styles from './style.module.css';
+
+type Props = {
+  title: string;
+  slug: string;
+  abstract?: string | null;
+  publishedAt?: string | null;
+  category?: {
+    name?: string | null;
+    slug?: string | null;
+  } | null;
+  authorName?: string | null;
+  image?: ResponsiveImage | null;
+  sticky?: boolean | null;
+};
+
+const {
+  title,
+  slug,
+  abstract = null,
+  publishedAt = null,
+  category = null,
+  authorName = null,
+  image = null,
+  sticky = false,
+}: Props = Astro.props;
+
+const href = `/magazine/${slug}`;
+const summary = abstract ? truncateToLength(abstract.trim(), 190) : null;
+
+const formattedDate = publishedAt
+  ? new Intl.DateTimeFormat('it-IT', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(publishedAt))
+  : null;
+
+const authorLabel = typeof authorName === 'string' && authorName.trim().length > 0 ? authorName.trim() : null;
+---
+
+<a href={href} class:list={[styles.root, 'group']}>
+  <article class="flex h-full flex-col">
+    <div class={styles.imageWrapper}>
+      {
+        image ? (
+          <Image
+            data={image}
+            sizes="(min-width: 1280px) 320px, (min-width: 768px) 45vw, 90vw"
+            pictureClass="block h-full w-full"
+            imgClass={styles.image}
+          />
+        ) : (
+          <div class="flex h-full w-full items-center justify-center text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate/60">
+            Immagine in arrivo
+          </div>
+        )
+      }
+    </div>
+
+    <div class={styles.content}>
+      <div class={styles.meta}>
+        {sticky ? <span class={styles.stickyTag}>In evidenza</span> : null}
+        {category?.name ? <span class={styles.categoryTag}>{category.name}</span> : null}
+        {formattedDate ? (
+          <time datetime={publishedAt ?? undefined} class={styles.date}>
+            {formattedDate}
+          </time>
+        ) : null}
+      </div>
+
+      <h3 class={styles.title}>{title}</h3>
+      {summary ? <p class={styles.abstract}>{summary}</p> : null}
+
+      <div class={styles.footer}>
+        {authorLabel ? <span class={styles.author}>Di {authorLabel}</span> : null}
+        <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-sky transition group-hover:text-brand-navy">
+          Leggi
+          <iconify-icon icon="iconoir:nav-arrow-right" width="18" height="18" aria-hidden="true" />
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

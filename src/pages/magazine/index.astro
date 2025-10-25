@@ -1,0 +1,90 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import MagazinePostCard from '~/components/MagazinePostCard';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { withFallbackSeo } from '~/lib/seo';
+import type { ResponsiveImage } from '~/lib/datocms/types';
+import styles from './index/_style.module.css';
+import {
+  MAGAZINE_INDEX_QUERY,
+  type MagazineIndexQueryResult,
+} from './index/_graphql';
+
+export const prerender = true;
+
+const data = await executeQuery<MagazineIndexQueryResult>(MAGAZINE_INDEX_QUERY);
+
+const heroTitle = data.magazineIndex?.title ?? 'Magazine';
+const heroSubtitle = data.magazineIndex?.subtitle?.trim() ?? '';
+const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+
+const seo = withFallbackSeo(data.magazineIndex?._seoMetaTags, {
+  title: `${heroTitle} | Multimage`,
+  description: heroDescription,
+});
+
+type PostCard = {
+  id: string;
+  slug: string;
+  title: string;
+  abstract?: string | null;
+  sticky?: boolean | null;
+  publishedAt?: string | null;
+  category?: {
+    name?: string | null;
+    slug?: string | null;
+  } | null;
+  authorName?: string | null;
+  image?: ResponsiveImage | null;
+};
+
+const posts: PostCard[] = (data.allBlogPosts ?? [])
+  .filter((post) => Boolean(post?.slug) && Boolean(post?.title))
+  .map((post) => ({
+    id: post.id,
+    slug: post.slug ?? '',
+    title: post.title ?? 'Articolo',
+    abstract: post.abstract,
+    sticky: post.sticky,
+    publishedAt: post.createdAt,
+    category: post.category,
+    authorName: post.author?.name ?? null,
+    image: post.featuredImage?.responsiveImage ?? null,
+  }))
+  .sort((a, b) => Number(b.sticky === true) - Number(a.sticky === true));
+---
+
+<BaseLayout seo={seo}>
+  <div class={styles.layout}>
+    <section class={styles.heroSection}>
+      <div class={styles.heroContent}>
+        <p class={styles.label}>Magazine</p>
+        <h1 class={styles.title}>{heroTitle}</h1>
+        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
+      </div>
+    </section>
+
+    {
+      posts.length === 0 ? (
+        <p class={styles.empty}>Gli articoli del magazine saranno disponibili a breve.</p>
+      ) : (
+        <section>
+          <div class={styles.cardsGrid}>
+            {posts.map((post) => (
+              <MagazinePostCard
+                title={post.title}
+                slug={post.slug}
+                abstract={post.abstract}
+                publishedAt={post.publishedAt}
+                category={post.category}
+                authorName={post.authorName}
+                image={post.image}
+                sticky={post.sticky}
+              />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

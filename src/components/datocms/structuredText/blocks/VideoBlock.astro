@@ -25,6 +25,21 @@ const poster = video.thumbnailUrl ?? undefined;
 const title = video.title ?? 'Contenuto multimediale';
 const provider = video.provider ?? null;
 const isEmbedProvider = provider === 'youtube' || provider === 'vimeo';
+
+let embedUrl = sourceUrl;
+if (isEmbedProvider) {
+  if (provider === 'youtube') {
+    if (video.providerUid && video.providerUid.length > 0) {
+      embedUrl = `https://www.youtube.com/embed/${video.providerUid}`;
+    } else if (sourceUrl && sourceUrl.includes('watch')) {
+      embedUrl = sourceUrl.replace('watch?v=', 'embed/');
+    }
+  } else if (provider === 'vimeo') {
+    if (video.providerUid && video.providerUid.length > 0) {
+      embedUrl = `https://player.vimeo.com/video/${video.providerUid}`;
+    }
+  }
+}
 ---
 
 {
@@ -32,10 +47,11 @@ const isEmbedProvider = provider === 'youtube' || provider === 'vimeo';
     <figure class="not-prose my-6 space-y-3 rounded-xl bg-brand-mist/40 p-4 text-center">
       {isEmbedProvider ? (
         <iframe
-          src={sourceUrl}
+          src={embedUrl ?? undefined}
           title={title}
           loading="lazy"
           class="mx-auto aspect-video h-auto w-full max-w-4xl rounded-lg"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
         />
       ) : (

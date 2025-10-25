@@ -93,6 +93,12 @@ export type EbooksIndexRecord = {
   seo: SeoMetaTag[] | null;
 };
 
+export type MagazineIndexRecord = {
+  title: string | null;
+  subtitle: string | null;
+  seo: SeoMetaTag[] | null;
+};
+
 export type CollectionSummaryRecord = {
   id: string;
   name: string | null;
@@ -123,4 +129,37 @@ export type PageRecord = {
   label: string | null;
   menu: boolean | null;
   seo: SeoMetaTag[] | null;
+};
+
+export type BlogCategoryRecord = {
+  id: string;
+  name: string | null;
+  slug: string | null;
+};
+
+export type BlogPostRecord = {
+  id: string;
+  title: string | null;
+  slug: string | null;
+  sticky: boolean | null;
+  abstract: string | null;
+  seo: SeoMetaTag[] | null;
+  featuredImage: AssetImage | null;
+  body: StructuredTextField;
+  author: {
+    id: string;
+    name: string | null;
+    slug: string | null;
+    biography?: string | null;
+    seo?: SeoMetaTag[] | null;
+  } | null;
+  category: BlogCategoryRecord | null;
+  keywords?: Array<{
+    id: string;
+    tag?: string | null;
+    slug?: string | null;
+    name?: string | null;
+  }> | null;
+  publishedAt?: string | null;
+  createdAt?: string | null;
 };

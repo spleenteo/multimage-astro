@@ -79,12 +79,107 @@ export type Page = ItemTypeDefinition<
     };
   }
 >;
+export type FaqSection = ItemTypeDefinition<
+  EnvironmentSettings,
+  'QkR2_FyOQrKHP2IdQYmRWw',
+  {
+    display_options: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    questions: {
+      type: 'rich_text';
+      blocks: Question;
+    };
+  }
+>;
+export type Question = ItemTypeDefinition<
+  EnvironmentSettings,
+  'CiaFELTbTVaDalASzzCh-g',
+  {
+    question: {
+      type: 'string';
+    };
+    answer: {
+      type: 'structured_text';
+      blocks: NewsletterSubscription | CtaButtonWithImage;
+    };
+  }
+>;
+export type NewsletterSubscription = ItemTypeDefinition<
+  EnvironmentSettings,
+  'JL95W2TbQkq54DqhCfeN2w',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    button_label: {
+      type: 'string';
+    };
+  }
+>;
+export type CtaButtonWithImage = ItemTypeDefinition<
+  EnvironmentSettings,
+  'dS2Z8nuURz6Pem2fHRN2tQ',
+  {
+    image: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    button_label: {
+      type: 'string';
+    };
+  }
+>;
+export type Button = ItemTypeDefinition<
+  EnvironmentSettings,
+  'NT-1f6AdRFuEqgoY824_uw',
+  {
+    label: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+    };
+    primary: {
+      type: 'boolean';
+    };
+  }
+>;
 export type Video = ItemTypeDefinition<
   EnvironmentSettings,
   '184828',
   {
     video: {
       type: 'video';
+    };
+  }
+>;
+export type MagazineIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Hvp_-y8hTkaEMfZDVmHf-g',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
     };
   }
 >;
@@ -122,11 +217,11 @@ export type Book = ItemTypeDefinition<
     price: {
       type: 'float';
     };
-    description: {
-      type: 'text';
-    };
     pages: {
       type: 'integer';
+    };
+    description: {
+      type: 'text';
     };
     promo: {
       type: 'string';
@@ -281,7 +376,13 @@ export type BlogPost = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks: Image | Video | Banner | SingleBook | SingleAuthor;
+      blocks:
+        | CtaButtonWithImage
+        | Video
+        | SingleBook
+        | SingleAuthor
+        | Banner
+        | Image;
       inline_blocks: Author | Page | Book | BlogPost;
     };
     keywords: {
@@ -665,10 +766,23 @@ export type Home = ItemTypeDefinition<
     };
   }
 >;
-export type AnyBlock = Video | SingleBook | SingleAuthor | Banner | Image | Section | Reprint;
+export type AnyBlock =
+  | FaqSection
+  | Question
+  | NewsletterSubscription
+  | CtaButtonWithImage
+  | Button
+  | Video
+  | SingleBook
+  | SingleAuthor
+  | Banner
+  | Image
+  | Section
+  | Reprint;
 export type AnyModel =
   | Author
   | Page
+  | MagazineIndex
   | Book
   | BlogPostOld
   | BlogPost
