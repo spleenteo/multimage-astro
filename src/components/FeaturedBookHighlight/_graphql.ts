@@ -26,7 +26,9 @@ export const FEATURED_BOOK_HIGHLIGHT_FRAGMENT = /* GraphQL */ `
         slug
         picture {
           alt
-          responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 220, h: 220, auto: format }) {
+          responsiveImage(
+            imgixParams: { fit: crop, crop: focalpoint, w: 220, h: 220, auto: format }
+          ) {
             ...ResponsiveImageFragment
           }
         }

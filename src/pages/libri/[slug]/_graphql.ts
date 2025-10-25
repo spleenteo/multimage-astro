@@ -38,7 +38,9 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
         picture {
           url
           alt
-          responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 640, h: 640, auto: format }) {
+          responsiveImage(
+            imgixParams: { fit: crop, crop: focalpoint, w: 640, h: 640, auto: format }
+          ) {
             ...ResponsiveImageFragment
           }
         }
