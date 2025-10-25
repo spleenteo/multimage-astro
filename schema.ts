@@ -665,14 +665,7 @@ export type Home = ItemTypeDefinition<
     };
   }
 >;
-export type AnyBlock =
-  | Video
-  | SingleBook
-  | SingleAuthor
-  | Banner
-  | Image
-  | Section
-  | Reprint;
+export type AnyBlock = Video | SingleBook | SingleAuthor | Banner | Image | Section | Reprint;
 export type AnyModel =
   | Author
   | Page

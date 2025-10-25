@@ -34,7 +34,9 @@ const paragraphs = (block.content ?? '')
   .filter((item) => item.length > 0);
 ---
 
-<section class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/50 bg-brand-mist/20 shadow-soft">
+<section
+  class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/50 bg-brand-mist/20 shadow-soft"
+>
   <div
     class:list={[
       'flex flex-col gap-6 md:gap-12',
@@ -65,17 +67,24 @@ const paragraphs = (block.content ?? '')
           </div>
         ) : null
       }
-      {link ? (
-        <div>
-          <a
-            href={link}
-            class="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
-          >
-            Scopri di più
-            <iconify-icon icon="iconoir:nav-arrow-right" width="18" height="18" aria-hidden="true" />
-          </a>
-        </div>
-      ) : null}
+      {
+        link ? (
+          <div>
+            <a
+              href={link}
+              class="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
+            >
+              Scopri di più
+              <iconify-icon
+                icon="iconoir:nav-arrow-right"
+                width="18"
+                height="18"
+                aria-hidden="true"
+              />
+            </a>
+          </div>
+        ) : null
+      }
     </div>
   </div>
 </section>

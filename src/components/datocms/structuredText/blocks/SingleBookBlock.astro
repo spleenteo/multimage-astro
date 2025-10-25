@@ -37,7 +37,9 @@ const alt = image?.alt ?? title;
 const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
 ---
 
-<article class="not-prose my-6 flex gap-4 rounded-xl border border-brand-mist/60 bg-white/90 p-4 shadow-soft">
+<article
+  class="not-prose my-6 flex gap-4 rounded-xl border border-brand-mist/60 bg-white/90 p-4 shadow-soft"
+>
   {
     imageData ? (
       <div class="hidden max-w-[160px] flex-shrink-0 md:block">
@@ -63,13 +65,15 @@ const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
       }
     </h3>
     {subtitle ? <p class="text-sm text-brand-charcoal/80">{subtitle}</p> : null}
-    {href ? (
-      <a
-        href={href}
-        class="text-sm font-semibold uppercase tracking-wide text-brand-sky hover:text-brand-navy"
-      >
-        Scopri il libro →
-      </a>
-    ) : null}
+    {
+      href ? (
+        <a
+          href={href}
+          class="text-sm font-semibold uppercase tracking-wide text-brand-sky hover:text-brand-navy"
+        >
+          Scopri il libro →
+        </a>
+      ) : null
+    }
   </div>
 </article>

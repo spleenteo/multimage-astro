@@ -61,9 +61,7 @@ export const INFO_PAGE_QUERY = /* GraphQL */ `
             link
             imagePosition
             featuredImage {
-              responsiveImage(
-                imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }
@@ -71,9 +69,7 @@ export const INFO_PAGE_QUERY = /* GraphQL */ `
           ... on ImageRecord {
             id
             image {
-              responsiveImage(
-                imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }
-              ) {
+              responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
             }

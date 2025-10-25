@@ -16,11 +16,11 @@ import {
   type AuthorRelatedBooksResult,
   type AuthorSlugsResult,
 } from './_graphql';
+import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import {
-  structuredTextToPlainText,
-  hasStructuredTextContent,
-} from '~/lib/datocms/structuredText';
-import { defaultBlockComponents, defaultLinkToRecordComponents } from '~/lib/datocms/structuredTextComponents';
+  defaultBlockComponents,
+  defaultLinkToRecordComponents,
+} from '~/lib/datocms/structuredTextComponents';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
 
 export const prerender = true;

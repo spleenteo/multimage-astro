@@ -8,7 +8,10 @@ import styles from './_style.module.css';
 import { INFO_PAGE_QUERY, INFO_PAGE_SLUGS_QUERY } from './_graphql';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
-import { defaultBlockComponents, defaultLinkToRecordComponents } from '~/lib/datocms/structuredTextComponents';
+import {
+  defaultBlockComponents,
+  defaultLinkToRecordComponents,
+} from '~/lib/datocms/structuredTextComponents';
 
 export const prerender = true;
 
