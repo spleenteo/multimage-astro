@@ -101,13 +101,13 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 # Next tasks to be done (unordered)
 
 - [x] Home page components
+- [x] CTAs sections
+- [x] Page composer with blocks
+- [x] GraphlQL a directory con fragments
+- [x] Move to structured text
+- [x] UI refinery for header and footer
 - [] Enable preview mode for live draft editing
 - [] Search engine for static website
-- [] Move to structured text
-- [] UI refinery for header and footer
-- [x] Page composer with blocks
 - [] LLMs.txt
 - [] Ecommerce cart integration
 - [] Newsletter section
-- [] CTAs sections
-- [x] GraphlQL a directory con fragments
