@@ -13,6 +13,7 @@ type RawButtonBlock = {
 type CtaButtonWithImageBlockData = {
   title?: string | null;
   content?: string | null;
+  contentHtml?: string | null;
   buttons?: Array<RawButtonBlock | null> | null;
   image?: {
     url?: string | null;
@@ -32,13 +33,14 @@ const { block }: Props = Astro.props;
 
 const title =
   typeof block.title === 'string' && block.title.length > 0 ? block.title : 'Scopri di più';
-const contentRaw = typeof block.content === 'string' ? block.content : null;
-const paragraphs = contentRaw
-  ? contentRaw
-      .split(/\r?\n\s*\r?\n/)
-      .map((item) => item.trim())
-      .filter((item) => item.length > 0)
-  : [];
+const contentPlain = typeof block.content === 'string' ? block.content : null;
+const contentHtmlRaw = typeof block.contentHtml === 'string' ? block.contentHtml : null;
+const contentHtml =
+  contentHtmlRaw && contentHtmlRaw.trim().length > 0
+    ? contentHtmlRaw
+    : contentPlain && contentPlain.trim().length > 0
+      ? `<p>${contentPlain.trim()}</p>`
+      : null;
 const buttons = (Array.isArray(block.buttons) ? block.buttons : [])
   .filter((btn): btn is RawButtonBlock => Boolean(btn && typeof btn.id === 'string'))
   .filter((btn) => {
@@ -83,15 +85,12 @@ const hasImage = Boolean(imageData);
       ]}
     >
       <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
-      {
-        paragraphs.length > 0 ? (
-          <div class="space-y-3 text-base leading-relaxed text-brand-charcoal/90">
-            {paragraphs.map((paragraph) => (
-              <p>{paragraph}</p>
-            ))}
-          </div>
-        ) : null
-      }
+      {contentHtml ? (
+        <div
+          class="prose prose-brand max-w-none text-base leading-relaxed text-brand-charcoal/90"
+          set:html={contentHtml}
+        />
+      ) : null}
       {
         hasButtons ? (
           <div class="mt-2 flex flex-wrap items-center gap-3">

@@ -9,11 +9,13 @@ import { toPlainText, toRichTextHtml } from '~/lib/text';
 import { toBookCard, formatBookPrice } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
+import CtaButtonWithImageBlock from '~/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro';
 import styles from './index/_style.module.css';
 import {
   HOME_PAGE_QUERY,
   type HomeBannerBannerBlockRecord,
   type HomeSingleBookBlockRecord,
+  type HomeCtaButtonBlockRecord,
   type HomeBannerBlockRecord,
   type HomePageQueryResult,
 } from './index/_graphql';
@@ -82,7 +84,8 @@ type HomeSingleBookHighlightData = {
 
 type HomeBannerEntry =
   | { kind: 'banner'; id: string; data: HomeBannerSectionData }
-  | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData };
+  | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData }
+  | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord };
 
 const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY);
 
@@ -212,6 +215,14 @@ const homeBannerEntries = bannerBlocks
       } satisfies HomeBannerEntry;
     }
 
+    if (block?.__typename === 'CtaButtonWithImageRecord') {
+      return {
+        kind: 'cta',
+        id: block.id,
+        block: block as HomeCtaButtonBlockRecord,
+      } satisfies HomeBannerEntry;
+    }
+
     return null;
   })
   .filter((entry): entry is HomeBannerEntry => entry !== null);
@@ -269,21 +280,34 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
     {
       homeBannerEntries.length > 0 ? (
         <div class="space-y-10">
-          {homeBannerEntries.map((entry) =>
-            entry.kind === 'banner' ? (
-              <BannerSection {...entry.data} />
-            ) : (
-              <FeaturedBookHighlight
-                book={entry.data.book}
-                coverImage={entry.data.coverImage}
-                collectionLabel={entry.data.collectionLabel ?? undefined}
-                collectionHref={entry.data.collectionHref ?? undefined}
-                label={entry.data.label ?? undefined}
-                author={entry.data.author ?? undefined}
-                coverColors={entry.data.coverColors}
+          {homeBannerEntries.map((entry) => {
+            if (entry.kind === 'banner') {
+              return <BannerSection {...entry.data} />;
+            }
+
+            if (entry.kind === 'singleBook') {
+              return (
+                <FeaturedBookHighlight
+                  book={entry.data.book}
+                  coverImage={entry.data.coverImage}
+                  collectionLabel={entry.data.collectionLabel ?? undefined}
+                  collectionHref={entry.data.collectionHref ?? undefined}
+                  label={entry.data.label ?? undefined}
+                  author={entry.data.author ?? undefined}
+                  coverColors={entry.data.coverColors}
+                />
+              );
+            }
+
+            return (
+              <CtaButtonWithImageBlock
+                block={{
+                  ...entry.block,
+                  content: entry.block.content ?? null,
+                }}
               />
-            ),
-          )}
+            );
+          })}
         </div>
       ) : null
     }

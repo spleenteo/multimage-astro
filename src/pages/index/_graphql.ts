@@ -4,11 +4,34 @@ import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFra
 import type { AssetColor, HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
 
+export const CTA_BUTTON_WITH_IMAGE_HOME_FRAGMENT = /* GraphQL */ `
+  fragment CtaButtonWithImageHomeBlock on CtaButtonWithImageRecord {
+    __typename
+    id
+    title
+    content
+    contentHtml: content
+    buttons {
+      id
+      label
+      url
+      primary
+    }
+    image {
+      url
+      responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
+        ...ResponsiveImageFragment
+      }
+    }
+  }
+`;
+
 export const HOME_PAGE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
   ${BANNER_SECTION_FRAGMENT}
   ${FEATURED_BOOK_HIGHLIGHT_FRAGMENT}
+  ${CTA_BUTTON_WITH_IMAGE_HOME_FRAGMENT}
   query HomePage {
     home {
       title
@@ -29,6 +52,7 @@ export const HOME_PAGE_QUERY = /* GraphQL */ `
         __typename
         ...BannerSectionBlock
         ...FeaturedBookHighlightBlock
+        ...CtaButtonWithImageHomeBlock
       }
     }
   }
@@ -79,7 +103,28 @@ export type HomeSingleBookBlockRecord = {
     | null;
 };
 
-export type HomeBannerBlockRecord = HomeBannerBannerBlockRecord | HomeSingleBookBlockRecord;
+export type HomeCtaButtonBlockRecord = {
+  __typename: 'CtaButtonWithImageRecord';
+  id: string;
+  title: string | null;
+  content: string | null;
+  contentHtml: string | null;
+  buttons: Array<{
+    id: string;
+    label: string | null;
+    url: string | null;
+    primary: boolean | null;
+  }> | null;
+  image: {
+    url: string | null;
+    responsiveImage: ResponsiveImage | null;
+  } | null;
+};
+
+export type HomeBannerBlockRecord =
+  | HomeBannerBannerBlockRecord
+  | HomeSingleBookBlockRecord
+  | HomeCtaButtonBlockRecord;
 
 export type HomePageQueryResult = {
   home:
