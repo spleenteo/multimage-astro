@@ -1,0 +1,240 @@
+@tailwind components;
+
+@layer components {
+  .wrapper {
+    @apply flex w-full justify-center;
+  }
+
+  .standaloneWrapper {
+    @apply min-h-screen bg-brand-sand px-4 py-10 md:px-12;
+  }
+
+  .embeddedWrapper {
+    @apply overflow-x-auto rounded-3xl border border-brand-mist/80 bg-white/95 px-4 py-8 shadow-soft;
+  }
+
+  .sheet {
+    @apply relative grid  border border-brand-mist bg-white text-brand-charcoal shadow-soft;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 22mm 18mm;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .divider {
+    @apply hidden;
+  }
+
+  .content {
+    @apply flex flex-col gap-6 pr-6;
+  }
+
+  .brand {
+    @apply flex flex-col items-start gap-4;
+  }
+
+  .brandLogoGroup {
+    @apply flex flex-col items-start gap-2;
+  }
+
+  .brandLogoImage {
+    @apply h-auto w-48 max-w-xs object-contain;
+    filter: grayscale(100%);
+  }
+
+  .brandTagline {
+    @apply text-sm leading-snug text-brand-slate;
+  }
+
+  .authors {
+    @apply text-base font-semibold uppercase tracking-[0.25em] text-brand-slate;
+  }
+
+  .titleBlock {
+    @apply flex flex-col gap-3;
+  }
+
+  .title {
+    @apply text-5xl font-serif text-brand-navy;
+  }
+
+  .subtitle {
+    @apply text-xl font-serif italic text-brand-charcoal/80;
+  }
+
+  .promo {
+    @apply border-l-4 border-brand-orange bg-brand-mist/30 px-4 py-3 text-sm italic leading-relaxed text-brand-charcoal;
+  }
+
+  .body {
+    @apply flex flex-col gap-2.5 text-[0.78rem] leading-[1.35rem];
+  }
+
+  .body :global(p) {
+    @apply text-[0.78rem] leading-[1.35rem];
+  }
+
+  .body :global(h2) {
+    @apply text-2xl font-serif text-brand-navy;
+  }
+
+  .body :global(ul) {
+    @apply list-disc pl-6;
+  }
+
+  .body :global(ol) {
+    @apply list-decimal pl-6;
+  }
+
+  .body :global(strong) {
+    @apply text-brand-navy;
+  }
+
+  .biography {
+    @apply flex flex-col gap-2 pt-4 text-[0.78rem] leading-[1.4rem] font-serif italic text-brand-charcoal;
+  }
+
+  .biography :global(p) {
+    @apply text-[0.78rem] leading-[1.4rem];
+  }
+
+  .biographyLabel {
+    @apply text-[0.75rem] font-semibold uppercase tracking-[0.15em] text-brand-slate not-italic;
+  }
+
+  .sidebar {
+    @apply flex flex-col justify-between gap-4 border-l border-brand-orange/40 pl-5;
+  }
+
+  .metadataSection {
+    @apply flex flex-col gap-3;
+  }
+
+  .metadataTitle {
+    @apply text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-brand-orange;
+  }
+
+  .metadataList {
+    @apply flex flex-col gap-2.5;
+  }
+
+  .metadataItem {
+    @apply flex flex-col gap-0.5 text-[0.8rem] leading-5;
+  }
+
+  .metadataLabel {
+    @apply text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-brand-slate;
+  }
+
+  .metadataValue {
+    @apply text-[0.8rem] font-medium leading-5 text-brand-charcoal;
+  }
+
+  .contactCard {
+    @apply flex flex-col gap-1.5 border border-brand-orange/40 bg-brand-mist/40 px-3 py-2.5 text-[0.7rem] leading-5 text-brand-charcoal;
+  }
+
+  .contactCard :global(p) {
+    @apply text-[0.7rem] leading-5;
+  }
+
+  .coverWrapper {
+    @apply flex flex-col items-center gap-1.5;
+  }
+
+  .coverImage {
+    @apply w-[140mm] max-w-[240px] border border-brand-mist shadow-soft;
+  }
+
+  .coverFallback {
+    @apply flex h-full w-full items-center justify-center bg-brand-mist;
+  }
+
+  .coverCaption {
+    @apply text-xs italic text-brand-slate;
+  }
+}
+
+@media (max-width: 960px) {
+  :global(.bookSheetResponsive) {
+    @apply px-0;
+  }
+
+  .sheet {
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-height: 0;
+    padding: 2rem 1.5rem;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .content {
+    @apply pr-0;
+  }
+
+  .sidebar {
+    @apply pl-0;
+  }
+
+  .coverImage {
+    @apply w-full max-w-xs;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    height: auto !important;
+  }
+
+  body > main,
+  body > main > .standaloneWrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .standaloneWrapper,
+  .embeddedWrapper {
+    width: auto !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+
+  .sheet {
+    width: auto !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  .wrapper,
+  .content,
+  .sidebar {
+    margin: 0 !important;
+    break-inside: avoid;
+  }
+}

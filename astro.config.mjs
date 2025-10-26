@@ -1,10 +1,14 @@
 import { defineConfig, envField } from 'astro/config';
 
 import tailwind from '@astrojs/tailwind';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'static',
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
   env: {
     schema: {
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({

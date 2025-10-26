@@ -1,0 +1,139 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { withFallbackSeo } from '~/lib/seo';
+import { formatAuthorNames } from '~/lib/authors';
+import styles from './index/_style.module.css';
+import { BOOK_SEARCH_QUERY, type BookSearchResult } from './index/_graphql';
+
+export const prerender = false;
+
+const searchParam = Astro.url.searchParams.get('q')?.trim() ?? '';
+const hasSearch = searchParam.length >= 3;
+const shouldShowMinCharsMessage = searchParam.length > 0 && searchParam.length < 3;
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const seo = withFallbackSeo(null, {
+  title: 'Scheda libro | Multimage',
+  description:
+    'Ricerca un libro nel catalogo Multimage e genera una scheda stampabile con tutte le informazioni principali.',
+});
+
+let results: BookSearchResult['allBooks'] = [];
+let searchError: string | null = null;
+
+if (hasSearch) {
+  try {
+    const escapedTerm = escapeRegex(searchParam);
+    const regexPattern = `.*${escapedTerm}.*`;
+
+    const data = await executeQuery<BookSearchResult>(BOOK_SEARCH_QUERY, {
+      variables: { pattern: regexPattern },
+    });
+
+    results = (data.allBooks ?? []).filter(
+      (book) => Boolean(book?.slug) && Boolean(book?.title),
+    );
+  } catch (error) {
+    console.error('Book search failed', error);
+    searchError =
+      'Si è verificato un problema nel recupero dei risultati. Riprova tra qualche istante.';
+  }
+}
+---
+
+<BaseLayout seo={seo}>
+  <div class={styles.layout}>
+    <section class={styles.intro}>
+      <p class="text-xs uppercase tracking-[0.35em] text-brand-slate">Strumenti redazionali</p>
+      <h1 class={styles.introTitle}>Genera scheda libro</h1>
+      <p class={styles.introDescription}>
+        Cerca un titolo o un ISBN nel catalogo e crea una scheda stampabile in formato A4 con tutte
+        le informazioni principali del libro.
+      </p>
+    </section>
+
+    <section class={styles.searchCard}>
+      <form class={styles.searchForm} method="get">
+        <input
+          type="search"
+          name="q"
+          value={searchParam}
+          placeholder="Titolo o ISBN"
+          autocomplete="off"
+          class={styles.searchField}
+          aria-label="Cerca libro per titolo o ISBN"
+        />
+        <button type="submit" class={styles.submitButton}>
+          Cerca
+        </button>
+      </form>
+
+      {
+        shouldShowMinCharsMessage ? (
+          <p class={styles.statusMessage}>Inserisci almeno 3 caratteri per avviare la ricerca.</p>
+        ) : null
+      }
+
+      {searchError ? <p class={styles.statusMessage}>{searchError}</p> : null}
+
+      {
+        hasSearch && !searchError ? (
+          results.length === 0 ? (
+            <p class={styles.statusMessage}>
+              Nessun libro trovato con il termine “{searchParam}”.
+            </p>
+          ) : (
+            <div class={styles.results}>
+              {results.map((book) => {
+                const title = (book.title ?? '').trim() || 'Titolo in aggiornamento';
+                const authorsLabel = formatAuthorNames(book.authors ?? []);
+                const collectionName = book.collection?.name ?? null;
+                const subtitle = book.subtitle?.trim();
+                const slugValue = book.slug ?? '';
+
+                return (
+                  <div class={styles.resultCard}>
+                    <div class={styles.resultInfo}>
+                      <h2 class={styles.resultTitle}>{title}</h2>
+                      {subtitle ? (
+                        <p class="text-sm font-serif italic text-brand-charcoal/80">{subtitle}</p>
+                      ) : null}
+                      <p class={styles.resultMeta}>{authorsLabel}</p>
+                      {
+                        collectionName || book.isbn ? (
+                          <p class={styles.resultMeta}>
+                            {collectionName ? `Collana: ${collectionName}` : null}
+                            {collectionName && book.isbn ? ' · ' : null}
+                            {book.isbn ? `ISBN: ${book.isbn}` : null}
+                          </p>
+                        ) : null
+                      }
+                    </div>
+                    {
+                      slugValue ? (
+                        <div class={styles.resultActions}>
+                          <a
+                            class={styles.createButton}
+                            href={`/scheda-libro/${slugValue}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Genera scheda libro
+                          </a>
+                        </div>
+                      ) : null
+                    }
+                  </div>
+                );
+              })}
+            </div>
+          )
+        ) : null
+      }
+    </section>
+  </div>
+</BaseLayout>

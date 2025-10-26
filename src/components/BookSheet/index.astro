@@ -1,0 +1,200 @@
+---
+import { StructuredText } from '@datocms/astro/StructuredText';
+import { Image } from '@datocms/astro/Image';
+import { formatBookPrice } from '~/lib/books';
+import { formatAuthorNames } from '~/lib/authors';
+import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import {
+  defaultBlockComponents,
+  defaultInlineBlockComponents,
+  defaultLinkToRecordComponents,
+} from '~/lib/datocms/structuredTextComponents';
+import type { BookSheetRecord } from '~/pages/scheda-libro/[slug]/_graphql';
+import styles from './_style.module.css';
+
+type Props = {
+  book: BookSheetRecord;
+  variant?: 'embedded' | 'standalone';
+};
+
+const { book, variant = 'embedded' }: Props = Astro.props;
+const MULTIMAGE_LOGO_URL =
+  '/logo-full.jpg';
+
+const title = book.title?.trim() ?? 'Titolo in aggiornamento';
+const subtitle = book.subtitle?.trim() ?? null;
+const promo = book.promo?.trim() ?? null;
+const description = book.description?.trim() ?? null;
+const authorsLabel = formatAuthorNames(book.authors ?? []);
+const formattedPrice = formatBookPrice(book.price) ?? null;
+const formattedPages = book.pages ? `${book.pages}` : null;
+const formattedFormat = book.format?.trim() ?? null;
+const formattedCollection = book.collection?.name?.trim() ?? null;
+const formattedLayout = book.layoutArtist?.trim() ?? null;
+const formattedCoverDesigner = book.coverDesigner?.trim() ?? null;
+const formattedIllustrator = book.illustrator?.trim() ?? null;
+const formattedIsbn = book.isbn?.trim() ?? null;
+const formattedFirstEdition = book.firstPrintYear ? `${book.firstPrintYear}` : null;
+
+const printDate = (() => {
+  if (!book.printYear) {
+    return null;
+  }
+
+  const parsed = new Date(book.printYear);
+  if (Number.isNaN(parsed.getTime())) {
+    return book.printYear;
+  }
+
+  return new Intl.DateTimeFormat('it-IT', {
+    month: 'long',
+    year: 'numeric',
+  }).format(parsed);
+})();
+
+const pageUrl = book.slug ? `https://multimage.org/libri/${book.slug}` : null;
+const hasReviewContent = hasStructuredTextContent(book.review);
+const reviewContent = hasReviewContent ? book.review : null;
+const primaryAuthor = (book.authors ?? []).find((author) =>
+  hasStructuredTextContent(author.biography),
+);
+const authorBiography = primaryAuthor?.biography ?? null;
+const hasAuthorBiography = hasStructuredTextContent(authorBiography);
+const authorDisplayName = primaryAuthor?.fullName?.trim() ?? null;
+
+const descriptionParagraphs =
+  !reviewContent && description
+    ? description
+        .split(/\n{2,}/)
+        .map((paragraph) => paragraph.trim())
+        .filter((paragraph) => paragraph.length > 0)
+    : [];
+
+const metadataItems = [
+  { label: 'Uscita', value: printDate },
+  { label: 'Prezzo', value: formattedPrice },
+  { label: 'Formato', value: formattedFormat },
+  { label: 'Numero di pagine', value: formattedPages },
+  { label: 'Prima edizione', value: formattedFirstEdition },
+  { label: 'Impaginazione', value: formattedLayout },
+  { label: 'Grafica di copertina', value: formattedCoverDesigner },
+  { label: 'Illustrazione', value: formattedIllustrator },
+  { label: 'Collana', value: formattedCollection },
+  { label: 'ISBN', value: formattedIsbn },
+  { label: 'Pagina web', value: pageUrl },
+]
+  .filter((item) => Boolean(item.value))
+  .map((item) => ({ ...item, value: item.value as string }));
+
+const contactLines = [
+  'Associazione Multimage APS',
+  'Via Desiderio da Settignano 11',
+  '50135 Firenze',
+  'P. IVA: 06987750012',
+  '',
+  'www.multimage.org',
+  'info@multimage.org',
+];
+
+const coverImage = book.coverImage?.responsiveImage ?? null;
+const wrapperClass =
+  variant === 'standalone' ? `${styles.wrapper} ${styles.standaloneWrapper}` : `${styles.wrapper} ${styles.embeddedWrapper}`;
+---
+
+<div class={wrapperClass}>
+  <article class={styles.sheet}>
+    <span class={styles.divider} aria-hidden="true"></span>
+
+    <section class={styles.content}>
+      <header class={styles.brand}>
+        <div class={styles.brandLogoGroup}>
+          <img
+            src={MULTIMAGE_LOGO_URL}
+            alt="Multimage"
+            class={styles.brandLogoImage}
+            loading={variant === 'standalone' ? 'eager' : 'lazy'}
+          />
+        </div>
+        <span class={styles.authors}>{authorsLabel}</span>
+      </header>
+
+      <div class={styles.titleBlock}>
+        <h1 class={styles.title}>{title}</h1>
+        {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
+      </div>
+
+      <section class={styles.body}>
+        {reviewContent ? (
+          <StructuredText
+            data={reviewContent as any}
+            blockComponents={defaultBlockComponents as any}
+            inlineBlockComponents={defaultInlineBlockComponents as any}
+            linkToRecordComponents={defaultLinkToRecordComponents as any}
+          />
+        ) : descriptionParagraphs.length > 0 ? (
+          descriptionParagraphs.map((paragraph) => <p>{paragraph}</p>)
+        ) : (
+          <p class="text-sm text-brand-slate">
+            La descrizione di questo titolo sarà disponibile a breve.
+          </p>
+        )}
+      </section>
+
+      {promo ? <blockquote class={styles.promo}>{promo}</blockquote> : null}
+
+      {
+        hasAuthorBiography && authorBiography ? (
+          <section class={styles.biography}>
+            {authorDisplayName ? (
+              <p class={styles.biographyLabel}>Bio di {authorDisplayName}</p>
+            ) : null}
+            <StructuredText
+              data={authorBiography as any}
+              blockComponents={defaultBlockComponents as any}
+              inlineBlockComponents={defaultInlineBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          </section>
+        ) : null
+      }
+    </section>
+
+    <aside class={styles.sidebar}>
+      <div class={styles.metadataSection}>
+        <p class={styles.metadataTitle}>Scheda tecnica</p>
+        <div class={styles.metadataList}>
+          {metadataItems.map((item) => (
+            <div class={styles.metadataItem}>
+              <span class={styles.metadataLabel}>{item.label}</span>
+              <span class={styles.metadataValue}>{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class={styles.coverWrapper}>
+        {coverImage ? (
+          <div class={styles.coverImage}>
+            <Image
+              data={coverImage}
+              pictureClass="block w-full"
+              imgClass="h-full w-full object-contain"
+            />
+          </div>
+        ) : (
+          <div class={`${styles.coverImage} ${styles.coverFallback}`}>
+            <p class="text-xs uppercase tracking-[0.3em] text-brand-slate">
+              Copertina in aggiornamento
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div class={styles.contactCard}>
+        {contactLines.map((line) =>
+          line.length > 0 ? <p>{line}</p> : <p aria-hidden="true">&nbsp;</p>,
+        )}
+      </div>
+    </aside>
+  </article>
+</div>

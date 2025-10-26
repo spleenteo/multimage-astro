@@ -1,0 +1,42 @@
+---
+import '../../../styles/global.css';
+import BookSheet from '~/components/BookSheet/index.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { BOOK_SHEET_QUERY, type BookSheetQueryResult } from './_graphql';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  Astro.response.status = 400;
+  throw new Error('Slug del libro mancante');
+}
+
+const data = await executeQuery<BookSheetQueryResult>(BOOK_SHEET_QUERY, {
+  variables: { slug },
+});
+
+const book = data.book;
+
+if (!book) {
+  Astro.response.status = 404;
+  throw new Error(`Libro non trovato per slug: ${slug}`);
+}
+
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{book.title ?? 'Scheda libro'} | Scheda libro</title>
+  </head>
+  <body class="bg-brand-sand">
+    <main>
+      <BookSheet book={book} variant="standalone" />
+    </main>
+  </body>
+</html>
