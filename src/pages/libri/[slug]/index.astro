@@ -123,7 +123,6 @@ const isArchived = book.archive === true;
 const isEbookFormat = formatValue?.toLowerCase() === 'ebook';
 
 const primaryCtaLabel = [isEbookFormat ? 'Ordina' : 'Ordina'].filter(Boolean).join(' · ');
-
 const primaryCtaHref = isEbookFormat && book.epubUrl ? book.epubUrl : '/info/ordinare';
 const primaryCtaTarget = isEbookFormat && book.epubUrl ? '_blank' : undefined;
 const primaryCtaRel = isEbookFormat && book.epubUrl ? 'noopener noreferrer' : undefined;

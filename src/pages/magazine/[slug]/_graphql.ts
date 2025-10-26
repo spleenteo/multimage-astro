@@ -81,12 +81,17 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
           ... on CtaButtonWithImageRecord {
             id
             title
-            subtitle
-            buttonLabel
+            content
             image {
               responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
                 ...ResponsiveImageFragment
               }
+            }
+            buttons {
+              id
+              label
+              url
+              primary
             }
           }
         }

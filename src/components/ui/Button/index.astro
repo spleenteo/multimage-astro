@@ -3,7 +3,8 @@ import styles from './style.module.css';
 
 type Props = {
   href?: string | null;
-  variant?: 'primary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  primary?: boolean | null;
   icon?: string | null;
   iconPosition?: 'left' | 'right';
   ariaLabel?: string;
@@ -17,6 +18,7 @@ type Props = {
 const {
   href = null,
   variant = 'primary',
+  primary = null,
   icon = null,
   iconPosition = 'right',
   ariaLabel,
@@ -27,7 +29,12 @@ const {
   rel = null,
 }: Props = Astro.props;
 
-const baseClasses = [styles.root, styles[variant] ?? styles.primary];
+const requestedVariant =
+  primary === true ? 'primary' : primary === false ? 'secondary' : variant ?? 'primary';
+
+const normalizedVariant = requestedVariant === 'outline' ? 'secondary' : requestedVariant;
+
+const baseClasses = [styles.root, styles[normalizedVariant] ?? styles.primary];
 if (fullWidth) {
   baseClasses.push(styles.fullWidth);
 }
@@ -39,7 +46,7 @@ if (fullWidth) {
       href={href}
       aria-label={ariaLabel}
       class:list={[...baseClasses, className]}
-      data-variant={variant}
+      data-variant={normalizedVariant}
       target={target ?? undefined}
       rel={rel ?? undefined}
     >
@@ -56,7 +63,7 @@ if (fullWidth) {
       type={type}
       aria-label={ariaLabel}
       class:list={[...baseClasses, className]}
-      data-variant={variant}
+      data-variant={normalizedVariant}
     >
       {icon && iconPosition === 'left' ? (
         <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />

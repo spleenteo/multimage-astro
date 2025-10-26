@@ -3,17 +3,17 @@ import { Image } from '@datocms/astro/Image';
 import type { ResponsiveImageType } from '@datocms/astro/Image';
 import Button from '~/components/ui/Button';
 
+type RawButtonBlock = {
+  id: string;
+  label?: string | null;
+  url?: string | null;
+  primary?: boolean | null;
+};
+
 type CtaButtonWithImageBlockData = {
   title?: string | null;
-  subtitle?: string | null;
-  buttonLabel?: string | null;
-  buttonUrl?: string | null;
-  link?: string | null;
-  button?: {
-    url?: string | null;
-    label?: string | null;
-    primary?: boolean | null;
-  } | null;
+  content?: string | null;
+  buttons?: Array<RawButtonBlock | null> | null;
   image?: {
     url?: string | null;
     responsiveImage?:
@@ -32,53 +32,37 @@ const { block }: Props = Astro.props;
 
 const title =
   typeof block.title === 'string' && block.title.length > 0 ? block.title : 'Scopri di più';
-const subtitleRaw = typeof block.subtitle === 'string' ? block.subtitle : null;
-const paragraphs = subtitleRaw
-  ? subtitleRaw
+const contentRaw = typeof block.content === 'string' ? block.content : null;
+const paragraphs = contentRaw
+  ? contentRaw
       .split(/\r?\n\s*\r?\n/)
       .map((item) => item.trim())
       .filter((item) => item.length > 0)
   : [];
-
-const buttonLabel =
-  (typeof block.buttonLabel === 'string' && block.buttonLabel.length > 0
-    ? block.buttonLabel
-    : null) ??
-  (typeof (block as Record<string, unknown>).button_label === 'string'
-    ? (block as Record<string, string>).button_label.length > 0
-      ? (block as Record<string, string>).button_label
-      : null
-    : null);
-
-const explicitUrl =
-  typeof block.buttonUrl === 'string' && block.buttonUrl.length > 0
-    ? block.buttonUrl
-    : typeof (block as Record<string, unknown>).button_url === 'string'
-      ? (block as Record<string, string>).button_url.length > 0
-        ? (block as Record<string, string>).button_url
-        : null
-      : null;
-
-const linkedButton = block.button ?? null;
-const linkedUrl =
-  linkedButton && typeof linkedButton.url === 'string' && linkedButton.url.length > 0
-    ? linkedButton.url
-    : null;
-
-const linkFromGenericField =
-  typeof block.link === 'string' && block.link.length > 0 ? block.link : null;
-
-const buttonHref = explicitUrl ?? linkedUrl ?? linkFromGenericField ?? null;
+const buttons = (Array.isArray(block.buttons) ? block.buttons : [])
+  .filter((btn): btn is RawButtonBlock => Boolean(btn && typeof btn.id === 'string'))
+  .filter((btn) => {
+    const label = typeof btn.label === 'string' ? btn.label.trim() : '';
+    const url = typeof btn.url === 'string' ? btn.url.trim() : '';
+    return label.length > 0 && url.length > 0;
+  })
+  .slice(0, 2)
+  .map((btn) => ({
+    id: btn.id,
+    label: (btn.label as string).trim(),
+    url: (btn.url as string).trim(),
+    primary: btn.primary === true,
+  }));
+const hasButtons = buttons.length > 0;
 
 const imageData = block.image?.responsiveImage as ResponsiveImageType | null;
-
-const showButton = Boolean(buttonLabel && buttonHref);
+const hasImage = Boolean(imageData);
 ---
 
 <section
   class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/40 bg-brand-mist/10 shadow-soft"
 >
-  <div class:list={['flex flex-col gap-6 md:flex-row']}>
+  <div class:list={['flex flex-col gap-6', hasImage ? 'md:flex-row' : 'md:flex-col']}>
     {
       imageData ? (
         <div class="flex w-full flex-shrink-0 items-center justify-center bg-brand-mist/40 p-6 md:w-2/5">
@@ -92,7 +76,12 @@ const showButton = Boolean(buttonLabel && buttonHref);
       ) : null
     }
 
-    <div class="flex w-full flex-col gap-4 px-6 pb-8 pt-6 md:w-full md:px-10 md:py-12">
+    <div
+      class:list={[
+        'flex w-full flex-col gap-5 px-6 pb-8 pt-6 md:px-10 md:py-12',
+        hasImage ? 'md:w-3/5' : 'md:w-full',
+      ]}
+    >
       <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
       {
         paragraphs.length > 0 ? (
@@ -104,14 +93,14 @@ const showButton = Boolean(buttonLabel && buttonHref);
         ) : null
       }
       {
-        showButton ? (
-          <div>
-            <Button href={buttonHref!}>{buttonLabel}</Button>
+        hasButtons ? (
+          <div class="mt-2 flex flex-wrap items-center gap-3">
+            {buttons.map((button) => (
+              <Button href={button.url} primary={button.primary}>
+                {button.label}
+              </Button>
+            ))}
           </div>
-        ) : buttonLabel ? (
-          <p class="text-sm font-semibold uppercase tracking-wide text-brand-navy/70">
-            {buttonLabel}
-          </p>
         ) : null
       }
     </div>

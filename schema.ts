@@ -98,11 +98,12 @@ export type CtaButtonWithImage = ItemTypeDefinition<
     title: {
       type: 'string';
     };
-    subtitle: {
+    content: {
       type: 'text';
     };
-    button_label: {
-      type: 'string';
+    buttons: {
+      type: 'rich_text';
+      blocks: Button;
     };
   }
 >;
@@ -118,6 +119,50 @@ export type Button = ItemTypeDefinition<
     };
     primary: {
       type: 'boolean';
+    };
+  }
+>;
+export type BlogPost = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184824',
+  {
+    slug: {
+      type: 'slug';
+    };
+    title: {
+      type: 'string';
+    };
+    sticky: {
+      type: 'boolean';
+    };
+    seo: {
+      type: 'seo';
+    };
+    author: {
+      type: 'link';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    abstract: {
+      type: 'text';
+    };
+    category: {
+      type: 'link';
+    };
+    body: {
+      type: 'structured_text';
+      blocks:
+        | CtaButtonWithImage
+        | Video
+        | SingleBook
+        | SingleAuthor
+        | Banner
+        | ImageBlock;
+      inline_blocks: Author | Page | Book | BlogPost;
+    };
+    keywords: {
+      type: 'links';
     };
   }
 >;
@@ -296,44 +341,6 @@ export type SingleAuthor = ItemTypeDefinition<
   {
     author: {
       type: 'link';
-    };
-  }
->;
-export type BlogPost = ItemTypeDefinition<
-  EnvironmentSettings,
-  '184824',
-  {
-    slug: {
-      type: 'slug';
-    };
-    title: {
-      type: 'string';
-    };
-    sticky: {
-      type: 'boolean';
-    };
-    seo: {
-      type: 'seo';
-    };
-    author: {
-      type: 'link';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    abstract: {
-      type: 'text';
-    };
-    category: {
-      type: 'link';
-    };
-    body: {
-      type: 'structured_text';
-      blocks: CtaButtonWithImage | Video | SingleBook | SingleAuthor | Banner | ImageBlock;
-      inline_blocks: Author | Page | Book | BlogPost;
-    };
-    keywords: {
-      type: 'links';
     };
   }
 >;
@@ -778,10 +785,10 @@ export type AnyBlock =
   | Reprint;
 export type AnyModel =
   | Author
+  | BlogPost
   | MagazineIndex
   | Book
   | BlogPostOld
-  | BlogPost
   | Page
   | Supplier
   | SuppliersIndex

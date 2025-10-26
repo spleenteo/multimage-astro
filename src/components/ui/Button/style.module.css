@@ -9,8 +9,8 @@
     @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange/40 hover:bg-brand-crimson;
   }
 
-  .outline {
-    @apply border border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white focus-visible:ring-brand-orange/40;
+  .secondary {
+    @apply bg-brand-mist text-brand-navy shadow-soft transition hover:bg-brand-mist/80 focus-visible:ring-brand-navy/30;
   }
 
   .ghost {
