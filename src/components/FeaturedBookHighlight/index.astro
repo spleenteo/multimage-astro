@@ -178,7 +178,13 @@ const authorBooksLabel =
       }
 
       <div class:list={['flex flex-wrap items-center', styles.actions]}>
-        {book.link ? <Button href={book.link} primary>Scopri il libro</Button> : null}
+        {
+          book.link ? (
+            <Button href={book.link} primary>
+              Scopri il libro
+            </Button>
+          ) : null
+        }
         {
           collectionHref ? (
             <Button href={collectionHref} primary={false} icon="iconoir:nav-arrow-right">
