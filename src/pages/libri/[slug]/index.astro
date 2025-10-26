@@ -373,6 +373,7 @@ const seo = withFallbackSeo(book.seo, {
                         href={primaryCtaHref}
                         target={primaryCtaTarget ?? undefined}
                         rel={primaryCtaRel ?? undefined}
+                        primary
                       >
                         {primaryCtaLabel}
                       </Button>
@@ -383,7 +384,7 @@ const seo = withFallbackSeo(book.seo, {
                         href={book.epubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        variant="outline"
+                        primary={false}
                       >
                         Scarica eBook
                       </Button>

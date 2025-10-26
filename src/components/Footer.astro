@@ -36,6 +36,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
       { label: 'Sostieni Multimage', href: '/info/sostieni-multimage' },
       { label: 'Ordinare', href: '/info/ordinare' },
       { label: 'Partecipare', href: '/info/partecipare' },
+      { label: 'Carta etica', href: '/info/carta-etica' },
     ],
   },
   {
@@ -48,12 +49,8 @@ const FOOTER_GROUPS: FooterGroup[] = [
   {
     links: [
       { label: 'Libri Amici', href: '/info/libri-amici' },
-      { label: 'Vai bene così', href: '/info/vai-bene-cosi' },
       { label: 'Sviluppo web', href: '/info/sviluppo-web' },
     ],
-  },
-  {
-    links: [{ label: 'Carta Etica', href: '/info/carta-etica' }],
   },
 ] as const;
 
@@ -87,7 +84,7 @@ const LEGAL_LINKS: LegalLink[] = [
     external: true,
   },
   {
-    label: 'Design & Development team',
+    label: 'Specifiche tecnice',
     href: '/info/sviluppo-web',
     external: false,
   },
@@ -168,7 +165,6 @@ const year = new Date().getFullYear();
   <div
     class="container flex flex-col gap-2 py-6 text-xs text-brand-mist/80 md:flex-row md:items-center md:justify-between"
   >
-    <p>©{year} Multimage Editrice</p>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
       {
         LEGAL_LINKS.map(({ label, href, external }) => (
