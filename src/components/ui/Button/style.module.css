@@ -6,7 +6,10 @@
   }
 
   .primary {
-    @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange/40 hover:bg-brand-crimson;
+    @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange hover:bg-brand-crimson;
+  }
+  .primary:hover {
+    color: white;
   }
 
   .secondary {
@@ -19,5 +22,13 @@
 
   .fullWidth {
     @apply w-full;
+  }
+
+  .root :global(a),
+  .root :global(a:visited),
+  .root :global(a:hover),
+  .root :global(a:focus) {
+    color: inherit !important;
+    text-decoration: none;
   }
 }
