@@ -18,8 +18,7 @@ type Props = {
 };
 
 const { book, variant = 'embedded' }: Props = Astro.props;
-const MULTIMAGE_LOGO_URL =
-  '/logo-full.jpg';
+const MULTIMAGE_LOGO_URL = '/logo-full.jpg';
 
 const title = book.title?.trim() ?? 'Titolo in aggiornamento';
 const subtitle = book.subtitle?.trim() ?? null;
@@ -98,7 +97,9 @@ const contactLines = [
 
 const coverImage = book.coverImage?.responsiveImage ?? null;
 const wrapperClass =
-  variant === 'standalone' ? `${styles.wrapper} ${styles.standaloneWrapper}` : `${styles.wrapper} ${styles.embeddedWrapper}`;
+  variant === 'standalone'
+    ? `${styles.wrapper} ${styles.standaloneWrapper}`
+    : `${styles.wrapper} ${styles.embeddedWrapper}`;
 ---
 
 <div class={wrapperClass}>
@@ -124,20 +125,22 @@ const wrapperClass =
       </div>
 
       <section class={styles.body}>
-        {reviewContent ? (
-          <StructuredText
-            data={reviewContent as any}
-            blockComponents={defaultBlockComponents as any}
-            inlineBlockComponents={defaultInlineBlockComponents as any}
-            linkToRecordComponents={defaultLinkToRecordComponents as any}
-          />
-        ) : descriptionParagraphs.length > 0 ? (
-          descriptionParagraphs.map((paragraph) => <p>{paragraph}</p>)
-        ) : (
-          <p class="text-sm text-brand-slate">
-            La descrizione di questo titolo sarà disponibile a breve.
-          </p>
-        )}
+        {
+          reviewContent ? (
+            <StructuredText
+              data={reviewContent as any}
+              blockComponents={defaultBlockComponents as any}
+              inlineBlockComponents={defaultInlineBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          ) : descriptionParagraphs.length > 0 ? (
+            descriptionParagraphs.map((paragraph) => <p>{paragraph}</p>)
+          ) : (
+            <p class="text-sm text-brand-slate">
+              La descrizione di questo titolo sarà disponibile a breve.
+            </p>
+          )
+        }
       </section>
 
       {promo ? <blockquote class={styles.promo}>{promo}</blockquote> : null}
@@ -163,37 +166,43 @@ const wrapperClass =
       <div class={styles.metadataSection}>
         <p class={styles.metadataTitle}>Scheda tecnica</p>
         <div class={styles.metadataList}>
-          {metadataItems.map((item) => (
-            <div class={styles.metadataItem}>
-              <span class={styles.metadataLabel}>{item.label}</span>
-              <span class={styles.metadataValue}>{item.value}</span>
-            </div>
-          ))}
+          {
+            metadataItems.map((item) => (
+              <div class={styles.metadataItem}>
+                <span class={styles.metadataLabel}>{item.label}</span>
+                <span class={styles.metadataValue}>{item.value}</span>
+              </div>
+            ))
+          }
         </div>
       </div>
 
       <div class={styles.coverWrapper}>
-        {coverImage ? (
-          <div class={styles.coverImage}>
-            <Image
-              data={coverImage}
-              pictureClass="block w-full"
-              imgClass="h-full w-full object-contain"
-            />
-          </div>
-        ) : (
-          <div class={`${styles.coverImage} ${styles.coverFallback}`}>
-            <p class="text-xs uppercase tracking-[0.3em] text-brand-slate">
-              Copertina in aggiornamento
-            </p>
-          </div>
-        )}
+        {
+          coverImage ? (
+            <div class={styles.coverImage}>
+              <Image
+                data={coverImage}
+                pictureClass="block w-full"
+                imgClass="h-full w-full object-contain"
+              />
+            </div>
+          ) : (
+            <div class={`${styles.coverImage} ${styles.coverFallback}`}>
+              <p class="text-xs uppercase tracking-[0.3em] text-brand-slate">
+                Copertina in aggiornamento
+              </p>
+            </div>
+          )
+        }
       </div>
 
       <div class={styles.contactCard}>
-        {contactLines.map((line) =>
-          line.length > 0 ? <p>{line}</p> : <p aria-hidden="true">&nbsp;</p>,
-        )}
+        {
+          contactLines.map((line) =>
+            line.length > 0 ? <p>{line}</p> : <p aria-hidden="true">&nbsp;</p>,
+          )
+        }
       </div>
     </aside>
   </article>

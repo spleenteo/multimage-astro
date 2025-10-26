@@ -38,7 +38,9 @@ export const BOOK_SHEET_QUERY = /* GraphQL */ `
       coverImage {
         alt
         url
-        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 700, h: 1000, auto: format }) {
+        responsiveImage(
+          imgixParams: { fit: crop, crop: focalpoint, w: 700, h: 1000, auto: format }
+        ) {
           ...ResponsiveImageFragment
         }
       }

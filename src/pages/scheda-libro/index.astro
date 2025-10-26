@@ -34,9 +34,7 @@ if (hasSearch) {
       variables: { pattern: regexPattern },
     });
 
-    results = (data.allBooks ?? []).filter(
-      (book) => Boolean(book?.slug) && Boolean(book?.title),
-    );
+    results = (data.allBooks ?? []).filter((book) => Boolean(book?.slug) && Boolean(book?.title));
   } catch (error) {
     console.error('Book search failed', error);
     searchError =
@@ -67,9 +65,7 @@ if (hasSearch) {
           class={styles.searchField}
           aria-label="Cerca libro per titolo o ISBN"
         />
-        <button type="submit" class={styles.submitButton}>
-          Cerca
-        </button>
+        <button type="submit" class={styles.submitButton}> Cerca </button>
       </form>
 
       {
@@ -83,9 +79,7 @@ if (hasSearch) {
       {
         hasSearch && !searchError ? (
           results.length === 0 ? (
-            <p class={styles.statusMessage}>
-              Nessun libro trovato con il termine “{searchParam}”.
-            </p>
+            <p class={styles.statusMessage}>Nessun libro trovato con il termine “{searchParam}”.</p>
           ) : (
             <div class={styles.results}>
               {results.map((book) => {
@@ -103,30 +97,26 @@ if (hasSearch) {
                         <p class="text-sm font-serif italic text-brand-charcoal/80">{subtitle}</p>
                       ) : null}
                       <p class={styles.resultMeta}>{authorsLabel}</p>
-                      {
-                        collectionName || book.isbn ? (
-                          <p class={styles.resultMeta}>
-                            {collectionName ? `Collana: ${collectionName}` : null}
-                            {collectionName && book.isbn ? ' · ' : null}
-                            {book.isbn ? `ISBN: ${book.isbn}` : null}
-                          </p>
-                        ) : null
-                      }
+                      {collectionName || book.isbn ? (
+                        <p class={styles.resultMeta}>
+                          {collectionName ? `Collana: ${collectionName}` : null}
+                          {collectionName && book.isbn ? ' · ' : null}
+                          {book.isbn ? `ISBN: ${book.isbn}` : null}
+                        </p>
+                      ) : null}
                     </div>
-                    {
-                      slugValue ? (
-                        <div class={styles.resultActions}>
-                          <a
-                            class={styles.createButton}
-                            href={`/scheda-libro/${slugValue}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Genera scheda libro
-                          </a>
-                        </div>
-                      ) : null
-                    }
+                    {slugValue ? (
+                      <div class={styles.resultActions}>
+                        <a
+                          class={styles.createButton}
+                          href={`/scheda-libro/${slugValue}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Genera scheda libro
+                        </a>
+                      </div>
+                    ) : null}
                   </div>
                 );
               })}
