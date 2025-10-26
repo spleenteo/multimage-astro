@@ -1,3 +1,0 @@
-[build]
-  publish = "dist"
-  command = "npx astro add netlify --yes && npm install && npm run build"

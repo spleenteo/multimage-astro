@@ -1,3 +1,0 @@
-{
-  "buildCommand": "npx astro add vercel --yes && npm install && npm run build"
-}
