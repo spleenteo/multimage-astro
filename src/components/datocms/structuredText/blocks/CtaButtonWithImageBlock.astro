@@ -85,12 +85,14 @@ const hasImage = Boolean(imageData);
       ]}
     >
       <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
-      {contentHtml ? (
-        <div
-          class="prose prose-brand max-w-none text-base leading-relaxed text-brand-charcoal/90"
-          set:html={contentHtml}
-        />
-      ) : null}
+      {
+        contentHtml ? (
+          <div
+            class="prose prose-brand max-w-none text-base leading-relaxed text-brand-charcoal/90"
+            set:html={contentHtml}
+          />
+        ) : null
+      }
       {
         hasButtons ? (
           <div class="mt-2 flex flex-wrap items-center gap-3">
