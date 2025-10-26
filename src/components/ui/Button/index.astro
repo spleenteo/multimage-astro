@@ -30,7 +30,7 @@ const {
 }: Props = Astro.props;
 
 const requestedVariant =
-  primary === true ? 'primary' : primary === false ? 'secondary' : variant ?? 'primary';
+  primary === true ? 'primary' : primary === false ? 'secondary' : (variant ?? 'primary');
 
 const normalizedVariant = requestedVariant === 'outline' ? 'secondary' : requestedVariant;
 
