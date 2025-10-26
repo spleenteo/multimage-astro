@@ -152,11 +152,32 @@ export type BlogPost = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks: CtaButtonWithImage | Video | SingleBook | SingleAuthor | Banner | ImageBlock;
+      blocks:
+        | CtaButtonWithImage
+        | Video
+        | SingleBook
+        | SingleAuthor
+        | Banner
+        | ImageBlock;
       inline_blocks: Author | Page | Book | BlogPost;
     };
     keywords: {
       type: 'links';
+    };
+  }
+>;
+export type BlogCategory = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70453',
+  {
+    name: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
     };
   }
 >;
@@ -496,21 +517,6 @@ export type BlogTag = ItemTypeDefinition<
     };
   }
 >;
-export type BlogCategory = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70453',
-  {
-    name: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    slug: {
-      type: 'string';
-    };
-  }
->;
 export type Collection = ItemTypeDefinition<
   EnvironmentSettings,
   '70447',
@@ -780,6 +786,7 @@ export type AnyBlock =
 export type AnyModel =
   | Author
   | BlogPost
+  | BlogCategory
   | MagazineIndex
   | Book
   | BlogPostOld
@@ -789,7 +796,6 @@ export type AnyModel =
   | CollectionsIndex
   | HighlightsIndex
   | BlogTag
-  | BlogCategory
   | Collection
   | Homeslide
   | License
