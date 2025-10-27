@@ -7,6 +7,7 @@ dist/
 # dependencies
 node_modules/
 DATOCMS.md
+.wrangler
 
 # logs
 npm-debug.log*
