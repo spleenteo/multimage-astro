@@ -48,6 +48,9 @@ npm run dev
 
 Astro boots on `http://localhost:4321/` with hot reload. Edits under `src/pages/`, `src/components/`, and `src/lib/` are reflected immediately.
 
+conviene lanciare wrangler dev solo quando ti serve verificare che tutto giri nell’ambiente Cloudflare.
+In quel caso basta ricordarsi di rifare npm run build prima di riaprire il worker, oppure avviare due terminali: uno con npm run dev per lavorare in tempo reale, e uno con npm run build && npx wrangler dev --local quando vuoi testare il risultato “deploy-ready”.
+
 ## 5. Build & Preview Locally
 
 Before deploying or sharing changes, run:

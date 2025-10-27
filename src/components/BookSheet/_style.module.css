@@ -17,7 +17,7 @@
     @apply relative grid border border-brand-mist bg-white text-brand-charcoal shadow-soft;
     width: 210mm;
     min-height: 297mm;
-    padding: 20mm 18mm;
+    padding: 15mm 15mm;
     grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
@@ -109,7 +109,7 @@
   }
 
   .metadataSection {
-    @apply flex flex-col gap-3;
+    @apply flex flex-col gap-2;
   }
 
   .metadataTitle {
