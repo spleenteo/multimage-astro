@@ -106,6 +106,20 @@ const PRIMARY_LINKS = buildPrimaryLinks(infoPages);
 const normalizedPath =
   currentPath.endsWith('/') && currentPath !== '/' ? currentPath.slice(0, -1) : currentPath;
 
+const tabSlugCounts = new Map<string, number>();
+
+function buildTabIds(label: string) {
+  const base = label.toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '') || 'voce';
+  const count = tabSlugCounts.get(base) ?? 0;
+  tabSlugCounts.set(base, count + 1);
+  const suffix = count > 0 ? `-${count}` : '';
+  const id = `${base}${suffix}`;
+  return {
+    tabId: `primary-tab-${id}`,
+    panelId: `primary-panel-${id}`,
+  };
+}
+
 function linkIsActive(link: NavLink, pathname: string) {
   if (link.children && link.children.length > 0) {
     if (link.label === 'Libri') {
@@ -220,63 +234,108 @@ const year = new Date().getFullYear();
     </div>
 
     <nav
-      class="hidden border-t border-white/10 bg-brand-navy-light/90 text-white md:block"
+      class="hidden border-t border-brand-navy/50 bg-brand-navy text-brand-sand md:block"
       aria-label="Navigazione principale"
     >
-      <ul
-        class="container flex flex-col gap-4 py-4 text-sm font-serif uppercase tracking-[0.2em] md:flex-row md:items-center md:justify-end md:gap-6"
+      <div
+        class="container flex flex-wrap items-center gap-2 py-3 md:justify-end md:gap-4"
+        role="tablist"
+        aria-label="Sezioni principali del sito"
+        data-tablist
       >
         {
           PRIMARY_LINKS.map((link) => {
             const isActive = linkIsActive(link, normalizedPath);
             const hasChildren = Boolean(link.children && link.children.length > 0);
+            const { tabId, panelId } = buildTabIds(link.label);
 
-            return (
-              <li class={`relative ${hasChildren ? 'group' : ''}`}>
-                {hasChildren ? (
-                  <>
-                    <button
-                      type="button"
-                      class={`flex w-full items-center justify-between bg-white/10 px-5 py-3 text-left font-serif text-xs uppercase tracking-[0.2em] text-white transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white md:w-auto md:bg-transparent md:px-3 md:py-3 md:text-sm ${
-                        isActive ? 'md:text-brand-sand/80' : 'md:hover:text-brand-sand/80'
-                      }`}
-                    >
-                      <span>{link.label}</span>
-                      <iconify-icon
-                        icon="iconoir:nav-arrow-down"
-                        width="16"
-                        height="16"
-                        aria-hidden="true"
-                      />
-                    </button>
-                    <div class="md:pointer-events-none md:absolute md:left-0 md:top-full md:mt-0 md:origin-top md:border md:border-brand-mist md:bg-white md:px-6 md:py-5 md:text-base md:shadow-xl md:transition md:duration-150 md:ease-out md:opacity-0 md:group-hover:pointer-events-auto md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                      <div class="space-y-2 md:min-w-[240px]">
-                        {link.children?.map((child) => (
+            if (hasChildren) {
+              return (
+                <div class="relative flex flex-col items-stretch" data-tab-item>
+                  <button
+                    id={tabId}
+                    type="button"
+                    role="tab"
+                    aria-controls={panelId}
+                    aria-selected={isActive ? 'true' : 'false'}
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
+                      isActive
+                        ? 'bg-white text-brand-navy'
+                        : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90'
+                    }`}
+                    data-tab-trigger
+                    data-tab-target={panelId}
+                    data-has-panel="true"
+                    data-tab-initial={isActive ? 'true' : undefined}
+                  >
+                    <span>{link.label}</span>
+                    <iconify-icon
+                      icon="iconoir:nav-arrow-down"
+                      width="16"
+                      height="16"
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    id={panelId}
+                    role="tabpanel"
+                    tabindex="-1"
+                    aria-labelledby={tabId}
+                    aria-hidden="true"
+                    class="mt-2 hidden rounded-2xl border border-brand-navy/40 bg-brand-navy text-white shadow-2xl focus:outline-none md:absolute md:left-1/2 md:top-full md:z-30 md:mt-3 md:w-64 md:-translate-x-1/2"
+                    data-tab-panel
+                    data-tab-parent={tabId}
+                  >
+                    <p class="sr-only" id={`${panelId}-desc`}>
+                      Seleziona un collegamento per visitare la sezione {link.label}.
+                    </p>
+                    <ul class="flex flex-col divide-y divide-white/10 py-3" aria-describedby={`${panelId}-desc`}>
+                      {link.children?.map((child) => (
+                        <li>
                           <a
                             href={child.href}
-                            class="block px-3 py-2 font-serif text-sm uppercase tracking-[0.2em] text-brand-charcoal/90 transition hover:bg-brand-mist"
+                            class="flex items-center justify-between px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light/80 hover:text-white focus:bg-brand-navy-light/80 focus:text-white focus:outline-none"
                           >
-                            {child.label}
+                            <span>{child.label}</span>
+                            <iconify-icon
+                              icon="iconoir:nav-arrow-right"
+                              width="16"
+                              height="16"
+                              aria-hidden="true"
+                              class="text-white/80"
+                            />
                           </a>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <a
-                    href={link.href ?? '#'}
-                    class={`block px-5 py-3 font-serif text-xs uppercase tracking-[0.2em] transition hover:text-brand-sand/80 md:px-3 md:py-3 md:text-sm ${
-                      isActive ? 'text-brand-sand/80' : 'text-white'
-                    }`}
-                  >
-                    {link.label}
-                  </a>
-                )}
-              </li>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <a
+                id={tabId}
+                href={link.href ?? '#'}
+                role="tab"
+                aria-selected={isActive ? 'true' : 'false'}
+                class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
+                  isActive
+                    ? 'bg-white text-brand-navy'
+                    : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white'
+                }`}
+                data-tab-trigger
+                data-tab-link="true"
+                data-tab-initial={isActive ? 'true' : undefined}
+              >
+                {link.label}
+              </a>
             );
           })
         }
-      </ul>
+      </div>
     </nav>
 
     <div
@@ -302,7 +361,7 @@ const year = new Date().getFullYear();
           </div>
 
           <nav class="space-y-4" aria-label="Navigazione mobile">
-            <ul class="space-y-4 text-sm font-serif uppercase tracking-[0.25em]">
+            <ul class="space-y-4 text-sm font-semibold uppercase tracking-[0.12em]">
               {
                 PRIMARY_LINKS.map((link) => {
                   const hasChildren = Boolean(link.children && link.children.length > 0);
@@ -427,6 +486,164 @@ const year = new Date().getFullYear();
     const searchForms = header.querySelectorAll('form[data-search-form]');
     const accordionItems = header.querySelectorAll('[data-mobile-accordion]');
     const mq = window.matchMedia('(min-width: 768px)');
+    const tabList = header.querySelector('[data-tablist]');
+    const tabTriggers = tabList ? Array.from(tabList.querySelectorAll('[data-tab-trigger]')) : [];
+    const tabPanels = tabList ? Array.from(header.querySelectorAll('[data-tab-panel]')) : [];
+    const initialTab =
+      tabTriggers.find((trigger) => trigger.dataset.tabInitial === 'true') ?? tabTriggers[0] ?? null;
+
+    const setSelectedTab = (trigger) => {
+      tabTriggers.forEach((item) => {
+        item.setAttribute('aria-selected', item === trigger ? 'true' : 'false');
+      });
+    };
+
+    const resetTabState = () => {
+      if (!tabList) {
+        return;
+      }
+      if (initialTab) {
+        setSelectedTab(initialTab);
+      }
+      tabTriggers.forEach((item) => {
+        if (item.dataset.hasPanel === 'true') {
+          item.setAttribute('aria-expanded', 'false');
+        }
+      });
+      tabPanels.forEach((panel) => {
+        panel.classList.add('hidden');
+        panel.setAttribute('aria-hidden', 'true');
+      });
+    };
+
+    const openPanelFor = (trigger, { focusPanel = false } = {}) => {
+      if (!tabList || !trigger) {
+        return;
+      }
+
+      setSelectedTab(trigger);
+
+      const targetId = trigger.dataset.tabTarget;
+      const hasPanel = trigger.dataset.hasPanel === 'true' && targetId;
+
+      tabTriggers.forEach((item) => {
+        if (item.dataset.hasPanel === 'true') {
+          item.setAttribute('aria-expanded', item === trigger && hasPanel ? 'true' : 'false');
+        }
+      });
+
+      tabPanels.forEach((panel) => {
+        const shouldShow = hasPanel && panel.id === targetId;
+        panel.classList.toggle('hidden', !shouldShow);
+        panel.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        if (shouldShow && focusPanel) {
+          panel.focus();
+        }
+      });
+    };
+
+    resetTabState();
+
+    if (tabList && tabTriggers.length > 0) {
+      tabTriggers.forEach((trigger) => {
+        const hasPanel = trigger.dataset.hasPanel === 'true';
+
+        trigger.addEventListener('focus', () => {
+          if (hasPanel) {
+            openPanelFor(trigger);
+          } else {
+            setSelectedTab(trigger);
+          }
+        });
+
+        trigger.addEventListener('mouseenter', () => {
+          if (hasPanel) {
+            openPanelFor(trigger);
+          } else {
+            setSelectedTab(trigger);
+          }
+        });
+
+        if (hasPanel) {
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+              resetTabState();
+            } else {
+              openPanelFor(trigger, { focusPanel: true });
+            }
+          });
+        }
+      });
+
+      tabList.addEventListener('keydown', (event) => {
+        if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) {
+          return;
+        }
+        const currentIndex = tabTriggers.indexOf(document.activeElement);
+        if (currentIndex === -1) {
+          return;
+        }
+        event.preventDefault();
+        let nextIndex = currentIndex;
+        if (event.key === 'ArrowRight') {
+          nextIndex = (currentIndex + 1) % tabTriggers.length;
+        } else if (event.key === 'ArrowLeft') {
+          nextIndex = (currentIndex - 1 + tabTriggers.length) % tabTriggers.length;
+        } else if (event.key === 'Home') {
+          nextIndex = 0;
+        } else if (event.key === 'End') {
+          nextIndex = tabTriggers.length - 1;
+        }
+
+        const nextTrigger = tabTriggers[nextIndex];
+        if (nextTrigger) {
+          nextTrigger.focus();
+          if (nextTrigger.dataset.hasPanel === 'true') {
+            openPanelFor(nextTrigger);
+          } else {
+            setSelectedTab(nextTrigger);
+          }
+        }
+      });
+
+      tabList.addEventListener('focusout', (event) => {
+        if (!tabList.contains(event.relatedTarget)) {
+          resetTabState();
+        }
+      });
+
+      tabList.addEventListener('mouseleave', () => {
+        resetTabState();
+      });
+
+      tabPanels.forEach((panel) => {
+        const parentId = panel.dataset.tabParent;
+        const parentTrigger = parentId ? header.querySelector(`#${parentId}`) : null;
+        if (!parentTrigger) {
+          return;
+        }
+
+        panel.addEventListener('mouseenter', () => {
+          openPanelFor(parentTrigger);
+        });
+
+        panel.addEventListener('focusin', () => {
+          openPanelFor(parentTrigger);
+        });
+
+        panel.addEventListener('mouseleave', () => {
+          resetTabState();
+        });
+
+        panel.addEventListener('focusout', (event) => {
+          if (!panel.contains(event.relatedTarget)) {
+            resetTabState();
+          }
+        });
+      });
+    }
 
     const openIcon = header.querySelector('[data-menu-icon="open"]');
     const closedIcon = header.querySelector('[data-menu-icon="closed"]');
@@ -502,6 +719,7 @@ const year = new Date().getFullYear();
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeMenu();
+        resetTabState();
       }
     });
 
