@@ -266,8 +266,8 @@ const year = new Date().getFullYear();
                     aria-haspopup="true"
                     class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
                       isActive
-                        ? 'bg-white text-brand-navy'
-                        : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90'
+                        ? 'bg-white text-brand-navy focus:text-brand-navy'
+                        : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
                     }`}
                     data-tab-trigger
                     data-tab-target={panelId}
@@ -330,8 +330,8 @@ const year = new Date().getFullYear();
                 aria-selected={isActive ? 'true' : 'false'}
                 class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
                   isActive
-                    ? 'bg-white text-brand-navy'
-                    : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white'
+                    ? 'bg-white text-brand-navy focus:text-brand-navy'
+                    : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'
                 }`}
                 data-tab-trigger
                 data-tab-link="true"
