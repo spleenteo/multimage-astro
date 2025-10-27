@@ -113,4 +113,3 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - [] Ecommerce cart integration
 - [] Newsletter section
 - [] Accessibilità
-
