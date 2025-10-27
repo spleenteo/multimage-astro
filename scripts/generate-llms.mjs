@@ -189,7 +189,10 @@ function renderStructuredTextToMarkdown(field) {
           .join('\n');
       }
       case 'listItem': {
-        return (node.children || []).map((child) => renderBlock(child, depth)).filter(Boolean).join('\n');
+        return (node.children || [])
+          .map((child) => renderBlock(child, depth))
+          .filter(Boolean)
+          .join('\n');
       }
       case 'blockquote': {
         const content = (node.children || [])
@@ -203,7 +206,10 @@ function renderStructuredTextToMarkdown(field) {
       }
       default: {
         if (node.children && node.children.length > 0) {
-          return (node.children || []).map((child) => renderBlock(child, depth)).filter(Boolean).join('\n');
+          return (node.children || [])
+            .map((child) => renderBlock(child, depth))
+            .filter(Boolean)
+            .join('\n');
         }
         return '';
       }
@@ -261,9 +267,10 @@ async function fetchAllBooks() {
 function formatAuthorLine(author) {
   const fullName = author.fullName ? author.fullName.trim() : '';
   const alias = author.alias ? author.alias.trim() : '';
-  const display = alias && alias.toLowerCase() !== fullName.toLowerCase() && fullName
-    ? `${fullName} (alias: ${alias})`
-    : fullName || alias || 'Autore sconosciuto';
+  const display =
+    alias && alias.toLowerCase() !== fullName.toLowerCase() && fullName
+      ? `${fullName} (alias: ${alias})`
+      : fullName || alias || 'Autore sconosciuto';
   const url = author.slug ? `https://www.multimage.org/autori/${author.slug}` : '';
   if (display && url) {
     return `${display} | link: ${url}`;
@@ -325,48 +332,50 @@ async function generate() {
     lines.push(`### ${title}`);
 
     if (book.subtitle) {
-    lines.push(`- sottotitolo: ${book.subtitle.trim()}`);
-  }
-
-  if (book.slug) {
-    lines.push(`- link: https://www.multimage.org/libri/${book.slug}`);
-  }
-
-  if (book.collection && (book.collection.name || book.collection.slug)) {
-    if (book.collection.name) {
-      lines.push(`- collana: ${book.collection.name.trim()}`);
+      lines.push(`- sottotitolo: ${book.subtitle.trim()}`);
     }
-    if (book.collection.slug) {
-      lines.push(`- link_collana: https://www.multimage.org/collane/${book.collection.slug}`);
-    }
-  }
 
-  if (book.review && book.review.value) {
-    const reviewText = renderStructuredTextToMarkdown(book.review);
-    if (reviewText) {
-      lines.push('- recensione:', '');
-      appendIndentedBlock(lines, reviewText, '  ');
-      lines.push('');
+    if (book.slug) {
+      lines.push(`- link: https://www.multimage.org/libri/${book.slug}`);
     }
-  }
+
+    if (book.collection && (book.collection.name || book.collection.slug)) {
+      if (book.collection.name) {
+        lines.push(`- collana: ${book.collection.name.trim()}`);
+      }
+      if (book.collection.slug) {
+        lines.push(`- link_collana: https://www.multimage.org/collane/${book.collection.slug}`);
+      }
+    }
+
+    if (book.review && book.review.value) {
+      const reviewText = renderStructuredTextToMarkdown(book.review);
+      if (reviewText) {
+        lines.push('- recensione:', '');
+        appendIndentedBlock(lines, reviewText, '  ');
+        lines.push('');
+      }
+    }
 
     if (book.isbn) {
-    lines.push(`- isbn: ${book.isbn}`);
-  }
+      lines.push(`- isbn: ${book.isbn}`);
+    }
 
-  if (book.edition != null) {
-    lines.push(`- edizione: ${book.edition}`);
-  }
+    if (book.edition != null) {
+      lines.push(`- edizione: ${book.edition}`);
+    }
 
-  if (book.printYear) {
-    lines.push(`- anno: ${book.printYear}`);
-  }
+    if (book.printYear) {
+      lines.push(`- anno: ${book.printYear}`);
+    }
 
-  const archiveText = book.archive ? 'Libro non disponibile in catalogo' : 'Disponibile in catalogo';
-  lines.push(`- archivio: ${archiveText}`);
+    const archiveText = book.archive
+      ? 'Libro non disponibile in catalogo'
+      : 'Disponibile in catalogo';
+    lines.push(`- archivio: ${archiveText}`);
 
-  if (Array.isArray(book.authors) && book.authors.length > 0) {
-    lines.push('- autori:');
+    if (Array.isArray(book.authors) && book.authors.length > 0) {
+      lines.push('- autori:');
       for (const author of book.authors) {
         const header = formatAuthorLine(author);
         lines.push(header ? `  - ${header}` : '  -');
@@ -389,7 +398,9 @@ async function generate() {
   await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
   await fs.writeFile(OUTPUT_PATH, lines.join('\n'), 'utf8');
 
-  console.log(`Generated ${path.relative(ROOT_DIR, OUTPUT_PATH)} with ${sortedBooks.length} books.`);
+  console.log(
+    `Generated ${path.relative(ROOT_DIR, OUTPUT_PATH)} with ${sortedBooks.length} books.`,
+  );
 }
 
 generate().catch((error) => {

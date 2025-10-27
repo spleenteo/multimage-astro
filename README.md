@@ -59,7 +59,22 @@ npm run preview
 
 `npm run build` executes `astro check` for static analysis and produces the static site in `dist/`. `npm run preview` serves that output so stakeholders can review it quickly.
 
-## 6. Deploying Fast
+## 6. LLM Knowledge Export
+
+Every build now regenerates `public/LLMs.md`, a machine-readable Markdown dump that agents can crawl. It contains:
+
+- L’introduzione (“Chi siamo” e “La storia”) estratta dalle pagine info corrispondenti.
+- L’intero catalogo (titolo, sottotitolo, link assoluti, collane, recensioni, disponibilità) con le biografie complete degli autori.
+
+To refresh it manually (e.g. after editing content but before a full build) run:
+
+```bash
+npm run generate-llms
+```
+
+The command relies on `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` being present in `.env`.
+
+## 7. Deploying Fast
 
 - **Vercel/Netlify**: set the same environment variables in your hosting control panel and use `npm run build` as the build command.
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
