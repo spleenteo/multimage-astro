@@ -6,10 +6,12 @@
     "prepare": "npx simple-git-hooks && npm run generate-schema",
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "npm run generate-llms",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "generate-schema": "npx datocms schema:generate schema.ts",
+    "generate-llms": "dotenv -e .env -- node scripts/generate-llms.mjs",
     "lint": "prettier --check .",
     "format": "npx prettier . --write"
   },
