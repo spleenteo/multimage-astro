@@ -106,8 +106,11 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - [x] GraphlQL a directory con fragments
 - [x] Move to structured text
 - [x] UI refinery for header and footer
+- [x] Accessibilità menu
+- [] LLMs.txt
 - [] Enable preview mode for live draft editing
 - [] Search engine for static website
-- [] LLMs.txt
 - [] Ecommerce cart integration
 - [] Newsletter section
+- [] Accessibilità
+
