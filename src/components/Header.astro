@@ -109,7 +109,11 @@ const normalizedPath =
 const tabSlugCounts = new Map<string, number>();
 
 function buildTabIds(label: string) {
-  const base = label.toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '') || 'voce';
+  const base =
+    label
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/gi, '-')
+      .replace(/(^-|-$)/g, '') || 'voce';
   const count = tabSlugCounts.get(base) ?? 0;
   tabSlugCounts.set(base, count + 1);
   const suffix = count > 0 ? `-${count}` : '';
@@ -291,7 +295,10 @@ const year = new Date().getFullYear();
                     <p class="sr-only" id={`${panelId}-desc`}>
                       Seleziona un collegamento per visitare la sezione {link.label}.
                     </p>
-                    <ul class="flex flex-col divide-y divide-white/10 py-3" aria-describedby={`${panelId}-desc`}>
+                    <ul
+                      class="flex flex-col divide-y divide-white/10 py-3"
+                      aria-describedby={`${panelId}-desc`}
+                    >
                       {link.children?.map((child) => (
                         <li>
                           <a
@@ -490,7 +497,9 @@ const year = new Date().getFullYear();
     const tabTriggers = tabList ? Array.from(tabList.querySelectorAll('[data-tab-trigger]')) : [];
     const tabPanels = tabList ? Array.from(header.querySelectorAll('[data-tab-panel]')) : [];
     const initialTab =
-      tabTriggers.find((trigger) => trigger.dataset.tabInitial === 'true') ?? tabTriggers[0] ?? null;
+      tabTriggers.find((trigger) => trigger.dataset.tabInitial === 'true') ??
+      tabTriggers[0] ??
+      null;
 
     const setSelectedTab = (trigger) => {
       tabTriggers.forEach((item) => {
