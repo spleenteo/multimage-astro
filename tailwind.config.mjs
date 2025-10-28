@@ -29,6 +29,7 @@ const config = {
         brand: {
           navy: '#004881',
           'navy-light': '#005192',
+          'navy-lighter': '#F3F4F6',
           sky: '#088AF2',
           crimson: '#AE0E0E',
           charcoal: '#343434',
