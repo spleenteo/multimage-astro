@@ -499,13 +499,7 @@ export type Page = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks:
-        | BookCarousel
-        | SingleBook
-        | SingleAuthor
-        | ImageBlock
-        | Video
-        | Banner;
+      blocks: BookCarousel | SingleBook | SingleAuthor | ImageBlock | Video | Banner;
       inline_blocks: Author | Collection | Page | Book | BlogPost;
     };
     layout: {

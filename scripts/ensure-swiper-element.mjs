@@ -14,7 +14,9 @@ async function ensureSwiperBundle() {
   try {
     await fs.access(source);
   } catch {
-    console.error('[ensure-swiper] Cannot find swiper-element bundle. Did you install dependencies?');
+    console.error(
+      '[ensure-swiper] Cannot find swiper-element bundle. Did you install dependencies?',
+    );
     process.exitCode = 1;
     return;
   }
