@@ -1,5 +1,6 @@
 import { BANNER_SECTION_FRAGMENT } from '~/components/BannerSection';
 import { FEATURED_BOOK_HIGHLIGHT_FRAGMENT } from '~/components/FeaturedBookHighlight';
+import { BOOK_CAROUSEL_SECTION_FRAGMENT } from '~/components/BookCarouselSection';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AssetColor, HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
@@ -32,6 +33,7 @@ export const HOME_PAGE_QUERY = /* GraphQL */ `
   ${BANNER_SECTION_FRAGMENT}
   ${FEATURED_BOOK_HIGHLIGHT_FRAGMENT}
   ${CTA_BUTTON_WITH_IMAGE_HOME_FRAGMENT}
+  ${BOOK_CAROUSEL_SECTION_FRAGMENT}
   query HomePage {
     home {
       title
@@ -53,6 +55,7 @@ export const HOME_PAGE_QUERY = /* GraphQL */ `
         ...BannerSectionBlock
         ...FeaturedBookHighlightBlock
         ...CtaButtonWithImageHomeBlock
+        ...BookCarouselSectionFragment
       }
     }
   }
@@ -121,10 +124,19 @@ export type HomeCtaButtonBlockRecord = {
   } | null;
 };
 
+export type HomeBookCarouselBlockRecord = {
+  __typename: 'BookCarouselRecord';
+  id: string;
+  title: string | null;
+  description: string | null;
+  books: BookRecordForCard[] | null;
+};
+
 export type HomeBannerBlockRecord =
   | HomeBannerBannerBlockRecord
   | HomeSingleBookBlockRecord
-  | HomeCtaButtonBlockRecord;
+  | HomeCtaButtonBlockRecord
+  | HomeBookCarouselBlockRecord;
 
 export type HomePageQueryResult = {
   home:

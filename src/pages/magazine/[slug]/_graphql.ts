@@ -1,7 +1,9 @@
+import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { BlogPostRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const MAGAZINE_POST_QUERY = /* GraphQL */ `
+  ${BOOK_CARD_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
   query MagazinePost($slug: String) {
     blogPost(filter: { slug: { eq: $slug } }) {
@@ -77,6 +79,14 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
               }
             }
             caption
+          }
+          ... on BookCarouselRecord {
+            id
+            title
+            description
+            books {
+              ...BookCardFragment
+            }
           }
           ... on CtaButtonWithImageRecord {
             id

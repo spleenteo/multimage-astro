@@ -1,0 +1,105 @@
+---
+import 'swiper/css/bundle';
+import BookCard from '~/components/BookCard';
+import type { BookCardViewModel } from '~/lib/books';
+import styles from './style.module.css';
+
+type Props = {
+  id: string;
+  title: string;
+  description?: string | null;
+  books: BookCardViewModel[];
+};
+
+const { id, title, description = null, books }: Props = Astro.props;
+const trimmedDescription = description?.trim() ?? null;
+const hasDescription = Boolean(trimmedDescription);
+
+if (!books || books.length === 0) {
+  return null;
+}
+
+const carouselId = `book-carousel-${id}`;
+const headingId = `${carouselId}-title`;
+const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
+---
+
+
+<section class={styles.section} aria-labelledby={headingId}>
+  <div class="container">
+    <div class={styles.header}>
+      <div class={styles.headingGroup}>
+        <h2 id={headingId} class={styles.title}>
+          {title}
+        </h2>
+        {hasDescription ? (
+          <p id={descriptionId} class={styles.description}>
+            {trimmedDescription}
+          </p>
+        ) : null}
+      </div>
+      <div class={styles.controls} aria-hidden="false">
+        <button
+        type="button"
+        id={`${carouselId}-prev`}
+        class={styles.navButton}
+        aria-label="Vedi libri precedenti"
+        aria-controls={carouselId}
+        >
+          <iconify-icon icon="iconoir:nav-arrow-left" width="18" height="18" aria-hidden="true" />
+        </button>
+        <div
+        id={`${carouselId}-pagination`}
+        class={styles.pagination}
+        aria-hidden="true"
+        ></div>
+        <button
+        type="button"
+        id={`${carouselId}-next`}
+        class={styles.navButton}
+        aria-label="Vedi libri successivi"
+        aria-controls={carouselId}
+        >
+          <iconify-icon icon="iconoir:nav-arrow-right" width="18" height="18" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+
+    <div class={styles.carousel}>
+      <swiper-container
+      class={styles.swiper}
+      id={carouselId}
+      aria-live="polite"
+      aria-roledescription="carousel"
+      aria-label={`Scorri libri: ${title}`}
+      {...(descriptionId ? { 'aria-describedby': descriptionId } : {})}
+      slides-per-view="1.15"
+      space-between="16"
+      navigation="true"
+      pagination="true"
+      navigation-prev-el={`#${carouselId}-prev`}
+      navigation-next-el={`#${carouselId}-next`}
+      pagination-el={`#${carouselId}-pagination`}
+      pagination-clickable="true"
+      a11y="true"
+      a11y-prev-slide-message="Slide precedente"
+      a11y-next-slide-message="Slide successiva"
+      a11y-first-slide-message="Prima slide"
+      a11y-last-slide-message="Ultima slide"
+      breakpoints={JSON.stringify({
+        640: { slidesPerView: 1, spaceBetween: 0 },
+        960: { slidesPerView: 2.2, spaceBetween: 24 },
+        1280: { slidesPerView: 3.2, spaceBetween: 28 },
+      })}
+      >
+        {books.map((book) => (
+          <swiper-slide class={styles.slide}>
+            <BookCard {...book} className={styles.card} />
+          </swiper-slide>
+        ))}
+      </swiper-container>
+    </div>
+  </div>
+</section>
+
+<script src="/vendor/swiper-element-bundle.min.js" is:inline></script>

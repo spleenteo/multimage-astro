@@ -1,6 +1,8 @@
+import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 
 export const INFO_PAGE_QUERY = /* GraphQL */ `
+  ${BOOK_CARD_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
   query InfoPage($slug: String) {
     page(filter: { slug: { eq: $slug } }) {
@@ -74,6 +76,14 @@ export const INFO_PAGE_QUERY = /* GraphQL */ `
               }
             }
             caption
+          }
+          ... on BookCarouselRecord {
+            id
+            title
+            description
+            books {
+              ...BookCardFragment
+            }
           }
         }
         links {

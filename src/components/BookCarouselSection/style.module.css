@@ -1,0 +1,67 @@
+@tailwind components;
+
+@layer components {
+  .section {
+    @apply py-14;
+    }
+    
+    .header {
+      @apply mb-6 flex flex-col gap-6 md:flex-row md:items-end md:justify-between;
+      }
+      
+      .headingGroup {
+        @apply flex max-w-3xl flex-col gap-3;
+        }
+        
+        .title {
+          @apply text-3xl font-serif tracking-tight text-brand-navy md:text-4xl;
+          }
+          
+          .description {
+            @apply text-base leading-relaxed text-brand-charcoal/80;
+            }
+            
+            .controls {
+              @apply flex items-center gap-3;
+              }
+              
+              .navButton {
+                @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-sky text-brand-sky transition hover:bg-brand-sky hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky;
+                }
+                
+                .pagination {
+                  @apply flex items-center gap-2;
+                  }
+                  
+        
+        .carousel {
+          @apply relative;
+          }
+          .swiper {
+            @apply block;
+            }
+
+  .slide {
+    @apply h-auto pt-2 pb-4;
+  }
+
+  .card {
+    @apply h-full;
+  }
+}
+
+:global(.swiper-pagination-bullet) {
+  @apply h-2 w-2 rounded-full bg-brand-mist transition;
+}
+
+:global(.swiper-pagination-bullet-active) {
+  @apply bg-brand-sky;
+}
+
+:global(swiper-container) {
+  @apply block w-full overflow-visible;
+}
+
+:global(swiper-slide) {
+  @apply h-auto;
+}

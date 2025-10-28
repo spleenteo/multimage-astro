@@ -1,0 +1,33 @@
+---
+import BookCarouselSection from '~/components/BookCarouselSection';
+import { mapBooksToCards } from '~/lib/books';
+import type { BookRecordForCard } from '~/lib/books';
+
+type Props = {
+  block: {
+    id: string;
+    title?: string | null;
+    description?: string | null;
+    books?: BookRecordForCard[] | null;
+  };
+};
+
+const { block }: Props = Astro.props;
+const cards = mapBooksToCards(block.books ?? []);
+
+if (cards.length === 0) {
+  return null;
+}
+
+const sectionTitle = block.title?.trim() || 'Libri consigliati';
+const sectionDescription = block.description?.trim() ?? null;
+---
+
+<div class="not-prose my-12">
+  <BookCarouselSection
+    id={block.id}
+    title={sectionTitle}
+    description={sectionDescription}
+    books={cards}
+  />
+</div>

@@ -9,7 +9,7 @@ const ENDPOINT = 'https://graphql.datocms.com/';
 const TOKEN = process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, '..');
-const OUTPUT_PATH = path.join(ROOT_DIR, 'public', 'llms-full.txt');
+const OUTPUT_PATH = path.join(ROOT_DIR, 'public', 'LLMs.md');
 const PAGE_SIZE = 100;
 
 if (!TOKEN) {

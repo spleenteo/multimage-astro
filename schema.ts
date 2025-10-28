@@ -2,6 +2,21 @@ import { ItemTypeDefinition } from '@datocms/cma-client';
 type EnvironmentSettings = {
   locales: 'it';
 };
+export type BookCarousel = ItemTypeDefinition<
+  EnvironmentSettings,
+  'GIeyoYr9QKOsVnBTSxGpiw',
+  {
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    books: {
+      type: 'links';
+    };
+  }
+>;
 export type Author = ItemTypeDefinition<
   EnvironmentSettings,
   '70445',
@@ -152,7 +167,14 @@ export type BlogPost = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks: CtaButtonWithImage | Video | SingleBook | SingleAuthor | Banner | ImageBlock;
+      blocks:
+        | BookCarousel
+        | CtaButtonWithImage
+        | SingleBook
+        | SingleAuthor
+        | ImageBlock
+        | Video
+        | Banner;
       inline_blocks: Author | Page | Book | BlogPost;
     };
     keywords: {
@@ -172,6 +194,88 @@ export type BlogCategory = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
+    };
+  }
+>;
+export type Home = ItemTypeDefinition<
+  EnvironmentSettings,
+  '152502',
+  {
+    highlight: {
+      type: 'link';
+    };
+    newsletter_title: {
+      type: 'string';
+    };
+    cta_title: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    claim: {
+      type: 'text';
+    };
+    hero_title: {
+      type: 'string';
+    };
+    newsletter_body: {
+      type: 'text';
+    };
+    cta_body: {
+      type: 'text';
+    };
+    hero_image: {
+      type: 'file';
+    };
+    banners: {
+      type: 'rich_text';
+      blocks: Banner | SingleBook | BookCarousel | CtaButtonWithImage;
+    };
+    banner: {
+      type: 'file';
+    };
+    banner_url: {
+      type: 'string';
+    };
+    hero_body: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Collection = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70447',
+  {
+    name: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
+    };
+    logo: {
+      type: 'file';
+    };
+  }
+>;
+export type License = ItemTypeDefinition<
+  EnvironmentSettings,
+  '183992',
+  {
+    code: {
+      type: 'string';
+    };
+    name: {
+      type: 'string';
+    };
+    position: {
+      type: 'integer';
     };
   }
 >;
@@ -196,6 +300,45 @@ export type SingleBook = ItemTypeDefinition<
   {
     book: {
       type: 'link';
+    };
+  }
+>;
+export type BlogPostOld = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70452',
+  {
+    sticky: {
+      type: 'boolean';
+    };
+    title: {
+      type: 'string';
+    };
+    category: {
+      type: 'link';
+    };
+    author: {
+      type: 'link';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    abstract: {
+      type: 'text';
+    };
+    tags: {
+      type: 'links';
+    };
+    related_posts: {
+      type: 'links';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    body_old: {
+      type: 'text';
     };
   }
 >;
@@ -305,45 +448,6 @@ export type Book = ItemTypeDefinition<
     };
   }
 >;
-export type BlogPostOld = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70452',
-  {
-    sticky: {
-      type: 'boolean';
-    };
-    title: {
-      type: 'string';
-    };
-    category: {
-      type: 'link';
-    };
-    author: {
-      type: 'link';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    abstract: {
-      type: 'text';
-    };
-    tags: {
-      type: 'links';
-    };
-    related_posts: {
-      type: 'links';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-    body_old: {
-      type: 'text';
-    };
-  }
->;
 export type SingleAuthor = ItemTypeDefinition<
   EnvironmentSettings,
   'VdpvBBQAR0ykrmM4yRYhlQ',
@@ -395,7 +499,13 @@ export type Page = ItemTypeDefinition<
     };
     body: {
       type: 'structured_text';
-      blocks: ImageBlock | Video | Banner | SingleBook | SingleAuthor;
+      blocks:
+        | BookCarousel
+        | SingleBook
+        | SingleAuthor
+        | ImageBlock
+        | Video
+        | Banner;
       inline_blocks: Author | Collection | Page | Book | BlogPost;
     };
     layout: {
@@ -511,24 +621,6 @@ export type BlogTag = ItemTypeDefinition<
     };
   }
 >;
-export type Collection = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70447',
-  {
-    name: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    slug: {
-      type: 'slug';
-    };
-    logo: {
-      type: 'file';
-    };
-  }
->;
 export type Homeslide = ItemTypeDefinition<
   EnvironmentSettings,
   '70446',
@@ -562,21 +654,6 @@ export type Homeslide = ItemTypeDefinition<
     };
     image_image_uid: {
       type: 'file';
-    };
-  }
->;
-export type License = ItemTypeDefinition<
-  EnvironmentSettings,
-  '183992',
-  {
-    code: {
-      type: 'string';
-    };
-    name: {
-      type: 'string';
-    };
-    position: {
-      type: 'integer';
     };
   }
 >;
@@ -715,56 +792,8 @@ export type Keyword = ItemTypeDefinition<
     };
   }
 >;
-export type Home = ItemTypeDefinition<
-  EnvironmentSettings,
-  '152502',
-  {
-    highlight: {
-      type: 'link';
-    };
-    newsletter_title: {
-      type: 'string';
-    };
-    cta_title: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    claim: {
-      type: 'text';
-    };
-    hero_title: {
-      type: 'string';
-    };
-    newsletter_body: {
-      type: 'text';
-    };
-    cta_body: {
-      type: 'text';
-    };
-    hero_image: {
-      type: 'file';
-    };
-    banners: {
-      type: 'rich_text';
-      blocks: Banner | SingleBook | CtaButtonWithImage;
-    };
-    banner: {
-      type: 'file';
-    };
-    banner_url: {
-      type: 'string';
-    };
-    hero_body: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
 export type AnyBlock =
+  | BookCarousel
   | FaqSection
   | Question
   | NewsletterSubscription
@@ -781,23 +810,23 @@ export type AnyModel =
   | Author
   | BlogPost
   | BlogCategory
+  | Home
+  | Collection
+  | License
   | MagazineIndex
-  | Book
   | BlogPostOld
+  | Book
   | Page
   | Supplier
   | SuppliersIndex
   | CollectionsIndex
   | HighlightsIndex
   | BlogTag
-  | Collection
   | Homeslide
-  | License
   | BooksIndex
   | EbooksIndex
   | BlogAuthor
   | ArchiveIndex
   | AuthorsIndex
-  | Keyword
-  | Home;
+  | Keyword;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

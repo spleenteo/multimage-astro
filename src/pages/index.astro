@@ -2,12 +2,14 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BannerSection from '~/components/BannerSection';
 import FeaturedBookHighlight from '~/components/FeaturedBookHighlight';
+import BookCarouselSection from '~/components/BookCarouselSection';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
-import { toBookCard, formatBookPrice } from '~/lib/books';
+import { toBookCard, formatBookPrice, mapBooksToCards } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
+import type { BookCardViewModel } from '~/lib/books';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
 import CtaButtonWithImageBlock from '~/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro';
 import styles from './index/_style.module.css';
@@ -16,6 +18,7 @@ import {
   type HomeBannerBannerBlockRecord,
   type HomeSingleBookBlockRecord,
   type HomeCtaButtonBlockRecord,
+  type HomeBookCarouselBlockRecord,
   type HomeBannerBlockRecord,
   type HomePageQueryResult,
 } from './index/_graphql';
@@ -82,9 +85,17 @@ type HomeSingleBookHighlightData = {
   } | null;
 };
 
+type HomeBookCarouselData = {
+  id: string;
+  title: string;
+  description?: string | null;
+  books: BookCardViewModel[];
+};
+
 type HomeBannerEntry =
   | { kind: 'banner'; id: string; data: HomeBannerSectionData }
   | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData }
+  | { kind: 'bookCarousel'; id: string; data: HomeBookCarouselData }
   | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord };
 
 const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY);
@@ -215,6 +226,28 @@ const homeBannerEntries = bannerBlocks
       } satisfies HomeBannerEntry;
     }
 
+    if (block?.__typename === 'BookCarouselRecord') {
+      const carouselBlock = block as HomeBookCarouselBlockRecord;
+      const cards = mapBooksToCards(carouselBlock.books ?? []);
+      if (cards.length === 0) {
+        return null;
+      }
+
+      const resolvedTitle = carouselBlock.title?.trim() || 'Libri consigliati';
+      const resolvedDescription = carouselBlock.description?.trim() ?? null;
+
+      return {
+        kind: 'bookCarousel',
+        id: carouselBlock.id,
+        data: {
+          id: carouselBlock.id,
+          title: resolvedTitle,
+          description: resolvedDescription,
+          books: cards,
+        },
+      } satisfies HomeBannerEntry;
+    }
+
     if (block?.__typename === 'CtaButtonWithImageRecord') {
       return {
         kind: 'cta',
@@ -299,14 +332,29 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
               );
             }
 
-            return (
-              <CtaButtonWithImageBlock
-                block={{
-                  ...entry.block,
-                  content: entry.block.content ?? null,
-                }}
-              />
-            );
+            if (entry.kind === 'bookCarousel') {
+              return (
+                <BookCarouselSection
+                  id={entry.data.id}
+                  title={entry.data.title}
+                  description={entry.data.description}
+                  books={entry.data.books}
+                />
+              );
+            }
+
+            if (entry.kind === 'cta') {
+              return (
+                <CtaButtonWithImageBlock
+                  block={{
+                    ...entry.block,
+                    content: entry.block.content ?? null,
+                  }}
+                />
+              );
+            }
+
+            return null;
           })}
         </div>
       ) : null
