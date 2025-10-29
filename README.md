@@ -76,7 +76,8 @@ The command relies on `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` being present in `.e
 
 ## 7. Deploying Fast
 
-- **Vercel/Netlify**: set the same environment variables in your hosting control panel and use `npm run build` as the build command.
+- **Vercel**: the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`, `SECRET_API_TOKEN`, `DRAFT_MODE_COOKIE_NAME`, `DATOCMS_PREVIEW_SECRET`) with `vercel env pull` and push updates via `vercel env add`. Deploy with `vercel deploy --prod` (build command defaults to `npm run build`).
+- **Netlify**: mirror the same variables under **Site settings → Build & deploy → Environment**, keeping `npm run build` as the build command and `dist/` as the publish directory.
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
 
 For contribution guidelines, coding style, and DatoCMS conventions, see `AGENTS.md`. Keep `DATOCMS.md` open while working—it is the source of truth for the content model and avoids needless web searches.
