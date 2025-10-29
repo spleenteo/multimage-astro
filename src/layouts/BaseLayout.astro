@@ -65,6 +65,18 @@ const infoPages = (allPages ?? [])
       type="module"
       defer
       is:inline></script>
+
+    <!-- Stub + script Vercel Web Analytics -->
+    <script is:inline>
+      window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments) }
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+
+    <script is:inline>
+      window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments) }
+    </script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
+
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
     <Header currentPath={currentPath} infoPages={infoPages} />
