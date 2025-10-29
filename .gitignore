@@ -8,6 +8,7 @@ dist/
 node_modules/
 DATOCMS.md
 .wrangler
+.netlify
 public/vendor/
 
 # logs
