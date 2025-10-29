@@ -7,8 +7,7 @@ import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
 import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
-import Analytics from '@vercel/analytics/astro'
-
+import Analytics from '@vercel/analytics/astro';
 
 const { seo = [] }: { seo?: TitleMetaLinkTag[] } = Astro.props;
 
