@@ -5,6 +5,7 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
+  site: 'https://www.multimage.org',
   env: {
     schema: {
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({

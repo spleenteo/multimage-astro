@@ -122,7 +122,8 @@ const infoPages = (allPages ?? [])
         }
       })(window, document);
     </script>
-    <script async charset="utf-8" src="https://cdn.iubenda.com/cs/stable/iubenda_cs.js"></script>
+    <script async charset="utf-8" src="https://cdn.iubenda.com/cs/stable/iubenda_cs.js" is:inline
+    ></script>
 
     <!-- Stub + script Vercel Web Analytics -->
     <script is:inline>
@@ -132,7 +133,7 @@ const infoPages = (allPages ?? [])
           (window.vaq = window.vaq || []).push(arguments);
         };
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/insights/script.js" is:inline></script>
 
     <script is:inline>
       window.si =
@@ -141,7 +142,7 @@ const infoPages = (allPages ?? [])
           (window.siq = window.siq || []).push(arguments);
         };
     </script>
-    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
     <Header currentPath={currentPath} infoPages={infoPages} />
