@@ -1,6 +1,7 @@
 import { BANNER_SECTION_FRAGMENT } from '~/components/BannerSection';
 import { FEATURED_BOOK_HIGHLIGHT_FRAGMENT } from '~/components/FeaturedBookHighlight';
 import { BOOK_CAROUSEL_SECTION_FRAGMENT } from '~/components/BookCarouselSection';
+import { PILLS_BLOCK_FRAGMENT } from '~/components/blocks/PillsBlock';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AssetColor, HomeRecord, ResponsiveImage, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
@@ -34,6 +35,7 @@ export const HOME_PAGE_QUERY = /* GraphQL */ `
   ${FEATURED_BOOK_HIGHLIGHT_FRAGMENT}
   ${CTA_BUTTON_WITH_IMAGE_HOME_FRAGMENT}
   ${BOOK_CAROUSEL_SECTION_FRAGMENT}
+  ${PILLS_BLOCK_FRAGMENT}
   query HomePage {
     home {
       title
@@ -56,6 +58,7 @@ export const HOME_PAGE_QUERY = /* GraphQL */ `
         ...FeaturedBookHighlightBlock
         ...CtaButtonWithImageHomeBlock
         ...BookCarouselSectionFragment
+        ...PillsBlockFragment
       }
     }
   }
@@ -132,11 +135,33 @@ export type HomeBookCarouselBlockRecord = {
   books: BookRecordForCard[] | null;
 };
 
+export type HomePillsBlockRecord = {
+  __typename: 'PillsBlockRecord';
+  id: string;
+  title: string | null;
+  description: string | null;
+  pillsBlock: Array<{
+    __typename: 'SingleInfoBlockRecord';
+    id: string;
+    icon: string | null;
+    title: string | null;
+    content: string | null;
+    button: {
+      __typename: 'ButtonRecord';
+      id: string;
+      label: string | null;
+      url: string | null;
+      primary: boolean | null;
+    } | null;
+  } | null> | null;
+};
+
 export type HomeBannerBlockRecord =
   | HomeBannerBannerBlockRecord
   | HomeSingleBookBlockRecord
   | HomeCtaButtonBlockRecord
-  | HomeBookCarouselBlockRecord;
+  | HomeBookCarouselBlockRecord
+  | HomePillsBlockRecord;
 
 export type HomePageQueryResult = {
   home:

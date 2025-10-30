@@ -3,6 +3,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BannerSection from '~/components/BannerSection';
 import FeaturedBookHighlight from '~/components/FeaturedBookHighlight';
 import BookCarouselSection from '~/components/BookCarouselSection';
+import PillsBlock from '~/components/blocks/PillsBlock';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
@@ -21,6 +22,7 @@ import {
   type HomeBookCarouselBlockRecord,
   type HomeBannerBlockRecord,
   type HomePageQueryResult,
+  type HomePillsBlockRecord,
 } from './index/_graphql';
 
 export const prerender = true;
@@ -92,11 +94,34 @@ type HomeBookCarouselData = {
   books: BookCardViewModel[];
 };
 
+type HomePillButton = {
+  id: string;
+  label: string | null;
+  url: string | null;
+  primary: boolean | null;
+} | null;
+
+type HomePillItem = {
+  id: string;
+  icon: string | null;
+  title: string | null;
+  content: string | null;
+  button: HomePillButton;
+};
+
+type HomePillsBlockData = {
+  id: string;
+  title: string | null;
+  description: string | null;
+  pills: HomePillItem[];
+};
+
 type HomeBannerEntry =
   | { kind: 'banner'; id: string; data: HomeBannerSectionData }
   | { kind: 'singleBook'; id: string; data: HomeSingleBookHighlightData }
   | { kind: 'bookCarousel'; id: string; data: HomeBookCarouselData }
-  | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord };
+  | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord }
+  | { kind: 'pills'; id: string; data: HomePillsBlockData };
 
 const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY);
 
@@ -248,6 +273,51 @@ const homeBannerEntries = bannerBlocks
       } satisfies HomeBannerEntry;
     }
 
+    if (block?.__typename === 'PillsBlockRecord') {
+      const pillsBlock = block as HomePillsBlockRecord;
+      const rawPills = pillsBlock.pillsBlock ?? [];
+      const pills = rawPills.reduce<HomePillItem[]>((acc, pill) => {
+        if (!pill || pill.__typename !== 'SingleInfoBlockRecord') {
+          return acc;
+        }
+
+        const buttonRecord =
+          pill.button && pill.button.__typename === 'ButtonRecord' ? pill.button : null;
+
+        acc.push({
+          id: pill.id,
+          icon: pill.icon ?? null,
+          title: pill.title ?? null,
+          content: pill.content ?? null,
+          button: buttonRecord
+            ? {
+                id: buttonRecord.id,
+                label: buttonRecord.label ?? null,
+                url: buttonRecord.url ?? null,
+                primary: buttonRecord.primary ?? null,
+              }
+            : null,
+        });
+
+        return acc;
+      }, []);
+
+      if (pills.length < 2) {
+        return null;
+      }
+
+      return {
+        kind: 'pills',
+        id: pillsBlock.id,
+        data: {
+          id: pillsBlock.id,
+          title: pillsBlock.title,
+          description: pillsBlock.description,
+          pills,
+        },
+      } satisfies HomeBannerEntry;
+    }
+
     if (block?.__typename === 'CtaButtonWithImageRecord') {
       return {
         kind: 'cta',
@@ -354,55 +424,21 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
               );
             }
 
+            if (entry.kind === 'pills') {
+              return (
+                <PillsBlock
+                  id={entry.id}
+                  title={entry.data.title}
+                  description={entry.data.description}
+                  pills={entry.data.pills}
+                />
+              );
+            }
+
             return null;
           })}
         </div>
       ) : null
     }
-
-    <section class="space-y-6">
-      <h2>Cosa cerchi?</h2>
-      <p>
-        Le sezioni principali di una casa di edtrice sono senza dubbio i Libri, le autrici/autori e
-        le collane editoriali che componono il nostro catalogo.
-      </p>
-      <div class="grid gap-6 md:grid-cols-3">
-        {
-          FEATURE_LINKS.map(({ href, title, description, icon }) => (
-            <a
-              href={href}
-              class:list={[
-                styles.featureCard,
-                'group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:bg-white',
-              ]}
-            >
-              <div class="space-y-3">
-                <span
-                  class:list={[
-                    styles.featureIcon,
-                    'inline-flex h-12 w-12 items-center justify-center bg-white text-brand-navy',
-                  ]}
-                >
-                  <iconify-icon icon={icon} width="24" height="24" aria-hidden="true" />
-                </span>
-                <h3 class="text-xl font-serif text-brand-navy group-hover:text-brand-sky">
-                  {title}
-                </h3>
-                <p>{description}</p>
-              </div>
-              <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-brand-sky group-hover:text-brand-navy">
-                <span>Scopri sezione</span>
-                <iconify-icon
-                  icon="iconoir:nav-arrow-right"
-                  width="16"
-                  height="16"
-                  aria-hidden="true"
-                />
-              </span>
-            </a>
-          ))
-        }
-      </div>
-    </section>
   </div>
 </BaseLayout>

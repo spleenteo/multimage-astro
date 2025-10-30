@@ -1,0 +1,127 @@
+---
+import Button from '~/components/ui/Button';
+import styles from './style.module.css';
+
+type PillsBlockButton = {
+  id: string;
+  label: string | null;
+  url: string | null;
+  primary: boolean | null;
+} | null;
+
+type PillItem = {
+  id: string;
+  icon: string | null;
+  title: string | null;
+  content: string | null;
+  button: PillsBlockButton;
+};
+
+type Props = {
+  id: string;
+  title: string | null;
+  description: string | null;
+  pills: PillItem[];
+};
+
+const { id, title, description, pills = [] }: Props = Astro.props;
+
+const normalizedTitle = title?.trim() ?? null;
+const normalizedDescription = description?.trim() ?? null;
+
+const normalizedPills = pills
+  .map((pill) => {
+    const icon = pill.icon?.trim() ?? null;
+    const pillTitle = pill.title?.trim() ?? null;
+    const rawContent = pill.content?.trim() ?? null;
+    const contentParagraphs = rawContent
+      ? rawContent
+          .split(/\n+/)
+          .map((paragraph) => paragraph.trim())
+          .filter(Boolean)
+      : [];
+    const button = pill.button
+      ? {
+          ...pill.button,
+          label: pill.button.label?.trim() ?? null,
+          url: pill.button.url?.trim() ?? null,
+        }
+      : null;
+
+    return {
+      id: pill.id,
+      icon,
+      title: pillTitle,
+      contentParagraphs,
+      button,
+    };
+  })
+  .filter((pill) => pill.title || pill.contentParagraphs.length > 0 || pill.button || pill.icon);
+
+if (normalizedPills.length === 0) {
+  return null;
+}
+
+const desktopColumnsClass = normalizedPills.length >= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2';
+---
+
+<section id={`pills-block-${id}`} class="space-y-6">
+  {
+    normalizedTitle ? (
+      <h2 class="text-3xl font-serif text-brand-charcoal">{normalizedTitle}</h2>
+    ) : null
+  }
+  {
+    normalizedDescription ? (
+      <p class="text-base text-brand-charcoal/90">{normalizedDescription}</p>
+    ) : null
+  }
+  <div class:list={['grid gap-6', 'md:grid-cols-2', desktopColumnsClass]}>
+    {
+      normalizedPills.map((pill) => (
+        <article
+          class:list={[
+            styles.card,
+            'group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:bg-white',
+          ]}
+        >
+          <div class="space-y-3">
+            {pill.icon ? (
+              <span
+                class:list={[
+                  styles.icon,
+                  'inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy',
+                ]}
+              >
+                <iconify-icon icon={pill.icon} width="24" height="24" aria-hidden="true" />
+              </span>
+            ) : null}
+            {pill.title ? (
+              <h3 class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky">
+                {pill.title}
+              </h3>
+            ) : null}
+            {pill.contentParagraphs.length > 0 ? (
+              <div class="space-y-2 text-sm leading-relaxed">
+                {pill.contentParagraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          {pill.button && pill.button.label && pill.button.url ? (
+            <div class="mt-6">
+              <Button
+                href={pill.button.url}
+                primary={pill.button.primary}
+                icon="iconoir:nav-arrow-right"
+              >
+                {pill.button.label}
+              </Button>
+            </div>
+          ) : null}
+        </article>
+      ))
+    }
+  </div>
+</section>
