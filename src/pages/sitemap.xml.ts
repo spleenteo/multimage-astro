@@ -23,8 +23,7 @@ type SitemapEntry = {
 };
 
 export const GET: APIRoute = async ({ site }) => {
-  const origin =
-    import.meta.env.PUBLIC_SITE_URL ?? site?.toString() ?? 'http://localhost:4321';
+  const origin = import.meta.env.PUBLIC_SITE_URL ?? site?.toString() ?? 'http://localhost:4321';
 
   if (!import.meta.env.PUBLIC_SITE_URL && !site) {
     console.warn(
@@ -84,7 +83,8 @@ export const GET: APIRoute = async ({ site }) => {
 
   urls.sort((a, b) => a.loc.localeCompare(b.loc));
 
-  const body = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+  const body =
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     urls
       .map((entry) => {
