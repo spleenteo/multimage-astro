@@ -1,5 +1,6 @@
 ---
 type FooterLink = {
+  id?: string;
   label: string;
   href: string;
 };
@@ -21,38 +22,44 @@ type LegalLink = {
   external?: boolean;
 };
 
-const FOOTER_GROUPS: FooterGroup[] = [
-  {
-    title: 'Informazioni',
-    links: [
-      { label: 'Chi siamo?', href: '/info/chi-siamo' },
-      { label: 'La storia', href: '/info/la-storia' },
-      { label: 'Adesioni', href: '/info/adesioni' },
-      { label: 'Magazine', href: '/magazine' },
-    ],
-  },
-  {
-    links: [
-      { label: 'Sostieni Multimage', href: '/info/sostieni-multimage' },
-      { label: 'Ordinare', href: '/info/ordinare' },
-      { label: 'Partecipare', href: '/info/partecipare' },
-      { label: 'Carta etica', href: '/info/carta-etica' },
-    ],
-  },
-  {
-    links: [
-      { label: 'Pubblicazioni', href: '/info/pubblicazioni' },
-      { label: 'Contatti', href: '/info/contatti' },
-      { label: 'Eirenefest', href: '/info/eirenefest' },
-    ],
-  },
-  {
-    links: [
-      { label: 'Libri Amici', href: '/info/libri-amici' },
-      { label: 'Sviluppo web', href: '/info/sviluppo-web' },
-    ],
-  },
-] as const;
+type Props = {
+  footerPages?: FooterLink[];
+};
+
+const { footerPages = [] }: Props = Astro.props;
+
+function buildFooterGroups(pages: FooterLink[]): FooterGroup[] {
+  if (pages.length === 0) {
+    return [];
+  }
+
+  const groupCount = Math.min(4, Math.max(1, pages.length));
+  const baseSize = Math.floor(pages.length / groupCount);
+  const remainder = pages.length % groupCount;
+
+  const groups: FooterGroup[] = [];
+  let cursor = 0;
+
+  for (let index = 0; index < groupCount; index += 1) {
+    const extra = index < remainder ? 1 : 0;
+    const sliceSize = baseSize + extra;
+    const links = pages.slice(cursor, cursor + sliceSize);
+    cursor += sliceSize;
+
+    if (links.length === 0) {
+      continue;
+    }
+
+    groups.push({
+      title: index === 0 ? 'Informazioni' : undefined,
+      links,
+    });
+  }
+
+  return groups;
+}
+
+const FOOTER_GROUPS = buildFooterGroups(footerPages);
 
 const SOCIAL_LINKS: SocialLink[] = [
   {

@@ -20,7 +20,12 @@ const SITE_QUERY = /* GraphQL */ `
         ...TagFragment
       }
     }
-    allPages(filter: { menu: { eq: true } }, orderBy: position_ASC, first: 100) {
+    headerPages: allPages(filter: { menu: { eq: true } }, orderBy: position_ASC, first: 100) {
+      id
+      slug
+      label
+    }
+    footerPages: allPages(filter: { menuFooter: { eq: true } }, orderBy: position_ASC, first: 100) {
       id
       slug
       label
@@ -32,27 +37,33 @@ type SiteMetaResult = {
   _site: {
     faviconMetaTags: SeoMetaTag[] | null;
   } | null;
-  allPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
+  headerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
+  footerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
 };
 
-const { _site, allPages } = await executeQuery<SiteMetaResult>(SITE_QUERY);
+const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY);
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
 
-const infoPages = (allPages ?? [])
-  .map((page) => {
-    const slug = page.slug?.trim();
-    const label = page.label?.trim();
-    if (!slug || !label) {
-      return null;
-    }
-    return {
-      id: page.id,
-      label,
-      href: `/info/${slug}`,
-    };
-  })
-  .filter((entry): entry is { id: string; label: string; href: string } => Boolean(entry));
+function mapPagesToLinks(pages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null) {
+  return (pages ?? [])
+    .map((page) => {
+      const slug = page.slug?.trim();
+      const label = page.label?.trim();
+      if (!slug || !label) {
+        return null;
+      }
+      return {
+        id: page.id,
+        label,
+        href: `/info/${slug}`,
+      };
+    })
+    .filter((entry): entry is { id: string; label: string; href: string } => Boolean(entry));
+}
+
+const infoPages = mapPagesToLinks(headerPages);
+const footerMenuPages = mapPagesToLinks(footerPages);
 ---
 
 <!doctype html>
@@ -151,7 +162,7 @@ const infoPages = (allPages ?? [])
         <slot />
       </div>
     </main>
-    <Footer />
+    <Footer footerPages={footerMenuPages} />
     <Analytics />
     <SpeedInsights />
   </body>

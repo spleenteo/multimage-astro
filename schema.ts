@@ -21,11 +21,20 @@ export type Author = ItemTypeDefinition<
   EnvironmentSettings,
   '70445',
   {
+    email: {
+      type: 'string';
+    };
     full_name: {
+      type: 'string';
+    };
+    phone: {
       type: 'string';
     };
     sort_by: {
       type: 'string';
+    };
+    note: {
+      type: 'text';
     };
     alias: {
       type: 'string';
@@ -44,15 +53,6 @@ export type Author = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
-    };
-    email: {
-      type: 'string';
-    };
-    phone: {
-      type: 'string';
-    };
-    note: {
-      type: 'text';
     };
   }
 >;
@@ -141,29 +141,32 @@ export type BlogPost = ItemTypeDefinition<
   EnvironmentSettings,
   '184824',
   {
+    author: {
+      type: 'link';
+    };
     slug: {
       type: 'slug';
     };
     title: {
       type: 'string';
     };
-    sticky: {
-      type: 'boolean';
-    };
     seo: {
       type: 'seo';
     };
-    author: {
+    category: {
       type: 'link';
     };
     featured_image: {
       type: 'file';
     };
+    keywords: {
+      type: 'links';
+    };
     abstract: {
       type: 'text';
     };
-    category: {
-      type: 'link';
+    sticky: {
+      type: 'boolean';
     };
     body: {
       type: 'structured_text';
@@ -176,9 +179,6 @@ export type BlogPost = ItemTypeDefinition<
         | Video
         | Banner;
       inline_blocks: Author | Page | Book | BlogPost;
-    };
-    keywords: {
-      type: 'links';
     };
   }
 >;
@@ -482,14 +482,23 @@ export type Page = ItemTypeDefinition<
   EnvironmentSettings,
   '70448',
   {
-    menu: {
-      type: 'boolean';
-    };
     label: {
       type: 'string';
     };
+    slug: {
+      type: 'slug';
+    };
+    menu: {
+      type: 'boolean';
+    };
+    seo: {
+      type: 'seo';
+    };
     title: {
       type: 'string';
+    };
+    menu_footer: {
+      type: 'boolean';
     };
     subtitle: {
       type: 'string';
@@ -504,12 +513,6 @@ export type Page = ItemTypeDefinition<
     };
     layout: {
       type: 'string';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
     };
     position: {
       type: 'integer';

@@ -128,6 +128,7 @@ export type PageRecord = {
   body: StructuredTextField;
   label: string | null;
   menu: boolean | null;
+  menuFooter: boolean | null;
   seo: SeoMetaTag[] | null;
 };
 
