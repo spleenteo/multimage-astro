@@ -97,4 +97,3 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - `lib/seo.ts` — utilities for merging SEO metadata with sensible fallbacks.
 - `lib/suppliers.ts` — mapping/grouping helpers for supplier/distributor records.
 - `lib/text.ts` — text normalisation utilities (plain text extraction, truncation, etc.).
-
