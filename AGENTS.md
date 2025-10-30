@@ -98,18 +98,3 @@ Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure t
 - `lib/suppliers.ts` — mapping/grouping helpers for supplier/distributor records.
 - `lib/text.ts` — text normalisation utilities (plain text extraction, truncation, etc.).
 
-# Next tasks to be done (unordered)
-
-- [x] Home page components
-- [x] CTAs sections
-- [x] Page composer with blocks
-- [x] GraphlQL a directory con fragments
-- [x] Move to structured text
-- [x] UI refinery for header and footer
-- [x] Accessibilità menu
-- [x] LLMs.txt
-- [] Enable preview mode for live draft editing
-- [] Search engine for static website
-- [] Ecommerce cart integration
-- [] Newsletter section
-- [] Accessibilità
