@@ -342,7 +342,7 @@ const seo = withFallbackSeo(book.seo, {
           {
             descriptionHtml ? (
               <div
-                class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal"
+                class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal"
                 set:html={descriptionHtml}
               />
             ) : null
@@ -404,7 +404,7 @@ const seo = withFallbackSeo(book.seo, {
       showReview && reviewContent ? (
         <section class={styles.reviewSection}>
           <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
-          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal">
+          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal">
             <StructuredText
               data={reviewContent as any}
               blockComponents={defaultBlockComponents as any}

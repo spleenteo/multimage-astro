@@ -58,6 +58,10 @@
     @apply font-semibold text-brand-charcoal;
   }
 
+  mark {
+    @apply bg-brand-sky/15 text-brand-charcoal;
+  }
+
   button {
     @apply font-sans rounded-none;
   }

@@ -54,7 +54,7 @@
   }
 
   .contentBlock {
-    @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal;
+    @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal;
   }
 
   .booksSection {
