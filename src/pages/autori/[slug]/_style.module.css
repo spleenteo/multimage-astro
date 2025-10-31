@@ -54,7 +54,7 @@
   }
 
   .contentBlock {
-    @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal;
+    @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3;
   }
 
   .booksSection {
