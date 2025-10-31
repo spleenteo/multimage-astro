@@ -9,6 +9,7 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+import { ClientRouter, type TransitionDirectionalAnimations } from 'astro:transitions';
 
 const { seo = [] }: { seo?: TitleMetaLinkTag[] } = Astro.props;
 
@@ -64,6 +65,39 @@ function mapPagesToLinks(pages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>>
 
 const infoPages = mapPagesToLinks(headerPages);
 const footerMenuPages = mapPagesToLinks(footerPages);
+
+const slideUpTransition: TransitionDirectionalAnimations = {
+  forwards: {
+    old: {
+      name: 'view-slide-up-old',
+      duration: '220ms',
+      easing: 'ease-out',
+      fillMode: 'both',
+    },
+    new: {
+      name: 'view-slide-up-new',
+      duration: '220ms',
+      easing: 'ease-out',
+      fillMode: 'both',
+    },
+  },
+  backwards: {
+    old: {
+      name: 'view-slide-up-old',
+      duration: '220ms',
+      easing: 'ease-out',
+      direction: 'reverse',
+      fillMode: 'both',
+    },
+    new: {
+      name: 'view-slide-up-new',
+      duration: '220ms',
+      easing: 'ease-out',
+      direction: 'reverse',
+      fillMode: 'both',
+    },
+  },
+};
 ---
 
 <!doctype html>
@@ -154,15 +188,67 @@ const footerMenuPages = mapPagesToLinks(footerPages);
         };
     </script>
     <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
+    <ClientRouter />
+    <style is:global>
+      @keyframes view-slide-up-old {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        to {
+          opacity: 0;
+          transform: translateY(-12px);
+        }
+      }
+
+      @keyframes view-slide-up-new {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        @keyframes view-slide-up-old {
+          from {
+            opacity: 1;
+            transform: translateY(0);
+          }
+
+          to {
+            opacity: 0;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes view-slide-up-new {
+          from {
+            opacity: 0;
+            transform: translateY(0);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+    </style>
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
-    <Header currentPath={currentPath} infoPages={infoPages} />
-    <main class="flex-1 bg-white">
+    <Header currentPath={currentPath} infoPages={infoPages} transition:persist />
+    <main class="flex-1 bg-white" transition:name="page" transition:animate={slideUpTransition}>
       <div class="container py-12 md:py-16">
         <slot />
       </div>
     </main>
-    <Footer footerPages={footerMenuPages} />
+    <Footer footerPages={footerMenuPages} transition:persist />
     <Analytics />
     <SpeedInsights />
   </body>

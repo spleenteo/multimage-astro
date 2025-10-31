@@ -483,8 +483,20 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
 </header>
 
 <script type="module" is:inline>
-  const header = document.querySelector('[data-header]');
-  if (header) {
+  const HEADER_STATE_KEY = '__headerState';
+
+  const enhanceHeader = () => {
+    const header = document.querySelector('[data-header]');
+    if (!header) {
+      return;
+    }
+
+    const existingState = header[HEADER_STATE_KEY];
+    if (existingState) {
+      existingState.sync();
+      return;
+    }
+
     const body = document.body;
     const menuButton = header.querySelector('[data-menu-button]');
     const mobileMenu = header.querySelector('[data-mobile-menu]');
@@ -495,10 +507,28 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
     const tabList = header.querySelector('[data-tablist]');
     const tabTriggers = tabList ? Array.from(tabList.querySelectorAll('[data-tab-trigger]')) : [];
     const tabPanels = tabList ? Array.from(header.querySelectorAll('[data-tab-panel]')) : [];
-    const initialTab =
-      tabTriggers.find((trigger) => trigger.dataset.tabInitial === 'true') ??
-      tabTriggers[0] ??
-      null;
+    const mobileTargets = header.querySelectorAll('[data-mobile-nav-target]');
+
+    const getNormalizedPath = () => {
+      const path = window.location.pathname;
+      if (path.endsWith('/') && path !== '/') {
+        return path.slice(0, -1);
+      }
+      return path;
+    };
+
+    const matchesPath = (href) => {
+      if (!href) {
+        return false;
+      }
+      const normalized = getNormalizedPath();
+      if (href === '/') {
+        return normalized === '/';
+      }
+      return normalized === href || normalized.startsWith(`${href}/`);
+    };
+
+    let initialTab = null;
 
     const setSelectedTab = (trigger) => {
       tabTriggers.forEach((item) => {
@@ -510,9 +540,18 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
       if (!tabList) {
         return;
       }
+
+      initialTab =
+        tabTriggers.find((trigger) => trigger.dataset.tabInitial === 'true') ??
+        tabTriggers[0] ??
+        null;
+
       if (initialTab) {
         setSelectedTab(initialTab);
+      } else {
+        tabTriggers.forEach((trigger) => trigger.setAttribute('aria-selected', 'false'));
       }
+
       tabTriggers.forEach((item) => {
         if (item.dataset.hasPanel === 'true') {
           item.setAttribute('aria-expanded', 'false');
@@ -550,7 +589,52 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
       });
     };
 
-    resetTabState();
+    const updateActiveState = () => {
+      tabTriggers.forEach((trigger) => {
+        const isLink = trigger.dataset.tabLink === 'true';
+        const hasPanel = trigger.dataset.hasPanel === 'true';
+        let isActive = false;
+
+        if (isLink) {
+          isActive = matchesPath(trigger.getAttribute('href'));
+        } else if (hasPanel) {
+          const targetId = trigger.dataset.tabTarget;
+          const panel = targetId ? header.querySelector(`#${targetId}`) : null;
+          if (panel) {
+            const childLinks = panel.querySelectorAll('a[href]');
+            isActive = Array.from(childLinks).some((link) =>
+              matchesPath(link.getAttribute('href')),
+            );
+          }
+        }
+
+        if (isActive) {
+          trigger.dataset.tabInitial = 'true';
+        } else {
+          delete trigger.dataset.tabInitial;
+        }
+      });
+
+      mobileTargets.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href) {
+          return;
+        }
+        const isActive = matchesPath(href);
+        if (isActive) {
+          link.classList.add('text-white');
+          link.classList.remove('text-white/90', 'text-white/80');
+        } else {
+          if (link.closest('[data-mobile-accordion]')) {
+            link.classList.remove('text-white');
+            link.classList.add('text-white/80');
+          } else {
+            link.classList.remove('text-white');
+            link.classList.add('text-white/90');
+          }
+        }
+      });
+    };
 
     if (tabList && tabTriggers.length > 0) {
       tabTriggers.forEach((trigger) => {
@@ -776,11 +860,33 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
       });
     });
 
-    const mobileTargets = header.querySelectorAll('[data-mobile-nav-target]');
     mobileTargets.forEach((link) => {
       link.addEventListener('click', () => {
         closeMenu();
       });
     });
-  }
+
+    const state = {
+      closeMenu,
+      resetTabState,
+      sync: () => {
+        updateActiveState();
+        resetTabState();
+        closeMenu();
+      },
+    };
+
+    header[HEADER_STATE_KEY] = state;
+    state.sync();
+  };
+
+  const beforeSwapHandler = () => {
+    const header = document.querySelector('[data-header]');
+    const state = header ? header[HEADER_STATE_KEY] : undefined;
+    state?.closeMenu();
+  };
+
+  document.addEventListener('astro:page-load', enhanceHeader);
+  document.addEventListener('astro:before-swap', beforeSwapHandler);
+  enhanceHeader();
 </script>
