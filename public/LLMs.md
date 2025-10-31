@@ -67,6 +67,88 @@ Nel frattempo l’associazione inizia a cambiare la sua struttura organizzativa 
 
 ## Catalogo libri
 
+### Resistenze
+- sottotitolo: Da Gaza all’Afghanistan al Myanmar
+- link: https://www.multimage.org/libri/resistenze
+- collana: rEsistenza
+- link_collana: https://www.multimage.org/collane/resistenza
+- recensione:
+
+  Tiziano Terzani diceva vent’anni fa: “Più che assaltare le cittadelle del potere si tratta ormai di opporre una lunga resistenza”. 
+  Il futuro è nelle nostre tante e variegate resistenze al cinismo disumano del potere. Lo scollamento tra governi e popolazione è la realtà del nostro oggi, molte e molti di noi si impegnano in una cittadinanza attiva. Un attivismo dei valori della solidarietà che non ha timore di mettersi in gioco. 
+  Questo è il nostro futuro. A indicarci la via sono le resistenze nel mondo, sotto i nostri occhi. Di alcune ce ne rendiamo conto come quella dei palestinesi in Cisgiordania e a Gaza, una resistenza fatta appunto di incrollabile resistenza, di altre molto meno perché i riflettori del mondo sono puntati altrove, eppure queste resistenze sono portatrici di valori. 
+  La resistenza birmana, dopo il colpo di Stato della giunta militare il 1° febbraio del 2021, fin da subito, con la partecipazione del 60% delle donne bimane, ha scelto di rispondere con la nonviolenza e la disobbedienza civile togliendo il suo supporto all’amministrazione della giunta dei militari. 
+  La resistenza delle donne afghane di cui non si parla mai, è fatta di volontà di portare avanti, clandestinamente, rischiando, l’istruzione delle bambine e delle ragazze continuando a credere in un futuro migliore.
+
+- isbn: 9791281546882
+- edizione: 1
+- anno: 2025-11-05
+- archivio: Disponibile in catalogo
+- autori:
+  - Fiorella Carollo | link: https://www.multimage.org/autori/fiorella-carollo
+    biografia:
+      **Fiorella Carollo** è un’ Orientalista, laureata in Giapponese a Ca’ Foscari, si è formata in antropologia, pensiero femminista e *Feminist Film Theory*. Ha vissuto a Londra, Tokyo, Melbourne e Bali, ora vive a sud di Roma, al mare. Blogger appassionata dal 2013 cura il blog “Donna Reporter” a cui ha fatto seguito “Le interviste di Donna Reporter” e l’ultimo nato “La rivoluzione ambientale”. Collabora con il gruppo stampa italiano di XR e con la *International Newsletter* del movimento.
+
+### Musica, per tutti!
+- sottotitolo: Roberto Goitre nel panorama della didattica musicale italiana odierna e nelle testimonianze di chi l'ha conosciuto
+- link: https://www.multimage.org/libri/musica-per-tutti
+- collana: Fuori Collana
+- link_collana: https://www.multimage.org/collane/fuori-collana
+- recensione:
+
+  Musica, per tutti!
+  Questa è l’idea chiave che emerge con forza dai testi di Roberto Goitre e ne racchiude il senso fondamentale del suo pensiero.
+  Ma… chi è *Roberto Goitre*?
+  È un importante didatta, compositore e direttore di coro torinese, vissuto fra il 1927 ed il 1980. Centra il proprio lavoro sul ruolo fondamentale che la musica, soprattutto vocale, può avere sia nello sviluppo dei giovanissimi, formandoli, affinandone le capacità necessarie per affrontare la quotidianità, sia nella vita degli adulti per approfondire, rafforzare conoscenze e legami sociali.
+  Partendo da queste premesse, ci si sofferma sull’analisi delle sue opere prodotte fra il 1972 ed il 1980 dopo un viaggio nel 1968 in Ungheria, dove ha modo di conoscere direttamente i principi didattici e musicali di Zoltán Kodály, compositore ed etnomusicologo ungherese che aveva trasformato con il proprio pensiero pedagogico l’educazione musicale del suo Paese e ne rimane affascinato.
+  Attraverso le testimonianze emerse da interviste a chi lo ha conosciuto, la ricerca prosegue alla scoperta di un rilevante pedagogo che ha contribuito ad introdurre significative innovazioni nel panorama didattico musicale italiano.
+
+- isbn: 9791281546851
+- edizione: 1
+- anno: 2025-11-03
+- archivio: Disponibile in catalogo
+- autori:
+  - Luigi Ciriolo | link: https://www.multimage.org/autori/luigi-ciriolo
+    biografia:
+      **Luigi Ciriolo**. Di origine piacentina, si forma presso il Conservatorio “Giuseppe Nicolini” della sua città.
+      Segue lezioni corali dirette da Mario Pigazzini e successivamente da Giorgio Ubaldi, studia tromba con Silvio Franzini, diplomandosi con Mario Bracalente nel 2019. 
+      Si laurea in Conservazione e Gestione dei Beni e delle Attività Culturali e consegue la laurea magistrale in Economia e Gestione delle Arti e delle Attività Culturali presso l’Università Ca’ Foscari di Venezia nel 2021.
+      Al Conservatorio “Benedetto Marcello” frequenta il Biennio di secondo livello di Didattica della musica con curvatura Kodály e conclude il suo percorso di studi, con Morena d’Este e Stefania Lucchetti, ottenendo il massimo dei voti nel 2023. Attualmente vive e lavora a Venezia.
+
+### Umanizzare la Terra
+- link: https://www.multimage.org/libri/umanizzare-la-terra-nuova-edizione
+- collana: Umanesimo Universalista
+- link_collana: https://www.multimage.org/collane/umanesimo-universalista
+- recensione:
+
+  "Se parliamo di coerenza e di forza morale, la figura di Giordano Bruno di fronte al martirio appare come il paradigma dell’umanista classico e, al nostro tempo, tanto Einstein quanto Oppenheimer possono essere giustamente considerati umanisti tutti d’un pezzo. E perché, andando al di là del campo della scienza, non dovremmo considerare come dei genuini umanisti Tolstoj, Gandhi e Martin Luther King? Forse Schweitzer non è stato un umanista? Sono sicuro che milioni di persone in tutto il mondo affrontano la vita con un atteggiamento umanista ma se cito solo alcune personalità è perché esse costituiscono modelli di umanesimo universalmente riconosciuti. So che a tali individui possono essere rimproverati alcuni comportamenti, qualche volta il modo di agire od il senso dell’opportunità od il tatto, ma non possiamo negare il loro impegno nei confronti degli altri esseri umani. D’altra parte, non siamo qui per pontificare su chi sia umanista e su chi non lo sia ma per presentare la nostra opinione, con tutte le limitazioni del caso, sull’Umanesimo. Ma se qualcuno esigesse da noi una definizione dell’atteggiamento umanista in questo momento storico, gli risponderemmo con poche parole che “è un umanista chiunque lotti contro la discriminazione e la violenza e proponga delle alternative affinché la libertà di scelta dell’essere umano possa manifestarsi”.
+
+  Silo, *Che cosa intendiamo oggi per Umanesimo Universalista*
+
+- isbn: 9791281546875
+- edizione: 1
+- anno: 2025-10-31
+- archivio: Disponibile in catalogo
+- autori:
+  - Mario Luis Rodriguez Cobos (alias: Silo) | link: https://www.multimage.org/autori/mario-luis-rodriguez-cobos
+    biografia:
+      Mario Luis Rodríguez Cobos detto Silo (Mendoza, 6 gennaio 1938 – Mendoza, 16 settembre 2010) è stato uno scrittore e filosofo argentino.
+
+      Ha fondato una corrente di pensiero che lui stesso ha definito Umanesimo Universalista ed è stato l’ispiratore di numerose attività e campagne del Movimento Umanista.
+
+      È stato insignito nel 1993 della laurea Honoris Causa in Scienze Linguistiche dall'Accademia delle Scienze di Russia.
+
+      Ha dato vita, nella parte finale della sua vita, al progetto spirituale conosciuto sotto il nome de *Il Messaggio di Silo*.
+
+      Nell'Argentina degli anni sessanta effettuò i primi studi e cominciò a creare  gruppi di studio sulla relazione tra individuo e società.  Il 4 Maggio del 1969 pronuncia il suo primo discorso pubblico *La Guarigione dalla Sofferenza* e quella data viene considerata come l'inizio del Movimento Umanista.
+
+      Nel 1972 pubblica il suo primo libro, *Lo Sgusrdo Interno,* e da allora scrive saggi, racconti di fantascienza, prosa poetica in cui traduce, nelle varie forme letterarie, il suo pensiero e la sua proposta di azione. Raccoglie le sue Opere nei sue volumi Opere Complete I e II e nel sito silo.net
+
+      Nel 2009 è stato l'ispiratore della Marcia Mondiale per la Pace e la Nonviolenza che ha rappresentato al Summit dei Premi Nobel per la Pace a Berlino nel Maggio del 2009 dove ha pronunciato il suo ultimo discorso, incluso nella ultima edizione del "Libro della Comunità".
+
+      - [Pagina su wikipedia](http://it.wikipedia.org/wiki/Mario_Rodr%C3%ADguez_Cobos)
+      - [Sito web](http://www.silo.net)
+
 ### Gandhi ad Aushwitz
 - sottotitolo: elogio della Nonviolenza (e sue problematiche)
 - link: https://www.multimage.org/libri/gandhi-ad-aushwitz
