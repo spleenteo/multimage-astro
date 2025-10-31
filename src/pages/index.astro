@@ -27,29 +27,6 @@ import {
 
 export const prerender = true;
 
-const FEATURE_LINKS = [
-  {
-    href: '/libri',
-    title: 'Catalogo libri',
-    icon: 'iconoir:book',
-    description:
-      'Sfoglia le pubblicazioni dedicate a diritti umani, nonviolenza e trasformazione sociale.',
-  },
-  {
-    href: '/autori',
-    title: 'Autrici e autori',
-    icon: 'iconoir:community',
-    description:
-      'Approfondimenti biografici, interviste e opere dei protagonisti del catalogo Multimage.',
-  },
-  {
-    href: '/collane',
-    title: 'Collane editoriali',
-    icon: 'iconoir:bookmark-book',
-    description: 'Percorsi tematici. serie storiche, raccolte e.',
-  },
-] as const;
-
 type HomeBannerSectionData = {
   id: string;
   title: string | null;

@@ -1,0 +1,56 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { withFallbackSeo } from '~/lib/seo';
+import styles from './index/_style.module.css';
+import { STAFF_INDEX_QUERY, type StaffIndexQueryResult } from './index/_graphql';
+
+export const prerender = true;
+
+const data = await executeQuery<StaffIndexQueryResult>(STAFF_INDEX_QUERY);
+const totalBooks = data._allBooksMeta?.count ?? null;
+const formattedBookCount =
+  typeof totalBooks === 'number' ? new Intl.NumberFormat('it-IT').format(totalBooks) : null;
+
+const seo = withFallbackSeo(null, {
+  title: 'Area staff',
+  description: 'Strumenti interni per il team Multimage.',
+});
+
+const tools = [
+  {
+    title: 'Archivio catalogo',
+    href: '/staff/archivio-catalogo/',
+    meta: formattedBookCount ? `${formattedBookCount} libri` : 'Catalogo completo',
+    summary: 'Visualizza e scarica in CSV l’elenco completo dei libri presenti in DatoCMS.',
+  },
+];
+---
+
+<BaseLayout seo={seo}>
+  <section class={styles.section}>
+    <header class={styles.header}>
+      <h1 class={styles.title}>Area staff</h1>
+      <p class={styles.description}>
+        Accesso rapido agli strumenti interni pensati per il team Multimage.
+      </p>
+    </header>
+
+    <div class={styles.tools}>
+      {
+        tools.map((tool) => (
+          <a href={tool.href} class={styles.toolCard}>
+            <div class={styles.toolHeader}>
+              <span class={styles.toolMeta}>{tool.meta}</span>
+              <h2 class={styles.toolTitle}>{tool.title}</h2>
+            </div>
+            <p class={styles.toolSummary}>{tool.summary}</p>
+            <span class={styles.toolLink}>
+              Apri strumento <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

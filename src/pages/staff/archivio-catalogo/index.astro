@@ -1,0 +1,303 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { withFallbackSeo } from '~/lib/seo';
+import { extractYear, formatBookPrice, normalizeText } from '~/lib/books';
+import styles from './_style.module.css';
+import { STAFF_ARCHIVE_CATALOG_QUERY, type StaffArchivioCatalogoQueryResult } from './_graphql';
+
+export const prerender = true;
+
+const data = await executeQuery<StaffArchivioCatalogoQueryResult>(STAFF_ARCHIVE_CATALOG_QUERY);
+const books = data.allBooks ?? [];
+
+const seo = withFallbackSeo(null, {
+  title: 'Archivio catalogo',
+  description: 'Esporta in CSV l’elenco completo dei libri pubblicati su DatoCMS.',
+});
+
+const formattedBooks = books.map((book) => {
+  const authors =
+    book.authors
+      ?.map((author) => normalizeText(author.fullName ?? author.alias ?? null))
+      .filter((name): name is string => Boolean(name)) ?? [];
+
+  const keywords =
+    book.keywords?.map((keyword) => normalizeText(keyword.name ?? null)).filter(Boolean) ?? [];
+
+  const reprints =
+    book.reprints
+      ?.map((reprint) => {
+        if (!reprint || reprint.__typename !== 'ReprintRecord') {
+          return null;
+        }
+
+        const parts: string[] = [];
+        if (typeof reprint.number === 'number') {
+          parts.push(`${reprint.number}ª ristampa`);
+        }
+        if (reprint.year) {
+          parts.push(reprint.year);
+        }
+        if (typeof reprint.circulation === 'number') {
+          parts.push(`tiratura ${reprint.circulation.toLocaleString('it-IT')}`);
+        }
+
+        const label = parts.join(' • ');
+        return label.length > 0 ? label : null;
+      })
+      .filter((value): value is string => Boolean(value)) ?? [];
+
+  const publicUrl = `https://www.multimage.org/libri/${book.slug}/`;
+  const collectionUrl = book.collection?.slug ? `/collane/${book.collection.slug}/` : null;
+
+  return {
+    ...book,
+    authors,
+    keywords,
+    reprints,
+    archiveLabel: book.archive ? 'Sì' : 'No',
+    priceLabel: formatBookPrice(book.price),
+    printYearLabel: extractYear(book.printYear) ?? book.printYear,
+    firstPrintYearLabel: book.firstPrintYear ? `${book.firstPrintYear}` : '',
+    publicUrl,
+    collectionUrl,
+  };
+});
+
+const toolsNavigation = [
+  {
+    label: 'Indice strumenti',
+    href: '/staff/',
+    current: false,
+  },
+  {
+    label: 'Archivio catalogo',
+    href: '/staff/archivio-catalogo/',
+    current: true,
+  },
+];
+---
+
+<BaseLayout seo={seo}>
+  <section class={styles.section}>
+    <div class={styles.container}>
+      <nav class={styles.menu} aria-label="Strumenti area staff">
+        {
+          toolsNavigation.map((item) => (
+            <a
+              href={item.href}
+              class:list={[styles.menuLink, item.current ? styles.menuLinkActive : null]}
+              aria-current={item.current ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <header class={styles.header}>
+        <div class={styles.titleGroup}>
+          <h1 class={styles.title}>Archivio catalogo</h1>
+          <p class={styles.count}>
+            {formattedBooks.length.toLocaleString('it-IT')} libri totali
+          </p>
+          <p class={styles.description}>
+            Esporta l’intero catalogo di DatoCMS per attività editoriali e amministrative. I dati
+            vengono aggiornati ad ogni pubblicazione.
+          </p>
+        </div>
+
+        <div class={styles.actions}>
+          <button
+            type="button"
+            class={styles.csvButton}
+            data-export-csv
+            data-table-id="staff-books-table"
+            data-filename="multimage_archivio_libri.csv"
+          >
+            Scarica CSV
+          </button>
+        </div>
+      </header>
+
+      <div class={styles.tableWrapper}>
+        <table id="staff-books-table" class={styles.table}>
+          <thead>
+            <tr>
+              <th scope="col" class={styles.theadCell}>ISBN</th>
+              <th scope="col" class={styles.theadCell}>Archiviato</th>
+              <th scope="col" class={styles.theadCell}>Titolo</th>
+              <th scope="col" class={styles.theadCell}>Sottotitolo</th>
+              <th scope="col" class={styles.theadCell}>Autori / Curatori</th>
+              <th scope="col" class={styles.theadCell}>Collana</th>
+              <th scope="col" class={styles.theadCell}>Formato</th>
+              <th scope="col" class={styles.theadCell}>Impaginatore</th>
+              <th scope="col" class={styles.theadCell}>Illustratore</th>
+              <th scope="col" class={styles.theadCell}>Autore Copertina</th>
+              <th scope="col" class={styles.theadCell}>Pagine</th>
+              <th scope="col" class={styles.theadCell}>Edizione</th>
+              <th scope="col" class={styles.theadCell}>Anno di stampa</th>
+              <th scope="col" class={styles.theadCell}>Prima edizione</th>
+              <th scope="col" class={styles.theadCell}>Ristampe</th>
+              <th scope="col" class={styles.theadCell}>Dimensioni</th>
+              <th scope="col" class={styles.theadCell}>Lingua originale</th>
+              <th scope="col" class={styles.theadCell}>Titolo originale</th>
+              <th scope="col" class={styles.theadCell}>Traduttore</th>
+              <th scope="col" class={styles.theadCell}>Parole chiave</th>
+              <th scope="col" class={styles.theadCell}>Prezzo</th>
+              <th scope="col" class={styles.theadCell}>Promozione speciale</th>
+              <th scope="col" class={styles.theadCell}>Magazzino</th>
+              <th scope="col" class={styles.theadCell}>Copyright</th>
+              <th scope="col" class={styles.theadCell}>URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              formattedBooks.map((book) => (
+                <tr>
+                  <td class={`${styles.cell} ${styles.cellStrong}`}>{book.isbn ?? ''}</td>
+                  <td class={styles.cell}>{book.archiveLabel}</td>
+                  <td class={`${styles.cell} ${styles.cellStrong}`}>{book.title}</td>
+                  <td class={styles.cell}>{book.subtitle ?? ''}</td>
+                  <td class={styles.cell}>
+                    {book.authors.length > 0 ? book.authors.join(', ') : ''}
+                  </td>
+                  <td class={styles.cell}>
+                    {book.collection?.name ? (
+                      book.collectionUrl ? (
+                        <a href={book.collectionUrl} class={styles.link}>
+                          {book.collection.name}
+                        </a>
+                      ) : (
+                        book.collection.name
+                      )
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td class={styles.cell}>{book.format ?? ''}</td>
+                  <td class={styles.cell}>{book.layoutArtist ?? ''}</td>
+                  <td class={styles.cell}>{book.illustrator ?? ''}</td>
+                  <td class={styles.cell}>{book.coverDesigner ?? ''}</td>
+                  <td class={styles.cell}>{book.pages ?? ''}</td>
+                  <td class={styles.cell}>{book.edition ?? ''}</td>
+                  <td class={styles.cell}>{book.printYearLabel ?? ''}</td>
+                  <td class={styles.cell}>{book.firstPrintYearLabel ?? ''}</td>
+                  <td class={styles.cell}>
+                    {book.reprints.length > 0 ? (
+                      <div class={styles.multiValue}>
+                        {book.reprints.map((entry) => (
+                          <div>{entry}</div>
+                        ))}
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td class={styles.cell}>{book.dimensions ?? ''}</td>
+                  <td class={styles.cell}>{book.originalLang ?? ''}</td>
+                  <td class={styles.cell}>{book.originalTitle ?? ''}</td>
+                  <td class={styles.cell}>{book.translator ?? ''}</td>
+                  <td
+                    class={styles.cell}
+                    data-export-value={book.keywords.length > 0 ? book.keywords.join(', ') : ''}
+                  >
+                    {book.keywords.length > 0 ? (
+                      <div class={styles.multiValue}>
+                        {book.keywords.map((keyword) => (
+                          <span class={styles.tag}>{keyword}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      ''
+                    )}
+                  </td>
+                  <td class={styles.cell}>{book.priceLabel ?? ''}</td>
+                  <td class={styles.cell}>{book.promo ?? ''}</td>
+                  <td class={styles.cell}>{book.stock ?? ''}</td>
+                  <td class={styles.cell}>{book.copyright ?? ''}</td>
+                  <td class={styles.cell}>
+                    <a href={book.publicUrl} class={styles.link}>
+                      {book.publicUrl}
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.querySelector('[data-export-csv]');
+      if (!button) return;
+
+      button.addEventListener('click', () => {
+        const tableId = button.getAttribute('data-table-id');
+        const fileName = button.getAttribute('data-filename') ?? 'export.csv';
+        if (!tableId) return;
+
+        const tableElement = document.getElementById(tableId);
+        if (!(tableElement instanceof HTMLTableElement)) {
+          console.warn(`Tabella con id "${tableId}" non trovata.`);
+          return;
+        }
+
+        const csvContent = tableToCsv(tableElement);
+        if (!csvContent) {
+          console.warn('Nessun contenuto CSV generato.');
+          return;
+        }
+
+        const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+      });
+
+      function tableToCsv(table: HTMLTableElement) {
+        const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>('tr'));
+        if (!rows.length) return '';
+
+        const separator = ';';
+
+        const escapeCell = (input: string | null | undefined) => {
+          const text = (input ?? '').toString().replace(/\s+/g, ' ').trim();
+          if (text.length === 0) {
+            return '';
+          }
+
+          if (/[\";\n]/.test(text)) {
+            return `"${text.replace(/"/g, '""')}"`;
+          }
+
+          return text;
+        };
+
+        return rows
+          .map((row) => {
+            const cells = Array.from(row.querySelectorAll<HTMLTableCellElement>('th, td'));
+            return cells
+              .map((cell) => {
+                const exportValue = cell.getAttribute('data-export-value');
+                const rawValue = exportValue ?? cell.textContent;
+                return escapeCell(rawValue);
+              })
+              .join(separator);
+          })
+          .join('\n');
+      }
+    });
+  </script>
+</BaseLayout>

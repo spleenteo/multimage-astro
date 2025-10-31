@@ -1,0 +1,83 @@
+@tailwind components;
+
+@layer components {
+  .section {
+    @apply py-20;
+  }
+
+  .container {
+    @apply mx-auto max-w-6xl space-y-12 px-4 sm:px-6 lg:px-8;
+  }
+
+  .header {
+    @apply flex flex-wrap items-center justify-between gap-4 bg-white/95 px-6 py-6 shadow-soft;
+  }
+
+  .titleGroup {
+    @apply space-y-2;
+  }
+
+  .title {
+    @apply text-3xl font-serif text-brand-navy;
+  }
+
+  .count {
+    @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand-sky;
+  }
+
+  .actions {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .csvButton {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-sky transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
+  }
+
+  .description {
+    @apply text-sm text-brand-slate;
+  }
+
+  .menu {
+    @apply mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 bg-white px-4 py-3 shadow-soft sm:gap-4 sm:px-6;
+  }
+
+  .menuLink {
+    @apply inline-flex items-center justify-center bg-brand-mist/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-charcoal transition duration-150 hover:bg-brand-mist hover:text-brand-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-6 sm:py-3 sm:text-sm;
+  }
+
+  .menuLinkActive {
+    @apply bg-brand-sky text-white shadow-soft hover:bg-brand-sky hover:text-white;
+  }
+
+  .tableWrapper {
+    @apply overflow-x-auto border border-white/70 bg-white/95 shadow-soft;
+  }
+
+  .table {
+    @apply min-w-[1200px] w-full border-collapse;
+  }
+
+  .theadCell {
+    @apply border-b border-white/80 bg-brand-slate/5 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.15em] text-brand-navy align-middle;
+  }
+
+  .cell {
+    @apply border-b border-white/70 px-4 py-3 text-sm text-brand-slate align-top;
+  }
+
+  .cellStrong {
+    @apply text-brand-navy font-medium;
+  }
+
+  .tag {
+    @apply mr-1 inline-flex items-center rounded bg-brand-slate/10 px-2 py-0.5 text-xs text-brand-slate;
+  }
+
+  .multiValue {
+    @apply space-y-1;
+  }
+
+  .link {
+    @apply text-brand-sky transition hover:text-brand-navy;
+  }
+}
