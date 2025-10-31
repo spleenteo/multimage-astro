@@ -1,3 +1,4 @@
+import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AssetImage, SeoMetaTag, StructuredTextField } from '~/lib/datocms/types';
 
@@ -110,6 +111,16 @@ export const BOOK_ALTERNATE_FORMATS_QUERY = /* GraphQL */ `
   }
 `;
 
+export const BOOK_COLLECTION_BOOKS_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${BOOK_CARD_FRAGMENT}
+  query BookCollectionBooks($collectionId: ItemId) {
+    allBooks(filter: { collection: { eq: $collectionId } }, orderBy: printYear_DESC, first: 500) {
+      ...BookCardFragment
+    }
+  }
+`;
+
 export const BOOK_SLUGS_QUERY = /* GraphQL */ `
   query BookSlugsForStaticPaths {
     allBooks(orderBy: title_ASC, first: 500) {
@@ -197,5 +208,30 @@ export type BookAlternateFormatsResult = {
 export type BookSlugsResult = {
   allBooks: Array<{
     slug: string | null;
+  }>;
+};
+export type BookCollectionBooksResult = {
+  allBooks: Array<{
+    id: string;
+    title: string;
+    subtitle: string | null;
+    slug: string;
+    promo: string | null;
+    description: string | null;
+    printYear: string | null;
+    coverImage: AssetImage | null;
+    price: number | null;
+    authors: Array<{
+      id: string;
+      fullName: string | null;
+      alias: string | null;
+      slug: string | null;
+    }>;
+    license: {
+      name: string | null;
+      code: string | null;
+    } | null;
+    format: string | null;
+    archive: boolean | null;
   }>;
 };

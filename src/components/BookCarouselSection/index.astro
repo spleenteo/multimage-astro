@@ -8,12 +8,24 @@ type Props = {
   id: string;
   title: string;
   description?: string | null;
+  descriptionLinkHref?: string | null;
+  descriptionLinkLabel?: string | null;
   books: BookCardViewModel[];
 };
 
-const { id, title, description = null, books }: Props = Astro.props;
+const {
+  id,
+  title,
+  description = null,
+  descriptionLinkHref = null,
+  descriptionLinkLabel = null,
+  books,
+}: Props = Astro.props;
 const trimmedDescription = description?.trim() ?? null;
 const hasDescription = Boolean(trimmedDescription);
+const hasDescriptionLink = Boolean(
+  descriptionLinkHref && descriptionLinkLabel && descriptionLinkLabel.trim().length > 0,
+);
 
 if (!books || books.length === 0) {
   return null;
@@ -35,6 +47,12 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
           hasDescription ? (
             <p id={descriptionId} class={styles.description}>
               {trimmedDescription}
+              {hasDescriptionLink ? (
+                <>
+                  {' '}
+                  <a href={descriptionLinkHref!}>{descriptionLinkLabel}</a>
+                </>
+              ) : null}
             </p>
           ) : null
         }

@@ -3,6 +3,7 @@ import { Image } from '@datocms/astro/Image';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AlternateFormatsList from '~/components/AlternateFormatsList';
+import BookCarouselSection from '~/components/BookCarouselSection';
 import DetailList from '~/components/DetailList';
 import AuthorsSection from '~/components/AuthorsSection';
 import Button from '~/components/ui/Button';
@@ -20,6 +21,7 @@ import {
   formatCirculation,
   formatEdition,
   formatOrdinal,
+  mapBooksToCards,
   normalizeText,
 } from '~/lib/books';
 import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
@@ -29,10 +31,12 @@ import {
   BOOK_DETAIL_QUERY,
   BOOK_AUTHORS_BOOKS_QUERY,
   BOOK_ALTERNATE_FORMATS_QUERY,
+  BOOK_COLLECTION_BOOKS_QUERY,
   BOOK_SLUGS_QUERY,
   type BookDetailQueryResult,
   type BookAuthorsBooksResult,
   type BookAlternateFormatsResult,
+  type BookCollectionBooksResult,
   type BookSlugsResult,
 } from './_graphql';
 
@@ -151,6 +155,45 @@ const alternateFormats = alternateFormatsRaw
   .filter((alt) => alt.format.toLowerCase() !== (formatValue?.toLowerCase() ?? ''));
 
 const limitedAlternateFormats = alternateFormats.slice(0, 3);
+
+let collectionCarouselTitle: string | null = null;
+let collectionCarouselDescription: string | null = null;
+let collectionCarouselLinkLabel: string | null = null;
+let collectionCarouselLinkHref: string | null = null;
+let collectionCarouselBooks = mapBooksToCards([]);
+let collectionCarouselId: string | null = null;
+
+if (book.collection?.id) {
+  const collectionBooksData = await executeQuery<BookCollectionBooksResult>(
+    BOOK_COLLECTION_BOOKS_QUERY,
+    {
+      variables: {
+        collectionId: book.collection.id,
+      },
+    },
+  );
+
+  const collectionBooks = collectionBooksData.allBooks ?? [];
+  const totalFromCollection = collectionBooks.length;
+  const relatedBooks = collectionBooks.filter((related) => related.id !== book.id);
+
+  const limitedRelated = relatedBooks.slice(0, 10);
+  const mappedRelated = mapBooksToCards(limitedRelated);
+
+  if (mappedRelated.length > 0 && book.collection?.name) {
+    collectionCarouselBooks = mappedRelated;
+    collectionCarouselTitle = `Dalla collana "${book.collection.name}"`;
+    const baseDescription = `Ecco alcuni dei ${totalFromCollection} libri presenti nella collana`;
+    if (book.collection.slug) {
+      collectionCarouselDescription = baseDescription;
+      collectionCarouselLinkLabel = book.collection.name;
+      collectionCarouselLinkHref = `/collane/${book.collection.slug}`;
+    } else {
+      collectionCarouselDescription = `${baseDescription} ${book.collection.name}`;
+    }
+    collectionCarouselId = `collection-${book.collection.slug ?? book.collection.id}`;
+  }
+}
 
 const authorsCards = authors.map((author) => {
   const name = getAuthorDisplayName(author);
@@ -426,5 +469,18 @@ const seo = withFallbackSeo(book.seo, {
         <DetailList title="Dettagli grafica" items={graphicsDetails} />
       </div>
     </section>
+
+    {
+      collectionCarouselTitle && collectionCarouselId && collectionCarouselBooks.length > 0 ? (
+        <BookCarouselSection
+          id={collectionCarouselId}
+          title={collectionCarouselTitle}
+          description={collectionCarouselDescription}
+          descriptionLinkHref={collectionCarouselLinkHref ?? undefined}
+          descriptionLinkLabel={collectionCarouselLinkLabel ?? undefined}
+          books={collectionCarouselBooks}
+        />
+      ) : null
+    }
   </article>
 </BaseLayout>

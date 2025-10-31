@@ -2,7 +2,7 @@
 
 ## Chi siamo
 
-**Multimage APS** è un’ a ssociazione e ditoriale senza fini di lucro con l'obiettivo di promuovere i valori dell’[Umanesimo universalista](https://it.humanipedia.org/index.php/Umanesimo_Universalista): centralità dell’Essere Umano e dei suoi diritti, pace, nonviolenza, nondiscriminazione, convergenza delle diversità, economia solidale, bene comune, spiritualità.
+**Multimage APS** è un'associazione editoriale senza fini di lucro con l'obiettivo di promuovere i valori dell’[Umanesimo universalista](https://it.humanipedia.org/index.php/Umanesimo_Universalista): centralità dell’Essere Umano e dei suoi diritti, pace, nonviolenza, nondiscriminazione, convergenza delle diversità, economia solidale, bene comune, spiritualità.
 
 **Multimage** aspira ad essere il punto di riferimento editoriale per tutti coloro che vogliono pubblicare documenti editoriali (saggi, narrativa, fumetti, gadgets, audiolibri, CD-ROM ecc.) che riguardano i diritti umani, la nonviolenza, la non discriminazione.
 
@@ -19,17 +19,19 @@ La struttura dell’associazione si articola seguendo le diverse “aree” nece
 
 Ogni area è coordinata da un volontario che lavora in team con un gruppo di persone che collaborano.
 
-**Area editoriale:** Olivier Turquet (Direttore editoriale). Cordinamento Collane: Simone Casu (Collana Artistika), Silvia Nocera (Collana Avere cura), Toni Casano (Collana I libri di Pressenza), Daniela Annetta (Collana Altre storie). Lettura, correzione bozze e traduzione Emanuela Annetta, Paola Giordana Di Nardo, Lorenzo Romano, Claudio Pozzi, Elena Opromolla. Grafica e impaginazione: Daniela Annetta, Simone Casu.
+**Area editoriale:**
+Olivier Turquet (Direttore editoriale).
+Cordinamento Collane: Simone Casu (Collana Artistika), Silvia Nocera (Collana Avere cura), Toni Casano (Collana I libri di Pressenza), Daniela Annetta (Collana Altre storie).
+Lettura, correzione bozze e traduzione Emanuela Annetta, Paola Giordana Di Nardo, Lorenzo Romano, Claudio Pozzi, Elena Opromolla.
+Grafica e impaginazione: Daniela Annetta, Simone Casu.
 
 **Area segreteria e legale:** Silvia Nocera (coordinamento), Claudio Pozzi, Lorenzo Romano, Paola Giordana Di Nardo, Simone Casu, Daniela Annetta, Antonella Prunecchi.
 
 **Area diffusione:** Olivier Turquet (coordinamento), Ivan Marchetti, Fulvio Faro. Social media: Paola Balestra (FB e IG), Ivan Marchetti (YT), Fulvio Faro (Tme).
 
-**Web:** Matteo Papadopulos (webmaster).
+**Area Web:** Matteo Papadopoulos
 
 **Area organizzazione/partecipazione eventi:** Olivier Turquet (Eirenefest), Silvia Nocera (Bookcity Milano)
-
-Il logo di Multimage è stato progettato e realizzato da Iole Malosti
 
 ## La storia
 
@@ -37,7 +39,7 @@ L'Associazione Editoriale Multimage nasce nel 1995 da una equipe di umanisti per
 
 Nel dicembre dello stesso anno viene alla luce il primo libro, *Umanizzare la Terra* le cui tre ristampe in edizione economica hanno raggiunto le 10000 copie e rimane il libro più diffuso che sia stato finora pubblicato.
 
-Nello stesso anno si pubblica la prima *Agenda Umanista* (di cui usciranno edizioni fino al 2000);  a questa pubblicazione si affiancano alcuni altri "gadgets" come la serie di manifesti dei I Principi di Azione Valida illustrati da Raphael Edwards, la carta di identità della Nazione Umana Universale, il manifesto di Pablo Echaurren Verrà l'allegria della gente. L'idea è di creare oggetti editoriali che diffondano un messaggio umanista, pacifista, nonviolento. 
+Nello stesso anno si pubblica la prima *Agenda Umanista* (di cui usciranno edizioni fino al 2000);  a questa pubblicazione si affiancano alcuni altri "gadgets" come la serie di manifesti dei I Principi di Azione Valida illustrati da Raphael Edwards, la carta di identità della Nazione Umana Universale, il manifesto di Pablo Echaurren Verrà l'allegria della gente. L'idea è di creare oggetti editoriali che diffondano un messaggio umanista, pacifista, nonviolento.
 
 Nel 1997 si sviluppa l'iniziativa "Dieci per cento", una collana di nostri libri che dedicano il 10% del prezzo di copertina a una iniziativa di solidarietà: in questo caso si tratta dei bambini di strada di Nairobi e del libro curato da PeaceLink ' *Apri una finestra sul mondo* '.
 
@@ -57,7 +59,7 @@ Un successivo salto editoriale si verifica nel 2000 con la pubblicazione del pri
 
 Le attività continuano con la creazione della collana di libri per e con i bambini *Lisolachecé;* più recentemente nascono la collana di poesia *PoEtica* mentre si ripubblicano in edizione anastatica commentata libri usciti fuori catalogo nella collana *Anastatika.*
 
-Su iniziativa dialcuni autori multimage nasce nel 2020 un ambito di lavoro comune che vuole superare un certo individualismo che attanaglia gli scrittori: durante il lockdown nascono un libro collettivo ( *Volti dal Futuro* ) e una serie di webinar che poi si trasferirenno sul [canale YouTube](https://www.youtube.com/channel/UCINQT0UDnsvNU5N3rpJUJEQ) dal titolo LuneDiLibri.
+Su iniziativa di alcuni autori, Multimage nasce nel 2020 un ambito di lavoro comune che vuole superare un certo individualismo che attanaglia gli scrittori: durante il *lockdown* nascono un libro collettivo (*Volti dal Futuro*) e una serie di webinar che poi si trasferirenno sul [canale YouTube](https://www.youtube.com/channel/UCINQT0UDnsvNU5N3rpJUJEQ) dal titolo *LuneDiLibri*.
 
 Nello stesso anno autori e autrici di Multimage APS iniziano a partecipare a Bookcity Milano con eventi online, programmati in sedi BCM e autoprodotti, attività che continua fino al momento attuale e che vede il coinvolgimento di varie sedi di associazioni partner a Milano.
 
