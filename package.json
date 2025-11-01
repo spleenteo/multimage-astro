@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "prepare": "npx simple-git-hooks && npm run generate-schema",
+    "prepare": "node scripts/prepare.mjs",
     "ensure-swiper": "node scripts/ensure-swiper-element.mjs",
     "dev": "npm run ensure-swiper && astro dev",
     "start": "npm run ensure-swiper && astro dev",
