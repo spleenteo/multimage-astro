@@ -171,9 +171,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
   const resultsWrapper = root.querySelector<HTMLElement>('[data-search-results]');
   const listEl = root.querySelector<HTMLElement>('[data-search-list]');
-  const filterInputs = Array.from(
-    root.querySelectorAll<HTMLInputElement>('[data-search-filter]'),
-  );
+  const filterInputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-search-filter]'));
 
   if (!form || !input || !statusEl || !resultsWrapper || !listEl) {
     console.warn('[search] Markup incompleto per la pagina di ricerca.');
@@ -337,11 +335,11 @@ const mountSearchPage = (): CleanupFn | undefined => {
       return;
     }
 
-  if (query.length < config.minLength) {
-    clearResults();
-    setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
-    return;
-  }
+    if (query.length < config.minLength) {
+      clearResults();
+      setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
+      return;
+    }
 
     setStatus('Caricamento…');
     void performSearch(query);
