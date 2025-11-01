@@ -238,7 +238,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
     }
 
     if (!visibleItems.length) {
-      const filtersDescription = activeFilters.map((key) => FILTERS[key].label.toLowerCase()).join(', ');
+      const filtersDescription = activeFilters
+        .map((key) => FILTERS[key].label.toLowerCase())
+        .join(', ');
       setStatus(
         `Nessun risultato per “${query}” con i filtri selezionati (${filtersDescription}).`,
       );

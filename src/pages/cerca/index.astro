@@ -79,25 +79,24 @@ const seo = withFallbackSeo([], {
       </p>
 
       <div class="search-filters" data-search-filters>
+        <span class="search-filters__label">Filtra per:</span>
         <label class="search-filters__item">
           <input type="checkbox" value="books" data-search-filter />
-          <iconify-icon icon="iconoir:book" width="16" height="16" aria-hidden="true"></iconify-icon>
-          <span>Solo libri</span>
+          <iconify-icon icon="iconoir:book" width="16" height="16" aria-hidden="true"
+          ></iconify-icon>
+          <span>Libri</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="authors" data-search-filter />
-          <iconify-icon
-            icon="iconoir:user-badge-check"
-            width="16"
-            height="16"
-            aria-hidden="true"
+          <iconify-icon icon="iconoir:user-badge-check" width="16" height="16" aria-hidden="true"
           ></iconify-icon>
-          <span>Solo autori</span>
+          <span>Autori</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="info" data-search-filter />
-          <iconify-icon icon="iconoir:post" width="16" height="16" aria-hidden="true"></iconify-icon>
-          <span>Solo informazioni</span>
+          <iconify-icon icon="iconoir:post" width="16" height="16" aria-hidden="true"
+          ></iconify-icon>
+          <span>Informazioni</span>
         </label>
       </div>
 
@@ -210,6 +209,11 @@ const seo = withFallbackSeo([], {
       align-items: center;
       color: rgba(9, 21, 40, 0.8);
       font-size: 0.9rem;
+    }
+
+    .search-filters__label {
+      font-weight: 600;
+      color: var(--brand-navy, #16213e);
     }
 
     .search-filters__item {
