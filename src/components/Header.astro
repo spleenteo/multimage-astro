@@ -191,7 +191,14 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
         </span>
       </a>
 
-      <form data-search-form class="hidden items-center bg-white/10 pl-4 pr-1 text-sm md:flex">
+      <form
+        data-search-form
+        class="hidden items-center bg-white/10 pl-4 pr-1 text-sm md:flex"
+        role="search"
+        action="/cerca"
+        method="get"
+        data-astro-reload
+      >
         <iconify-icon
           icon="iconoir:search"
           width="16"
@@ -200,9 +207,12 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           aria-hidden="true"></iconify-icon>
         <input
           type="search"
+          name="q"
           class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-none"
           placeholder="Cerca libri, autori..."
           aria-label="Cerca libri o autori"
+          data-search-input
+          autocomplete="off"
         />
         <button
           type="submit"
@@ -424,7 +434,14 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
             </ul>
           </nav>
 
-          <form data-search-form class="flex items-center bg-white/10 pl-4 pr-1 text-sm">
+          <form
+            data-search-form
+            class="flex items-center bg-white/10 pl-4 pr-1 text-sm"
+            role="search"
+            action="/cerca"
+            method="get"
+            data-astro-reload
+          >
             <iconify-icon
               icon="iconoir:search"
               width="16"
@@ -433,9 +450,12 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
               aria-hidden="true"></iconify-icon>
             <input
               type="search"
+              name="q"
               class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-none"
               placeholder="Cerca libri, autori..."
               aria-label="Cerca libri o autori"
+              data-search-input
+              autocomplete="off"
             />
             <button
               type="submit"
@@ -835,27 +855,8 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
       });
     });
 
-    const buildSearchUrl = (query) => {
-      const normalized = query.trim();
-      if (!normalized) {
-        return null;
-      }
-      const siteQuery = `${normalized} site:multimage.org`;
-      return `https://www.google.com/search?q=${encodeURIComponent(siteQuery)}`;
-    };
-
     searchForms.forEach((form) => {
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const input = form.querySelector('input[type="search"]');
-        if (!input) {
-          return;
-        }
-        const url = buildSearchUrl(input.value ?? '');
-        if (!url) {
-          return;
-        }
-        window.open(url, '_blank', 'noopener');
+      form.addEventListener('submit', () => {
         closeMenu();
       });
     });

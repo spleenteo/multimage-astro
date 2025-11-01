@@ -4,6 +4,7 @@
 
 interface ImportMetaEnv {
   readonly PUBLIC_SITE_URL?: string;
+  readonly PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN?: string;
 }
 
 interface ImportMeta {

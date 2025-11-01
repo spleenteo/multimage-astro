@@ -1,0 +1,265 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { withFallbackSeo } from '~/lib/seo';
+import searchClientScript from './search-page.client.ts?url';
+
+export const prerender = true;
+
+const MIN_QUERY_LENGTH = 3;
+const SITE_SEARCH_ENDPOINT = 'https://site-api.datocms.com/search-results';
+
+const siteSearchToken = import.meta.env.PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN;
+
+if (!siteSearchToken) {
+  throw new Error(
+    'La variabile PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN è obbligatoria per la pagina di ricerca.',
+  );
+}
+
+const searchConfig = {
+  endpoint: SITE_SEARCH_ENDPOINT,
+  token: siteSearchToken,
+  minQueryLength: MIN_QUERY_LENGTH,
+  limit: 25,
+  fuzzy: true,
+};
+
+const seo = withFallbackSeo([], {
+  title: 'Cerca | Multimage',
+  description:
+    'Cerca libri, autrici e autori, articoli del magazine e tutte le risorse del sito Multimage interrogando direttamente l’indice di DatoCMS.',
+});
+---
+
+<BaseLayout seo={seo} disableTransitions>
+  <section class="search-page">
+    <div
+      class="container search-page__container"
+      data-search-root
+      data-endpoint={searchConfig.endpoint}
+      data-token={searchConfig.token}
+      data-min-length={String(searchConfig.minQueryLength)}
+      data-limit={String(searchConfig.limit)}
+      data-fuzzy={searchConfig.fuzzy ? 'true' : 'false'}
+    >
+      <header class="search-page__intro">
+        <h1 class="search-page__title">Cerca nel catalogo Multimage</h1>
+        <p class="search-page__subtitle">
+          Digita almeno {MIN_QUERY_LENGTH} caratteri per avviare la ricerca. I risultati vengono
+          aggiornati in tempo reale senza ricaricare la pagina.
+        </p>
+      </header>
+
+      <form class="search-page__form" role="search" method="get" action="/cerca" data-search-form>
+        <label class="search-page__label" for="search-query">
+          <span class="sr-only">Cerca libri, autori o articoli</span>
+          <input
+            id="search-query"
+            name="q"
+            type="search"
+            autocomplete="off"
+            inputmode="search"
+            placeholder="Titoli, autori, parole chiave…"
+            aria-describedby="search-status"
+            class="search-page__input"
+            data-search-input
+          />
+        </label>
+        <button type="submit" class="search-page__submit">Cerca</button>
+      </form>
+
+      <p
+        class="search-page__status"
+        id="search-status"
+        role="status"
+        aria-live="polite"
+        data-search-status
+      >
+        Inserisci almeno {MIN_QUERY_LENGTH} caratteri per iniziare.
+      </p>
+
+      <div class="search-results" data-search-results hidden>
+        <ul class="search-results__list" data-search-list></ul>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .search-page {
+      padding: 4rem 0 6rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 244, 240, 0.9));
+    }
+
+    .search-page__container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .search-page__intro {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .search-page__title {
+      font-size: clamp(1.8rem, 2vw + 1rem, 2.6rem);
+      font-weight: 700;
+      color: var(--brand-navy, #16213e);
+    }
+
+    .search-page__subtitle {
+      max-width: 48rem;
+      color: rgba(9, 21, 40, 0.7);
+      line-height: 1.6;
+    }
+
+    .search-page__form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(15, 32, 60, 0.1);
+      border-radius: 9999px;
+      padding: 0.5rem 0.75rem;
+      box-shadow: 0 12px 40px rgba(13, 30, 54, 0.08);
+    }
+
+    .search-page__label {
+      flex: 1 1 240px;
+    }
+
+    .search-page__input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      padding: 0.5rem 0.75rem;
+      color: var(--brand-navy, #16213e);
+    }
+
+    .search-page__input:focus {
+      outline: none;
+    }
+
+    .search-page__submit {
+      appearance: none;
+      border: none;
+      border-radius: 9999px;
+      background: var(--brand-orange, #f27052);
+      color: #fff;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.65rem 1.5rem;
+      cursor: pointer;
+      transition:
+        transform 160ms ease,
+        background 160ms ease;
+    }
+
+    .search-page__submit:hover,
+    .search-page__submit:focus-visible {
+      background: var(--brand-crimson, #c74a35);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .search-page__status {
+      font-size: 0.95rem;
+      color: rgba(9, 21, 40, 0.75);
+      min-height: 1.5rem;
+    }
+
+    .search-results__list {
+      display: grid;
+      gap: 1.5rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .search-result {
+      display: grid;
+      gap: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 32px rgba(13, 30, 54, 0.08);
+      transition:
+        transform 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .search-result:hover,
+    .search-result:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 48px rgba(13, 30, 54, 0.14);
+    }
+
+    .search-result__badge {
+      align-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: rgba(13, 30, 54, 0.08);
+      color: var(--brand-navy, #16213e);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .search-result__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--brand-navy, #16213e);
+      line-height: 1.4;
+    }
+
+    .search-result__title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .search-result__title a:hover,
+    .search-result__title a:focus {
+      text-decoration: underline;
+    }
+
+    .search-result__excerpt {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(9, 21, 40, 0.8);
+    }
+
+    .search-result__url {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(9, 21, 40, 0.55);
+    }
+
+    .highlight {
+      background: rgba(242, 112, 82, 0.25);
+      color: inherit;
+      padding: 0 0.2em;
+      border-radius: 0.25em;
+    }
+
+    @media (max-width: 768px) {
+      .search-page {
+        padding: 2.5rem 0 4rem;
+      }
+
+      .search-page__form {
+        border-radius: 1.5rem;
+      }
+    }
+  </style>
+
+  <script type="module" src={searchClientScript}></script>
+</BaseLayout>

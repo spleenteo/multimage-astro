@@ -11,7 +11,11 @@ import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { ClientRouter } from 'astro:transitions';
 
-const { seo = [] }: { seo?: TitleMetaLinkTag[] } = Astro.props;
+const { seo = [], disableTransitions = false } = Astro.props as {
+  seo?: TitleMetaLinkTag[];
+  disableTransitions?: boolean;
+};
+const enableVercelInsights = import.meta.env.PROD;
 
 const SITE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
@@ -262,13 +266,23 @@ const slideUpTransition: DirectionalTransition = {
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
     <Header currentPath={currentPath} infoPages={infoPages} transition:persist />
-    <main class="flex-1 bg-white" transition:name="page" transition:animate={slideUpTransition}>
-      <div class="container py-12 md:py-16">
-        <slot />
-      </div>
-    </main>
+    {
+      disableTransitions ? (
+        <main class="flex-1 bg-white">
+          <div class="container py-12 md:py-16">
+            <slot />
+          </div>
+        </main>
+      ) : (
+        <main class="flex-1 bg-white" transition:name="page" transition:animate={slideUpTransition}>
+          <div class="container py-12 md:py-16">
+            <slot />
+          </div>
+        </main>
+      )
+    }
     <Footer footerPages={footerMenuPages} transition:persist />
-    <Analytics />
-    <SpeedInsights />
+    {enableVercelInsights && <Analytics />}
+    {enableVercelInsights && <SpeedInsights />}
   </body>
 </html>
