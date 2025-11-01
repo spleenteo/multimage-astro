@@ -28,22 +28,26 @@ type SearchConfig = {
   fuzzy: boolean;
 };
 
+type FilterKey = 'books' | 'authors' | 'info';
+
 type CleanupFn = () => void;
 
-const TYPE_LABELS: Array<{ test: (url: string) => boolean; label: string }> = [
-  { test: (url) => /\/libri\//.test(url), label: 'Libro' },
-  { test: (url) => /\/autori\//.test(url), label: 'Autore' },
-  { test: (url) => /\/(magazine|blog)\//.test(url), label: 'Magazine' },
-];
+const filterLabels: Record<FilterKey, string> = {
+  books: 'libri',
+  authors: 'autori',
+  info: 'informazioni',
+};
+
+const classifyEntry = (url: string): FilterKey => {
+  if (/\/libri\//.test(url)) return 'books';
+  if (/\/autori\//.test(url)) return 'authors';
+  if (/\/info\//.test(url)) return 'info';
+  if (/\/magazine\//.test(url)) return 'info';
+  return 'info';
+};
 
 const getRootConfig = (root: HTMLElement): SearchConfig => {
-  const {
-    endpoint = '',
-    token = '',
-    minLength = '3',
-    limit = '25',
-    fuzzy = 'true',
-  } = root.dataset;
+  const { endpoint = '', token = '', minLength = '3', limit = '25', fuzzy = 'true' } = root.dataset;
 
   return {
     endpoint,
@@ -55,8 +59,9 @@ const getRootConfig = (root: HTMLElement): SearchConfig => {
 };
 
 const labelForUrl = (url: string): string => {
-  const matcher = TYPE_LABELS.find(({ test }) => test(url));
-  return matcher ? matcher.label : 'Risorsa';
+  const key = classifyEntry(url);
+  const label = filterLabels[key];
+  return label.charAt(0).toUpperCase() + label.slice(1);
 };
 
 const pathFromUrl = (url: string): string => {
@@ -148,6 +153,11 @@ const updateUrl = (query: string) => {
   window.history.replaceState({}, '', url);
 };
 
+const readQueryFromLocation = (): string => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('q')?.trim() ?? '';
+};
+
 const mountSearchPage = (): CleanupFn | undefined => {
   const root = document.querySelector<HTMLElement>('[data-search-root]');
   if (!(root instanceof HTMLElement)) {
@@ -161,6 +171,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
   const resultsWrapper = root.querySelector<HTMLElement>('[data-search-results]');
   const listEl = root.querySelector<HTMLElement>('[data-search-list]');
+  const filterInputs = Array.from(
+    root.querySelectorAll<HTMLInputElement>('[data-search-filter]'),
+  );
 
   if (!form || !input || !statusEl || !resultsWrapper || !listEl) {
     console.warn('[search] Markup incompleto per la pagina di ricerca.');
@@ -176,6 +189,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
   let debounceId: number | undefined;
   let activeController: AbortController | null = null;
   let latestQuery = '';
+  let cachedResults: SearchResult[] = [];
+  let cachedTotal = 0;
+  let cachedQuery = '';
 
   const setStatus = (message: string) => {
     statusEl.textContent = message;
@@ -184,22 +200,62 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const clearResults = () => {
     listEl.innerHTML = '';
     resultsWrapper.hidden = true;
+    cachedResults = [];
+    cachedTotal = 0;
+    cachedQuery = '';
+  };
+
+  const getActiveFilters = (): FilterKey[] =>
+    filterInputs.filter((inputEl) => inputEl.checked).map((inputEl) => inputEl.value as FilterKey);
+
+  const matchesFilters = (entry: SearchResult, filters: FilterKey[]): boolean => {
+    if (!filters.length) {
+      return true;
+    }
+    const key = classifyEntry(entry.attributes.url ?? '');
+    return filters.includes(key);
   };
 
   const renderResults = (items: SearchResult[], total: number, query: string) => {
-    clearResults();
+    listEl.innerHTML = '';
+    resultsWrapper.hidden = true;
+
+    if (!query) {
+      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+      return;
+    }
+
+    const activeFilters = getActiveFilters();
+    const visibleItems = activeFilters.length
+      ? items.filter((entry) => matchesFilters(entry, activeFilters))
+      : items;
 
     if (!items.length) {
       setStatus(`Nessun risultato per “${query}”.`);
       return;
     }
 
-    const fragment = document.createDocumentFragment();
-    items.forEach((entry) => fragment.append(createResultItem(entry)));
+    if (!visibleItems.length) {
+      const filtersDescription = activeFilters.map((key) => filterLabels[key]).join(', ');
+      setStatus(
+        `Nessun risultato per “${query}” con i filtri selezionati (${filtersDescription}).`,
+      );
+      return;
+    }
 
+    const fragment = document.createDocumentFragment();
+    visibleItems.forEach((entry) => fragment.append(createResultItem(entry)));
     listEl.append(fragment);
     resultsWrapper.hidden = false;
-    setStatus(`Trovati ${total} risultati per “${query}”.`);
+
+    const base = `Trovati ${visibleItems.length}${
+      activeFilters.length ? ` su ${total}` : ''
+    } risultati per “${query}”.`;
+    const filtersSuffix =
+      activeFilters.length > 0
+        ? ` Filtri attivi: ${activeFilters.map((key) => filterLabels[key]).join(', ')}.`
+        : '';
+    setStatus(base + filtersSuffix);
   };
 
   const handleError = (error: unknown, query: string) => {
@@ -216,6 +272,14 @@ const mountSearchPage = (): CleanupFn | undefined => {
     }
 
     setStatus(`Si è verificato un errore durante la ricerca di “${query}”. Riprova più tardi.`);
+  };
+
+  const applyFilters = () => {
+    if (!cachedQuery) {
+      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+      return;
+    }
+    renderResults(cachedResults, cachedTotal, cachedQuery);
   };
 
   const performSearch = async (query: string) => {
@@ -242,13 +306,15 @@ const mountSearchPage = (): CleanupFn | undefined => {
       }
 
       const payload = (await response.json()) as SearchResponse;
+      cachedResults = payload.data ?? [];
+      cachedTotal = payload.meta?.total_count ?? cachedResults.length;
+      cachedQuery = query;
+
       if (latestQuery !== query) {
         return;
       }
 
-      const items = payload.data ?? [];
-      const total = payload.meta?.total_count ?? items.length;
-      renderResults(items, total, query);
+      renderResults(cachedResults, cachedTotal, query);
     } catch (error) {
       handleError(error, query);
     } finally {
@@ -271,11 +337,11 @@ const mountSearchPage = (): CleanupFn | undefined => {
       return;
     }
 
-    if (query.length < config.minLength) {
-      clearResults();
-      setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
-      return;
-    }
+  if (query.length < config.minLength) {
+    clearResults();
+    setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
+    return;
+  }
 
     setStatus('Caricamento…');
     void performSearch(query);
@@ -286,39 +352,10 @@ const mountSearchPage = (): CleanupFn | undefined => {
     triggerSearch(input.value, { updateHistory: true });
   };
 
-  const readInitialQuery = () => {
-    if (typeof window === 'undefined') {
-      return '';
-    }
-    const params = new URLSearchParams(window.location.search);
-    return params.get('q')?.trim() ?? '';
-  };
-
-  const syncFromLocation = (options: { updateHistory: boolean }) => {
-    const current = readInitialQuery();
-    input.value = current;
-    if (!current) {
-      clearResults();
-      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
-      return;
-    }
-
-    if (current.length < config.minLength) {
-      clearResults();
-      setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
-      return;
-    }
-
-    triggerSearch(current, options);
-  };
-
-  syncFromLocation({ updateHistory: false });
-
   const handleInput = () => {
     if (debounceId !== undefined) {
       window.clearTimeout(debounceId);
     }
-
     const value = input.value;
     debounceId = window.setTimeout(() => {
       triggerSearch(value, { updateHistory: true });
@@ -326,17 +363,33 @@ const mountSearchPage = (): CleanupFn | undefined => {
   };
 
   const handlePopState = () => {
-    syncFromLocation({ updateHistory: false });
+    const current = readQueryFromLocation();
+    input.value = current;
+    triggerSearch(current, { updateHistory: false });
+  };
+
+  const handleFilterChange = () => {
+    applyFilters();
   };
 
   form.addEventListener('submit', handleSubmit);
   input.addEventListener('input', handleInput);
   window.addEventListener('popstate', handlePopState);
+  filterInputs.forEach((inputEl) => inputEl.addEventListener('change', handleFilterChange));
+
+  const initialQuery = readQueryFromLocation();
+  if (initialQuery) {
+    input.value = initialQuery;
+    triggerSearch(initialQuery, { updateHistory: false });
+  } else {
+    setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+  }
 
   return () => {
     form.removeEventListener('submit', handleSubmit);
     input.removeEventListener('input', handleInput);
     window.removeEventListener('popstate', handlePopState);
+    filterInputs.forEach((inputEl) => inputEl.removeEventListener('change', handleFilterChange));
     if (debounceId !== undefined) {
       window.clearTimeout(debounceId);
     }

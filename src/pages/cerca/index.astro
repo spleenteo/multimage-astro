@@ -45,8 +45,8 @@ const seo = withFallbackSeo([], {
       <header class="search-page__intro">
         <h1 class="search-page__title">Cerca nel catalogo Multimage</h1>
         <p class="search-page__subtitle">
-          Digita almeno {MIN_QUERY_LENGTH} caratteri per avviare la ricerca. I risultati vengono
-          aggiornati in tempo reale senza ricaricare la pagina.
+          Digita almeno {MIN_QUERY_LENGTH} caratteri per avviare la ricerca. I risultati vengono aggiornati
+          in tempo reale senza ricaricare la pagina.
         </p>
       </header>
 
@@ -77,6 +77,21 @@ const seo = withFallbackSeo([], {
       >
         Inserisci almeno {MIN_QUERY_LENGTH} caratteri per iniziare.
       </p>
+
+      <div class="search-filters" data-search-filters>
+        <label class="search-filters__item">
+          <input type="checkbox" value="books" data-search-filter />
+          <span>Solo libri</span>
+        </label>
+        <label class="search-filters__item">
+          <input type="checkbox" value="authors" data-search-filter />
+          <span>Solo autori</span>
+        </label>
+        <label class="search-filters__item">
+          <input type="checkbox" value="info" data-search-filter />
+          <span>Solo informazioni</span>
+        </label>
+      </div>
 
       <div class="search-results" data-search-results hidden>
         <ul class="search-results__list" data-search-list></ul>
@@ -178,6 +193,40 @@ const seo = withFallbackSeo([], {
       list-style: none;
       padding: 0;
       margin: 0;
+    }
+
+    .search-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      color: rgba(9, 21, 40, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .search-filters__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 9999px;
+      border: 1px solid rgba(15, 32, 60, 0.12);
+      padding: 0.4rem 0.85rem;
+      cursor: pointer;
+      transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease;
+    }
+
+    .search-filters__item:hover,
+    .search-filters__item:focus-within {
+      border-color: rgba(15, 32, 60, 0.25);
+      background: #ffffff;
+    }
+
+    .search-filters__item input {
+      accent-color: var(--brand-orange, #f27052);
     }
 
     .search-result {
