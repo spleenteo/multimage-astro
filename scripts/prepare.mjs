@@ -19,7 +19,7 @@ if (isCI) {
 const hasSimpleGitHooksConfig = (() => {
   if (!existsSync(pkgPath)) {
     return false;
-    }
+  }
   try {
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
     return Boolean(pkg['simple-git-hooks']);
