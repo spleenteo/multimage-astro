@@ -10,6 +10,7 @@ DATOCMS.md
 .wrangler
 .netlify
 public/vendor/
+public/generated/
 
 # logs
 npm-debug.log*

@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { withFallbackSeo } from '~/lib/seo';
-import searchClientScript from './search-page.client.ts?url';
 
 export const prerender = true;
 
@@ -23,6 +22,10 @@ const searchConfig = {
   limit: 25,
   fuzzy: true,
 };
+
+const searchScriptSrc = import.meta.env.DEV
+  ? '/src/pages/cerca/search-page.client.ts'
+  : '/generated/search-page.client.js';
 
 const seo = withFallbackSeo([], {
   title: 'Cerca | Multimage',
@@ -408,5 +411,5 @@ const seo = withFallbackSeo([], {
     }
   </style>
 
-  <script type="module" src={searchClientScript}></script>
+  <script type="module" src={searchScriptSrc} is:inline></script>
 </BaseLayout>

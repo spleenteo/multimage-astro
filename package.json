@@ -7,7 +7,8 @@
     "ensure-swiper": "node scripts/ensure-swiper-element.mjs",
     "dev": "npm run ensure-swiper && astro dev",
     "start": "npm run ensure-swiper && astro dev",
-    "prebuild": "npm run ensure-swiper && npm run generate-llms",
+    "bundle-search-client": "node scripts/build-search-client.mjs",
+    "prebuild": "npm run ensure-swiper && npm run generate-llms && npm run bundle-search-client",
     "build": "astro check && astro build",
     "preview": "npm run ensure-swiper && astro preview",
     "astro": "astro",
@@ -39,6 +40,7 @@
     "dotenv-cli": "^7.4.2",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1",
-    "simple-git-hooks": "^2.11.1"
+    "simple-git-hooks": "^2.11.1",
+    "esbuild": "^0.24.0"
   }
 }
