@@ -92,6 +92,44 @@ const appendHighlightedText = (target: HTMLElement, source: string | null | unde
   }
 };
 
+const stripHighlightMarkers = (value: string): string => value.replace(/\[\/?h\]/g, '');
+
+const normalizeText = (value: string): string =>
+  stripHighlightMarkers(value)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const entryContainsPhrase = (entry: SearchResult, phrase: string): boolean => {
+  const normalizedPhrase = normalizeText(phrase);
+  if (!normalizedPhrase) {
+    return false;
+  }
+
+  const sources: Array<string | null | undefined> = [
+    entry.attributes.title,
+    entry.attributes.body_excerpt,
+  ];
+
+  if (entry.attributes.highlight?.title) {
+    sources.push(...entry.attributes.highlight.title);
+  }
+
+  if (entry.attributes.highlight?.body) {
+    sources.push(...entry.attributes.highlight.body);
+  }
+
+  return sources.some((source) => {
+    if (!source) {
+      return false;
+    }
+    const normalizedSource = normalizeText(source);
+    return normalizedSource.includes(normalizedPhrase);
+  });
+};
+
 const createResultItem = (entry: SearchResult): HTMLLIElement => {
   const { attributes } = entry;
   const filterKey = classifyEntry(attributes.url ?? '');
@@ -115,8 +153,11 @@ const createResultItem = (entry: SearchResult): HTMLLIElement => {
   title.className = 'search-result__title';
 
   const link = document.createElement('a');
-  link.href = attributes.url ?? '#';
-  link.rel = 'noopener';
+  const href = pathFromUrl(attributes.url ?? '#');
+  link.href = href;
+  if (/^https?:\/\//.test(href)) {
+    link.rel = 'noopener';
+  }
   appendHighlightedText(link, attributes.highlight?.title?.[0] ?? attributes.title ?? '');
   title.append(link);
   item.append(title);
@@ -137,22 +178,27 @@ const createResultItem = (entry: SearchResult): HTMLLIElement => {
   return item;
 };
 
-const buildRequestUrl = (query: string, config: SearchConfig): string => {
+const buildRequestUrl = (query: string, config: SearchConfig, exactMatch: boolean): string => {
   const target = new URL(config.endpoint);
-  target.searchParams.set('filter[query]', query);
-  if (config.fuzzy) {
+  target.searchParams.set('filter[query]', exactMatch ? `"${query}"` : query);
+  if (!exactMatch && config.fuzzy) {
     target.searchParams.set('filter[fuzzy]', 'true');
   }
   target.searchParams.set('page[limit]', String(config.limit));
   return target.toString();
 };
 
-const updateUrl = (query: string) => {
+const updateUrl = (query: string, exact: boolean) => {
   const url = new URL(window.location.href);
   if (query) {
     url.searchParams.set('q', query);
   } else {
     url.searchParams.delete('q');
+  }
+  if (exact) {
+    url.searchParams.set('exact', '1');
+  } else {
+    url.searchParams.delete('exact');
   }
   window.history.replaceState({}, '', url);
 };
@@ -160,6 +206,11 @@ const updateUrl = (query: string) => {
 const readQueryFromLocation = (): string => {
   const params = new URLSearchParams(window.location.search);
   return params.get('q')?.trim() ?? '';
+};
+
+const readExactFromLocation = (): boolean => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('exact') === '1';
 };
 
 const mountSearchPage = (): CleanupFn | undefined => {
@@ -175,7 +226,10 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
   const resultsWrapper = root.querySelector<HTMLElement>('[data-search-results]');
   const listEl = root.querySelector<HTMLElement>('[data-search-list]');
-  const filterInputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-search-filter]'));
+  const filterInputs = Array.from(
+    root.querySelectorAll<HTMLInputElement>('[data-search-filter]'),
+  );
+  const exactInput = root.querySelector<HTMLInputElement>('[data-search-exact]');
 
   if (!form || !input || !statusEl || !resultsWrapper || !listEl) {
     console.warn('[search] Markup incompleto per la pagina di ricerca.');
@@ -191,6 +245,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
   let debounceId: number | undefined;
   let activeController: AbortController | null = null;
   let latestQuery = '';
+  let exactMatch = false;
   let cachedResults: SearchResult[] = [];
   let cachedTotal = 0;
   let cachedQuery = '';
@@ -209,6 +264,22 @@ const mountSearchPage = (): CleanupFn | undefined => {
 
   const getActiveFilters = (): FilterKey[] =>
     filterInputs.filter((inputEl) => inputEl.checked).map((inputEl) => inputEl.value as FilterKey);
+
+  const updateFilterStyles = () => {
+    filterInputs.forEach((inputEl) => {
+      const label = inputEl.closest('.search-filters__item');
+      if (label) {
+        label.classList.toggle('is-active', inputEl.checked);
+      }
+    });
+
+    if (exactInput) {
+      const label = exactInput.closest('.search-filters__item');
+      if (label) {
+        label.classList.toggle('is-active', exactInput.checked);
+      }
+    }
+  };
 
   const matchesFilters = (entry: SearchResult, filters: FilterKey[]): boolean => {
     if (!filters.length) {
@@ -283,6 +354,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
       setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
       return;
     }
+    updateFilterStyles();
     renderResults(cachedResults, cachedTotal, cachedQuery);
   };
 
@@ -296,7 +368,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     latestQuery = query;
 
     try {
-      const response = await fetch(buildRequestUrl(query, config), {
+      const response = await fetch(buildRequestUrl(query, config, exactMatch), {
         headers: {
           Authorization: `Bearer ${config.token}`,
           Accept: 'application/json',
@@ -310,8 +382,13 @@ const mountSearchPage = (): CleanupFn | undefined => {
       }
 
       const payload = (await response.json()) as SearchResponse;
-      cachedResults = payload.data ?? [];
-      cachedTotal = payload.meta?.total_count ?? cachedResults.length;
+      const rawResults = payload.data ?? [];
+      const filteredResults = exactMatch
+        ? rawResults.filter((entry) => entryContainsPhrase(entry, query))
+        : rawResults;
+
+      cachedResults = filteredResults;
+      cachedTotal = exactMatch ? filteredResults.length : payload.meta?.total_count ?? rawResults.length;
       cachedQuery = query;
 
       if (latestQuery !== query) {
@@ -332,7 +409,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     const query = rawValue.trim();
 
     if (updateHistory) {
-      updateUrl(query);
+      updateUrl(query, exactMatch);
     }
 
     if (!query) {
@@ -369,19 +446,37 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const handlePopState = () => {
     const current = readQueryFromLocation();
     input.value = current;
+    exactMatch = readExactFromLocation();
+    if (exactInput) {
+      exactInput.checked = exactMatch;
+    }
+    updateFilterStyles();
     triggerSearch(current, { updateHistory: false });
   };
 
   const handleFilterChange = () => {
+    updateFilterStyles();
     applyFilters();
+  };
+
+  const handleExactChange = () => {
+    exactMatch = Boolean(exactInput?.checked);
+    updateFilterStyles();
+    triggerSearch(input.value, { updateHistory: true });
   };
 
   form.addEventListener('submit', handleSubmit);
   input.addEventListener('input', handleInput);
   window.addEventListener('popstate', handlePopState);
   filterInputs.forEach((inputEl) => inputEl.addEventListener('change', handleFilterChange));
+  exactInput?.addEventListener('change', handleExactChange);
 
   const initialQuery = readQueryFromLocation();
+  exactMatch = readExactFromLocation();
+  if (exactInput) {
+    exactInput.checked = exactMatch;
+  }
+  updateFilterStyles();
   if (initialQuery) {
     input.value = initialQuery;
     triggerSearch(initialQuery, { updateHistory: false });
@@ -394,6 +489,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     input.removeEventListener('input', handleInput);
     window.removeEventListener('popstate', handlePopState);
     filterInputs.forEach((inputEl) => inputEl.removeEventListener('change', handleFilterChange));
+    exactInput?.removeEventListener('change', handleExactChange);
     if (debounceId !== undefined) {
       window.clearTimeout(debounceId);
     }

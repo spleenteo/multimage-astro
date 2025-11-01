@@ -98,6 +98,12 @@ const seo = withFallbackSeo([], {
           ></iconify-icon>
           <span>Informazioni</span>
         </label>
+        <label class="search-filters__item">
+          <input type="checkbox" value="exact" data-search-exact />
+          <iconify-icon icon="iconoir:lock" width="16" height="16" aria-hidden="true"
+          ></iconify-icon>
+          <span>Ricerca esatta</span>
+        </label>
       </div>
 
       <div class="search-results" data-search-results hidden>
@@ -220,6 +226,7 @@ const seo = withFallbackSeo([], {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      position: relative;
       background: rgba(255, 255, 255, 0.9);
       border-radius: 9999px;
       border: 1px solid rgba(15, 32, 60, 0.12);
@@ -243,6 +250,77 @@ const seo = withFallbackSeo([], {
 
     .search-filters__item iconify-icon {
       color: var(--brand-orange, #f27052);
+    }
+
+    .search-filters__item input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .search-filters__item.is-active {
+      background: var(--brand-orange, #f27052);
+      border-color: var(--brand-orange, #f27052);
+      color: #fff;
+    }
+
+    .search-filters__item.is-active iconify-icon,
+    .search-filters__item.is-active span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked + iconify-icon,
+    .search-filters__item input:checked + iconify-icon + span,
+    .search-filters__item input:checked ~ span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ iconify-icon,
+    .search-filters__item input:checked ~ span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ iconify-icon {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked {
+      accent-color: #fff;
+    }
+
+    .search-filters__item input:checked + iconify-icon,
+    .search-filters__item input:checked + iconify-icon + span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked + iconify-icon {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ iconify-icon {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ span {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ iconify-icon {
+      color: #fff;
+    }
+
+    .search-filters__item input:checked ~ span {
+      color: #fff;
+    }
+
+    .search-filters__item:has(input:checked) {
+      background: var(--brand-orange, #f27052);
+      border-color: var(--brand-orange, #f27052);
+      color: #fff;
     }
 
     .search-result {
