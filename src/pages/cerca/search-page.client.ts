@@ -226,9 +226,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
   const resultsWrapper = root.querySelector<HTMLElement>('[data-search-results]');
   const listEl = root.querySelector<HTMLElement>('[data-search-list]');
-  const filterInputs = Array.from(
-    root.querySelectorAll<HTMLInputElement>('[data-search-filter]'),
-  );
+  const filterInputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-search-filter]'));
   const exactInput = root.querySelector<HTMLInputElement>('[data-search-exact]');
 
   if (!form || !input || !statusEl || !resultsWrapper || !listEl) {
@@ -388,7 +386,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
         : rawResults;
 
       cachedResults = filteredResults;
-      cachedTotal = exactMatch ? filteredResults.length : payload.meta?.total_count ?? rawResults.length;
+      cachedTotal = exactMatch
+        ? filteredResults.length
+        : (payload.meta?.total_count ?? rawResults.length);
       cachedQuery = query;
 
       if (latestQuery !== query) {
