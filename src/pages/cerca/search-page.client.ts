@@ -141,11 +141,11 @@ const createResultItem = (entry: SearchResult): HTMLLIElement => {
   badge.className = 'search-result__badge';
   const badgeIcon = document.createElement('iconify-icon');
   badgeIcon.setAttribute('icon', filterMeta.icon);
-  badgeIcon.setAttribute('width', '16');
-  badgeIcon.setAttribute('height', '16');
+  badgeIcon.setAttribute('width', '20');
+  badgeIcon.setAttribute('height', '20');
   badge.append(badgeIcon);
   const badgeText = document.createElement('span');
-  badgeText.textContent = filterMeta.label;
+  badgeText.textContent = filterMeta.label.toUpperCase();
   badge.append(badgeText);
   item.append(badge);
 
@@ -172,7 +172,14 @@ const createResultItem = (entry: SearchResult): HTMLLIElement => {
 
   const url = document.createElement('p');
   url.className = 'search-result__url';
-  url.textContent = pathFromUrl(attributes.url ?? '');
+  const urlLink = document.createElement('a');
+  urlLink.href = href;
+  urlLink.textContent = 'Vai alla pagina';
+  if (/^https?:\/\//.test(href)) {
+    urlLink.rel = 'noopener';
+  }
+  urlLink.className = 'search-result__url-link';
+  url.append(urlLink);
   item.append(url);
 
   return item;
