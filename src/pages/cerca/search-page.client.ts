@@ -32,17 +32,16 @@ type FilterKey = 'books' | 'authors' | 'info';
 
 type CleanupFn = () => void;
 
-const filterLabels: Record<FilterKey, string> = {
-  books: 'libri',
-  authors: 'autori',
-  info: 'informazioni',
+const FILTERS: Record<FilterKey, { label: string; icon: string }> = {
+  books: { label: 'Libri', icon: 'iconoir:book' },
+  authors: { label: 'Autori', icon: 'iconoir:user-badge-check' },
+  info: { label: 'Informazioni', icon: 'iconoir:post' },
 };
 
 const classifyEntry = (url: string): FilterKey => {
   if (/\/libri\//.test(url)) return 'books';
   if (/\/autori\//.test(url)) return 'authors';
-  if (/\/info\//.test(url)) return 'info';
-  if (/\/magazine\//.test(url)) return 'info';
+  if (/\/(info|magazine)\//.test(url)) return 'info';
   return 'info';
 };
 
@@ -58,11 +57,7 @@ const getRootConfig = (root: HTMLElement): SearchConfig => {
   };
 };
 
-const labelForUrl = (url: string): string => {
-  const key = classifyEntry(url);
-  const label = filterLabels[key];
-  return label.charAt(0).toUpperCase() + label.slice(1);
-};
+const labelForUrl = (url: string): string => FILTERS[classifyEntry(url)].label;
 
 const pathFromUrl = (url: string): string => {
   try {
@@ -99,12 +94,21 @@ const appendHighlightedText = (target: HTMLElement, source: string | null | unde
 
 const createResultItem = (entry: SearchResult): HTMLLIElement => {
   const { attributes } = entry;
+  const filterKey = classifyEntry(attributes.url ?? '');
+  const filterMeta = FILTERS[filterKey];
   const item = document.createElement('li');
   item.className = 'search-result';
 
   const badge = document.createElement('span');
   badge.className = 'search-result__badge';
-  badge.textContent = labelForUrl(attributes.url ?? '');
+  const badgeIcon = document.createElement('iconify-icon');
+  badgeIcon.setAttribute('icon', filterMeta.icon);
+  badgeIcon.setAttribute('width', '16');
+  badgeIcon.setAttribute('height', '16');
+  badge.append(badgeIcon);
+  const badgeText = document.createElement('span');
+  badgeText.textContent = filterMeta.label;
+  badge.append(badgeText);
   item.append(badge);
 
   const title = document.createElement('h3');
@@ -234,7 +238,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     }
 
     if (!visibleItems.length) {
-      const filtersDescription = activeFilters.map((key) => filterLabels[key]).join(', ');
+      const filtersDescription = activeFilters.map((key) => FILTERS[key].label.toLowerCase()).join(', ');
       setStatus(
         `Nessun risultato per “${query}” con i filtri selezionati (${filtersDescription}).`,
       );
@@ -251,7 +255,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     } risultati per “${query}”.`;
     const filtersSuffix =
       activeFilters.length > 0
-        ? ` Filtri attivi: ${activeFilters.map((key) => filterLabels[key]).join(', ')}.`
+        ? ` Filtri attivi: ${activeFilters.map((key) => FILTERS[key].label).join(', ')}.`
         : '';
     setStatus(base + filtersSuffix);
   };

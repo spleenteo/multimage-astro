@@ -81,14 +81,22 @@ const seo = withFallbackSeo([], {
       <div class="search-filters" data-search-filters>
         <label class="search-filters__item">
           <input type="checkbox" value="books" data-search-filter />
+          <iconify-icon icon="iconoir:book" width="16" height="16" aria-hidden="true"></iconify-icon>
           <span>Solo libri</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="authors" data-search-filter />
+          <iconify-icon
+            icon="iconoir:user-badge-check"
+            width="16"
+            height="16"
+            aria-hidden="true"
+          ></iconify-icon>
           <span>Solo autori</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="info" data-search-filter />
+          <iconify-icon icon="iconoir:post" width="16" height="16" aria-hidden="true"></iconify-icon>
           <span>Solo informazioni</span>
         </label>
       </div>
@@ -229,6 +237,10 @@ const seo = withFallbackSeo([], {
       accent-color: var(--brand-orange, #f27052);
     }
 
+    .search-filters__item iconify-icon {
+      color: var(--brand-orange, #f27052);
+    }
+
     .search-result {
       display: grid;
       gap: 0.75rem;
@@ -260,6 +272,10 @@ const seo = withFallbackSeo([], {
       color: var(--brand-navy, #16213e);
       padding: 0.25rem 0.75rem;
       border-radius: 9999px;
+    }
+
+    .search-result__badge iconify-icon {
+      color: var(--brand-orange, #f27052);
     }
 
     .search-result__title {
