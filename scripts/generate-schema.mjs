@@ -1,11 +1,10 @@
 import { spawn } from 'node:child_process';
 
-const managementToken =
-  process.env.DATOCMS_API_TOKEN || process.env.DATOCMS_CMA_TOKEN || process.env.CMS_API_TOKEN;
+const managementToken = process.env.DATOCMS_CMA_TOKEN;
 
 if (!managementToken) {
   console.log(
-    '[dato] Skipping schema generation: set DATOCMS_API_TOKEN to enable automatic schema updates.',
+    '[dato] Skipping schema generation: set DATOCMS_CMA_TOKEN to enable automatic schema updates.',
   );
   process.exit(0);
 }

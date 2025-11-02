@@ -10,21 +10,9 @@
       "type": "datocmsAccessToken",
       "tokenName": "CDA Only (Published)"
     },
-    "DATOCMS_DRAFT_CONTENT_CDA_TOKEN": {
-      "type": "datocmsAccessToken",
-      "tokenName": "CDA Only (Draft)"
-    },
     "DATOCMS_CMA_TOKEN": {
       "type": "datocmsAccessToken",
       "tokenName": "CMA Only (Admin)"
-    },
-    "SECRET_API_TOKEN": {
-      "type": "string",
-      "value": "secretTokenProtectingWebhookEndpointsFromBeingCalledByAnyone"
-    },
-    "DRAFT_MODE_COOKIE_NAME": {
-      "type": "string",
-      "value": "__draftMode"
     },
     "SIGNED_COOKIE_JWT_SECRET": {
       "type": "string",

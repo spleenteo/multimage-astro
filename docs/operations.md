@@ -5,7 +5,9 @@
 
 **Environment & Secrets**
 
-- DatoCMS tokens (`DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `DATOCMS_CMA_TOKEN`) plus webhook secrets (`SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `DRAFT_MODE_COOKIE_NAME`) are declared in datocms.json but only the published token is enforced via Astro’s env schema (datocms.json:1-31, astro.config.mjs:6-16).
+- DatoCMS tokens (`DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_CMA_TOKEN`) plus eventual preview secrets (riintroducili solo quando implementi `/api/preview`) sono dichiarati in datocms.json, ma solo il token pubblicato è validato via Astro env schema (datocms.json:1-31, astro.config.mjs:6-16).
+- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` (server-only, GraphQL CDA) e `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` (client-side, Site Search API) vanno mantenuti separati: il primo offre accesso completo ai contenuti pubblicati via query personalizzate e non deve uscire dal build server; il secondo espone solo l’indice pubblico per la ricerca e può vivere nel browser senza rischiare dati sensibili (src/lib/datocms/executeQuery.ts:1-21, src/pages/cerca/index.astro:10-78).
+- Per `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` crea in DatoCMS un ruolo dedicato (es. “Search Role”) con l’unico permesso **Perform Site Search API calls**, poi genera da Site Search → API tokens un token associato a quel ruolo; non usare token CDA/CMA o ruoli con privilegi aggiuntivi, perché il valore finisce nel browser.
 - Public runtime expects `PUBLIC_SITE_URL` for sitemap URLs and `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` for the client search page; missing values throw at build time (src/pages/sitemap.xml.ts:5-44, src/pages/cerca/index.astro:6-28).
 
 **Preview & Drafts**

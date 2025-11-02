@@ -24,7 +24,7 @@ cp .env.example .env
 
 ```bash
 DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN=your_readonly_token
-DATOCMS_DRAFT_CONTENT_CDA_TOKEN=optional_drafts_token
+PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN=your_public_search_token
 DATOCMS_CMA_TOKEN=optional_schema_token
 ```
 
@@ -76,7 +76,7 @@ The command relies on `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` being present in `.e
 
 ## 7. Deploying Fast
 
-- **Vercel**: the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`, `SECRET_API_TOKEN`, `DRAFT_MODE_COOKIE_NAME`, `DATOCMS_PREVIEW_SECRET`) with `vercel env pull` and push updates via `vercel env add`. Deploy with `vercel deploy --prod` (build command defaults to `npm run build`).
+- **Vercel**: the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`) with `vercel env pull` and push updates via `vercel env add`. Deploy with `vercel deploy --prod` (build command defaults to `npm run build`).
 - **Netlify**: mirror the same variables under **Site settings → Build & deploy → Environment**, keeping `npm run build` as the build command and `dist/` as the publish directory.
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
 
