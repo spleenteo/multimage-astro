@@ -77,7 +77,6 @@ If that's the case:
 
 If the environment permits the execution of `tsc`, always ensure to double-check that the scripts/code you write are correct by running `tsc`!
 
-
 ## Project Structure & Module Organization
 
 Il progetto deve avere una struttura simile a https://github.com/datocms/astro-website/tree/main/src/components/blocks/ShowcaseProjectBlock o https://github.com/datocms/astro-website/tree/main/src/pages/partners/%5BpartnerSlug%5D in cui ogni componente o ogni rotta ha:

@@ -1,9 +1,8 @@
 # Ignore artifacts:
 .astro
 src/lib/datocms/graphql-env.d.ts
-schema.graphql
 schema.ts
-public/LLMs.md
 docs/DATOCMS.md
 dist/
 public/generated/
+AGENTS.md
