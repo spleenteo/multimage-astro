@@ -12,7 +12,7 @@ const isCI =
   process.env.NETLIFY === 'true';
 
 if (isCI) {
-  console.log('[prepare] CI environment detected; skipping git hooks and schema generation.');
+  console.log('[prepare] CI environment detected; skipping git hooks setup.');
   process.exit(0);
 }
 
@@ -42,10 +42,3 @@ if (hasSimpleGitHooksConfig) {
 } else {
   console.log('[prepare] No simple-git-hooks configuration found; skipping git hooks setup.');
 }
-
-if (process.env.SKIP_GENERATE_SCHEMA === '1') {
-  console.log('[prepare] SKIP_GENERATE_SCHEMA=1 set; skipping schema generation.');
-  process.exit(0);
-}
-
-run('npm run generate-schema');

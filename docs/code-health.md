@@ -7,7 +7,6 @@
 **Duplication & Dead Code**
 
 - Hard-coded `first: 500` limits appear across numerous queries; centralise pagination helpers or shared query fragments to avoid scattering magic numbers (src/pages/libri/[slug]/\_graphql.ts:44-109, src/pages/autori/index/\_graphql.ts:11-37, src/pages/sitemap.xml/\_graphql.ts:4-24).
-- `scripts/generate-schema.mjs` contains guarded logic for schema generation, yet `npm run generate-schema` bypasses it and calls `npx datocms` directly, leaving the helper unused (scripts/generate-schema.mjs:1-28, package.json:19).
 - `simple-git-hooks` is listed but no config is present, so prepare runs a no-op; remove the dependency or add hook definitions to avoid confusion (package.json:31-40, scripts/prepare.mjs:24-52).
 
 **Maintainability Gaps**

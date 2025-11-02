@@ -2,13 +2,18 @@
 
 - Default deployment target is Vercel; README documents linking the repo, syncing env vars, and running `vercel deploy --prod`; build command is `npm run build` with static output in `dist/` (README.md:57-80, astro.config.mjs:1-18).
 - A `wrangler.toml` is present for Cloudflare Pages with `pages_build_output_dir = "./dist"`, but there is no Cloudflare adapter configured, so deployments there remain manual (wrangler.toml:1-3).
+- Local dev (`npm run dev`) ora invoca `npm run sync-datocms` prima di `npm run ensure-swiper`, generando lo `schema.ts` (se `DATOCMS_API_TOKEN` è disponibile; lo script legge automaticamente anche dal file `.env` e propaga eventuali `DATOCMS_CMA_TOKEN` legacy) e scaricando `https://www.datocms.com/docs/llms-full.txt` in `DATOCMS.md` solo quando cambia, così documentazione e tipi restano aggiornati senza touching manuali (package.json:7-15, scripts/sync-datocms.mjs:1-110).
 
 **Environment & Secrets**
 
-- DatoCMS tokens (`DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_CMA_TOKEN`) plus eventual preview secrets (riintroducili solo quando implementi `/api/preview`) sono dichiarati in datocms.json, ma solo il token pubblicato è validato via Astro env schema (datocms.json:1-31, astro.config.mjs:6-16).
+- DatoCMS tokens (`DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_API_TOKEN` per gli strumenti CLI) plus eventual preview secrets (riintroducili solo quando implementi `/api/preview`) sono dichiarati in datocms.json, ma solo il token pubblicato è validato via Astro env schema (datocms.json:1-31, astro.config.mjs:6-16).
+- Il token locale per la CLI (`DATOCMS_API_TOKEN`) può essere un ruolo “Read-only” o dedicato allo schema generation; rimane opzionale su Vercel perché la pipeline cloud non rigenera lo schema (scripts/sync-datocms.mjs:1-110).
+- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` non è referenziato dal codice; tienilo fuori da Vercel finché non esiste una pipeline di preview e prevedi una rotazione se era stato condiviso (src/lib/datocms/executeQuery.ts:13-26).
+- Su Vercel sono indispensabili `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, oltre a `NODE_ENV=production`; il token CLI (`DATOCMS_API_TOKEN`) resta facoltativo e può stare solo negli ambienti di sviluppo (datocms.json:1-31, astro.config.mjs:6-16).
 - `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` (server-only, GraphQL CDA) e `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` (client-side, Site Search API) vanno mantenuti separati: il primo offre accesso completo ai contenuti pubblicati via query personalizzate e non deve uscire dal build server; il secondo espone solo l’indice pubblico per la ricerca e può vivere nel browser senza rischiare dati sensibili (src/lib/datocms/executeQuery.ts:1-21, src/pages/cerca/index.astro:10-78).
-- Per `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` crea in DatoCMS un ruolo dedicato (es. “Search Role”) con l’unico permesso **Perform Site Search API calls**, poi genera da Site Search → API tokens un token associato a quel ruolo; non usare token CDA/CMA o ruoli con privilegi aggiuntivi, perché il valore finisce nel browser.
-- Public runtime expects `PUBLIC_SITE_URL` for sitemap URLs and `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` for the client search page; missing values throw at build time (src/pages/sitemap.xml.ts:5-44, src/pages/cerca/index.astro:6-28).
+- Per `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` crea in DatoCMS un ruolo dedicato (es. “Search Role”) con l’unico permesso **Perform Site Search API calls**, poi genera da Site Search → API tokens un token associato a quel ruolo; non usare token CDA/CMA o ruoli con privilegi aggiuntivi, perché il valore finisce nel browser. Evita ruoli “Admin” o “Editor” per il token della ricerca pubblica.
+- Oltre ai token, il runtime legge variabili standard come `NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL` e `NETLIFY`; attiva solo quelle necessarie su Vercel (`NODE_ENV`, `VERCEL`) e documenta gli interruttori opzionali per gli script locali (scripts/build-search-client.mjs:26-31).
+- Public runtime expects `PUBLIC_SITE_URL` per la sitemap e `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` per la pagina di ricerca; valori mancanti causano errori di build (src/pages/sitemap.xml.ts:5-44, src/pages/cerca/index.astro:6-28).
 
 **Preview & Drafts**
 
@@ -24,4 +29,5 @@
 
 - Protect the `/staff` routes before deploying; add authentication middleware or move the catalogue export into a secured API function (src/pages/staff/index.astro:1-55).
 - Document required environment variables in a dedicated ops runbook and add validation for draft/CMA tokens similar to the published token check (astro.config.mjs:6-16, .env.example:1-3).
-- Automate schema generation within CI using guarded scripts to avoid surprises from `npm install` running `npx datocms` without credentials (scripts/prepare.mjs:36-68, package.json:18-20).
+- Tenendo `public/LLMs.md` come asset statico, rimuovi la dipendenza da `npm run generate-llms` nelle fasi pre-build o limita lo script a trigger manuali/documentati, così da non alterare i commit né rallentare `npm run dev` (package.json:14-18, scripts/generate-llms.mjs:5-238).
+- Evita hook di commit automatici: `simple-git-hooks` è presente ma inattivo; se l’obiettivo è garantire nessuna modifica automatica sui commit, elimina il pacchetto o chiarisci nel README che non viene attivato (package.json:31-40, scripts/prepare.mjs:24-52).

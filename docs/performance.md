@@ -15,5 +15,5 @@
 
 **Build Costs**
 
-- `npm run prebuild` invokes `scripts/generate-llms.mjs`, which paginates through the entire catalogue; ensure this export is necessary for every production build or gate behind an opt-in flag to shorten CI pipelines (package.json:14-18, scripts/generate-llms.mjs:5-238).
+- `npm run prebuild` invoca `scripts/generate-llms.mjs`, che pagina l’intero catalogo; se `public/LLMs.md` deve restare un asset statico, scollega lo script dal pre-build di default e documenta un comando manuale per rigenerarlo solo quando serve (package.json:14-18, scripts/generate-llms.mjs:5-238).
 - `scripts/prepare.mjs` triggers schema generation on install, causing extra network requests during onboarding and slow CI unless explicitly skipped (scripts/prepare.mjs:36-68).
