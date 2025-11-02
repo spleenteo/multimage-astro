@@ -23,9 +23,10 @@ type SitemapEntry = {
 };
 
 export const GET: APIRoute = async ({ site }) => {
-  const origin = import.meta.env.PUBLIC_SITE_URL ?? site?.toString() ?? 'http://localhost:4321';
+  const envOrigin = (import.meta.env.PUBLIC_SITE_URL || '').trim();
+  const origin = envOrigin || site?.toString() || 'http://localhost:4321';
 
-  if (!import.meta.env.PUBLIC_SITE_URL && !site) {
+  if (!envOrigin && !site) {
     console.warn(
       '[sitemap] Falling back to http://localhost:4321. Configure PUBLIC_SITE_URL or the `site` option in astro.config.mjs for accurate sitemap URLs.',
     );
