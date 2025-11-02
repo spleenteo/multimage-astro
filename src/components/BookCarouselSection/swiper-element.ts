@@ -1,3 +1,5 @@
 import { register } from 'swiper/element/bundle';
 
-register();
+if (!customElements.get('swiper-container')) {
+  register();
+}

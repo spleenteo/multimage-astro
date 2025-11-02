@@ -4,7 +4,9 @@ import BookCard from '~/components/BookCard';
 import type { BookCardViewModel } from '~/lib/books';
 import styles from './style.module.css';
 
-const swiperElementUrl = Astro.resolve('./swiper-element.ts');
+const swiperScriptSrc = import.meta.env.DEV
+  ? '/src/components/BookCarouselSection/swiper-element.ts'
+  : '/generated/swiper-element.js';
 
 type Props = {
   id: string;
@@ -123,4 +125,4 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
   </div>
 </section>
 
-<script type="module" src={swiperElementUrl}></script>
+<script type="module" src={swiperScriptSrc} is:inline></script>
