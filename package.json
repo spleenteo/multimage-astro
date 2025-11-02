@@ -8,12 +8,11 @@
     "dev": "npm run sync-datocms && npm run ensure-swiper && astro dev",
     "start": "npm run sync-datocms && npm run ensure-swiper && astro dev",
     "bundle-search-client": "node scripts/build-search-client.mjs",
-    "prebuild": "npm run ensure-swiper && npm run generate-llms && npm run bundle-search-client",
+    "prebuild": "npm run ensure-swiper && npm run bundle-search-client",
     "build": "astro check && astro build",
     "preview": "npm run ensure-swiper && astro preview",
     "astro": "astro",
     "generate-schema": "npx datocms schema:generate schema.ts",
-    "generate-llms": "dotenv -e .env -- node scripts/generate-llms.mjs",
     "lint": "prettier --check .",
     "format": "npx prettier . --write"
   },

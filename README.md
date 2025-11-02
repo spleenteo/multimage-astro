@@ -61,18 +61,12 @@ npm run preview
 
 ## 6. LLM Knowledge Export
 
-Every build now regenerates `public/LLMs.md`, a machine-readable Markdown dump that agents can crawl. It contains:
+Astro prerenders `/llms-full.txt` via `src/pages/llms-full.txt.ts`, producing a machine-readable Markdown dump alongside the rest of the site. Each build emits `dist/llms-full.txt`, which includes:
 
-- L’introduzione (“Chi siamo” e “La storia”) estratta dalle pagine info corrispondenti.
-- L’intero catalogo (titolo, sottotitolo, link assoluti, collane, recensioni, disponibilità) con le biografie complete degli autori.
+- Le sezioni introduttive (“Chi siamo” e “La storia”) estratte dalle relative pagine DatoCMS.
+- L’intero catalogo con titoli, sottotitoli, URL assoluti, collane, recensioni, disponibilità e biografie complete degli autori.
 
-To refresh it manually (e.g. after editing content but before a full build) run:
-
-```bash
-npm run generate-llms
-```
-
-The command relies on `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` being present in `.env`.
+Per rigenerare il file è sufficiente eseguire `npm run build` (oppure `npm run dev`, che calcola comunque l’endpoint). Non sono necessari script aggiuntivi.
 
 ## 7. Deploying Fast
 

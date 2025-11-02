@@ -7,4 +7,3 @@
 - [ ] [Area: refactor] [Impact: P3] [Effort: S] Prune unused runtime adapters — @astrojs/cloudflare and @astrojs/node are dependencies but unused in astro.config, adding supply-chain and install overhead (package.json:20-24).
 - [ ] [Area: testing] [Impact: P3] [Effort: M] Introduce automated checks — project lacks CI to run astro check/build/lint despite scripts existing; add a workflow to catch regressions before deploy (package.json:7-23).
 - [ ] [Area: testing] [Impact: P2] [Effort: S] Add unified test runner — introduce `npm run test` that executes `npm run format`, `npm run lint`, and `npm run build`, matching the agreed local testing flow (package.json:14-21).
-- [ ] [Area: infra] [Impact: P2] [Effort: S] Decouple LLM export from default builds — keep `public/LLMs.md` as a checked-in static file by removing `npm run generate-llms` from `npm run prebuild` and documenting a manual regeneration path (package.json:14-18, scripts/generate-llms.mjs:5-238).

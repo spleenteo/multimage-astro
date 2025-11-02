@@ -15,4 +15,4 @@
 
 **Build Costs**
 
-- `npm run prebuild` invoca `scripts/generate-llms.mjs`, che pagina l’intero catalogo; se `public/LLMs.md` deve restare un asset statico, scollega lo script dal pre-build di default e documenta un comando manuale per rigenerarlo solo quando serve (package.json:14-18, scripts/generate-llms.mjs:5-238).
+- L’esportazione LLM ora avviene nel prerender dell’endpoint `src/pages/llms-full.txt.ts`, evitando round-trip aggiuntivi durante `npm run prebuild`; resta comunque un processo pesante per il CDA, quindi monitora i tempi di build quando il catalogo cresce (src/pages/llms-full.txt.ts, src/pages/llms-full/\_graphql.ts).

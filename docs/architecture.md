@@ -9,13 +9,13 @@
 - Each routed page issues GraphQL queries defined alongside it (e.g., `src/pages/libri/index/_graphql.ts`), mapping records to view models with helpers like `mapBooksToCards` before rendering components.
 - The layout requests menu pages and favicon tags on every render; individual sections assemble structured text through `@datocms/astro/StructuredText` or via `toRichTextHtml` for legacy HTML strings.
 - Client-side search bundles a small ES module via `scripts/build-search-client.mjs` and talks to DatoCMS Site Search using the public token exposed through `data-*` attributes (src/pages/cerca/index.astro:6-78, scripts/build-search-client.mjs:1-37).
-- `scripts/generate-llms.mjs` exports una copia markdown (`public/LLMs.md`) del catalogo paginando il CDA; dato che ora il file deve restare una pagina statica gestita dalla build, valuta di scollegare lo script dal prebuild e mantenerlo come comando manuale documentato (scripts/generate-llms.mjs:5-238, package.json:14-18).
+- `src/pages/llms-full.txt.ts` è un endpoint prerender che replica le query del vecchio script e produce direttamente `dist/llms-full.txt` durante la build, con le query centralizzate in `src/pages/llms-full/_graphql.ts` (src/pages/llms-full.txt.ts, src/pages/llms-full/\_graphql.ts).
 
 **Build & Deploy**
 
 - `npm run dev` copies the Swiper web component into `public/vendor` before starting Astro, ensuring `BookCarouselSection` can hydrate the `<swiper-container>` element (package.json:10-13, scripts/ensure-swiper-element.mjs:6-27).
 - Lo schema GraphQL (`schema.ts`) e `DATOCMS.md` vengono sincronizzati automaticamente all’avvio tramite `npm run sync-datocms`, che rigenera lo schema quando `DATOCMS_API_TOKEN` è presente (leggendo anche token legacy dal `.env`) e aggiorna la doc solo se il contenuto remoto varia (package.json:7-15, scripts/sync-datocms.mjs:1-110).
-- `npm run prebuild` ensures schema and LLM exports are regenerated, then `npm run build` runs `astro check` followed by the production build producing `dist/` (package.json:14-20).
+- `npm run prebuild` oggi si limita a copiare lo Swiper bundle e a ricostruire il client di ricerca prima che `npm run build` esegua `astro check` e la build di produzione (package.json:10-18, scripts/build-search-client.mjs:1-37).
 - Repository targets Vercel per README guidance; env vars (`DATOCMS_*`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`) are required at build/publish time and are defined in datocms.json for deployment tooling (README.md:49-80, datocms.json:1-31).
 - A `wrangler.toml` is present for Cloudflare Pages static hosting, matching Astro’s static output directory, but no Cloudflare adapter is wired in the Astro config (wrangler.toml:1-3).
 

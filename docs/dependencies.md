@@ -7,7 +7,7 @@
 **CMS & Data**
 
 - `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` provide rendering helpers, GraphQL fetching, and schema generation; however, `@datocms/cma-client` is only re-exported for types and may be removable if unused elsewhere (package.json:20-36, src/types/datocms.d.ts:1-2).
-- The project leans on `dotenv-cli` for scripted env loading (`npm run generate-llms`) and `@datocms/cda-client` for all content queries (package.json:18-35, scripts/generate-llms.mjs:5-238).
+- DatoCMS data flows mainly through `@datocms/cda-client`; the LLM export ora sfrutta un endpoint Astro (`src/pages/llms-full.txt.ts`) invece di uno script dedicato, quindi `dotenv-cli` resta necessario solo per strumenti occasionali come `npm run sync-datocms` (package.json:7-18, src/pages/llms-full.txt.ts).
 
 **Monitoring & Analytics**
 

@@ -1,94 +1,93 @@
-#!/usr/bin/env node
+import type { APIRoute } from 'astro';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { LLMS_BOOKS_QUERY, LLMS_INTRO_QUERY } from './llms-full/_graphql';
 
-import fs from 'fs/promises';
-import path from 'path';
-import process from 'process';
-import { fileURLToPath } from 'url';
+export const prerender = true;
 
-const ENDPOINT = 'https://graphql.datocms.com/';
-const TOKEN = process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN;
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(__dirname, '..');
-const OUTPUT_PATH = path.join(ROOT_DIR, 'public', 'LLMs.md');
 const PAGE_SIZE = 100;
 
-if (!TOKEN) {
-  console.error('Missing DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN environment variable.');
-  process.exitCode = 1;
-  process.exit();
-}
+type StructuredTextRecord = {
+  value?: {
+    document?: StructuredTextNode;
+  };
+  document?: StructuredTextNode;
+  type?: string;
+  children?: StructuredTextNode[];
+};
 
-const INTRO_QUERY = `
-  query LLMsIntro {
-    chiSiamo: page(filter: { slug: { eq: "chi-siamo" } }) {
-      title
-      body {
-        value
-      }
-    }
-    laStoria: page(filter: { slug: { eq: "la-storia" } }) {
-      title
-      body {
-        value
-      }
-    }
-  }
-`;
+type StructuredTextNode = {
+  type?: string;
+  level?: number;
+  style?: string;
+  marks?: string[];
+  url?: string;
+  value?: string;
+  children?: StructuredTextNode[];
+};
 
-const BOOKS_QUERY = `
-  query AllBooksBatch($first: IntType!, $skip: IntType!) {
-    allBooks(orderBy: [printYear_DESC, title_ASC], first: $first, skip: $skip) {
-      title
-      subtitle
-      slug
-      collection {
-        name
-        slug
-      }
-      review {
-        value
-      }
-      isbn
-      edition
-      printYear
-      archive
-      authors {
-        fullName
-        alias
-        slug
-        biography {
-          value
-        }
-      }
-    }
-  }
-`;
+type IntroQueryResult = {
+  chiSiamo?: {
+    body?: StructuredTextRecord | null;
+  } | null;
+  laStoria?: {
+    body?: StructuredTextRecord | null;
+  } | null;
+};
 
-function normalizeWhitespace(text) {
+type BookRecord = {
+  title?: string | null;
+  subtitle?: string | null;
+  slug?: string | null;
+  collection?: {
+    name?: string | null;
+    slug?: string | null;
+  } | null;
+  review?: StructuredTextRecord | null;
+  isbn?: string | null;
+  edition?: number | null;
+  printYear?: string | null;
+  archive?: boolean | null;
+  authors?: Array<{
+    fullName?: string | null;
+    alias?: string | null;
+    slug?: string | null;
+    biography?: StructuredTextRecord | null;
+  } | null> | null;
+};
+
+type BooksQueryResult = {
+  allBooks: BookRecord[];
+};
+
+function normalizeWhitespace(text: string) {
   return text.replace(/\u00a0/g, ' ');
 }
 
-function extractDocument(data) {
+function extractDocument(data: StructuredTextRecord | StructuredTextNode | null | undefined) {
   if (!data || typeof data !== 'object') return null;
-  if (data.value && typeof data.value === 'object' && data.value.document) {
-    return data.value.document;
+
+  if ('value' in data && data.value && typeof data.value === 'object' && 'document' in data.value) {
+    return data.value.document ?? null;
   }
-  if (data.document && typeof data.document === 'object') {
+
+  if ('document' in data && data.document && typeof data.document === 'object') {
     return data.document;
   }
-  if (data.type && data.children) {
-    return data;
+
+  if ('type' in data && 'children' in data) {
+    return data as StructuredTextNode;
   }
+
   return null;
 }
 
-function renderStructuredTextToMarkdown(field) {
+function renderStructuredTextToMarkdown(field?: StructuredTextRecord | null) {
   const root = extractDocument(field);
   if (!root) return '';
 
-  const blocks = [];
+  const blocks: string[] = [];
 
-  const renderInlines = (nodes = []) =>
+  const renderInlines = (nodes: StructuredTextNode[] = []): string =>
     nodes
       .map((node) => {
         if (!node) {
@@ -115,13 +114,12 @@ function renderStructuredTextToMarkdown(field) {
                   content = `*${content}*`;
                   break;
                 case 'underline':
-                  content = content; // keep underline as plain text
                   break;
                 case 'code':
                   content = `\`${content}\``;
                   break;
                 default:
-                  content = content;
+                  break;
               }
             }
           }
@@ -146,7 +144,7 @@ function renderStructuredTextToMarkdown(field) {
       })
       .join('');
 
-  const renderBlock = (node, depth = 0) => {
+  const renderBlock = (node: StructuredTextNode | null | undefined, depth = 0): string => {
     if (!node) {
       return '';
     }
@@ -168,8 +166,9 @@ function renderStructuredTextToMarkdown(field) {
           .map((item, index) => {
             const marker = isNumbered ? `${index + 1}.` : '-';
             const paragraphs =
-              (item.children || []).map((child) => renderBlock(child, depth + 1)).filter(Boolean) ||
-              [];
+              (item?.children || [])
+                .map((child) => renderBlock(child, depth + 1))
+                .filter(Boolean) || [];
             if (paragraphs.length === 0) {
               return '';
             }
@@ -226,47 +225,11 @@ function renderStructuredTextToMarkdown(field) {
   return blocks.join('\n\n').replace(/\n{3,}/g, '\n\n');
 }
 
-async function fetchGraphQL(query, variables = {}) {
-  const response = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${TOKEN}`,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+function formatAuthorLine(author: NonNullable<BookRecord['authors']>[number] | undefined) {
+  if (!author) return '';
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`DatoCMS request failed: ${response.status} ${response.statusText}\n${text}`);
-  }
-
-  const payload = await response.json();
-  if (payload.errors) {
-    throw new Error(JSON.stringify(payload.errors, null, 2));
-  }
-
-  return payload.data;
-}
-
-async function fetchAllBooks() {
-  let skip = 0;
-  const books = [];
-  while (true) {
-    const data = await fetchGraphQL(BOOKS_QUERY, { first: PAGE_SIZE, skip });
-    const batch = data.allBooks ?? [];
-    books.push(...batch);
-    if (batch.length < PAGE_SIZE) {
-      break;
-    }
-    skip += batch.length;
-  }
-  return books;
-}
-
-function formatAuthorLine(author) {
-  const fullName = author.fullName ? author.fullName.trim() : '';
-  const alias = author.alias ? author.alias.trim() : '';
+  const fullName = author.fullName?.trim() ?? '';
+  const alias = author.alias?.trim() ?? '';
   const display =
     alias && alias.toLowerCase() !== fullName.toLowerCase() && fullName
       ? `${fullName} (alias: ${alias})`
@@ -278,7 +241,7 @@ function formatAuthorLine(author) {
   return display || (url ? `link: ${url}` : '');
 }
 
-function appendIndentedBlock(lines, text, indent) {
+function appendIndentedBlock(lines: string[], text: string, indent: string) {
   if (!text) {
     return;
   }
@@ -292,24 +255,50 @@ function appendIndentedBlock(lines, text, indent) {
   }
 }
 
-async function generate() {
-  const introData = await fetchGraphQL(INTRO_QUERY);
-  const books = await fetchAllBooks();
+async function fetchIntro() {
+  return executeQuery<IntroQueryResult>(LLMS_INTRO_QUERY);
+}
 
-  const lines = [];
+async function fetchAllBooks() {
+  let skip = 0;
+  const books: BookRecord[] = [];
+
+  while (true) {
+    const data = await executeQuery<BooksQueryResult>(LLMS_BOOKS_QUERY, {
+      variables: {
+        first: PAGE_SIZE,
+        skip,
+      },
+    });
+
+    const batch = data.allBooks ?? [];
+    books.push(...batch);
+
+    if (batch.length < PAGE_SIZE) {
+      break;
+    }
+
+    skip += batch.length;
+  }
+
+  return books;
+}
+
+function buildMarkdown(intro: IntroQueryResult, books: BookRecord[]) {
+  const lines: string[] = [];
   lines.push('# MULTIMAGE, la casa editrice dei diritti umani', '');
 
-  if (introData.chiSiamo) {
+  if (intro.chiSiamo) {
     lines.push('## Chi siamo', '');
-    const markdown = renderStructuredTextToMarkdown(introData.chiSiamo.body);
+    const markdown = renderStructuredTextToMarkdown(intro.chiSiamo.body);
     if (markdown) {
       lines.push(markdown, '');
     }
   }
 
-  if (introData.laStoria) {
+  if (intro.laStoria) {
     lines.push('## La storia', '');
-    const markdown = renderStructuredTextToMarkdown(introData.laStoria.body);
+    const markdown = renderStructuredTextToMarkdown(intro.laStoria.body);
     if (markdown) {
       lines.push(markdown, '');
     }
@@ -317,8 +306,7 @@ async function generate() {
 
   lines.push('## Catalogo libri', '');
 
-  const sortedBooks = [...books];
-  sortedBooks.sort((a, b) => {
+  const sortedBooks = [...books].sort((a, b) => {
     const yearA = a.printYear ?? '';
     const yearB = b.printYear ?? '';
     if (yearA === yearB) {
@@ -380,12 +368,12 @@ async function generate() {
         const header = formatAuthorLine(author);
         lines.push(header ? `  - ${header}` : '  -');
 
-        if (author.biography && author.biography.value) {
-          const biographyText = renderStructuredTextToMarkdown(author.biography);
-          if (biographyText) {
-            lines.push('    biografia:');
-            appendIndentedBlock(lines, biographyText, '      ');
-          }
+        const biographyText = author?.biography
+          ? renderStructuredTextToMarkdown(author.biography)
+          : '';
+        if (biographyText) {
+          lines.push('    biografia:');
+          appendIndentedBlock(lines, biographyText, '      ');
         }
       }
     }
@@ -393,17 +381,18 @@ async function generate() {
     lines.push('');
   }
 
-  lines.push(''); // ensure file ends with newline
+  lines.push('');
 
-  await fs.mkdir(path.dirname(OUTPUT_PATH), { recursive: true });
-  await fs.writeFile(OUTPUT_PATH, lines.join('\n'), 'utf8');
-
-  console.log(
-    `Generated ${path.relative(ROOT_DIR, OUTPUT_PATH)} with ${sortedBooks.length} books.`,
-  );
+  return lines.join('\n');
 }
 
-generate().catch((error) => {
-  console.error('Failed to generate LLMs catalog:', error);
-  process.exitCode = 1;
-});
+export const GET: APIRoute = async () => {
+  const [intro, books] = await Promise.all([fetchIntro(), fetchAllBooks()]);
+  const markdown = buildMarkdown(intro, books);
+
+  return new Response(markdown, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+    },
+  });
+};
