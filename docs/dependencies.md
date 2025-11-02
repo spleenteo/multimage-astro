@@ -16,7 +16,6 @@
 **Tooling**
 
 - Formatting is handled by `prettier` + `prettier-plugin-astro`; no ESLint is configured, so lint coverage is limited to formatting (package.json:31-40).
-- `simple-git-hooks` is listed as a dev dependency but lacks configuration, meaning hook setup currently no-ops in `scripts/prepare.mjs` (package.json:31-40, scripts/prepare.mjs:24-52).
 
 **Risk Notes**
 

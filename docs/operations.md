@@ -30,4 +30,3 @@
 - Protect the `/staff` routes before deploying; add authentication middleware or move the catalogue export into a secured API function (src/pages/staff/index.astro:1-55).
 - Document required environment variables in a dedicated ops runbook and add validation for draft/CMA tokens similar to the published token check (astro.config.mjs:6-16, .env.example:1-3).
 - Tenendo `public/LLMs.md` come asset statico, rimuovi la dipendenza da `npm run generate-llms` nelle fasi pre-build o limita lo script a trigger manuali/documentati, così da non alterare i commit né rallentare `npm run dev` (package.json:14-18, scripts/generate-llms.mjs:5-238).
-- Evita hook di commit automatici: `simple-git-hooks` è presente ma inattivo; se l’obiettivo è garantire nessuna modifica automatica sui commit, elimina il pacchetto o chiarisci nel README che non viene attivato (package.json:31-40, scripts/prepare.mjs:24-52).

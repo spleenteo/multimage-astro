@@ -3,7 +3,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "prepare": "node scripts/prepare.mjs",
     "ensure-swiper": "node scripts/ensure-swiper-element.mjs",
     "sync-datocms": "node scripts/sync-datocms.mjs",
     "dev": "npm run sync-datocms && npm run ensure-swiper && astro dev",
@@ -39,9 +38,8 @@
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.5",
     "dotenv-cli": "^7.4.2",
+    "esbuild": "^0.24.0",
     "prettier": "^3.3.3",
-    "prettier-plugin-astro": "^0.14.1",
-    "simple-git-hooks": "^2.11.1",
-    "esbuild": "^0.24.0"
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
