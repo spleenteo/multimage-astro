@@ -28,7 +28,7 @@ PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN=your_public_search_token
 DATOCMS_CMA_TOKEN=optional_schema_token
 ```
 
-See `DATOCMS.md` for the authoritative description of models and fields.
+See `docs/DATOCMS.md` for the authoritative description of models and fields.
 
 ## 3. Generate the DatoCMS Schema
 
@@ -74,4 +74,4 @@ Per rigenerare il file è sufficiente eseguire `npm run build` (oppure `npm run 
 - **Netlify**: mirror the same variables under **Site settings → Build & deploy → Environment**, keeping `npm run build` as the build command and `dist/` as the publish directory.
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
 
-For contribution guidelines, coding style, and DatoCMS conventions, see `AGENTS.md`. Keep `DATOCMS.md` open while working—it is the source of truth for the content model and avoids needless web searches.
+For contribution guidelines, coding style, and DatoCMS conventions, see `AGENTS.md`. Keep `docs/DATOCMS.md` open while working—it is the source of truth for the content model and avoids needless web searches.

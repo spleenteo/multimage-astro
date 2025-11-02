@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +9,7 @@ const DOCS_URL = 'https://www.datocms.com/docs/llms-full.txt';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
-const docsPath = path.join(repoRoot, 'DATOCMS.md');
+const docsPath = path.join(repoRoot, 'docs', 'DATOCMS.md');
 
 async function loadEnv() {
   if (process.env.DATOCMS_CMA_TOKEN) {
@@ -114,6 +114,7 @@ async function downloadDocs() {
       }
     }
 
+    await mkdir(path.dirname(docsPath), { recursive: true });
     await writeFile(docsPath, incoming, 'utf8');
     console.log('[dato] Updated DATOCMS.md from remote source.');
   } catch (error) {

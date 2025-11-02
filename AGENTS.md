@@ -1,4 +1,22 @@
-# Repository Guidelines
+# Documentation
+
+The `/docs` directory is the canonical knowledge base for this project.
+Always keep in context and review the files inside it (especially `docs/DATOCMS.md`) before starting any task.
+Update the relevant sections whenever you complete a feature or significant refactor. Always keep the documentation updated in the descirption for components, models, or helpers.
+
+## DatoCMS Documentation
+
+Whenever you need information about DatoCMS, you can always trust `docs/DATOCMS.md` that contains the entire documentation with examples.
+
+Consider the paragraphs from `docs/DATOCMS.md` focused on Astro: DatoCMS Overview, Images and video management, Accessing draft/updated content, Managing images, Displaying videos, Structured Text fields, SEO Management, Real-time updates
+
+If you need real working examples, you can rely on these repos to get inspired, considering them as best practices:
+
+- https://github.com/datocms/astro-starter-kit/tree/main
+- https://github.com/voorhoede/head-start
+- https://github.com/datocms/astro-website
+
+NEVER, EVER change or modify `docs/DATOCMS.md`
 
 # DatoCMS Expert
 
@@ -59,17 +77,6 @@ If that's the case:
 
 If the environment permits the execution of `tsc`, always ensure to double-check that the scripts/code you write are correct by running `tsc`!
 
-## DatoCMS Documentation
-
-Whenever you need information about DatoCMS, you can always trust the `DATOCMS.md`that contains the entire documentation with examples.
-
-Consider the paragraphs from `DATOCMS.md`focused on Astro: DatoCMS Overview, Images and video management, Accessing draft/updated content, Managing images, Displaying videos, Structured Text fields, SEO Management, Real-time updates
-
-If you need real working examples, you can rely on these repos to get inspired, considering them as best practices:
-
-- https://github.com/datocms/astro-starter-kit/tree/main
-- https://github.com/voorhoede/head-start
-- https://github.com/datocms/astro-website
 
 ## Project Structure & Module Organization
 
@@ -95,7 +102,7 @@ dopodiché ogni query richiama i fragments necessari
             ...ChangelogEntryLinkFragment
 ```
 
-`src/` contains all Astro source files: `src/pages/` for routed pages (e.g., `libri/`, `autori/`, `info/`), `src/components/` for reusable UI such as `BookCard.astro`, and `src/lib/` for shared utilities, DatoCMS query helpers, and layout logic. Asset originals live in `public/`. Automation scripts (including the DatoCMS schema generator) reside in `scripts/`. The root `DATOCMS.md` documents content models and should be treated as the canonical data reference.
+`src/` contains all Astro source files: `src/pages/` for routed pages (e.g., `libri/`, `autori/`, `info/`), `src/components/` for reusable UI such as `BookCard.astro`, and `src/lib/` for shared utilities, DatoCMS query helpers, and layout logic. Asset originals live in `public/`. Automation scripts (including the DatoCMS schema generator) reside in `scripts/`. The `docs/DATOCMS.md` file documents content models and should be treated as the canonical data reference.
 
 ## Build, Test, and Development Commands
 
@@ -110,7 +117,7 @@ Write components in Astro/TypeScript with 2-space indentation. Favor TypeScript 
 
 ## Testing Guidelines
 
-There is no dedicated unit-test suite; rely on `astro check` plus `npm run build` for static analysis. When touching CMS queries, validate pages against real preview content and confirm anchor/link behavior (e.g., alphabetical menus, supplier groups). Document manual QA steps in PR descriptions.
+There is no dedicated unit-test suite; rely on `astro check` plus `npm run build` and `npm run test` for static analysis. When touching CMS queries, validate pages against real preview content and confirm anchor/link behavior (e.g., alphabetical menus, supplier groups). Document manual QA steps in PR descriptions.
 
 ## Commit & Pull Request Guidelines
 
@@ -118,41 +125,4 @@ Commit messages in this repo are short, imperative descriptions (e.g., “Fix im
 
 ## DatoCMS & Configuration Tips
 
-Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `DATOCMS.md` this is a downloaded file to access DatoCMS's documentation in a super fast way.
-
-# Components Overview
-
-- `AlternateFormatsList` — renders links to additional book formats with pricing and external/ internal routing.
-- `AuthorCard` — displays author metadata (name, portrait, book count) linking to the author detail page.
-- `AuthorChip` — compact author pill with avatar, used inside highlights or stacked metadata.
-- `AuthorsSection` — wraps a list of author cards with optional navigation/headers.
-- `BannerSection` — two-column marketing banner with responsive imagery and gradient background.
-- `BookCard` — reusable book summary card with cover art, metadata, and price tag integration.
-- `BooksSectionNav` — header navigation for the books mega menu (still in `.astro` form).
-- `CollectionCard` — grid card for a collection/series with logo, description, and book count.
-- `CollectionDetailHero` — hero banner for a collection detail page with logo and stats.
-- `DetailList` — definition list block for labelled metadata (edition, graphics, etc.).
-- `FeaturedBookHighlight` — large highlight component for the home hero book feature.
-- `InfoSection` — simple heading/paragraph/chip block for informational content.
-- `SectionIntro` — boxed introductory text used to headline listing pages.
-- `SupplierCard` — distributor profile card with contact info and logo support.
-- `ui/Button` — atomic button/anchor primitive with variant, icon, and external-link support.
-- `ui/AuthorNames` — helper component to render formatted author names/labels.
-- `ui/PriceTag` — badge-style label for book price information.
-- `DraftModeQueryListener` — listens for Netlify/Vercel draft-mode revalidation events.
-- `DraftModeToggler` — small utility widget for enabling/disabling draft mode in dev.
-- `Footer` — site footer layout component.
-- `Header` — global navigation header with search/menu controls.
-
-# Utility Modules
-
-- `lib/authors.ts` — helpers for normalising author names, sorting, and building view models.
-- `lib/books.ts` — book formatting utilities (price, edition, licence labels, etc.).
-- `lib/colors.ts` — color palette helpers for deriving accent/background colours.
-- `lib/currency.ts` — Euro currency formatter.
-- `lib/datocms/commonFragments.ts` — shared GraphQL fragments for Tag/ResponsiveImage.
-- `lib/datocms/executeQuery.ts` — wrapped fetcher for the DatoCMS CDA with caching options.
-- `lib/datocms/types.ts` — shared TypeScript types mirroring DatoCMS records.
-- `lib/seo.ts` — utilities for merging SEO metadata with sensible fallbacks.
-- `lib/suppliers.ts` — mapping/grouping helpers for supplier/distributor records.
-- `lib/text.ts` — text normalisation utilities (plain text extraction, truncation, etc.).
+Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `docs/DATOCMS.md`; this is a downloaded file to access DatoCMS's documentation in a super fast way.

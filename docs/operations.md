@@ -2,7 +2,7 @@
 
 - Default deployment target is Vercel; README documents linking the repo, syncing env vars, and running `vercel deploy --prod`; build command is `npm run build` with static output in `dist/` (README.md:57-80, astro.config.mjs:1-18).
 - A `wrangler.toml` is present for Cloudflare Pages with `pages_build_output_dir = "./dist"`, but there is no Cloudflare adapter configured, so deployments there remain manual (wrangler.toml:1-3).
-- Local dev (`npm run dev`) ora invoca `npm run sync-datocms` prima di `astro dev`, generando lo `schema.ts` (se `DATOCMS_API_TOKEN` è disponibile; lo script legge automaticamente anche dal file `.env` e propaga eventuali `DATOCMS_CMA_TOKEN` legacy) e scaricando `https://www.datocms.com/docs/llms-full.txt` in `DATOCMS.md` solo quando cambia, così documentazione e tipi restano aggiornati senza touching manuali (package.json:7-13, scripts/sync-datocms.mjs:1-110).
+- Local dev (`npm run dev`) ora invoca `npm run sync-datocms` prima di `astro dev`, generando lo `schema.ts` (se `DATOCMS_API_TOKEN` è disponibile; lo script legge automaticamente anche dal file `.env` e propaga eventuali `DATOCMS_CMA_TOKEN` legacy) e scaricando `https://www.datocms.com/docs/llms-full.txt` in `docs/DATOCMS.md` solo quando cambia, così documentazione e tipi restano aggiornati senza touching manuali (package.json:7-13, scripts/sync-datocms.mjs:1-110).
 
 **Environment & Secrets**
 

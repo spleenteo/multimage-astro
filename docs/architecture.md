@@ -15,7 +15,7 @@
 
 - `BookCarouselSection` importa `swiper/element/bundle` inline, quindi non serve più copiare asset in `public/vendor`; basta mantenere la dipendenza `swiper` aggiornata (src/components/BookCarouselSection/index.astro:1-134).
 - Il layout principale non usa `ClientRouter` né animazioni `transition:*`; ogni pagina viene resa come HTML statico evitando hydration globale superflua (src/layouts/BaseLayout.astro:1-170).
-- Lo schema GraphQL (`schema.ts`) e `DATOCMS.md` vengono sincronizzati automaticamente all’avvio tramite `npm run sync-datocms`, che rigenera lo schema quando `DATOCMS_API_TOKEN` è presente (leggendo anche token legacy dal `.env`) e aggiorna la doc solo se il contenuto remoto varia (package.json:7-15, scripts/sync-datocms.mjs:1-110).
+- Lo schema GraphQL (`schema.ts`) e `docs/DATOCMS.md` vengono sincronizzati automaticamente all’avvio tramite `npm run sync-datocms`, che rigenera lo schema quando `DATOCMS_API_TOKEN` è presente (leggendo anche token legacy dal `.env`) e aggiorna la doc solo se il contenuto remoto varia (package.json:7-15, scripts/sync-datocms.mjs:1-110).
 - `npm run prebuild` oggi ricostruisce solo il client di ricerca prima che `npm run build` esegua `astro check` e la build di produzione (package.json:10-18, scripts/build-search-client.mjs:1-37).
 - Repository targets Vercel per README guidance; env vars (`DATOCMS_*`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`) are required at build/publish time and are defined in datocms.json for deployment tooling (README.md:49-80, datocms.json:1-31).
 - A `wrangler.toml` is present for Cloudflare Pages static hosting, matching Astro’s static output directory, but no Cloudflare adapter is wired in the Astro config (wrangler.toml:1-3).
