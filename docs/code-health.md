@@ -11,4 +11,3 @@
 
 - No QueryListener/DraftMode toggler exists despite the requirement in AGENTS.md; introduce dedicated components/utilities to standardise preview flows (AGENTS.md:73-89).
 - Staff tooling lives under `/src/pages/staff` alongside public content; once secured, consider relocating to an authenticated API route or a protected admin bundle to prevent accidental exposure (src/pages/staff/index.astro:1-55).
-- Unused Astro adapters (`@astrojs/cloudflare`, `@astrojs/node`) remain in dependencies, complicating upgrades and audits; remove or configure them intentionally (package.json:20-24).

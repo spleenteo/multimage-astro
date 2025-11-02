@@ -1,6 +1,6 @@
 **Runtime**
 
-- `astro@^5.15.1` powers the static site; adapters for Node and Cloudflare are installed but unused, increasing attack surface without benefit (package.json:20-24, astro.config.mjs:1-18).
+- `astro@^5.15.1` powers the static site; deployment relies on the default Vercel adapter with no extra runtimes bundled (package.json:20-24, astro.config.mjs:1-18).
 - `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer` deliver styling via Tailwind layers with custom brand tokens (tailwind.config.mjs:1-61).
 - `swiper` serves the carousel web component; `BookCarouselSection` now imports `swiper/element/bundle` directly so no asset-copy step is required (src/components/BookCarouselSection/index.astro:1-134).
 
@@ -19,6 +19,6 @@
 
 **Risk Notes**
 
-- Remove unused adapters (`@astrojs/node`, `@astrojs/cloudflare`) to reduce dependency footprint unless multi-runtime deployment is planned (package.json:20-24).
+- Verify `swiper` updates promptly; pinned caret version can introduce breaking bundle changes, so consider locking to an exact version and bundling tree-shaken CSS.
 - Verify `swiper` updates promptly; pinned caret version can introduce breaking bundle changes, so consider locking to an exact version and bundling tree-shaken CSS.
 - Ensure `@datocms/cli` is updated when DatoCMS changes schema generation APIs; current version ^3.1.4 should be cross-checked against CLI release notes.
