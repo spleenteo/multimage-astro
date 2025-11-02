@@ -125,3 +125,6 @@ Commit messages in this repo are short, imperative descriptions (e.g., “Fix im
 ## DatoCMS & Configuration Tips
 
 Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `docs/DATOCMS.md`; this is a downloaded file to access DatoCMS's documentation in a super fast way.
+
+# Interaction with humans
+Even if you are running with lot of permissions in wiritng mode, feel free to ask questions to clarify the main point to complete the request.
