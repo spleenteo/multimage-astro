@@ -3,7 +3,8 @@ import 'swiper/css/bundle';
 import BookCard from '~/components/BookCard';
 import type { BookCardViewModel } from '~/lib/books';
 import styles from './style.module.css';
-import swiperElementUrl from './swiper-element.ts?url';
+
+const swiperElementUrl = Astro.resolve('./swiper-element.ts');
 
 type Props = {
   id: string;
