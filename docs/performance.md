@@ -1,11 +1,10 @@
 **Hot Paths**
 
-- Base layout enables `ClientRouter` transitions across the entire site, forcing hydration of every page and injecting animation scripts even when no transitions are needed; consider disabling or scoping to specific sections to preserve Astro’s zero-JS model (src/layouts/BaseLayout.astro:12-124).
 - The staff catalogue table renders hundreds of rows at build time and ships them as HTML plus client-side CSV logic, inflating static payloads and impacting perceived performance for what should be an internal-only tool (src/pages/staff/archivio-catalogo/index.astro:1-317).
 
 **Client Bundles**
 
-- `BookCarouselSection` imports `swiper/css/bundle` and loads the full web-component bundle on every usage; tree-shaking or lazy loading per route would reduce CSS/JS overhead (src/components/BookCarouselSection/index.astro:1-102, public/vendor/swiper-element-bundle.min.js).
+- `BookCarouselSection` imports `swiper/css/bundle` and the full `swiper/element` bundle; consider lazy-loading the component or trimming the bundle if carousel usage stays limited (src/components/BookCarouselSection/index.astro:1-134).
 - Global scripts include legacy Google Analytics, Iubenda, and Vercel analytics; defer or async-load non-essential scripts to avoid blocking the main thread (src/layouts/BaseLayout.astro:132-210).
 
 **Data Fetching & HTML Size**

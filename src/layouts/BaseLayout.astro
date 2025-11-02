@@ -9,11 +9,9 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
-import { ClientRouter } from 'astro:transitions';
 
-const { seo = [], disableTransitions = false } = Astro.props as {
+const { seo = [] } = Astro.props as {
   seo?: TitleMetaLinkTag[];
-  disableTransitions?: boolean;
 };
 const enableVercelInsights = import.meta.env.PROD;
 
@@ -69,58 +67,6 @@ function mapPagesToLinks(pages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>>
 
 const infoPages = mapPagesToLinks(headerPages);
 const footerMenuPages = mapPagesToLinks(footerPages);
-
-type TransitionAnimation = {
-  name: string;
-  delay?: number | string;
-  duration?: number | string;
-  easing?: string;
-  fillMode?: string;
-  direction?: string;
-};
-
-type TransitionAnimationPair = {
-  old: TransitionAnimation | TransitionAnimation[];
-  new: TransitionAnimation | TransitionAnimation[];
-};
-
-type DirectionalTransition = {
-  forwards: TransitionAnimationPair;
-  backwards: TransitionAnimationPair;
-};
-
-const slideUpTransition: DirectionalTransition = {
-  forwards: {
-    old: {
-      name: 'view-slide-up-old',
-      duration: '220ms',
-      easing: 'ease-out',
-      fillMode: 'both',
-    },
-    new: {
-      name: 'view-slide-up-new',
-      duration: '220ms',
-      easing: 'ease-out',
-      fillMode: 'both',
-    },
-  },
-  backwards: {
-    old: {
-      name: 'view-slide-up-old',
-      duration: '220ms',
-      easing: 'ease-out',
-      direction: 'reverse',
-      fillMode: 'both',
-    },
-    new: {
-      name: 'view-slide-up-new',
-      duration: '220ms',
-      easing: 'ease-out',
-      direction: 'reverse',
-      fillMode: 'both',
-    },
-  },
-};
 ---
 
 <!doctype html>
@@ -211,77 +157,15 @@ const slideUpTransition: DirectionalTransition = {
         };
     </script>
     <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
-    <ClientRouter />
-    <style is:global>
-      @keyframes view-slide-up-old {
-        from {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        to {
-          opacity: 0;
-          transform: translateY(-12px);
-        }
-      }
-
-      @keyframes view-slide-up-new {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        @keyframes view-slide-up-old {
-          from {
-            opacity: 1;
-            transform: translateY(0);
-          }
-
-          to {
-            opacity: 0;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes view-slide-up-new {
-          from {
-            opacity: 0;
-            transform: translateY(0);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      }
-    </style>
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
-    <Header currentPath={currentPath} infoPages={infoPages} transition:persist />
-    {
-      disableTransitions ? (
-        <main class="flex-1 bg-white">
-          <div class="container py-12 md:py-16">
-            <slot />
-          </div>
-        </main>
-      ) : (
-        <main class="flex-1 bg-white" transition:name="page" transition:animate={slideUpTransition}>
-          <div class="container py-12 md:py-16">
-            <slot />
-          </div>
-        </main>
-      )
-    }
-    <Footer footerPages={footerMenuPages} transition:persist />
+    <Header currentPath={currentPath} infoPages={infoPages} />
+    <main class="flex-1 bg-white">
+      <div class="container py-12 md:py-16">
+        <slot />
+      </div>
+    </main>
+    <Footer footerPages={footerMenuPages} />
     {enableVercelInsights && <Analytics />}
     {enableVercelInsights && <SpeedInsights />}
   </body>

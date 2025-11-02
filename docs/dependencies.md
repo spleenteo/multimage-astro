@@ -2,7 +2,7 @@
 
 - `astro@^5.15.1` powers the static site; adapters for Node and Cloudflare are installed but unused, increasing attack surface without benefit (package.json:20-24, astro.config.mjs:1-18).
 - `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer` deliver styling via Tailwind layers with custom brand tokens (tailwind.config.mjs:1-61).
-- `swiper` is bundled purely for the carousel web component; its CSS bundle is imported wholesale and the minified runtime is copied to `public/vendor` at build time (src/components/BookCarouselSection/index.astro:1-102, scripts/ensure-swiper-element.mjs:6-27).
+- `swiper` serves the carousel web component; `BookCarouselSection` now imports `swiper/element/bundle` directly so no asset-copy step is required (src/components/BookCarouselSection/index.astro:1-134).
 
 **CMS & Data**
 

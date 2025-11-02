@@ -2,7 +2,6 @@
 
 - `executeQuery` advertises draft support but hardcodes `includeDrafts: false`, so preview features silently fail; update it to respect options and swap tokens as needed (src/lib/datocms/executeQuery.ts:13-26).
 - Rich-text handling mixes StructuredText rendering with manual HTML injection; consolidate around structured renderers to maintain consistent escaping rules (src/pages/index.astro:345-355, src/components/SupplierCard/index.astro:71-139).
-- `ClientRouter` usage effectively converts the site into an SPA; if transitions remain, consider wrapping only specific routes to avoid unnecessary hydration (src/layouts/BaseLayout.astro:12-124).
 
 **Duplication & Dead Code**
 

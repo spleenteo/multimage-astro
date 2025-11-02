@@ -3,6 +3,7 @@ import 'swiper/css/bundle';
 import BookCard from '~/components/BookCard';
 import type { BookCardViewModel } from '~/lib/books';
 import styles from './style.module.css';
+import swiperElementUrl from './swiper-element.ts?url';
 
 type Props = {
   id: string;
@@ -121,4 +122,4 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
   </div>
 </section>
 
-<script src="/vendor/swiper-element-bundle.min.js" is:inline></script>
+<script type="module" src={swiperElementUrl}></script>
