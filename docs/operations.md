@@ -23,7 +23,7 @@
 **Monitoring & Logging**
 
 - Client monitoring relies on Google Analytics (legacy UA), Vercel Analytics, and Vercel Speed Insights; there is no server-side logging, error tracking, or health checks configured (src/layouts/BaseLayout.astro:132-210).
-- No CI/CD workflow exists to run builds before deployment; deployments rely on developers running `npm run build` manually as per README instructions (README.md:49-66).
+- No CI/CD workflow exists to run builds before deployment; sviluppatorə ora possono eseguire `npm run test` (format → lint → build) manualmente, ma serve ancora automatizzare la pipeline in CI (README.md:49-66, package.json:7-23).
 
 **Gaps & Recommendations**
 

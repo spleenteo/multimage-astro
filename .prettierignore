@@ -4,3 +4,5 @@ src/lib/datocms/graphql-env.d.ts
 schema.graphql
 schema.ts
 public/LLMs.md
+dist/
+public/generated/
