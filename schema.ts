@@ -6,19 +6,19 @@ export type Author = ItemTypeDefinition<
   EnvironmentSettings,
   '70445',
   {
-    email: {
+    email_private: {
       type: 'string';
     };
     full_name: {
       type: 'string';
     };
-    phone: {
+    phone_private: {
       type: 'string';
     };
     sort_by: {
       type: 'string';
     };
-    note: {
+    note_private: {
       type: 'text';
     };
     alias: {

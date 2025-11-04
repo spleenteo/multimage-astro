@@ -35,6 +35,7 @@ When the user has not provided a definitive schema, approach solutions by **cons
 - Localized fields
 - Models with draft mode enabled
 - API calls producing paginated responses
+- Every field from DatoCMS using the suffix _private should never be used in the graphql or public page
 
 ## Type Safety Best Practices
 

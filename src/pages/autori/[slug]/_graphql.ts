@@ -13,7 +13,6 @@ export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
       biography {
         value
       }
-      note
       picture {
         url
         alt

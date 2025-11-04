@@ -21,7 +21,6 @@ import {
   defaultBlockComponents,
   defaultLinkToRecordComponents,
 } from '~/lib/datocms/structuredTextComponents';
-import { toPlainText, toRichTextHtml } from '~/lib/text';
 
 export const prerender = true;
 
@@ -60,10 +59,7 @@ const relatedBooks = mapBooksToCards(relatedData.allBooks);
 const authorDisplayName = getAuthorDisplayName(author);
 const biographyHasContent = hasStructuredTextContent(author.biography);
 const biographyPlain = structuredTextToPlainText(author.biography ?? null);
-const noteHtml = toRichTextHtml(author.note ?? null);
-const notePlain = toPlainText(author.note ?? null);
-const noteHasContent = typeof noteHtml === 'string' && noteHtml.length > 0;
-const summarySource = biographyPlain.length > 0 ? biographyPlain : notePlain;
+const summarySource = biographyPlain;
 const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
 
 const pseudonyms = (author.pseudonyms ?? [])
@@ -145,15 +141,6 @@ const pictureResponsiveImage = author.picture?.responsiveImage
               blockComponents={defaultBlockComponents as any}
               linkToRecordComponents={defaultLinkToRecordComponents as any}
             />
-          </div>
-        ) : null
-      }
-
-      {
-        noteHasContent && typeof noteHtml === 'string' ? (
-          <div class={styles.contentBlock}>
-            <h2 class="text-3xl font-serif text-brand-navy">Note</h2>
-            <div set:html={noteHtml} />
           </div>
         ) : null
       }
