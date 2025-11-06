@@ -50,7 +50,7 @@ const formattedBooks = books.map((book) => {
 
   const publicUrl = `https://www.multimage.org/libri/${book.slug}/`;
   const collectionUrl = book.collection?.slug ? `/collane/${book.collection.slug}/` : null;
-  const dimensionsLabel = normalizeText(book.dimensionNew?.dimensions ?? book.dimensions);
+  const dimensionsLabel = normalizeText(book.dimension?.dimensions ?? book.dimensions);
 
   return {
     ...book,

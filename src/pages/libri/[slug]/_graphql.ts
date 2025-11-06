@@ -72,6 +72,7 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       translator
       layoutArtist
       dimension {
+        id
         dimensions
       }
 
@@ -179,7 +180,7 @@ export type BookDetailRecord = {
   translator: string | null;
   layoutArtist: string | null;
   dimensions: string | null;
-  dimensionNew: {
+  dimension: {
     id: string;
     dimensions: string | null;
   } | null;
