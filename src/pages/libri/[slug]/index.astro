@@ -313,7 +313,7 @@ if (layoutArtist) {
   graphicsDetails.push({ label: 'Impaginatore', value: layoutArtist });
 }
 
-const coverSizeLabel = normalizeText(book.dimension?.dimensions ?? book.dimensions);
+const coverSizeLabel = normalizeText(book.dimensionNew?.dimensions ?? book.dimensions);
 if (coverSizeLabel) {
   graphicsDetails.push({ label: 'Dimensioni', value: coverSizeLabel });
 }
