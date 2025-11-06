@@ -71,7 +71,10 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       originalTitle
       translator
       layoutArtist
-      dimensions
+      dimension {
+        dimensions
+      }
+
       illustrator
       editedBy
       seo: _seoMetaTags {
@@ -176,6 +179,10 @@ export type BookDetailRecord = {
   translator: string | null;
   layoutArtist: string | null;
   dimensions: string | null;
+  dimensionNew: {
+    id: string;
+    dimensions: string | null;
+  } | null;
   illustrator: string | null;
   editedBy: boolean | null;
   seo: SeoMetaTag[] | null;

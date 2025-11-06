@@ -313,9 +313,9 @@ if (layoutArtist) {
   graphicsDetails.push({ label: 'Impaginatore', value: layoutArtist });
 }
 
-const dimensions = normalizeText(book.dimensions);
-if (dimensions) {
-  graphicsDetails.push({ label: 'Dimensioni', value: dimensions });
+const coverSizeLabel = normalizeText(book.dimension?.dimensions ?? book.dimensions);
+if (coverSizeLabel) {
+  graphicsDetails.push({ label: 'Dimensioni', value: coverSizeLabel });
 }
 
 const coverResponsiveImage = book.coverImage?.responsiveImage
