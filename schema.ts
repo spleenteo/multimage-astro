@@ -342,11 +342,11 @@ export type Book = ItemTypeDefinition<
     subtitle: {
       type: 'string';
     };
-    title: {
-      type: 'string';
-    };
     price: {
       type: 'float';
+    };
+    title: {
+      type: 'string';
     };
     pages: {
       type: 'integer';
@@ -375,11 +375,11 @@ export type Book = ItemTypeDefinition<
     epub_url: {
       type: 'string';
     };
-    print_year: {
-      type: 'date';
-    };
     archive: {
       type: 'boolean';
+    };
+    print_year: {
+      type: 'date';
     };
     review: {
       type: 'structured_text';
@@ -412,10 +412,7 @@ export type Book = ItemTypeDefinition<
     cover_image: {
       type: 'file';
     };
-    dimensions: {
-      type: 'string';
-    };
-    dimension_new: {
+    dimension: {
       type: 'link';
     };
     original_title: {
