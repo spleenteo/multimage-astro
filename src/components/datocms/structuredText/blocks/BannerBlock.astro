@@ -28,10 +28,15 @@ const imagePosition = (block.imagePosition ?? 'right').toLowerCase() === 'left' 
 const image = (block.featuredImage?.responsiveImage as ResponsiveImageType | null) ?? null;
 const alt = image?.alt ?? title;
 const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
-const paragraphs = (block.content ?? '')
-  .split(/\r?\n\s*\r?\n/)
-  .map((item) => item.trim())
-  .filter((item) => item.length > 0);
+const rawContent = block.content?.trim() ?? '';
+const hasInlineHtml = /<\/?[a-z][\s\S]*>/i.test(rawContent);
+const paragraphs = hasInlineHtml
+  ? []
+  : rawContent
+      .split(/\r?\n\s*\r?\n/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+const contentHtml = hasInlineHtml ? rawContent : null;
 ---
 
 <section
@@ -59,7 +64,15 @@ const paragraphs = (block.content ?? '')
     <div class="flex w-full flex-col gap-4 px-6 pb-8 pt-6 md:w-1/2 md:px-10 md:py-12">
       <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
       {
-        paragraphs.length > 0 ? (
+        contentHtml ? (
+          <div
+            class="space-y-3 text-base leading-relaxed text-brand-charcoal/90"
+            set:html={contentHtml}
+          />
+        ) : null
+      }
+      {
+        !contentHtml && paragraphs.length > 0 ? (
           <div class="space-y-3 text-base leading-relaxed text-brand-charcoal/90">
             {paragraphs.map((paragraph) => (
               <p>{paragraph}</p>
@@ -72,7 +85,7 @@ const paragraphs = (block.content ?? '')
           <div>
             <a
               href={link}
-              class="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
+              class="inline-flex items-center gap-2 rounded-full bg-brand-navy px-5 py-3 text-sm font-semibold uppercase tracking-wide !text-white transition hover:bg-brand-charcoal hover:!text-white focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
             >
               Scopri di più
               <iconify-icon
