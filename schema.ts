@@ -378,17 +378,11 @@ export type Book = ItemTypeDefinition<
     print_year: {
       type: 'date';
     };
-    review: {
-      type: 'structured_text';
-    };
     archive: {
       type: 'boolean';
     };
-    edition: {
-      type: 'integer';
-    };
-    collection: {
-      type: 'link';
+    review: {
+      type: 'structured_text';
     };
     illustrator: {
       type: 'string';
@@ -396,24 +390,33 @@ export type Book = ItemTypeDefinition<
     stock: {
       type: 'integer';
     };
-    first_print_year: {
-      type: 'integer';
+    collection: {
+      type: 'link';
     };
-    cover_designer: {
-      type: 'string';
+    edition: {
+      type: 'integer';
     };
     format: {
       type: 'string';
     };
-    cover_image: {
-      type: 'file';
+    cover_designer: {
+      type: 'string';
+    };
+    first_print_year: {
+      type: 'integer';
     };
     reprints: {
       type: 'rich_text';
       blocks: Reprint;
     };
+    cover_image: {
+      type: 'file';
+    };
     dimensions: {
       type: 'string';
+    };
+    dimension_new: {
+      type: 'link';
     };
     original_title: {
       type: 'string';
@@ -823,6 +826,15 @@ export type SingleInfoBlock = ItemTypeDefinition<
     };
   }
 >;
+export type CoverSize = ItemTypeDefinition<
+  EnvironmentSettings,
+  'cj2JswthQqK9y4JL20VDdw',
+  {
+    dimensions: {
+      type: 'string';
+    };
+  }
+>;
 export type AnyBlock =
   | FaqSection
   | Question
@@ -860,5 +872,6 @@ export type AnyModel =
   | BlogAuthor
   | ArchiveIndex
   | AuthorsIndex
-  | Keyword;
+  | Keyword
+  | CoverSize;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
