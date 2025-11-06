@@ -35,11 +35,6 @@ const navItems: NavItem[] = [
     href: '/libri/ebooks',
     isActive: (pathname) => pathname.startsWith('/libri/ebooks'),
   },
-  {
-    label: 'Fuori catalogo',
-    href: '/libri/archivio',
-    isActive: (pathname) => pathname.startsWith('/libri/archivio'),
-  },
 ];
 
 const { currentPath }: Props = Astro.props;
