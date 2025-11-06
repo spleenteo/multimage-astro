@@ -15,7 +15,9 @@ export const STAFF_ARCHIVE_CATALOG_QUERY = /* GraphQL */ `
       edition
       printYear
       firstPrintYear
-      dimensions
+      dimension {
+        dimensions
+      }
       originalLang
       originalTitle
       translator
@@ -66,6 +68,10 @@ export type StaffArchivioCatalogoQueryResult = {
     printYear: string | null;
     firstPrintYear: number | null;
     dimensions: string | null;
+    dimensionNew: {
+      id: string;
+      dimensions: string | null;
+    } | null;
     originalLang: string | null;
     originalTitle: string | null;
     translator: string | null;

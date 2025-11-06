@@ -50,12 +50,14 @@ const formattedBooks = books.map((book) => {
 
   const publicUrl = `https://www.multimage.org/libri/${book.slug}/`;
   const collectionUrl = book.collection?.slug ? `/collane/${book.collection.slug}/` : null;
+  const dimensionsLabel = normalizeText(book.dimensionNew?.dimensions ?? book.dimensions);
 
   return {
     ...book,
     authors,
     keywords,
     reprints,
+    dimensionsLabel,
     archiveLabel: book.archive ? 'Sì' : 'No',
     priceLabel: formatBookPrice(book.price),
     printYearLabel: extractYear(book.printYear) ?? book.printYear,
@@ -195,7 +197,7 @@ const toolsNavigation = [
                       ''
                     )}
                   </td>
-                  <td class={styles.cell}>{book.dimensions ?? ''}</td>
+                  <td class={styles.cell}>{book.dimensionsLabel ?? ''}</td>
                   <td class={styles.cell}>{book.originalLang ?? ''}</td>
                   <td class={styles.cell}>{book.originalTitle ?? ''}</td>
                   <td class={styles.cell}>{book.translator ?? ''}</td>
