@@ -1,18 +1,21 @@
-**Current State**
+---
+agent_edit: false
+scope: How to run simple test
+---
 
-- There is no automated test suite; the repo relies on `astro check`, build, and manual QA per AGENTS.md (package.json:14-21, AGENTS.md:45-60).
-- No GitHub Actions or other CI workflows execute linting or builds, so regressions can land unnoticed (project lacks `.github/workflows`).
-- `npm run test` ora lancia in sequenza `npm run format`, `npm run lint` (Prettier `--check` con `.prettierignore`) e `npm run build`; in questo modo il codice viene formattato automaticamente tranne per i file esclusi (es. `schema.ts`) e il bundle viene ricostruito in un unico comando (package.json:7-23, .prettierignore:1-6).
+# Testing
 
-**Gaps**
+Fastro is a website with very poor dynamic parts. Most of it is static site.
+So testing is just about code formatting and build before pushing the repo
 
-- GraphQL queries are unvalidated at runtime; schema drift will only surface during builds, and preview mode cannot be smoke-tested without automation (src/lib/datocms/executeQuery.ts:13-26).
-- Client search logic and CSV export scripts lack unit coverage, despite containing non-trivial parsing/formatting code (src/pages/cerca/search-page.client.ts:1-220, src/pages/staff/archivio-catalogo/index.astro:200-317).
-- No accessibility or visual regression tests exist for high-traffic routes like `/` or `/libri`.
+You can run the unit tests with the following command:
 
-**Suggested Plan**
+```bash
+npm run test
+```
 
-- Add a CI pipeline that runs `npm run lint`, `npm run build`, and (once added) component tests on pull requests.
-- Introduce lightweight Vitest suites for pure utilities (authors/books formatting, structured text helpers) and Jest-like DOM tests for search CSV helpers where feasible.
-- Incorporate GraphQL contract tests using generated types to assert required fields (e.g., map fragments through `executeQuery` with mocked responses) before deploying schema changes.
-- Schedule manual checks for DatoCMS draft previews until automated preview coverage is implemented.
+Via `run-p test:*` it will run several check:
+
+- format
+- lint
+- build

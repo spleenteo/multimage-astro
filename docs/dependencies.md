@@ -1,24 +1,30 @@
-**Runtime**
+---
+agent_edit: true
+scope: Summarise runtime, CMS, and tooling dependencies used by Multimage.
+---
 
-- `astro@^5.15.1` powers the static site; deployment relies on the default Vercel adapter with no extra runtimes bundled (package.json:20-24, astro.config.mjs:1-18).
-- `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer` deliver styling via Tailwind layers with custom brand tokens (tailwind.config.mjs:1-61).
-- `swiper` serves the carousel web component; `BookCarouselSection` now imports `swiper/element/bundle` directly so no asset-copy step is required (src/components/BookCarouselSection/index.astro:1-134).
+# Dependencies
 
-**CMS & Data**
+## Runtime & UI
 
-- `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` provide rendering helpers, GraphQL fetching, and schema generation; however, `@datocms/cma-client` is only re-exported for types and may be removable if unused elsewhere (package.json:20-36, src/types/datocms.d.ts:1-2).
-- DatoCMS data flows mainly through `@datocms/cda-client`; the LLM export ora sfrutta un endpoint Astro (`src/pages/llms-full.txt.ts`) invece di uno script dedicato, quindi `dotenv-cli` resta necessario solo per strumenti occasionali come `npm run sync-datocms` (package.json:7-18, src/pages/llms-full.txt.ts).
+- `astro@^5.15.1` outputs a fully static site deployed to Vercel.
+- Styling stacks on `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer`, with brand tokens defined in `tailwind.config.mjs`.
+- `swiper` provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required.
 
-**Monitoring & Analytics**
+## CMS & Data
 
-- `@vercel/analytics` and `@vercel/speed-insights` are embedded conditionally in production, complementing legacy Google Analytics and Iubenda snippets defined inline (package.json:24-30, src/layouts/BaseLayout.astro:132-210).
+- `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
+- DatoCMS data primarily flows through `@datocms/cda-client`; the LLM export now runs inside `src/pages/llms-full.txt.ts`, so `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
 
-**Tooling**
+## Monitoring & Analytics
 
-- Formatting is handled by `prettier` + `prettier-plugin-astro`; no ESLint is configured, so lint coverage is limited to formatting (package.json:31-40).
+- `@vercel/analytics` and `@vercel/speed-insights` augment inline Google Analytics and Iubenda snippets inside `BaseLayout`.
 
-**Risk Notes**
+## Tooling
 
-- Verify `swiper` updates promptly; pinned caret version can introduce breaking bundle changes, so consider locking to an exact version and bundling tree-shaken CSS.
-- Verify `swiper` updates promptly; pinned caret version can introduce breaking bundle changes, so consider locking to an exact version and bundling tree-shaken CSS.
-- Ensure `@datocms/cli` is updated when DatoCMS changes schema generation APIs; current version ^3.1.4 should be cross-checked against CLI release notes.
+- Formatting is enforced via `prettier` + `prettier-plugin-astro`. No ESLint is configured, so lint coverage stops at formatting.
+
+## Risk Notes
+
+- Keep `swiper` pinned to a specific version to avoid sudden bundle regressions introduced by caret releases.
+- Track `@datocms/cli` updates, especially when schema generation APIs change, and upgrade promptly to retain compatibility.

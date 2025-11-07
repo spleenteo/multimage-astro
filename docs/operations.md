@@ -1,32 +1,40 @@
-**Deployments**
+---
+agent_edit: true
+scope: Describe how Multimage is built, deployed, and configured across environments.
+---
 
-- Default deployment target is Vercel; README documents linking the repo, syncing env vars, and running `vercel deploy --prod`; build command is `npm run build` with static output in `dist/` (README.md:57-80, astro.config.mjs:1-18).
-- A `wrangler.toml` is present for Cloudflare Pages with `pages_build_output_dir = "./dist"`, but there is no Cloudflare adapter configured, so deployments there remain manual (wrangler.toml:1-3).
-- Local dev (`npm run dev`) ora invoca `npm run sync-datocms` prima di `astro dev`, generando lo `schema.ts` (se `DATOCMS_API_TOKEN` è disponibile; lo script legge automaticamente anche dal file `.env` e propaga eventuali `DATOCMS_CMA_TOKEN` legacy) e scaricando `https://www.datocms.com/docs/llms-full.txt` in `docs/DATOCMS.md` solo quando cambia, così documentazione e tipi restano aggiornati senza touching manuali (package.json:7-13, scripts/sync-datocms.mjs:1-110).
+# Operations Runbook
 
-**Environment & Secrets**
+## Deployments
 
-- DatoCMS tokens (`DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_API_TOKEN` per gli strumenti CLI) plus eventual preview secrets (riintroducili solo quando implementi `/api/preview`) sono dichiarati in datocms.json, ma solo il token pubblicato è validato via Astro env schema (datocms.json:1-31, astro.config.mjs:6-16).
-- Il token locale per la CLI (`DATOCMS_API_TOKEN`) può essere un ruolo “Read-only” o dedicato allo schema generation; rimane opzionale su Vercel perché la pipeline cloud non rigenera lo schema (scripts/sync-datocms.mjs:1-110).
-- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` non è referenziato dal codice; tienilo fuori da Vercel finché non esiste una pipeline di preview e prevedi una rotazione se era stato condiviso (src/lib/datocms/executeQuery.ts:13-26).
-- Su Vercel sono indispensabili `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, oltre a `NODE_ENV=production`; il token CLI (`DATOCMS_API_TOKEN`) resta facoltativo e può stare solo negli ambienti di sviluppo (datocms.json:1-31, astro.config.mjs:6-16).
-- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` (server-only, GraphQL CDA) e `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` (client-side, Site Search API) vanno mantenuti separati: il primo offre accesso completo ai contenuti pubblicati via query personalizzate e non deve uscire dal build server; il secondo espone solo l’indice pubblico per la ricerca e può vivere nel browser senza rischiare dati sensibili (src/lib/datocms/executeQuery.ts:1-21, src/pages/cerca/index.astro:10-78).
-- Per `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` crea in DatoCMS un ruolo dedicato (es. “Search Role”) con l’unico permesso **Perform Site Search API calls**, poi genera da Site Search → API tokens un token associato a quel ruolo; non usare token CDA/CMA o ruoli con privilegi aggiuntivi, perché il valore finisce nel browser. Evita ruoli “Admin” o “Editor” per il token della ricerca pubblica.
-- Oltre ai token, il runtime legge variabili standard come `NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL` e `NETLIFY`; attiva solo quelle necessarie su Vercel (`NODE_ENV`, `VERCEL`) e documenta gli interruttori opzionali per gli script locali (scripts/build-search-client.mjs:26-31).
-- Public runtime expects `PUBLIC_SITE_URL` per la sitemap e `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` per la pagina di ricerca; valori mancanti causano errori di build (src/pages/sitemap.xml.ts:5-44, src/pages/cerca/index.astro:6-28).
+- Primary target is Vercel: link the repo, sync environment variables, and use `npm run build` (static output lives in `dist/`).
+- `wrangler.toml` points Cloudflare Pages at the same `dist/` directory, but no adapter is configured. Treat Cloudflare as experimental/manual unless the Astro adapter is added.
+- `npm run dev` chains `npm run sync-datocms` before `astro dev`, ensuring `schema.ts` and `docs/DATOCMS.md` stay in sync when `DATOCMS_API_TOKEN` is available.
+- `npm run prebuild` currently rebuilds the Site Search client before `npm run build` invokes `astro check` and the production build.
 
-**Preview & Drafts**
+## Environment & Secrets
 
-- There is no `/api/preview` endpoint, DraftMode toggler, or QueryListener implementation even though AGENTS.md calls for them; as a result editors cannot trigger draft previews or live updates (AGENTS.md:73-89, src/lib/datocms/executeQuery.ts:13-26).
-- `executeQuery` always uses the published CDA token, so draft mode cannot be enabled without code changes; this also prevents secure gating of preview tokens (src/lib/datocms/executeQuery.ts:13-26).
+- Required env vars on Vercel: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, and `NODE_ENV=production`. CLI-specific `DATOCMS_API_TOKEN` can remain local.
+- `datocms.json` enumerates the CDA/CMA tokens used during automation; keep it updated when tokens rotate.
+- Draft (`DATOCMS_DRAFT_CONTENT_CDA_TOKEN`) and preview secrets should stay out of Vercel until `/api/preview` is implemented. When added, scope them to draft-only roles.
+- `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` is bundled into the browser; provision it from a role limited to **Perform Site Search API calls** to prevent privileged access. See `docs/security.md` for scoping details.
+- Runtime also reads standard flags (`NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL`, `NETLIFY`). Only set what the deploy target actually needs to keep the surface minimal.
+- `PUBLIC_SITE_URL` powers sitemap generation and absolute links; missing values break `/src/pages/sitemap.xml.ts`.
 
-**Monitoring & Logging**
+## Preview & Drafts
 
-- Client monitoring relies on Google Analytics (legacy UA), Vercel Analytics, and Vercel Speed Insights; there is no server-side logging, error tracking, or health checks configured (src/layouts/BaseLayout.astro:132-210).
-- No CI/CD workflow exists to run builds before deployment; sviluppatorə ora possono eseguire `npm run test` (format → lint → build) manualmente, ma serve ancora automatizzare la pipeline in CI (README.md:49-66, package.json:7-23).
+- `/api/preview` and Draft Mode helpers are still TODO. Once implemented, guard the endpoint with a secret, toggle Draft Mode cookies, and call `executeQuery({ includeDrafts: true })` so editors can see unpublished content.
+- `executeQuery` must select between the published and draft CDA tokens. Today it always picks the published token, preventing secure previews.
+- Add Draft Mode UI: `DraftModeToggler`, `DraftModeQueryListener`, and guard components that should only render behind preview.
 
-**Gaps & Recommendations**
+## Monitoring & Logging
 
-- Protect the `/staff` routes before deploying; add authentication middleware or move the catalogue export into a secured API function (src/pages/staff/index.astro:1-55).
-- Document required environment variables in a dedicated ops runbook and add validation for draft/CMA tokens similar to the published token check (astro.config.mjs:6-16, .env.example:1-3).
-- L’endpoint prerender `src/pages/llms-full.txt.ts` genera il file `/llms-full.txt` durante la build; non servono script manuali, ma documenta quando aggiornare la logica se cambia la struttura del catalogo (src/pages/llms-full.txt.ts, src/pages/llms-full/\_graphql.ts).
+- Client monitoring uses Google Analytics (legacy UA), `@vercel/analytics`, and `@vercel/speed-insights`. There is no server-side logging or alerting yet.
+- `llms-full.txt` is generated during the build; track CDA rate limits and document any schema changes that require updates to the exporter (`src/pages/llms-full.txt.ts`).
+
+## Testing & Automation
+
+- No CI workflow runs `astro check`, linting, or builds. Add GitHub Actions (or Vercel checks) to execute at least `npm run lint` and `npm run build` on pull requests.
+- `npm run test` chains `npm run format` → `npm run lint` (Prettier `--check`) → `npm run build`. This covers formatting and build health but not unit coverage.
+- Utilities like `src/pages/cerca/search-page.client.ts` and the staff CSV helpers have zero unit tests; start with Vitest for pure helpers and DOM tests for CSV/search scripts.
+- GraphQL queries rely on build-time validation. Consider lightweight contract tests that mock `executeQuery` responses so schema drift is caught earlier.

@@ -1,13 +1,20 @@
-**Key Issues**
+---
+agent_edit: true
+scope: Track maintainability issues, duplication, and refactors needed across the codebase.
+---
 
-- `executeQuery` advertises draft support but hardcodes `includeDrafts: false`, so preview features silently fail; update it to respect options and swap tokens as needed (src/lib/datocms/executeQuery.ts:13-26).
-- Rich-text handling mixes StructuredText rendering with manual HTML injection; consolidate around structured renderers to maintain consistent escaping rules (src/pages/index.astro:345-355, src/components/SupplierCard/index.astro:71-139).
+# Code Health Checklist
 
-**Duplication & Dead Code**
+## Key Issues
 
-- Hard-coded `first: 500` limits appear across numerous queries; centralise pagination helpers or shared query fragments to avoid scattering magic numbers (src/pages/libri/[slug]/\_graphql.ts:44-109, src/pages/autori/index/\_graphql.ts:11-37, src/pages/sitemap.xml/\_graphql.ts:4-24).
+- `executeQuery` still hardcodes `includeDrafts: false`, so preview mode silently fails. Implement the draft token swap and honor the `includeDrafts` option exposed by the helper.
+- Rich-text rendering mixes Structured Text serializers with manual `set:html` calls (home page hero, supplier cards, author pages). Consolidate on Structured Text renderers or sanitize HTML to keep escaping rules consistent.
 
-**Maintainability Gaps**
+## Duplication & Dead Code
 
-- No QueryListener/DraftMode toggler exists despite the requirement in AGENTS.md; introduce dedicated components/utilities to standardise preview flows (AGENTS.md:73-89).
-- Staff tooling lives under `/src/pages/staff` alongside public content; once secured, consider relocating to an authenticated API route or a protected admin bundle to prevent accidental exposure (src/pages/staff/index.astro:1-55).
+- GraphQL queries repeatedly declare `first: 500` across pages (`src/pages/libri/[slug]/_graphql.ts`, `src/pages/autori/index/_graphql.ts`, `src/pages/sitemap.xml/_graphql.ts`). Extract pagination helpers or re-usable fragments so record limits live in one place.
+
+## Maintainability Gaps
+
+- Draft-mode tooling mandated by AGENTS.md (QueryListener, toggler, `/api/preview`) is still missing. Add those components and API routes so editors can verify unpublished content safely.
+- Staff tooling still lives under `src/pages/staff/` alongside public content. Once auth is added, consider moving exports into a protected admin bundle or API endpoint to avoid accidental deployment.

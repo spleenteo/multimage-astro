@@ -1,6 +1,11 @@
-- [ ] [Area: security] [Impact: P1] [Effort: M] Sanitize CMS-rich text before using set:html — toRichTextHtml returns raw markup and multiple components inject it directly, enabling XSS if editors paste HTML; render via StructuredText or sanitize output (src/lib/text.ts:65, src/pages/index.astro:351, src/components/SupplierCard/index.astro:78, src/pages/autori/[slug]/index.astro:156).
-- [ ] [Area: security] [Impact: P1] [Effort: L] Lock down staff tools and CSV export — Staff pages are prerendered static routes exposing catalog/stock data without auth, relying only on robots.txt; move them behind authenticated API or remove from static build (src/pages/staff/index.astro:8, src/pages/staff/archivio-catalogo/index.astro:1, public/robots.txt:1).
-- [ ] [Area: dato] [Impact: P2] [Effort: M] Restore draft/preview query pipeline — executeQuery hardcodes includeDrafts false and ignores draft tokens, preventing editorial previews; pick tokens based on draft mode and surface includeDrafts (src/lib/datocms/executeQuery.ts:13-26).
-- [ ] [Area: dato] [Impact: P2] [Effort: M] Wire up DraftModeQueryListener & preview endpoints — AGENTS.md mandates live preview tooling but the project lacks listener/toggler components and an /api/preview handler; add them and guard with a dedicated preview secret when implemented (AGENTS.md:73-89).
-- [ ] [Area: refactor] [Impact: P2] [Effort: M] Replace hard-coded first:500 GraphQL fetches with pagination — multiple queries pull up to 500 records, risking truncation and bloated HTML; introduce pagination or segmented feeds (src/pages/libri/index/\_graphql.ts:15-22, src/pages/sitemap.xml/\_graphql.ts:4-24, src/pages/staff/archivio-catalogo/\_graphql.ts:1-25).
-- [ ] [Area: testing] [Impact: P3] [Effort: M] Introduce automated checks — project lacks CI to run astro check/build/lint despite scripts existing; add a workflow to catch regressions before deploy (package.json:7-23).
+---
+agent_edit: true
+scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
+---
+
+- [ ] [Security] [Impact: H] [Effort: L] [Owner: @codex] [Status: todo] — Lock down `/staff` tools and CSV export so inventory data is no longer publicly prerendered (`src/pages/staff/index.astro`, `src/pages/staff/archivio-catalogo/index.astro`, `public/robots.txt`).
+- [ ] [Security] [Impact: H] [Effort: M] [Owner: @codex] [Status: todo] — Sanitize or replace `toRichTextHtml` usages to prevent XSS in `src/lib/text.ts`, homepage hero, supplier cards, and author pages.
+- [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — Restore draft/preview query pipeline so `executeQuery` honors `includeDrafts` and swaps tokens automatically.
+- [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — Implement `/api/draft-mode`, `DraftModeToggler`, and `DraftModeQueryListener` wiring per `docs/preview-mode.md`.
+- [ ] [Refactoring] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — Replace scattered `first: 500` GraphQL limits with pagination helpers or batched feeds (books, authors, sitemap, staff exports).
+- [ ] [Testing] [Impact: L] [Effort: M] [Owner: @codex] [Status: todo] — Add CI automation (`npm run lint`, `npm run build`) and seed unit tests for utilities (search client, CSV helpers, GraphQL contracts).
