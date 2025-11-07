@@ -3,46 +3,61 @@ agent_edit: true
 scope: A list to describe all helpers, scripts, middlewares used in the project
 ---
 
-## Data Fetching & GraphQL
-
-- `executeQuery` (`src/lib/datocms/executeQuery.ts`): Thin wrapper around `@datocms/cda-client` that selects the proper CDA token based on the `includeDrafts` flag, enforces `excludeInvalid`, and forwards variables for every GraphQL request.
-- `commonFragments` (`src/lib/datocms/commonFragments.ts`): Hosts the shared responsive image, SEO (`TagFragment`), and taxonomy fragments so blocks/pages can stay DRY.
-- `types` (`src/lib/datocms/types.ts`): Re-exports generated GraphQL types, keeping component props aligned with the DatoCMS schema.
-
-## Draft Mode Utilities
-
-- `draftMode` helpers (`src/lib/draftMode.ts`): Provides `enableDraftMode`, `disableDraftMode`, `isDraftModeEnabled`, and `draftModeHeaders()` to manage the signed cookie, guard API access, and re-create the Draft Mode header set when server-side fetching draft content.
-
-## Routing & Preview Glue
-
-- `recordInfo` helpers (`src/lib/datocms/recordInfo.ts`): Maps DatoCMS items to on-site routes and friendly slugs; used by preview/SEO endpoints to build URLs for `Page` and `Article` models.
-
-## Internationalization
-
-- `i18n` toolkit (`src/lib/index.ts`): Initializes Rosetta with the configured locales, exposes `t`, `setLocale`, `getLocale`, `getLocaleName`, and constants like `defaultLocale`/`cookieName` for locale-aware UI.
-
-## Design & Icons
-
-- `design` config (`src/config/design.ts`): Defines the default `ICON_SET` and the `iconName()` helper to normalize Iconify identifiers consumed by the `Ico` component.
-
-## Content & View-Model Helpers
-
-- `authors` (`src/lib/authors.ts`): Normalizes author names, sorts them, and builds view models for author lists.
-- `books` (`src/lib/books.ts`): Formats prices, editions, call-to-action labels, and simplifies CTA wiring for book cards.
-- `colors` (`src/lib/colors.ts`): Derives background/gradient tokens from cover art to keep cards on-brand.
-- `currency` (`src/lib/currency.ts`): Shared Euro currency formatter used by price tags and badges.
-- `seo` (`src/lib/seo.ts`): Merges `_site` defaults, Structured Text content, and per-page overrides into the props consumed by `<Seo />`.
-- `suppliers` (`src/lib/suppliers.ts`): Groups distributor records, maps CSV fields, and powers the staff exports.
-- `text` (`src/lib/text.ts`): Provides helpers for truncation, highlight parsing, and legacy HTML rendering (to be sanitized per security notes).
-
-## Structured Text Tooling
-
-- `structuredText` serializers (`src/lib/datocms/structuredText.ts` + `structuredTextComponents.ts`): Custom renderers that map blocks, inline records, and links to Astro components while keeping escaping consistent.
-
-## API Route Helpers
-
-- API utilities (`src/pages/api/utils.ts`): Shared functions for Astro API routes, including CORS headers (`withCORS`), JSON serialization, success/error response builders, and `isRelativeUrl` guard used to prevent open redirects.
-
-## Tooling Scripts
-
-- `sync-datocms` (`scripts/sync-datocms.mjs`): Node script that loads `.env` values, regenerates `schema.ts` via `npx datocms schema:generate`, and refreshes `docs/DATOCMS.md` from the official DatoCMS LLM docs dump.
+- **`executeQuery`** (`src/lib/datocms/executeQuery.ts`)
+  - Purpose: wraps `@datocms/cda-client` with `excludeInvalid: true`.
+  - Used in: every GraphQL request (`BaseLayout`, pages, APIs).
+  - Notes: currently ignores `includeDrafts`; fix planned under docs/TODO.md CMS task **CD1**.
+- **`commonFragments`** (`src/lib/datocms/commonFragments.ts`)
+  - Purpose: exports shared `TagFragment` and `ResponsiveImageFragment`.
+  - Used in: most `_graphql.ts` files to keep fragments DRY.
+  - Notes: Book/Collection components rely on width/height—update carefully.
+- **`structuredText` helpers** (`src/lib/datocms/structuredText.ts`)
+  - Purpose: converts Structured Text to plain text, checks emptiness.
+  - Used in: SEO fallbacks, author summaries, info pages.
+  - Notes: safe alternative to `toRichTextHtml` when sanitization is required.
+- **`structuredTextComponents`** (`src/lib/datocms/structuredTextComponents.ts`)
+  - Purpose: maps Structured Text blocks/inline/link nodes to Astro components (VideoBlock, LinkToRecord, etc.).
+  - Notes: update this registry whenever components change (keep docs/list-components.md aligned).
+- **`text` utilities** (`src/lib/text.ts`)
+  - Purpose: `toPlainText`, `truncateToLength`, entity decoding, `toRichTextHtml`.
+  - Used in: book hero copy, supplier bios, staff notices.
+  - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
+- **`books` helper** (`src/lib/books.ts`)
+  - Purpose: builds book view models, formats price/edition/licence/year.
+  - Used in: listings, carousels, detail pages, staff exports.
+  - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props.
+- **`authors` helper** (`src/lib/authors.ts`)
+  - Purpose: formats author names, chips, sort letters, and related metadata.
+  - Used in: `/autori`, book detail sidebars, Structured Text.
+  - Notes: exposes `AUTHOR_NAME_FALLBACK`, `buildAuthorSegments`, etc.
+- **`suppliers` helper** (`src/lib/suppliers.ts`)
+  - Purpose: converts Dato supplier records into card view models and region groups.
+  - Used in: `/distributori`.
+  - Notes: generates Google Maps URLs and rich-text HTML strings that must be sanitized (Security task **S2**).
+- **`colors` helper** (`src/lib/colors.ts`)
+  - Purpose: derives palette colors from Imgix metadata and blends shades.
+  - Used in: `BookCard`, `FeaturedBookHighlight`, color-aware UI.
+- **`currency` helper** (`src/lib/currency.ts`)
+  - Purpose: formats `EUR` values (`it-IT`).
+  - Used in: `PriceTag`, `BookCard`, staff exports.
+- **`seo` helper** (`src/lib/seo.ts`)
+  - Purpose: attaches fallback `<title>`/`<meta name="description">` tags when `_seoMetaTags` omit them.
+  - Used in: every page via `withFallbackSeo`.
+- **Dato type exports** (`src/lib/datocms/types.ts`)
+  - Purpose: centralizes reusable TypeScript aliases for Dato records.
+  - Notes: regenerate via `npx datocms schema:generate`; never edit manually.
+- **Search client** (`src/pages/cerca/search-page.client.ts`)
+  - Purpose: browser-only module powering `/cerca` (debounce, filters, URL sync, rendering).
+  - Notes: bundled by `scripts/build-search-client.mjs`; tests tracked under docs/TODO.md task **TC2**.
+- **Staff CSV exporter** (inline inside `src/pages/staff/archivio-catalogo/index.astro`)
+  - Purpose: turns the prerendered `<table>` into a downloadable CSV with BOM.
+  - Notes: slated for extraction + testing (Code Health task **CH1**).
+- **Search/Swiper bundler** (`scripts/build-search-client.mjs`)
+  - Purpose: builds `public/generated/search-page.client.js` and `swiper-element.js` via esbuild.
+  - Notes: deletes stale artefacts and honors `NODE_ENV` for sourcemaps.
+- **Dato sync script** (`scripts/sync-datocms.mjs`)
+  - Purpose: loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md` from the official dump.
+  - Notes: requires `DATOCMS_API_TOKEN` or `DATOCMS_CMA_TOKEN` to run schema generation.
+- **LLM export handler** (`src/pages/llms-full.txt.ts` + `_graphql.ts`)
+  - Purpose: streams every book/author/page summary for AI tooling.
+  - Notes: currently public with no auth—see Security task **S4**.

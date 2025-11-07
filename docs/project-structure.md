@@ -5,117 +5,85 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 
 # Project Structure & Module Organization
 
-## Components, models, graphql fragments
+## Directory overview
+- **`src/pages/**`**
+  - Route directories (`index`, `libri`, `collane`, `autori`, `distributori`, `magazine`, `info`, `staff`, `cerca`, `sitemap.xml`, `llms-full`) each ship an `index.astro`, optional `_style.module.css`, and a sibling `_graphql.ts` describing their queries. API/utility routes live as `.ts` files (e.g., `sitemap.xml.ts`, `llms-full.txt.ts`).
+- **`src/components/**`**
+  - Feature components bundle `index.astro`, optional `index.ts` (for fragment exports), and CSS modules. Subdirectories cover Dato blocks (`components/blocks`), Structured Text renderers (`components/datocms/structuredText`), and design primitives (`components/ui`).
+- **`src/layouts`**
+  - Hosts `BaseLayout.astro`, which fetches `_site`, header/footer menus, analytics scripts, and wraps every page.
+- **`src/lib`**
+  - Framework-agnostic helpers such as Dato tooling (`datocms/*`), view-model mappers (`books.ts`, `authors.ts`, `suppliers.ts`), formatting utilities (`text.ts`, `colors.ts`, `currency.ts`), and SEO fallbacks (`seo.ts`).
+- **`src/styles`**
+  - Global Tailwind import (`global.css`) and CSS variables including font declarations to keep modules lean.
+- **`scripts`**
+  - `build-search-client.mjs` emits the browser bundles in `public/generated`; `sync-datocms.mjs` loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md`.
+- **`public/generated`**
+  - Build artefacts from `npm run prebuild`. Missing files here break `/cerca` and `BookCarouselSection` because `<script src="/generated/...">` references them directly.
+- **`docs/**`**
+  - Canonical documentation (assets, search, inventories, etc.). Keep these files aligned with the code or log drift in `docs/TODO.md`.
 
-Il progetto deve avere una struttura simile a https://github.com/datocms/astro-website/tree/main/src/components/blocks/ShowcaseProjectBlock o https://github.com/datocms/astro-website/tree/main/src/pages/partners/%5BpartnerSlug%5D in cui ogni componente o ogni rotta ha:
+## Co-location & layering rules
+- **Queries next to consumers.** Every page/component that needs data keeps an adjacent `_graphql.ts` exporting both the document and TypeScript helpers. Shared fragments (`BookCardFragment`, `BANNER_SECTION_FRAGMENT`, etc.) are re-exported from `index.ts` to keep import sites tidy.
+- **CSS modules per component.** Styles live beside the component they affect. Global typography/colors stay in `src/styles/global.css` and Tailwind theme tokens.
+- **Map data in `src/lib`.** Only `src/lib` should know how to massage GraphQL payloads (`mapBooksToCards`, `mapAuthorsToCards`, `groupSuppliersByRegion`, `withFallbackSeo`, `toRichTextHtml`). Pages should stick to view-model orchestration.
+- **Generated JS under `public/generated`.** Do not scatter ad-hoc bundles. `BookCarouselSection` and `/cerca` expect their modules there, so always run `npm run prebuild` locally and in CI.
 
-- Un file \_graphql.ts in cui si trova la graphql dedicata
-- un file index.astro che rappresenta il contenuto
+## Route map & data flow
+- **`/`**
+  - Data: `src/pages/index/_graphql.ts` (`home`, modular `banners`).
+  - Primary components: `BaseLayout`, `FeaturedBookHighlight`, `BannerSection`, `BookCarouselSection`, `blocks/PillsBlock`, Structured Text blocks.
+  - Notes: Hero copy (`home.claim`) flows through `toRichTextHtml`; sanitize per docs/assets.md#html-fragments--sanitization.
+- **`/libri`**
+  - Data: `src/pages/libri/index/_graphql.ts` (`booksIndex`, `allBooks`).
+  - Primary components: `SectionIntro`, grid of `BookCard` instances.
+  - Notes: Still fetches `first: 500`; see docs/TODO.md CMS task **CD2** for pagination.
+- **`/libri/[slug]`**
+  - Data: `src/pages/libri/[slug]/_graphql.ts` plus related `authors`, `alternate formats`, and `collection` queries.
+  - Primary components: `BookCarouselSection`, `AuthorsSection`, `AlternateFormatsList`, `DetailList`.
+  - Notes: Heavy view-model mapping—reuse helpers from `src/lib/books.ts` and `src/lib/authors.ts`.
+- **`/collane` & `/collane/[slug]`**
+  - Data: Listing (`src/pages/collane/index/_graphql.ts`) and detail (`src/pages/collane/[slug]/_graphql.ts`).
+  - Primary components: `SectionIntro`, `CollectionCard`, `CollectionDetailHero`, `BookCard`.
+  - Notes: Detail route queries `BookCollectionBooks` to populate related carousels.
+- **`/autori` & `/autori/[slug]`**
+  - Data: `src/pages/autori/index/_graphql.ts`, `src/pages/autori/[slug]/_graphql.ts`.
+  - Primary components: `SectionIntro`, `BookCard`, `AuthorsSection`.
+  - Notes: Detail route issues separate calls for the author record and related books.
+- **`/distributori`**
+  - Data: `src/pages/distributori/_graphql.ts`.
+  - Primary components: `SectionIntro`, `SupplierCard`.
+  - Notes: `SupplierCard` renders HTML descriptions; sanitize per Security task **S2**.
+- **`/magazine` & `/magazine/[slug]`**
+  - Data: `src/pages/magazine/index/_graphql.ts`, `src/pages/magazine/[slug]/_graphql.ts`.
+  - Primary components: `MagazinePostCard`, Structured Text blocks, `BookCarouselSection`.
+  - Notes: `LinkToRecord.astro` still targets `/blog/...`; fix via Project Structure task **PS2**.
+- **`/info` & `/info/[slug]`**
+  - Data: Static placeholder (`src/pages/info/index.astro`) plus `src/pages/info/[slug]/_graphql.ts` for CMS-driven pages.
+  - Primary components: `InfoSection`, Structured Text renderer.
+  - Notes: `BaseLayout` maps `allPages` into header/footer menus used here.
+- **`/staff` & `/staff/archivio-catalogo`**
+  - Data: `src/pages/staff/index/_graphql.ts`, `src/pages/staff/archivio-catalogo/_graphql.ts`.
+  - Primary components: bespoke markup + CSV export script.
+  - Notes: Entire toolset is publicly prerendered; see Security task **S1**.
+- **`/cerca`**
+  - Data: `src/pages/cerca/index.astro` (no GraphQL) plus the Site Search bundle.
+  - Primary components: Search form + `public/generated/search-page.client.js`.
+  - Notes: Reads config from `data-*` attributes and talks to Site Search directly; see docs/search.md for operational notes.
+- **`/sitemap.xml`**
+  - Data: `src/pages/sitemap.xml/_graphql.ts`.
+  - Primary components: none (pure XML response).
+  - Notes: Falls back to `http://localhost:4321` when `PUBLIC_SITE_URL` is missing; enforce env per SEO task **SEO1**.
+- **`/llms-full.txt`**
+  - Data: `src/pages/llms-full/_graphql.ts` and `LLMS_BOOKS/INTRO` queries.
+  - Primary components: none (streamed text response).
+  - Notes: Dumps every book/author/page body without auth; lock it down via Security task **S4**.
 
-dopodiché ogni query richiama i fragments necessari
-
-```
- import { VideoPlayerFragment } from '~/components/VideoPlayer/graphql';
- inDepthExplanation {
-          value
-          links {
-            ... on RecordInterface {
-              id
-              __typename
-            }
-            ...AcademyChapterLinkFragment
-            ...AcademyCourseLinkFragment
-            ...BlogPostLinkFragment
-            ...ChangelogEntryLinkFragment
-```
-
-## Filesystem structure
-
-Inside of this project, you'll see the following folders and files:
-
-```
-/
-├── config/
-├── docs/
-│   └── decision-log/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── assets/
-│   │   └── icons/
-│   │       └── name.svg
-│   ├── blocks/
-│   │   ├── Blocks.astro
-│   │   └── SomeContentBlock/
-│   │       ├── SomeContentBlock.astro
-│   │       └── SomeContentBlock.fragment.graphql
-│   ├── components/
-│   │   └── SomeUiComponent.astro
-│   ├── layouts/
-│   │   └── Default.astro
-│   ├── lib/
-│   │   └── some-helper-function.ts
-│   ├── middleware/
-│   │   └── some-req-res-interceptor.ts
-│   └── pages/
-│       ├── api/
-|       |   └── some-dynamic-endpoint.ts
-│       └── [locale]/
-│           ├── index.astro
-│           └── _index.query.graphql
-├── scripts/
-│   ├── internal-scripts.mjs
-└── package.json
-```
-
-- `docs/` contains project documentation.
-  - `decision-log/` lists all key decisions made during the project. Please read the log so you understand why decisions are made and document key decisions when you make them.
-- `src/` contains all website source files that will be handled by Astro.
-  - `pages/` - [Pages](https://docs.astro.build/en/core-concepts/astro-pages/) are organised by file system routing and are paired with GraphQL query files for data loading.
-  - `pages/api/` - [API routes](https://docs.astro.build/en/core-concepts/endpoints/#server-endpoints-api-routes) are dynamic server endpoints with support for path & query params etc.
-  - `components/` - [Components](https://docs.astro.build/en/core-concepts/astro-components/) are the elements the website is composed of. This can be Astro and framework specific components.
-  - `blocks/` - Blocks are a specific set of components which have a complementary content [Block](https://www.datocms.com/docs/content-modelling/blocks) in DatoCMS and therefore have a paired GraphQL fragment file.
-  - `layouts/` - [Layouts](https://docs.astro.build/en/core-concepts/layouts/) are Astro components used to provide a reusable UI structure, such as a page template.
-  - `lib/` - Shared logic and utility helpers, like `datocms`, `i18n` and `routing`.
-  - `assets/` - is for assets that require a build step. See [Assets](./assets.md).
-- `public/` is for any static assets that are served as-is. See [Assets](./assets.md).
-- `config/` bundles all our configuration files (like DatoCMS migrations), so the project root doesn't become too cluttered.
-- `scripts/` contains all our custom CLI scripts, typically available via `package.json` > `scripts`. Also see [Commands](../README.md#commands).
-
-## Architecture overview
-
-- Astro 5.15 runs in fully static mode; every routed page is prerendered and
-  wrapped by `src/layouts/BaseLayout.astro`, which fetches global navigation,
-  favicon meta tags, and SEO defaults from DatoCMS at build time.
-- Components follow the “`_graphql.ts` + `index.astro`” pairing mandated in
-  AGENTS.md. Shared fragments live under `src/lib/datocms/commonFragments.ts`
-  and are imported wherever a block or page needs them.
-- All content flows through `src/lib/datocms/executeQuery.ts` using the server
-  CDA tokens. No local content mirror exists, so GraphQL queries are the source
-  of truth.
-
-## Data flow & rendering
-
-- Routed pages define their queries next to the template
-  (`src/pages/libri/index/_graphql.ts`, etc.), map the result into view models
-  with helpers (e.g., `mapBooksToCards` in `src/lib`), and hand the data to UI
-  components.
-- Layout requests such as menus and favicons are currently fetched per page.
-  Consider caching if they become hot spots.
-- Structured Text is rendered either via `@datocms/astro/StructuredText` or via
-  `toRichTextHtml` for older fields. Work toward consolidating on Structured
-  Text renderers to maintain consistent escaping.
-- Client-side search ships a bespoke bundle generated by
-  `scripts/build-search-client.mjs`, which talks to the Site Search API using
-  the public token exposed through data attributes on `/cerca`.
-- `src/pages/llms-full.txt.ts` reproduces the former export script entirely at
-  build time, keeping the dataset in sync without extra manual commands.
-
-## Build & deploy reminders
-
-- `npm run sync-datocms` regenerates `schema.ts` and refreshes
-  `docs/DATOCMS.md` whenever `DATOCMS_API_TOKEN` is available locally.
-- `npm run prebuild` rebuilds the Site Search client ahead of `npm run build`,
-  which itself runs `astro check` + production build.
-- Vercel is the only supported deploy target; all automation and docs assume
-  builds are promoted via the Vercel dashboard/CLI linked to this repository.
+## Known gaps & violations
+- `src/components/DraftModeToggler/**` and `src/components/DraftModeQueryListener/**` exist but are empty. Either rebuild the preview mode feature or delete the scaffolding (docs/TODO.md Project Structure task **PS3**).
+- Structured Text links for blog posts still point to `/blog/...` although the published route is `/magazine/...`. Fix `LinkToRecord.astro` and add regression coverage (docs/TODO.md Project Structure task **PS2**).
+- GraphQL queries rely on `first: 500` almost everywhere (`/libri`, `/autori`, `/sitemap`, staff exports), which hammers the CDA and bloats build artifacts. Tackle pagination + cache tags under docs/TODO.md CMS task **CD2**.
+- `executeQuery` ignores the `includeDrafts` option and always uses the published token, so preview/draft mode cannot work. Restore the token switch and reflect the behavior in docs/list-helpers.md (docs/TODO.md CMS task **CD1**).
+- `/staff/*` and `/llms-full.txt` are anonymously accessible yet expose internal data. Hardening plans live in docs/TODO.md Security tasks **S1** and **S4**.
+- `public/generated` assets are not fingerprinted or validated; missing `npm run prebuild` results in broken `<script>` imports. Add integrity checks per docs/TODO.md Project Structure task **PS1**.
+- Numerous policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, SEO, testing) remain `agent_edit: false`, preventing us from documenting the real state. Request updated frontmatter via docs/TODO.md Documentation Hygiene task **DH1**.
