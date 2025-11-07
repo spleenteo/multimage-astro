@@ -60,6 +60,7 @@ Also, in the /head-start folder you’ll find files, scripts, and logic referenc
 - **Suggested tasks:** `/docs/TODO.md`
 
 ### Rules:
+Unless you’re explicitly asked to read one of its files, ignore the `/docs/prompts/` folder and all its content.
 
 When a human confirms a feature/refactor is completed, you MUST:
 
