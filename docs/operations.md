@@ -7,8 +7,7 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 
 ## Deployments
 
-- Primary target is Vercel: link the repo, sync environment variables, and use `npm run build` (static output lives in `dist/`).
-- `wrangler.toml` points Cloudflare Pages at the same `dist/` directory, but no adapter is configured. Treat Cloudflare as experimental/manual unless the Astro adapter is added.
+- Vercel is the single supported target: link the repo, sync environment variables, and use `npm run build` (static output lives in `dist/`).
 - `npm run dev` chains `npm run sync-datocms` before `astro dev`, ensuring `schema.ts` and `docs/DATOCMS.md` stay in sync when `DATOCMS_API_TOKEN` is available.
 - `npm run prebuild` currently rebuilds the Site Search client before `npm run build` invokes `astro check` and the production build.
 
@@ -18,7 +17,7 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 - `datocms.json` enumerates the CDA/CMA tokens used during automation; keep it updated when tokens rotate.
 - Draft (`DATOCMS_DRAFT_CONTENT_CDA_TOKEN`) and preview secrets should stay out of Vercel until `/api/preview` is implemented. When added, scope them to draft-only roles.
 - `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` is bundled into the browser; provision it from a role limited to **Perform Site Search API calls** to prevent privileged access. See `docs/security.md` for scoping details.
-- Runtime also reads standard flags (`NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL`, `NETLIFY`). Only set what the deploy target actually needs to keep the surface minimal.
+- Runtime also reads standard flags (`NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL`). Only set what the deploy target actually needs to keep the surface minimal.
 - `PUBLIC_SITE_URL` powers sitemap generation and absolute links; missing values break `/src/pages/sitemap.xml.ts`.
 
 ## Preview & Drafts

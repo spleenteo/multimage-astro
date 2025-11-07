@@ -70,8 +70,7 @@ Per rigenerare il file è sufficiente eseguire `npm run build` (oppure `npm run 
 
 ## 7. Deploying Fast
 
-- **Vercel**: the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`) with `vercel env pull` and push updates via `vercel env add`. Deploy with `vercel deploy --prod` (build command defaults to `npm run build`).
-- **Netlify**: mirror the same variables under **Site settings → Build & deploy → Environment**, keeping `npm run build` as the build command and `dist/` as the publish directory.
+- **Vercel** (canonical): the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`) with `vercel env pull` and push updates via `vercel env add`. Deploy with `vercel deploy --prod` (build command defaults to `npm run build`).
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
 
 For contribution guidelines, coding style, and DatoCMS conventions, see `AGENTS.md`. Keep `docs/DATOCMS.md` open while working—it is the source of truth for the content model and avoids needless web searches.

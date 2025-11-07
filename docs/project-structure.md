@@ -117,6 +117,5 @@ Inside of this project, you'll see the following folders and files:
   `docs/DATOCMS.md` whenever `DATOCMS_API_TOKEN` is available locally.
 - `npm run prebuild` rebuilds the Site Search client ahead of `npm run build`,
   which itself runs `astro check` + production build.
-- Vercel is the primary deploy target; Cloudflare Pages is only partially
-  configured via `wrangler.toml` and would require the appropriate adapter to
-  become first-class.
+- Vercel is the only supported deploy target; all automation and docs assume
+  builds are promoted via the Vercel dashboard/CLI linked to this repository.
