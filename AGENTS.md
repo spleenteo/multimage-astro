@@ -80,7 +80,9 @@ Areas:
 * Features
 
 Sort by Impact desc, then Effort asc. Reference an Issue ID when available.
-Move completed task at theend of file, adding the date of completition.
+Move completed task at theend of file, adding the date of completition, reduce the description and remove the complexity, owner and impact details. Here is a template:
+
+- [completation date] - [Area] **[Feature name]**: short description
 
 # 3) Permissions & File Policy
 

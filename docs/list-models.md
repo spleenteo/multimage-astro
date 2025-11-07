@@ -6,7 +6,7 @@ scope: A list to describe all models in pages
 ## Singleton & index models
 - **`_Site`** (queried inside `BaseLayout` via `SITE_QUERY`)
   - Powers favicon/meta tags and header/footer menus for every page.
-  - Notes: menu booleans (`menu`, `menuFooter`) must stay aligned with localized routes once i18n is enabled.
+  - Notes: Italian-only site, so `menu`/`menuFooter` just control which info pages appear in the navigation.
 - **`HomeRecord`** (`src/pages/index/_graphql.ts`)
   - Fields: `title`, `claim`, `heroImage`, `_seoMetaTags`, `highlight`, modular `banners`.
   - Used in home hero plus the modular block pipeline described below.

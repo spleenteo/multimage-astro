@@ -22,7 +22,6 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 
 ## SEO
 - [ ] [SEO] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **SEO1** enforce `PUBLIC_SITE_URL` (or `astro.config.site`) during builds so `sitemap.xml` and canonical URLs never fall back to `http://localhost:4321` (Due: 2025-11-18; Acceptance: build fails with a clear error when the env is missing, docs/assets.md and docs/project-structure.md reference the requirement).
-- [ ] [SEO] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **SEO2** design the hreflang/canonical strategy tied to future locales and update sitemap generation accordingly (Due: 2025-12-12; Acceptance: proposal documented in docs/i18n.md#plan-for-enabling-locales and docs/seo.md once unlocked, sitemap handler emits `<xhtml:link>` entries for each locale).
 
 ## CMS/Data
 - [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **CD1** restore preview/draft mode by teaching `executeQuery` to honor `includeDrafts` + alternate CDA tokens, then wiring `/api/preview` + DraftMode toggles (Due: 2025-11-28; Acceptance: preview cookies flip the token, docs/list-helpers.md and docs/project-structure.md updated, regression tests cover both modes).
@@ -33,7 +32,7 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 - [ ] [Testing] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **TC2** create targeted tests for `search-page.client.ts` (debounce, filters, exact match) and the extracted CSV helper (Due: 2025-11-28; Acceptance: tests run via `npm test`, cover success + error paths, referenced in docs/search.md and docs/list-helpers.md).
 
 ## i18n
-- [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **I18N1** define the locale architecture (Dato model changes, route strategy, helper API) and stage the first bilingual proof of concept (Due: 2025-12-12; Acceptance: RFC captured in docs/i18n.md, `executeQuery` supports `SiteLocale`, sitemap + navigation reflect the new structure).
+- No open work — Multimage confirmed the site will remain permanently Italian-only (see docs/i18n.md).
 
 ## Project Structure
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS1** add a prebuild verification that fails the build when `public/generated/search-page.client.js` or `swiper-element.js` are missing or stale (Due: 2025-11-18; Acceptance: CI step or `astro build` guard runs before deployment, docs/assets.md and docs/project-structure.md updated).
@@ -43,3 +42,6 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 ## Documentation Hygiene
 - [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **DH1** coordinate with maintainers to flip `agent_edit: true` on the locked policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, SEO, testing) (Due: 2025-11-18; Acceptance: frontmatter updated via maintainer PR, tracked in docs/decision-log once editing is allowed).
 - [ ] [Documentation] [Impact: L] [Effort: M] [Owner: @codex] [Status: todo] — **DH2** add a lightweight script or checklist to verify `docs/list-*` files stay in sync with the filesystem (Due: 2025-12-05; Acceptance: script lives under `scripts/` or package.json, runs in CI, prevents stale inventories).
+
+## Completed
+- [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale, so the planned localization architecture was retired and docs/i18n.md now records the decision instead of future work.

@@ -1,21 +1,21 @@
 ---
-agent_edit: false 
-scope: provide an XML sitemap, inject SEO meta, canonical and alternate links
+agent_edit: true 
+scope: provide SEO guidance for the single-locale Multimage site
 ---
 
 # Search Engine Optimisation (SEO)
 
 ## SEO meta data
 
-Fastro utilises the [SEO Preferences and SEO fields in DatoCMS](https://www.datocms.com/docs/content-modelling/seo-fields). The global SEO settings can therefore be configured via SEO Preferences: `/editor/settings` in your CMS instance. For each individual page, its SEO settings can be extended using its SEO field.
+Multimage is mono-locale (Italian-only) and fully powered by DatoCMS SEO fields. Configure the global defaults under **SEO Preferences** (`/editor/settings`) and extend every routable model with its own SEO field so editors can override title/description/canonical tags per page.
 
-To use the SEO data from DatoCMS you must query it, and pass it on to the [default layout](../src/layouts/Default.astro), which in turn uses our [`<SeoHead>` component](../src/components/SeoHead.astro).
+To render those tags, query `_seoMetaTags`, wrap them with `withFallbackSeo`, and pass the result to `BaseLayout`, which hydrates `@datocms/astro`'s `<Seo />` component.
 
 For example:
 
 ```graphql
-query Page($locale: SiteLocale!, $slug: String!) {
-  page(locale: $locale, filter: { slug: { eq: $slug } }) {
+query Page($slug: String!) {
+  page(filter: { slug: { eq: $slug } }) {
     _seoMetaTags {
       attributes
       content
@@ -24,42 +24,33 @@ query Page($locale: SiteLocale!, $slug: String!) {
   # ...
 ```
 
-The [`_seoMetaTags`](https://www.datocms.com/docs/content-delivery-api/seo-and-favicon) contains the merged values of the global SEO Preferences and a page's SEO field. The layout adds them all to the head of the HTML:
-
 ```astro
 ---
-import Layout from '@layouts/Default.astro';
-const { page } = // ...
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { withFallbackSeo } from '~/lib/seo';
+const { page } = await executeQuery(PAGE_QUERY, { slug });
+const seo = withFallbackSeo(page?._seoMetaTags, {
+  title: page?.title ? `${page.title} | Multimage` : 'Multimage Editrice',
+  description: page?.subtitle ?? undefined,
+});
 ---
-<Layout
-  seoMetaTags={ page._seoMetaTags }
-  { ...otherProps }
->
+<BaseLayout seo={seo}>
+  <!-- page content -->
+</BaseLayout>
 ```
 
-## Canonical and alternate links
+### Canonical strategy
 
-For SEO it's important that a page has a preferred canonical URL and links to pages in alternate locales. Fastro makes it easy to set these, by providing `pageUrls` to the [default layout](../src/layouts/Default.astro):
-
-```astro
----
-import Layout from '@layouts/Default.astro';
----
-<Layout 
-  pageUrls={[
-    { locale: 'en', pathname: '/en/some/path/' },
-    { locale: 'nl', pathname: '/nl/ander/pad/' },
-    { locale: '..', pathname: '...' },
-  ]}
-  { ...otherProps }
->
-```
-
-The page URL matching the current page locale is used as `link[rel=canonical]`. The other URLs are used as `link[rel=alternate][hreflang={locale}]` (also see [I18n Routing](./i18n.md#routing)). If an empty list of `pageUrls` is provided, Fastro defaults to `/{locale}/` for all links.
+Because the site is permanently Italian-only, there is a single canonical URL per page and no alternate/hreflang variants. Let DatoCMS manage canonicals via its SEO field—if `_seoMetaTags` omits one, add it directly in the CMS. Do **not** pass `pageUrls` or generate alternate links in the layout.
 
 ## Sitemap
 
-Fastro automatically generates an XML sitemap, using the official [`@astro/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/). The XML sitemap automatically includes all static pages, based on the `getStaticPages()` of all routes. If you need to include dynamic pages, you can configure these using the [`customPages` option in `@astro/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap/#custompages).
+`src/pages/sitemap.xml.ts` builds the sitemap manually. At build time it:
 
-The [default layout](../src/layouts/Default.astro) and a [`robots.txt`](../src/pages/robots.txt.ts) both link to the generated XML sitemap (`/sitemap-index.xml`), so it's picked up and indexed by search engines.
+1. Reads `PUBLIC_SITE_URL` (or falls back to `site` from `astro.config.mjs`).
+2. Fetches all published pages, books, collections, authors, and blog posts via `SITEMAP_QUERY`.
+3. Emits `/sitemap.xml` with one `<url>` per slug (no alternates because there is only one locale).
 
+Ensure `PUBLIC_SITE_URL` is set for every environment so URLs never fall back to `http://localhost:4321` (see docs/TODO.md task **SEO1**). When adding new routable models, update `src/pages/sitemap.xml/_graphql.ts` so those slugs are included.
+
+`public/robots.txt` already points to `/sitemap.xml`, so crawlers discover it automatically.

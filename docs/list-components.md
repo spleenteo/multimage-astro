@@ -11,7 +11,7 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: tighten CSP/SRI as part of Security task **S3**.
 - **Header** (`src/components/Header.astro`)
-  - Purpose: renders top social strip, locale-aware navigation, inline search form, and mega menus.
+  - Purpose: renders top social strip, Italian navigation, inline search form, and mega menus.
   - Key props: `currentPath`, `infoPages`.
   - Used in: `BaseLayout`.
   - Owner: @codex.
@@ -21,7 +21,7 @@ scope: A list to describe all components used in the project
   - Key props: `footerPages`.
   - Used in: `BaseLayout`.
   - Owner: @codex.
-  - Notes: automatically balances link groups; ensure localized slugs are passed once i18n lands.
+  - Notes: automatically balances link groups; site is permanently Italian-only so no locale switching is required.
 - **BooksSectionNav** (`src/components/BooksSectionNav.astro`)
   - Purpose: sticky sub-navigation for `/libri` and `/collane` pages.
   - Key props: `currentPath`.
@@ -160,7 +160,7 @@ scope: A list to describe all components used in the project
   - Key props: `href`, `variant`, `primary`, `icon`, `type`, `target`, `rel`.
   - Notes: rely on `data-variant` classes when styling new buttons.
 - **AuthorNames** (`src/components/ui/AuthorNames/index.astro`)
-  - Purpose: formats author lists with locale-aware separators.
+  - Purpose: formats author lists with Italian separators (commas + “e”).
   - Key props: `authors[]`, `fallback?`, `prefix?`, `suffix?`.
   - Notes: delegates to `formatAuthorNames` from `src/lib/authors.ts`.
 - **PriceTag** (`src/components/ui/PriceTag/index.astro`)
