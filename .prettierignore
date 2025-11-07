@@ -2,7 +2,7 @@
 .astro
 src/lib/datocms/graphql-env.d.ts
 schema.ts
-docs/DATOCMS.md
+docs/
 dist/
 public/generated/
 AGENTS.md
