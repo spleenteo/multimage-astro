@@ -1,131 +1,117 @@
-# Documentation
+# 1) Mission & Scope
 
-The `/docs` directory is the canonical knowledge base for this project.
-Always keep in context and review the files inside it (especially `docs/DATOCMS.md`) before starting any task.
-Update the relevant sections whenever you complete a feature or significant refactor. Always keep the documentation updated in the descirption for components, models, or helpers.
+This project is named **“Multimage”**, a website for a non profit editor association publishing books about nonviolence and human rights.
 
-## DatoCMS Documentation
+Technical stack:
 
-Whenever you need information about DatoCMS, you can always trust `docs/DATOCMS.md` that contains the entire documentation with examples.
+- Uses **Astro + Tailwind + Iconify + DatoCMS + Vercel + npm**.
+- Is written in **TypeScript** and consumes **GraphQL** data.
+- Supports **static routes**, **dynamic routes**, **Astro Islands**, **query listeners** (for live updates), and **cache tags** (for granular revalidation).
+- Exposes `api/preview` to let editors view **draft** content on Vercel.
 
-Consider the paragraphs from `docs/DATOCMS.md` focused on Astro: DatoCMS Overview, Images and video management, Accessing draft/updated content, Managing images, Displaying videos, Structured Text fields, SEO Management, Real-time updates
+## Objectives
 
-If you need real working examples, you can rely on these repos to get inspired, considering them as best practices:
+- Create a **solid, maintainable structure** the team can evolve over time.
+- **Follow** the guidelines defined under `/docs`.
+- **Continuously update documentation** where you have permission (see *Permissions & File Policy*).
+- **Code style:** avoid repetition. Create helpers, snippets, or fragments to prevent duplicated code and GraphQL definitions.
+
+In addition to the documentation files, if you need working examples, you can rely on these repos as best-practice references:
 
 - https://github.com/datocms/astro-starter-kit/tree/main
 - https://github.com/voorhoede/head-start
 - https://github.com/datocms/astro-website
 
-NEVER, EVER change or modify `docs/DATOCMS.md`
+Also, in the /head-start folder you’ll find files, scripts, and logic referenced in the docs. This folder is temporary and meant for copy-and-adapt only. Ignore any Cloudflare-specific deploy steps, test harnesses, or tooling not aligned with Fastro’s scope.
 
-# DatoCMS Expert
+## Out of Scope / Never Do
 
-## Professional Standards
+- **Do not push** directly to the Git repository (no commits to any remote branch).
+  - If changes are needed, open a well-formed **Issue** (attach a patch file if applicable).
+- **Do not modify** any file marked with `agent_edit: false` in its frontmatter.
+- **Never include** GraphQL fields whose name ends with **`_private`** (see GraphQL rules below).
 
-You are an expert in DatoCMS. Maintain a professional demeanor and provide accurate, verified responses by consulting the provided files as frequently as necessary.
+# 2) Canonical Documentation & How to Use It
 
-## Understanding User Intent
+1. `/docs` is the **canonical knowledge base**.
+2. `docs/DATOCMS.md` is the **main** reference for DatoCMS integration.  
+   - Use web search **only** for **DatoCMS product updates** listed at [https://www.datocms.com/product-updates](https://www.datocms.com/product-updates)
+3. If information is missing or unclear → **open an Issue** with concise, answerable questions.
+4. Keep `docs/TODO.md` **up to date** with tasks you start, complete, defer, and with any **Issues** you find.
 
-DatoCMS functions in multiple areas: CMA API, CDA API, and Plugins SDK. When a user's request is unclear, pose clarifying questions to better understand their goals before proceeding.
 
-## Default Assumptions for Complex Scenarios
+## What to Consult in `/docs`
 
-When the user has not provided a definitive schema, approach solutions by **considering the most complex scenario possible:**
+- **DatoCMS:** `/docs/DATOCMS.md` (Overview, images & video, drafts/updated content, Structured Text, SEO, real-time updates, etc.)
+- **Decision log:** `/docs/decision-log.md`
+- **Accessibility:** `/docs/accessibility.md`
+- **Assets (responsive images, video, icons):** `/docs/assets.md`
+- **How to manage blocks and components:** `/docs/cms-content-modelling.md`
+- **How to fetch content from the CMS via GraphQL:** `/docs/cms-data-loading.md`
+- **Project structure rules:** `/docs/project-structure.md`
+- **Translations / multilingual:** `/docs/i18n.md`
+- **DatoCMS naming conventions:** `/docs/cms-content-modelling.md`
+- **SEO setup:** `/docs/seo.md`
+- **DatoCMS search system:** `/docs/search.md`
+- **How to test the application:** `/docs/testing.md`
+- **Components catalogue & usage:** `/docs/list-components.md`
+- **Helper functions catalogue:** `/docs/list-helpers.md`
+- **Models and pages catalogue:** `/docs/list-models.md`
+- **Suggested tasks:** `/docs/TODO.md`
 
-- Localized fields
-- Models with draft mode enabled
-- API calls producing paginated responses
-- Every field from DatoCMS using the suffix _private should never be used in the graphql or public page
+### Rules:
 
-## Type Safety Best Practices
+When a human confirms a feature/refactor is completed, you MUST:
 
-When crafting scripts that interact with the CMA and known structured records:
+- Update the relevant docs you’re allowed to modify
+- Update /docs/list-*.md with any components, models, or helpers created/changed
+- Update /docs/TODO.md (status → done, or add follow-ups)
 
-- Use TypeScript and the `ItemTypeDefinition` type for optimal type safety
-- For other cases, utilize `SchemaRepository`
+## How to use and update TODO.md
 
-## Leverage Official Utilities
+In /docs/TODO.md, add new tasks using this template:
 
-Whenever feasible, use utilities provided by official clients rather than recreating solutions:
+- [ ] [Area] [Impact: H|M|L] [Effort: H|M|L] [Owner: @handle] [Status: todo|wip|done] — Short task description
 
-**CMA Client utilities:**
+Areas:
+* Refactoring
+* Security
+* Performance/optimization
+* Features
 
-- `listPagedIterator`
-- `mapNormalizedFieldValues`
-- `mapBlocksInNonLocalizedFieldValue`
-- `buildBlockRecord`
-- `duplicateBlockRecord`
+Sort by Impact desc, then Effort asc. Reference an Issue ID when available.
+Move completed task at theend of file, adding the date of completition.
 
-**Structured Text and DAST utilities:**
+# 3) Permissions & File Policy
 
-- Navigation: `mapNodes`, `filterNodes`, etc.
-- Type guards: `isLink`, `isSpan`, etc.
+- **Modifiable by agents:**
+  - `docs/**` files that explicitly include `agent_edit: true`
+  - Example files, fixtures, and tests (unless otherwise stated)
+- **Read-only:**
+  - All files with `agent_edit: false` (CI will enforce)
+- **Never touch:**
+  - `docs/DATOCMS.md`
+  - `schema.ts` (generated by the DatoCMS CLI)
+  - Any credentials/secrets
+  - `.env*` files and environment variable definitions
 
-## Documentation Review
+> **Frontmatter contract:** If a file contains `agent_edit: false`, you **must not** edit it. If changes are required, open an **Issue**.
 
-Before responding to any user query, review the provided files/documents/knowledge as frequently as necessary to ensure accuracy and verification of all information.
-
-## Handling Complex Field Structures
-
-Unless explicitely stated otherwise, ALWAYS consider that a model might **contain modular content, structured text, or single block fields**, hiding nested blocks inside with any possible fields!
-
-If that's the case:
-
-1. Use "Nested mode" (`?nested=true`) to retrieve records with all their nested blocks
-2. Utilize utilities such as `mapBlocksInNonLocalizedFieldValue` to safely traverse the entire hierarchy of nested blocks
-
-## Prefer TypeScript
-
-If the environment permits the execution of `tsc`, always ensure to double-check that the scripts/code you write are correct by running `tsc`!
-
-## Project Structure & Module Organization
-
-Il progetto deve avere una struttura simile a https://github.com/datocms/astro-website/tree/main/src/components/blocks/ShowcaseProjectBlock o https://github.com/datocms/astro-website/tree/main/src/pages/partners/%5BpartnerSlug%5D in cui ogni componente o ogni rotta ha:
-
-- Un file \_graphql.ts in cui si trova la graphql dedicata
-- un file index.astro che rappresenta il contenuto
-
-dopodiché ogni query richiama i fragments necessari
-
-```
- import { VideoPlayerFragment } from '~/components/VideoPlayer/graphql';
- inDepthExplanation {
-          value
-          links {
-            ... on RecordInterface {
-              id
-              __typename
-            }
-            ...AcademyChapterLinkFragment
-            ...AcademyCourseLinkFragment
-            ...BlogPostLinkFragment
-            ...ChangelogEntryLinkFragment
-```
-
-`src/` contains all Astro source files: `src/pages/` for routed pages (e.g., `libri/`, `autori/`, `info/`), `src/components/` for reusable UI such as `BookCard.astro`, and `src/lib/` for shared utilities, DatoCMS query helpers, and layout logic. Asset originals live in `public/`. Automation scripts (including the DatoCMS schema generator) reside in `scripts/`. The `docs/DATOCMS.md` file documents content models and should be treated as the canonical data reference.
-
-## Build, Test, and Development Commands
-
-- `npm run dev`: start Astro in dev mode with hot reload.
-- `npm run build`: run `astro check` followed by a production build; use before PRs.
-- `npm run generate-schema`: regenerate `schema.ts` via the DatoCMS CLI whenever models change.
-- `npm run lint` / `npm run format`: check or apply Prettier formatting.
-
-## Coding Style & Naming Conventions
-
-Write components in Astro/TypeScript with 2-space indentation. Favor TypeScript types from `schema.ts` or the view-model helpers in `src/lib/datocms/types.ts`; avoid re-declaring GraphQL shapes. Use the shared color helpers in `src/lib/colors.ts` anytime you need to derive palette-based backgrounds/shadows from DatoCMS assets, rather than re-implementing them inside components. Use the DatoCMS `<Image>` component for CMS-driven images, mirroring the implementations in `BookCard.astro` and `AuthorCard.astro`. Run Prettier before committing to keep code style consistent.
-
-## Testing Guidelines
-
-There is no dedicated unit-test suite; rely on `astro check` plus `npm run build` and `npm run test` for static analysis. When touching CMS queries, validate pages against real preview content and confirm anchor/link behavior (e.g., alphabetical menus, supplier groups). Document manual QA steps in PR descriptions.
+# 4) General Style
 
 ## Commit & Pull Request Guidelines
 
-Commit messages in this repo are short, imperative descriptions (e.g., “Fix image component by Astro”). Group related changes and commit frequently rather than monolithic updates. PRs should include: summary of changes, affected routes/components, any schema updates, and screenshots or URLs for UI tweaks. Reference relevant issues or Linear tickets when available.
+Commit messages are short, imperative descriptions (e.g., “Fix image component in Astro”). Group related changes and commit frequently rather than shipping monolithic updates.  
+PRs should include: a summary of changes, affected routes/components, any schema updates, and screenshots or URLs for UI tweaks. Reference relevant Issues or Linear tickets when available.
 
 ## DatoCMS & Configuration Tips
 
-Environment variables for CDA/CMA tokens are defined in `datocms.json`; ensure they are present locally before running data-dependent commands. Never edit `schema.ts` manually, always regenerate with `npm run generate-schema`. Never update or modify `docs/DATOCMS.md`; this is a downloaded file to access DatoCMS's documentation in a super fast way.
+Environment variables for CDA/CMA tokens are defined in `datocms.json`; make sure they are present locally before running data-dependent commands.  
+Never edit `schema.ts` manually — always regenerate with `npm run generate-schema`.
 
 # Interaction with humans
-Even if you are running with lot of permissions in wiritng mode, feel free to ask questions to clarify the main point to complete the request.
+
+Before writing code, perform a quick analysis.
+If anything is unclear, ask concise, targeted questions.
+Even with broad write permissions, clarify missing details rather than guessing.
+
