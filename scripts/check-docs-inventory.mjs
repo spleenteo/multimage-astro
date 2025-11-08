@@ -60,7 +60,7 @@ function extractInventoryNames(docContent) {
 }
 
 async function collectAstroComponents() {
-  const baseDir = path.join(repoRoot, 'src/components');
+  const baseDirs = ['src/components', 'src/layouts'];
   const components = new Map();
 
   async function walk(dir) {
@@ -85,12 +85,16 @@ async function collectAstroComponents() {
       const relative = normalizeRelative(path.relative(repoRoot, entryPath));
       const parentDir = path.basename(path.dirname(entryPath));
       const fileBase = path.parse(dirent.name).name;
-      let componentName = parentDir;
+      let componentName;
 
       if (parentDir === 'components') {
         componentName = fileBase;
+      } else if (/^index$/i.test(fileBase)) {
+        componentName = parentDir;
       } else if (fileBase !== 'Component' && fileBase !== parentDir) {
         componentName = fileBase;
+      } else {
+        componentName = parentDir;
       }
 
       if (!components.has(componentName)) {
@@ -100,7 +104,9 @@ async function collectAstroComponents() {
     }
   }
 
-  await walk(baseDir);
+  for (const relDir of baseDirs) {
+    await walk(path.join(repoRoot, relDir));
+  }
   return components;
 }
 

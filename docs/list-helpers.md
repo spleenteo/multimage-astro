@@ -67,6 +67,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **Search/Swiper bundler** (`scripts/build-search-client.mjs`)
   - Purpose: builds `public/generated/search-page.client.js` and `swiper-element.js` via esbuild.
   - Notes: deletes stale artefacts and honors `NODE_ENV` for sourcemaps.
+- **`docs:inventory` checker** (`scripts/check-docs-inventory.mjs`)
+  - Purpose: scans `src/components/**` + helper directories and verifies `docs/list-*` includes every component/helper path.
+  - Notes: fails `npm run docs:inventory` when entries drift; keep bullets aligned with the script’s parsed format.
 - **Dato sync script** (`scripts/sync-datocms.mjs`)
   - Purpose: loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md` from the official dump.
   - Notes: requires `DATOCMS_API_TOKEN` or `DATOCMS_CMA_TOKEN` to run schema generation.

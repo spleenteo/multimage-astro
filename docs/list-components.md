@@ -4,25 +4,25 @@ scope: A list to describe all components used in the project
 ---
 
 ## Layout & navigation
-- **BaseLayout** (`src/layouts/BaseLayout.astro`)
+- `BaseLayout` — **BaseLayout** (`src/layouts/BaseLayout.astro`)
   - Purpose: wraps every page, fetching `_site`, header/footer menus, and favicon meta while injecting analytics/Iubenda/Iconify snippets.
   - Key props: `seo?: TitleMetaLinkTag[]`.
   - Used in: every route under `src/pages/**/index.astro`.
   - Owner: @codex.
   - Notes: tighten CSP/SRI as part of Security task **S3**.
-- **Header** (`src/components/Header.astro`)
+- `Header` — **Header** (`src/components/Header.astro`)
   - Purpose: renders top social strip, Italian navigation, inline search form, and mega menus.
   - Key props: `currentPath`, `infoPages`.
   - Used in: `BaseLayout`.
   - Owner: @codex.
   - Notes: remote PNG logos still lack intrinsic dimensions (track under docs/TODO.md PS1).
-- **Footer** (`src/components/Footer.astro`)
+- `Footer` — **Footer** (`src/components/Footer.astro`)
   - Purpose: builds footer link columns, social links, and legal links using `_site` footer pages.
   - Key props: `footerPages`.
   - Used in: `BaseLayout`.
   - Owner: @codex.
   - Notes: automatically balances link groups; site is permanently Italian-only so no locale switching is required.
-- **BooksSectionNav** (`src/components/BooksSectionNav.astro`)
+- `BooksSectionNav` — **BooksSectionNav** (`src/components/BooksSectionNav.astro`)
   - Purpose: sticky sub-navigation for `/libri` and `/collane` pages.
   - Key props: `currentPath`.
   - Used in: `Header` (only on book/collection routes).
@@ -30,97 +30,97 @@ scope: A list to describe all components used in the project
   - Notes: pure markup, keeps focus logic next to link definitions.
 
 ## Sections, heroes & cards
-- **SectionIntro** (`src/components/SectionIntro/index.astro`)
+- `SectionIntro` — **SectionIntro** (`src/components/SectionIntro/index.astro`)
   - Purpose: shared hero intro with optional alignment.
   - Key props: `title`, `description`, `align?`.
   - Used in: `/libri`, `/collane`, `/autori`, `/distributori`, `/libri/*`.
   - Owner: @codex.
   - Notes: accepts only strings; sanitize upstream.
-- **InfoSection** (`src/components/InfoSection/index.astro`)
+- `InfoSection` — **InfoSection** (`src/components/InfoSection/index.astro`)
   - Purpose: multi-paragraph info block for the `/info` placeholder page.
   - Key props: `title`, `paragraphs`, `chip?`.
   - Used in: `src/pages/info/index.astro`.
   - Owner: @codex.
   - Notes: replace hard-coded Italian copy once CMS data is available.
-- **CollectionDetailHero** (`src/components/CollectionDetailHero/index.astro`)
+- `CollectionDetailHero` — **CollectionDetailHero** (`src/components/CollectionDetailHero/index.astro`)
   - Purpose: hero for collection detail pages showing title, book count, logo, and description.
   - Key props: `name`, `booksCount`, `description?`, `logo?`.
   - Used in: `collane/[slug]`.
   - Owner: @codex.
   - Notes: pass counts from `mapBooksToCards`.
-- **AuthorsSection** (`src/components/AuthorsSection/index.astro`)
+- `AuthorsSection` — **AuthorsSection** (`src/components/AuthorsSection/index.astro`)
   - Purpose: highlights book authors with imagery and bios.
   - Key props: `title`, `authors[]` view-model.
   - Used in: `libri/[slug]`.
   - Owner: @codex.
   - Notes: expects precomputed `authorsCards` (picture alt defaults to author name).
-- **AlternateFormatsList** (`src/components/AlternateFormatsList/index.astro`)
+- `AlternateFormatsList` — **AlternateFormatsList** (`src/components/AlternateFormatsList/index.astro`)
   - Purpose: lists sibling formats (ebook/print) with prices and links.
   - Key props: `formats[]` (format, price, href, `isExternal`).
   - Used in: `libri/[slug]`.
   - Owner: @codex.
   - Notes: automatically toggles `_blank` for external ebook URLs.
-- **DetailList** (`src/components/DetailList/index.astro`)
+- `DetailList` — **DetailList** (`src/components/DetailList/index.astro`)
   - Purpose: definition list for metadata (ISBN, pages, translators, etc.).
   - Key props: `title`, `items[]` (label/value/href).
   - Used in: book detail pages, staff exports.
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
-- **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
+- `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
   - Purpose: reusable book summary with cover art, summary, price, and ribbons.
   - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.).
   - Used in: listings, carousels, Structured Text blocks, related feeds.
   - Owner: @codex.
   - Notes: relies on `mapBooksToCards` and `BookCardFragment`.
-- **FeaturedBookHighlight** (`src/components/FeaturedBookHighlight/index.astro` + `_graphql.ts`)
+- `FeaturedBookHighlight` — **FeaturedBookHighlight** (`src/components/FeaturedBookHighlight/index.astro` + `_graphql.ts`)
   - Purpose: hero highlight for a single release, including author chip and CTAs.
   - Key props: `book`, `coverImage`, `author`, `collectionLabel`/`collectionHref`.
   - Used in: home banners, Structured Text.
   - Owner: @codex.
   - Notes: derives colors from `AssetColor`; uses `AuthorChip` internally.
-- **BannerSection** (`src/components/BannerSection/index.astro` + `_graphql.ts`)
+- `BannerSection` — **BannerSection** (`src/components/BannerSection/index.astro` + `_graphql.ts`)
   - Purpose: two-column hero with CTA and responsive image.
   - Key props: `title`, `content`, `link`, `imagePosition`, `featuredImage`.
   - Used in: home banners, Structured Text `BannerBlock`.
   - Owner: @codex.
   - Notes: renders HTML via `set:html`; sanitize per docs/assets.md.
-- **PillsBlock** (`src/components/blocks/PillsBlock/index.astro` + `_graphql.ts`)
+- `PillsBlock` — **PillsBlock** (`src/components/blocks/PillsBlock/index.astro` + `_graphql.ts`)
   - Purpose: renders up to three info “pills” with optional icons, multiline copy, and CTA buttons.
   - Key props: `id`, `title`, `description`, `pills[]` (each pill exposes `icon`, `title`, `content`, nested `ButtonRecord`).
   - Used in: home modular banners and any future Structured Text blocks that map to `PillsBlockRecord`.
   - Owner: @codex.
   - Notes: splits multiline copy into paragraphs and trims button labels—content still flows through `toRichTextHtml`, so sanitize before expanding usage (Security task **S2**).
-- **BookCarouselSection** (`src/components/BookCarouselSection/index.astro` + `_graphql.ts`)
+- `BookCarouselSection` — **BookCarouselSection** (`src/components/BookCarouselSection/index.astro` + `_graphql.ts`)
   - Purpose: Swiper-based carousel with accessible controls.
   - Key props: `id`, `title`, `description?`, `books[]`.
   - Used in: home page, book detail related lists, Structured Text block.
   - Owner: @codex.
   - Notes: requires `public/generated/swiper-element.js`; run `npm run prebuild` (see docs/TODO.md Project Structure task **PS1**).
-- **CollectionCard** (`src/components/CollectionCard/index.astro` + `_graphql.ts`)
+- `CollectionCard` — **CollectionCard** (`src/components/CollectionCard/index.astro` + `_graphql.ts`)
   - Purpose: renders collection tiles with logo, stats, and description.
   - Key props: `name`, `slug`, `description`, `booksCount`, `logo`.
   - Used in: `/collane` listing.
   - Owner: @codex.
   - Notes: includes fallbacks when logos are missing.
-- **SupplierCard** (`src/components/SupplierCard/index.astro`)
+- `SupplierCard` — **SupplierCard** (`src/components/SupplierCard/index.astro`)
   - Purpose: distributor contact card showing region, contacts, and map links.
   - Key props: `SupplierCardViewModel` fields.
   - Used in: `/distributori`.
   - Owner: @codex.
   - Notes: `descriptionHtml` is injected via `set:html`; sanitize upstream (Security task **S2**).
-- **MagazinePostCard** (`src/components/MagazinePostCard/index.astro`)
+- `MagazinePostCard` — **MagazinePostCard** (`src/components/MagazinePostCard/index.astro`)
   - Purpose: magazine teaser card with badges, excerpt, and CTA.
   - Key props: `title`, `slug`, `abstract`, `category`, `authorName`, `image`, `sticky`.
   - Used in: `/magazine` listing.
   - Owner: @codex.
   - Notes: uses `truncateToLength` for summary; dates formatted with `Intl.DateTimeFormat`.
-- **AuthorCard** (`src/components/AuthorCard/index.astro`)
+- `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
   - Purpose: author summaries for the `/autori` grid.
   - Key props: `slug`, `name`, `summary`, `picture`, `booksCount`.
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
   - Notes: consumes `mapAuthorsToCards` output.
-- **AuthorChip** (`src/components/AuthorChip/index.astro`)
+- `AuthorChip` — **AuthorChip** (`src/components/AuthorChip/index.astro`)
   - Purpose: inline author pill with avatar or initials.
   - Key props: `name`, `label`, `booksLabel?`, `link?`, `image?`.
   - Used in: `FeaturedBookHighlight` and other author callouts.
@@ -128,59 +128,59 @@ scope: A list to describe all components used in the project
   - Notes: auto-generates initials when images are missing.
 
 ## Structured Text blocks & helpers
-- **BannerBlock** (`src/components/datocms/structuredText/blocks/BannerBlock.astro`)
+- `BannerBlock` — **BannerBlock** (`src/components/datocms/structuredText/blocks/BannerBlock.astro`)
   - Purpose: renders `BannerRecord` content inside Structured Text.
   - Used in: info/magazine Structured Text bodies.
   - Notes: shares logic with `BannerSection` and uses `set:html`.
-- **BookCarouselBlock** (`src/components/datocms/structuredText/blocks/BookCarouselBlock.astro`)
+- `BookCarouselBlock` — **BookCarouselBlock** (`src/components/datocms/structuredText/blocks/BookCarouselBlock.astro`)
   - Purpose: bridges `BookCarouselRecord` nodes to `BookCarouselSection`.
   - Notes: converts raw `books` array via `mapBooksToCards`.
-- **CtaButtonWithImageBlock** (`src/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro`)
+- `CtaButtonWithImageBlock` — **CtaButtonWithImageBlock** (`src/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro`)
   - Purpose: CTA layout with up to two buttons plus optional image.
   - Notes: enforces label/url validation and sanitization checklist from docs/assets.md.
-- **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
+- `ImageBlock` — **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
   - Purpose: responsive image with optional caption.
   - Notes: injects fallback `alt` text when Dato omits it.
-- **SectionBlock** (`src/components/datocms/structuredText/blocks/SectionBlock.astro`)
+- `SectionBlock` — **SectionBlock** (`src/components/datocms/structuredText/blocks/SectionBlock.astro`)
   - Purpose: basic text section derived from multiline strings.
   - Notes: splits on blank lines to build paragraphs.
-- **SingleBookBlock** (`src/components/datocms/structuredText/blocks/SingleBookBlock.astro`)
+- `SingleBookBlock` — **SingleBookBlock** (`src/components/datocms/structuredText/blocks/SingleBookBlock.astro`)
   - Purpose: inline book callout with link and subtitle.
   - Notes: wraps card in `<a>` when a slug exists.
-- **SingleAuthorBlock** (`src/components/datocms/structuredText/blocks/SingleAuthorBlock.astro`)
+- `SingleAuthorBlock` — **SingleAuthorBlock** (`src/components/datocms/structuredText/blocks/SingleAuthorBlock.astro`)
   - Purpose: inline author highlight referencing Dato records.
   - Notes: uses `getAuthorDisplayName` and optional portrait image.
-- **VideoBlock** (`src/components/datocms/structuredText/blocks/VideoBlock.astro`)
+- `VideoBlock` — **VideoBlock** (`src/components/datocms/structuredText/blocks/VideoBlock.astro`)
   - Purpose: embeds YouTube/Vimeo or native video assets, falling back to `<video>`.
   - Notes: constructs provider-specific embed URLs and poster images.
-- **InlineRecordBlock** (`src/components/datocms/structuredText/InlineRecordBlock.astro`)
+- `InlineRecordBlock` — **InlineRecordBlock** (`src/components/datocms/structuredText/InlineRecordBlock.astro`)
   - Purpose: pill-styled inline references for authors, collections, pages, books, and blog posts.
   - Notes: defaults to “Contenuto correlato” when data is incomplete.
-- **LinkToRecord** (`src/components/datocms/structuredText/LinkToRecord.astro`)
+- `LinkToRecord` — **LinkToRecord** (`src/components/datocms/structuredText/LinkToRecord.astro`)
   - Purpose: custom link renderer for Structured Text record nodes.
   - Notes: currently routes blog posts to `/blog/...`; fix via docs/TODO.md Project Structure task **PS2**.
 
 ## UI primitives
-- **Button** (`src/components/ui/Button/index.astro`)
+- `Button` — **Button** (`src/components/ui/Button/index.astro`)
   - Purpose: shared anchor/button primitive with variants and optional icons.
   - Key props: `href`, `variant`, `primary`, `icon`, `type`, `target`, `rel`.
   - Notes: rely on `data-variant` classes when styling new buttons.
-- **AuthorNames** (`src/components/ui/AuthorNames/index.astro`)
+- `AuthorNames` — **AuthorNames** (`src/components/ui/AuthorNames/index.astro`)
   - Purpose: formats author lists with Italian separators (commas + “e”).
   - Key props: `authors[]`, `fallback?`, `prefix?`, `suffix?`.
   - Notes: delegates to `formatAuthorNames` from `src/lib/authors.ts`.
-- **PriceTag** (`src/components/ui/PriceTag/index.astro`)
+- `PriceTag` — **PriceTag** (`src/components/ui/PriceTag/index.astro`)
   - Purpose: renders a badge-style label for prices or promotions.
   - Key props: `value`, `label?`, `muted?`.
   - Notes: uses `formatEuro`; returns `null` when price is not provided.
 
 ## Draft Mode utilities
-- **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)
+- `DraftModeQueryListener` — **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)
   - Purpose: wraps `@datocms/astro`’s `QueryListener` so pages reload automatically when the subscribed GraphQL query changes in DatoCMS.
   - Key props: `query`, `variables`, any additional options supported by `datocms-listen` except `token`/`includeDrafts` (handled internally).
   - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request.
 
 ## Deprecated or missing pieces
-- **ResponsiveImage/VideoPlayer components referenced in legacy docs**
+- ResponsiveImage/VideoPlayer components referenced in legacy docs
   - Status: removed in favor of direct `@datocms/astro/Image` usage and `VideoBlock`.
   - Action: continue building on current helpers instead of reviving the historical components.
