@@ -7,7 +7,7 @@ scope: Track maintainability issues, duplication, and refactors needed across th
 
 ## Key Issues
 
-- `executeQuery` still hardcodes `includeDrafts: false`, so preview mode silently fails. Implement the draft token swap and honor the `includeDrafts` option exposed by the helper.
+- Preview plumbing now swaps CDA tokens correctly, but there are no regression tests for the `/api/preview` flow or `DraftModeQueryListener`. Add unit/integration coverage so future refactors do not break drafts silently.
 - Rich-text rendering mixes Structured Text serializers with manual `set:html` calls (home page hero, supplier cards, author pages). Consolidate on Structured Text renderers or sanitize HTML to keep escaping rules consistent.
 
 ## Duplication & Dead Code
@@ -16,5 +16,5 @@ scope: Track maintainability issues, duplication, and refactors needed across th
 
 ## Maintainability Gaps
 
-- Draft-mode tooling mandated by AGENTS.md (QueryListener, toggler, `/api/preview`) is still missing. Add those components and API routes so editors can verify unpublished content safely.
+- Draft-mode tooling now exists; the remaining gap is observability. Add smoke tests (or at least a Playwright script) that calls `/api/preview` and asserts the toggler swaps state so regressions surface before deploys.
 - Staff tooling still lives under `src/pages/staff/` alongside public content. Once auth is added, consider moving exports into a protected admin bundle or API endpoint to avoid accidental deployment.

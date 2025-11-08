@@ -8,10 +8,14 @@ import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import { EBOOKS_PAGE_QUERY, type EbooksPageQueryResult } from './_graphql';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
-const data = await executeQuery<EbooksPageQueryResult>(EBOOKS_PAGE_QUERY);
+const data = await executeQuery<EbooksPageQueryResult>(EBOOKS_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const heroTitle = data.ebooksIndex?.title ?? 'Ebook';
 const heroSubtitle = toPlainText(data.ebooksIndex?.subtitle ?? null);
@@ -22,6 +26,7 @@ const seo = withFallbackSeo(data.ebooksIndex?._seoMetaTags, {
 });
 
 const ebooks = mapBooksToCards(data.allBooks ?? []);
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -55,4 +60,5 @@ const ebooks = mapBooksToCards(data.allBooks ?? []);
       )
     }
   </section>
+  <DraftModeQueryListener query={EBOOKS_PAGE_QUERY} />
 </BaseLayout>

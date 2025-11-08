@@ -17,8 +17,8 @@ import {
   defaultInlineBlockComponents,
   defaultLinkToRecordComponents,
 } from '~/lib/datocms/structuredTextComponents';
-
-export const prerender = true;
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
 export async function getStaticPaths() {
   const data = await executeQuery<MagazinePostSlugsResult>(MAGAZINE_POST_SLUGS_QUERY);
@@ -35,8 +35,11 @@ if (!slug) {
   throw new Error('Missing magazine post slug');
 }
 
+const draftModeEnabled = resolveDraftMode(Astro);
+
 const data = await executeQuery<MagazinePostQueryResult>(MAGAZINE_POST_QUERY, {
   variables: { slug },
+  includeDrafts: draftModeEnabled,
 });
 
 const post = data.blogPost;
@@ -65,6 +68,7 @@ const seo = withFallbackSeo(post._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
   description: heroDescription,
 });
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -121,4 +125,5 @@ const seo = withFallbackSeo(post._seoMetaTags, {
       }
     </section>
   </article>
+  <DraftModeQueryListener query={MAGAZINE_POST_QUERY} variables={{ slug }} />
 </BaseLayout>

@@ -21,8 +21,8 @@ import {
   defaultBlockComponents,
   defaultLinkToRecordComponents,
 } from '~/lib/datocms/structuredTextComponents';
-
-export const prerender = true;
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
 export async function getStaticPaths() {
   const data = await executeQuery<AuthorSlugsResult>(AUTHOR_SLUGS_QUERY);
@@ -39,8 +39,11 @@ if (!slug) {
   throw new Error('Missing author slug');
 }
 
+const draftModeEnabled = resolveDraftMode(Astro);
+
 const detailData = await executeQuery<AuthorDetailResult>(AUTHOR_DETAIL_QUERY, {
   variables: { slug },
+  includeDrafts: draftModeEnabled,
 });
 
 const author = detailData.author;
@@ -51,6 +54,7 @@ if (!author) {
 
 const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_BOOKS_QUERY, {
   variables: { authorIds: [author.id] },
+  includeDrafts: draftModeEnabled,
 });
 
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
@@ -82,6 +86,7 @@ const pictureResponsiveImage = author.picture?.responsiveImage
       alt: author.picture.responsiveImage.alt ?? authorDisplayName,
     }
   : null;
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -172,4 +177,9 @@ const pictureResponsiveImage = author.picture?.responsiveImage
       }
     </section>
   </article>
+  <DraftModeQueryListener query={AUTHOR_DETAIL_QUERY} variables={{ slug }} />
+  <DraftModeQueryListener
+    query={AUTHOR_RELATED_BOOKS_QUERY}
+    variables={{ authorIds: [author.id] }}
+  />
 </BaseLayout>

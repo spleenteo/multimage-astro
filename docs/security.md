@@ -12,7 +12,7 @@ scope: Track security risks, mitigations, and review checkpoints for Multimage.
 
 ## High-Priority Gaps
 
-- **Preview tokens without guardrails** — There is no `/api/preview` or draft-mode guard yet; every fetch in `src/lib/datocms/executeQuery.ts` uses the published CDA token. When draft previews are reintroduced, enforce signed secrets and per-request token switching.
+- **Preview tokens rotation** — `/api/preview` and `/api/draft-mode/*` now enforce `SECRET_API_TOKEN` and drop signed cookies before toggling Draft Mode. Keep the CDA draft token and secrets rotated across Vercel environments so a leaked URL cannot grant long-term preview access.
 - **Unbounded CSV export** — The staff CSV button currently serializes the full catalogue on the client (`src/pages/staff/archivio-catalogo/index.astro:200-317`). Even after the page is secured, validate user roles and strip fields that should never leave the CMS.
 
 ## Additional Observations

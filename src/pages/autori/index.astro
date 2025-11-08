@@ -8,10 +8,14 @@ import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './index/_style.module.css';
 import { AUTHORS_PAGE_QUERY, type AuthorsPageQueryResult } from './index/_graphql';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
-const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY);
+const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const heroTitle = data.authorsIndex?.title ?? 'Autori';
 const heroSubtitle = toPlainText(data.authorsIndex?.subtitle ?? null);
@@ -62,6 +66,7 @@ for (const author of authorCards) {
 
 const authorGroups = Array.from(authorGroupsMap.values());
 const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, anchorId }));
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -115,4 +120,5 @@ const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, 
       )
     }
   </section>
+  <DraftModeQueryListener query={AUTHORS_PAGE_QUERY} />
 </BaseLayout>

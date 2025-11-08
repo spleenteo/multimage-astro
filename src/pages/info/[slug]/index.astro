@@ -12,8 +12,8 @@ import {
   defaultBlockComponents,
   defaultLinkToRecordComponents,
 } from '~/lib/datocms/structuredTextComponents';
-
-export const prerender = true;
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
 export type InfoPageQueryResult = {
   page: (PageRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
@@ -40,8 +40,11 @@ if (!slug) {
   throw new Error('Missing info page slug');
 }
 
+const draftModeEnabled = resolveDraftMode(Astro);
+
 const data = await executeQuery<InfoPageQueryResult>(INFO_PAGE_QUERY, {
   variables: { slug },
+  includeDrafts: draftModeEnabled,
 });
 
 const page = data.page;
@@ -60,6 +63,7 @@ const seo = withFallbackSeo(page._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
   description: heroDescription,
 });
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -90,4 +94,5 @@ const seo = withFallbackSeo(page._seoMetaTags, {
       }
     </section>
   </article>
+  <DraftModeQueryListener query={INFO_PAGE_QUERY} variables={{ slug }} />
 </BaseLayout>

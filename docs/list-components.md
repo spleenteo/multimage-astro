@@ -168,10 +168,17 @@ scope: A list to describe all components used in the project
   - Key props: `value`, `label?`, `muted?`.
   - Notes: uses `formatEuro`; returns `null` when price is not provided.
 
+## Draft Mode utilities
+- **DraftModeToggler** (`src/components/DraftModeToggler/index.astro`)
+  - Purpose: floating pill rendered by `BaseLayout` that lets editors enter/exit Draft Mode without visiting `/api/preview` manually.
+  - Key props: none (reads the current path and Draft Mode cookie from `Astro`).
+  - Notes: prompts the user for `SECRET_API_TOKEN`, posts to `/api/preview` or `/api/draft-mode/disable`, then reloads the page.
+- **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)
+  - Purpose: wraps `@datocms/astro`’s `QueryListener` so pages reload automatically when the subscribed GraphQL query changes in DatoCMS.
+  - Key props: `query`, `variables`, any additional options supported by `datocms-listen` except `token`/`includeDrafts` (handled internally).
+  - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request.
+
 ## Deprecated or missing pieces
-- **DraftModeToggler & DraftModeQueryListener directories** (`src/components/DraftMode*/`)
-  - Status: directories exist but contain no usable components.
-  - Action: either build the Draft Mode experience or remove the scaffolding (docs/TODO.md task **PS3**).
 - **ResponsiveImage/VideoPlayer components referenced in legacy docs**
   - Status: removed in favor of direct `@datocms/astro/Image` usage and `VideoBlock`.
   - Action: continue building on current helpers instead of reviving the historical components.

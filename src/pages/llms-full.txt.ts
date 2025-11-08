@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { LLMS_BOOKS_QUERY, LLMS_INTRO_QUERY } from './llms-full/_graphql';
 
-export const prerender = true;
+export const prerender = import.meta.env.PROD;
 
 const PAGE_SIZE = 100;
 

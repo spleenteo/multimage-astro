@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { SITEMAP_QUERY, type SitemapQueryResult } from './sitemap.xml/_graphql';
 
-export const prerender = true;
+export const prerender = import.meta.env.PROD;
 
 const STATIC_PATHS = [
   '/',

@@ -16,5 +16,5 @@
       }
     ]
   },
-  "exclude": ["tmp-next", "node_modules", "dist", "public/generated"]
+  "exclude": ["tmp-next", "tmp-sample", "node_modules", "dist", "public/generated"]
 }

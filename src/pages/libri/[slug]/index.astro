@@ -27,6 +27,8 @@ import {
 import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 import {
   BOOK_DETAIL_QUERY,
   BOOK_AUTHORS_BOOKS_QUERY,
@@ -39,8 +41,6 @@ import {
   type BookCollectionBooksResult,
   type BookSlugsResult,
 } from './_graphql';
-
-export const prerender = true;
 
 export async function getStaticPaths() {
   const data = await executeQuery<BookSlugsResult>(BOOK_SLUGS_QUERY);
@@ -57,8 +57,11 @@ if (!slug) {
   throw new Error('Missing book slug');
 }
 
+const draftModeEnabled = resolveDraftMode(Astro);
+
 const detailData = await executeQuery<BookDetailQueryResult>(BOOK_DETAIL_QUERY, {
   variables: { slug },
+  includeDrafts: draftModeEnabled,
 });
 
 const book = detailData.book;
@@ -77,6 +80,7 @@ let authorsBookCounts = new Map<string, number>();
 if (authorIds.length > 0) {
   const authorsData = await executeQuery<BookAuthorsBooksResult>(BOOK_AUTHORS_BOOKS_QUERY, {
     variables: { authorIds },
+    includeDrafts: draftModeEnabled,
   });
 
   const counts = new Map<string, number>();
@@ -105,6 +109,7 @@ const alternateFormatsData = await executeQuery<BookAlternateFormatsResult>(
       title: book.title,
       excludeSlug: { neq: book.slug ?? '' },
     } as any,
+    includeDrafts: draftModeEnabled,
   },
 );
 
@@ -170,6 +175,7 @@ if (book.collection?.id) {
       variables: {
         collectionId: book.collection.id,
       },
+      includeDrafts: draftModeEnabled,
     },
   );
 
@@ -327,6 +333,7 @@ const seo = withFallbackSeo(book.seo, {
   title: `${book.title} | Multimage`,
   description: fallbackDescription,
 });
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -483,4 +490,21 @@ const seo = withFallbackSeo(book.seo, {
       ) : null
     }
   </article>
+  <DraftModeQueryListener query={BOOK_DETAIL_QUERY} variables={{ slug }} />
+  {
+    book.collection?.id ? (
+      <DraftModeQueryListener
+        query={BOOK_COLLECTION_BOOKS_QUERY}
+        variables={{ collectionId: book.collection.id }}
+      />
+    ) : null
+  }
+  {
+    book.title ? (
+      <DraftModeQueryListener
+        query={BOOK_ALTERNATE_FORMATS_QUERY}
+        variables={{ title: book.title, excludeSlug: { neq: book.slug ?? '' } }}
+      />
+    ) : null
+  }
 </BaseLayout>
