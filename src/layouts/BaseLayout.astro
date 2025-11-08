@@ -4,6 +4,7 @@ import Footer from '~/components/Footer.astro';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
+import { PUBLIC_SITE_URL } from 'astro:env/client';
 import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
@@ -45,6 +46,34 @@ type SiteMetaResult = {
   footerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
 };
 
+function normalizeCanonicalBase(candidate: string | URL | null | undefined): string | null {
+  if (!candidate) {
+    return null;
+  }
+  const value = typeof candidate === 'string' ? candidate : candidate.toString();
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    url.hash = '';
+    url.search = '';
+    return url.toString().replace(/\/+$/, '');
+  } catch {
+    return null;
+  }
+}
+
+function buildCanonicalHref(base: string, pathname: string): string {
+  if (!pathname || pathname === '/') {
+    return `${base}/`;
+  }
+
+  return `${base}${pathname}`;
+}
+
 const draftModeEnabled = resolveDraftMode(Astro);
 
 const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY, {
@@ -52,6 +81,25 @@ const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(S
 });
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
+const canonicalBase =
+  normalizeCanonicalBase(PUBLIC_SITE_URL) ??
+  normalizeCanonicalBase(Astro.site ?? null) ??
+  normalizeCanonicalBase(Astro.url.origin);
+
+const canonicalHref = canonicalBase ? buildCanonicalHref(canonicalBase, currentPath) : null;
+const canonicalTags: TitleMetaLinkTag[] =
+  canonicalHref && !seo.some((tag) => tag.tag === 'link' && tag.attributes?.rel === 'canonical')
+    ? [
+        {
+          tag: 'link',
+          attributes: {
+            rel: 'canonical',
+            href: canonicalHref,
+          },
+          content: null,
+        },
+      ]
+    : [];
 
 function mapPagesToLinks(pages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null) {
   return (pages ?? [])
@@ -80,7 +128,7 @@ const footerMenuPages = mapPagesToLinks(footerPages);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <Seo data={[...faviconTags, ...seo]} />
+    <Seo data={[...faviconTags, ...canonicalTags, ...seo]} />
     <link rel="dns-prefetch" href="https://www.google-analytics.com" />
     <link rel="dns-prefetch" href="https://cdn.iubenda.com" />
     <script

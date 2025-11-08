@@ -40,7 +40,7 @@ const seo = withFallbackSeo(page?._seoMetaTags, {
 Dato automatically emits OG/Twitter tags (image, description, locale) whenever `_seoMetaTags` is rendered, so no extra layout logic is required. Avoid overriding those tags manually unless a route needs additional `meta` entries (e.g., `robots`, `article:published_time`).
 
 ## Canonicals, robots & sitemap
-- Because the site is permanently Italian-only, there is a single canonical URL per page and no alternate/hreflang variants. Let DatoCMS manage canonicals via its SEO field—if `_seoMetaTags` omits one, add it directly in the CMS.
+- Because the site is permanently Italian-only, there is a single canonical URL per page and no alternate/hreflang variants. `BaseLayout` now adds a `<link rel="canonical">` built from `PUBLIC_SITE_URL` + the current slug/path whenever `_seoMetaTags` does not already include one, so keep that env var aligned with the public origin.
 - `src/pages/sitemap.xml.ts` builds the sitemap manually: it reads `PUBLIC_SITE_URL`, fetches all published pages/books/collections/authors/blog posts via `SITEMAP_QUERY`, and emits `/sitemap.xml` with one `<url>` per slug. Update `src/pages/sitemap.xml/_graphql.ts` whenever you introduce a new routable model.
 - Set `PUBLIC_SITE_URL` for every environment so URLs never fall back to `http://localhost:4321` (see docs/TODO.md task **SEO1**). `astro.config.mjs` already sets `site`, but Vercel preview deploys still rely on the env var.
 - `public/robots.txt` only blocks `/staff/` today. Keep it in sync with any other sensitive routes and leave the `Sitemap: /sitemap.xml` line in place so crawlers discover the XML automatically.
