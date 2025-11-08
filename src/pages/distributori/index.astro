@@ -8,10 +8,14 @@ import { toPlainText } from '~/lib/text';
 import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
 import styles from './_style.module.css';
 import { SUPPLIERS_PAGE_QUERY, type SuppliersPageQueryResult } from './_graphql';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
-const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY);
+const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const heroTitle = data.suppliersIndex?.title ?? 'Distributori';
 const heroSubtitleRaw = toPlainText(data.suppliersIndex?.subtitle ?? null);
@@ -37,6 +41,7 @@ const supplierSections = supplierGroups.map((group) => ({
 }));
 
 const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anchorId }));
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -89,4 +94,5 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
       )
     }
   </section>
+  <DraftModeQueryListener query={SUPPLIERS_PAGE_QUERY} />
 </BaseLayout>

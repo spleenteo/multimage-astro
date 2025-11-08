@@ -15,8 +15,8 @@ import {
   type CollectionRelatedBooksResult,
   type CollectionSlugsResult,
 } from './_graphql';
-
-export const prerender = true;
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
 export async function getStaticPaths() {
   const data = await executeQuery<CollectionSlugsResult>(COLLECTION_SLUGS_QUERY);
@@ -33,8 +33,11 @@ if (!slug) {
   throw new Error('Missing collection slug');
 }
 
+const draftModeEnabled = resolveDraftMode(Astro);
+
 const detailData = await executeQuery<CollectionDetailResult>(COLLECTION_DETAIL_QUERY, {
   variables: { slug },
+  includeDrafts: draftModeEnabled,
 });
 
 const collection = detailData.collection;
@@ -47,6 +50,7 @@ const relatedData = await executeQuery<CollectionRelatedBooksResult>(
   COLLECTION_RELATED_BOOKS_QUERY,
   {
     variables: { collectionId: collection.id },
+    includeDrafts: draftModeEnabled,
   },
 );
 
@@ -59,6 +63,7 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
   title: `${collectionName} | Multimage`,
   description: collectionDescription ?? undefined,
 });
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -95,4 +100,9 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
       }
     </section>
   </article>
+  <DraftModeQueryListener query={COLLECTION_DETAIL_QUERY} variables={{ slug }} />
+  <DraftModeQueryListener
+    query={COLLECTION_RELATED_BOOKS_QUERY}
+    variables={{ collectionId: collection.id }}
+  />
 </BaseLayout>

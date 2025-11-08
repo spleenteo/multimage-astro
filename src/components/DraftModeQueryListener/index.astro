@@ -1,0 +1,33 @@
+---
+import { QueryListener, type QueryListenerOptions } from '@datocms/astro/QueryListener';
+import { DATOCMS_DRAFT_CONTENT_CDA_TOKEN } from 'astro:env/server';
+import { resolveDraftMode } from '~/lib/draftPreview';
+
+type Props<
+  QueryResult = unknown,
+  QueryVariables extends Record<string, unknown> = Record<string, unknown>,
+> = Omit<
+  QueryListenerOptions<QueryResult, QueryVariables>,
+  'includeDrafts' | 'token' | 'excludeInvalid'
+>;
+
+const props = Astro.props as Props;
+const draftModeEnabled = resolveDraftMode(Astro);
+
+if (draftModeEnabled && !DATOCMS_DRAFT_CONTENT_CDA_TOKEN) {
+  throw new Error(
+    'Draft Mode requires DATOCMS_DRAFT_CONTENT_CDA_TOKEN. Set it locally and on Vercel before using previews.',
+  );
+}
+---
+
+{
+  draftModeEnabled && DATOCMS_DRAFT_CONTENT_CDA_TOKEN && (
+    <QueryListener
+      {...props}
+      token={DATOCMS_DRAFT_CONTENT_CDA_TOKEN}
+      excludeInvalid
+      includeDrafts
+    />
+  )
+}

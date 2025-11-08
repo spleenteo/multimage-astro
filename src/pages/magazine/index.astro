@@ -6,10 +6,14 @@ import { withFallbackSeo } from '~/lib/seo';
 import type { ResponsiveImage } from '~/lib/datocms/types';
 import styles from './index/_style.module.css';
 import { MAGAZINE_INDEX_QUERY, type MagazineIndexQueryResult } from './index/_graphql';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
-const data = await executeQuery<MagazineIndexQueryResult>(MAGAZINE_INDEX_QUERY);
+const data = await executeQuery<MagazineIndexQueryResult>(MAGAZINE_INDEX_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const heroTitle = data.magazineIndex?.title ?? 'Magazine';
 const heroSubtitle = data.magazineIndex?.subtitle?.trim() ?? '';
@@ -49,6 +53,7 @@ const posts: PostCard[] = (data.allBlogPosts ?? [])
     image: post.featuredImage?.responsiveImage ?? null,
   }))
   .sort((a, b) => Number(b.sticky === true) - Number(a.sticky === true));
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -84,4 +89,5 @@ const posts: PostCard[] = (data.allBlogPosts ?? [])
       )
     }
   </div>
+  <DraftModeQueryListener query={MAGAZINE_INDEX_QUERY} />
 </BaseLayout>

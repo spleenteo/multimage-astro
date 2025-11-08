@@ -80,10 +80,8 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Notes: Dumps every book/author/page body without auth; lock it down via Security task **S4**.
 
 ## Known gaps & violations
-- `src/components/DraftModeToggler/**` and `src/components/DraftModeQueryListener/**` exist but are empty. Either rebuild the preview mode feature or delete the scaffolding (docs/TODO.md Project Structure task **PS3**).
 - Structured Text links for blog posts still point to `/blog/...` although the published route is `/magazine/...`. Fix `LinkToRecord.astro` and add regression coverage (docs/TODO.md Project Structure task **PS2**).
 - GraphQL queries rely on `first: 500` almost everywhere (`/libri`, `/autori`, `/sitemap`, staff exports), which hammers the CDA and bloats build artifacts. Tackle pagination + cache tags under docs/TODO.md CMS task **CD2**.
-- `executeQuery` ignores the `includeDrafts` option and always uses the published token, so preview/draft mode cannot work. Restore the token switch and reflect the behavior in docs/list-helpers.md (docs/TODO.md CMS task **CD1**).
 - `/staff/*` and `/llms-full.txt` are anonymously accessible yet expose internal data. Hardening plans live in docs/TODO.md Security tasks **S1** and **S4**.
 - `public/generated` assets are not fingerprinted or validated; missing `npm run prebuild` results in broken `<script>` imports. Add integrity checks per docs/TODO.md Project Structure task **PS1**.
 - Numerous policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, SEO, testing) remain `agent_edit: false`, preventing us from documenting the real state. Request updated frontmatter via docs/TODO.md Documentation Hygiene task **DH1**.

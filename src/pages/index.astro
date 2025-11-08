@@ -13,6 +13,8 @@ import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { BookCardViewModel } from '~/lib/books';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
 import CtaButtonWithImageBlock from '~/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 import styles from './index/_style.module.css';
 import {
   HOME_PAGE_QUERY,
@@ -25,7 +27,7 @@ import {
   type HomePillsBlockRecord,
 } from './index/_graphql';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
 type HomeBannerSectionData = {
   id: string;
@@ -100,7 +102,9 @@ type HomeBannerEntry =
   | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord }
   | { kind: 'pills'; id: string; data: HomePillsBlockData };
 
-const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY);
+const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const defaultTitle = 'La casa editrice dei diritti umani';
 const defaultClaimHtml = `<p>Multimage promuove libri, autori e iniziative che raccontano i diritti umani, la nonviolenza e le storie spesso dimenticate. Questa nuova applicazione Astro riprende colori e tipografia dell'esperienza originale per offrire una base moderna e accessibile.</p>`;
@@ -311,6 +315,7 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
   description: heroClaimText,
 });
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -418,4 +423,5 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
       ) : null
     }
   </div>
+  <DraftModeQueryListener query={HOME_PAGE_QUERY} />
 </BaseLayout>

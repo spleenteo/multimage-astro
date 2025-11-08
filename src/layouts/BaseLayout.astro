@@ -1,12 +1,14 @@
 ---
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
+import DraftModeToggler from '~/components/DraftModeToggler';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
 import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
+import { resolveDraftMode } from '~/lib/draftPreview';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
@@ -44,7 +46,11 @@ type SiteMetaResult = {
   footerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
 };
 
-const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY);
+const draftModeEnabled = resolveDraftMode(Astro);
+
+const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
 
@@ -168,5 +174,6 @@ const footerMenuPages = mapPagesToLinks(footerPages);
     <Footer footerPages={footerMenuPages} />
     {enableVercelInsights && <Analytics />}
     {enableVercelInsights && <SpeedInsights />}
+    <DraftModeToggler />
   </body>
 </html>

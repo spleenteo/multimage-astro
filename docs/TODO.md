@@ -24,7 +24,7 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 - [ ] [SEO] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **SEO1** enforce `PUBLIC_SITE_URL` (or `astro.config.site`) during builds so `sitemap.xml` and canonical URLs never fall back to `http://localhost:4321` (Due: 2025-11-18; Acceptance: build fails with a clear error when the env is missing, docs/assets.md and docs/project-structure.md reference the requirement).
 
 ## CMS/Data
-- [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **CD1** restore preview/draft mode by teaching `executeQuery` to honor `includeDrafts` + alternate CDA tokens, then wiring `/api/preview` + DraftMode toggles (Due: 2025-11-28; Acceptance: preview cookies flip the token, docs/list-helpers.md and docs/project-structure.md updated, regression tests cover both modes).
+- [ ] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: wip] — **CD1** restore preview/draft mode by teaching `executeQuery` to honor `includeDrafts` + alternate CDA tokens, then wiring `/api/preview` + DraftMode toggles (Due: 2025-11-28; Acceptance: preview cookies flip the token, docs/list-helpers.md and docs/project-structure.md updated, regression tests cover both modes — regression tests still pending).
 - [ ] [Refactoring] [Impact: M] [Effort: H] [Owner: @codex] [Status: todo] — **CD2** replace ad-hoc `first: 500` GraphQL calls with paginated loaders + cache tags for books, authors, sitemap, and staff exports (Due: 2025-12-05; Acceptance: helpers accept `first/skip`, sitemap iterates pages, staff exports stream data in batches, docs/list-models.md reflects the new approach).
 
 ## Testing / CI
@@ -37,7 +37,6 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 ## Project Structure
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS1** add a prebuild verification that fails the build when `public/generated/search-page.client.js` or `swiper-element.js` are missing or stale (Due: 2025-11-18; Acceptance: CI step or `astro build` guard runs before deployment, docs/assets.md and docs/project-structure.md updated).
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS2** fix `LinkToRecord.astro` so `BlogPostRecord` links point to `/magazine/${slug}` and add coverage to stop regressions (Due: 2025-11-21; Acceptance: Structured Text links resolve correctly, docs/list-components.md#structured-text-blocks annotated, regression test in place).
-- [ ] [Refactoring] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **PS3** either implement Draft Mode (UI + `/api` routes) or delete the empty `src/components/DraftMode*/` directories to avoid future confusion (Due: 2025-11-28; Acceptance: directories contain working components or are removed, docs/list-components.md updated).
 
 ## Documentation Hygiene
 - [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **DH1** coordinate with maintainers to flip `agent_edit: true` on the locked policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, SEO, testing) (Due: 2025-11-18; Acceptance: frontmatter updated via maintainer PR, tracked in docs/decision-log once editing is allowed).
@@ -45,3 +44,4 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 
 ## Completed
 - [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale, so the planned localization architecture was retired and docs/i18n.md now records the decision instead of future work.
+- 2025-11-07 - [Refactoring] **PS3**: Implemented Draft Mode UI, `/api/preview`, and documentation so editors can use preview without removing static output.

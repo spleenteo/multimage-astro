@@ -7,24 +7,25 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 
 ## Deployments
 
-- Vercel is the single supported target: link the repo, sync environment variables, and use `npm run build` (static output lives in `dist/`).
+- Vercel is the single supported target: link the repo, sync environment variables, and run `npm run build`. The build uses `@astrojs/vercel` in server mode so `.vercel/output/` contains the serverless entrypoints for `/api/*` while `dist/` still holds the prerendered HTML for legacy hosting. Tutte le pagine alimentate dal CMS esportano `prerender = false`, quindi anche i deploy preview/prod su Vercel rispettano i cookie di Draft Mode.
 - `npm run dev` chains `npm run sync-datocms` before `astro dev`, ensuring `schema.ts` and `docs/DATOCMS.md` stay in sync when `DATOCMS_API_TOKEN` is available.
 - `npm run prebuild` currently rebuilds the Site Search client before `npm run build` invokes `astro check` and the production build.
+- `npm run preview` simply serves `dist/` via `astro preview`; it is useful for checking the published snapshot, but preview mode and Draft Mode cookies never work there because no server runtime executes.
+- `tmp-sample/` is a read-only Astro starter kept in the repo for reference. It is excluded via `tsconfig.json` so `astro check`/`npm run build` ignore its missing React dependencies.
 
 ## Environment & Secrets
 
-- Required env vars on Vercel: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, and `NODE_ENV=production`. CLI-specific `DATOCMS_API_TOKEN` can remain local.
-- `datocms.json` enumerates the CDA/CMA tokens used during automation; keep it updated when tokens rotate.
-- Draft (`DATOCMS_DRAFT_CONTENT_CDA_TOKEN`) and preview secrets should stay out of Vercel until `/api/preview` is implemented. When added, scope them to draft-only roles.
-- `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` is bundled into the browser; provision it from a role limited to **Perform Site Search API calls** to prevent privileged access. See `docs/security.md` for scoping details.
+- Required env vars on Vercel: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, and `NODE_ENV=production`. CLI-specific `DATOCMS_API_TOKEN`/`DATOCMS_CMA_TOKEN` can remain local unless schema generation runs in CI.
+- `datocms.json` enumerates the CDA/CMA tokens used during automation; keep it updated when tokens rotate so `vercel env pull` stays in sync.
+- `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` ships to the browser; provision it from a role limited to **Perform Site Search API calls** to prevent privileged access. See `docs/security.md` for scoping details.
 - Runtime also reads standard flags (`NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL`). Only set what the deploy target actually needs to keep the surface minimal.
 - `PUBLIC_SITE_URL` powers sitemap generation and absolute links; missing values break `/src/pages/sitemap.xml.ts`.
 
 ## Preview & Drafts
 
-- `/api/preview` and Draft Mode helpers are still TODO. Once implemented, guard the endpoint with a secret, toggle Draft Mode cookies, and call `executeQuery({ includeDrafts: true })` so editors can see unpublished content.
-- `executeQuery` must select between the published and draft CDA tokens. Today it always picks the published token, preventing secure previews.
-- Add Draft Mode UI: `DraftModeToggler`, `DraftModeQueryListener`, and guard components that should only render behind preview.
+- `/api/preview` now guards entry into Draft Mode via `SECRET_API_TOKEN`, sets the signed cookie, and redirects back to any relative path. `/api/draft-mode/enable|disable` remain for the DatoCMS Web Previews plugin.
+- `executeQuery` accepts `{ includeDrafts: true }` and automatically swaps between the published/draft CDA tokens. Pages call `resolveDraftMode(Astro)` from `~/lib/draftPreview`, which legge i cookie su ogni richiesta (dev, preview, prod) grazie a `prerender = false` sulle route CMS-driven.
+- `DraftModeToggler` (in `BaseLayout`) prompts for the secret and lets editors exit previews without visiting raw endpoints. `DraftModeQueryListener` renders on every CMS-driven page so the browser reloads as soon as the subscribed query changes in Dato.
 
 ## Monitoring & Logging
 

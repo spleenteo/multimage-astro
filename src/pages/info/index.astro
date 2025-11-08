@@ -4,7 +4,7 @@ import InfoSection from '~/components/InfoSection';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 
-export const prerender = true;
+export const prerender = import.meta.env.PROD;
 
 const seo = withFallbackSeo([], {
   title: 'Info | Multimage',

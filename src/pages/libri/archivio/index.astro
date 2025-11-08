@@ -8,10 +8,14 @@ import { mapBooksToCards } from '~/lib/books';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import { ARCHIVE_PAGE_QUERY, type ArchivePageQueryResult } from './_graphql';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { resolveDraftMode } from '~/lib/draftPreview';
 
-export const prerender = true;
+const draftModeEnabled = resolveDraftMode(Astro);
 
-const data = await executeQuery<ArchivePageQueryResult>(ARCHIVE_PAGE_QUERY);
+const data = await executeQuery<ArchivePageQueryResult>(ARCHIVE_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
 
 const heroTitle = data.archiveIndex?.title ?? 'Fuori catalogo';
 const heroSubtitle = toPlainText(data.archiveIndex?.subtitle ?? null);
@@ -22,6 +26,7 @@ const seo = withFallbackSeo(data.archiveIndex?._seoMetaTags, {
 });
 
 const archiveBooks = mapBooksToCards(data.allBooks ?? []);
+export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
@@ -57,4 +62,5 @@ const archiveBooks = mapBooksToCards(data.allBooks ?? []);
       )
     }
   </section>
+  <DraftModeQueryListener query={ARCHIVE_PAGE_QUERY} />
 </BaseLayout>
