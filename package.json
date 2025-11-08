@@ -5,6 +5,7 @@
   "scripts": {
     "sync-datocms": "node scripts/sync-datocms.mjs",
     "dev": "npm run sync-datocms && astro dev",
+    "docs:inventory": "node scripts/check-docs-inventory.mjs",
     "start": "npm run sync-datocms && astro dev",
     "bundle-search-client": "node scripts/build-search-client.mjs",
     "prebuild": "npm run bundle-search-client",
