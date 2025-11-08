@@ -24,7 +24,11 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 ## Preview & Drafts
 
 - `/api/preview` now guards entry into Draft Mode via `SECRET_API_TOKEN`, sets the signed cookie, and redirects back to any relative path. `/api/draft-mode/enable|disable` remain for the DatoCMS Web Previews plugin.
-- `executeQuery` accepts `{ includeDrafts: true }` and automatically swaps between the published/draft CDA tokens. Pages call `resolveDraftMode(Astro)` from `~/lib/draftPreview`, which legge i cookie su ogni richiesta (dev, preview, prod) grazie a `prerender = false` sulle route CMS-driven.
+- `executeQuery` accepts `{ includeDrafts: true }` e grazie a `resolveDraftMode(Astro)` (vedi `~/lib/draftPreview`) legge i cookie su ogni richiesta — le pagine CMS esportano `prerender = false`, quindi anche i deploy preview/prod di Vercel supportano le bozze.
+- `/api/post-deploy` è invocato automaticamente da Vercel (via `datocms.json`) e si occupa di installare/aggiornare plug-in ufficiali DatoCMS:
+  - **Web Previews** → aggiunge due frontends (Production + Preview) che puntano a `/api/preview-links?token=...`.
+  - **SEO/Readability Analysis** → punta `htmlGeneratorUrl` al `/api/seo-analysis` dell’ambiente corrente.
+  Se il post-deploy fallisce (es. perché il plug-in è già installato con permessi diversi) puoi rilanciarlo manualmente con `curl -X POST <deploy-url>/api/post-deploy -H 'Content-Type: application/json' -d '{"datocmsApiToken":"<CMA>","frontendUrl":"<deploy-url>"}'` (usa un CMA token “Admin”).
 - `DraftModeToggler` (in `BaseLayout`) prompts for the secret and lets editors exit previews without visiting raw endpoints. `DraftModeQueryListener` renders on every CMS-driven page so the browser reloads as soon as the subscribed query changes in Dato.
 
 ## Monitoring & Logging

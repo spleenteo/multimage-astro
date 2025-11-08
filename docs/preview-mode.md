@@ -114,6 +114,12 @@ any required schema entry is missing thanks to `env.validateSecrets` in
   la pagina in questione esporti `prerender = false`. Se il cookie è presente ma
   il contenuto resta pubblicato, controlla i log serverless (funzione
   `_render`) per errori lato query.
+- **DatoCMS Web Previews plugin** → l’endpoint `/api/preview-links` implementa il
+  webhook del plugin. Ogni deploy (preview o prod) richiama `/api/post-deploy`,
+  che aggiorna automaticamente il plugin aggiungendo i due “frontends”:
+  `Production` (usa `PUBLIC_SITE_URL`) e `Preview` (l’URL del deployment
+  corrente). Se aggiungi nuovi modelli o rotte, ricorda di aggiornare
+  `recordToWebsiteRoute` perché il plugin sappia come costruire gli URL.
 - **401 or missing query params on `/api/preview`** → usually indicates you’re
   hitting the static preview server instead of the dev server. Make sure `npm
   run dev` is running and note the port printed in the banner (4321 by default;
