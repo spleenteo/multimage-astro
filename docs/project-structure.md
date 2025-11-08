@@ -23,6 +23,13 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - **`docs/**`**
   - Canonical documentation (assets, search, inventories, etc.). Keep these files aligned with the code or log drift in `docs/TODO.md`.
 
+## Runtime configuration & tooling
+- `astro.config.mjs` switches between `output: 'server'` (default) and `output: 'static'` using the `ASTRO_OUTPUT` env var, wires the Vercel adapter when needed, and hard-codes `site: 'https://www.multimage.org'`. It also validates every CDA/CMA/search env so builds fail fast when a token is missing.
+- The same config exposes `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` and `PUBLIC_SITE_URL` to the client. `/cerca` throws during rendering if the search token is absent and the sitemap falls back to `http://localhost:4321` whenever `PUBLIC_SITE_URL` is unset (see docs/TODO.md SEO task **SEO1**).
+- `tsconfig.json` defines the `~/*` path aliases used throughout the repo and enables `allowImportingTsExtensions` because `_graphql.ts` files are imported with their extension. Keep helpers inside `src/lib/**` so cross-layer imports stay obvious.
+- `npm run sync-datocms` (called by `npm run dev`/`start`) loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md`. 
+- `npm run prebuild`/`npm run bundle-search-client` builds the browser bundles under `public/generated`. Run it before `astro dev`/`astro build` locally and wire it into CI (tracked by docs/TODO.md Project Structure task **PS1**).
+
 ## Co-location & layering rules
 - **Queries next to consumers.** Every page/component that needs data keeps an adjacent `_graphql.ts` exporting both the document and TypeScript helpers. Shared fragments (`BookCardFragment`, `BANNER_SECTION_FRAGMENT`, etc.) are re-exported from `index.ts` to keep import sites tidy.
 - **CSS modules per component.** Styles live beside the component they affect. Global typography/colors stay in `src/styles/global.css` and Tailwind theme tokens.
@@ -79,9 +86,18 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Primary components: none (streamed text response).
   - Notes: Dumps every book/author/page body without auth; lock it down via Security task **S4**.
 
+## API & preview routes
+- **`/api/preview`** (GET/POST) requires `SECRET_API_TOKEN`, validates relative redirects, sets the signed draft-mode cookie via `enableDraftMode`, and returns 401 otherwise.
+- **`/api/draft-mode/enable`** mirrors the preview secret guard before redirecting to a relative URL; **`/api/draft-mode/disable`** only clears the cookie but still rejects absolute redirects.
+- **`/api/preview-links`** powers the Dato “Web Previews” plugin: it maps records to website routes via `recordToWebsiteRoute`, generates draft/published URLs (enabling or disabling draft mode on the way), and responds with permissive CORS headers.
+- **`/api/seo-analysis`** is called by the “SEO/Readability Analysis” plugin. It validates the secret, fetches the record via `@datocms/cma-client`, hits the frontend with `draftModeHeaders()` to capture unpublished content, and returns metadata + rendered HTML via `jsdom`.
+- **`/api/post-deploy`** installs/configures both plugins right after the initial deploy. Because it accepts an arbitrary CMA token and writes preview URLs containing our `SECRET_API_TOKEN`, retire it (or require an extra server-side secret) once staging/production are configured (docs/TODO.md Security task **S5**).
+
 ## Known gaps & violations
 - Structured Text links for blog posts still point to `/blog/...` although the published route is `/magazine/...`. Fix `LinkToRecord.astro` and add regression coverage (docs/TODO.md Project Structure task **PS2**).
 - GraphQL queries rely on `first: 500` almost everywhere (`/libri`, `/autori`, `/sitemap`, staff exports), which hammers the CDA and bloats build artifacts. Tackle pagination + cache tags under docs/TODO.md CMS task **CD2**.
 - `/staff/*` and `/llms-full.txt` are anonymously accessible yet expose internal data. Hardening plans live in docs/TODO.md Security tasks **S1** and **S4**.
 - `public/generated` assets are not fingerprinted or validated; missing `npm run prebuild` results in broken `<script>` imports. Add integrity checks per docs/TODO.md Project Structure task **PS1**.
-- Numerous policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, SEO, testing) remain `agent_edit: false`, preventing us from documenting the real state. Request updated frontmatter via docs/TODO.md Documentation Hygiene task **DH1**.
+- Cache tags/revalidation hooks are still absent even though the project relies on query listeners. Capture incremental cache invalidation in docs/TODO.md CMS task **CD3** and update data loaders accordingly.
+- The one-off `/api/post-deploy` endpoint remains deployed and can leak the preview secret if an attacker points it at their Dato project. Remove or protect it per docs/TODO.md Security task **S5**.
+- Builds default to `output: 'server'`, so Vercel provisions serverless functions unless `ASTRO_OUTPUT=static` is set. Decide on the canonical runtime and document that contract (docs/TODO.md Project Structure task **PS4**).

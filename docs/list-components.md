@@ -84,12 +84,18 @@ scope: A list to describe all components used in the project
   - Used in: home banners, Structured Text `BannerBlock`.
   - Owner: @codex.
   - Notes: renders HTML via `set:html`; sanitize per docs/assets.md.
+- **PillsBlock** (`src/components/blocks/PillsBlock/index.astro` + `_graphql.ts`)
+  - Purpose: renders up to three info “pills” with optional icons, multiline copy, and CTA buttons.
+  - Key props: `id`, `title`, `description`, `pills[]` (each pill exposes `icon`, `title`, `content`, nested `ButtonRecord`).
+  - Used in: home modular banners and any future Structured Text blocks that map to `PillsBlockRecord`.
+  - Owner: @codex.
+  - Notes: splits multiline copy into paragraphs and trims button labels—content still flows through `toRichTextHtml`, so sanitize before expanding usage (Security task **S2**).
 - **BookCarouselSection** (`src/components/BookCarouselSection/index.astro` + `_graphql.ts`)
   - Purpose: Swiper-based carousel with accessible controls.
   - Key props: `id`, `title`, `description?`, `books[]`.
   - Used in: home page, book detail related lists, Structured Text block.
   - Owner: @codex.
-  - Notes: requires `public/generated/swiper-element.js`; run `npm run prebuild`.
+  - Notes: requires `public/generated/swiper-element.js`; run `npm run prebuild` (see docs/TODO.md Project Structure task **PS1**).
 - **CollectionCard** (`src/components/CollectionCard/index.astro` + `_graphql.ts`)
   - Purpose: renders collection tiles with logo, stats, and description.
   - Key props: `name`, `slug`, `description`, `booksCount`, `logo`.

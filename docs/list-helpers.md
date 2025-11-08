@@ -19,6 +19,10 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: exports shared `TagFragment` and `ResponsiveImageFragment`.
   - Used in: most `_graphql.ts` files to keep fragments DRY.
   - Notes: Book/Collection components rely on width/height—update carefully.
+- **`recordInfo` helpers** (`src/lib/datocms/recordInfo.ts`)
+  - Purpose: `recordToWebsiteRoute` and `recordToSlug` translate Dato records into site URLs/slugs.
+  - Used in: `/api/preview-links`, `/api/seo-analysis`, and any future automations that need to resolve routes.
+  - Notes: extend the switch statements whenever you add a routable model so preview links stay accurate.
 - **`structuredText` helpers** (`src/lib/datocms/structuredText.ts`)
   - Purpose: converts Structured Text to plain text, checks emptiness.
   - Used in: SEO fallbacks, author summaries, info pages.
@@ -69,3 +73,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **LLM export handler** (`src/pages/llms-full.txt.ts` + `_graphql.ts`)
   - Purpose: streams every book/author/page summary for AI tooling.
   - Notes: currently public with no auth—see Security task **S4**.
+- **API response helpers** (`src/pages/api/utils.ts`)
+  - Purpose: shared `withCORS`, `json`, `invalidRequestResponse`, `successfulResponse`, and `isRelativeUrl` utilities for every API route.
+  - Used in: `/api/preview`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, etc.
+  - Notes: keep `withCORS` in sync with Dato plugin requirements and reuse `isRelativeUrl` for any new redirect-bearing endpoints.

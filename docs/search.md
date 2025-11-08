@@ -7,6 +7,12 @@ scope: How to implement search offered by DatoCMS
 
 DatoCMS Site Search powers `/cerca`. The page is fully client-driven but depends on two build-time artefacts, so any change touches both Astro and Node layers.
 
+## Indexing & content sources
+- The Site Search index is configured entirely inside Dato. Flag **Book**, **Author**, **Page**, and **BlogPost** models as indexable; staff-only routes (`/staff`, `/llms-full.txt`) stay out of the index on purpose.
+- Each record contributes `title`, `body_excerpt`, and optional `[h]...[/h]` highlight ranges. The browser parses those markers (see `appendHighlightedText`) and renders `<mark>` tags.
+- When schema changes affect indexed fields, visit **Settings → Site Search** inside Dato and trigger “Regenerate index” after publishing. The Astro repo has no webhook hook, so regeneration is a manual step.
+- Requests go straight to `https://site-api.datocms.com/search-results` from the browser. There is no proxy, so rate limiting and ACLs must be enforced via the dedicated Site Search API token.
+
 ## Architecture
 1. `scripts/build-search-client.mjs` bundles `src/pages/cerca/search-page.client.ts` into `public/generated/search-page.client.js`. The script also emits `public/generated/swiper-element.js` for `BookCarouselSection` so `npm run prebuild` remains a single source of truth.
 2. `src/pages/cerca/index.astro` prerenders a semantic search form (role="search", status region, filters). At runtime it loads the bundled module (or the source file during `astro dev`) and forwards configuration via `data-*` attributes: endpoint, token, min-length, limit, fuzzy toggle.
@@ -20,9 +26,15 @@ DatoCMS Site Search powers `/cerca`. The page is fully client-driven but depends
 
 ## Runtime behavior
 - Minimum query length defaults to 3 characters (`MIN_QUERY_LENGTH` constant). The bundle enforces it, clears results otherwise, and updates the status live region with Italian guidance.
-- Filters are simple checkboxes (`books`, `authors`, `info`). The script computes active filters on every render and hides list items that do not match. The “Ricerca esatta” checkbox toggles a local `exactMatch` flag; when enabled, results are re-filtered client-side through `entryContainsPhrase` before rendering.
+- Filters are simple checkboxes (`books`, `authors`, `info`). `classifyEntry` maps URLs containing `/libri/` → books, `/autori/` → authors, everything else (info pages + magazine posts) → info. Adjust the regexes if you add new sections or want a dedicated magazine filter.
+- The “Ricerca esatta” checkbox toggles a local `exactMatch` flag; when enabled, results are re-filtered client-side through `entryContainsPhrase` before rendering. Otherwise the request uses Dato’s fuzzy search (`filter[fuzzy]=true`).
 - Results render `<li>` cards with badges, links, highlight `<mark>`s, and “Vai alla pagina” links. `appendHighlightedText` safely escapes everything except the `[h]...[/h]` tokens returned by Site Search.
-- URL state stays in sync via `window.history.replaceState` so sharing `/cerca?q=libro&exact=1` restores the view. The script also cleans up listeners on `astro:before-swap` to avoid memory leaks.
+- URL state stays in sync via `window.history.replaceState` so sharing `/cerca?q=libro&exact=1` restores the view. The script also caches the most recent payload (`cachedResults`, `cachedQuery`, `cachedTotal`) and cleans up listeners on `astro:before-swap` to avoid memory leaks.
+
+## Index health & drift
+- Because filters rely on URL patterns, keep new routable sections aligned with `/libri/...`, `/autori/...`, or `/info/...` slugs—or extend `classifyEntry` when you ship a new section.
+- Magazine posts currently fall under the `info` filter. Add a dedicated filter only after confirming editors need to slice the results differently.
+- After large content migrations, run “Regenerate index” and smoke-test `/cerca` in both dev and a deployed preview. Missing bundles, stale tokens, or index drift should be logged back in `docs/TODO.md` (Testing task **TC2** covers automated coverage for the bundle itself).
 
 ## Tokens & permissions
 - `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` **must** belong to a Dato role that only has *Perform Site Search API calls*. Treat it as public but environment-specific; never reuse CDA/CMA tokens because this value is embedded into the HTML as a `data-token` attribute.
