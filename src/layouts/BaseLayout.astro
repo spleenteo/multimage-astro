@@ -1,7 +1,6 @@
 ---
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
-import DraftModeToggler from '~/components/DraftModeToggler';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
@@ -174,6 +173,5 @@ const footerMenuPages = mapPagesToLinks(footerPages);
     <Footer footerPages={footerMenuPages} />
     {enableVercelInsights && <Analytics />}
     {enableVercelInsights && <SpeedInsights />}
-    <DraftModeToggler />
   </body>
 </html>

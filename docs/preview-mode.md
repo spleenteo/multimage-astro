@@ -49,10 +49,10 @@ while every page stays prerendered.
 
 ## 3. UI helpers & live updates
 
-- `DraftModeToggler` (floating pill rendered by `BaseLayout`) lets editors enter
-  or exit preview without memorising URLs. When enabling preview it prompts for
-  `SECRET_API_TOKEN`, calls `/api/preview` with the current path, and reloads the
-  page after the cookie flips.
+- Il plugin **DatoCMS Web Previews** (configurato via `/api/post-deploy`) mostra
+  i link “Draft”/“Published” direttamente nel backoffice. Ogni link passa dagli
+  endpoint `/api/draft-mode/enable|disable` prima di reindirizzare al percorso
+  corretto.
 - Pages import `DraftModeQueryListener` from `~/components/DraftModeQueryListener`
   and render it with the same GraphQL document/variables used by their
   `executeQuery` call. When DatoCMS emits an update for that query, the listener
@@ -66,14 +66,15 @@ while every page stays prerendered.
    `output: "server"` e i percorsi alimentati dal CMS esportano
    `export const prerender = false;`, quindi ogni richiesta passa dal server
    (Draft Mode funziona anche sui deploy Vercel preview/prod).
-2. Editors open `/api/preview?secret=...&redirect=/pagina` once per browser
-   session or use the Toggler prompt.
+2. Gli editor attivano la preview visitando `/api/preview?secret=...&redirect=/pagina`
+   oppure cliccando “Draft version” dal plugin in DatoCMS (questo chiama lo
+   stesso endpoint e poi reindirizza al percorso desiderato).
 3. As they edit content in DatoCMS, the Query Listener reloads the page when the
    matching query updates. Poiché le pagine sono server-rendered, le bozze sono
    visibili sia localmente sia su Vercel (preview/prod), basta aver attivato la
-   modalità Draft con l’endpoint o il Toggler.
+   modalità Draft tramite l’endpoint o il plugin.
 4. Exiting preview is as simple as hitting `/api/draft-mode/disable?url=/pagina`
-   or clicking “Esci dalla bozza” in the Toggler.
+   (anche il link “Published version” del plugin lo fa automaticamente).
 
 > ⚠️ `npm run preview` serves the static `dist/` output and cannot read draft
 > cookies, even though il resto del sistema è ormai SSR. Usa `npm run dev`

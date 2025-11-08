@@ -12,9 +12,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `/api/preview`, `/api/draft-mode/*`, `BaseLayout`, and every page that needs to check whether previews are active.
   - Notes: relies on `SIGNED_COOKIE_JWT_SECRET` and the cookie name exported by `astro:env/client`. Page-level callers guard the helper with `import.meta.env.DEV` so prerendered builds never attempt to read cookies.
 - **`draftPreview` utilities** (`src/lib/draftPreview.ts`)
-  - Purpose: centralises whether SSR-for-drafts is enabled and exposes `resolveDraftMode(Astro)` for components/pages.
-  - Used in: every CMS-driven page, BaseLayout, DraftModeToggler, DraftModeQueryListener.
-  - Notes: SSR for previews is only available while running `npm run dev`/`vercel dev`; production and hosted preview builds stay static.
+  - Purpose: centralises Draft Mode resolution and exposes `resolveDraftMode(Astro)` for components/pages.
+  - Used in: every CMS-driven page, BaseLayout, DraftModeQueryListener.
+  - Notes: tutte le pagine CMS esportano `prerender = false`, quindi il helper legge i cookie sia in dev (`npm run dev`/`vercel dev`) sia sui deploy preview/prod di Vercel.
 - **`commonFragments`** (`src/lib/datocms/commonFragments.ts`)
   - Purpose: exports shared `TagFragment` and `ResponsiveImageFragment`.
   - Used in: most `_graphql.ts` files to keep fragments DRY.

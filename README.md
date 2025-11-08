@@ -84,18 +84,18 @@ Draft Mode cookies are honored ovunque:
 1. Make sure `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, and
    `SIGNED_COOKIE_JWT_SECRET` are set (see the `.env` snippet above). `npm run
 dev` fails fast if they are missing.
-2. Visit `/api/preview?secret=<SECRET_API_TOKEN>&redirect=/percorso` once per
-   browser session (or use the floating “Anteprima” pill rendered by
-   `DraftModeToggler`). The endpoint validates the secret, drops the signed
-   cookie, and redirects you to the requested page.
-3. Every CMS-driven page runs on the server (`prerender = false`) and passes
+2. Visita `/api/preview?secret=<SECRET_API_TOKEN>&redirect=/percorso` una volta
+   per sessione (oppure usa il plugin **DatoCMS Web Previews**, che chiama lo
+   stesso endpoint). L’API valida il segreto, imposta il cookie e reindirizza
+   alla pagina richiesta.
+3. Ogni pagina alimentata dal CMS gira sul server (`prerender = false`) e passa
    `includeDrafts` to `executeQuery`, so Draft Mode works on `npm run dev`,
    `vercel dev`, Vercel preview, and Vercel production. `DraftModeQueryListener`
    subscribes to the underlying GraphQL query and automatically reloads when a
    content editor hits “Save” in DatoCMS.
-4. Exit preview through `/api/draft-mode/disable?url=/percorso` or the
-   “Esci dalla bozza” button on the pill. The cookie is deleted and the site
-   returns to published content.
+4. Esci dalla preview passando da `/api/draft-mode/disable?url=/percorso` (anche
+   il plugin invia questa chiamata). Il cookie viene cancellato e torni alla
+   versione pubblicata.
 
 > **Nota:** `npm run preview` continua a servire lo snapshot statico di `dist/` e
 > quindi ignora i cookie di Draft Mode. Usa `npm run dev` (eventualmente con
