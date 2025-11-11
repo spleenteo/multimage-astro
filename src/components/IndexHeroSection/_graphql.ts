@@ -1,7 +1,7 @@
 import type { SeoMetaTag } from '~/lib/datocms/types';
 
 export const INDEX_HERO_FRAGMENT = /* GraphQL */ `
-  fragment IndexHeroFields on IndexPage {
+  fragment IndexHeroFields on IndexPageRecord {
     title
     subtitle
     _seoMetaTags {
