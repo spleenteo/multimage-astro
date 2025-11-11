@@ -39,7 +39,7 @@ scope: A list to describe all components used in the project
 - `IndexHeroSection` — **IndexHeroSection** (`src/components/IndexHeroSection/index.astro`)
   - Purpose: wraps `SectionIntro` inside a standardized section for index pages with reusable spacing.
   - Key props: `title`, `subtitleHtml`, `align?`.
-  - Used in: `/autori`, `/collane` (more listing pages will adopt it).
+  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri`.
   - Owner: @codex.
   - Notes: expects the parent page to handle SEO fallbacks and sanitization.
 - `InfoSection` — **InfoSection** (`src/components/InfoSection/index.astro`)

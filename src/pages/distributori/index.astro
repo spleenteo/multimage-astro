@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro';
+import IndexHeroSection from '~/components/IndexHeroSection';
 import SupplierCard from '~/components/SupplierCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
@@ -17,13 +17,15 @@ const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY, 
   includeDrafts: draftModeEnabled,
 });
 
-const heroTitle = data.suppliersIndex?.title ?? 'Distributori';
-const heroSubtitleRaw = toPlainText(data.suppliersIndex?.subtitle ?? null);
-const heroDescription = heroSubtitleRaw.length > 0 ? heroSubtitleRaw : undefined;
+const suppliersIndexContent = data.suppliersIndexPage?.[0] ?? null;
+const heroSection = {
+  title: suppliersIndexContent?.title?.trim() || 'Distributori',
+  subtitleHtml: suppliersIndexContent?.subtitle?.trim() || null,
+};
 
-const seo = withFallbackSeo(data.suppliersIndex?._seoMetaTags, {
-  title: heroTitle,
-  description: heroDescription,
+const seo = withFallbackSeo(suppliersIndexContent?._seoMetaTags, {
+  title: heroSection.title,
+  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
 });
 
 const suppliers = mapSuppliersToCards(data.allSuppliers);
@@ -47,7 +49,11 @@ export const prerender = false;
 <BaseLayout seo={seo}>
   <section class={styles.layout}>
     <div class="mx-auto max-w-5xl">
-      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
+      <IndexHeroSection
+        title={heroSection.title}
+        subtitleHtml={heroSection.subtitleHtml}
+        align="center"
+      />
     </div>
 
     {
