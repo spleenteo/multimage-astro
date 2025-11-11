@@ -1,18 +1,15 @@
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { RESPONSIVE_IMAGE_FRAGMENT, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorRecordForCard } from '~/lib/authors';
 import type { AuthorsIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import { INDEX_HERO_FRAGMENT } from '~/components/IndexHeroSection/_graphql';
 
 export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
+  ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${INDEX_HERO_FRAGMENT}
   query AuthorsPage {
-    authorsIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
+    authorsIndexPage: allIndexPages(filter: { slug: { eq: "autori" } }, first: 1) {
+      ...IndexHeroFields
     }
     allAuthors(orderBy: sortBy_ASC, first: 500) {
       id
@@ -44,7 +41,7 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
 `;
 
 export type AuthorsPageQueryResult = {
-  authorsIndex: (AuthorsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  authorsIndexPage: Array<AuthorsIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }> | null;
   allAuthors: AuthorRecordForCard[];
   allBooks: Array<{
     id: string;
