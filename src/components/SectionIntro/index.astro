@@ -4,18 +4,34 @@ import styles from './style.module.css';
 type Props = {
   title: string;
   description?: string | null;
+  descriptionHtml?: string | null;
   align?: 'left' | 'center';
   className?: string;
 };
 
-const { title, description, align = 'left', className = '' }: Props = Astro.props;
+const {
+  title,
+  description,
+  descriptionHtml = null,
+  align = 'left',
+  className = '',
+}: Props = Astro.props;
 const alignmentClass = align === 'center' ? styles.alignCenter : styles.alignLeft;
+const trimmedDescriptionHtml = typeof descriptionHtml === 'string' ? descriptionHtml.trim() : null;
+const hasDescriptionHtml = Boolean(trimmedDescriptionHtml);
+const resolvedDescription = hasDescriptionHtml ? null : description;
 ---
 
 <div class:list={[styles.root, className]}>
   <div class={styles.background}></div>
   <div class:list={[styles.content, alignmentClass]}>
     <h1 class={styles.title}>{title}</h1>
-    {description ? <p class={styles.description}>{description}</p> : null}
+    {
+      hasDescriptionHtml ? (
+        <div class={styles.description} set:html={trimmedDescriptionHtml} />
+      ) : resolvedDescription ? (
+        <p class={styles.description}>{resolvedDescription}</p>
+      ) : null
+    }
   </div>
 </div>

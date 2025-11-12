@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro';
+import IndexHeroSection from '~/components/IndexHeroSection';
 import AuthorCard from '~/components/AuthorCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
@@ -17,12 +17,14 @@ const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
 });
 
-const heroTitle = data.authorsIndex?.title ?? 'Autori';
-const heroSubtitle = toPlainText(data.authorsIndex?.subtitle ?? null);
-const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-const seo = withFallbackSeo(data.authorsIndex?._seoMetaTags, {
-  title: heroTitle,
-  description: heroDescription,
+const authorsIndexContent = data.authorsIndexPage?.[0] ?? null;
+const heroSection = {
+  title: authorsIndexContent?.title?.trim() || 'Autori',
+  subtitleHtml: authorsIndexContent?.subtitle?.trim() || null,
+};
+const seo = withFallbackSeo(authorsIndexContent?._seoMetaTags, {
+  title: heroSection.title,
+  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
 });
 
 const bookCounts = new Map<string, number>();
@@ -70,10 +72,8 @@ export const prerender = false;
 ---
 
 <BaseLayout seo={seo}>
-  <section class={styles.section}>
-    <div class={styles.intro}>
-      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
-    </div>
+  <section class={styles.layout}>
+    <IndexHeroSection title={heroSection.title} subtitleHtml={heroSection.subtitleHtml} />
 
     {
       authorCards.length === 0 ? (

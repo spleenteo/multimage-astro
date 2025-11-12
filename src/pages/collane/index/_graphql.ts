@@ -1,22 +1,16 @@
 import { COLLECTION_CARD_FRAGMENT } from '~/components/CollectionCard';
+import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type {
-  CollectionSummaryRecord,
-  CollectionsIndexRecord,
-  SeoMetaTag,
-} from '~/lib/datocms/types';
+import type { CollectionSummaryRecord } from '~/lib/datocms/types';
 
 export const COLLECTIONS_PAGE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${INDEX_HERO_FRAGMENT}
   ${COLLECTION_CARD_FRAGMENT}
   query CollectionsPage {
-    collectionsIndex {
-      title
-      subtitle
-      seoMetaTags: _seoMetaTags {
-        ...TagFragment
-      }
+    collectionsIndexPage: allIndexPages(filter: { slug: { eq: "collane" } }, first: 1) {
+      ...IndexHeroFields
     }
     allCollections(orderBy: name_ASC) {
       ...CollectionCardFragment
@@ -31,7 +25,7 @@ export const COLLECTIONS_PAGE_QUERY = /* GraphQL */ `
 `;
 
 export type CollectionsQueryResult = {
-  collectionsIndex: (CollectionsIndexRecord & { seoMetaTags: SeoMetaTag[] | null }) | null;
+  collectionsIndexPage: IndexHeroFields[] | null;
   allCollections: Array<
     Pick<CollectionSummaryRecord, 'id' | 'name' | 'slug' | 'description' | 'logo'>
   >;

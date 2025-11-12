@@ -1,0 +1,29 @@
+---
+import SectionIntro from '~/components/SectionIntro';
+import styles from './style.module.css';
+
+type Props = {
+  title: string;
+  subtitleHtml?: string | null;
+  align?: 'left' | 'center';
+  className?: string;
+  innerClassName?: string;
+};
+
+const {
+  title,
+  subtitleHtml = null,
+  align = 'center',
+  className = '',
+  innerClassName = '',
+}: Props = Astro.props;
+
+const trimmedSubtitle = typeof subtitleHtml === 'string' ? subtitleHtml.trim() : null;
+const resolvedSubtitle = trimmedSubtitle && trimmedSubtitle.length > 0 ? trimmedSubtitle : null;
+---
+
+<section class:list={[styles.section, className]}>
+  <div class:list={[styles.inner, innerClassName]}>
+    <SectionIntro title={title} descriptionHtml={resolvedSubtitle ?? undefined} align={align} />
+  </div>
+</section>

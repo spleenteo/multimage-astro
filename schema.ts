@@ -2,6 +2,24 @@ import { ItemTypeDefinition } from '@datocms/cma-client';
 type EnvironmentSettings = {
   locales: 'it';
 };
+export type IndexPage = ItemTypeDefinition<
+  EnvironmentSettings,
+  'fAa-reI7QymIa_MCsJxNlQ',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
 export type Author = ItemTypeDefinition<
   EnvironmentSettings,
   '70445',
@@ -38,6 +56,132 @@ export type Author = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
+    };
+  }
+>;
+export type Supplier = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70444',
+  {
+    url: {
+      type: 'string';
+    };
+    name: {
+      type: 'string';
+    };
+    city: {
+      type: 'string';
+    };
+    email: {
+      type: 'string';
+    };
+    region: {
+      type: 'string';
+    };
+    logo: {
+      type: 'file';
+    };
+    telephone: {
+      type: 'string';
+    };
+    address: {
+      type: 'string';
+    };
+    map: {
+      type: 'lat_lon';
+    };
+    description: {
+      type: 'text';
+    };
+  }
+>;
+export type Video = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184828',
+  {
+    video: {
+      type: 'video';
+    };
+  }
+>;
+export type EbooksIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '180517',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type Reprint = ItemTypeDefinition<
+  EnvironmentSettings,
+  '181484',
+  {
+    number: {
+      type: 'integer';
+    };
+    circulation: {
+      type: 'integer';
+    };
+    year: {
+      type: 'date';
+    };
+  }
+>;
+export type BlogAuthor = ItemTypeDefinition<
+  EnvironmentSettings,
+  '181489',
+  {
+    name: {
+      type: 'string';
+    };
+    biography: {
+      type: 'text';
+    };
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type ArchiveIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177591',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type SingleBook = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ErrM9cdtQ3u-NUZT_49EdA',
+  {
+    book: {
+      type: 'link';
+    };
+  }
+>;
+export type Keyword = ItemTypeDefinition<
+  EnvironmentSettings,
+  '1295615',
+  {
+    name: {
+      type: 'string';
     };
   }
 >;
@@ -88,25 +232,6 @@ export type NewsletterSubscription = ItemTypeDefinition<
     };
   }
 >;
-export type CtaButtonWithImage = ItemTypeDefinition<
-  EnvironmentSettings,
-  'dS2Z8nuURz6Pem2fHRN2tQ',
-  {
-    image: {
-      type: 'file';
-    };
-    title: {
-      type: 'string';
-    };
-    content: {
-      type: 'text';
-    };
-    buttons: {
-      type: 'rich_text';
-      blocks: Button;
-    };
-  }
->;
 export type Button = ItemTypeDefinition<
   EnvironmentSettings,
   'NT-1f6AdRFuEqgoY824_uw',
@@ -122,6 +247,65 @@ export type Button = ItemTypeDefinition<
     };
   }
 >;
+export type BookCarousel = ItemTypeDefinition<
+  EnvironmentSettings,
+  'GIeyoYr9QKOsVnBTSxGpiw',
+  {
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    books: {
+      type: 'links';
+    };
+  }
+>;
+export type PillsBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'HZi-jubFRamxNRRshwBsng',
+  {
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    pills_block: {
+      type: 'rich_text';
+      blocks: SingleInfoBlock;
+    };
+  }
+>;
+export type SingleInfoBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'LC9IkC3SQfeCI8hNLSoLww',
+  {
+    icon: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    content: {
+      type: 'text';
+    };
+    button: {
+      type: 'single_block';
+      blocks: Button;
+    };
+  }
+>;
+export type CoverSize = ItemTypeDefinition<
+  EnvironmentSettings,
+  'cj2JswthQqK9y4JL20VDdw',
+  {
+    dimensions: {
+      type: 'string';
+    };
+  }
+>;
 export type BlogPost = ItemTypeDefinition<
   EnvironmentSettings,
   '184824',
@@ -129,11 +313,11 @@ export type BlogPost = ItemTypeDefinition<
     author: {
       type: 'link';
     };
-    slug: {
-      type: 'slug';
-    };
     title: {
       type: 'string';
+    };
+    slug: {
+      type: 'slug';
     };
     seo: {
       type: 'seo';
@@ -167,28 +351,10 @@ export type BlogPost = ItemTypeDefinition<
     };
   }
 >;
-export type BlogCategory = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70453',
-  {
-    name: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    slug: {
-      type: 'slug';
-    };
-  }
->;
 export type Home = ItemTypeDefinition<
   EnvironmentSettings,
   '152502',
   {
-    highlight: {
-      type: 'link';
-    };
     newsletter_title: {
       type: 'string';
     };
@@ -201,9 +367,6 @@ export type Home = ItemTypeDefinition<
     claim: {
       type: 'text';
     };
-    hero_title: {
-      type: 'string';
-    };
     newsletter_body: {
       type: 'text';
     };
@@ -211,9 +374,6 @@ export type Home = ItemTypeDefinition<
       type: 'text';
     };
     hero_image: {
-      type: 'file';
-    };
-    banner: {
       type: 'file';
     };
     banners: {
@@ -225,20 +385,181 @@ export type Home = ItemTypeDefinition<
         | PillsBlock
         | CtaButtonWithImage;
     };
-    banner_url: {
-      type: 'string';
-    };
-    hero_body: {
-      type: 'text';
-    };
     seo: {
       type: 'seo';
     };
   }
 >;
-export type Collection = ItemTypeDefinition<
+export type Book = ItemTypeDefinition<
   EnvironmentSettings,
-  '70447',
+  '70450',
+  {
+    slug: {
+      type: 'slug';
+    };
+    edited_by: {
+      type: 'boolean';
+    };
+    copyright: {
+      type: 'string';
+    };
+    isbn: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    price: {
+      type: 'float';
+    };
+    title: {
+      type: 'string';
+    };
+    pages: {
+      type: 'integer';
+    };
+    description: {
+      type: 'text';
+    };
+    promo: {
+      type: 'string';
+    };
+    license: {
+      type: 'link';
+    };
+    seo: {
+      type: 'seo';
+    };
+    highlight: {
+      type: 'boolean';
+    };
+    authors: {
+      type: 'links';
+    };
+    layout_artist: {
+      type: 'string';
+    };
+    epub_url: {
+      type: 'string';
+    };
+    print_year: {
+      type: 'date';
+    };
+    review: {
+      type: 'structured_text';
+    };
+    archive: {
+      type: 'boolean';
+    };
+    edition: {
+      type: 'integer';
+    };
+    collection: {
+      type: 'link';
+    };
+    stock: {
+      type: 'integer';
+    };
+    illustrator: {
+      type: 'string';
+    };
+    first_print_year: {
+      type: 'integer';
+    };
+    cover_designer: {
+      type: 'string';
+    };
+    format: {
+      type: 'string';
+    };
+    cover_image: {
+      type: 'file';
+    };
+    reprints: {
+      type: 'rich_text';
+      blocks: Reprint;
+    };
+    dimension: {
+      type: 'link';
+    };
+    original_title: {
+      type: 'string';
+    };
+    original_lang: {
+      type: 'string';
+    };
+    translator: {
+      type: 'string';
+    };
+    keywords: {
+      type: 'links';
+    };
+  }
+>;
+export type CtaButtonWithImage = ItemTypeDefinition<
+  EnvironmentSettings,
+  'dS2Z8nuURz6Pem2fHRN2tQ',
+  {
+    image: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    content: {
+      type: 'text';
+    };
+    buttons: {
+      type: 'rich_text';
+      blocks: Button;
+    };
+  }
+>;
+export type ImageBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  '184826',
+  {
+    image: {
+      type: 'file';
+    };
+    caption: {
+      type: 'string';
+    };
+  }
+>;
+export type SingleAuthor = ItemTypeDefinition<
+  EnvironmentSettings,
+  'VdpvBBQAR0ykrmM4yRYhlQ',
+  {
+    author: {
+      type: 'link';
+    };
+  }
+>;
+export type Banner = ItemTypeDefinition<
+  EnvironmentSettings,
+  '1936637',
+  {
+    featured_image: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    content: {
+      type: 'text';
+    };
+    link: {
+      type: 'string';
+    };
+    image_position: {
+      type: 'string';
+    };
+  }
+>;
+export type BlogCategory = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70453',
   {
     name: {
       type: 'string';
@@ -248,9 +569,6 @@ export type Collection = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
-    };
-    logo: {
-      type: 'file';
     };
   }
 >;
@@ -323,264 +641,6 @@ export type BlogPostOld = ItemTypeDefinition<
     };
   }
 >;
-export type Book = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70450',
-  {
-    copyright: {
-      type: 'string';
-    };
-    edited_by: {
-      type: 'boolean';
-    };
-    isbn: {
-      type: 'string';
-    };
-    slug: {
-      type: 'slug';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    price: {
-      type: 'float';
-    };
-    title: {
-      type: 'string';
-    };
-    pages: {
-      type: 'integer';
-    };
-    description: {
-      type: 'text';
-    };
-    promo: {
-      type: 'string';
-    };
-    license: {
-      type: 'link';
-    };
-    seo: {
-      type: 'seo';
-    };
-    highlight: {
-      type: 'boolean';
-    };
-    authors: {
-      type: 'links';
-    };
-    layout_artist: {
-      type: 'string';
-    };
-    epub_url: {
-      type: 'string';
-    };
-    archive: {
-      type: 'boolean';
-    };
-    print_year: {
-      type: 'date';
-    };
-    review: {
-      type: 'structured_text';
-    };
-    illustrator: {
-      type: 'string';
-    };
-    stock: {
-      type: 'integer';
-    };
-    collection: {
-      type: 'link';
-    };
-    edition: {
-      type: 'integer';
-    };
-    format: {
-      type: 'string';
-    };
-    cover_designer: {
-      type: 'string';
-    };
-    first_print_year: {
-      type: 'integer';
-    };
-    reprints: {
-      type: 'rich_text';
-      blocks: Reprint;
-    };
-    cover_image: {
-      type: 'file';
-    };
-    dimension: {
-      type: 'link';
-    };
-    original_title: {
-      type: 'string';
-    };
-    original_lang: {
-      type: 'string';
-    };
-    translator: {
-      type: 'string';
-    };
-    keywords: {
-      type: 'links';
-    };
-  }
->;
-export type ImageBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  '184826',
-  {
-    image: {
-      type: 'file';
-    };
-    caption: {
-      type: 'string';
-    };
-  }
->;
-export type Video = ItemTypeDefinition<
-  EnvironmentSettings,
-  '184828',
-  {
-    video: {
-      type: 'video';
-    };
-  }
->;
-export type Page = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70448',
-  {
-    label: {
-      type: 'string';
-    };
-    slug: {
-      type: 'slug';
-    };
-    menu: {
-      type: 'boolean';
-    };
-    seo: {
-      type: 'seo';
-    };
-    title: {
-      type: 'string';
-    };
-    menu_footer: {
-      type: 'boolean';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    body: {
-      type: 'structured_text';
-      blocks:
-        | BookCarousel
-        | SingleBook
-        | SingleAuthor
-        | ImageBlock
-        | Video
-        | Banner;
-      inline_blocks: Author | Collection | Page | Book | BlogPost;
-    };
-    layout: {
-      type: 'string';
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export type Supplier = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70444',
-  {
-    name: {
-      type: 'string';
-    };
-    logo: {
-      type: 'file';
-    };
-    city: {
-      type: 'string';
-    };
-    region: {
-      type: 'string';
-    };
-    address: {
-      type: 'string';
-    };
-    telephone: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    url: {
-      type: 'string';
-    };
-    email: {
-      type: 'string';
-    };
-    map: {
-      type: 'lat_lon';
-    };
-  }
->;
-export type SuppliersIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177742',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type CollectionsIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177447',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    cover: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type HighlightsIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177589',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
 export type BlogTag = ItemTypeDefinition<
   EnvironmentSettings,
   '70454',
@@ -632,84 +692,6 @@ export type Homeslide = ItemTypeDefinition<
     };
   }
 >;
-export type BooksIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '171774',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type EbooksIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '180517',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type Reprint = ItemTypeDefinition<
-  EnvironmentSettings,
-  '181484',
-  {
-    number: {
-      type: 'integer';
-    };
-    circulation: {
-      type: 'integer';
-    };
-    year: {
-      type: 'date';
-    };
-  }
->;
-export type BlogAuthor = ItemTypeDefinition<
-  EnvironmentSettings,
-  '181489',
-  {
-    name: {
-      type: 'string';
-    };
-    biography: {
-      type: 'text';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type ArchiveIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177591',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
 export type AuthorsIndex = ItemTypeDefinition<
   EnvironmentSettings,
   '177592',
@@ -725,150 +707,276 @@ export type AuthorsIndex = ItemTypeDefinition<
     };
   }
 >;
-export type SingleAuthor = ItemTypeDefinition<
+export type Page = ItemTypeDefinition<
   EnvironmentSettings,
-  'VdpvBBQAR0ykrmM4yRYhlQ',
+  '70448',
   {
-    author: {
-      type: 'link';
+    label: {
+      type: 'string';
     };
-  }
->;
-export type Banner = ItemTypeDefinition<
-  EnvironmentSettings,
-  '1936637',
-  {
+    slug: {
+      type: 'slug';
+    };
+    menu: {
+      type: 'boolean';
+    };
+    seo: {
+      type: 'seo';
+    };
+    title: {
+      type: 'string';
+    };
+    menu_footer: {
+      type: 'boolean';
+    };
+    subtitle: {
+      type: 'string';
+    };
     featured_image: {
       type: 'file';
     };
-    title: {
+    body: {
+      type: 'structured_text';
+      blocks:
+        | BookCarousel
+        | SingleBook
+        | SingleAuthor
+        | ImageBlock
+        | Video
+        | Banner;
+      inline_blocks: Author | Collection | Page | Book | BlogPost;
+    };
+    layout: {
       type: 'string';
     };
-    content: {
-      type: 'text';
-    };
-    link: {
-      type: 'string';
-    };
-    image_position: {
-      type: 'string';
+    position: {
+      type: 'integer';
     };
   }
 >;
-export type BookCarousel = ItemTypeDefinition<
+export type Collection = ItemTypeDefinition<
   EnvironmentSettings,
-  'GIeyoYr9QKOsVnBTSxGpiw',
-  {
-    title: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    books: {
-      type: 'links';
-    };
-  }
->;
-export type SingleBook = ItemTypeDefinition<
-  EnvironmentSettings,
-  'ErrM9cdtQ3u-NUZT_49EdA',
-  {
-    book: {
-      type: 'link';
-    };
-  }
->;
-export type Keyword = ItemTypeDefinition<
-  EnvironmentSettings,
-  '1295615',
+  '70447',
   {
     name: {
       type: 'string';
     };
-  }
->;
-export type PillsBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'HZi-jubFRamxNRRshwBsng',
-  {
-    title: {
-      type: 'string';
-    };
     description: {
       type: 'text';
     };
-    pills_block: {
-      type: 'rich_text';
-      blocks: SingleInfoBlock;
+    slug: {
+      type: 'slug';
+    };
+    logo: {
+      type: 'file';
     };
   }
 >;
-export type SingleInfoBlock = ItemTypeDefinition<
+export type SuppliersIndex = ItemTypeDefinition<
   EnvironmentSettings,
-  'LC9IkC3SQfeCI8hNLSoLww',
+  '177742',
   {
-    icon: {
-      type: 'string';
-    };
     title: {
       type: 'string';
     };
-    content: {
+    subtitle: {
       type: 'text';
     };
-    button: {
-      type: 'single_block';
-      blocks: Button;
+    seo: {
+      type: 'seo';
     };
   }
 >;
-export type CoverSize = ItemTypeDefinition<
+export type CollectionsIndex = ItemTypeDefinition<
   EnvironmentSettings,
-  'cj2JswthQqK9y4JL20VDdw',
+  '177447',
   {
-    dimensions: {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    cover: {
+      type: 'file';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type HighlightsIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '177589',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type BooksIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  '171774',
+  {
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    seo: {
+      type: 'seo';
+    };
+  }
+>;
+export type MenuItem = ItemTypeDefinition<
+  EnvironmentSettings,
+  'HgR65F53QMCb2K39_hHZZw',
+  {
+    label: {
+      type: 'string';
+    };
+    page: {
+      type: 'link';
+    };
+  }
+>;
+export type App = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ZwV1BuKbRiGcG4zyhazrrw',
+  {
+    callout_background: {
+      type: 'color';
+    };
+    footer_text: {
+      type: 'structured_text';
+    };
+    nav_items: {
+      type: 'rich_text';
+      blocks: MenuItem | MenuDropdown | MenuExternalItem;
+      localized: true;
+    };
+    callout_text: {
+      type: 'text';
+    };
+    footer_links: {
+      type: 'rich_text';
+      blocks: FooterMenuBlock;
+      localized: true;
+    };
+    social_links: {
+      type: 'rich_text';
+      blocks: SocialLink;
+    };
+    legal_text: {
+      type: 'structured_text';
+      localized: true;
+    };
+  }
+>;
+export type SocialLink = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Uoswkz_uQ4ibh_EoJ-DwkQ',
+  {
+    platform: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+    };
+    icon_name: {
+      type: 'string';
+    };
+  }
+>;
+export type FooterMenuBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'RkbPKoyQTc-ZOyS_6ou0vw',
+  {
+    widget_label: {
+      type: 'string';
+    };
+    nav_links: {
+      type: 'rich_text';
+      blocks: MenuItem | MenuExternalItem;
+    };
+  }
+>;
+export type MenuDropdown = ItemTypeDefinition<
+  EnvironmentSettings,
+  'KqTe02scRaOINXc7vgwjbA',
+  {
+    static_label: {
+      type: 'string';
+    };
+    pages: {
+      type: 'rich_text';
+      blocks: MenuItem | MenuExternalItem;
+    };
+  }
+>;
+export type MenuExternalItem = ItemTypeDefinition<
+  EnvironmentSettings,
+  'Y3bk-wH6TKibydUwoN1eBA',
+  {
+    label: {
+      type: 'string';
+    };
+    url: {
       type: 'string';
     };
   }
 >;
 export type AnyBlock =
+  | Video
+  | Reprint
+  | SingleBook
   | FaqSection
   | Question
   | NewsletterSubscription
-  | CtaButtonWithImage
   | Button
+  | BookCarousel
+  | PillsBlock
+  | SingleInfoBlock
+  | CtaButtonWithImage
   | ImageBlock
-  | Video
-  | Reprint
   | SingleAuthor
   | Banner
-  | BookCarousel
-  | SingleBook
-  | PillsBlock
-  | SingleInfoBlock;
+  | MenuItem
+  | SocialLink
+  | FooterMenuBlock
+  | MenuDropdown
+  | MenuExternalItem;
 export type AnyModel =
+  | IndexPage
   | Author
-  | BlogPost
-  | BlogCategory
-  | Home
-  | Collection
-  | License
-  | MagazineIndex
-  | BlogPostOld
-  | Book
-  | Page
   | Supplier
-  | SuppliersIndex
-  | CollectionsIndex
-  | HighlightsIndex
-  | BlogTag
-  | Homeslide
-  | BooksIndex
   | EbooksIndex
   | BlogAuthor
   | ArchiveIndex
-  | AuthorsIndex
   | Keyword
-  | CoverSize;
+  | CoverSize
+  | BlogPost
+  | Home
+  | Book
+  | BlogCategory
+  | License
+  | MagazineIndex
+  | BlogPostOld
+  | BlogTag
+  | Homeslide
+  | AuthorsIndex
+  | Page
+  | Collection
+  | SuppliersIndex
+  | CollectionsIndex
+  | HighlightsIndex
+  | BooksIndex
+  | App;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

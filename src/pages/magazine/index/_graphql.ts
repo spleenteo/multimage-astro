@@ -1,18 +1,14 @@
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { MagazineIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
+import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
+import { RESPONSIVE_IMAGE_FRAGMENT, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { ResponsiveImage } from '~/lib/datocms/types';
 
 export const MAGAZINE_INDEX_QUERY = /* GraphQL */ `
+  ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${INDEX_HERO_FRAGMENT}
   query MagazineIndexPage {
-    magazineIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
+    magazineIndexPage: allIndexPages(filter: { slug: { eq: "magazine" } }, first: 1) {
+      ...IndexHeroFields
     }
     allBlogPosts(orderBy: createdAt_DESC, first: 60) {
       id
@@ -43,7 +39,7 @@ export const MAGAZINE_INDEX_QUERY = /* GraphQL */ `
 `;
 
 export type MagazineIndexQueryResult = {
-  magazineIndex: (MagazineIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  magazineIndexPage: IndexHeroFields[] | null;
   allBlogPosts: Array<{
     id: string;
     title: string | null;

@@ -1,18 +1,14 @@
-import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
+import { RESPONSIVE_IMAGE_FRAGMENT, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { SupplierRecord } from '~/lib/suppliers';
-import type { SuppliersIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
+  ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${INDEX_HERO_FRAGMENT}
   query SuppliersPage {
-    suppliersIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        tag
-        attributes
-        content
-      }
+    suppliersIndexPage: allIndexPages(filter: { slug: { eq: "distributori" } }, first: 1) {
+      ...IndexHeroFields
     }
     allSuppliers(
       first: 300
@@ -46,6 +42,6 @@ export const SUPPLIERS_PAGE_QUERY = /* GraphQL */ `
 `;
 
 export type SuppliersPageQueryResult = {
-  suppliersIndex: (SuppliersIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  suppliersIndexPage: IndexHeroFields[] | null;
   allSuppliers: SupplierRecord[];
 };

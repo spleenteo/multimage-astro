@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import IndexHeroSection from '~/components/IndexHeroSection';
 import MagazinePostCard from '~/components/MagazinePostCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
+import { toPlainText } from '~/lib/text';
 import type { ResponsiveImage } from '~/lib/datocms/types';
 import styles from './index/_style.module.css';
 import { MAGAZINE_INDEX_QUERY, type MagazineIndexQueryResult } from './index/_graphql';
@@ -15,13 +17,15 @@ const data = await executeQuery<MagazineIndexQueryResult>(MAGAZINE_INDEX_QUERY, 
   includeDrafts: draftModeEnabled,
 });
 
-const heroTitle = data.magazineIndex?.title ?? 'Magazine';
-const heroSubtitle = data.magazineIndex?.subtitle?.trim() ?? '';
-const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
+const magazineIndexContent = data.magazineIndexPage?.[0] ?? null;
+const heroSection = {
+  title: magazineIndexContent?.title?.trim() || 'Magazine',
+  subtitleHtml: magazineIndexContent?.subtitle?.trim() || null,
+};
 
-const seo = withFallbackSeo(data.magazineIndex?._seoMetaTags, {
-  title: `${heroTitle} | Multimage`,
-  description: heroDescription,
+const seo = withFallbackSeo(magazineIndexContent?._seoMetaTags, {
+  title: `${heroSection.title} | Multimage`,
+  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
 });
 
 type PostCard = {
@@ -59,11 +63,12 @@ export const prerender = false;
 <BaseLayout seo={seo}>
   <div class={styles.layout}>
     <section class={styles.heroSection}>
-      <div class={styles.heroContent}>
-        <p class={styles.label}>Magazine</p>
-        <h1 class={styles.title}>{heroTitle}</h1>
-        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
-      </div>
+      <p class={styles.label}>Magazine</p>
+      <IndexHeroSection
+        title={heroSection.title}
+        subtitleHtml={heroSection.subtitleHtml}
+        align="center"
+      />
     </section>
 
     {

@@ -1,19 +1,16 @@
 import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
+import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { BookRecordForCard } from '~/lib/books';
-import type { BooksIndexRecord, SeoMetaTag } from '~/lib/datocms/types';
 
 export const BOOKS_PAGE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
   ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${INDEX_HERO_FRAGMENT}
   ${BOOK_CARD_FRAGMENT}
   query BooksPage {
-    booksIndex {
-      title
-      subtitle
-      _seoMetaTags {
-        ...TagFragment
-      }
+    booksIndexPage: allIndexPages(filter: { slug: { eq: "libri" } }, first: 1) {
+      ...IndexHeroFields
     }
     allBooks(
       orderBy: printYear_DESC
@@ -26,6 +23,6 @@ export const BOOKS_PAGE_QUERY = /* GraphQL */ `
 `;
 
 export type BooksPageQueryResult = {
-  booksIndex: (BooksIndexRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
+  booksIndexPage: IndexHeroFields[] | null;
   allBooks: BookRecordForCard[];
 };

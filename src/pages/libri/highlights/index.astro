@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import SectionIntro from '~/components/SectionIntro';
+import IndexHeroSection from '~/components/IndexHeroSection';
 import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
@@ -17,12 +17,14 @@ const data = await executeQuery<HighlightsPageQueryResult>(HIGHLIGHTS_PAGE_QUERY
   includeDrafts: draftModeEnabled,
 });
 
-const heroTitle = data.highlightsIndex?.title ?? 'In evidenza';
-const heroSubtitle = toPlainText(data.highlightsIndex?.subtitle ?? null);
-const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-const seo = withFallbackSeo(data.highlightsIndex?._seoMetaTags, {
-  title: heroTitle,
-  description: heroDescription,
+const highlightsIndexContent = data.highlightsIndexPage?.[0] ?? null;
+const heroSection = {
+  title: highlightsIndexContent?.title?.trim() || 'In evidenza',
+  subtitleHtml: highlightsIndexContent?.subtitle?.trim() || null,
+};
+const seo = withFallbackSeo(highlightsIndexContent?._seoMetaTags, {
+  title: heroSection.title,
+  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
 });
 
 const highlights = mapBooksToCards(data.allBooks ?? []);
@@ -32,7 +34,11 @@ export const prerender = false;
 <BaseLayout seo={seo}>
   <section class={styles.section}>
     <div class={styles.intro}>
-      <SectionIntro title={heroTitle} description={heroDescription} align="center" />
+      <IndexHeroSection
+        title={heroSection.title}
+        subtitleHtml={heroSection.subtitleHtml}
+        align="center"
+      />
     </div>
 
     {

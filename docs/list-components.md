@@ -32,10 +32,16 @@ scope: A list to describe all components used in the project
 ## Sections, heroes & cards
 - `SectionIntro` — **SectionIntro** (`src/components/SectionIntro/index.astro`)
   - Purpose: shared hero intro with optional alignment.
-  - Key props: `title`, `description`, `align?`.
+  - Key props: `title`, `description`, `descriptionHtml`, `align?`.
   - Used in: `/libri`, `/collane`, `/autori`, `/distributori`, `/libri/*`.
   - Owner: @codex.
-  - Notes: accepts only strings; sanitize upstream.
+-  - Notes: plain text descriptions stay escaped; `descriptionHtml` renders editor-provided markup (Dato HTML textarea).
+- `IndexHeroSection` — **IndexHeroSection** (`src/components/IndexHeroSection/index.astro`)
+  - Purpose: wraps `SectionIntro` inside a standardized section for index pages with reusable spacing.
+  - Key props: `title`, `subtitleHtml`, `align?`.
+  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri`, `/libri/highlights`, `/libri/archivio`, `/libri/ebooks`.
+  - Owner: @codex.
+  - Notes: expects the parent page to handle SEO fallbacks and sanitization.
 - `InfoSection` — **InfoSection** (`src/components/InfoSection/index.astro`)
   - Purpose: multi-paragraph info block for the `/info` placeholder page.
   - Key props: `title`, `paragraphs`, `chip?`.
