@@ -28,10 +28,12 @@ The [DatoCMS Schema builder](https://www.datocms.com/docs/content-modelling) dis
 
 Head Start uses these standardised model names:
 
-| Model name  | Model type                                                              | Notes                                                                                                                                                                                                                                     |
-| ----------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `... Page`  | regular model                                                           | All pages are regular models with a name that ends with `Page` (`Home Page`, `Product Page` and the generic `Page`). These `Page` models are used by routes in `src/pages/`.                                                              |
-| `... Block` | reusable [block](https://www.datocms.com/docs/content-modelling/blocks) | All reusable blocks have a name that ends with `Block` (`Text Block`, `Image Block`, etc). These `Block`s are used by templates and fragments in `src/blocks/`. See [documentation on Blocks and Components](./blocks-and-components.md). |
+- **`... Page`**  
+  - Type: regular model.  
+  - Notes: all pages end with `Page` (`Home Page`, `Product Page`, generic `Page`) and power the routes in `src/pages/`.
+- **`... Block`**  
+  - Type: reusable [block](https://www.datocms.com/docs/content-modelling/blocks).  
+  - Notes: every reusable block name ends with `Block` (`Text Block`, `Image Block`, etc.) and is consumed by templates and fragments in `src/blocks/`. See [Blocks and Components](./blocks-and-components.md).
 
 Since a project has multiple pages and multiple blocks, the name should describe the models function. For example a `Newsletter Signup Block`.
 
@@ -39,26 +41,44 @@ Since a project has multiple pages and multiple blocks, the name should describe
 
 While there can always be exceptions, Head Start aims to cover the majority of field names with a list of standardised field names:
 
-| Field name | Field type                                                                                                                                                                | Notes                                                                                                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `title`    | single line string field                                                                                                                                                  | _Not_ `heading`, `name` (except for persons).                                                                                                                             |
-| `subtitle` | single line string field                                                                                                                                                  | _Not_ `tagline`, `excerpt`.                                                                                                                                               |
-| `slug`     | [slug field](https://www.datocms.com/docs/content-modelling/slug-permalinks)                                                                                              | _Not_ `permalink`, `path`, `url`. use `title` as reference field.                                                                                                         |
-| `blocks`   | [modular content field](https://www.datocms.com/docs/content-modelling/modular-content)                                                                                   | _Not_ `body`, `content`. Plural to signal its a list.                                                                                                                     |
-| `items`    | [modular content field](https://www.datocms.com/docs/content-modelling/modular-content)                                                                                   | Use when a block field can have multiple items of the same type. For example a `Unique Selling Point Block` where each item has an `title` and a `image` field.           |
-| `text`     | [structured text field](https://www.datocms.com/docs/content-modelling/structured-text)                                                                                   | _Not_ `body`, `content`, `description`. Prefer over multiple-paragraph text field as structured text offers more flexibility.                                             |
-| `image`(s) | [single asset or asset gallery field](https://www.datocms.com/docs/general-concepts/media-area)                                                                           | _Not_ `picture`(s), `photo`(s), `avatar`(s). Use plural if intended for an image grid or gallery. Set accept only specified extensions validation to 'allow only images'. |
-| `video`    | [single asset field](https://www.datocms.com/docs/general-concepts/videos) or [external video field](https://www.datocms.com/docs/content-modelling/external-video-field) | Type of field depends on video source (uploaded in CMS or 3rd party platform).                                                                                            |
-| `page`(s)  | [link(s) field](https://www.datocms.com/docs/content-modelling/links)                                                                                                     | Set reference to `InternalLink` model. This model bundles all `... Pages` models and ensures their routes are resolved consistently throughout the codebase.              |
+- **`title`**  
+  - Type: single line string field.  
+  - Notes: do **not** use `heading` or `name` (except for people records).
+- **`subtitle`**  
+  - Type: single line string field.  
+  - Notes: avoid `tagline` or `excerpt`.
+- **`slug`**  
+  - Type: [slug field](https://www.datocms.com/docs/content-modelling/slug-permalinks).  
+  - Notes: not `permalink`, `path`, or `url`; use `title` as the reference field.
+- **`blocks`**  
+  - Type: [modular content field](https://www.datocms.com/docs/content-modelling/modular-content).  
+  - Notes: plural naming signals the list, not `body` or `content`.
+- **`items`**  
+  - Type: [modular content field](https://www.datocms.com/docs/content-modelling/modular-content).  
+  - Notes: use when the field repeats the same item structure (e.g., “Unique Selling Point Block” entries composed of `title` + `image`).
+- **`text`**  
+  - Type: [structured text field](https://www.datocms.com/docs/content-modelling/structured-text).  
+  - Notes: avoid `body`, `content`, `description`; structured text is preferred over multi-paragraph text areas.
+- **`image` / `images`**  
+  - Type: [single asset or asset gallery field](https://www.datocms.com/docs/general-concepts/media-area).  
+  - Notes: not `picture`, `photo`, or `avatar`. Use plural when the UI renders grids/galleries; restrict validation to image extensions only.
+- **`video`**  
+  - Type: [asset field](https://www.datocms.com/docs/general-concepts/videos) or [external video field](https://www.datocms.com/docs/content-modelling/external-video-field).  
+  - Notes: choose the field type based on whether the video is uploaded to Dato or hosted externally.
+- **`page` / `pages`**  
+  - Type: [link field](https://www.datocms.com/docs/content-modelling/links).  
+  - Notes: reference the `InternalLink` model so all `... Page` routes resolve consistently across the codebase.
 
 ## Modelling Appearance
 
 In cases where the appearance of a content model needs to be controlled from the CMS, Head Start aims to handle this using two standardised fields:
 
-| Field name | Field type                                                                                     | Notes                                                                                                                                                                                                                                                                                                                                                               |
-| ---------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `layout`   | single line string field                                                                       | Defines position, size and direction. Use pre-defined values by configuring [accept only specified values](https://www.datocms.com/docs/content-modelling/validations#single-line-text) in field validation settings. For example `full-width`, `centered`, `fixed-header`.                                                                                         |
-| `style`    | single line string field or [link field](https://www.datocms.com/docs/content-modelling/links) | Defines other visual style properties. Use string field with pre-defined values by configuring [accept only specified values](https://www.datocms.com/docs/content-modelling/validations#single-line-text) or create a dedicated Style model and use a link field to reference it, if the style is used cross-model. For example `highlight`, `branded`, `primary`. |
+- **`layout`**  
+  - Type: single line string field.  
+  - Notes: defines position, size, direction. Configure [accept only specified values](https://www.datocms.com/docs/content-modelling/validations#single-line-text) (e.g., `full-width`, `centered`, `fixed-header`).
+- **`style`**  
+  - Type: single line string field or [link field](https://www.datocms.com/docs/content-modelling/links).  
+  - Notes: governs visual treatments. Use predefined values or create a Style model referenced via link fields when styles are shared (`highlight`, `branded`, `primary`, etc.).
 
 A few example situations:
 
