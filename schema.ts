@@ -104,21 +104,6 @@ export type Video = ItemTypeDefinition<
     };
   }
 >;
-export type EbooksIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '180517',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
 export type Reprint = ItemTypeDefinition<
   EnvironmentSettings,
   '181484',
@@ -146,21 +131,6 @@ export type BlogAuthor = ItemTypeDefinition<
     };
     slug: {
       type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type ArchiveIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177591',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
     };
     seo: {
       type: 'seo';
@@ -587,21 +557,6 @@ export type License = ItemTypeDefinition<
     };
   }
 >;
-export type MagazineIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  'Hvp_-y8hTkaEMfZDVmHf-g',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
 export type BlogPostOld = ItemTypeDefinition<
   EnvironmentSettings,
   '70452',
@@ -653,57 +608,6 @@ export type BlogTag = ItemTypeDefinition<
     };
     slug: {
       type: 'string';
-    };
-  }
->;
-export type Homeslide = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70446',
-  {
-    ref: {
-      type: 'integer';
-    };
-    claim: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-    description: {
-      type: 'text';
-    };
-    online: {
-      type: 'boolean';
-    };
-    item_position: {
-      type: 'integer';
-    };
-    creation_date: {
-      type: 'date_time';
-    };
-    updated_date: {
-      type: 'date_time';
-    };
-    image_image_uid: {
-      type: 'file';
-    };
-  }
->;
-export type AuthorsIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177592',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
     };
   }
 >;
@@ -769,69 +673,6 @@ export type Collection = ItemTypeDefinition<
     };
     logo: {
       type: 'file';
-    };
-  }
->;
-export type SuppliersIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177742',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type CollectionsIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177447',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    cover: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type HighlightsIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '177589',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
-    };
-  }
->;
-export type BooksIndex = ItemTypeDefinition<
-  EnvironmentSettings,
-  '171774',
-  {
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'text';
-    };
-    seo: {
-      type: 'seo';
     };
   }
 >;
@@ -957,9 +798,7 @@ export type AnyModel =
   | IndexPage
   | Author
   | Supplier
-  | EbooksIndex
   | BlogAuthor
-  | ArchiveIndex
   | Keyword
   | CoverSize
   | BlogPost
@@ -967,16 +806,9 @@ export type AnyModel =
   | Book
   | BlogCategory
   | License
-  | MagazineIndex
   | BlogPostOld
   | BlogTag
-  | Homeslide
-  | AuthorsIndex
   | Page
   | Collection
-  | SuppliersIndex
-  | CollectionsIndex
-  | HighlightsIndex
-  | BooksIndex
   | App;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
