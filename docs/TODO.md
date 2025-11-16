@@ -40,7 +40,6 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 ## Project Structure
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS1** add a prebuild verification that fails the build when `public/generated/search-page.client.js` or `swiper-element.js` are missing or stale (Due: 2025-11-18; Acceptance: CI step or `astro build` guard runs before deployment, docs/assets.md and docs/project-structure.md updated).
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS2** fix `LinkToRecord.astro` so `BlogPostRecord` links point to `/magazine/${slug}` and add coverage to stop regressions (Due: 2025-11-21; Acceptance: Structured Text links resolve correctly, docs/list-components.md#structured-text-blocks annotated, regression test in place).
-- [ ] [Refactoring] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **PS4** decide on the canonical `ASTRO_OUTPUT` (`static` vs `server`) and encode that choice in `astro.config.mjs` + docs (Due: 2025-11-29; Acceptance: build scripts fail when the env is missing/mismatched, `datocms.json` + docs/project-structure.md#runtime-configuration--tooling record the final contract, Vercel deploy instructions updated).
 
 ## Documentation Hygiene
 - [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **DH1** coordinate with maintainers to flip `agent_edit: true` on the locked policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, testing) (Due: 2025-11-18; Acceptance: frontmatter updated via maintainer PR, tracked in docs/decision-log once editing is allowed).
@@ -49,3 +48,4 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 ## Completed
 - [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale, so the planned localization architecture was retired and docs/i18n.md now records the decision instead of future work.
 - 2025-11-07 - [Refactoring] **PS3**: Implemented Draft Mode UI, `/api/preview`, and documentation so editors can use preview without removing static output.
+- 2025-11-16 - [Refactoring] **PS4**: Finalised the SERVER=static/preview contract so production ships pure SSG while previews run SSR from the same repo.

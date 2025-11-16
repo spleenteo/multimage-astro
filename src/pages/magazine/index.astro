@@ -57,7 +57,7 @@ const posts: PostCard[] = (data.allBlogPosts ?? [])
     image: post.featuredImage?.responsiveImage ?? null,
   }))
   .sort((a, b) => Number(b.sticky === true) - Number(a.sticky === true));
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

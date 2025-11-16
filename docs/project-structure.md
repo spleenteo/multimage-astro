@@ -24,9 +24,10 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Canonical documentation (assets, search, inventories, etc.). Keep these files aligned with the code or log drift in `docs/TODO.md`.
 
 ## Runtime configuration & tooling
-- `astro.config.mjs` switches between `output: 'server'` (default) and `output: 'static'` using the `ASTRO_OUTPUT` env var, wires the Vercel adapter when needed, and hard-codes `site: 'https://www.multimage.org'`. It also validates every CDA/CMA/search env so builds fail fast when a token is missing.
+- `astro.config.mjs` now reads the `SERVER` env var. `SERVER=static` (default) emits `output: 'static'` so every public route prerenders to `dist/`; `SERVER=preview` flips the build to `output: 'server'` so the preview Vercel project can render Draft Mode requests on demand. The config only wires the Vercel adapter when SSR is enabled and still validates every CDA/CMA/search env so builds fail fast when a token is missing.
 - The same config exposes `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` and `PUBLIC_SITE_URL` to the client. `/cerca` throws during rendering if the search token is absent and the sitemap falls back to `http://localhost:4321` whenever `PUBLIC_SITE_URL` is unset (see docs/TODO.md SEO task **SEO1**).
 - `tsconfig.json` defines the `~/*` path aliases used throughout the repo and enables `allowImportingTsExtensions` because `_graphql.ts` files are imported with their extension. Keep helpers inside `src/lib/**` so cross-layer imports stay obvious.
+- `~/lib/prerender` centralises the shared `export { prerender }` flag so Astro pages are prerendered only when `SERVER=static` but remain SSR when `SERVER=preview`.
 - `npm run sync-datocms` (called by `npm run dev`/`start`) loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md`. 
 - `npm run prebuild`/`npm run bundle-search-client` builds the browser bundles under `public/generated`. Run it before `astro dev`/`astro build` locally and wire it into CI (tracked by docs/TODO.md Project Structure task **PS1**).
 
@@ -87,6 +88,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Notes: Dumps every book/author/page body without auth; lock it down via Security task **S4**.
 
 ## API & preview routes
+(Deployed only when `SERVER=preview`; static builds omit all runtime endpoints.)
 - **`/api/preview`** (GET/POST) requires `SECRET_API_TOKEN`, validates relative redirects, sets the signed draft-mode cookie via `enableDraftMode`, and returns 401 otherwise.
 - **`/api/draft-mode/enable`** mirrors the preview secret guard before redirecting to a relative URL; **`/api/draft-mode/disable`** only clears the cookie but still rejects absolute redirects.
 - **`/api/preview-links`** powers the Dato “Web Previews” plugin: it maps records to website routes via `recordToWebsiteRoute`, generates draft/published URLs (enabling or disabling draft mode on the way), and responds with permissive CORS headers.
@@ -100,4 +102,4 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - `public/generated` assets are not fingerprinted or validated; missing `npm run prebuild` results in broken `<script>` imports. Add integrity checks per docs/TODO.md Project Structure task **PS1**.
 - Cache tags/revalidation hooks are still absent even though the project relies on query listeners. Capture incremental cache invalidation in docs/TODO.md CMS task **CD3** and update data loaders accordingly.
 - The one-off `/api/post-deploy` endpoint remains deployed and can leak the preview secret if an attacker points it at their Dato project. Remove or protect it per docs/TODO.md Security task **S5**.
-- Builds default to `output: 'server'`, so Vercel provisions serverless functions unless `ASTRO_OUTPUT=static` is set. Decide on the canonical runtime and document that contract (docs/TODO.md Project Structure task **PS4**).
+***Resolved 2025-11-16*** — Builds default to `SERVER=static`, which prerenders every route to `dist/`. Deployments that need live drafts set `SERVER=preview`, which runs every page as SSR while keeping the codebase identical and reusing the same repo for both Vercel projects.

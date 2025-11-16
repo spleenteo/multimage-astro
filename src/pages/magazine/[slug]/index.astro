@@ -68,7 +68,7 @@ const seo = withFallbackSeo(post._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
   description: heroDescription,
 });
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

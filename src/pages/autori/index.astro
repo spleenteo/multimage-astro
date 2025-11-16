@@ -68,7 +68,7 @@ for (const author of authorCards) {
 
 const authorGroups = Array.from(authorGroupsMap.values());
 const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, anchorId }));
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

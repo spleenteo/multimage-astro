@@ -2,7 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { withFallbackSeo } from '~/lib/seo';
 
-export const prerender = import.meta.env.PROD;
+export { prerender } from '~/lib/prerender';
 
 const MIN_QUERY_LENGTH = 3;
 const SITE_SEARCH_ENDPOINT = 'https://site-api.datocms.com/search-results';

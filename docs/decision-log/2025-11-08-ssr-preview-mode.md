@@ -4,7 +4,7 @@ agent_edit: true
 
 # Output SSR per abilitare anteprime editoriali
 
-**Abbiamo portato l'output di Astro da `static` a `server` per consentire agli editor di usare le preview di DatoCMS senza rigenerare l'intero sito.**
+**Abbiamo portato l'output di Astro da `static` a `server` per consentire agli editor di usare le preview di DatoCMS senza rigenerare l'intero sito.** _(Superseded on 2025-11-16 by the `SERVER=static|preview` dual-runtime decision.)_
 
 - Date: 2025-11-08
 - Alternatives Considered:

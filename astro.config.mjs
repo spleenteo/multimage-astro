@@ -3,16 +3,24 @@ import { defineConfig, envField } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
 
-const resolvedOutput = /** @type {'static' | 'server'} */ (process.env.ASTRO_OUTPUT ?? 'server');
-const useAdapter = resolvedOutput === 'server';
+const serverMode = (process.env.SERVER ?? 'static').toLowerCase();
+const resolvedOutput = /** @type {'static' | 'server'} */ (
+  serverMode === 'preview' ? 'server' : 'static'
+);
+const adapter = vercel();
 
 // https://astro.build/config
 export default defineConfig({
   output: resolvedOutput,
-  adapter: useAdapter ? vercel() : undefined,
+  adapter,
   site: 'https://www.multimage.org',
   env: {
     schema: {
+      SERVER: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+      }),
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({
         context: 'server',
         access: 'secret',

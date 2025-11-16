@@ -7,12 +7,15 @@ scope: How to manage draft preview for editors
 
 Multimage now exposes a full Draft Mode pipeline so editors can review unpublished
 DatoCMS content (with live query updates) on Vercel without switching the public
-site away from static output. `/api/*` routes run as Vercel serverless functions
-while every page stays prerendered.
+site away from static output. When `SERVER=static` the Astro build runs in
+`output: 'static'` and ships a pure SSG snapshot (no runtime `/api/*` routes).
+Preview deployments flip `SERVER=preview`, reusing the same codebase but running
+every route as SSR so Draft Mode cookies toggle draft data at request time.
 
 ## 1. Access control & secrets
 
 1. Provision these environment variables locally and on every Vercel project:
+   - `SERVER` – `static` for the public build, `preview` for the SSR preview project/local dev when testing Draft Mode.
    - `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` – draft-only CDA token scoped to the
      Multimage project.
    - `SECRET_API_TOKEN` – arbitrary preview secret shared between `/api/preview`,
@@ -39,7 +42,8 @@ while every page stays prerendered.
 - `src/lib/datocms/executeQuery.ts` now accepts `{ includeDrafts: true }` and
   automatically swaps the CDA token. Every page/component that calls
   `executeQuery` reads `isDraftModeEnabled(Astro.cookies)` and forwards the flag,
-  so the same templates power both published and draft renders.
+  so the same templates power both published and draft renders (SSR whenever
+  `SERVER=preview`).
 - Draft-only CDA tokens never reach the browser. They are only passed to
   `@datocms/cda-client` on the server and to Query Listeners when (and only when)
   Draft Mode is active for the current request.
@@ -62,29 +66,31 @@ while every page stays prerendered.
 
 ## 4. Workflow on Vercel
 
-1. Deploy the branch to any Vercel environment. The build targets
-   `output: "server"` e i percorsi alimentati dal CMS esportano
-   `export const prerender = false;`, quindi ogni richiesta passa dal server
-   (Draft Mode funziona anche sui deploy Vercel preview/prod).
+1. Deploy the branch to both Vercel projects. Production sets `SERVER=static`,
+   so Astro builds `output: "static"` (pure prerender, no runtime APIs). The
+   preview project sets `SERVER=preview`, which keeps the exact same
+   codebase but runs every page via SSR so Draft Mode can override queries.
 2. Gli editor attivano la preview visitando `/api/preview?secret=...&redirect=/pagina`
    oppure cliccando “Draft version” dal plugin in DatoCMS (questo chiama lo
    stesso endpoint e poi reindirizza al percorso desiderato).
-3. As they edit content in DatoCMS, the Query Listener reloads the page when the
-   matching query updates. Poiché le pagine sono server-rendered, le bozze sono
-   visibili sia localmente sia su Vercel (preview/prod), basta aver attivato la
-   modalità Draft tramite l’endpoint o il plugin.
+3. Ogni pagina alimentata dal CMS esporta `export { prerender } from
+   '~/lib/prerender'`, quindi viene prerenderizzata solo quando
+   `SERVER=static`. In anteprima (`SERVER=preview`) le richieste passano dal
+   server, `executeQuery` riceve `includeDrafts`, e `DraftModeQueryListener`
+   ricarica l’interfaccia quando DatoCMS emette un update.
 4. Exiting preview is as simple as hitting `/api/draft-mode/disable?url=/pagina`
    (anche il link “Published version” del plugin lo fa automaticamente).
 
 > ⚠️ `npm run preview` serves the static `dist/` output and cannot read draft
-> cookies, even though il resto del sistema è ormai SSR. Usa `npm run dev`
-> (eventualmente con `--port <n>`) oppure un deployment su Vercel per verificare
-> le bozze.
+> cookies. Usa `SERVER=preview npm run dev` (eventualmente con `--port <n>`),
+> `vercel dev`, oppure il progetto Vercel dedicato alle anteprime quando devi
+> verificare le bozze.
 
 ### Required Vercel settings
 
 | Variable | Value |
 | --- | --- |
+| `SERVER` | `static` (public) or `preview` (draft) |
 | `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` | Published-only CDA token |
 | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` | Draft-only CDA token |
 | `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` | Site Search token (already public) |
@@ -102,8 +108,9 @@ any required schema entry is missing thanks to `env.validateSecrets` in
   value (remember that Vercel differentiates Production, Preview, and
   Development envs).
 - **Draft Mode cookie present but published content still visible** → ensure the
-  page/component wraps its query with `DraftModeQueryListener` *and* passes
-  `includeDrafts` to `executeQuery`.
+  page/component wraps its query with `DraftModeQueryListener`, passes
+  `includeDrafts` to `executeQuery`, and that you are running the site with
+  `SERVER=preview` (otherwise the request serves the prerendered snapshot).
 - **Missing live reload** → check the browser console for `QueryListener`
   messages. If the component threw an error, it usually means the draft token is
   absent or the query/variables are not serialisable.
@@ -112,9 +119,9 @@ any required schema entry is missing thanks to `env.validateSecrets` in
   env vars at runtime via `astro:env`.
 - **Preview page still shows published content su Vercel** → assicurati di aver
   chiamato `/api/preview?secret=...` sulla stessa origine del deployment e che
-  la pagina in questione esporti `prerender = false`. Se il cookie è presente ma
-  il contenuto resta pubblicato, controlla i log serverless (funzione
-  `_render`) per errori lato query.
+  il progetto Vercel sia configurato con `SERVER=preview`. Se il cookie è
+  presente ma il contenuto resta pubblicato, controlla i log serverless
+  (funzione `_render`) per errori lato query.
 - **DatoCMS Web Previews plugin** → l’endpoint `/api/preview-links` implementa il
   webhook del plugin. Ogni deploy (preview o prod) richiama `/api/post-deploy`,
   che aggiorna automaticamente il plugin aggiungendo i due “frontends”:
@@ -122,8 +129,8 @@ any required schema entry is missing thanks to `env.validateSecrets` in
   corrente). Se aggiungi nuovi modelli o rotte, ricorda di aggiornare
   `recordToWebsiteRoute` perché il plugin sappia come costruire gli URL.
 - **401 or missing query params on `/api/preview`** → usually indicates you’re
-  hitting the static preview server instead of the dev server. Make sure `npm
-  run dev` is running and note the port printed in the banner (4321 by default;
-  Astro auto-increments when the port is busy). When you run `npm run preview`
-  or access `/api/preview` from the prerendered `dist/`, the handler always
-  returns 401 because query parameters are stripped.
+  hitting the static preview server instead of a `SERVER=preview` runtime. Make
+  sure `SERVER=preview npm run dev` is running and note the port printed in the
+  banner (4321 by default; Astro auto-increments when the port is busy). When
+  you run `npm run preview` or access `/api/preview` from the prerendered
+  `dist/`, the handler always returns 401 because query parameters are stripped.
