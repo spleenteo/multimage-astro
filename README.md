@@ -23,6 +23,7 @@ cp .env.example .env
 ```
 
 ```bash
+SERVER=static
 DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN=your_published_token
 DATOCMS_DRAFT_CONTENT_CDA_TOKEN=your_draft_token
 PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN=your_public_search_token
@@ -34,7 +35,9 @@ DATOCMS_CMA_TOKEN=optional_schema_token
 
 > Nota: evita di racchiudere i valori tra virgolette nello `.env` (soprattutto
 > `SECRET_API_TOKEN` e `DRAFT_MODE_COOKIE_NAME`), altrimenti i confronti lato
-> server falliscono.
+> server falliscono. Imposta `SERVER=preview` quando devi testare le preview in
+> locale; lascia `SERVER=static` (o ometti la variabile) per simulare la build
+> pubblica.
 ```
 
 See `docs/DATOCMS.md` for the authoritative description of models and fields.
@@ -69,17 +72,21 @@ npm run build
 npm run preview
 ```
 
-`npm run build` executes `astro check` and runs the Vercel adapter in server
-mode. `dist/` still contains the prerendered HTML while `.vercel/output/`
-collects the serverless entrypoints used for `/api/*`. `npm run preview` serves
-the `dist/` snapshot only; Draft Mode and `/api/preview` will return 401 there
-because no server runtime executes.
+`npm run build` executes `astro check` and honours the `SERVER` env var. With
+`SERVER=static` (default) Astro switches to `output: 'static'` and writes only
+`dist/` (pure SSG). With `SERVER=preview` the build stays fully SSR (via the
+Vercel adapter) so every route can read Draft Mode cookies. `npm run preview`
+always serves the static `dist/` snapshot; Draft Mode and `/api/preview` will
+return 401 there because no server runtime executes.
 
 ## 6. Preview Draft Content
 
-Previewing unpublished entries now follows the same flow in development and on
-Vercel, because the CMS-driven routes render on the server (no prerendering) so
-Draft Mode cookies are honored ovunque:
+Previewing unpublished entries relies on the `SERVER` split:
+
+- `SERVER=static` (production) prerenders every public route and does not
+  include runtime preview APIs.
+- `SERVER=preview` (preview Vercel project or local dev) runs the entire app in
+  SSR so Draft Mode cookies can toggle draft CDA tokens per request.
 
 1. Make sure `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, and
    `SIGNED_COOKIE_JWT_SECRET` are set (see the `.env` snippet above). `npm run
@@ -88,11 +95,11 @@ dev` fails fast if they are missing.
    per sessione (oppure usa il plugin **DatoCMS Web Previews**, che chiama lo
    stesso endpoint). L’API valida il segreto, imposta il cookie e reindirizza
    alla pagina richiesta.
-3. Ogni pagina alimentata dal CMS gira sul server (`prerender = false`) e passa
-   `includeDrafts` to `executeQuery`, so Draft Mode works on `npm run dev`,
-   `vercel dev`, Vercel preview, and Vercel production. `DraftModeQueryListener`
-   subscribes to the underlying GraphQL query and automatically reloads when a
-   content editor hits “Save” in DatoCMS.
+3. Ogni pagina alimentata dal CMS esporta `export { prerender } from
+'~/lib/prerender'`: viene prerenderizzata quando `SERVER=static` e resta SSR
+   quando `SERVER=preview`. `DraftModeQueryListener` si iscrive alla query
+   GraphQL e ricarica automaticamente la pagina quando un editor salva in
+   DatoCMS.
 4. Esci dalla preview passando da `/api/draft-mode/disable?url=/percorso` (anche
    il plugin invia questa chiamata). Il cookie viene cancellato e torni alla
    versione pubblicata.
@@ -113,7 +120,7 @@ Per rigenerare il file è sufficiente eseguire `npm run build` (oppure `npm run 
 
 ## 8. Deploying Fast
 
-- **Vercel** (canonical): the repository is linked to the `multimage-astro` project on your personal account. Run `vercel login`, then `vercel link --project multimage-astro --yes` inside the repo. Sync the required environment variables (`DATOCMS_*`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `DRAFT_MODE_COOKIE_NAME`, etc.) with `vercel env pull`. Deploy with `vercel deploy --prod`; the build runs the Vercel adapter in server mode so `/api/*` **e tutte le pagine collegate al CMS** girano come funzioni serverless, consentendo l’uso del Draft Mode anche sui deploy preview/prod. `dist/` viene comunque prodotto nel caso servano asset statici legacy.
+- **Vercel** (canonical): link the repo twice — one project for production (`SERVER=static`) and another for previews (`SERVER=preview`). Run `vercel login`, then `vercel link --project multimage-astro --yes` (prod) and `vercel link --project multimage-astro-preview --yes` (example name) inside the repo. Sync the required environment variables (`SERVER`, `DATOCMS_*`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `DRAFT_MODE_COOKIE_NAME`, etc.) with `vercel env pull`. Production deploys a pure static snapshot; the preview project runs full SSR (pages + `/api/preview`, `/api/draft-mode/*`, `/api/preview-links`, `/api/seo-analysis`) so editors can see drafts instantly.
 - **Manual upload**: run `npm run build` and publish the `dist/` directory.
 
 For contribution guidelines, coding style, and DatoCMS conventions, see `AGENTS.md`. Keep `docs/DATOCMS.md` open while working—it is the source of truth for the content model and avoids needless web searches.

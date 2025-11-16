@@ -57,7 +57,7 @@ for (const collection of data.allCollections ?? []) {
     booksCount: bookCounts.get(collection.id) ?? 0,
   });
 }
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

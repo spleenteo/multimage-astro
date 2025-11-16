@@ -333,7 +333,7 @@ const seo = withFallbackSeo(book.seo, {
   title: `${book.title} | Multimage`,
   description: fallbackDescription,
 });
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

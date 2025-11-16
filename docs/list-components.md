@@ -89,7 +89,7 @@ scope: A list to describe all components used in the project
   - Key props: `title`, `content`, `link`, `imagePosition`, `featuredImage`.
   - Used in: home banners, Structured Text `BannerBlock`.
   - Owner: @codex.
-  - Notes: renders HTML via `set:html`; sanitize per docs/assets.md.
+  - Notes: renders HTML via `set:html`; sanitize per docs/guidelines/assets.md.
 - `PillsBlock` — **PillsBlock** (`src/components/blocks/PillsBlock/index.astro` + `_graphql.ts`)
   - Purpose: renders up to three info “pills” with optional icons, multiline copy, and CTA buttons.
   - Key props: `id`, `title`, `description`, `pills[]` (each pill exposes `icon`, `title`, `content`, nested `ButtonRecord`).
@@ -143,7 +143,7 @@ scope: A list to describe all components used in the project
   - Notes: converts raw `books` array via `mapBooksToCards`.
 - `CtaButtonWithImageBlock` — **CtaButtonWithImageBlock** (`src/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro`)
   - Purpose: CTA layout with up to two buttons plus optional image.
-  - Notes: enforces label/url validation and sanitization checklist from docs/assets.md.
+  - Notes: enforces label/url validation and sanitization checklist from docs/guidelines/assets.md.
 - `ImageBlock` — **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
   - Purpose: responsive image with optional caption.
   - Notes: injects fallback `alt` text when Dato omits it.

@@ -1,21 +1,20 @@
 ---
-agent_edit: false
-scope: How to run simple test
+agent_edit: true
+scope: Live view of testing practices and gaps
 ---
 
-# Testing
+# Testing — Current State (2025-11-16)
 
-Fastro is a website with very poor dynamic parts. Most of it is static site.
-So testing is just about code formatting and build before pushing the repo
+- Commands:
+  - `npm run format` — Prettier write
+  - `npm run lint` — Prettier check
+  - `npm run build` — `astro check` + `astro build`
+  - `npm run test` — runs format → lint → build (no jest/playwright suites yet)
+- There are no automated unit, integration, E2E, or accessibility tests. Manual QA happens locally by running `npm run dev` or hitting Vercel preview URLs.
+- Pending work:
+  - **CH2** add runtime assertions/tests for `/cerca` config.
+  - **TC1** add CI workflow to run lint + build on PRs.
+  - **TC2** create tests for `search-page.client.ts` and the planned CSV helper.
+- Mocking strategy for DatoCMS has not been defined; current recommendation is to hit the real CDA in preview environments only.
 
-You can run the unit tests with the following command:
-
-```bash
-npm run test
-```
-
-Via `run-p test:*` it will run several check:
-
-- format
-- lint
-- build
+Testing guidelines and expectations live in `/docs/guidelines/testing.md`.

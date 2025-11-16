@@ -63,7 +63,7 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
   title: `${collectionName} | Multimage`,
   description: collectionDescription ?? undefined,
 });
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

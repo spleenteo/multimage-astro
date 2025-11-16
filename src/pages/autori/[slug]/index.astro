@@ -86,7 +86,7 @@ const pictureResponsiveImage = author.picture?.responsiveImage
       alt: author.picture.responsiveImage.alt ?? authorDisplayName,
     }
   : null;
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

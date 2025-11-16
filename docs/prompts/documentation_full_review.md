@@ -10,15 +10,15 @@ Don't use markdown tables, prefer bullets lists or more convenient style.
 - Repository scope: whole project, with emphasis on Astro front-end, content fetching, build/runtime configs, and `/docs/*`.
 - Docs that MUST be updated (modify only these; do NOT create new files or folders):
   - Decision log → `/docs/decision-log.md`
-  - Accessibility → `/docs/accessibility.md`
-  - Assets (responsive images, video, icons) → `/docs/assets.md`
-  - How to manage blocks and components (incl. DatoCMS naming conventions) → `/docs/cms-content-modelling.md`
-  - How to fetch content from the CMS via GraphQL → `/docs/cms-data-loading.md`
-  - Project structure rules → `/docs/project-structure.md`
-  - Translations / multilingual → `/docs/i18n.md`
-  - SEO setup → `/docs/seo.md`
-  - DatoCMS search system → `/docs/search.md`
-  - How to test the application → `/docs/testing.md`
+  - Accessibility → `/docs/guidelines/accessibility.md`
+  - Assets (responsive images, video, icons) → `/docs/guidelines/assets.md`
+  - How to manage blocks and components (incl. DatoCMS naming conventions) → `/docs/guidelines/cms-content-modelling.md`
+  - How to fetch content from the CMS via GraphQL → `/docs/guidelines/cms-data-loading.md`
+  - Project structure rules → `/docs/guidelines/project-structure.md`
+  - Translations / multilingual → `/docs/guidelines/i18n.md`
+  - SEO setup → `/docs/guidelines/seo.md`
+  - DatoCMS search system → `/docs/guidelines/search.md`
+  - How to test the application → `/docs/guidelines/testing.md`
   - Components catalogue & usage → `/docs/list-components.md`
   - Helper functions catalogue → `/docs/list-helpers.md`
   - Models and pages catalogue → `/docs/list-models.md`
@@ -36,15 +36,15 @@ Don't use markdown tables, prefer bullets lists or more convenient style.
 - Provide a **single unified diff patch** that updates only the listed docs, reflecting the audit results:
   1. `/docs/TODO.md`: revised as per `AGENTS.md` with prioritized tasks, owners, due dates/SLAs, acceptance criteria, and cross-links to the other updated docs. Group tasks into Security, Code Health, Accessibility, SEO, CMS/Data, Testing/CI, i18n, Project Structure, and Documentation Hygiene.
   2. `/docs/list-components.md`, `/docs/list-helpers.md`, `/docs/list-models.md`: verified inventories that match the codebase (name, path, purpose, props/signatures, usage locations, owners). Flag drift and deprecated items inline with short rationales.
-  3. `/docs/accessibility.md`: concrete checklist status (WCAG mappings), known violations, test approach (keyboard/AT), and remediation tasks (cross-referenced in `/docs/TODO.md`).
-  4. `/docs/assets.md`: document current image/video/icon strategy (Astro `<Image/>` or integrations), responsive sourcesets, formats, AVIF/WebP/fallbacks, cache policy, and any gaps (e.g., missing width/height, lazy-loading strategy, LQIP).
-  5. `/docs/cms-content-modelling.md`: confirm DatoCMS naming conventions, blocks/components mapping, validation rules, slugs, and versioning. Note mismatches vs code (fields used but not modeled, or vice-versa).
-  6. `/docs/cms-data-loading.md`: GraphQL patterns, fragments, pagination, revalidation/ISR/SWR choices, error handling, type generation, and query performance tips; include examples from current code where possible.
-  7. `/docs/project-structure.md`: enforce rules (layering, import boundaries, file colocations, naming, barrel usage) and list any violations to fix.
-  8. `/docs/i18n.md`: locales, routing rules, canonical/alternate links, translation workflow, missing keys detection, RTL considerations.
-  9. `/docs/seo.md`: meta defaults, OG/Twitter tags, sitemaps, robots, canonical/altLang, structured data, Core Web Vitals levers. Note gaps and planned fixes.
-  10. `/docs/search.md`: DatoCMS search indexing flow, fields, update triggers, ranking/typos, client querying; note missing fields or sync issues.
-  11. `/docs/testing.md`: unit/e2e strategy, fixtures/mocks for GraphQL, a11y checks, visual regression, performance budgets, and CI gates; add concrete commands that exist in `package.json`.
+  3. `/docs/guidelines/accessibility.md`: concrete checklist status (WCAG mappings), known violations, test approach (keyboard/AT), and remediation tasks (cross-referenced in `/docs/TODO.md`).
+  4. `/docs/guidelines/assets.md`: document current image/video/icon strategy (Astro `<Image/>` or integrations), responsive sourcesets, formats, AVIF/WebP/fallbacks, cache policy, and any gaps (e.g., missing width/height, lazy-loading strategy, LQIP).
+  5. `/docs/guidelines/cms-content-modelling.md`: confirm DatoCMS naming conventions, blocks/components mapping, validation rules, slugs, and versioning. Note mismatches vs code (fields used but not modeled, or vice-versa).
+  6. `/docs/guidelines/cms-data-loading.md`: GraphQL patterns, fragments, pagination, revalidation/ISR/SWR choices, error handling, type generation, and query performance tips; include examples from current code where possible.
+  7. `/docs/guidelines/project-structure.md`: enforce rules (layering, import boundaries, file colocations, naming, barrel usage) and list any violations to fix.
+  8. `/docs/guidelines/i18n.md`: locales, routing rules, canonical/alternate links, translation workflow, missing keys detection, RTL considerations.
+  9. `/docs/guidelines/seo.md`: meta defaults, OG/Twitter tags, sitemaps, robots, canonical/altLang, structured data, Core Web Vitals levers. Note gaps and planned fixes.
+  10. `/docs/guidelines/search.md`: DatoCMS search indexing flow, fields, update triggers, ranking/typos, client querying; note missing fields or sync issues.
+  11. `/docs/guidelines/testing.md`: unit/e2e strategy, fixtures/mocks for GraphQL, a11y checks, visual regression, performance budgets, and CI gates; add concrete commands that exist in `package.json`.
   12. `/docs/decision-log.md`: add entries for any policy choices changed/confirmed during this audit (date, context, decision, alternatives, consequences).
 - Keep the patch ≤ 500 added lines total; if more detail is needed, summarize and link to existing sections within those docs rather than adding new files.
 

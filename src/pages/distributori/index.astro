@@ -43,7 +43,7 @@ const supplierSections = supplierGroups.map((group) => ({
 }));
 
 const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anchorId }));
-export const prerender = false;
+export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

@@ -1,7 +1,8 @@
 import type { AstroCookies } from 'astro';
 import { draftModeEnabledFromAstro } from '~/lib/draftMode';
 
-const draftPreviewSsrEnabled = true;
+const serverMode = (import.meta.env.SERVER ?? 'static').toLowerCase();
+const draftPreviewSsrEnabled = serverMode === 'preview';
 
 export function resolveDraftMode(astro: { request?: Request; cookies: AstroCookies }) {
   if (!draftPreviewSsrEnabled) {

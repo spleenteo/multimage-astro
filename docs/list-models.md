@@ -76,4 +76,4 @@ scope: A list to describe all models in pages
 - **Aggregate meta queries** (`_allBooksMeta`, `_allAuthorsMeta`, etc.)
   - Used for counts in `/autori`, `/libri`, `/staff`, and pagination planning.
 - **Dato Site Search index**
-  - Not a GraphQL model but relevant to `/cerca`; configured via `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` and described in docs/search.md (remember to “Regenerate index” in Dato after schema changes).
+  - Not a GraphQL model but relevant to `/cerca`; configured via `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` and described in docs/guidelines/search.md (remember to “Regenerate index” in Dato after schema changes).

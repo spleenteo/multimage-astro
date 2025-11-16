@@ -14,7 +14,11 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **`draftPreview` utilities** (`src/lib/draftPreview.ts`)
   - Purpose: centralises Draft Mode resolution and exposes `resolveDraftMode(Astro)` for components/pages.
   - Used in: every CMS-driven page, BaseLayout, DraftModeQueryListener.
-  - Notes: tutte le pagine CMS esportano `prerender = false`, quindi il helper legge i cookie sia in dev (`npm run dev`/`vercel dev`) sia sui deploy preview/prod di Vercel.
+  - Notes: insieme al flag condiviso `~/lib/prerender`, assicura che le pagine leggano i cookie solo quando `SERVER=preview` (SSR). In produzione (`SERVER=static`) i template restano prerenderizzati.
+- **`prerender` flag** (`src/lib/prerender.ts`)
+  - Purpose: exports a shared `prerender` boolean so every page can `export { prerender } from '~/lib/prerender'`.
+  - Used in: tutte le rotte pubbliche (`src/pages/**/*.astro`, `sitemap.xml.ts`, `llms-full.txt.ts`).
+  - Notes: ritorna `true` quando `SERVER=static` (build ibrido) e `false` quando `SERVER=preview` (full SSR). Evita duplicare `if` o valori hard-coded nei singoli file.
 - **`commonFragments`** (`src/lib/datocms/commonFragments.ts`)
   - Purpose: exports shared `TagFragment` and `ResponsiveImageFragment`.
   - Used in: most `_graphql.ts` files to keep fragments DRY.
