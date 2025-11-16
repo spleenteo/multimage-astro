@@ -57,8 +57,19 @@ async function loadEnv() {
   }
 }
 
+function resolveDatoEnvironment() {
+  const override = process.env.DATO_ENVIROMENT || process.env.DATO_ENVIRONMENT;
+  if (!override) {
+    return undefined;
+  }
+
+  const trimmed = override.trim();
+  return trimmed.length ? trimmed : undefined;
+}
+
 async function runGenerateSchema() {
   const managementToken = process.env.DATOCMS_API_TOKEN || process.env.DATOCMS_CMA_TOKEN || '';
+  const datoEnvironment = resolveDatoEnvironment();
 
   if (!managementToken) {
     console.log(
@@ -68,7 +79,13 @@ async function runGenerateSchema() {
   }
 
   return new Promise((resolve, reject) => {
-    const child = spawn('npx', ['datocms', 'schema:generate', 'schema.ts'], {
+    const args = ['datocms', 'schema:generate', 'schema.ts'];
+
+    if (datoEnvironment) {
+      args.push('--environment', datoEnvironment);
+    }
+
+    const child = spawn('npx', args, {
       stdio: 'inherit',
       env: {
         ...process.env,

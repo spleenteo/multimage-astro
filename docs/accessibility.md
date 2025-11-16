@@ -1,16 +1,14 @@
 ---
-agent_edit: false
-scope: aims to provide an accessible baseline, by providing helper classes and components
+agent_edit: true
+scope: Living record of Multimage accessibility coverage and gaps
 ---
 
-# Accessibility (a11y)
+# Accessibility — Current State (2025-11-16)
 
-## Best practices
+- Pages use semantic landmarks through `BaseLayout.astro`, but there is still no skip link or outlined landmark focus state (tracked in docs/TODO.md task **A11Y2**).
+- Component catalogue relies heavily on Structured Text rendered via `@datocms/astro/StructuredText`; interactive blocks (search form, BookCarouselSection, staff tables) expose ARIA labels but have not been validated with screen readers yet (see **A11Y1**).
+- Focus management for modal-like experiences (none today) is not implemented; editors rely on page-level reloads triggered by DraftModeQueryListener.
+- Color contrast follows the Tailwind theme defined in `tailwind.config.mjs`, which reuses Multimage’s palette; no automated contrast audit has been run since 2025-11-01.
+- Keyboard testing to date has been ad-hoc via local dev builds; there is no Playwright/Cypress suite to prevent regressions.
 
-aims to stay close to the web standards. Here's a few tips to help keep it accessible:
-
-- Use semantic HTML as a baseline.
-- Use [media queries for a11y](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries/Using_media_queries_for_accessibility) like `prefers-reduced-motion` and `prefers-contrast`.
-- Use native elements for interaction like `<form>`s, `<label>`led `<input>`s, `<output>`s, `<dialog>`, `<details>` with `<summary>` and native API's like the [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API).
-- Add relevant ARIA roles and attributes on custom interactive components.
-- Require `alt` texts on assets in the CMS and use their value in templates.
+Refer to `/docs/guidelines/accessibility.md` for non-negotiable policies and testing procedures. Update this file whenever new audits finish or regressions are discovered.

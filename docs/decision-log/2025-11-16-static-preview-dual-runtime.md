@@ -21,6 +21,6 @@ agent_edit: true
 ## Consequences
 
 - Vercel ospita due progetti: dominio pubblico (build statico) e preview/editors (build SSR). Entrambi leggono gli stessi segreti.
-- `docs/preview-mode.md`, `README.md`, `docs/project-structure.md`, e `docs/list-helpers.md` documentano il contratto `SERVER=static|preview` e la presenza del helper condiviso `~/lib/prerender`.
+- `docs/guidelines/preview-mode.md`, `README.md`, `docs/guidelines/project-structure.md`, e `docs/list-helpers.md` documentano il contratto `SERVER=static|preview` e la presenza del helper condiviso `~/lib/prerender`.
 - Il plugin Web Preview continua a funzionare perché il progetto Vercel dedicato alle anteprime gira con `SERVER=preview`, quindi gli endpoint `/api/*` e le pagine restano SSR pur condividendo la stessa codebase.
 - I deploy futuri devono impostare esplicitamente `SERVER` nell’ambiente Vercel appropriato; l’assenza del parametro ricade su `static`, quindi non c’è regressione per la produzione.

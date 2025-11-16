@@ -1,30 +1,14 @@
 ---
 agent_edit: true
-scope: Summarise runtime, CMS, and tooling dependencies used by Multimage.
+scope: Live inventory of runtime and build dependencies
 ---
 
-# Dependencies
+# Dependencies — Current State (2025-11-16)
 
-## Runtime & UI
+- Core stack: Astro 5.15, Tailwind 3.4, TypeScript 5.5, `@astrojs/tailwind`, `@astrojs/vercel`, `@datocms/astro`, `@datocms/cda-client`, `@datocms/cma-client`.
+- Tooling: Prettier 3.3 + `prettier-plugin-astro`, esbuild 0.25, dotenv-cli, npm-run-all.
+- Client bundles: Swiper 11 for carousels, Iconify for icons.
+- Dev-only libs: `@astrojs/check`, `@astrojs/ts-plugin`, `@types/*` packages.
+- Known upgrades/debt: still shipping GA UA snippet, jsdom only used by `/api/seo-analysis`, no automated dependency audit pipeline.
 
-- `astro@^5.15.1` outputs a fully static site deployed to Vercel.
-- Styling stacks on `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer`, with brand tokens defined in `tailwind.config.mjs`.
-- `swiper` provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required.
-
-## CMS & Data
-
-- `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
-- DatoCMS data primarily flows through `@datocms/cda-client`; the LLM export now runs inside `src/pages/llms-full.txt.ts`, so `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
-
-## Monitoring & Analytics
-
-- `@vercel/analytics` and `@vercel/speed-insights` augment inline Google Analytics and Iubenda snippets inside `BaseLayout`.
-
-## Tooling
-
-- Formatting is enforced via `prettier` + `prettier-plugin-astro`. No ESLint is configured, so lint coverage stops at formatting.
-
-## Risk Notes
-
-- Keep `swiper` pinned to a specific version to avoid sudden bundle regressions introduced by caret releases.
-- Track `@datocms/cli` updates, especially when schema generation APIs change, and upgrade promptly to retain compatibility.
+Policies for approving/upgrading dependencies reside in `/docs/guidelines/dependencies.md`.
