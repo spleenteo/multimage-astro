@@ -367,9 +367,6 @@ export type Book = ItemTypeDefinition<
     slug: {
       type: 'slug';
     };
-    edited_by: {
-      type: 'boolean';
-    };
     copyright: {
       type: 'string';
     };
@@ -379,20 +376,17 @@ export type Book = ItemTypeDefinition<
     subtitle: {
       type: 'string';
     };
-    price: {
-      type: 'float';
-    };
     title: {
       type: 'string';
     };
-    pages: {
-      type: 'integer';
+    price: {
+      type: 'float';
     };
-    description: {
-      type: 'text';
+    review_short: {
+      type: 'structured_text';
     };
-    promo: {
-      type: 'string';
+    edited_by: {
+      type: 'boolean';
     };
     license: {
       type: 'link';
@@ -406,38 +400,47 @@ export type Book = ItemTypeDefinition<
     authors: {
       type: 'links';
     };
-    layout_artist: {
+    description: {
+      type: 'text';
+    };
+    promo: {
       type: 'string';
     };
-    epub_url: {
-      type: 'string';
+    pages: {
+      type: 'integer';
     };
     print_year: {
       type: 'date';
     };
-    review: {
-      type: 'structured_text';
-    };
     archive: {
       type: 'boolean';
     };
+    epub_url: {
+      type: 'string';
+    };
+    review: {
+      type: 'structured_text';
+    };
+    layout_artist: {
+      type: 'string';
+    };
     edition: {
-      type: 'integer';
-    };
-    collection: {
-      type: 'link';
-    };
-    stock: {
       type: 'integer';
     };
     illustrator: {
       type: 'string';
     };
-    first_print_year: {
+    stock: {
       type: 'integer';
+    };
+    collection: {
+      type: 'link';
     };
     cover_designer: {
       type: 'string';
+    };
+    first_print_year: {
+      type: 'integer';
     };
     format: {
       type: 'string';
@@ -692,6 +695,9 @@ export type App = ItemTypeDefinition<
   EnvironmentSettings,
   'ZwV1BuKbRiGcG4zyhazrrw',
   {
+    pdf_footer: {
+      type: 'text';
+    };
     callout_background: {
       type: 'color';
     };
