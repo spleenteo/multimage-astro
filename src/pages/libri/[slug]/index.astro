@@ -15,12 +15,9 @@ import {
   defaultLinkToRecordComponents,
 } from '~/lib/datocms/structuredTextComponents';
 import {
-  buildLicenseLabel,
-  extractYear,
   formatBookPrice,
-  formatCirculation,
-  formatEdition,
-  formatOrdinal,
+  buildEditionDetails,
+  buildGraphicsDetails,
   mapBooksToCards,
   normalizeText,
 } from '~/lib/books';
@@ -116,10 +113,7 @@ const alternateFormatsData = await executeQuery<BookAlternateFormatsResult>(
 const authorSegments = buildAuthorSegments(authors);
 const authorPrefix = book.editedBy ? 'A cura di ' : 'Di ';
 
-const licenseLabel = buildLicenseLabel(book.license);
 const formattedPrice = formatBookPrice(book.price);
-const formattedEdition = formatEdition(book.edition);
-const formattedPrintYear = extractYear(book.printYear);
 const descriptionHtml = book.description;
 const reviewContent = hasStructuredTextContent(book.review) ? book.review : null;
 const reviewPlain = structuredTextToPlainText(reviewContent);
@@ -224,105 +218,8 @@ const authorsCards = authors.map((author) => {
 
 const authorsSectionTitle = authorsCards.length > 1 ? 'Gli autori del libro' : 'L’autore del libro';
 
-const editionDetails = [] as Array<{ label: string; value: string; href?: string }>;
-
-if (book.collection?.name && book.collection.slug) {
-  editionDetails.push({
-    label: 'Collana',
-    value: book.collection.name,
-    href: `/collane/${book.collection.slug}`,
-  });
-}
-
-if (book.isbn) {
-  editionDetails.push({ label: 'ISBN', value: book.isbn });
-}
-
-if (formattedPrintYear) {
-  editionDetails.push({ label: 'Anno di stampa', value: formattedPrintYear });
-}
-
-if (book.firstPrintYear) {
-  editionDetails.push({ label: 'Prima edizione', value: `${book.firstPrintYear}` });
-}
-
-if (book.edition && book.edition > 1 && formattedEdition) {
-  editionDetails.push({ label: 'Edizione', value: formattedEdition });
-}
-
-for (const reprint of book.reprints ?? []) {
-  if (reprint.__typename !== 'ReprintRecord') {
-    continue;
-  }
-
-  const reprintOrdinal = formatOrdinal(reprint.number);
-  if (reprintOrdinal) {
-    editionDetails.push({ label: 'Ristampa', value: `${reprintOrdinal} ristampa` });
-  }
-
-  const formattedCirculation = formatCirculation(reprint.circulation ?? null);
-  if (formattedCirculation) {
-    editionDetails.push({ label: 'Tiratura', value: formattedCirculation });
-  }
-
-  const reprintYear = extractYear(reprint.year ?? null);
-  if (reprintYear) {
-    editionDetails.push({ label: 'Anno di ristampa', value: reprintYear });
-  }
-}
-
-const originalLang = normalizeText(book.originalLang);
-if (originalLang) {
-  editionDetails.push({ label: 'Lingua originale', value: originalLang });
-}
-
-const originalTitle = normalizeText(book.originalTitle);
-if (originalTitle) {
-  editionDetails.push({ label: 'Titolo originale', value: originalTitle });
-}
-
-const translator = normalizeText(book.translator);
-if (translator) {
-  editionDetails.push({ label: 'Traduttore', value: translator });
-}
-
-if (formatValue) {
-  editionDetails.push({ label: 'Formato', value: formatValue });
-}
-
-if (formattedPrice) {
-  editionDetails.push({ label: 'Prezzo di copertina', value: formattedPrice });
-}
-
-if (licenseLabel) {
-  editionDetails.push({ label: 'Licenza', value: licenseLabel });
-}
-
-const graphicsDetails = [] as Array<{ label: string; value: string }>;
-
-if (book.pages) {
-  graphicsDetails.push({ label: 'Pagine', value: `${book.pages}` });
-}
-
-const illustrator = normalizeText(book.illustrator);
-if (illustrator) {
-  graphicsDetails.push({ label: 'Illustratore', value: illustrator });
-}
-
-const coverDesigner = normalizeText(book.coverDesigner);
-if (coverDesigner) {
-  graphicsDetails.push({ label: 'Grafica di copertina', value: coverDesigner });
-}
-
-const layoutArtist = normalizeText(book.layoutArtist);
-if (layoutArtist) {
-  graphicsDetails.push({ label: 'Impaginatore', value: layoutArtist });
-}
-
-const coverSizeLabel = normalizeText(book.dimension?.dimensions ?? book.dimensions);
-if (coverSizeLabel) {
-  graphicsDetails.push({ label: 'Dimensioni', value: coverSizeLabel });
-}
+const editionDetails = buildEditionDetails(book);
+const graphicsDetails = buildGraphicsDetails(book);
 
 const coverResponsiveImage = book.coverImage?.responsiveImage
   ? { ...book.coverImage.responsiveImage, alt: book.coverImage.responsiveImage.alt ?? book.title }
@@ -474,6 +371,16 @@ export { prerender } from '~/lib/prerender';
       <div class={styles.detailsGrid}>
         <DetailList title="Dettagli edizione" items={editionDetails} />
         <DetailList title="Dettagli grafica" items={graphicsDetails} />
+      </div>
+      <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12">
+        <a
+          href={`/libri/schede/${book.slug}`}
+          class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Scheda libro (PDF)
+        </a>
       </div>
     </section>
 

@@ -1,0 +1,509 @@
+---
+import '../../../styles/global.css';
+
+import { Image } from '@datocms/astro/Image';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { formatAuthorNames } from '~/lib/authors';
+import { buildEditionDetails, buildGraphicsDetails } from '~/lib/books';
+import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { resolveDraftMode } from '~/lib/draftPreview';
+import { truncateToLength } from '~/lib/text';
+import { BOOK_SHEET_QUERY, type BookSheetQueryResult } from './_graphql';
+import { BOOK_SLUGS_QUERY, type BookSlugsResult } from '../[slug]/_graphql';
+
+export async function getStaticPaths() {
+  const data = await executeQuery<BookSlugsResult>(BOOK_SLUGS_QUERY);
+
+  return (data.allBooks ?? [])
+    .map((book) => book.slug)
+    .filter((slug): slug is string => Boolean(slug))
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing book slug');
+}
+
+const draftModeEnabled = resolveDraftMode(Astro);
+
+const data = await executeQuery<BookSheetQueryResult>(BOOK_SHEET_QUERY, {
+  variables: { slug },
+  includeDrafts: draftModeEnabled,
+});
+
+const book = data.book;
+
+if (!book) {
+  throw new Response('Scheda non trovata', { status: 404 });
+}
+
+const pdfFooter = (data.app?.pdfFooter ?? '').trim();
+const authors = book.authors ?? [];
+const authorPrefix = book.editedBy ? 'A cura di ' : 'Di ';
+const authorLine = formatAuthorNames(authors);
+const collectionLabel = book.collection?.name
+  ? `Collana ${book.collection.name}`
+  : 'Catalogo Multimage';
+
+const stripLinks = (text: string) =>
+  text
+    .replace(/https?:\/\/\S+/gi, '')
+    .replace(/www\.\S+/gi, '')
+    .trim();
+
+const primaryAuthor = authors[0] ?? null;
+const primaryAuthorBioSource = hasStructuredTextContent(primaryAuthor?.biographyShort)
+  ? primaryAuthor?.biographyShort
+  : primaryAuthor?.biography;
+const primaryAuthorBio = structuredTextToPlainText(primaryAuthorBioSource);
+const authorBioExcerpt =
+  primaryAuthorBio.length > 0
+    ? truncateToLength(primaryAuthorBio, 500)
+    : 'Biografia in aggiornamento.';
+
+const reviewSource = hasStructuredTextContent(book.reviewShort) ? book.reviewShort : book.review;
+const descriptionPlain = stripLinks(structuredTextToPlainText(reviewSource));
+const descriptionExcerpt =
+  descriptionPlain.length > 0
+    ? truncateToLength(descriptionPlain, 1200)
+    : 'Descrizione in aggiornamento.';
+
+const editionDetails = buildEditionDetails(book);
+const graphicsDetails = buildGraphicsDetails(book);
+const technicalDetails = [...editionDetails, ...graphicsDetails].filter(
+  ({ label }) => !['Collana', 'ISBN', 'Prezzo di copertina', 'Licenza'].includes(label),
+);
+
+const coverResponsiveImage = book.coverImage?.responsiveImage
+  ? {
+      ...book.coverImage.responsiveImage,
+      alt: book.coverImage.responsiveImage.alt ?? `Copertina di ${book.title}`,
+    }
+  : null;
+
+const fallbackCoverUrl = book.coverImage?.url ?? null;
+const pageTitle = `${book.isbn ?? 'scheda'} - ${book.title} - Scheda Libro Multimage`;
+
+export { prerender } from '~/lib/prerender';
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={descriptionExcerpt} />
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="sheet__header">
+        <div class="sheet__logoWrap">
+          <img
+            src="https://www.datocms-assets.com/10828/1761778162-logo-multimage-medium.jpg"
+            alt="Multimage"
+            class="sheet__logo"
+            loading="lazy"
+          />
+          <p class="sheet__meta">{collectionLabel}</p>
+        </div>
+        <div class="sheet__meta --right">
+          <span class="sheet__metaLabel">Scheda libro</span>
+          {book.isbn ? <span class="sheet__metaValue">ISBN {book.isbn}</span> : null}
+        </div>
+      </header>
+
+      <div class="sheet__grid">
+        <section class="sheet__main">
+          <div class="sheet__titleBlock">
+            <h1 class="sheet__title">{book.title}</h1>
+            {book.subtitle ? <p class="sheet__subtitle">{book.subtitle}</p> : null}
+            <p class="sheet__authors">
+              <span>{authorPrefix}</span>
+              <span>{authorLine}</span>
+            </p>
+          </div>
+
+          <section class="sheet__section">
+            <h2 class="sheet__sectionTitle">Descrizione</h2>
+            <p class="sheet__text">{descriptionExcerpt}</p>
+          </section>
+
+          <section class="sheet__section">
+            <h2 class="sheet__sectionTitle">Biografia autore</h2>
+            <p class="sheet__text sheet__bioText">{authorBioExcerpt}</p>
+          </section>
+        </section>
+
+        <aside class="sheet__side">
+          <div class="sheet__coverCard">
+            {
+              coverResponsiveImage ? (
+                <Image data={coverResponsiveImage} sizes="(min-width: 960px) 260px, 40vw" />
+              ) : fallbackCoverUrl ? (
+                <img src={`${fallbackCoverUrl}`} alt={`Copertina di ${book.title}`} />
+              ) : (
+                <div class="sheet__coverPlaceholder">Copertina in arrivo</div>
+              )
+            }
+          </div>
+
+          <div class="sheet__detailCard">
+            <h3 class="sheet__detailTitle">Dettagli tecnici</h3>
+            <dl class="sheet__detailList">
+              {
+                technicalDetails.map((detail) => (
+                  <>
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.value}</dd>
+                  </>
+                ))
+              }
+            </dl>
+          </div>
+
+          {
+            pdfFooter ? (
+              <div class="sheet__publisherCard">
+                <h3 class="sheet__detailTitle">Multimage</h3>
+                <div class="sheet__publisherText" set:html={pdfFooter} />
+              </div>
+            ) : null
+          }
+        </aside>
+      </div>
+    </main>
+
+    {
+      draftModeEnabled ? (
+        <DraftModeQueryListener query={BOOK_SHEET_QUERY} variables={{ slug }} />
+      ) : null
+    }
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #f2f4f6;
+    font-family: var(--font-sans);
+    color: #343434;
+  }
+
+  .sheet {
+    width: 210mm;
+    max-width: 100%;
+    margin: 16px auto 32px;
+    padding: 18mm 16mm;
+    background: #ffffff;
+    box-shadow: 0 18px 45px rgba(0, 72, 129, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12mm;
+  }
+
+  .sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .sheet__logoWrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sheet__logo {
+    width: 150px;
+    height: auto;
+  }
+
+  .sheet__meta {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c757d;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet__meta.--right {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sheet__metaLabel {
+    font-weight: 700;
+    color: #004881;
+  }
+
+  .sheet__metaValue {
+    font-weight: 600;
+  }
+
+  .sheet__grid {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: 12mm;
+    align-items: start;
+  }
+
+  .sheet,
+  .sheet__main,
+  .sheet__side,
+  .sheet__section,
+  .sheet__titleBlock,
+  .sheet__coverCard,
+  .sheet__detailCard,
+  .sheet__publisherCard {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .sheet__main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-family: var(--font-serif);
+  }
+
+  .sheet__titleBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sheet__title {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    line-height: 1.15;
+    color: #004881;
+    margin: 0;
+  }
+
+  .sheet__subtitle {
+    font-size: 16px;
+    color: #343434;
+    margin: 0;
+    font-family: var(--font-serif);
+  }
+
+  .sheet__authors {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #343434;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-family: var(--font-serif);
+  }
+
+  .sheet__section {
+    break-inside: avoid;
+  }
+
+  .sheet__sectionTitle {
+    font-size: 14px;
+    color: #004881;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+
+  .sheet__text {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+    font-family: var(--font-serif);
+  }
+
+  .sheet__bioText {
+    font-style: italic;
+  }
+
+  .sheet__side {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    break-inside: avoid;
+  }
+
+  .sheet__coverCard {
+    padding: 8px;
+    border: 1px solid #e4e7eb;
+    background: #f2f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet__coverCard img,
+  .sheet__coverCard :global(img) {
+    max-height: 260px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .sheet__coverPlaceholder {
+    font-size: 12px;
+    text-align: center;
+    color: #6c757d;
+    padding: 12px;
+  }
+
+  .sheet__detailCard {
+    padding: 10px 12px;
+    border: 1px solid #e4e7eb;
+    background: #f8fafc;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet__detailTitle {
+    margin: 0 0 6px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #004881;
+  }
+
+  .sheet__detailList {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
+    row-gap: 6px;
+    margin: 0;
+    font-size: 12.5px;
+  }
+
+  .sheet__detailList dt {
+    font-weight: 700;
+    color: #343434;
+    margin: 0;
+  }
+
+  .sheet__detailList dd {
+    margin: 0;
+    color: #343434;
+  }
+
+  .sheet__publisherCard {
+    padding: 10px 12px;
+    border: 1px solid #e4e7eb;
+    background: #fff7f0;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet__publisherText {
+    margin: 0;
+    color: #343434;
+  }
+
+  .sheet__publisherText :global(p) {
+    margin: 0 0 4px;
+    line-height: 1.45;
+    font-size: 12px;
+  }
+
+  .sheet__publisherText :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 960px) {
+    .sheet {
+      padding: 20px 16px;
+      gap: 32px;
+    }
+
+    .sheet__grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    :global(body) {
+      background: #ffffff;
+    }
+
+    .sheet {
+      box-shadow: none;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      padding: 8mm;
+      gap: 6mm;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .sheet__grid {
+      display: grid !important;
+      grid-template-columns: 1.8fr 1.2fr;
+      gap: 6mm;
+    }
+
+    .sheet__title {
+      font-size: 34px;
+    }
+
+    .sheet__subtitle {
+      font-size: 12px;
+    }
+
+    .sheet__authors {
+      font-size: 11px;
+    }
+
+    .sheet__text {
+      font-size: 13.5px;
+    }
+
+    .sheet__detailList {
+      font-size: 11px;
+    }
+
+    .sheet__coverCard {
+      min-height: 180px;
+    }
+
+    .sheet__detailCard,
+    .sheet__publisherCard {
+      padding: 8px 10px;
+    }
+
+    .sheet__detailTitle {
+      font-size: 12px;
+    }
+
+    .sheet__meta {
+      font-size: 10px;
+    }
+
+    .sheet__header {
+      gap: 8px;
+    }
+  }
+</style>

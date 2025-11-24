@@ -49,3 +49,4 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 - [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale, so the planned localization architecture was retired and docs/guidelines/i18n.md now records the decision instead of future work.
 - 2025-11-07 - [Refactoring] **PS3**: Implemented Draft Mode UI, `/api/preview`, and documentation so editors can use preview without removing static output.
 - 2025-11-16 - [Refactoring] **PS4**: Finalised the SERVER=static/preview contract so production ships pure SSG while previews run SSR from the same repo.
+- 2025-11-23 - [Features] **Scheda libro A4**: aggiunta pagina `/libri/schede/[slug]` stampabile con dettagli tecnici condivisi e footer editore.

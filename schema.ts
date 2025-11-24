@@ -30,6 +30,9 @@ export type Author = ItemTypeDefinition<
     full_name: {
       type: 'string';
     };
+    biography_short: {
+      type: 'structured_text';
+    };
     phone_private: {
       type: 'string';
     };

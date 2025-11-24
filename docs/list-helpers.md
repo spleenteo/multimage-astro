@@ -39,8 +39,8 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year.
-  - Used in: listings, carousels, detail pages, staff exports.
+  - Purpose: builds book view models, formats price/edition/licence/year, and now exposes `buildEditionDetails` + `buildGraphicsDetails` to keep technical metadata consistent between detail and printable pages.
+  - Used in: listings, carousels, detail pages, staff exports, printable schede.
   - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props.
 - **`authors` helper** (`src/lib/authors.ts`)
   - Purpose: formats author names, chips, sort letters, and related metadata.
