@@ -33,6 +33,7 @@ import {
   BOOK_COLLECTION_BOOKS_QUERY,
   BOOK_SLUGS_QUERY,
   type BookDetailQueryResult,
+  type BookDetailRecord,
   type BookAuthorsBooksResult,
   type BookAlternateFormatsResult,
   type BookCollectionBooksResult,
@@ -218,6 +219,86 @@ const authorsCards = authors.map((author) => {
 
 const authorsSectionTitle = authorsCards.length > 1 ? 'Gli autori del libro' : 'L’autore del libro';
 
+const reviewDateFormatter = new Intl.DateTimeFormat('it-IT', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+});
+
+type BookReviewLink = NonNullable<BookDetailRecord['reviews']>[number];
+const MIN_ABSTRACT_LENGTH = 40;
+
+const dateToTimestamp = (value: string | null | undefined) => {
+  if (!value) {
+    return 0;
+  }
+
+  const timestamp = new Date(value).getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+};
+
+const reviewPreviews = (book.reviews ?? [])
+  .filter((review): review is BookReviewLink => Boolean(review?.slug))
+  .sort((a, b) => {
+    const dateA = a._firstPublishedAt ?? a.createdAt ?? null;
+    const dateB = b._firstPublishedAt ?? b.createdAt ?? null;
+    return dateToTimestamp(dateB) - dateToTimestamp(dateA);
+  })
+  .map((review) => {
+    const abstract = review.abstract?.trim() ?? '';
+    const plainBody = structuredTextToPlainText(review.body);
+    const needsBodyFallback = abstract.length === 0 || abstract.length < MIN_ABSTRACT_LENGTH;
+    const excerptSource = needsBodyFallback ? plainBody : abstract;
+    const excerpt =
+      excerptSource && excerptSource.length > 0
+        ? truncateToLength(excerptSource, 300)
+        : 'Anteprima in arrivo.';
+    const dateIso = review._firstPublishedAt ?? review.createdAt ?? null;
+    const dateLabel =
+      dateIso && !Number.isNaN(new Date(dateIso).getTime())
+        ? reviewDateFormatter.format(new Date(dateIso))
+        : 'Data in aggiornamento';
+
+    return {
+      id: review.id,
+      slug: review.slug as string,
+      title: review.title ?? 'Recensione',
+      excerpt,
+      dateIso,
+      dateLabel,
+      authorName: review.author?.name?.trim() ?? null,
+    };
+  });
+
+const reviewStructuredData =
+  reviewPreviews.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@graph': reviewPreviews
+          .filter((review) => review.dateIso)
+          .map((review) => ({
+            '@type': 'Review',
+            datePublished: review.dateIso,
+            name: review.title,
+            reviewBody: review.excerpt,
+            url: `/magazine/${review.slug}`,
+            ...(review.authorName
+              ? { author: { '@type': 'Person', name: review.authorName } }
+              : {}),
+            itemReviewed: {
+              '@type': 'Book',
+              name: book.title,
+              ...(book.isbn ? { isbn: book.isbn } : {}),
+              ...(book.slug ? { url: `/libri/${book.slug}` } : {}),
+            },
+            publisher: {
+              '@type': 'Organization',
+              name: 'Multimage',
+            },
+          })),
+      }
+    : null;
+
 const editionDetails = buildEditionDetails(book);
 const graphicsDetails = buildGraphicsDetails(book);
 
@@ -234,6 +315,15 @@ export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>
+  {
+    reviewStructuredData ? (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(reviewStructuredData)}
+      />
+    ) : null
+  }
   <article class="space-y-12">
     <div class={styles.heroGrid}>
       <div class={styles.coverPanel}>
@@ -383,6 +473,50 @@ export { prerender } from '~/lib/prerender';
         </a>
       </div>
     </section>
+
+    {
+      reviewPreviews.length > 0 ? (
+        <section class={styles.reviewsSection}>
+          <div class="flex items-baseline justify-between gap-3">
+            <h2 class="text-3xl font-serif text-brand-navy">Recensioni</h2>
+          </div>
+          <ul class="space-y-5">
+            {reviewPreviews.map((review) => (
+              <li data-review-id={review.id}>
+                <a
+                  href={`/magazine/${review.slug}`}
+                  class="group block rounded-lg border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
+                >
+                  <div class="flex gap-3">
+                    <div class="mt-0.5 text-brand-sky">
+                      <iconify-icon icon="iconoir:design-pencil" class="text-xl sm:text-2xl" />
+                    </div>
+                    <div class="space-y-2">
+                      {review.dateLabel ? (
+                        <p class="text-xs font-semibold uppercase tracking-wide text-brand-slate">
+                          <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
+                          {review.authorName ? <span class="mx-2">•</span> : null}
+                          {review.authorName ? <span>A cura di {review.authorName}</span> : null}
+                        </p>
+                      ) : null}
+                      <p class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky">
+                        {review.title}
+                      </p>
+                      <p class="text-sm leading-relaxed text-brand-charcoal/90">
+                        {review.excerpt}{' '}
+                        <span class="inline-flex items-center gap-1 font-semibold text-brand-sky group-hover:text-brand-navy">
+                          Leggi recensione completa
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null
+    }
 
     {
       collectionCarouselTitle && collectionCarouselId && collectionCarouselBooks.length > 0 ? (

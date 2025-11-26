@@ -1,6 +1,11 @@
 import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
-import type { AssetImage, SeoMetaTag, StructuredTextField } from '~/lib/datocms/types';
+import type {
+  AssetImage,
+  BlogPostRecord,
+  SeoMetaTag,
+  StructuredTextField,
+} from '~/lib/datocms/types';
 
 export const BOOK_DETAIL_QUERY = /* GraphQL */ `
   ${RESPONSIVE_IMAGE_FRAGMENT}
@@ -25,6 +30,22 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       coverDesigner
       epubUrl
       archive
+      reviews {
+        id
+        title
+        slug
+        abstract
+        _firstPublishedAt
+        createdAt
+        body {
+          value
+        }
+        author {
+          id
+          name
+          slug
+        }
+      }
       coverImage {
         url
         alt
@@ -151,6 +172,11 @@ export type BookDetailRecord = {
   coverDesigner: string | null;
   epubUrl: string | null;
   archive: boolean | null;
+  reviews: Array<
+    Pick<BlogPostRecord, 'id' | 'title' | 'slug' | 'abstract' | 'createdAt' | 'body' | 'author'> & {
+      _firstPublishedAt?: string | null;
+    }
+  > | null;
   coverImage: AssetImage | null;
   authors: Array<{
     id: string;

@@ -363,115 +363,6 @@ export type Home = ItemTypeDefinition<
     };
   }
 >;
-export type Book = ItemTypeDefinition<
-  EnvironmentSettings,
-  '70450',
-  {
-    slug: {
-      type: 'slug';
-    };
-    copyright: {
-      type: 'string';
-    };
-    isbn: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    price: {
-      type: 'float';
-    };
-    review_short: {
-      type: 'structured_text';
-    };
-    edited_by: {
-      type: 'boolean';
-    };
-    license: {
-      type: 'link';
-    };
-    seo: {
-      type: 'seo';
-    };
-    highlight: {
-      type: 'boolean';
-    };
-    authors: {
-      type: 'links';
-    };
-    description: {
-      type: 'text';
-    };
-    promo: {
-      type: 'string';
-    };
-    pages: {
-      type: 'integer';
-    };
-    print_year: {
-      type: 'date';
-    };
-    archive: {
-      type: 'boolean';
-    };
-    epub_url: {
-      type: 'string';
-    };
-    review: {
-      type: 'structured_text';
-    };
-    layout_artist: {
-      type: 'string';
-    };
-    edition: {
-      type: 'integer';
-    };
-    illustrator: {
-      type: 'string';
-    };
-    stock: {
-      type: 'integer';
-    };
-    collection: {
-      type: 'link';
-    };
-    cover_designer: {
-      type: 'string';
-    };
-    first_print_year: {
-      type: 'integer';
-    };
-    format: {
-      type: 'string';
-    };
-    cover_image: {
-      type: 'file';
-    };
-    reprints: {
-      type: 'rich_text';
-      blocks: Reprint;
-    };
-    dimension: {
-      type: 'link';
-    };
-    original_title: {
-      type: 'string';
-    };
-    original_lang: {
-      type: 'string';
-    };
-    translator: {
-      type: 'string';
-    };
-    keywords: {
-      type: 'links';
-    };
-  }
->;
 export type CtaButtonWithImage = ItemTypeDefinition<
   EnvironmentSettings,
   'dS2Z8nuURz6Pem2fHRN2tQ',
@@ -783,6 +674,118 @@ export type MenuExternalItem = ItemTypeDefinition<
     };
   }
 >;
+export type Book = ItemTypeDefinition<
+  EnvironmentSettings,
+  '70450',
+  {
+    reviews: {
+      type: 'links';
+    };
+    slug: {
+      type: 'slug';
+    };
+    copyright: {
+      type: 'string';
+    };
+    isbn: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    price: {
+      type: 'float';
+    };
+    review_short: {
+      type: 'structured_text';
+    };
+    edited_by: {
+      type: 'boolean';
+    };
+    pages: {
+      type: 'integer';
+    };
+    promo: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+    authors: {
+      type: 'links';
+    };
+    license: {
+      type: 'link';
+    };
+    highlight: {
+      type: 'boolean';
+    };
+    seo: {
+      type: 'seo';
+    };
+    archive: {
+      type: 'boolean';
+    };
+    print_year: {
+      type: 'date';
+    };
+    epub_url: {
+      type: 'string';
+    };
+    layout_artist: {
+      type: 'string';
+    };
+    review: {
+      type: 'structured_text';
+    };
+    collection: {
+      type: 'link';
+    };
+    edition: {
+      type: 'integer';
+    };
+    illustrator: {
+      type: 'string';
+    };
+    stock: {
+      type: 'integer';
+    };
+    first_print_year: {
+      type: 'integer';
+    };
+    cover_designer: {
+      type: 'string';
+    };
+    format: {
+      type: 'string';
+    };
+    reprints: {
+      type: 'rich_text';
+      blocks: Reprint;
+    };
+    cover_image: {
+      type: 'file';
+    };
+    dimension: {
+      type: 'link';
+    };
+    original_title: {
+      type: 'string';
+    };
+    original_lang: {
+      type: 'string';
+    };
+    translator: {
+      type: 'string';
+    };
+    keywords: {
+      type: 'links';
+    };
+  }
+>;
 export type AnyBlock =
   | Video
   | Reprint
@@ -812,12 +815,12 @@ export type AnyModel =
   | CoverSize
   | BlogPost
   | Home
-  | Book
   | BlogCategory
   | License
   | BlogPostOld
   | BlogTag
   | Page
   | Collection
-  | App;
+  | App
+  | Book;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
