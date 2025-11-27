@@ -10,21 +10,25 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { resolveDraftMode } from '~/lib/draftPreview';
 import { truncateToLength } from '~/lib/text';
 import { BOOK_SHEET_QUERY, type BookSheetQueryResult } from './_graphql';
-import { BOOK_SLUGS_QUERY, type BookSlugsResult } from '../[slug]/_graphql';
+
+/** Static builds must skip generation; preview stays SSR. */
+export const prerender = (process.env.SERVER ?? 'static').toLowerCase() === 'static';
 
 export async function getStaticPaths() {
-  const data = await executeQuery<BookSlugsResult>(BOOK_SLUGS_QUERY);
-
-  return (data.allBooks ?? [])
-    .map((book) => book.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
+  return [];
 }
 
 const { slug } = Astro.params;
 
 if (!slug) {
   throw new Error('Missing book slug');
+}
+
+const serverMode = (process.env.SERVER ?? 'static').toLowerCase();
+const isPreviewMode = serverMode === 'preview';
+
+if (!isPreviewMode) {
+  throw new Response('Scheda disponibile solo in modalità anteprima.', { status: 404 });
 }
 
 const draftModeEnabled = resolveDraftMode(Astro);
@@ -86,8 +90,6 @@ const coverResponsiveImage = book.coverImage?.responsiveImage
 
 const fallbackCoverUrl = book.coverImage?.url ?? null;
 const pageTitle = `${book.isbn ?? 'scheda'} - ${book.title} - Scheda Libro Multimage`;
-
-export { prerender } from '~/lib/prerender';
 ---
 
 <!doctype html>

@@ -8,7 +8,7 @@ import DetailList from '~/components/DetailList';
 import AuthorsSection from '~/components/AuthorsSection';
 import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { toPlainText, truncateToLength } from '~/lib/text';
+import { toPlainText, truncateToLength, decodeEntities } from '~/lib/text';
 import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import {
   defaultBlockComponents,
@@ -26,6 +26,7 @@ import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
+import type { TitleMetaLinkTag } from '@datocms/astro';
 import {
   BOOK_DETAIL_QUERY,
   BOOK_AUTHORS_BOOKS_QUERY,
@@ -307,10 +308,54 @@ const coverResponsiveImage = book.coverImage?.responsiveImage
   : null;
 
 const fallbackDescription = toPlainText(book.promo ?? book.description);
-const seo = withFallbackSeo(book.seo, {
-  title: `${book.title} | Multimage`,
-  description: fallbackDescription,
-});
+const escapeAttr = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const sanitizeMetaTags = (tags: TitleMetaLinkTag[]): TitleMetaLinkTag[] =>
+  tags.map((tag) => {
+    if (tag.tag !== 'meta' || !tag.attributes) {
+      return tag;
+    }
+
+    const descriptor = (tag.attributes.name ?? tag.attributes.property ?? '')
+      .toString()
+      .toLowerCase();
+    const rawContent =
+      (typeof tag.attributes.content === 'string' && tag.attributes.content) ||
+      (typeof tag.content === 'string' ? tag.content : '') ||
+      '';
+    const decoded = decodeEntities(rawContent);
+
+    const isDescription =
+      descriptor === 'description' ||
+      descriptor === 'og:description' ||
+      descriptor === 'twitter:description';
+
+    const preparedContent = isDescription ? truncateToLength(toPlainText(decoded), 240) : decoded;
+    const withoutQuotes = preparedContent.replace(/"/g, "'");
+    const safeContent = escapeAttr(withoutQuotes);
+
+    return {
+      ...tag,
+      attributes: {
+        ...tag.attributes,
+        content: safeContent,
+      },
+      content: null,
+    };
+  });
+
+const seo = sanitizeMetaTags(
+  withFallbackSeo(book.seo, {
+    title: `${book.title} | Multimage`,
+    description: fallbackDescription,
+  }),
+);
 export { prerender } from '~/lib/prerender';
 ---
 
@@ -464,7 +509,7 @@ export { prerender } from '~/lib/prerender';
       </div>
       <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12">
         <a
-          href={`/libri/schede/${book.slug}`}
+          href={`https://multimage-astro-vf31.vercel.app/libri/schede/${book.slug}`}
           class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
           target="_blank"
           rel="noopener noreferrer"

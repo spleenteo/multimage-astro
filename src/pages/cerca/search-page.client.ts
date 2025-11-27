@@ -68,6 +68,8 @@ const pathFromUrl = (url: string): string => {
   }
 };
 
+const isHiddenUrl = (url: string): boolean => /\/libri\/schede\//.test(pathFromUrl(url));
+
 const appendHighlightedText = (target: HTMLElement, source: string | null | undefined) => {
   const text = source ?? '';
   const regex = /\[h\]([\s\S]*?)\[\/h\]/g;
@@ -388,14 +390,13 @@ const mountSearchPage = (): CleanupFn | undefined => {
 
       const payload = (await response.json()) as SearchResponse;
       const rawResults = payload.data ?? [];
+      const visibleResults = rawResults.filter((entry) => !isHiddenUrl(entry.attributes.url ?? ''));
       const filteredResults = exactMatch
-        ? rawResults.filter((entry) => entryContainsPhrase(entry, query))
-        : rawResults;
+        ? visibleResults.filter((entry) => entryContainsPhrase(entry, query))
+        : visibleResults;
 
       cachedResults = filteredResults;
-      cachedTotal = exactMatch
-        ? filteredResults.length
-        : (payload.meta?.total_count ?? rawResults.length);
+      cachedTotal = filteredResults.length;
       cachedQuery = query;
 
       if (latestQuery !== query) {
