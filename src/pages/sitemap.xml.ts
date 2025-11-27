@@ -46,7 +46,13 @@ export const GET: APIRoute = async ({ site }) => {
     return Number.isNaN(parsed.valueOf()) ? undefined : parsed.toISOString();
   };
 
+  const shouldHideFromSitemap = (path: string) => path.startsWith('/libri/schede/');
+
   const pushEntry = (path: string, lastmod?: string | null) => {
+    if (shouldHideFromSitemap(path)) {
+      return;
+    }
+
     const url = new URL(path, baseUrl).toString();
     if (seen.has(url)) {
       return;

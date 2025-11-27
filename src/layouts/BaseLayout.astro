@@ -11,6 +11,7 @@ import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import { resolveDraftMode } from '~/lib/draftPreview';
 import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
+import { decodeEntities, toPlainText, truncateToLength } from '~/lib/text';
 
 const { seo = [] } = Astro.props as {
   seo?: TitleMetaLinkTag[];
@@ -120,6 +121,46 @@ function mapPagesToLinks(pages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>>
 
 const infoPages = mapPagesToLinks(headerPages);
 const footerMenuPages = mapPagesToLinks(footerPages);
+
+const escapeAttr = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const sanitizeMetaTags = (tags: TitleMetaLinkTag[]): TitleMetaLinkTag[] =>
+  tags.map((tag) => {
+    if (tag.tag !== 'meta' || !tag.attributes) {
+      return tag;
+    }
+
+    const descriptor = (tag.attributes.name ?? tag.attributes.property ?? '')
+      .toString()
+      .toLowerCase();
+    const rawContent =
+      (typeof tag.attributes.content === 'string' && tag.attributes.content) ||
+      (typeof tag.content === 'string' ? tag.content : '') ||
+      '';
+    const decoded = decodeEntities(rawContent);
+    const normalized = descriptor.includes('description')
+      ? truncateToLength(toPlainText(decoded), 240)
+      : truncateToLength(decoded, 160);
+    const withoutQuotes = normalized.replace(/"/g, "'");
+    const safeContent = escapeAttr(withoutQuotes);
+
+    return {
+      ...tag,
+      attributes: {
+        ...tag.attributes,
+        content: safeContent,
+      },
+      content: safeContent,
+    };
+  });
+
+const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTags]);
 ---
 
 <!doctype html>
@@ -128,7 +169,7 @@ const footerMenuPages = mapPagesToLinks(footerPages);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <Seo data={[...faviconTags, ...canonicalTags, ...seo]} />
+    <Seo data={seoData} />
     <link rel="dns-prefetch" href="https://www.google-analytics.com" />
     <link rel="dns-prefetch" href="https://cdn.iubenda.com" />
     <script
