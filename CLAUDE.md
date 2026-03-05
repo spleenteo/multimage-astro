@@ -22,11 +22,12 @@
 
 # 2) Documentation System
 
-Three layers:
+Four layers:
 
 1. **`/docs/guidelines/`** — canonical policies (routing, assets, SEO, security, etc.). Modify carefully; document significant decisions in `docs/decision-log/`.
 2. **`/docs/current-state.md`** — living snapshot of actual implementation status. Update when features change.
 3. **`/docs/list-*.md` · `TODO.md` · `decision-log/`** — component/helper/model inventories, open tasks, and architectural decisions.
+4. **`/docs/shapes/`** — shaped work proposals and their slices. See below.
 
 ## Quick Reference
 
@@ -67,6 +68,15 @@ Use the installed skills — no local documentation file exists for DatoCMS:
 2. Update `/docs/list-*.md` for new/changed components, helpers, or models
 3. Update `/docs/current-state.md` for affected areas
 4. Update `/docs/TODO.md` (mark done, add follow-ups)
+
+## Shapes & Slices
+
+`/docs/shapes/` contains shaped work proposals. Each file defines a problem, appetite, solution sketch, rabbit holes, no-gos, and slices.
+
+- When asked to work on a shape: read the shape file first, then execute its slices
+- When a slice is complete: update its checkbox in the shape file and add a corresponding entry to `docs/TODO.md` (completed)
+- When proposing new work: create a shape file following the format in `docs/shapes/README.md`
+- Keep `docs/shapes/README.md` index up to date with status changes
 
 ## `docs/prompts/` folder
 
