@@ -30,27 +30,27 @@ Three layers:
 
 ## Quick Reference
 
-| Need | File |
-|------|------|
-| Project structure & routes | `docs/guidelines/project-structure.md` |
+| Need                          | File                                       |
+| ----------------------------- | ------------------------------------------ |
+| Project structure & routes    | `docs/guidelines/project-structure.md`     |
 | Blocks & components authoring | `docs/guidelines/blocks-and-components.md` |
-| GraphQL / CMS data loading | `docs/guidelines/cms-data-loading.md` |
-| CMS content modelling | `docs/guidelines/cms-content-modelling.md` |
-| Assets (images, video, icons) | `docs/guidelines/assets.md` |
-| SEO | `docs/guidelines/seo.md` |
-| Search | `docs/guidelines/search.md` |
-| Preview / draft mode | `docs/guidelines/preview-mode.md` |
-| Security | `docs/guidelines/security.md` |
-| Testing | `docs/guidelines/testing.md` |
-| Operations (build, deploy) | `docs/guidelines/operations.md` |
-| Performance | `docs/guidelines/performance.md` |
-| i18n | `docs/guidelines/i18n.md` |
-| Dependencies | `docs/guidelines/dependencies.md` |
-| Current implementation status | `docs/current-state.md` |
-| Component catalogue | `docs/list-components.md` |
-| Helper catalogue | `docs/list-helpers.md` |
-| Model catalogue | `docs/list-models.md` |
-| Open tasks | `docs/TODO.md` |
+| GraphQL / CMS data loading    | `docs/guidelines/cms-data-loading.md`      |
+| CMS content modelling         | `docs/guidelines/cms-content-modelling.md` |
+| Assets (images, video, icons) | `docs/guidelines/assets.md`                |
+| SEO                           | `docs/guidelines/seo.md`                   |
+| Search                        | `docs/guidelines/search.md`                |
+| Preview / draft mode          | `docs/guidelines/preview-mode.md`          |
+| Security                      | `docs/guidelines/security.md`              |
+| Testing                       | `docs/guidelines/testing.md`               |
+| Operations (build, deploy)    | `docs/guidelines/operations.md`            |
+| Performance                   | `docs/guidelines/performance.md`           |
+| i18n                          | `docs/guidelines/i18n.md`                  |
+| Dependencies                  | `docs/guidelines/dependencies.md`          |
+| Current implementation status | `docs/current-state.md`                    |
+| Component catalogue           | `docs/list-components.md`                  |
+| Helper catalogue              | `docs/list-helpers.md`                     |
+| Model catalogue               | `docs/list-models.md`                      |
+| Open tasks                    | `docs/TODO.md`                             |
 
 ## DatoCMS
 

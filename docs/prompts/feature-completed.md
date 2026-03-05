@@ -7,7 +7,7 @@ Finalize a completed feature by running repo quality gates (docs inventory, test
 ### Context
 - Repository scope: whole project (Astro web app).
 - Relevant files / functions:
-  - `AGENTS.md` – defines rules that govern documentation & agents.
+  - `CLAUDE.md` – defines rules that govern documentation & agents.
   - `docs/` (especially `docs/list-*`) – documentation lists to keep in sync.
   - Project npm scripts:
     - `npm run docs:inventory` – inventories docs and signals when `docs/list-*` needs updates.
@@ -21,7 +21,7 @@ Finalize a completed feature by running repo quality gates (docs inventory, test
 - **Do not generate per-file or per-commit unified diffs.** Provide only a concise summary of changes and outcomes.
 - Summarize issues found by `docs:inventory` and `test` with actionable fixes; auto-apply safe fixes where possible.
 - Commit any files changed by the process:
-  1) If the feature is complex and required critical decisions, create a decision-log as per `AGENTS.md`.
+  1) If the feature is complex and required critical decisions, create a decision-log as per `CLAUDE.md`.
   2) First commit for auto-updates (docs/lists, formatting, lint fixes).
   3) If git-hooks (format/lint/prettier) introduce new changes, **amend** the prior commit.
 - Report whether documentation was updated during feature development; if not, and inventory indicates gaps, **suggest a deep rewrite** of the relevant docs sections.
