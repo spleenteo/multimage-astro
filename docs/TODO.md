@@ -1,17 +1,10 @@
----
-agent_edit: true
-scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
----
-
-> **Assumptions**
-> - `docs/guidelines/accessibility.md`, `docs/guidelines/cms-content-modelling.md`, `docs/guidelines/cms-data-loading.md`, `docs/decision-log/README.md`, and `docs/guidelines/testing.md` still declare `agent_edit: false`, so remediation work is tracked here until the frontmatter is updated (see Documentation Hygiene task **DH1**).
 
 ## Security
 - [ ] [Security] [Impact: H] [Effort: L] [Owner: @codex] [Status: todo] — **S5** retire `/api/post-deploy` (or enforce a server-side secret) so malicious calls cannot leak `SECRET_API_TOKEN` through preview webhooks (Due: 2025-11-15; Acceptance: route removed or 401s unless an internal secret is present, docs/guidelines/project-structure.md#api--preview-routes and docs/guidelines/seo.md#preview-plugins--automation updated).
 - [ ] [Security] [Impact: H] [Effort: M] [Owner: @codex] [Status: todo] — **S1** lock down `/staff` and `/staff/archivio-catalogo` so catalog exports require auth (Due: 2025-11-21; Acceptance: routes return 401 unless a signed cookie/session is present, robots.txt is not the only guard, docs/guidelines/project-structure.md#route-map--data-flow updated once permissions ship).
 - [ ] [Security] [Impact: H] [Effort: M] [Owner: @codex] [Status: todo] — **S2** sanitize every `set:html` surface fed by `toRichTextHtml` (home hero, BannerSection, Cta blocks, book descriptions, supplier bios) (Due: 2025-12-05; Acceptance: introduce a shared HTML sanitizer, add regression tests for script injection, cross-reference docs/guidelines/assets.md#html-fragments--sanitization).
 - [ ] [Security] [Impact: H] [Effort: M] [Owner: @codex] [Status: todo] — **S4** gate `/llms-full.txt` behind a tokenized endpoint or remove it from the public build (Due: 2025-11-28; Acceptance: anonymous visitors cannot download the full catalog + biographies, docs/guidelines/project-structure.md#route-map--data-flow reflects the new flow).
-- [ ] [Security] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **S6** add an SSR regression test that rejects double-encoded paths (coverage for the Astro 5.16.3 path-decoding patch); exercise both `SERVER=static` prerendering and `SERVER=preview` handlers (Due: 2025-12-09; Acceptance: test fails on 5.15, passes on 5.16.3+, documented in docs/testing.md).
+- [ ] [Security] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **S6** add an SSR regression test that rejects double-encoded paths (coverage for the Astro 5.16.3 path-decoding patch); exercise both `SERVER=static` prerendering and `SERVER=preview` handlers (Due: 2025-12-09; Acceptance: test fails on 5.15, passes on 5.16.3+, documented in docs/guidelines/testing.md).
 - [ ] [Security] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **S3** add CSP/SRI + bundle integrity for Iconify, GA, Iubenda, and `/generated/*.js` (Due: 2025-11-28; Acceptance: BaseLayout emits CSP headers + `<script>` hashes, `/cerca` verifies generated bundles exist before booting, see docs/guidelines/assets.md and docs/guidelines/search.md).
 
 ## Code Health
@@ -46,11 +39,11 @@ scope: Codex adds things to be done as a list of tasks, suggestions, urgencies
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS2** fix `LinkToRecord.astro` so `BlogPostRecord` links point to `/magazine/${slug}` and add coverage to stop regressions (Due: 2025-11-21; Acceptance: Structured Text links resolve correctly, docs/list-components.md#structured-text-blocks annotated, regression test in place).
 
 ## Documentation Hygiene
-- [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **DH1** coordinate with maintainers to flip `agent_edit: true` on the locked policy docs (accessibility, cms-content-modelling, cms-data-loading, decision log, testing) (Due: 2025-11-18; Acceptance: frontmatter updated via maintainer PR, tracked in docs/decision-log once editing is allowed).
-- [ ] [Documentation] [Impact: L] [Effort: M] [Owner: @codex] [Status: todo] — **DH2** add a lightweight script or checklist to verify `docs/list-*` files stay in sync with the filesystem (Due: 2025-12-05; Acceptance: script lives under `scripts/` or package.json, runs in CI, prevents stale inventories).
+- [ ] [Documentation] [Impact: L] [Effort: M] [Owner: @codex] [Status: todo] — **DH2** wire `npm run docs:inventory` into CI so `docs/list-*` files stay in sync with the filesystem (Due: 2025-12-05; Acceptance: script runs in CI, failures block merges, referenced in docs/guidelines/testing.md).
 
 ## Completed
-- [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale, so the planned localization architecture was retired and docs/guidelines/i18n.md now records the decision instead of future work.
+- 2026-03-05 - [Documentation] **DH1**: Removed agent_edit system; consolidated root status docs into docs/current-state.md; removed DATOCMS.md (replaced by skills); simplified sync-datocms.mjs; rewrote CLAUDE.md for Claude Code workflow.
+- [x] [Features] [Impact: M] [Effort: M] [Owner: @codex] [Status: done] — **I18N1** (Completed: 2025-11-07) — Scope officially locked to a single Italian locale.
 - 2025-11-07 - [Refactoring] **PS3**: Implemented Draft Mode UI, `/api/preview`, and documentation so editors can use preview without removing static output.
 - 2025-11-16 - [Refactoring] **PS4**: Finalised the SERVER=static/preview contract so production ships pure SSG while previews run SSR from the same repo.
 - 2025-11-23 - [Features] **Scheda libro A4**: aggiunta pagina `/libri/schede/[slug]` stampabile con dettagli tecnici condivisi e footer editore.

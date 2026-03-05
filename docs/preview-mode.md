@@ -1,5 +1,4 @@
 ---
-agent_edit: true
 scope: Live description of the Draft Mode pipeline
 ---
 

@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Fastro uses DatoCMS and uses content modelling and naming conventions for models and fields
 ---
 

@@ -1,5 +1,4 @@
 ---
-agent_edit: true
 ---
 
 # Split guidelines from editable docs

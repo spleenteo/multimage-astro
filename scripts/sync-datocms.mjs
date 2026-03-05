@@ -1,15 +1,13 @@
 import { spawn } from 'node:child_process';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+// Note: only handles schema generation. DatoCMS documentation is available via installed skills.
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
-const DOCS_URL = 'https://www.datocms.com/docs/llms-full.txt';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
-const docsPath = path.join(repoRoot, 'docs', 'DATOCMS.md');
 
 async function loadEnv() {
   if (process.env.DATOCMS_CMA_TOKEN) {
@@ -108,44 +106,9 @@ async function runGenerateSchema() {
   });
 }
 
-async function downloadDocs() {
-  try {
-    const response = await fetch(DOCS_URL, {
-      headers: {
-        'User-Agent': 'multimage-astro-sync-script',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Unexpected status ${response.status}`);
-    }
-
-    const incoming = await response.text();
-
-    if (existsSync(docsPath)) {
-      const current = await readFile(docsPath, 'utf8');
-
-      if (current === incoming) {
-        console.log('[dato] DATOCMS.md is already up to date, skipping download.');
-        return;
-      }
-    }
-
-    await mkdir(path.dirname(docsPath), { recursive: true });
-    await writeFile(docsPath, incoming, 'utf8');
-    console.log('[dato] Updated DATOCMS.md from remote source.');
-  } catch (error) {
-    console.warn(
-      '[dato] Failed to refresh DATOCMS.md — proceeding with existing copy.',
-      error instanceof Error ? error.message : error,
-    );
-  }
-}
-
 async function main() {
   await loadEnv();
   await runGenerateSchema();
-  await downloadDocs();
 }
 
 main().catch((error) => {

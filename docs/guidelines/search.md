@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: How to implement search offered by DatoCMS
 ---
 

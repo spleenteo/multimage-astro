@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Track maintainability issues, duplication, and refactors needed across the codebase.
 ---
 

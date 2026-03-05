@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ---
 

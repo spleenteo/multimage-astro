@@ -1,5 +1,4 @@
 ---
-agent_edit: true
 ---
 
 # Upgrade to Astro 5.16.3

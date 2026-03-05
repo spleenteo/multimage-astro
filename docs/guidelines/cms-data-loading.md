@@ -1,139 +1,75 @@
 ---
-agent_edit: false
-scope: Fastros provides loaders and helpers to fetch content from DatoCMS.
+scope: GraphQL data loading conventions and patterns for Multimage.
 ---
 
 # CMS Data Loading
 
-## Configuration
+## Core helper: `executeQuery`
 
-Fastro supports the use of DatoCMS enviroments. This enables feature branches to use a different environment than the main branch. You need to set the DATOCMS_ENVIROMENT environment variable in `.env`
-
-## GraphQL files
-
-Fastro uses the [DatoCMS Content Delivery API](https://www.datocms.com/docs/content-delivery-api), which uses [GraphQL](https://graphql.org/). Fastro has a pre-configured GraphQL loader, so you can use and directly import `.graphql` files. As a convention Fastro puts [GraphQL Query](https://graphql.org/learn/queries/) files (like `_page-name.query.graphql`) directly next to their related Astro pages, and [GraphQL Fragment](https://graphql.org/learn/queries/) files (like `block-name.fragment.graphql`) directly next to their related block components:
-
-```
-src/
-├── blocks/
-│   ├── Blocks.astro
-│   └── SomeContentBlock/
-│       ├── SomeContentBlock.astro
-│       └── SomeContentBlock.fragment.graphql
-|
-└── pages/
-    └── [locale]/
-        ├── index.astro
-        └── _index.query.graphql
-```
-
-You can import GraphQL Fragment files:
-
-```graphql
-# src/blocks/ImageBlock/ImageBlock.fragment.graphql
-
-fragment ImageBlock on ImageBlockRecord {
-  id
-  image {
-    alt
-    title
-    url
-    # ...
-  }
-}
-```
-
-```graphql
-# src/pages/[locale]/[slug]/_index.query.graphql
-
-#import '@blocks/ImageBlock/ImageBlock.fragment.graphql'
-#import '@blocks/TextBlock/TextBlock.fragment.graphql'
-
-query Page($locale: SiteLocale!, $slug: String!) {
-  page(locale: $locale, filter: { slug: { eq: $slug } }) {
-    title
-    # ...
-    bodyBlocks {
-      __typename
-      ... on ImageBlockRecord {
-        ...ImageBlock
-      }
-      ... on TextBlockRecord {
-        ...TextBlock
-      }
-    }
-  }
-}
-```
-
-And you can import GraphQL Query files:
+All GraphQL calls go through `src/lib/datocms/executeQuery.ts`. It wraps `@datocms/cda-client` and selects the correct token automatically:
 
 ```ts
-// src/pages/[locale]/[slug]/index.astro
+import { executeQuery } from '~/lib/datocms/executeQuery';
 
-import query from './_index.query.graphql';
-console.log(typeof query); // DocumentNode
-```
-
-Fastro expects TypeScript types for all your GraphQL files, which you can import:
-
-```ts
-import type { ImageBlockFragment, PageQuery, PageRecord } from '@lib/datocms/types';
-```
-
-## DatoCMS requests
-
-Fastro provides a generic `datocmsRequest()` helper to fetch data using the [DatoCMS Content Delivery API](https://www.datocms.com/docs/content-delivery-api). This function automatically uses the DatoCMS environment you've [configured](#configuration). It expects a `query` like the one that can be imported from a [`.graphql` file](#graphql-files), and supports passing `variables` to that query.
-
-Example usage:
-
-```astro
----
-import { datocmsRequest } from '@lib/datocms';
-import type { PageQuery, PageRecord } from '@lib/datocms/types';
-import query from './_index.query.graphql';
-
-const { page } = (await datocmsRequest<PageQuery>({
-  query,
-  variables: { locale, slug: Astro.params.slug },
-})) as { page: PageRecord };
----
-```
-
-## DatoCMS collections
-
-Fastro provides a `datocmsCollection()` helper to retrieve all records of a collection. DatoCMS limits requests up to 500 records (100 by default). This function uses `datocmsRequest()` combined with pagination, to get all records even if there are more than 500. This is especialy useful when defining [`getStaticPaths()` in an Astro template](https://docs.astro.build/en/core-concepts/routing/#static-ssg-mode). The `datocmsCollection()` allows you to provide a fragment, so you can define what data you want for each record.
-
-Simplified example without types:
-
-```ts
-import { datocmsCollection } from '@lib/datocms';
-
-const pages = await datocmsCollection({
-  collection: 'Pages',
-  fragment: `slugs: _allSlugLocales { locale, value }`,
+const result = await executeQuery<MyQueryType>(MY_QUERY, {
+  variables: { slug: 'my-slug' },
+  includeDrafts: false,     // default false; true in preview mode
+  excludeInvalid: true,     // default true
+  environment: 'sandbox',   // optional; omit for default environment
 });
 ```
 
-More realistic example with types:
+Token selection:
+- `includeDrafts: false` → `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`
+- `includeDrafts: true` → `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` (required in preview deployments)
 
-```astro
----
-import { datocmsCollection } from '@lib/datocms';
+## Query colocation
 
-export async function getStaticPaths() {
-  interface PagesCollectionItem {
-    slugs: Array<{ locale: string; value: string }>;
-  }
-  const pages = await datocmsCollection<PagesCollectionItem>({
-    collection: 'Pages',
-    fragment: `slugs: _allSlugLocales { locale, value }`,
-  });
-  return pages.flatMap((page) =>
-    page.slugs.map((slug) => ({
-      params: { locale: slug.locale, slug: slug.value },
-    })),
-  );
-}
----
+Every page or component that fetches data keeps a sibling `_graphql.ts` that exports the query string and TypeScript helpers:
+
 ```
+src/pages/libri/[slug]/
+├── index.astro        ← consumes the query
+└── _graphql.ts        ← exports query string, fragments, and typed helpers
+```
+
+Shared fragments (e.g. `ResponsiveImageFragment`, `BANNER_SECTION_FRAGMENT`) are defined once and re-exported from the component's `index.ts` to keep import sites tidy.
+
+## Draft mode integration
+
+In `.astro` files that support preview, resolve draft mode before executing queries:
+
+```ts
+import { resolveDraftMode } from '~/lib/draftPreview';
+
+const { isEnabled: includeDrafts } = resolveDraftMode(Astro);
+const data = await executeQuery(QUERY, { includeDrafts });
+```
+
+Draft mode is only active when `SERVER=preview` (Vercel preview deployment). Static builds (`SERVER=static`) always use published content.
+
+## Pagination
+
+There is currently no paginated loader. Routes like `/libri`, `/autori`, and `/sitemap.xml` use `first: 500` as a workaround. This is a known gap tracked as **CD2** in `docs/TODO.md`.
+
+Until a paginated helper ships: keep `first: 500` and annotate it with `// TODO CD2`.
+
+## Fragment conventions
+
+- Name fragments after their owning component: `BookCardFragment`, `AuthorCardFragment`
+- Place fragments in the component's `_graphql.ts` or `index.ts`
+- Compose fragments at the page-level `_graphql.ts`
+- Never duplicate field selections — always reference the fragment
+- Never include fields ending in `_private`
+
+## Error handling
+
+`executeQuery` propagates errors from `@datocms/cda-client`. Failures crash the build during SSG (desired — fail fast). In preview SSR, errors surface as Astro error pages.
+
+## Type generation
+
+Types come from `schema.ts`, managed by `npm run generate-schema`. Import CMS types from `~/lib/datocms/types`. Never write CMS types by hand.
+
+## Cache tags (planned)
+
+Cache tag propagation is not yet implemented. Tracked as **CD3** in `docs/TODO.md`.

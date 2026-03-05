@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: How to run simple test
 ---
 

@@ -1,5 +1,4 @@
 ---
-agent_edit: true
 ---
 
 # Output SSR per abilitare anteprime editoriali

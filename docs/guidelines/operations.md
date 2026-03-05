@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Describe how Multimage is built, deployed, and configured across environments.
 ---
 

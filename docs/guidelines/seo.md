@@ -1,5 +1,4 @@
 ---
-agent_edit: false 
 scope: provide SEO guidance for the single-locale Multimage site
 ---
 

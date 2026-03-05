@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Explains how to manage decision logs
 ---
 

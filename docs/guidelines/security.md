@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Track security risks, mitigations, and review checkpoints for Multimage.
 ---
 

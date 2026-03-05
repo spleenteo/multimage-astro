@@ -1,5 +1,4 @@
 ---
-agent_edit: true
 ---
 
 # Doppia pipeline static/preview per Draft Mode

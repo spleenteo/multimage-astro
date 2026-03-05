@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Fastro distinguishes between CMS content related Blocks and regular UI Components.
 ---
 

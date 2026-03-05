@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: How Fastro uses Icons, Fonts and digital assets in general
 ---
 

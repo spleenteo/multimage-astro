@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: aims to provide an accessible baseline, by providing helper classes and components
 ---
 

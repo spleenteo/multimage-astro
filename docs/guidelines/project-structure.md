@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Fastro is based on and extends the [Astro project structure](https://docs.astro.build/en/core-concepts/project-structure/)
 ---
 
@@ -17,7 +16,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - **`src/styles`**
   - Global Tailwind import (`global.css`) and CSS variables including font declarations to keep modules lean.
 - **`scripts`**
-  - `build-search-client.mjs` emits the browser bundles in `public/generated`; `sync-datocms.mjs` loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md`.
+  - `build-search-client.mjs` emits the browser bundles in `public/generated`; `sync-datocms.mjs` loads `.env` and regenerates `schema.ts`.
 - **`public/generated`**
   - Build artefacts from `npm run prebuild`. Missing files here break `/cerca` and `BookCarouselSection` because `<script src="/generated/...">` references them directly.
 - **`docs/**`**
@@ -28,7 +27,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - The same config exposes `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` and `PUBLIC_SITE_URL` to the client. `/cerca` throws during rendering if the search token is absent and the sitemap falls back to `http://localhost:4321` whenever `PUBLIC_SITE_URL` is unset (see docs/TODO.md SEO task **SEO1**).
 - `tsconfig.json` defines the `~/*` path aliases used throughout the repo and enables `allowImportingTsExtensions` because `_graphql.ts` files are imported with their extension. Keep helpers inside `src/lib/**` so cross-layer imports stay obvious.
 - `~/lib/prerender` centralises the shared `export { prerender }` flag so Astro pages are prerendered only when `SERVER=static` but remain SSR when `SERVER=preview`.
-- `npm run sync-datocms` (called by `npm run dev`/`start`) loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md`. 
+- `npm run sync-datocms` (called by `npm run dev`/`start`) loads `.env` and regenerates `schema.ts`.
 - `npm run prebuild`/`npm run bundle-search-client` builds the browser bundles under `public/generated`. Run it before `astro dev`/`astro build` locally and wire it into CI (tracked by docs/TODO.md Project Structure task **PS1**).
 
 ## Co-location & layering rules

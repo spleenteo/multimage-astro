@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: Document performance-sensitive code paths and tactics to keep Multimage fast.
 ---
 

@@ -1,5 +1,4 @@
 ---
-agent_edit: false
 scope: How to manage draft preview for editors
 ---
 

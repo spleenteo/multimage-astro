@@ -11,7 +11,7 @@ const repoRoot = path.resolve(path.dirname(__filename), '..');
 const LIST_DOCS = ['docs/list-components.md', 'docs/list-helpers.md', 'docs/list-models.md'];
 
 const PATH_TOKEN_REGEX = /`([^`]+)`/g;
-const PATH_PREFIX = /^(src|scripts|docs|public|head-start)\//;
+const PATH_PREFIX = /^(src|scripts|docs|public)\//;
 
 const errors = [];
 
