@@ -2,6 +2,21 @@ import type { ItemTypeDefinition } from '@datocms/cma-client';
 type EnvironmentSettings = {
   locales: 'it';
 };
+export type ProjectComment = ItemTypeDefinition<
+  EnvironmentSettings,
+  'DSifBVWPSki5p1x3eJqjNA',
+  {
+    model_id: {
+      type: 'string';
+    };
+    record_id: {
+      type: 'string';
+    };
+    content: {
+      type: 'json';
+    };
+  }
+>;
 export type IndexPage = ItemTypeDefinition<
   EnvironmentSettings,
   'fAa-reI7QymIa_MCsJxNlQ',
@@ -595,13 +610,13 @@ export type App = ItemTypeDefinition<
     callout_background: {
       type: 'color';
     };
-    footer_text: {
-      type: 'structured_text';
-    };
     nav_items: {
       type: 'rich_text';
       blocks: MenuItem | MenuDropdown | MenuExternalItem;
       localized: true;
+    };
+    footer_text: {
+      type: 'structured_text';
     };
     callout_text: {
       type: 'text';
@@ -681,6 +696,18 @@ export type Book = ItemTypeDefinition<
     reviews: {
       type: 'links';
     };
+    edited_by: {
+      type: 'boolean';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    review_short: {
+      type: 'structured_text';
+    };
     slug: {
       type: 'slug';
     };
@@ -690,35 +717,17 @@ export type Book = ItemTypeDefinition<
     isbn: {
       type: 'string';
     };
-    subtitle: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
     price: {
       type: 'float';
-    };
-    review_short: {
-      type: 'structured_text';
-    };
-    edited_by: {
-      type: 'boolean';
-    };
-    pages: {
-      type: 'integer';
     };
     promo: {
       type: 'string';
     };
-    description: {
-      type: 'text';
-    };
     authors: {
       type: 'links';
     };
-    license: {
-      type: 'link';
+    pages: {
+      type: 'integer';
     };
     highlight: {
       type: 'boolean';
@@ -726,11 +735,20 @@ export type Book = ItemTypeDefinition<
     seo: {
       type: 'seo';
     };
-    archive: {
-      type: 'boolean';
+    license: {
+      type: 'link';
+    };
+    description: {
+      type: 'text';
+    };
+    review: {
+      type: 'structured_text';
     };
     print_year: {
       type: 'date';
+    };
+    archive: {
+      type: 'boolean';
     };
     epub_url: {
       type: 'string';
@@ -738,20 +756,17 @@ export type Book = ItemTypeDefinition<
     layout_artist: {
       type: 'string';
     };
-    review: {
-      type: 'structured_text';
-    };
-    collection: {
-      type: 'link';
+    illustrator: {
+      type: 'string';
     };
     edition: {
       type: 'integer';
     };
-    illustrator: {
-      type: 'string';
-    };
     stock: {
       type: 'integer';
+    };
+    collection: {
+      type: 'link';
     };
     first_print_year: {
       type: 'integer';
@@ -762,12 +777,12 @@ export type Book = ItemTypeDefinition<
     format: {
       type: 'string';
     };
+    cover_image: {
+      type: 'file';
+    };
     reprints: {
       type: 'rich_text';
       blocks: Reprint;
-    };
-    cover_image: {
-      type: 'file';
     };
     dimension: {
       type: 'link';
@@ -807,6 +822,7 @@ export type AnyBlock =
   | MenuDropdown
   | MenuExternalItem;
 export type AnyModel =
+  | ProjectComment
   | IndexPage
   | Author
   | Supplier

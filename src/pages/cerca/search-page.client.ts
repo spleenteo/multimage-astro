@@ -132,12 +132,65 @@ const entryContainsPhrase = (entry: SearchResult, phrase: string): boolean => {
   });
 };
 
+const extractBookSlugFromUrl = (url: string | null | undefined): string | null => {
+  if (!url) return null;
+  const path = pathFromUrl(url);
+  const match = path.match(/\/libri\/([^/?#]+)/);
+  return match?.[1] ?? null;
+};
+
+let archivedSlugs: Set<string> | null = null;
+let archivedSlugsPromise: Promise<Set<string>> | null = null;
+
+const fetchArchivedSlugs = async (): Promise<Set<string>> => {
+  if (archivedSlugs) {
+    return archivedSlugs;
+  }
+
+  if (!archivedSlugsPromise) {
+    archivedSlugsPromise = fetch('/archived-books.json')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Unable to load archived books index');
+        }
+        return response.json() as Promise<{ slugs?: string[] }>;
+      })
+      .then((payload) => new Set(payload.slugs ?? []))
+      .catch(() => new Set<string>())
+      .finally(() => {
+        archivedSlugsPromise = null;
+      });
+
+    archivedSlugs = await archivedSlugsPromise;
+    return archivedSlugs;
+  }
+
+  archivedSlugs = await archivedSlugsPromise;
+  return archivedSlugs;
+};
+
+const isArchivedBook = (entry: SearchResult, filterKey: FilterKey): boolean => {
+  if (filterKey !== 'books') {
+    return false;
+  }
+
+  const slug = extractBookSlugFromUrl(entry.attributes.url);
+  if (!slug) {
+    return false;
+  }
+
+  return archivedSlugs?.has(slug) ?? false;
+};
+
 const createResultItem = (entry: SearchResult): HTMLLIElement => {
   const { attributes } = entry;
   const filterKey = classifyEntry(attributes.url ?? '');
   const filterMeta = FILTERS[filterKey];
   const item = document.createElement('li');
   item.className = 'search-result';
+
+  const badges = document.createElement('div');
+  badges.className = 'search-result__badges';
 
   const badge = document.createElement('span');
   badge.className = 'search-result__badge';
@@ -149,7 +202,16 @@ const createResultItem = (entry: SearchResult): HTMLLIElement => {
   const badgeText = document.createElement('span');
   badgeText.textContent = filterMeta.label.toUpperCase();
   badge.append(badgeText);
-  item.append(badge);
+  badges.append(badge);
+
+  if (isArchivedBook(entry, filterKey)) {
+    const archivedBadge = document.createElement('span');
+    archivedBadge.className = 'search-result__badge search-result__badge--archived';
+    archivedBadge.textContent = 'Fuori catalogo';
+    badges.append(archivedBadge);
+  }
+
+  item.append(badges);
 
   const title = document.createElement('h3');
   title.className = 'search-result__title';
@@ -472,6 +534,12 @@ const mountSearchPage = (): CleanupFn | undefined => {
     updateFilterStyles();
     triggerSearch(input.value, { updateHistory: true });
   };
+
+  void fetchArchivedSlugs().then(() => {
+    if (cachedResults.length && cachedQuery) {
+      renderResults(cachedResults, cachedTotal, cachedQuery);
+    }
+  });
 
   form.addEventListener('submit', handleSubmit);
   input.addEventListener('input', handleInput);
