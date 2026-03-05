@@ -36,6 +36,6 @@ Example: `2026-03-05-security-baseline.md`
 |-------|--------|------|
 | [security-baseline](2026-03-05-security-baseline.md) | idea | 2026-03-05 |
 | [seo-structured-data](2026-03-05-seo-structured-data.md) | idea | 2026-03-05 |
-| [search-v2](2026-03-05-search-v2.md) | idea | 2026-03-05 |
+| [search-v2](2026-03-05-search-v2.md) | in-progress | 2026-03-05 |
 | [ci-pipeline](2026-03-05-ci-pipeline.md) | idea | 2026-03-05 |
 | [cache-tags](2026-03-05-cache-tags.md) | idea | 2026-03-05 |

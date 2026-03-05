@@ -63,7 +63,10 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Notes: regenerate via `npx datocms schema:generate`; never edit manually.
 - **Search client** (`src/pages/cerca/search-page.client.ts`)
   - Purpose: browser-only module powering `/cerca` (debounce, filters, URL sync, rendering).
-  - Notes: bundled by `scripts/build-search-client.mjs`; tests tracked under docs/TODO.md task **TC2**.
+  - Notes: bundled by `scripts/build-search-client.mjs`; `getRootConfig` throws if required `data-*` attrs are missing. Tests tracked under docs/TODO.md task **TC2**.
+- **Search styles** (`src/pages/cerca/_search.css`)
+  - Purpose: global CSS for `/cerca` — covers static page elements and dynamically-created result cards.
+  - Notes: imported in `index.astro` frontmatter so it is not scoped; class names must match those set in `search-page.client.ts`.
 - **Staff CSV exporter** (inline inside `src/pages/staff/archivio-catalogo/index.astro`)
   - Purpose: turns the prerendered `<table>` into a downloadable CSV with BOM.
   - Notes: slated for extraction + testing (Code Health task **CH1**).

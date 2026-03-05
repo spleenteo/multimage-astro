@@ -46,7 +46,18 @@ const classifyEntry = (url: string): FilterKey => {
 };
 
 const getRootConfig = (root: HTMLElement): SearchConfig => {
-  const { endpoint = '', token = '', minLength = '3', limit = '25', fuzzy = 'true' } = root.dataset;
+  const { endpoint, token, minLength = '3', limit = '25', fuzzy = 'true' } = root.dataset;
+
+  if (!endpoint) {
+    throw new Error(
+      '[search] data-endpoint mancante su [data-search-root]. Controlla PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN.',
+    );
+  }
+  if (!token) {
+    throw new Error(
+      '[search] data-token mancante su [data-search-root]. Controlla PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN.',
+    );
+  }
 
   return {
     endpoint,
@@ -290,8 +301,6 @@ const mountSearchPage = (): CleanupFn | undefined => {
     return undefined;
   }
 
-  const config = getRootConfig(root);
-
   const form = root.querySelector<HTMLFormElement>('[data-search-form]');
   const input = root.querySelector<HTMLInputElement>('[data-search-input]');
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
@@ -305,9 +314,13 @@ const mountSearchPage = (): CleanupFn | undefined => {
     return undefined;
   }
 
-  if (!config.endpoint || !config.token) {
+  let config: SearchConfig;
+  try {
+    config = getRootConfig(root);
+  } catch (err) {
     statusEl.textContent =
       'Configurazione della ricerca mancante. Verifica il token pubblico di DatoCMS.';
+    console.error(err);
     return undefined;
   }
 
@@ -368,12 +381,26 @@ const mountSearchPage = (): CleanupFn | undefined => {
     }
 
     const activeFilters = getActiveFilters();
+
+    const catalogItems = items.filter(
+      (entry) => !isArchivedBook(entry, classifyEntry(entry.attributes.url ?? '')),
+    );
+
     const visibleItems = activeFilters.length
-      ? items.filter((entry) => matchesFilters(entry, activeFilters))
-      : items;
+      ? catalogItems.filter((entry) => matchesFilters(entry, activeFilters))
+      : catalogItems;
 
     if (!items.length) {
-      setStatus(`Nessun risultato per “${query}”.`);
+      setStatus(
+        `Nessun risultato per “${query}”. Prova con parole diverse, controlla l'ortografia o rimuovi i filtri attivi.`,
+      );
+      return;
+    }
+
+    if (!catalogItems.length) {
+      setStatus(
+        `Nessun risultato nel catalogo attivo per “${query}”. I libri fuori catalogo sono esclusi dalla ricerca.`,
+      );
       return;
     }
 
@@ -393,7 +420,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     resultsWrapper.hidden = false;
 
     const base = `Trovati ${visibleItems.length}${
-      activeFilters.length ? ` su ${total}` : ''
+      activeFilters.length ? ` su ${catalogItems.length}` : ''
     } risultati per “${query}”.`;
     const filtersSuffix =
       activeFilters.length > 0

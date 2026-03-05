@@ -14,7 +14,7 @@ DatoCMS Site Search powers `/cerca`. The page is fully client-driven but depends
 
 ## Architecture
 1. `scripts/build-search-client.mjs` bundles `src/pages/cerca/search-page.client.ts` into `public/generated/search-page.client.js`. The script also emits `public/generated/swiper-element.js` for `BookCarouselSection` so `npm run prebuild` remains a single source of truth.
-2. `src/pages/cerca/index.astro` prerenders a semantic search form (role="search", status region, filters). At runtime it loads the bundled module (or the source file during `astro dev`) and forwards configuration via `data-*` attributes: endpoint, token, min-length, limit, fuzzy toggle.
+2. `src/pages/cerca/index.astro` prerenders a semantic search form (role="search", status region, filters). Styles live in `src/pages/cerca/_search.css` (imported globally so dynamically-created result cards pick them up). At runtime it loads the bundled module (or the source file during `astro dev`) and forwards configuration via `data-*` attributes: endpoint, token, min-length, limit, fuzzy toggle.
 3. The client bundle registers listeners (`submit`, `input`, history `popstate`, filter toggles, exact-match checkbox). It debounces keystrokes, updates the URL (`?q=...&exact=1`), and uses `AbortController` to cancel in-flight fetches.
 4. All requests hit `https://site-api.datocms.com/search-results` directly from the browser with `Authorization: Bearer <PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN>`. No proxy route exists, so rate limiting and token secrecy rely on Dato’s role system.
 
@@ -38,6 +38,7 @@ DatoCMS Site Search powers `/cerca`. The page is fully client-driven but depends
 ## Tokens & permissions
 - `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` **must** belong to a Dato role that only has *Perform Site Search API calls*. Treat it as public but environment-specific; never reuse CDA/CMA tokens because this value is embedded into the HTML as a `data-token` attribute.
 - `src/pages/cerca/index.astro` throws at build time if the token is missing. Surface this clearly in `.env.example`, Vercel, and deployment runbooks.
+- `getRootConfig()` throws at runtime if `data-endpoint` or `data-token` are absent on `[data-search-root]`. The error is caught in `mountSearchPage`, logged to the console, and surfaced in the UI status region. This guards against silent misconfiguration in preview or staging builds.
 - Rotate the token by updating envs **and** re-running `npm run prebuild` so the generated bundle in `public/generated` picks up the new value.
 
 ## Error handling & observability
