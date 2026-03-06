@@ -56,7 +56,7 @@ export function sortAuthorsForIndex(authors: Array<AuthorRecordForCard>) {
   return [...authors].sort((a, b) => extractSortKey(a).localeCompare(extractSortKey(b), 'it'));
 }
 
-export const AUTHOR_NAME_FALLBACK = 'Autore in aggiornamento';
+export const AUTHOR_NAME_FALLBACK = 'Profilo in aggiornamento';
 
 export type AuthorNameLike = {
   alias?: string | null;

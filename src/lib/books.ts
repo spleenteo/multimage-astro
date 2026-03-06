@@ -236,7 +236,7 @@ export function buildEditionDetails(source: BookDetailSource): BookDetailItem[] 
 
   const translator = normalizeText(source.translator);
   if (translator) {
-    details.push({ label: 'Traduttore', value: translator });
+    details.push({ label: 'Traduzione', value: translator });
   }
 
   const formatValue = normalizeText(source.format);
