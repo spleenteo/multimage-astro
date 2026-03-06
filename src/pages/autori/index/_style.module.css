@@ -17,6 +17,38 @@
     @apply mx-auto max-w-6xl;
   }
 
+  .searchBar {
+    @apply flex justify-center px-4 pb-2;
+  }
+
+  .searchPill {
+    @apply flex w-full max-w-md items-center gap-3 rounded-full border border-brand-slate/15 bg-white/90 px-5 py-3 shadow-[0_8px_32px_rgba(13,30,54,0.08)] backdrop-blur-sm transition-shadow duration-200 focus-within:shadow-[0_8px_32px_rgba(13,30,54,0.14)] focus-within:border-brand-sky/40;
+  }
+
+  .searchIcon {
+    @apply shrink-0 text-brand-slate/40;
+  }
+
+  .searchInput {
+    @apply min-w-0 flex-1 border-none bg-transparent text-sm text-brand-navy placeholder:text-brand-slate/45 focus:outline-none;
+  }
+
+  .searchInput::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  .searchClear {
+    @apply shrink-0 cursor-pointer text-brand-slate/30 transition-colors duration-150 hover:text-brand-slate/70;
+  }
+
+  .noResults {
+    @apply hidden py-16 text-center text-brand-slate;
+  }
+
+  .noResults[data-visible] {
+    @apply block;
+  }
+
   .nav {
     @apply sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.4em] text-brand-slate shadow-soft backdrop-blur-sm;
   }

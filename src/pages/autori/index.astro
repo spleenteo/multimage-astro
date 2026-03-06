@@ -82,17 +82,36 @@ export { prerender } from '~/lib/prerender';
         <div class={styles.container}>
           <div id="char-menu" class="sr-only" aria-hidden="true" />
 
+          <div class={styles.searchBar}>
+            <div class={styles.searchPill}>
+              <svg class={styles.searchIcon} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                id="author-search"
+                type="search"
+                placeholder="Cerca per nome o alias…"
+                class={styles.searchInput}
+                autocomplete="off"
+                aria-label="Cerca autori per nome o alias"
+              />
+            </div>
+          </div>
+
           <nav class={styles.nav} aria-label="Indice alfabetico autori">
             {navigationAnchors.map(({ letter, anchorId }) => (
-              <a href={`#${anchorId}`} class={styles.navLink}>
+              <a href={`#${anchorId}`} class={styles.navLink} data-nav-anchor={anchorId}>
                 {letter}
               </a>
             ))}
           </nav>
 
+          <p class={styles.noResults} id="author-no-results">Nessun autore trovato.</p>
+
           <div class={styles.groupList}>
             {authorGroups.map(({ letter, anchorId, authors }) => (
-              <section id={anchorId} class="space-y-8">
+              <section id={anchorId} class="space-y-8" data-author-group>
                 <div class={styles.groupHeader}>
                   <h2 class={styles.groupTitle}>{letter}</h2>
                   <a href="#char-menu" class={styles.backLink}>
@@ -102,15 +121,20 @@ export { prerender } from '~/lib/prerender';
 
                 <div class={styles.authorsGrid}>
                   {authors.map((author) => (
-                    <AuthorCard
-                      name={author.name}
-                      slug={author.slug}
-                      alias={author.alias}
-                      country={author.country}
-                      summary={author.summary}
-                      booksCount={author.booksCount}
-                      picture={author.picture}
-                    />
+                    <div
+                      data-author-card
+                      data-search={[author.name, author.alias].filter(Boolean).join(' ')}
+                    >
+                      <AuthorCard
+                        name={author.name}
+                        slug={author.slug}
+                        alias={author.alias}
+                        country={author.country}
+                        summary={author.summary}
+                        booksCount={author.booksCount}
+                        picture={author.picture}
+                      />
+                    </div>
                   ))}
                 </div>
               </section>
@@ -122,3 +146,53 @@ export { prerender } from '~/lib/prerender';
   </section>
   <DraftModeQueryListener query={AUTHORS_PAGE_QUERY} />
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var input = document.getElementById('author-search');
+    var noResults = document.getElementById('author-no-results');
+    if (!input) return;
+
+    function normalize(s) {
+      return s
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+    }
+
+    function filter() {
+      var query = normalize(input.value.trim());
+      var groups = document.querySelectorAll('[data-author-group]');
+      var totalVisible = 0;
+
+      groups.forEach(function (group) {
+        var cards = group.querySelectorAll('[data-author-card]');
+        var groupVisible = 0;
+
+        cards.forEach(function (card) {
+          var text = normalize(card.dataset.search || '');
+          var visible = query === '' || text.includes(query);
+          card.style.display = visible ? '' : 'none';
+          if (visible) groupVisible++;
+        });
+
+        var hide = groupVisible === 0 && query !== '';
+        group.style.display = hide ? 'none' : '';
+        if (!hide) totalVisible += groupVisible;
+
+        var anchor = document.querySelector('[data-nav-anchor="' + group.id + '"]');
+        if (anchor) anchor.style.display = hide ? 'none' : '';
+      });
+
+      if (noResults) {
+        if (query !== '' && totalVisible === 0) {
+          noResults.setAttribute('data-visible', '');
+        } else {
+          noResults.removeAttribute('data-visible');
+        }
+      }
+    }
+
+    input.addEventListener('input', filter);
+  })();
+</script>
