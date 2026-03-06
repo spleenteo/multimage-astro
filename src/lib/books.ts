@@ -266,7 +266,7 @@ export function buildGraphicsDetails(source: BookDetailSource): BookDetailItem[]
 
   const illustrator = normalizeText(source.illustrator);
   if (illustrator) {
-    details.push({ label: 'Illustratore', value: illustrator });
+    details.push({ label: 'Illustrazioni', value: illustrator });
   }
 
   const coverDesigner = normalizeText(source.coverDesigner);
@@ -276,7 +276,7 @@ export function buildGraphicsDetails(source: BookDetailSource): BookDetailItem[]
 
   const layoutArtist = normalizeText(source.layoutArtist);
   if (layoutArtist) {
-    details.push({ label: 'Impaginatore', value: layoutArtist });
+    details.push({ label: 'Impaginazione', value: layoutArtist });
   }
 
   const coverSizeLabel = normalizeText(source.dimension?.dimensions ?? source.dimensions);
