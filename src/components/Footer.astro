@@ -142,34 +142,42 @@ const LEGAL_LINKS: LegalLink[] = [
         ))
       }
 
-      <div class="space-y-4 md:col-span-3">
-        <p class="text-xs font-semibold uppercase tracking-wider text-white/70">Seguici</p>
-        <ul class="flex flex-col gap-2">
-          {
-            SOCIAL_LINKS.map(({ label, href, icon }) => (
-              <li>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  class="inline-flex items-center gap-3 text-sm text-brand-mist transition hover:text-white"
-                >
-                  <span class="flex h-9 w-9 items-center justify-center bg-white/10">
-                    <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-                  </span>
-                  <span>{label}</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+    </div>
+  </div>
+
+  <div class="border-b border-white/10 py-6">
+    <div class="container flex flex-col items-center gap-4">
+      <p class="text-xs font-semibold uppercase tracking-wider text-white/70">Seguici</p>
+      <ul class="flex flex-wrap justify-center gap-6">
+        {
+          SOCIAL_LINKS.map(({ label, href, icon }) => (
+            <li>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white"
+              >
+                <span class="flex h-9 w-9 items-center justify-center bg-white/10">
+                  <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+                </span>
+                <span>{label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 
   <div
-    class="container flex flex-col gap-2 py-6 text-xs text-brand-mist/80 md:flex-row md:items-center md:justify-between"
+    class="container flex flex-col gap-4 py-6 text-xs text-brand-mist/80 md:flex-row md:items-center md:justify-between"
   >
+    <address class="not-italic leading-relaxed text-brand-mist/70">
+      Associazione Multimage APS &mdash; Via Mario Pagano 7, 50133 Firenze &mdash;
+      <a href="mailto:info@multimage.org" class="transition hover:text-white">info@multimage.org</a>
+       &mdash; P.I. 06987750012
+    </address>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
       {
         LEGAL_LINKS.map(({ label, href, external }) => (
