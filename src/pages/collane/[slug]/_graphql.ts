@@ -32,7 +32,7 @@ export const COLLECTION_RELATED_BOOKS_QUERY = /* GraphQL */ `
     _allBooksMeta(filter: { collection: { eq: $collectionId } }) {
       count
     }
-    allBooks(filter: { collection: { eq: $collectionId } }, orderBy: title_ASC, first: 60) {
+    allBooks(filter: { collection: { eq: $collectionId } }, orderBy: _firstPublishedAt_DESC, first: 60) {
       id
       title
       subtitle
