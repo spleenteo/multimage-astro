@@ -19,13 +19,13 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "^10.0.7",
     "@datocms/astro": "^0.6.12",
     "@datocms/cda-client": "^0.2.10",
     "@datocms/cma-client": "^5.4.18",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^5.18.1",
+    "astro": "^6.3.3",
     "autoprefixer": "^10.5.0",
     "datocms": "^4.0.27",
     "jsdom": "^29.1.1",
@@ -38,7 +38,6 @@
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.8",
-    "@astrojs/vercel": "^8.2.11",
     "@types/jsdom": "^28.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "dotenv-cli": "^11.0.0",

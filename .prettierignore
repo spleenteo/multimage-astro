@@ -4,5 +4,6 @@ src/lib/datocms/graphql-env.d.ts
 schema.ts
 docs/
 dist/
+.vercel/
 public/generated/
 AGENTS.md
