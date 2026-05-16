@@ -84,9 +84,21 @@ export { prerender } from '~/lib/prerender';
 
           <div class={styles.searchBar}>
             <div class={styles.searchPill}>
-              <svg class={styles.searchIcon} xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
+              <svg
+                class={styles.searchIcon}
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
               </svg>
               <input
                 id="author-search"
@@ -107,7 +119,9 @@ export { prerender } from '~/lib/prerender';
             ))}
           </nav>
 
-          <p class={styles.noResults} id="author-no-results">Nessun autore trovato.</p>
+          <p class={styles.noResults} id="author-no-results">
+            Nessun autore trovato.
+          </p>
 
           <div class={styles.groupList}>
             {authorGroups.map(({ letter, anchorId, authors }) => (

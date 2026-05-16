@@ -7,9 +7,9 @@ export interface DraftModeQueryListenerProps<
   QueryResult = unknown,
   QueryVariables extends Record<string, unknown> = Record<string, unknown>,
 > extends Omit<
-    QueryListenerOptions<QueryResult, QueryVariables>,
-    'includeDrafts' | 'token' | 'excludeInvalid'
-  > {}
+  QueryListenerOptions<QueryResult, QueryVariables>,
+  'includeDrafts' | 'token' | 'excludeInvalid'
+> {}
 
 const props = Astro.props as DraftModeQueryListenerProps;
 const draftModeEnabled = resolveDraftMode(Astro);
