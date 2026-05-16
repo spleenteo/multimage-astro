@@ -236,8 +236,8 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
   - [x] D4.3 CMA v5 review (3 call site OK, nessuna azione) ✓
   - [x] D4.4 CLI v4 review (schema:inspect/cma:script come opportunità) ✓
   - [x] D4.5 Report: `docs/decision-log/2026-05-16-datocms-review.md` ✓
-- [ ] **D5 — (post-D4) Creare shape Astro 6**
-  - [ ] Nuovo file `docs/shapes/YYYY-MM-DD-astro-6-migration.md` con findings di D4 come input
+- [x] **D5 — (post-D4) Creare shape Astro 6** (2026-05-16)
+  - [x] Creato `docs/shapes/2026-05-16-astro-6-migration.md` (status: ready). Include findings CVE da D2, conferma compatibilità pattern DatoCMS da D4, blocker `@astrojs/tailwind` non-compat con piano sostituzione via PostCSS.
 - [ ] **Shape candidates emersi da D4** (vedi `docs/decision-log/2026-05-16-datocms-review.md`):
   - [ ] **D4-R1 + R2**: shape `gql.tada + auto-pagination` (sostituisce result types manuali + `first: 500` hard caps)
   - [ ] **D4-R3**: shape `content-link-visual-editing` (DX editorial click-to-edit su preview)
