@@ -12,7 +12,7 @@ shaping: true
 ## Decisioni post-conversazione
 
 - **Invalidation scope**: 🟡 *invalidate everything* (~1000 record × 8 publish/mese ≈ 8K invocations = ~1% budget Vercel free). Costo DatoCMS rate-limit accettato dall'utente.
-- **Cache bypass per draft**: 🟡 *query param `?draft=1`* (più semplice, debugabile via URL).
+- **Cache bypass per draft**: 🟡 *cookie `__prerender_bypass` (meccanismo Vercel-nativo)* affiancato al JWT cookie esistente (pattern DatoCMS canonico). Finding emerso dallo spike A0: l'adapter `@astrojs/vercel@10` espone `isr.bypassToken` che, presente come valore del cookie `__prerender_bypass`, fa bypassare la CDN. Nessun query param `?draft=1` necessario — URL editor restano puliti.
 - **TTL ISR default**: 🟡 24h. Con invalidation totale a ogni publish, il TTL è di fatto un floor per le pagine non visitate.
 - **Staging**: 🟡 Preview Vercel del branch (auto-deploy del push).
 - **Visual Editing + Web Previews**: 🟡 integrato in questa shape (richiede draft mode su same-domain — questa shape è il prerequisito tecnico).
@@ -82,7 +82,7 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | R1.1 | Preview DatoCMS sidebar punta allo stesso dominio della produzione | Must-have |
 | R1.2 | Modifica record → propagazione in produzione entro 60 secondi (webhook → bypass URL su tutte le pagine) | Must-have |
 | 🟡 R1.3 | Visual Editing / Content Link attivo in draft mode + integrato col tab "Visual" del plugin Web Previews | Must-have |
-| 🟡 R1.4 | URL editor: pattern `?draft=1` accettato (URL un po' meno pulito, in cambio di semplicità) | Accepted |
+| 🟡 R1.4 | URL editor: clean (no query param). Cache bypass via cookie Vercel-nativo `__prerender_bypass` + JWT cookie esistente | Must-have |
 | **R2** | **Budget** | |
 | R2.1 | Function invocations attese ≤5% del free plan Vercel (margine 20x) | Must-have |
 | R2.2 | Nessun degrado bandwidth | Must-have |
@@ -137,11 +137,12 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | `/collane/[slug]` | CDA query `allCollections { slug }` | ~20 |
 | `/info/[slug]` | CDA query `allPages { slug }` | ~10 |
 | **Totale stimato** | | **~900-1100 URL** |
-| **A4** | **Draft mode + cache bypass via `?draft=1`** | |
-| A4.1 | Modificare `src/lib/draftPreview.ts`: `resolveDraftMode(Astro)` resta API pubblica per le pages (nessuna modifica ai consumer). Implementazione interna: richiede **sia** draft cookie valido **sia** query `?draft=1` per attivare draft. Solo cookie senza query → no draft (la pagina viene servita da cache come anonymous). | |
-| A4.2 | Aggiornare endpoint `/api/draft-mode/enable` per redirect a `?draft=1` invece di `/` puro | |
-| A4.3 | DatoCMS Web Previews plugin (`/api/preview-links`): URL emessi includono `?draft=1` | |
-| A4.4 | Verifica: ISR cache key include query string → `/libri/foo` e `/libri/foo?draft=1` sono cache entry separate → editor sempre fresh | |
+| **A4** | **Draft mode + cache bypass via cookie `__prerender_bypass`** | |
+| A4.1 | Modificare `src/lib/draftMode.ts` → `enableDraftMode()` setta DUE cookie in un colpo: (a) JWT cookie (pattern attuale, signed con `SIGNED_COOKIE_JWT_SECRET`, identifica editor autenticato) (b) `__prerender_bypass=<BYPASS_TOKEN>` (cookie Vercel-nativo, http-only, secure, sameSite=none — la CDN lo riconosce e bypassa cache). `disableDraftMode()` rimuove entrambi. | |
+| A4.2 | `src/lib/draftPreview.ts`: `resolveDraftMode(Astro)` resta API pubblica invariata per le pages. Implementazione interna invariata (legge JWT cookie). | |
+| A4.3 | `/api/draft-mode/enable` e `/api/draft-mode/disable` esistenti: chiamano `enableDraftMode/disableDraftMode` → setteranno/elimineranno automaticamente entrambi i cookie | |
+| A4.4 | `/api/preview-links`: nessuna modifica — emette URL diretti tipo `/libri/foo`, l'enable endpoint si occupa di settare i cookie prima del redirect | |
+| A4.5 | Verifica: due cookie sempre coerenti (entrambi presenti o entrambi assenti). Edge case: cookie singolo presente → trattato come anonymous (sicuro per default) | |
 | **A5** | **Visual Editing (Content Link) integrato** | |
 | A5.1 | `npm install @datocms/content-link` | |
 | A5.2 | Aggiungere `DATOCMS_BASE_EDITING_URL` a `astro.config.mjs` envField + a Vercel | |
@@ -178,7 +179,7 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | R1.1 | Sidebar DatoCMS punta a single domain | Must-have | ✅ |
 | R1.2 | Modifica → propagazione <60s | Must-have | ✅ |
 | 🟡 R1.3 | Visual Editing attivo + integrato col tab Visual | Must-have | ✅ |
-| 🟡 R1.4 | URL pattern `?draft=1` accettato | Accepted | ✅ |
+| 🟡 R1.4 | URL editor clean + cache bypass via cookie Vercel-nativo | Must-have | ✅ |
 | R2.1 | Function invocations ≤5% free | Must-have | ✅ |
 | R2.2 | No degrado bandwidth | Must-have | ✅ |
 | 🟡 R2.3 | Costo DatoCMS rate-limit accettato | Accepted | ✅ |
@@ -221,9 +222,11 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 
 ## Slices
 
-- [ ] **A0 — Spike ISR su `@astrojs/vercel@10`** (¼ giornata)
-  - Test minimal: una route SSR con `isr: { expiration: 60, bypassToken }`, verificare cache hit/miss e bypass header funziona
-  - Confermare che query string è parte della cache key (`?draft=1` produce cache entry separata)
+- [x] **A0 — Spike ISR su `@astrojs/vercel@10`** (completato)
+  - **Trovato**: `isr` config supporta `{ bypassToken, expiration: number|false, exclude: (string|RegExp)[] }`
+  - **Trovato critico**: `bypassToken` ha doppia funzione: (a) come valore del cookie `__prerender_bypass` → CDN bypassa cache (Draft Mode) (b) come header `x-prerender-revalidate` → CDN bypassa + ri-cache (on-demand ISR per webhook)
+  - **Conseguenza**: stesso TOKEN serve sia per draft mode (cookie) sia per webhook (header). Una sola env var `BYPASS_TOKEN`.
+  - **Design change**: niente `?draft=1` query param — uso il cookie nativo Vercel + JWT cookie esistente (vedi A4)
 - [ ] **A1+A2 — `output: 'server'` + cleanup `SERVER`** (½ giornata)
   - `astro.config.mjs`: output fisso, adapter con ISR config, env schema senza SERVER, + `DATOCMS_BASE_EDITING_URL`
   - Rimuovere `prerender.ts`, aggiornare 9 file che lo importano
@@ -234,10 +237,11 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - `src/pages/api/revalidate/index.ts`: auth `SECRET_API_TOKEN`, chunked 20 in parallelo, ~250ms pausa, debouncing 5s, logging
   - Test locale: chiamare l'endpoint con curl, verificare i log riportano ~900-1100 URL invalidati
   - Configurare Webhook DatoCMS dopo cutover (in slice A8)
-- [ ] **A4 — Middleware `?draft=1` + cache bypass** (¼ giornata)
-  - `src/middleware.ts`: legge query + cookie, popola `Astro.locals.draftMode = true` se entrambi presenti
-  - Aggiornare `/api/draft-mode/enable` per emettere redirect con `?draft=1`
-  - Aggiornare `/api/preview-links` per includere `?draft=1` negli URL emessi al plugin Web Previews
+- [ ] **A4 — Draft mode dual-cookie (JWT + `__prerender_bypass`)** (¼ giornata)
+  - Modificare `src/lib/draftMode.ts`: `enableDraftMode/disableDraftMode` settano/eliminano entrambi i cookie
+  - `resolveDraftMode(Astro)` invariato (pages non toccate)
+  - Endpoint `/api/draft-mode/{enable,disable}` invariati (delegano alle funzioni in `draftMode.ts`)
+  - `/api/preview-links` invariato (URL clean)
 - [ ] **A5 — Visual Editing (Content Link)** (½ giornata)
   - `npm install @datocms/content-link`
   - Estendere `executeQuery` wrapper con `contentLink: 'v1'` + `baseEditingUrl` quando draft attivo
