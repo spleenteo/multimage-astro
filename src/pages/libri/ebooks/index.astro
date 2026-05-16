@@ -28,7 +28,6 @@ const seo = withFallbackSeo(ebooksIndexContent?._seoMetaTags, {
 });
 
 const ebooks = mapBooksToCards(data.allBooks ?? []);
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

@@ -315,7 +315,6 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
   description: heroClaimText,
 });
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

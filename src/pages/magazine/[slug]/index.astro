@@ -6,12 +6,7 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
-import {
-  MAGAZINE_POST_QUERY,
-  MAGAZINE_POST_SLUGS_QUERY,
-  type MagazinePostQueryResult,
-  type MagazinePostSlugsResult,
-} from './_graphql';
+import { MAGAZINE_POST_QUERY, type MagazinePostQueryResult } from './_graphql';
 import {
   defaultBlockComponents,
   defaultInlineBlockComponents,
@@ -19,15 +14,6 @@ import {
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
-
-export async function getStaticPaths() {
-  const data = await executeQuery<MagazinePostSlugsResult>(MAGAZINE_POST_SLUGS_QUERY);
-
-  return (data.allBlogPosts ?? [])
-    .map((entry) => entry.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
-}
 
 const { slug } = Astro.params;
 
@@ -68,7 +54,6 @@ const seo = withFallbackSeo(post._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
   description: heroDescription,
 });
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

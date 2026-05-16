@@ -11,10 +11,8 @@ import styles from './_style.module.css';
 import {
   AUTHOR_DETAIL_QUERY,
   AUTHOR_RELATED_BOOKS_QUERY,
-  AUTHOR_SLUGS_QUERY,
   type AuthorDetailResult,
   type AuthorRelatedBooksResult,
-  type AuthorSlugsResult,
 } from './_graphql';
 import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import {
@@ -23,15 +21,6 @@ import {
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
-
-export async function getStaticPaths() {
-  const data = await executeQuery<AuthorSlugsResult>(AUTHOR_SLUGS_QUERY);
-
-  return (data.allAuthors ?? [])
-    .map((author) => author.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
-}
 
 const { slug } = Astro.params;
 
@@ -86,7 +75,6 @@ const pictureResponsiveImage = author.picture?.responsiveImage
       alt: author.picture.responsiveImage.alt ?? authorDisplayName,
     }
   : null;
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

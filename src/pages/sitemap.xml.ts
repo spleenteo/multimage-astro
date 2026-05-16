@@ -2,8 +2,6 @@ import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { SITEMAP_QUERY, type SitemapQueryResult } from './sitemap.xml/_graphql';
 
-export { prerender } from '~/lib/prerender';
-
 const STATIC_PATHS = [
   '/',
   '/libri',

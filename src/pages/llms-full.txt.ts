@@ -2,8 +2,6 @@ import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { LLMS_BOOKS_QUERY, LLMS_INTRO_QUERY } from './llms-full/_graphql';
 
-export { prerender } from '~/lib/prerender';
-
 const PAGE_SIZE = 100;
 
 type StructuredTextRecord = {

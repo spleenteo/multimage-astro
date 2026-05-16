@@ -5,7 +5,7 @@ import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
-import { INFO_PAGE_QUERY, INFO_PAGE_SLUGS_QUERY } from './_graphql';
+import { INFO_PAGE_QUERY } from './_graphql';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import {
@@ -18,21 +18,6 @@ import { resolveDraftMode } from '~/lib/draftPreview';
 export type InfoPageQueryResult = {
   page: (PageRecord & { _seoMetaTags: SeoMetaTag[] | null }) | null;
 };
-
-export type InfoPageSlugsResult = {
-  allPages: Array<{
-    slug: string | null;
-  }>;
-};
-
-export async function getStaticPaths() {
-  const data = await executeQuery<InfoPageSlugsResult>(INFO_PAGE_SLUGS_QUERY);
-
-  return (data.allPages ?? [])
-    .map((entry) => entry.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
-}
 
 const { slug } = Astro.params;
 
@@ -63,7 +48,6 @@ const seo = withFallbackSeo(page._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
   description: heroDescription,
 });
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

@@ -10,22 +10,11 @@ import styles from './_style.module.css';
 import {
   COLLECTION_DETAIL_QUERY,
   COLLECTION_RELATED_BOOKS_QUERY,
-  COLLECTION_SLUGS_QUERY,
   type CollectionDetailResult,
   type CollectionRelatedBooksResult,
-  type CollectionSlugsResult,
 } from './_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
-
-export async function getStaticPaths() {
-  const data = await executeQuery<CollectionSlugsResult>(COLLECTION_SLUGS_QUERY);
-
-  return (data.allCollections ?? [])
-    .map((collection) => collection.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
-}
 
 const { slug } = Astro.params;
 
@@ -63,7 +52,6 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
   title: `${collectionName} | Multimage`,
   description: collectionDescription ?? undefined,
 });
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

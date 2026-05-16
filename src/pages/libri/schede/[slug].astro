@@ -11,27 +11,17 @@ import { resolveDraftMode } from '~/lib/draftPreview';
 import { truncateToLength } from '~/lib/text';
 import { BOOK_SHEET_QUERY, type BookSheetQueryResult } from './_graphql';
 
-/** Static builds must skip generation; preview stays SSR. */
-export const prerender = (process.env.SERVER ?? 'static').toLowerCase() === 'static';
-
-export async function getStaticPaths() {
-  return [];
-}
-
 const { slug } = Astro.params;
 
 if (!slug) {
   throw new Error('Missing book slug');
 }
 
-const serverMode = (process.env.SERVER ?? 'static').toLowerCase();
-const isPreviewMode = serverMode === 'preview';
+const draftModeEnabled = resolveDraftMode(Astro);
 
-if (!isPreviewMode) {
+if (!draftModeEnabled) {
   throw new Response('Scheda disponibile solo in modalità anteprima.', { status: 404 });
 }
-
-const draftModeEnabled = resolveDraftMode(Astro);
 
 const data = await executeQuery<BookSheetQueryResult>(BOOK_SHEET_QUERY, {
   variables: { slug },

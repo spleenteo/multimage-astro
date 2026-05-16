@@ -1,8 +1,6 @@
 import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 
-export const prerender = true;
-
 const ARCHIVED_BOOKS_QUERY = /* GraphQL */ `
   query ArchivedBooksSlugs {
     allBooks(filter: { _status: { eq: published }, archive: { eq: true } }) {

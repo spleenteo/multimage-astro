@@ -32,23 +32,12 @@ import {
   BOOK_AUTHORS_BOOKS_QUERY,
   BOOK_ALTERNATE_FORMATS_QUERY,
   BOOK_COLLECTION_BOOKS_QUERY,
-  BOOK_SLUGS_QUERY,
   type BookDetailQueryResult,
   type BookDetailRecord,
   type BookAuthorsBooksResult,
   type BookAlternateFormatsResult,
   type BookCollectionBooksResult,
-  type BookSlugsResult,
 } from './_graphql';
-
-export async function getStaticPaths() {
-  const data = await executeQuery<BookSlugsResult>(BOOK_SLUGS_QUERY);
-
-  return (data.allBooks ?? [])
-    .map((book) => book.slug)
-    .filter((slug): slug is string => Boolean(slug))
-    .map((slug) => ({ params: { slug } }));
-}
 
 const { slug } = Astro.params;
 
@@ -356,7 +345,6 @@ const seo = sanitizeMetaTags(
     description: fallbackDescription,
   }),
 );
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

@@ -28,7 +28,6 @@ const seo = withFallbackSeo(booksIndexContent?._seoMetaTags, {
 });
 
 const books = mapBooksToCards(data.allBooks ?? []);
-export { prerender } from '~/lib/prerender';
 ---
 
 <BaseLayout seo={seo}>

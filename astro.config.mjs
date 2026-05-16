@@ -2,24 +2,21 @@ import { defineConfig, envField } from 'astro/config';
 
 import vercel from '@astrojs/vercel';
 
-const serverMode = (process.env.SERVER ?? 'static').toLowerCase();
-const resolvedOutput = /** @type {'static' | 'server'} */ (
-  serverMode === 'preview' ? 'server' : 'static'
-);
-const adapter = vercel();
+const adapter = vercel({
+  isr: {
+    bypassToken: process.env.BYPASS_TOKEN,
+    expiration: 60 * 60 * 24,
+    exclude: [/^\/api\//],
+  },
+});
 
 // https://astro.build/config
 export default defineConfig({
-  output: resolvedOutput,
+  output: 'server',
   adapter,
   site: 'https://www.multimage.org',
   env: {
     schema: {
-      SERVER: envField.string({
-        context: 'server',
-        access: 'public',
-        optional: true,
-      }),
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({
         context: 'server',
         access: 'secret',
@@ -46,6 +43,16 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      BYPASS_TOKEN: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
+      DATOCMS_BASE_EDITING_URL: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+      }),
       PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN: envField.string({
         context: 'client',
         access: 'public',
@@ -59,6 +66,6 @@ export default defineConfig({
   },
   integrations: [],
   build: {
-    concurrency: 8, // Start here, then test 2, 6, 8
+    concurrency: 8,
   },
 });
