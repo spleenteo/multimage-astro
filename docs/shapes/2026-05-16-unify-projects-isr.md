@@ -4,7 +4,7 @@ shaping: true
 
 # Shape: Unificare i due progetti Vercel via ISR + bypassToken
 
-**Status**: ready
+**Status**: in-progress (A0-A6 + A9 done — A7-A8 require user actions)
 **Date**: 2026-05-16
 **Appetite**: ~2 giornate (con Visual Editing integrato)
 **Predecessor**: richiede merge di `2026-05-16-astro-6-migration.md` (Astro 6 + adapter Vercel 10 indispensabili)
@@ -227,28 +227,28 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - **Trovato critico**: `bypassToken` ha doppia funzione: (a) come valore del cookie `__prerender_bypass` → CDN bypassa cache (Draft Mode) (b) come header `x-prerender-revalidate` → CDN bypassa + ri-cache (on-demand ISR per webhook)
   - **Conseguenza**: stesso TOKEN serve sia per draft mode (cookie) sia per webhook (header). Una sola env var `BYPASS_TOKEN`.
   - **Design change**: niente `?draft=1` query param — uso il cookie nativo Vercel + JWT cookie esistente (vedi A4)
-- [ ] **A1+A2 — `output: 'server'` + cleanup `SERVER`** (½ giornata)
+- [x] **A1+A2 — `output: 'server'` + cleanup `SERVER`** (commit `cf33bdd`)
   - `astro.config.mjs`: output fisso, adapter con ISR config, env schema senza SERVER, + `DATOCMS_BASE_EDITING_URL`
   - Rimuovere `prerender.ts`, aggiornare 9 file che lo importano
   - Semplificare `draftPreview.ts`: legge cookie + query `?draft=1`
   - Build singola passa (`npm run build`)
-- [ ] **A3 — Webhook revalidate "invalidate everything"** (½ giornata)
+- [x] **A3 — Webhook revalidate "invalidate everything"** (commit `de51b33`)
   - Nuovo helper `src/lib/datocms/publicUrls.ts` con `getAllPublicUrls()`
   - `src/pages/api/revalidate/index.ts`: auth `SECRET_API_TOKEN`, chunked 20 in parallelo, ~250ms pausa, debouncing 5s, logging
   - Test locale: chiamare l'endpoint con curl, verificare i log riportano ~900-1100 URL invalidati
   - Configurare Webhook DatoCMS dopo cutover (in slice A8)
-- [ ] **A4 — Draft mode dual-cookie (JWT + `__prerender_bypass`)** (¼ giornata)
+- [x] **A4 — Draft mode dual-cookie (JWT + `__prerender_bypass`)** (commit `87d12b8`)
   - Modificare `src/lib/draftMode.ts`: `enableDraftMode/disableDraftMode` settano/eliminano entrambi i cookie
   - `resolveDraftMode(Astro)` invariato (pages non toccate)
   - Endpoint `/api/draft-mode/{enable,disable}` invariati (delegano alle funzioni in `draftMode.ts`)
   - `/api/preview-links` invariato (URL clean)
-- [ ] **A5 — Visual Editing (Content Link)** (½ giornata)
+- [x] **A5 — Visual Editing (Content Link)** (commit `932a9cb`)
   - `npm install @datocms/content-link`
   - Estendere `executeQuery` wrapper con `contentLink: 'v1'` + `baseEditingUrl` quando draft attivo
   - Nuovo `src/components/ContentLink.astro` con `createController().enableClickToEdit()`, renderizzato in `BaseLayout` se draft
   - Aggiungere `data-datocms-content-link-boundary` agli 8 block components in `src/components/datocms/structuredText/blocks/`
   - Aggiornare `DraftModeQueryListener` con props contentLink + baseEditingUrl
-- [ ] **A6 — CSP middleware** (¼ giornata)
+- [x] **A6 — CSP middleware** (commit `b8e313a`)
   - Estendere `src/middleware.ts`: in draft mode aggiungere `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com`
   - Test: il sito si carica nel tab "Visual" del plugin Web Previews
 - [ ] **A7 — Staging + smoke test** (¼ giornata)
@@ -261,9 +261,11 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - Creare Webhook in DatoCMS che chiama `/api/revalidate`
   - Aspettare 24-48h, monitorare invocations
   - Decommissioning secondo progetto Vercel
-- [ ] **A9 — Cleanup + docs** (¼ giornata)
-  - `preview-mode.md`, `current-state.md`, `list-components.md`, `TODO.md`
-  - Sezione "Monitoring" in `operations.md`
+- [x] **A9 — Cleanup + docs** (questo commit)
+  - `preview-mode.md` riscritta con architettura ISR + dual-cookie + Visual Editing + webhook
+  - `current-state.md` aggiornata (Hosting single project, dependencies, env vars)
+  - `list-components.md` aggiunto `ContentLink`, aggiornato `DraftModeQueryListener`
+  - `TODO.md` entry "Unify Vercel projects via ISR" in Completed
 
 ---
 

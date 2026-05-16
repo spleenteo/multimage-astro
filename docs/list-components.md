@@ -182,8 +182,11 @@ scope: A list to describe all components used in the project
 ## Draft Mode utilities
 - `DraftModeQueryListener` — **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)
   - Purpose: wraps `@datocms/astro`’s `QueryListener` so pages reload automatically when the subscribed GraphQL query changes in DatoCMS.
-  - Key props: `query`, `variables`, any additional options supported by `datocms-listen` except `token`/`includeDrafts` (handled internally).
-  - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request.
+  - Key props: `query`, `variables`, any additional options supported by `datocms-listen` except `token`/`includeDrafts`/`contentLink`/`baseEditingUrl` (handled internally).
+  - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request. Internally enables Content Link (`contentLink: 'v1'`) so live updates preserve stega encoding for Visual Editing.
+- `ContentLink` — **ContentLink** (`src/components/ContentLink.astro`)
+  - Purpose: client-side bootstrap for DatoCMS Content Link click-to-edit overlay. Initializes `createController().enableClickToEdit()` from `@datocms/content-link`.
+  - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true. Outside draft mode the stega-encoded metadata is absent from CDA responses so the overlay is inert.
 
 ## Deprecated or missing pieces
 - ResponsiveImage/VideoPlayer components referenced in legacy docs

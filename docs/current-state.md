@@ -10,7 +10,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 - Astro pages live under `src/pages/**`, each with a sibling `_graphql.ts` defining queries/fragments. API routes exist under `src/pages/api/**` and power preview/draft tooling plus automations (`post-deploy`, `seo-analysis`, `preview-links`).
 - Components are grouped by feature: `src/components/blocks`, `src/components/datocms/structuredText`, `src/components/ui`, and utility components like `DraftModeQueryListener`.
-- Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). `~/lib/prerender` centralizes the shared `export { prerender }` flag so pages switch between static/SSR based on `SERVER`.
+- Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). All routes are SSR with ISR caching (no more `prerender` flag branching).
 - Layout, styles, scripts:
   - `src/layouts/BaseLayout.astro` loads site-wide data, analytics, and icon scripts.
   - `src/styles/global.css` imports fonts + Tailwind base layers; `tailwind.config.mjs` defines the design tokens.
@@ -20,7 +20,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Routing
 
-- Static content: `/`, `/libri`, `/libri/[slug]`, `/collane`, `/autori`, `/magazine`, `/magazine/[slug]`, `/distributori`, `/info`, `/info/[slug]`, `/staff`, `/staff/archivio-catalogo`, `/llms-full.txt`, `/sitemap.xml`, `/cerca`, `/libri/ebooks|archivio|highlights`, `/collane/[slug]` all prerender when `SERVER=static` and switch to SSR automatically in preview mode via `~/lib/prerender`.
+- Tutte le route pubbliche (`/`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/llms-full.txt`, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`, `/staff/*`) sono SSR ma servite dalla CDN Vercel via ISR — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations.
 - API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/utils` remain SSR-only endpoints even during static builds.
 - Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `LinkToRecord.astro` to resolve URLs from Dato records.
 - Known issues: `/staff` routes still lack auth (**S1**); `/llms-full.txt` should be gated (**S4**); `/magazine` Structured Text links still point to `/blog/...` (**PS2**).
@@ -29,8 +29,9 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 - All GraphQL calls go through `src/lib/datocms/executeQuery.ts`, which swaps CDA tokens based on `includeDrafts`.
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
-- Draft Mode detection happens through `resolveDraftMode(Astro)` → `draftModeEnabledFromAstro`, allowing every fetch to opt into `includeDrafts` when SSR is active (`SERVER=preview`).
-- Static builds (`SERVER=static`) execute all queries at build time; preview builds rerun queries per request.
+- Draft Mode detection happens through `resolveDraftMode(Astro)` → `draftModeEnabledFromAstro`. `executeQuery` automatically opts into `contentLink: 'v1'` + `baseEditingUrl` for Visual Editing whenever `includeDrafts` is true.
+- Editors enter draft mode through the DatoCMS Web Previews plugin (or `/api/preview?secret=...`). `enableDraftMode` sets a dual-cookie: the JWT app-level cookie + the Vercel-native `__prerender_bypass` cookie that bypasses CDN cache for the editor's requests.
+- Webhook `/api/revalidate` is called by DatoCMS on every publish/update/unpublish event. The endpoint enumerates every public URL via `getAllPublicUrls()` (in `src/lib/datocms/publicUrls.ts`) and forces regeneration in chunked parallel fetches (~30-45s for the full catalogue).
 - No pagination yet — routes such as `/libri`, `/autori`, `/sitemap.xml`, and staff exports still request up to 500 items (**CD2**).
 - Cache tag propagation is not yet wired (**CD3**).
 
@@ -83,7 +84,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Testing
 
-- Commands: `npm run format` (Prettier write), `npm run lint` (Prettier check), `npm run build` (`astro check` + build), `npm run test` (format → lint → dual SERVER build).
+- Commands: `npm run format` (Prettier write), `npm run lint` (Prettier check), `npm run build` (`astro check` + build single output), `npm run test` (format → lint → build).
 - No automated unit, integration, E2E, or accessibility tests. Manual QA happens locally or via Vercel preview URLs.
 - Pending: **CH2** (search config assertions), **TC1** (CI workflow), **TC2** (search client tests).
 - DatoCMS mocking strategy not defined; recommendation is to use real CDA in preview environments only.
@@ -97,14 +98,14 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Operations
 
-- Hosting: two Vercel projects share this repo. Production uses `SERVER=static` (SSG); preview uses `SERVER=preview` (SSR + Draft Mode).
-- Required env vars: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`.
+- Hosting: **un solo progetto Vercel** con `output: 'server'` + ISR. Anonymous → CDN cache. Editor con draft cookie → CDN bypass + SSR + Visual Editing.
+- Required env vars: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `BYPASS_TOKEN`, `DATOCMS_BASE_EDITING_URL`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`. (`SERVER` rimossa.)
 - `npm run dev`/`start` auto-runs `npm run sync-datocms` (schema generation).
 - Preview workflow: editors hit `/api/preview` or the Web Preview plugin to enable draft cookies, then browse the preview deployment for live drafts.
 
 ## Dependencies
 
-- Core: Astro 6.3.3, Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 5.9, `@astrojs/vercel` 10.0.7, `@datocms/astro` 0.6.12, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.4.18, `datocms` (CLI) 4.0.27.
+- Core: Astro 6.3.3, Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 5.9, `@astrojs/vercel` 10.0.7 con ISR, `@datocms/astro` 0.6.12, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.4.18, `@datocms/content-link` 0.3.20 (Visual Editing), `datocms` (CLI) 4.0.27.
 - Tooling: Prettier 3.8 + `prettier-plugin-astro`, esbuild 0.28, dotenv-cli 11.
 - Client bundles: Swiper 12 (fix CVE prototype pollution), Iconify CDN.
 - Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto come transitive di `@vercel/routing-utils@5.3.3` — upstream issue, attende patch da Vercel; Tailwind 4 e TypeScript 6 deliberatamente non aggiornati.
