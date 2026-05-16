@@ -41,3 +41,4 @@ Example: `2026-03-05-security-baseline.md`
 | [cache-tags](2026-03-05-cache-tags.md) | idea | 2026-03-05 |
 | [upgrade-and-env-security](2026-05-16-upgrade-and-env-security.md) | shaping | 2026-05-16 |
 | [astro-6-migration](2026-05-16-astro-6-migration.md) | done | 2026-05-16 |
+| [unify-projects-isr](2026-05-16-unify-projects-isr.md) | shaping | 2026-05-16 |
