@@ -1,6 +1,5 @@
 import { defineConfig, envField } from 'astro/config';
 
-import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
 
 const serverMode = (process.env.SERVER ?? 'static').toLowerCase();
@@ -58,7 +57,7 @@ export default defineConfig({
     },
     validateSecrets: true,
   },
-  integrations: [tailwind()],
+  integrations: [],
   build: {
     concurrency: 8, // Start here, then test 2, 6, 8
   },
