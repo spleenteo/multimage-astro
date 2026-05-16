@@ -39,3 +39,4 @@ Example: `2026-03-05-security-baseline.md`
 | [search-v2](2026-03-05-search-v2.md) | in-progress | 2026-03-05 |
 | [ci-pipeline](2026-03-05-ci-pipeline.md) | idea | 2026-03-05 |
 | [cache-tags](2026-03-05-cache-tags.md) | idea | 2026-03-05 |
+| [upgrade-and-env-security](2026-05-16-upgrade-and-env-security.md) | shaping | 2026-05-16 |
