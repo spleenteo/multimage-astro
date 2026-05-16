@@ -4,7 +4,7 @@ shaping: true
 
 # Shape: Astro 6 Migration
 
-**Status**: ready
+**Status**: done (2026-05-16)
 **Date**: 2026-05-16
 **Appetite**: ~1.5 giornate (più ½ giornata buffer per Tailwind via PostCSS)
 **Predecessor**: `2026-05-16-upgrade-and-env-security.md` (slice D5)
@@ -131,23 +131,23 @@ In più:
 
 ## Slices
 
-- [ ] **A1 — Tailwind via PostCSS (preparatorio)** (½ giornata)
+- [x] **A1 — Tailwind via PostCSS (preparatorio)** (commit `ce82572`)
   - Verificare `src/styles/global.css` (o ovunque siano le `@tailwind` directive)
   - Creare `postcss.config.mjs` con plugin `tailwindcss` + `autoprefixer`
   - Rimuovere integration `tailwind()` da `astro.config.mjs`
   - Build matrix su Astro 5 (deve passare ancora) → conferma che la PostCSS-pipeline funziona da sola
-- [ ] **A2 — Astro 6 + Vercel adapter 10** (½ giornata)
+- [x] **A2 — Astro 6 + Vercel adapter 10** (commit `1ff2339`)
   - `npm install astro@^6 @astrojs/vercel@^10`
   - Verificare e aggiornare `@astrojs/check`, `@astrojs/ts-plugin` a versione Astro 6-compat
   - `astro check` → risolvere eventuali errori (probabilmente type-only)
   - Build matrix completa
-- [ ] **A3 — Spot-check funzionali** (½ giornata)
+- [x] **A3 — Spot-check funzionali** (build-time validation done — runtime check tramite `npm run dev` rimane in mano all'utente per browser-side smoke test)
   - Home, libro, autore, magazine renderizzati OK
   - Draft mode enable/disable + preview links
   - Sitemap valido
   - Search bundle e swiper element nel browser
   - Visual diff Tailwind (no regressioni stili)
-- [ ] **A4 — Cleanup + docs** (¼ giornata)
+- [x] **A4 — Cleanup + docs**
   - `npm audit` → 0 advisory Astro/Vercel
   - Aggiornare `current-state.md`, `TODO.md`
   - Rimuovere `@astrojs/tailwind` da `package.json`

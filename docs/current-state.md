@@ -104,10 +104,10 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Dependencies
 
-- Core: Astro 5.18.1, Tailwind 3.4.19, TypeScript 5.9, `@datocms/astro` 0.6.12, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.4.18, `datocms` (CLI) 4.0.27.
+- Core: Astro 6.3.3, Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 5.9, `@astrojs/vercel` 10.0.7, `@datocms/astro` 0.6.12, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.4.18, `datocms` (CLI) 4.0.27.
 - Tooling: Prettier 3.8 + `prettier-plugin-astro`, esbuild 0.28, dotenv-cli 11.
 - Client bundles: Swiper 12 (fix CVE prototype pollution), Iconify CDN.
-- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); Astro 5.x exposed a `define:vars` XSS advisory + server-island replay CVE — fix richiede Astro 6 (shape dedicato in arrivo); Tailwind 4 e TypeScript 6 deliberatamente non aggiornati.
+- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto come transitive di `@vercel/routing-utils@5.3.3` — upstream issue, attende patch da Vercel; Tailwind 4 e TypeScript 6 deliberatamente non aggiornati.
 
 ## Accessibility
 
