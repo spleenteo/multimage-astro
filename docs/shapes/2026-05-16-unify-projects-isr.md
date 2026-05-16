@@ -119,11 +119,26 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | A2.4 | Rimuovere `SERVER` da `envField` schema in `astro.config.mjs` | |
 | A2.5 | Rimuovere `SERVER` da Vercel env vars (entrambi i progetti) | |
 | **A3** | **Webhook invalidation totale** | |
-| A3.1 | Endpoint `src/pages/api/revalidate/index.ts`: auth via `SECRET_API_TOKEN`. Riceve webhook (qualunque trigger), enumera **tutti gli URL pubblici** (chiama internamente una funzione `getAllPublicUrls()` che fa una query CDA `allBooks/allAuthors/allBlogPosts/allCollections/allPages` + URL statici hard-coded) e per ciascuno fa `fetch` con header `x-prerender-revalidate: <BYPASS_TOKEN>` | |
-| A3.2 | Configurare Webhook in DatoCMS: trigger su tutti i publish/unpublish/update, target `https://www.multimage.org/api/revalidate?token=...` | |
-| A3.3 | Rate-limiting interno: chunk di N=20 request in parallelo con `Promise.all`, attesa breve tra chunk (per non saturare DatoCMS oltre i 40 req/sec se i regen kickano in catena) | |
+| A3.1 | Nuovo helper `src/lib/datocms/publicUrls.ts` esporta `getAllPublicUrls(): Promise<string[]>` — enumera tutti gli URL pubblici tramite query CDA + costanti hard-coded (vedi tabella sotto). Riusabile anche da `sitemap.xml.ts` in futuro. | |
+| A3.2 | Endpoint `src/pages/api/revalidate/index.ts`: auth via `SECRET_API_TOKEN`. Chiama `getAllPublicUrls()`, fa `fetch` su ciascun URL con header `x-prerender-revalidate: <BYPASS_TOKEN>`. Chunked 20 in parallelo con `Promise.all`, ~250ms pausa tra chunk per stare sotto i 40 req/sec di DatoCMS. Tempo stimato: 30-45s a publish. | |
+| A3.3 | **Debouncing in-memory**: variabile module-level `lastRunAt`. Se l'ultimo run è <5s fa, il webhook risponde 200 senza rilanciare (DatoCMS spesso invia burst, evitiamo doppi run). | |
+| A3.4 | **Logging**: `console.log('[revalidate] ...')` con count URL invalidati, tempo totale, eventuali errori. Visibile in `vercel logs`. | |
+| A3.5 | Configurare Webhook in DatoCMS (slice A8): trigger su tutti i publish/unpublish/update, target `https://www.multimage.org/api/revalidate?token=...`. | |
+
+### URL enumerati da `getAllPublicUrls()`
+
+| Categoria | Sorgente | Stima |
+|---|---|---|
+| Statici | array hard-coded: `/`, `/sitemap.xml`, `/llms-full.txt`, `/archived-books.json`, `/robots.txt`, `/libri`, `/autori`, `/magazine`, `/collane`, `/distributori`, `/cerca`, `/info` | ~12 |
+| `/libri/[slug]` | CDA query `allBooks { slug }` | ~300 |
+| `/libri/schede/[slug]` | stesso `allBooks` (stesso slug, route diversa) | ~300 |
+| `/autori/[slug]` | CDA query `allAuthors { slug }` | ~200 |
+| `/magazine/[slug]` | CDA query `allBlogPosts { slug }` | ~50 |
+| `/collane/[slug]` | CDA query `allCollections { slug }` | ~20 |
+| `/info/[slug]` | CDA query `allPages { slug }` | ~10 |
+| **Totale stimato** | | **~900-1100 URL** |
 | **A4** | **Draft mode + cache bypass via `?draft=1`** | |
-| A4.1 | `src/middleware.ts`: se query `?draft=1` presente E draft cookie valido, propaga `includeDrafts: true` al downstream. Altrimenti normale traffic. | |
+| A4.1 | Modificare `src/lib/draftPreview.ts`: `resolveDraftMode(Astro)` resta API pubblica per le pages (nessuna modifica ai consumer). Implementazione interna: richiede **sia** draft cookie valido **sia** query `?draft=1` per attivare draft. Solo cookie senza query → no draft (la pagina viene servita da cache come anonymous). | |
 | A4.2 | Aggiornare endpoint `/api/draft-mode/enable` per redirect a `?draft=1` invece di `/` puro | |
 | A4.3 | DatoCMS Web Previews plugin (`/api/preview-links`): URL emessi includono `?draft=1` | |
 | A4.4 | Verifica: ISR cache key include query string → `/libri/foo` e `/libri/foo?draft=1` sono cache entry separate → editor sempre fresh | |
@@ -132,7 +147,7 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | A5.2 | Aggiungere `DATOCMS_BASE_EDITING_URL` a `astro.config.mjs` envField + a Vercel | |
 | A5.3 | `executeQuery` wrapper: in draft mode aggiungi `contentLink: 'v1'` + `baseEditingUrl: DATOCMS_BASE_EDITING_URL` alle option | |
 | A5.4 | Nuovo componente `src/components/ContentLink.astro` che inizializza `createController().enableClickToEdit()` da `@datocms/content-link` — renderizzato condizionalmente in `BaseLayout` solo se draft mode attivo | |
-| A5.5 | Aggiungere `data-datocms-content-link-boundary` agli Structured Text block components (custom blocks come BannerBlock, CtaButtonWithImageBlock, ImageBlock, SingleAuthorBlock, SingleBookBlock, PillsBlock — 6 file in `src/components/datocms/structuredText/blocks/`) | |
+| A5.5 | Aggiungere `data-datocms-content-link-boundary` agli 8 Structured Text block components in `src/components/datocms/structuredText/blocks/`: `BannerBlock.astro`, `BookCarouselBlock.astro`, `CtaButtonWithImageBlock.astro`, `ImageBlock.astro`, `SectionBlock.astro`, `SingleAuthorBlock.astro`, `SingleBookBlock.astro`, `VideoBlock.astro` | |
 | A5.6 | `DraftModeQueryListener` props: aggiungi `contentLink="v1"` + `baseEditingUrl` quando attivo (per real-time updates con stega) | |
 | **A6** | **CSP per Visual Tab iframe** | |
 | A6.1 | Estensione `src/middleware.ts`: set header `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com` quando draft mode attivo (permette al plugin Web Previews di caricare il sito nell'iframe del tab "Visual") | |
@@ -215,7 +230,9 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - Semplificare `draftPreview.ts`: legge cookie + query `?draft=1`
   - Build singola passa (`npm run build`)
 - [ ] **A3 — Webhook revalidate "invalidate everything"** (½ giornata)
-  - `src/pages/api/revalidate/index.ts`: auth `SECRET_API_TOKEN`, enumera tutti gli URL pubblici via query CDA, fa bypass call su ciascuno (chunked 20 in parallelo)
+  - Nuovo helper `src/lib/datocms/publicUrls.ts` con `getAllPublicUrls()`
+  - `src/pages/api/revalidate/index.ts`: auth `SECRET_API_TOKEN`, chunked 20 in parallelo, ~250ms pausa, debouncing 5s, logging
+  - Test locale: chiamare l'endpoint con curl, verificare i log riportano ~900-1100 URL invalidati
   - Configurare Webhook DatoCMS dopo cutover (in slice A8)
 - [ ] **A4 — Middleware `?draft=1` + cache bypass** (¼ giornata)
   - `src/middleware.ts`: legge query + cookie, popola `Astro.locals.draftMode = true` se entrambi presenti
@@ -225,7 +242,7 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - `npm install @datocms/content-link`
   - Estendere `executeQuery` wrapper con `contentLink: 'v1'` + `baseEditingUrl` quando draft attivo
   - Nuovo `src/components/ContentLink.astro` con `createController().enableClickToEdit()`, renderizzato in `BaseLayout` se draft
-  - Aggiungere `data-datocms-content-link-boundary` ai 6 block components in `src/components/datocms/structuredText/blocks/`
+  - Aggiungere `data-datocms-content-link-boundary` agli 8 block components in `src/components/datocms/structuredText/blocks/`
   - Aggiornare `DraftModeQueryListener` con props contentLink + baseEditingUrl
 - [ ] **A6 — CSP middleware** (¼ giornata)
   - Estendere `src/middleware.ts`: in draft mode aggiungere `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com`
