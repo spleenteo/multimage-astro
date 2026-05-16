@@ -230,14 +230,17 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
   - [x] D3.4 `docs/guidelines/security.md` aggiornato con findings + matrice + playbook ✓
   - [ ] **AZIONE UTENTE**: eseguire migrazione su Vercel dashboard + verifica token su DatoCMS dashboard (vedi `docs/guidelines/security.md` § "Environment Variables Audit")
   - [ ] **AZIONE UTENTE**: rimuovere `DATOCMS_API_TOKEN` da Vercel (dead weight)
-- [ ] **D4 — DatoCMS skills review**
-  - [ ] D4.1 Frontend integrations review (Image, QueryListener, draft mode, cache tags)
-  - [ ] D4.2 CDA patterns review (executeQuery, _graphql.ts colocation, fragments)
-  - [ ] D4.3 CMA v5 review (uso post-upgrade)
-  - [ ] D4.4 CLI v4 review (schema:generate, eventuali nuove feature da adottare)
-  - [ ] D4.5 Report findings in `docs/decision-log/2026-05-XX-datocms-review.md`
+- [x] **D4 — DatoCMS skills review** (completato 2026-05-16)
+  - [x] D4.1 Frontend integrations review (Image, QueryListener, draft mode, content link, cache tags) ✓
+  - [x] D4.2 CDA patterns review (executeQuery, _graphql.ts colocation, fragments, gql.tada gap) ✓
+  - [x] D4.3 CMA v5 review (3 call site OK, nessuna azione) ✓
+  - [x] D4.4 CLI v4 review (schema:inspect/cma:script come opportunità) ✓
+  - [x] D4.5 Report: `docs/decision-log/2026-05-16-datocms-review.md` ✓
 - [ ] **D5 — (post-D4) Creare shape Astro 6**
   - [ ] Nuovo file `docs/shapes/YYYY-MM-DD-astro-6-migration.md` con findings di D4 come input
+- [ ] **Shape candidates emersi da D4** (vedi `docs/decision-log/2026-05-16-datocms-review.md`):
+  - [ ] **D4-R1 + R2**: shape `gql.tada + auto-pagination` (sostituisce result types manuali + `first: 500` hard caps)
+  - [ ] **D4-R3**: shape `content-link-visual-editing` (DX editorial click-to-edit su preview)
 
 ## Open questions
 
