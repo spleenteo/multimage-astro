@@ -104,10 +104,10 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Dependencies
 
-- Core: Astro 5.16.3, Tailwind 3.4, TypeScript 5.5, `@datocms/astro`, `@datocms/cda-client`, `@datocms/cma-client`, `@datocms/cli`.
-- Tooling: Prettier 3.3 + `prettier-plugin-astro`, esbuild 0.25, dotenv-cli.
-- Client bundles: Swiper 11, Iconify CDN.
-- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**).
+- Core: Astro 5.18.1, Tailwind 3.4.19, TypeScript 5.9, `@datocms/astro` 0.6.12, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.4.18, `datocms` (CLI) 4.0.27.
+- Tooling: Prettier 3.8 + `prettier-plugin-astro`, esbuild 0.28, dotenv-cli 11.
+- Client bundles: Swiper 12 (fix CVE prototype pollution), Iconify CDN.
+- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); Astro 5.x exposed a `define:vars` XSS advisory + server-island replay CVE — fix richiede Astro 6 (shape dedicato in arrivo); Tailwind 4 e TypeScript 6 deliberatamente non aggiornati.
 
 ## Accessibility
 

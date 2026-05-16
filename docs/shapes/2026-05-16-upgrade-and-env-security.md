@@ -217,12 +217,12 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
 
 ## Slices (Shape D)
 
-- [ ] **D2 — Upgrade pacchetti primo giro**
-  - [ ] D2.1 Bump 16 patch/minor + verifica `npm run lint`
-  - [ ] D2.2 DatoCMS CLI 3 → 4; verifica `npm run sync-datocms` produce `schema.ts` identico (diff)
-  - [ ] D2.3 DatoCMS CMA client 4 → 5; aggiorna i 3 call site (`post-deploy`, `seo-analysis`, `utils.ts`)
-  - [ ] D2.4 Major minori non-Astro (`@vercel/analytics` v2, `@vercel/speed-insights` v2, `swiper` 12, `esbuild` 0.28, `dotenv-cli` 11, `jsdom` 29, `serialize-error` 13)
-  - [ ] D2.6 Build matrix: `SERVER=static npm run build && SERVER=preview npm run build && astro check` → tutto verde
+- [x] **D2 — Upgrade pacchetti primo giro** (completato 2026-05-16)
+  - [x] D2.1 Bump 16 patch/minor + lint clean ✓
+  - [x] D2.2 DatoCMS CLI 3 → `datocms` 4.0.27; `npm run sync-datocms` rigenera schema correttamente ✓
+  - [x] D2.3 DatoCMS CMA client 4 → 5.4.18; API usate compatibili senza modifiche al codice ✓
+  - [x] D2.4 Major minori non-Astro (Vercel v2, swiper 12, jsdom 29, esbuild 0.28, dotenv-cli 11, serialize-error 13) ✓
+  - [x] D2.6 Build matrix static + preview + `astro check` → tutto verde ✓
 - [ ] **D3 — Env vars security audit**
   - [ ] D3.1 Migrazione 6 secret Vercel a *Sensitive* (rinserire valori, vedi guida Vercel)
   - [ ] D3.2 Verifica scope `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` su DatoCMS dashboard
@@ -239,8 +239,19 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
 
 ## Open questions
 
-1. Sequenza di D3 (security) vs D2 (deps): in serie o in parallelo? **Proposta**: D2 prima (verifichiamo che nulla si rompa con i bump), poi D3 (security audit puro su Vercel, indipendente dal codice).
+1. ✅ Sequenza D3 vs D2: deciso serie (D2 prima, fatto).
 2. D4 (DatoCMS review): output minimo? **Proposta**: un decision-log con lista di follow-up actions, non patch di codice immediati — diventa input per shape successivi.
+
+## Findings da D2 (importante per priorità di Astro 6)
+
+`npm audit` dopo D2 segnala **vulnerabilità non-patchabili in Astro 5 e adapter Vercel 8** che richiedono il major upgrade per essere risolte:
+
+- **Astro <6.1.9**: XSS in `define:vars` via incomplete `</script>` sanitization (moderate)
+- **Astro <6.1.9**: Server island encrypted parameters cross-component replay (moderate)
+- **@astrojs/vercel <10**: Unauthenticated path override via `x-astro-path` (high)
+- **@astrojs/vercel <10**: ReDoS in `path-to-regexp` via transitive `@vercel/routing-utils` (high)
+
+**Conseguenza per la shape**: D5 (creazione shape Astro 6) non è più "valutazione opzionale" ma **risposta a CVE pendenti**. Va affrontato prima possibile dopo D4.
 
 ---
 

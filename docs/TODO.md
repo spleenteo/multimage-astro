@@ -48,3 +48,4 @@
 - 2025-11-16 - [Refactoring] **PS4**: Finalised the SERVER=static/preview contract so production ships pure SSG while previews run SSR from the same repo.
 - 2025-11-23 - [Features] **Scheda libro A4**: aggiunta pagina `/libri/schede/[slug]` stampabile con dettagli tecnici condivisi e footer editore.
 - 2025-11-26 - [Features] **Recensioni libro**: sezione recensioni nella pagina libro con data, autore e link all’articolo completo.
+- 2026-05-16 - [Refactoring] **D2 — Upgrade pacchetti non-Astro** (shape `2026-05-16-upgrade-and-env-security.md`): bump 16 patch/minor (astro 5.18, prettier 3.8, typescript 5.9, ecc.), switch `@datocms/cli` 3 → `datocms` 4, `@datocms/cma-client` 4 → 5.4.18, `@vercel/analytics`/`speed-insights` v2, swiper 11 → 12 (fix CVE critical), jsdom 27 → 29, esbuild 0.28, dotenv-cli 11, serialize-error 13. Build matrix static + preview pass; `astro check` 0 errori. Astro 6, Tailwind 4, TypeScript 6 fuori scope.
