@@ -1,6 +1,7 @@
 ---
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
+import ContentLink from '~/components/ContentLink.astro';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
@@ -262,5 +263,6 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     <Footer footerPages={footerMenuPages} />
     {enableVercelInsights && <Analytics />}
     {enableVercelInsights && <SpeedInsights />}
+    {draftModeEnabled && <ContentLink />}
   </body>
 </html>

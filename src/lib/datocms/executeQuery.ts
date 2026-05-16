@@ -1,5 +1,6 @@
 import { executeQuery as libExecuteQuery } from '@datocms/cda-client';
 import {
+  DATOCMS_BASE_EDITING_URL,
   DATOCMS_DRAFT_CONTENT_CDA_TOKEN,
   DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
 } from 'astro:env/server';
@@ -7,7 +8,8 @@ import {
 /**
  * Executes a GraphQL query using the DatoCMS Content Delivery API, using a
  * different API token depending on whether we want to fetch draft content or
- * published.
+ * published. In draft mode it also opts into Content Link (stega-encoded
+ * metadata) so the client-side overlay can drive click-to-edit.
  */
 export async function executeQuery<
   Result = unknown,
@@ -22,6 +24,8 @@ export async function executeQuery<
     includeDrafts,
     token,
     environment: options?.environment,
+    contentLink: includeDrafts ? 'v1' : undefined,
+    baseEditingUrl: includeDrafts ? DATOCMS_BASE_EDITING_URL : undefined,
   });
 
   return result;

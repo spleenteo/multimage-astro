@@ -23,7 +23,7 @@ const sectionTitle = block.title?.trim() || 'Libri consigliati';
 const sectionDescription = block.description?.trim() ?? null;
 ---
 
-<div class="not-prose my-12">
+<div data-datocms-content-link-boundary class="not-prose my-12">
   <BookCarouselSection
     id={block.id}
     title={sectionTitle}

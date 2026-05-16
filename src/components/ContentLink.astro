@@ -1,0 +1,15 @@
+---
+// Initializes the DatoCMS Content Link controller on the client side.
+// Render only when draft mode is active — outside draft mode the stega-encoded
+// metadata is absent from the CDA response so click-to-edit overlays have
+// nothing to attach to.
+---
+
+<div data-datocms-content-link-root hidden></div>
+
+<script>
+  import { createController } from '@datocms/content-link';
+
+  const controller = createController();
+  controller.enableClickToEdit();
+</script>

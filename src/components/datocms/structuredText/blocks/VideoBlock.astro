@@ -44,7 +44,10 @@ if (isEmbedProvider) {
 
 {
   sourceUrl ? (
-    <figure class="not-prose my-6 space-y-3 rounded-xl bg-brand-mist/40 p-4 text-center">
+    <figure
+      data-datocms-content-link-boundary
+      class="not-prose my-6 space-y-3 rounded-xl bg-brand-mist/40 p-4 text-center"
+    >
       {isEmbedProvider ? (
         <iframe
           src={embedUrl ?? undefined}
