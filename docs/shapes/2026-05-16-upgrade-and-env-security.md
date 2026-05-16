@@ -223,11 +223,13 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
   - [x] D2.3 DatoCMS CMA client 4 → 5.4.18; API usate compatibili senza modifiche al codice ✓
   - [x] D2.4 Major minori non-Astro (Vercel v2, swiper 12, jsdom 29, esbuild 0.28, dotenv-cli 11, serialize-error 13) ✓
   - [x] D2.6 Build matrix static + preview + `astro check` → tutto verde ✓
-- [ ] **D3 — Env vars security audit**
-  - [ ] D3.1 Migrazione 6 secret Vercel a *Sensitive* (rinserire valori, vedi guida Vercel)
-  - [ ] D3.2 Verifica scope `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` su DatoCMS dashboard
-  - [ ] D3.3 Audit `astro.config.mjs` envField; aggiungere commenti dove utile
-  - [ ] D3.4 Aggiornare/creare `docs/guidelines/security.md` con tabella env vars
+- [x] **D3 — Env vars security audit** (audit completato 2026-05-16, azioni manuali Vercel/DatoCMS rimangono)
+  - [x] D3.1 Code audit env vars usage: matrice 10 var documentata in `docs/guidelines/security.md` ✓
+  - [x] D3.2 Verifica scope `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`: playbook manuale documentato (verifica su DatoCMS dashboard)
+  - [x] D3.3 Playbook migrazione Sensitive: ordine + 6 step documentati in `security.md`
+  - [x] D3.4 `docs/guidelines/security.md` aggiornato con findings + matrice + playbook ✓
+  - [ ] **AZIONE UTENTE**: eseguire migrazione su Vercel dashboard + verifica token su DatoCMS dashboard (vedi `docs/guidelines/security.md` § "Environment Variables Audit")
+  - [ ] **AZIONE UTENTE**: rimuovere `DATOCMS_API_TOKEN` da Vercel (dead weight)
 - [ ] **D4 — DatoCMS skills review**
   - [ ] D4.1 Frontend integrations review (Image, QueryListener, draft mode, cache tags)
   - [ ] D4.2 CDA patterns review (executeQuery, _graphql.ts colocation, fragments)
