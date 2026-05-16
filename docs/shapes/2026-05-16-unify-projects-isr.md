@@ -4,10 +4,18 @@ shaping: true
 
 # Shape: Unificare i due progetti Vercel via ISR + bypassToken
 
-**Status**: shaping
+**Status**: ready
 **Date**: 2026-05-16
-**Appetite**: ~1.5–2 giornate
+**Appetite**: ~2 giornate (con Visual Editing integrato)
 **Predecessor**: richiede merge di `2026-05-16-astro-6-migration.md` (Astro 6 + adapter Vercel 10 indispensabili)
+
+## Decisioni post-conversazione
+
+- **Invalidation scope**: 🟡 *invalidate everything* (~1000 record × 8 publish/mese ≈ 8K invocations = ~1% budget Vercel free). Costo DatoCMS rate-limit accettato dall'utente.
+- **Cache bypass per draft**: 🟡 *query param `?draft=1`* (più semplice, debugabile via URL).
+- **TTL ISR default**: 🟡 24h. Con invalidation totale a ogni publish, il TTL è di fatto un floor per le pagine non visitate.
+- **Staging**: 🟡 Preview Vercel del branch (auto-deploy del push).
+- **Visual Editing + Web Previews**: 🟡 integrato in questa shape (richiede draft mode su same-domain — questa shape è il prerequisito tecnico).
 
 ---
 
@@ -47,18 +55,21 @@ Stima budget Vercel Hobby plan (~1M function invocations/mese, ~100GB bandwidth)
 | Architettura | Function invocations/mese | % del free | Bandwidth |
 |---|---|---|---|
 | Oggi (statico) | ~0 (solo preview SSR) | <0,1% | ~9 GB (9%) |
-| Cammino A (SSR + ISR) | ~15-25K (regen TTL + webhook) | **~2%** | ~9 GB |
+| 🟡 Cammino A scelto: SSR + ISR + invalidation totale | ~8K (~1000 record × 8 publish) + ~1-2K residual | **~1%** | ~9 GB |
+| Draft mode browsing (editor team) | ~100-500 (uncached SSR) | <0,1% | trascurabile |
 | All-SSR senza cache (worst case) | ~9K (1/page view) | <1% | ~9 GB |
 
 A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike del 26 aprile (~340 visits/giorno) sarebbe stato trascurabile anche in regime full-SSR.
+
+**Trade-off accettato**: invalidation totale fa partire ~1000 query GraphQL DatoCMS in burst a ogni publish. Rate-limit DatoCMS (40 req/sec) → completamento in ~25-75s. L'utente ha confermato che il costo DatoCMS non è un blocker.
 
 ## Outcome
 
 - **Un solo progetto Vercel** che serve sia la produzione (statica per il visitatore) sia il preview/visual editing (dinamico per gli editor in draft mode).
 - **Variabile `SERVER` eliminata** dal codice e da Vercel.
-- Webhook DatoCMS → invalidation per URL granulare via bypassToken.
-- Function invocations attese: **<3%** del budget Vercel free.
-- D4-R3 (Content Link / Visual Editing) diventa implementabile come shape successiva.
+- Webhook DatoCMS → invalidation **totale** via 1 endpoint che gira il bypass su tutte le URL pubbliche.
+- Function invocations attese: **~1%** del budget Vercel free.
+- 🟡 **Visual Editing attivo via plugin Web Previews di DatoCMS**: editor clicca "Preview" in sidebar → atterra sul dominio prod in draft mode → vede overlay click-to-edit su testi e blocchi.
 
 ---
 
@@ -66,15 +77,17 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 
 | ID | Requirement | Status |
 |----|-------------|--------|
-| **R0** | Singolo progetto Vercel che serve sia anonymous visitors (statico) sia editor in draft mode (SSR) | Core goal |
+| **R0** | Singolo progetto Vercel che serve sia anonymous visitors (statico) sia editor in draft mode + visual editing (SSR) | Core goal |
 | **R1** | **DX editori** | |
 | R1.1 | Preview DatoCMS sidebar punta allo stesso dominio della produzione | Must-have |
-| R1.2 | Modifica record → propagazione in produzione entro pochi secondi (webhook → bypass URL) | Must-have |
-| R1.3 | Visual Editing / Content Link diventa abilitabile (shape successiva, ma non bloccata da questa architettura) | Leaning yes |
+| R1.2 | Modifica record → propagazione in produzione entro 60 secondi (webhook → bypass URL su tutte le pagine) | Must-have |
+| 🟡 R1.3 | Visual Editing / Content Link attivo in draft mode + integrato col tab "Visual" del plugin Web Previews | Must-have |
+| 🟡 R1.4 | URL editor: pattern `?draft=1` accettato (URL un po' meno pulito, in cambio di semplicità) | Accepted |
 | **R2** | **Budget** | |
 | R2.1 | Function invocations attese ≤5% del free plan Vercel (margine 20x) | Must-have |
 | R2.2 | Nessun degrado bandwidth | Must-have |
-| **R2.3** | Monitoraggio: comandi per vedere quanti invocation/mese si stanno usando documentati | Nice-to-have |
+| 🟡 R2.3 | Costo DatoCMS rate-limit accettato: ~1000 query/burst a ogni publish | Accepted |
+| R2.4 | Monitoraggio: comandi per vedere quanti invocation/mese si stanno usando documentati | Nice-to-have |
 | **R3** | **Manutenibilità** | |
 | R3.1 | Variabile env `SERVER` rimossa dal codebase | Must-have |
 | R3.2 | `src/lib/prerender.ts` e `src/lib/draftPreview.ts` semplificati o rimossi | Must-have |
@@ -91,37 +104,54 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 
 ## Solution sketch — Cammino A (selezionato)
 
-`output: 'server'` permanente, ogni route SSR ma cached aggressivamente sul CDN Vercel via ISR. Anonymous visitors → response cached → cost zero. Editor in draft mode → cache miss → SSR con `includeDrafts: true`. Webhook DatoCMS → bypassToken → rigenera l'URL toccato.
+`output: 'server'` permanente, ogni route SSR ma cached aggressivamente sul CDN Vercel via ISR. Anonymous visitors → response cached → cost zero. Editor con `?draft=1` → cache miss → SSR con `includeDrafts: true` + stega encoding per Visual Editing. Webhook DatoCMS → endpoint che invalida TUTTI gli URL pubblici.
 
 | Part | Mechanism | Flag |
 |------|-----------|:----:|
 | **A1** | **Architettura ISR** | |
-| A1.1 | `astro.config.mjs`: rimosso branching `SERVER`, fissato `output: 'server'`, adapter con `isr: { expiration, bypassToken, exclude }` | |
+| A1.1 | `astro.config.mjs`: rimosso branching `SERVER`, fissato `output: 'server'`, adapter con `isr: { expiration: 86400, bypassToken, exclude: ['/api/**'] }` | |
 | A1.2 | Generare e salvare `BYPASS_TOKEN` come env Vercel (Sensitive) | |
-| A1.3 | Decidere TTL ISR: proposta default `expiration: 86400` (24h) con possibilità di override per route alta cadenza | |
+| A1.3 | TTL default 24h. Floor naturale per pagine non visitate, irrilevante per le altre (invalidate totale a ogni publish). | |
 | **A2** | **Eliminare branching SERVER** | |
-| A2.1 | Rimuovere `src/lib/prerender.ts` (o ridurlo a `export const prerender = false` se serve esplicito) | |
-| A2.2 | Semplificare `src/lib/draftPreview.ts`: `resolveDraftMode` torna a leggere solo il cookie | |
+| A2.1 | Rimuovere `src/lib/prerender.ts` | |
+| A2.2 | Semplificare `src/lib/draftPreview.ts`: `resolveDraftMode` legge solo cookie + query param `?draft=1` (entrambi richiesti per attivare draft) | |
 | A2.3 | Aggiornare 9 file che importano `prerender` da `src/lib/prerender.ts` | |
 | A2.4 | Rimuovere `SERVER` da `envField` schema in `astro.config.mjs` | |
 | A2.5 | Rimuovere `SERVER` da Vercel env vars (entrambi i progetti) | |
-| **A3** | **Webhook invalidation** | |
-| A3.1 | Nuovo endpoint `src/pages/api/revalidate/index.ts` che riceve webhook DatoCMS, valida token, mappa record → URL via `recordToWebsiteRoute`, chiama bypass URL per ogni URL toccato | |
-| A3.2 | Configurare un Webhook in DatoCMS: trigger su publish/unpublish/update, target `/api/revalidate?token=...` | |
-| A3.3 | Decidere ambito invalidation: solo l'URL del record (semplice) o anche index/sitemap (più completo). Proposta: invalidare URL del record + `/` + `/sitemap.xml` se il record è in `BlogPost|Book|Author|Collection` | ⚠️ |
-| **A4** | **Cache-Control + Vary per draft cookie** | |
-| A4.1 | Middleware `src/middleware.ts`: se draft cookie presente, imposta `Cache-Control: private, no-store`. Altrimenti lascia che ISR cache | |
-| A4.2 | Verifica che ISR cache key non includa il cookie (default su Vercel: cache by URL only) | |
-| **A5** | **Validation + decommissioning** | |
-| A5.1 | Deploy del singolo progetto su un sottodominio di staging (es. `staging.multimage.org`) | |
-| A5.2 | Smoke test: anonymous load, draft mode toggle, webhook end-to-end (publish in CMS → vedere il cambio in produzione entro 10s) | |
-| A5.3 | Cutover: aggiornare DatoCMS plugin Web Previews per puntare al singolo dominio. Aggiornare DNS se serve | |
-| A5.4 | Monitorare function invocations su Vercel per una settimana | |
-| A5.5 | Eliminare il secondo progetto Vercel | |
-| **A6** | **Cleanup + docs** | |
-| A6.1 | Aggiornare `docs/guidelines/preview-mode.md` con la nuova architettura ISR | |
-| A6.2 | Aggiornare `docs/current-state.md` § Hosting e § Configuration | |
-| A6.3 | Aggiungere paragrafo "Monitoring" con comandi Vercel per controllare invocation usage | |
+| **A3** | **Webhook invalidation totale** | |
+| A3.1 | Endpoint `src/pages/api/revalidate/index.ts`: auth via `SECRET_API_TOKEN`. Riceve webhook (qualunque trigger), enumera **tutti gli URL pubblici** (chiama internamente una funzione `getAllPublicUrls()` che fa una query CDA `allBooks/allAuthors/allBlogPosts/allCollections/allPages` + URL statici hard-coded) e per ciascuno fa `fetch` con header `x-prerender-revalidate: <BYPASS_TOKEN>` | |
+| A3.2 | Configurare Webhook in DatoCMS: trigger su tutti i publish/unpublish/update, target `https://www.multimage.org/api/revalidate?token=...` | |
+| A3.3 | Rate-limiting interno: chunk di N=20 request in parallelo con `Promise.all`, attesa breve tra chunk (per non saturare DatoCMS oltre i 40 req/sec se i regen kickano in catena) | |
+| **A4** | **Draft mode + cache bypass via `?draft=1`** | |
+| A4.1 | `src/middleware.ts`: se query `?draft=1` presente E draft cookie valido, propaga `includeDrafts: true` al downstream. Altrimenti normale traffic. | |
+| A4.2 | Aggiornare endpoint `/api/draft-mode/enable` per redirect a `?draft=1` invece di `/` puro | |
+| A4.3 | DatoCMS Web Previews plugin (`/api/preview-links`): URL emessi includono `?draft=1` | |
+| A4.4 | Verifica: ISR cache key include query string → `/libri/foo` e `/libri/foo?draft=1` sono cache entry separate → editor sempre fresh | |
+| **A5** | **Visual Editing (Content Link) integrato** | |
+| A5.1 | `npm install @datocms/content-link` | |
+| A5.2 | Aggiungere `DATOCMS_BASE_EDITING_URL` a `astro.config.mjs` envField + a Vercel | |
+| A5.3 | `executeQuery` wrapper: in draft mode aggiungi `contentLink: 'v1'` + `baseEditingUrl: DATOCMS_BASE_EDITING_URL` alle option | |
+| A5.4 | Nuovo componente `src/components/ContentLink.astro` che inizializza `createController().enableClickToEdit()` da `@datocms/content-link` — renderizzato condizionalmente in `BaseLayout` solo se draft mode attivo | |
+| A5.5 | Aggiungere `data-datocms-content-link-boundary` agli Structured Text block components (custom blocks come BannerBlock, CtaButtonWithImageBlock, ImageBlock, SingleAuthorBlock, SingleBookBlock, PillsBlock — 6 file in `src/components/datocms/structuredText/blocks/`) | |
+| A5.6 | `DraftModeQueryListener` props: aggiungi `contentLink="v1"` + `baseEditingUrl` quando attivo (per real-time updates con stega) | |
+| **A6** | **CSP per Visual Tab iframe** | |
+| A6.1 | Estensione `src/middleware.ts`: set header `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com` quando draft mode attivo (permette al plugin Web Previews di caricare il sito nell'iframe del tab "Visual") | |
+| **A7** | **Staging + validation** | |
+| A7.1 | Push del branch → Vercel preview auto-genera URL `chore-merge-projects-...-vercel.app` | |
+| A7.2 | Smoke test: anonymous load, draft mode toggle via `/api/draft-mode/enable?redirect=/libri/x&token=...`, edit overlay click → DatoCMS apre il record | |
+| A7.3 | Test end-to-end webhook: simulare publish in DatoCMS (anche solo un campo testo banale) e verificare propagazione in <60s | |
+| A7.4 | Monitorare function invocations su Vercel dashboard per 24-48h | |
+| **A8** | **Cutover + decommissioning** | |
+| A8.1 | Merge branch in `main`, Vercel deploy automatico | |
+| A8.2 | DatoCMS plugin Web Previews: aggiornare frontend URL al dominio prod unificato | |
+| A8.3 | Configurare Webhook DatoCMS in dashboard (target `/api/revalidate`) | |
+| A8.4 | Decommissioning del secondo progetto Vercel (preview SSR) | |
+| **A9** | **Cleanup + docs** | |
+| A9.1 | Aggiornare `docs/guidelines/preview-mode.md`: nuova architettura ISR + draft mode + Visual Editing | |
+| A9.2 | Aggiornare `docs/current-state.md`: § Hosting (un solo progetto), § Dependencies (+ @datocms/content-link), § Configuration (- SERVER, + BYPASS_TOKEN, + DATOCMS_BASE_EDITING_URL) | |
+| A9.3 | Aggiornare `docs/list-components.md` con `ContentLink.astro` | |
+| A9.4 | Sezione "Monitoring" in operations.md con comandi `vercel logs` / dashboard invocation stats | |
+| A9.5 | Aggiornare TODO.md (D4-R3 "content-link visual editing" → done, riferimento qui) | |
 
 ---
 
@@ -131,11 +161,13 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 |-----|-------------|--------|:--:|
 | R0 | Singolo progetto Vercel | Core goal | ✅ |
 | R1.1 | Sidebar DatoCMS punta a single domain | Must-have | ✅ |
-| R1.2 | Modifica → propagazione in pochi secondi | Must-have | ✅ |
-| R1.3 | Visual Editing abilitabile | Leaning yes | ✅ |
+| R1.2 | Modifica → propagazione <60s | Must-have | ✅ |
+| 🟡 R1.3 | Visual Editing attivo + integrato col tab Visual | Must-have | ✅ |
+| 🟡 R1.4 | URL pattern `?draft=1` accettato | Accepted | ✅ |
 | R2.1 | Function invocations ≤5% free | Must-have | ✅ |
 | R2.2 | No degrado bandwidth | Must-have | ✅ |
-| R2.3 | Monitoring documentato | Nice-to-have | ✅ |
+| 🟡 R2.3 | Costo DatoCMS rate-limit accettato | Accepted | ✅ |
+| R2.4 | Monitoring documentato | Nice-to-have | ✅ |
 | R3.1 | `SERVER` rimosso da codice | Must-have | ✅ |
 | R3.2 | `prerender.ts` e `draftPreview.ts` semplificati | Must-have | ✅ |
 | R3.3 | `astro.config.mjs` senza branching SERVER | Must-have | ✅ |
@@ -146,7 +178,8 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 | R5.3 | Docs aggiornati | Must-have | ✅ |
 
 **Notes:**
-- ⚠️ in A3.3 sull'ambito di invalidation: scelta tra "solo URL del record" (semplice, ma index pages mostrano dati vecchi fino al TTL) vs "URL + index/sitemap" (più completo, ma più chiamate per webhook). Decisione operativa in slice A3.
+- Tutte le decisioni open dello shaping precedente risolte.
+- D4-R3 (Visual Editing) **assorbito in questa shape** (era pianificato come shape successivo): la single-domain + draft mode lo abilita naturalmente e va wired contestualmente perché il middleware è condiviso.
 
 ---
 
@@ -173,36 +206,43 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 
 ## Slices
 
-- [ ] **A0 — Spike: verifica ISR su `@astrojs/vercel@10`** (½ giornata)
-  - Confermare opzioni `isr` (expiration, bypassToken, exclude) effettivamente disponibili nell'adapter v10
-  - Test minimal: una route SSR con ISR, verificare che il primo hit genera function invocation e i successivi sono cache hit
-- [ ] **A1+A2 — Switch a `output: 'server'` + cleanup SERVER** (½ giornata)
-  - Aggiornare `astro.config.mjs` (output fisso, adapter con ISR config, env schema senza SERVER)
-  - Rimuovere `prerender.ts`, semplificare `draftPreview.ts`
-  - Aggiornare 9 file che importano `prerender`
-  - Build matrix passa (solo `npm run build`, non più due varianti)
-- [ ] **A3 — Webhook revalidate endpoint** (½ giornata)
-  - `src/pages/api/revalidate/index.ts` con auth via `SECRET_API_TOKEN`
-  - Mapping record → URL via `recordToWebsiteRoute`
-  - Chiamata bypass URL per URL del record + `/` + `/sitemap.xml` (decisione su altre index in slice)
-  - Test locale: simulare payload DatoCMS, verificare invalidation chain
-- [ ] **A4 — Middleware cache-control per draft mode** (¼ giornata)
-  - `src/middleware.ts` che vede il cookie e imposta `Cache-Control: private, no-store`
-  - Test: editor in draft mode vede sempre fresh, anonymous vede cached
-- [ ] **A5 — Staging deploy + smoke test** (½ giornata)
-  - Deploy single-project a sottodominio di staging
-  - End-to-end test: publish CMS → vedere update in <10s
-  - Monitor 24-48h invocations
-- [ ] **A6 — Cutover + decommissioning + docs** (½ giornata)
-  - Aggiornare DatoCMS plugin Web Previews
+- [ ] **A0 — Spike ISR su `@astrojs/vercel@10`** (¼ giornata)
+  - Test minimal: una route SSR con `isr: { expiration: 60, bypassToken }`, verificare cache hit/miss e bypass header funziona
+  - Confermare che query string è parte della cache key (`?draft=1` produce cache entry separata)
+- [ ] **A1+A2 — `output: 'server'` + cleanup `SERVER`** (½ giornata)
+  - `astro.config.mjs`: output fisso, adapter con ISR config, env schema senza SERVER, + `DATOCMS_BASE_EDITING_URL`
+  - Rimuovere `prerender.ts`, aggiornare 9 file che lo importano
+  - Semplificare `draftPreview.ts`: legge cookie + query `?draft=1`
+  - Build singola passa (`npm run build`)
+- [ ] **A3 — Webhook revalidate "invalidate everything"** (½ giornata)
+  - `src/pages/api/revalidate/index.ts`: auth `SECRET_API_TOKEN`, enumera tutti gli URL pubblici via query CDA, fa bypass call su ciascuno (chunked 20 in parallelo)
+  - Configurare Webhook DatoCMS dopo cutover (in slice A8)
+- [ ] **A4 — Middleware `?draft=1` + cache bypass** (¼ giornata)
+  - `src/middleware.ts`: legge query + cookie, popola `Astro.locals.draftMode = true` se entrambi presenti
+  - Aggiornare `/api/draft-mode/enable` per emettere redirect con `?draft=1`
+  - Aggiornare `/api/preview-links` per includere `?draft=1` negli URL emessi al plugin Web Previews
+- [ ] **A5 — Visual Editing (Content Link)** (½ giornata)
+  - `npm install @datocms/content-link`
+  - Estendere `executeQuery` wrapper con `contentLink: 'v1'` + `baseEditingUrl` quando draft attivo
+  - Nuovo `src/components/ContentLink.astro` con `createController().enableClickToEdit()`, renderizzato in `BaseLayout` se draft
+  - Aggiungere `data-datocms-content-link-boundary` ai 6 block components in `src/components/datocms/structuredText/blocks/`
+  - Aggiornare `DraftModeQueryListener` con props contentLink + baseEditingUrl
+- [ ] **A6 — CSP middleware** (¼ giornata)
+  - Estendere `src/middleware.ts`: in draft mode aggiungere `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com`
+  - Test: il sito si carica nel tab "Visual" del plugin Web Previews
+- [ ] **A7 — Staging + smoke test** (¼ giornata)
+  - Push branch → URL preview Vercel
+  - End-to-end: enable draft → libro page con `?draft=1` → vede overlay → click → DatoCMS apre il record nel tab
+  - Webhook test manuale (curl POST a `/api/revalidate?token=...`)
+- [ ] **A8 — Cutover + decommissioning** (¼ giornata)
+  - Merge in main
+  - Update plugin Web Previews su DatoCMS (frontend URL → dominio prod unificato)
+  - Creare Webhook in DatoCMS che chiama `/api/revalidate`
+  - Aspettare 24-48h, monitorare invocations
   - Decommissioning secondo progetto Vercel
-  - Update `preview-mode.md`, `current-state.md`, `TODO.md`
-
-## Open questions
-
-1. **Ambito invalidation (A3.3)**: oltre all'URL del record, vale la pena toccare anche home/sitemap/index pages? Proposta: sì, lista whitelist hard-coded di 3-4 URL "globali" che si invalidano sempre.
-2. **TTL ISR di default**: 24h va bene? O più aggressivo (es. 1h per home, 24h per pagine record)? Proposta: 24h ovunque per partire, ottimizzare se serve.
-3. **Staging deploy come?** Sottodominio temporaneo `staging.multimage.org`? Branch deploy su preview Vercel? Proposta: il preview Vercel del nuovo branch dovrebbe bastare (vedi solo lui prima di toccare la prod).
+- [ ] **A9 — Cleanup + docs** (¼ giornata)
+  - `preview-mode.md`, `current-state.md`, `list-components.md`, `TODO.md`
+  - Sezione "Monitoring" in `operations.md`
 
 ---
 
@@ -210,6 +250,6 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 
 - [astro-6-migration](2026-05-16-astro-6-migration.md) — **prerequisito** (Astro 6 e adapter v10 sono indispensabili per ISR).
 - [upgrade-and-env-security](2026-05-16-upgrade-and-env-security.md) — D3 azioni Vercel (Sensitive migration) restano indipendenti.
-- [cache-tags](2026-03-05-cache-tags.md) — **sovrappone parzialmente**: questa shape risolve la stessa problematica con approccio URL-based invece di tag-based. Decisione: dopo questa shape, valutare se la shape cache-tags ha ancora senso o può essere chiusa come "superseded".
-- (futura) `content-link-visual-editing` (D4-R3) — abilitata da questa shape (single domain + draft mode = prerequisito Content Link).
+- [cache-tags](2026-03-05-cache-tags.md) — **superseded** da questa shape (approccio URL-based + invalidation totale invece di tag-based granulare).
+- 🟡 `content-link-visual-editing` (D4-R3) — **assorbito in A5+A6** di questa shape.
 - (futura) `gql-tada-auto-pagination` (D4-R1+R2) — indipendente.
