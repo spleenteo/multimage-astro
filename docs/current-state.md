@@ -4,7 +4,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 # Current State
 
-> Last significant update: 2025-12-01. Update sections as features ship or gaps are closed.
+> Last significant update: 2026-05-30 (ISR cutover live in production + DatoCMS field hardening). Update sections as features ship or gaps are closed.
 
 ## Project Structure
 
@@ -50,7 +50,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Images: every CMS-driven image goes through `@datocms/astro/Image` with `ResponsiveImageFragment`, emitting AVIF/WebP + JPEG fallbacks. Header/footer logos are still remote PNGs without intrinsic dimensions.
 - Videos: `VideoBlock.astro` handles YouTube/Vimeo/native MP4 from Structured Text blocks.
 - Generated bundles: `npm run prebuild` emits `public/generated/search-page.client.js` and `public/generated/swiper-element.js`. Missing bundles break `/cerca` and `BookCarouselSection` (**PS1**).
-- HTML sanitization: home hero copy, Banner sections, supplier bios, and staff notices call `toRichTextHtml`/`set:html` without sanitization (**S2**).
+- HTML sanitization: home hero copy, Banner sections, supplier bios, and staff notices call `toRichTextHtml`/`set:html` without render-time sanitization (**S2**, partial). Source-side mitigation in place for `book.description` + `blog_post.abstract` (DatoCMS `sanitized_html` validator + restricted WYSIWYG toolbar, 2026-05-30).
 
 ## SEO
 
@@ -71,7 +71,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - `/staff` and `/staff/archivio-catalogo` remain publicly accessible, exposing catalog exports (**S1**).
 - `/llms-full.txt` exposes the full catalogue in plaintext (**S4**).
 - `/api/post-deploy` accepts arbitrary requests and can leak preview secrets; needs retirement or auth (**S5**).
-- Inline HTML renderers (`toRichTextHtml`, `set:html`) lack sanitization, leaving XSS exposure (**S2**).
+- Inline HTML renderers (`toRichTextHtml`, `set:html`) lack render-time sanitization, leaving XSS exposure (**S2**, now partial). Mitigated at source for `book.description` + `blog_post.abstract`: DatoCMS `sanitized_html` validator (auto-sanitize at save) + WYSIWYG toolbar limited to bold/italic/link (2026-05-30). Legacy un-re-saved values and other surfaces still unsanitized at render — see `docs/decision-log/2026-05-30-isr-cutover-fixes.md`.
 - CSP/SRI headers are not enforced (**S3**).
 - Secrets live outside the repo; `astro.config.mjs` validates required env fields at build time.
 

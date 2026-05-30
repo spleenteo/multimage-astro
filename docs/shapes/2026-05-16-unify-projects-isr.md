@@ -4,7 +4,7 @@ shaping: true
 
 # Shape: Unificare i due progetti Vercel via ISR + bypassToken
 
-**Status**: in-progress (A0-A6 + A9 done — A7-A8 require user actions)
+**Status**: done (A0-A9 completati; live in produzione dal 2026-05-30. Unica azione residua non bloccante: decommissioning del secondo progetto Vercel)
 **Date**: 2026-05-16
 **Appetite**: ~2 giornate (con Visual Editing integrato)
 **Predecessor**: richiede merge di `2026-05-16-astro-6-migration.md` (Astro 6 + adapter Vercel 10 indispensabili)
@@ -251,16 +251,17 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
 - [x] **A6 — CSP middleware** (commit `b8e313a`)
   - Estendere `src/middleware.ts`: in draft mode aggiungere `Content-Security-Policy: frame-ancestors 'self' https://plugins-cdn.datocms.com`
   - Test: il sito si carica nel tab "Visual" del plugin Web Previews
-- [ ] **A7 — Staging + smoke test** (¼ giornata)
-  - Push branch → URL preview Vercel
-  - End-to-end: enable draft → libro page con `?draft=1` → vede overlay → click → DatoCMS apre il record nel tab
-  - Webhook test manuale (curl POST a `/api/revalidate?token=...`)
-- [ ] **A8 — Cutover + decommissioning** (¼ giornata)
-  - Merge in main
-  - Update plugin Web Previews su DatoCMS (frontend URL → dominio prod unificato)
-  - Creare Webhook in DatoCMS che chiama `/api/revalidate`
-  - Aspettare 24-48h, monitorare invocations
-  - Decommissioning secondo progetto Vercel
+- [x] **A7 — Staging + smoke test** (completato 2026-05-30)
+  - Smoke test eseguiti direttamente in produzione dopo merge (l'utente ha scelto deploy diretto + fix dopo, dato il rollback istantaneo Vercel e il traffico basso)
+  - Verificati live: cookie dual (`__prerender_bypass` presente), `x-vercel-cache: HIT` anonimo / `BYPASS` in draft, CSP `frame-ancestors`, webhook end-to-end (669 URL in ~20s)
+- [x] **A8 — Cutover + decommissioning** (completato 2026-05-30)
+  - Merge in main + deploy ✓
+  - Plugin Web Previews aggiornato via CLI: `previewWebhook` → `https://www.multimage.org/api/preview-links?token=...` + blocco `visualEditing.enableDraftModeUrl` (mancava → Visual Editing non si attivava)
+  - Webhook DatoCMS creato via CLI: "Revalidate site cache (ISR)" id `33942`, eventi `item:publish/unpublish/delete`, auto_retry on
+  - **Fix post-cutover** (vedi `docs/decision-log/2026-05-30-isr-cutover-fixes.md`):
+    - CSP `frame-ancestors` esteso a `https://*.datocms.com https://admin.multimage.org` (catena iframe annidata — commit `17c9e43`)
+    - `DATOCMS_BASE_EDITING_URL` corretto a URL bare senza `/environments/main` (mismatch environment)
+  - Decommissioning secondo progetto Vercel: **azione utente residua** (non bloccante)
 - [x] **A9 — Cleanup + docs** (questo commit)
   - `preview-mode.md` riscritta con architettura ISR + dual-cookie + Visual Editing + webhook
   - `current-state.md` aggiornata (Hosting single project, dependencies, env vars)

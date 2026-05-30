@@ -55,7 +55,7 @@ environment (Production / Preview).
 | `SIGNED_COOKIE_JWT_SECRET` | yes | Random string used to sign the draft JWT cookie (`openssl rand -hex 32`). |
 | `DRAFT_MODE_COOKIE_NAME` | optional | Defaults to `multimage_draft_mode`. |
 | `BYPASS_TOKEN` | yes on Vercel | Opaque token used both as the `__prerender_bypass` cookie value (Draft Mode) and as the `x-prerender-revalidate` header (on-demand ISR via `/api/revalidate`). Generate with `openssl rand -hex 32`. |
-| `DATOCMS_BASE_EDITING_URL` | yes for Visual Editing | Format `https://{project-slug}.admin.datocms.com/environments/{environment-name}`. Used by Content Link to construct edit-URLs. |
+| `DATOCMS_BASE_EDITING_URL` | yes for Visual Editing | **Bare admin URL with no `/environments/...` suffix**: `https://multimage.admin.datocms.com`. Used by Content Link to construct edit-URLs. ⚠️ Appending `/environments/main` (even though `main` *is* the primary) makes the stega edit-URLs take the *sandbox* form, and the plugin then reports "Environment Mismatch Detected" — the sandbox URL shape doesn't match a primary-environment editing session. Only append `/environments/<name>` when targeting a genuine non-primary sandbox. |
 | `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` | yes | Site Search token (ships to the browser — must be read-only Site Search scope). |
 | `PUBLIC_SITE_URL` | yes | Site origin without trailing slash. |
 
@@ -109,8 +109,16 @@ Inside draft mode:
   overlay can target each block as a unit.
 
 The plugin's "Visual" tab loads the site inside an iframe. To make that work,
-`src/middleware.ts` adds `Content-Security-Policy: frame-ancestors 'self'
-https://plugins-cdn.datocms.com` to draft-mode responses only.
+`src/middleware.ts` adds a `Content-Security-Policy: frame-ancestors ...` header
+to draft-mode responses only.
+
+⚠️ The Visual tab **nests** iframes — `admin.multimage.org` (the admin app)
+frames `plugins-cdn.datocms.com` (the plugin), which frames the site. CSP
+`frame-ancestors` validates the *whole* ancestor chain, so listing only
+`plugins-cdn.datocms.com` is not enough: the browser shows "refused to connect".
+The header therefore allows `'self' https://*.datocms.com
+https://admin.multimage.org`. The custom admin domain (`admin.multimage.org`)
+must be listed explicitly — the `*.datocms.com` wildcard does **not** match it.
 
 ## 6. On-demand cache invalidation (webhook)
 
@@ -121,20 +129,34 @@ The endpoint:
 1. Validates the secret.
 2. Debounces if invoked less than 5 seconds ago (idempotent burst protection).
 3. Calls `getAllPublicUrls()` from `src/lib/datocms/publicUrls.ts` to enumerate
-   ~900–1100 URLs (records via CDA + hard-coded statics).
+   all public URLs (records via CDA + hard-coded statics — ~669 at current
+   catalogue size).
 4. Fetches each URL with `x-prerender-revalidate: <BYPASS_TOKEN>` in chunks of
    20 in parallel, with a 250 ms pause between chunks (stays under the DatoCMS
    40 req/sec rate limit during cascading regeneration).
 5. Logs total/success/failures and elapsed time to `vercel logs`.
 
-Expected completion: ~30–45 s per webhook for the current catalogue size.
+Measured completion: ~20 s per webhook for the current catalogue (~669 URLs).
 
-### Configuring the DatoCMS webhook
+### The DatoCMS webhook (configured)
 
-1. DatoCMS → Settings → Webhooks → New webhook.
-2. URL: `https://www.multimage.org/api/revalidate?token=<SECRET_API_TOKEN>`.
-3. Events: every publish, unpublish, update (record + content management).
-4. Save.
+A webhook named **"Revalidate site cache (ISR)"** (id `33942`) is configured on
+the project:
+
+- **URL**: `https://www.multimage.org/api/revalidate?token=<SECRET_API_TOKEN>`
+- **Events**: `item` → `publish`, `unpublish`, `delete`. `update` is **not**
+  triggered on purpose — saving a draft does not change what the public sees, so
+  there is nothing to invalidate until the record is actually published.
+- **auto_retry**: on (DatoCMS retries on transient failures).
+
+The "invalidate everything" strategy (rather than mapping a record to only its
+dependent pages) is a deliberate decision from the shape: a book appears on its
+own page *and* in the home, lists, author/collection pages, so a full sweep is
+simpler and guarantees nothing stays stale. The cost is ~669 CDA reads per
+publish, accepted during shaping.
+
+To recreate it via CLI: `npx datocms cma:call webhooks create --data='{...}'`
+with the events above (see the shape doc for the full payload).
 
 ## 7. Local development
 
@@ -163,10 +185,17 @@ locally — every request is SSR'd. Draft mode works via the JWT cookie (visit
 - **Visual Editing overlay missing** → confirm `DATOCMS_BASE_EDITING_URL` is
   set. Without it `executeQuery` skips Content Link opts (`contentLink: 'v1'`
   is still set, but the CDA needs the base URL to encode edit-URLs).
-- **Iframe in DatoCMS "Visual" tab won't load** → check response headers for
-  `Content-Security-Policy: frame-ancestors ...`. If absent on a page where
-  draft mode is supposed to be active, double-check `isDraftModeEnabled` is
-  resolving to `true` (likely missing or invalid JWT cookie).
+- **Iframe in DatoCMS "Visual" tab won't load / "refused to connect"** → check
+  response headers for `Content-Security-Policy: frame-ancestors ...`. Two
+  causes: (a) the header is absent — `isDraftModeEnabled` is resolving to
+  `false` (missing/invalid JWT cookie); (b) the header is present but does not
+  list the custom admin domain — `frame-ancestors` must include
+  `https://admin.multimage.org`, not just `https://plugins-cdn.datocms.com`,
+  because the ancestor chain includes the admin app (see §5).
+- **Plugin shows "Environment Mismatch Detected" (records belong to sandbox
+  `main`)** → `DATOCMS_BASE_EDITING_URL` has a `/environments/...` suffix. Remove
+  it: the value must be the bare `https://multimage.admin.datocms.com` when
+  editing the primary environment (see §2).
 - **DatoCMS rate limit errors during webhook** → unlikely with current
   chunking (20 parallel × 250 ms pause ≈ 80 req/sec inbound, but each URL
   triggers 1–3 GraphQL calls so the burst can briefly exceed 40 req/sec).
