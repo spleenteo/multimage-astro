@@ -14,6 +14,7 @@ import {
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
+import { toPlainText } from '~/lib/text';
 
 const { slug } = Astro.params;
 
@@ -35,7 +36,9 @@ if (!post) {
 }
 
 const heroTitle = post.title ?? 'Articolo';
-const heroSubtitle = post.abstract?.trim() ?? '';
+// L'abstract è gestito da un WYSIWYG: rimuoviamo i tag HTML per usarlo come
+// testo semplice nel sottotitolo e nella meta description.
+const heroSubtitle = toPlainText(post.abstract);
 const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
 const label = post.category?.name ?? 'Magazine';
 const publishedAt = post.createdAt ?? null;

@@ -17,6 +17,21 @@ const namedEntities: Record<string, string> = {
   '&Ugrave;': 'Ù',
   '&eacute;': 'é',
   '&Eacute;': 'É',
+  '&rsquo;': '’',
+  '&lsquo;': '‘',
+  '&rdquo;': '”',
+  '&ldquo;': '“',
+  '&ndash;': '–',
+  '&mdash;': '—',
+  '&hellip;': '…',
+  '&laquo;': '«',
+  '&raquo;': '»',
+  '&deg;': '°',
+  '&middot;': '·',
+  '&euro;': '€',
+  '&copy;': '©',
+  '&reg;': '®',
+  '&trade;': '™',
 };
 
 export function decodeEntities(value: string): string {

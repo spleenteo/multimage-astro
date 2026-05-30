@@ -1,7 +1,7 @@
 ---
 import { Image } from '@datocms/astro/Image';
 import type { ResponsiveImage } from '~/lib/datocms/types';
-import { truncateToLength } from '~/lib/text';
+import { toPlainText, truncateToLength } from '~/lib/text';
 import styles from './style.module.css';
 
 type Props = {
@@ -30,7 +30,10 @@ const {
 }: Props = Astro.props;
 
 const href = `/magazine/${slug}`;
-const summary = abstract ? truncateToLength(abstract.trim(), 190) : null;
+// L'abstract arriva da un WYSIWYG (HTML): lo riduciamo a testo semplice
+// prima di troncarlo, così non vengono mostrati i tag né si spezza il markup.
+const plainAbstract = toPlainText(abstract);
+const summary = plainAbstract ? truncateToLength(plainAbstract, 190) : null;
 
 const formattedDate = publishedAt
   ? new Intl.DateTimeFormat('it-IT', {
