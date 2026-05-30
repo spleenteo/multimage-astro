@@ -35,10 +35,10 @@ Opening `book.description` or `blog_post.abstract` — without editing anything 
 
 **Fix** (via CLI, `client.fields.update`):
 - Removed the Sanitize HTML addon from both fields (kept the Character counter on `description`).
-- Both fields were `editor: textarea` holding hand-written, inconsistent HTML. Converted to `editor: wysiwyg` with a minimal toolbar `['bold','italic','link']` — paste from Word/web now strips everything except bold/italic/link, and editors can no longer paste raw HTML via "show source".
-- Added the `sanitized_html` validator with `sanitize_before_validation: true` — HTML is auto-cleaned at save time (no blocking error). This addresses TODO **S2** at the data layer.
+- Both fields were `editor: textarea` holding hand-written, inconsistent HTML. Converted to `editor: wysiwyg` with a minimal toolbar `['bold','italic','link']` — paste from Word/web now strips everything except bold/italic/link, and editors can no longer paste raw HTML via "show source". **This is the actual anti-spurious-HTML control**: cleanup happens at paste time, in the editor.
+- Initially also added the `sanitized_html` validator with `sanitize_before_validation: true`, then **removed it** (from `book.description`, `home.claim`, `blog_post.abstract`). It reproduced the exact same phantom dirty-form loop as the Sanitize HTML addon: sanitize-on-save rewrites the value, the WYSIWYG re-normalizes it differently on load, the two never converge, so the record can't be published without re-saving. The cleanup it provided is redundant with the limited WYSIWYG toolbar (which already strips on paste), so the validator added only the loop with no extra benefit. Lesson: **any sanitize-/rewrite-on-save mechanism on a WYSIWYG field causes the dirty-form loop** — keep cleanup at the editor (toolbar) layer, not the save layer.
 
-**Note**: existing stored values are not migrated; they normalize only when a record is re-saved. The `set:html` render path remains theoretically exposed for un-re-saved values until S2 is also closed at render time (`toRichTextHtml`).
+**Note**: existing stored values are not migrated; they normalize only when a record is re-saved. S2 at the render layer (`set:html` / `toRichTextHtml`) is still open — the WYSIWYG toolbar mitigates new input at source but does not sanitize legacy values or other surfaces at render time.
 
 ### 5. Site Search re-index on publish + 7-day ISR TTL
 
