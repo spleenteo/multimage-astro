@@ -35,13 +35,6 @@ const TOP_LINKS: TopLink[] = [
     tone: 'instagram',
   },
   {
-    label: 'Twitter',
-    href: 'https://twitter.com/multimageED',
-    icon: 'iconoir:twitter',
-    external: true,
-    tone: 'twitter',
-  },
-  {
     label: 'Facebook',
     href: 'https://www.facebook.com/multimage/',
     icon: 'iconoir:facebook-tag',
@@ -91,7 +84,6 @@ function buildPrimaryLinks(infoPages: Array<{ label: string; href: string }>): N
 
 const toneClassMap: Record<string, string> = {
   instagram: 'bg-social-instagram hover:bg-social-instagram/80 text-white',
-  twitter: 'bg-social-twitter hover:bg-social-twitter/80 text-white',
   facebook: 'bg-social-facebook hover:bg-social-facebook/80 text-white',
   newsletter: 'bg-social-newsletter hover:bg-social-newsletter/80 text-white',
   cta: 'bg-brand-orange hover:bg-brand-crimson text-white',

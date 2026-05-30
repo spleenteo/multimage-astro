@@ -41,7 +41,6 @@ const config = {
         social: {
           facebook: '#4267B2',
           instagram: '#C13584',
-          twitter: '#38A1F3',
           newsletter: '#53BE42',
         },
       },
