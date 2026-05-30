@@ -1,5 +1,6 @@
 ---
 import BooksSectionNav from './BooksSectionNav.astro';
+import { NEWSLETTER_FORM_URL } from '~/lib/newsletter';
 
 type NavLink = {
   label: string;
@@ -49,7 +50,7 @@ const TOP_LINKS: TopLink[] = [
   },
   {
     label: 'Newsletter',
-    href: 'https://b8860c2e.sibforms.com/serve/MUIFAMaTBmjHTvEXUcaRHDgifktpyEIZ9LkXuyPpoK9V9EelMXKhfDuWS2UYh4s6rd5T40cvoRsPpn3UKTX7CsKObG95GUpqbntf4lI0r7vo2dOkx6eY-9Ty3mYFlnHS6ofqASx3o9UzoCt9cJ3HmnIzg_SOdVzBeudcKWQuERioBo-aeBrjNYe8oK_Ex0cEhlsAni7AyO0Vuhnatg==',
+    href: NEWSLETTER_FORM_URL,
     icon: 'iconoir:mail',
     external: true,
     tone: 'newsletter',

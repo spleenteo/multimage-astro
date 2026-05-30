@@ -1,0 +1,30 @@
+---
+import { NEWSLETTER_FORM_URL } from '~/lib/newsletter';
+
+// Testi hardcoded come primo step. In futuro verranno gestiti da DatoCMS
+// tramite i campi del blocco NewsletterSubscription (title, subtitle, button_label).
+const title = 'Resta in contatto con Multimage';
+const subtitle =
+  'Iscriviti alla newsletter per ricevere novità editoriali, anteprime e iniziative dedicate a nonviolenza e diritti umani.';
+const buttonLabel = 'Iscriviti alla newsletter';
+---
+
+<section class="bg-brand-navy text-brand-mist">
+  <div
+    class="container flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:gap-10 md:py-16 md:text-left"
+  >
+    <div class="max-w-2xl space-y-3">
+      <h2 class="text-2xl font-semibold text-white md:text-3xl">{title}</h2>
+      <p class="text-sm leading-relaxed text-brand-mist/80 md:text-base">{subtitle}</p>
+    </div>
+    <a
+      href={NEWSLETTER_FORM_URL}
+      target="_blank"
+      rel="noreferrer"
+      class="inline-flex shrink-0 items-center gap-2 bg-white px-6 py-3 text-sm font-semibold text-brand-navy transition hover:bg-brand-mist"
+    >
+      <iconify-icon icon="iconoir:mail" width="18" height="18" aria-hidden="true"></iconify-icon>
+      <span>{buttonLabel}</span>
+    </a>
+  </div>
+</section>
