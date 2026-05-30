@@ -39,3 +39,31 @@ Opening `book.description` or `blog_post.abstract` — without editing anything 
 - Added the `sanitized_html` validator with `sanitize_before_validation: true` — HTML is auto-cleaned at save time (no blocking error). This addresses TODO **S2** at the data layer.
 
 **Note**: existing stored values are not migrated; they normalize only when a record is re-saved. The `set:html` render path remains theoretically exposed for un-re-saved values until S2 is also closed at render time (`toRichTextHtml`).
+
+### 5. Site Search re-index on publish + 7-day ISR TTL
+
+The old static architecture rebuilt the whole site on publish, which also
+re-spidered the Site Search index. Under ISR there is no rebuild — content
+propagates via `/api/revalidate`, which did **not** touch the search index, so
+search results drifted until the next manual build.
+
+DatoCMS has no native scheduler for re-indexing, but `buildTriggers.reindex`
+re-spiders the index **with no deploy** (verified: `build_status` stays
+`success`). Considered a daily Vercel Cron hitting either the deploy hook (wrong
+— a full build invalidates the ISR cache for nothing) or `reindex`; chose
+instead to call `reindex` directly inside `/api/revalidate` after the cache
+sweep. Re-indexing now happens exactly when content is published, no cron, no
+wasted spidering. Best-effort (logged, non-blocking); no-op without
+`DATOCMS_CMA_TOKEN` + `SITE_SEARCH_BUILD_TRIGGER_ID` (`37696`).
+
+Separately, `isr.expiration` was raised from 24h to **7 days**. With on-demand
+revalidation covering every publish, the TTL is only a safety net for a
+missed/failed webhook; a manual build forces a full refresh. Permanent caching
+(`expiration: false`) was rejected — a silently failed webhook would otherwise
+leave a page stale indefinitely.
+
+Also decommissioned in the same pass: the second Vercel project's build trigger
+("Preview (Vercel)", id 37875) was deleted, and a hard-coded link to the old
+`multimage-astro-vf31.vercel.app` preview domain in `libri/[slug]/index.astro`
+was made relative (the `/libri/schede/[slug]` route exists in the unified
+project).

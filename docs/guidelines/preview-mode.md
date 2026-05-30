@@ -28,6 +28,8 @@ DatoCMS publish → webhook → /api/revalidate
                           → enumerates all public URLs
                           → fetches each with x-prerender-revalidate header
                           → CDN regenerates + recaches
+                          → buildTriggers.reindex → Site Search re-spidered
+                            (no rebuild, no cache impact)
 ```
 
 ### Cookies that drive draft mode (dual-cookie pattern)
@@ -134,9 +136,21 @@ The endpoint:
 4. Fetches each URL with `x-prerender-revalidate: <BYPASS_TOKEN>` in chunks of
    20 in parallel, with a 250 ms pause between chunks (stays under the DatoCMS
    40 req/sec rate limit during cascading regeneration).
-5. Logs total/success/failures and elapsed time to `vercel logs`.
+5. Triggers a **Site Search re-index** (`buildTriggers.reindex`) — re-spiders
+   the search index with no rebuild and no ISR cache impact. Best-effort: a
+   failure is logged but does not fail the revalidation. No-op unless both
+   `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID` (currently `37696`)
+   are set.
+6. Logs total/success/failures, elapsed time, and reindex result to `vercel logs`.
 
 Measured completion: ~20 s per webhook for the current catalogue (~669 URLs).
+
+### Cache TTL (safety net)
+
+`astro.config.mjs` sets `isr.expiration` to **7 days**. This is only a safety
+net: content changes propagate on-demand through the webhook above, so the TTL
+just covers the rare case of a missed/failed webhook. A manual Vercel build
+forces a full refresh anytime.
 
 ### The DatoCMS webhook (configured)
 

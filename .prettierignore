@@ -7,3 +7,4 @@ dist/
 .vercel/
 public/generated/
 AGENTS.md
+datocms.config.json

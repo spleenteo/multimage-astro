@@ -5,7 +5,11 @@ import vercel from '@astrojs/vercel';
 const adapter = vercel({
   isr: {
     bypassToken: process.env.BYPASS_TOKEN,
-    expiration: 60 * 60 * 24,
+    // 7-day TTL as a safety net only. Content changes propagate on-demand via
+    // the /api/revalidate webhook (publish → invalidate + Site Search reindex),
+    // so the TTL just covers the rare case of a missed/failed webhook. Force a
+    // full refresh anytime with a manual build.
+    expiration: 60 * 60 * 24 * 7,
     exclude: [/^\/api\//],
   },
 });
@@ -51,6 +55,11 @@ export default defineConfig({
       DATOCMS_BASE_EDITING_URL: envField.string({
         context: 'server',
         access: 'public',
+        optional: true,
+      }),
+      SITE_SEARCH_BUILD_TRIGGER_ID: envField.string({
+        context: 'server',
+        access: 'secret',
         optional: true,
       }),
       PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN: envField.string({

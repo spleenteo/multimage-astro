@@ -1,8 +1,34 @@
+import { buildClient } from '@datocms/cma-client';
 import type { APIRoute } from 'astro';
-import { SECRET_API_TOKEN, BYPASS_TOKEN } from 'astro:env/server';
+import {
+  SECRET_API_TOKEN,
+  BYPASS_TOKEN,
+  DATOCMS_CMA_TOKEN,
+  SITE_SEARCH_BUILD_TRIGGER_ID,
+} from 'astro:env/server';
 import { PUBLIC_SITE_URL } from 'astro:env/client';
 import { getAllPublicUrls } from '~/lib/datocms/publicUrls';
 import { handleUnexpectedError, invalidRequestResponse, json, withCORS } from '../utils';
+
+/**
+ * Re-spiders the DatoCMS Site Search index without a site rebuild. Best-effort:
+ * a failure here must not fail the cache revalidation, so errors are logged and
+ * swallowed. No-op unless both the CMA token and the build trigger id are set.
+ */
+async function reindexSiteSearch(): Promise<boolean> {
+  if (!DATOCMS_CMA_TOKEN || !SITE_SEARCH_BUILD_TRIGGER_ID) {
+    return false;
+  }
+  try {
+    const client = buildClient({ apiToken: DATOCMS_CMA_TOKEN });
+    await client.buildTriggers.reindex(SITE_SEARCH_BUILD_TRIGGER_ID);
+    console.log(`[revalidate] Site Search reindex triggered (${SITE_SEARCH_BUILD_TRIGGER_ID})`);
+    return true;
+  } catch (error) {
+    console.error('[revalidate] Site Search reindex failed:', error);
+    return false;
+  }
+}
 
 export const prerender = false;
 
@@ -68,10 +94,12 @@ export const POST: APIRoute = async ({ url }) => {
     }
   }
 
+  const reindexed = await reindexSiteSearch();
+
   const elapsedMs = Date.now() - start;
   console.log(
-    `[revalidate] Done. ${success} ok, ${failures} failed, total ${urls.length} URLs in ${elapsedMs}ms`,
+    `[revalidate] Done. ${success} ok, ${failures} failed, total ${urls.length} URLs in ${elapsedMs}ms (search reindex: ${reindexed})`,
   );
 
-  return json({ total: urls.length, success, failures, elapsedMs }, withCORS());
+  return json({ total: urls.length, success, failures, elapsedMs, reindexed }, withCORS());
 };

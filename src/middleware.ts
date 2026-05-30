@@ -19,7 +19,9 @@ import { isDraftModeEnabled } from '~/lib/draftMode';
  * - `https://admin.multimage.org` is the project's custom admin domain (the
  *   URL editors actually use), which the wildcard above does NOT match.
  */
-const FRAME_ANCESTORS = ["'self'", 'https://*.datocms.com', 'https://admin.multimage.org'].join(' ');
+const FRAME_ANCESTORS = ["'self'", 'https://*.datocms.com', 'https://admin.multimage.org'].join(
+  ' ',
+);
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const response = await next();

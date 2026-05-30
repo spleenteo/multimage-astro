@@ -31,7 +31,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
 - Draft Mode detection happens through `resolveDraftMode(Astro)` → `draftModeEnabledFromAstro`. `executeQuery` automatically opts into `contentLink: 'v1'` + `baseEditingUrl` for Visual Editing whenever `includeDrafts` is true.
 - Editors enter draft mode through the DatoCMS Web Previews plugin (or `/api/preview?secret=...`). `enableDraftMode` sets a dual-cookie: the JWT app-level cookie + the Vercel-native `__prerender_bypass` cookie that bypasses CDN cache for the editor's requests.
-- Webhook `/api/revalidate` is called by DatoCMS on every publish/update/unpublish event. The endpoint enumerates every public URL via `getAllPublicUrls()` (in `src/lib/datocms/publicUrls.ts`) and forces regeneration in chunked parallel fetches (~30-45s for the full catalogue).
+- Webhook `/api/revalidate` is called by DatoCMS on every publish/unpublish/delete event. The endpoint enumerates every public URL via `getAllPublicUrls()` (in `src/lib/datocms/publicUrls.ts`) and forces regeneration in chunked parallel fetches (~20s for the current catalogue), then re-spiders the Site Search index via `buildTriggers.reindex` (no rebuild). ISR `expiration` is 7 days (safety net only — see `docs/guidelines/preview-mode.md`).
 - No pagination yet — routes such as `/libri`, `/autori`, `/sitemap.xml`, and staff exports still request up to 500 items (**CD2**).
 - Cache tag propagation is not yet wired (**CD3**).
 
