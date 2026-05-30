@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # Claude Code
 .claude/
+
+# datocms CLI local link (per-developer siteId/orgId, no secrets)
+datocms.config.json
