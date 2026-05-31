@@ -12,6 +12,12 @@ const DRAFT_MODE_COOKIE_NAME = SERVER_DRAFT_MODE_COOKIE_NAME?.trim() || 'multima
 // See https://vercel.com/docs/build-output-api/v3/features#draft-mode
 const VERCEL_BYPASS_COOKIE_NAME = '__prerender_bypass';
 
+// The editor session lasts 30 days, then the editor must re-activate via the
+// magic link. Applied to both the JWT (`expiresIn`) and the cookie (`maxAge`)
+// so a leaked cookie eventually dies instead of living forever.
+const EDITOR_SESSION_DURATION = '30d';
+const EDITOR_SESSION_MAX_AGE = 60 * 60 * 24 * 30;
+
 const SHARED_COOKIE_OPTS = {
   path: '/' as const,
   sameSite: 'none' as const,
@@ -24,7 +30,9 @@ const SHARED_COOKIE_OPTS = {
  * Draft Mode.
  */
 function jwtToken() {
-  return jwt.sign({ enabled: true }, SIGNED_COOKIE_JWT_SECRET);
+  return jwt.sign({ enabled: true }, SIGNED_COOKIE_JWT_SECRET, {
+    expiresIn: EDITOR_SESSION_DURATION,
+  });
 }
 
 /**
@@ -38,12 +46,14 @@ function jwtToken() {
 export function enableDraftMode(context: APIContext) {
   context.cookies.set(DRAFT_MODE_COOKIE_NAME, jwtToken(), {
     ...SHARED_COOKIE_OPTS,
+    maxAge: EDITOR_SESSION_MAX_AGE,
     httpOnly: false,
   });
 
   if (BYPASS_TOKEN) {
     context.cookies.set(VERCEL_BYPASS_COOKIE_NAME, BYPASS_TOKEN, {
       ...SHARED_COOKIE_OPTS,
+      maxAge: EDITOR_SESSION_MAX_AGE,
       httpOnly: true,
     });
   }

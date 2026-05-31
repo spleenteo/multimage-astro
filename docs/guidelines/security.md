@@ -7,7 +7,7 @@ scope: Track security risks, mitigations, and review checkpoints for Multimage.
 ## Critical Findings
 
 - **Rich-text XSS (CWE-79)** — `toRichTextHtml` returns raw CMS HTML and multiple templates bind the result with `set:html`, so any editor-provided `<script>` executes for visitors. Harden `src/lib/text.ts:65-95`, audit `src/pages/index.astro:345-355`, `src/components/SupplierCard/index.astro:71-139`, and `src/pages/autori/[slug]/index.astro:138-158` to use Structured Text renderers or sanitize output.
-- **Catalog data exposure (CWE-200)** — The `/staff` routes are prerendered static pages without auth, exposing inventory details and CSV exports. `robots.txt` cannot protect `src/pages/staff/index.astro` or `src/pages/staff/archivio-catalogo/index.astro`, so relocate or secure them before deploy.
+- **Catalog data exposure (CWE-200)** — _Resolved 2026-05-31 (S1)._ Internal routes (`/staff`, `/staff/archivio-catalogo`, `/libri/schede/*`) are gated centrally in `src/middleware.ts`: a request without the editor session (the signed draft-mode JWT cookie) gets a flat `404` before any render, so the public never learns the paths exist nor receives inventory/CSV data. Enforcement is single-point — pages no longer guard themselves. The bearer-token model fits the sensitivity (stock/circulation business data, not PII); see `docs/decision-log/2026-05-31-editor-session-gating.md`.
 
 ## High-Priority Gaps
 

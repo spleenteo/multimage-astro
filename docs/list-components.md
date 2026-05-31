@@ -183,10 +183,14 @@ scope: A list to describe all components used in the project
 - `DraftModeQueryListener` — **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)
   - Purpose: wraps `@datocms/astro`’s `QueryListener` so pages reload automatically when the subscribed GraphQL query changes in DatoCMS.
   - Key props: `query`, `variables`, any additional options supported by `datocms-listen` except `token`/`includeDrafts`/`contentLink`/`baseEditingUrl` (handled internally).
-  - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request. Internally enables Content Link (`contentLink: 'v1'`) so live updates preserve stega encoding for Visual Editing.
+  - Notes: only renders (and therefore only exposes the draft CDA token) when Draft Mode is active for the current request. Enables Content Link (`contentLink: 'v1'`) so live updates preserve stega encoding for Visual Editing — but only when `DATOCMS_BASE_EDITING_URL` is set (the CDA 422s otherwise), so local dev gets live drafts without the overlay.
 - `ContentLink` — **ContentLink** (`src/components/ContentLink.astro`)
   - Purpose: client-side bootstrap for DatoCMS Content Link click-to-edit overlay. Initializes `createController().enableClickToEdit()` from `@datocms/content-link`.
   - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true. Outside draft mode the stega-encoded metadata is absent from CDA responses so the overlay is inert.
+- `EditorModeBadge` — **EditorModeBadge** (`src/components/EditorModeBadge.astro`)
+  - Purpose: floating "Modalità editor" indicator shown while the editor session is active. Reminds the editor they are viewing drafts and offers a link to `/staff` plus an "Esci" that hits `/api/draft-mode/disable`.
+  - Key props: `currentPath` (used to build the exit redirect back to the current page).
+  - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true; `print:hidden`. The printable book sheet has no layout, so it shows no badge. See `docs/decision-log/2026-05-31-editor-session-gating.md`.
 
 ## Deprecated or missing pieces
 - ResponsiveImage/VideoPlayer components referenced in legacy docs

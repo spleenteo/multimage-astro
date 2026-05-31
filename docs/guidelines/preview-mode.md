@@ -197,8 +197,12 @@ locally — every request is SSR'd. Draft mode works via the JWT cookie (visit
   header value not matching `bypassToken` configured in `astro.config.mjs`.
   Both must come from the same `BYPASS_TOKEN` env var.
 - **Visual Editing overlay missing** → confirm `DATOCMS_BASE_EDITING_URL` is
-  set. Without it `executeQuery` skips Content Link opts (`contentLink: 'v1'`
-  is still set, but the CDA needs the base URL to encode edit-URLs).
+  set. Without it `executeQuery` (and `DraftModeQueryListener`) skip Content
+  Link entirely (`contentLink`/`baseEditingUrl` left `undefined`): drafts still
+  render, just without the click-to-edit overlay. This is intentional — sending
+  `contentLink: 'v1'` without a base URL makes the CDA 422
+  (`INVALID_X_BASE_EDITING_URL_HEADER`), which used to break every draft page in
+  local dev.
 - **Iframe in DatoCMS "Visual" tab won't load / "refused to connect"** → check
   response headers for `Content-Security-Policy: frame-ancestors ...`. Two
   causes: (a) the header is absent — `isDraftModeEnabled` is resolving to

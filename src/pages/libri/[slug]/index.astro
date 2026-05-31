@@ -495,16 +495,20 @@ const seo = sanitizeMetaTags(
         <DetailList title="Dettagli edizione" items={editionDetails} />
         <DetailList title="Dettagli grafica" items={graphicsDetails} />
       </div>
-      <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12">
-        <a
-          href={`/libri/schede/${book.slug}`}
-          class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Scheda libro (PDF)
-        </a>
-      </div>
+      {
+        draftModeEnabled ? (
+          <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12 print:hidden">
+            <a
+              href={`/libri/schede/${book.slug}`}
+              class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Scheda libro (PDF) — staff
+            </a>
+          </div>
+        ) : null
+      }
     </section>
 
     {

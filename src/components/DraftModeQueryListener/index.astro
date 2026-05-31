@@ -19,6 +19,11 @@ if (draftModeEnabled && !DATOCMS_DRAFT_CONTENT_CDA_TOKEN) {
     'Draft Mode requires DATOCMS_DRAFT_CONTENT_CDA_TOKEN. Set it locally and on Vercel before using previews.',
   );
 }
+
+// Content Link requires a base editing URL (see executeQuery.ts) — opt in only
+// when DATOCMS_BASE_EDITING_URL is set, otherwise the realtime listener would
+// hit the same 422 locally. Drafts still stream live without the overlay.
+const enableContentLink = Boolean(DATOCMS_BASE_EDITING_URL);
 ---
 
 {
@@ -28,8 +33,8 @@ if (draftModeEnabled && !DATOCMS_DRAFT_CONTENT_CDA_TOKEN) {
       token={DATOCMS_DRAFT_CONTENT_CDA_TOKEN}
       excludeInvalid
       includeDrafts
-      contentLink="v1"
-      baseEditingUrl={DATOCMS_BASE_EDITING_URL}
+      contentLink={enableContentLink ? 'v1' : undefined}
+      baseEditingUrl={enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined}
     />
   )
 }

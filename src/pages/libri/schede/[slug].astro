@@ -17,11 +17,11 @@ if (!slug) {
   throw new Error('Missing book slug');
 }
 
+// Access to this internal route is gated centrally in src/middleware.ts: only
+// requests carrying the editor session reach this point, so draft mode is
+// always on here. We still read it to fetch draft content and wire the live
+// query listener below.
 const draftModeEnabled = resolveDraftMode(Astro);
-
-if (!draftModeEnabled) {
-  throw new Response('Scheda disponibile solo in modalità anteprima.', { status: 404 });
-}
 
 const data = await executeQuery<BookSheetQueryResult>(BOOK_SHEET_QUERY, {
   variables: { slug },
@@ -31,7 +31,7 @@ const data = await executeQuery<BookSheetQueryResult>(BOOK_SHEET_QUERY, {
 const book = data.book;
 
 if (!book) {
-  throw new Response('Scheda non trovata', { status: 404 });
+  return new Response('Scheda non trovata', { status: 404 });
 }
 
 const pdfFooter = (data.app?.pdfFooter ?? '').trim();

@@ -18,14 +18,21 @@ export async function executeQuery<
   const includeDrafts = Boolean(options?.includeDrafts);
   const token = options?.token ?? resolveToken(includeDrafts);
 
+  // Content Link (stega-encoded edit URLs for Visual Editing) only makes sense
+  // when we have a base editing URL to build those links from — the CDA returns
+  // 422 (INVALID_X_BASE_EDITING_URL_HEADER) if we ask for it without one. So we
+  // couple them: production sets DATOCMS_BASE_EDITING_URL and gets visual
+  // editing; local dev (env unset) still sees drafts, just without the overlay.
+  const enableContentLink = includeDrafts && Boolean(DATOCMS_BASE_EDITING_URL);
+
   const result = await libExecuteQuery<Result, Variables>(query, {
     variables: options?.variables,
     excludeInvalid: options?.excludeInvalid ?? true,
     includeDrafts,
     token,
     environment: options?.environment,
-    contentLink: includeDrafts ? 'v1' : undefined,
-    baseEditingUrl: includeDrafts ? DATOCMS_BASE_EDITING_URL : undefined,
+    contentLink: enableContentLink ? 'v1' : undefined,
+    baseEditingUrl: enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined,
   });
 
   return result;
