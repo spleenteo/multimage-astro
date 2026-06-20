@@ -86,6 +86,7 @@ const isArchived = archivedFlag === true;
               <Image
                 data={coverResponsiveImage}
                 sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
+                srcSetCandidates={[1, 2]}
                 imgClass={styles.coverImage}
                 imgStyle={{ filter: `drop-shadow(26px 36px 48px ${shadowColor})` }}
               />

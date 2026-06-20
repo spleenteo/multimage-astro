@@ -6,7 +6,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 
 ## Directory overview
 - **`src/pages/**`**
-  - Route directories (`index`, `libri`, `collane`, `autori`, `distributori`, `magazine`, `info`, `staff`, `cerca`, `sitemap.xml`, `llms-full`) each ship an `index.astro`, optional `_style.module.css`, and a sibling `_graphql.ts` describing their queries. API/utility routes live as `.ts` files (e.g., `sitemap.xml.ts`, `llms-full.txt.ts`).
+  - Route directories (`index`, `libri`, `collane`, `autori`, `distributori`, `magazine`, `info`, `staff`, `cerca`, `sitemap.xml`) each ship an `index.astro`, optional `_style.module.css`, and a sibling `_graphql.ts` describing their queries. API/utility routes live as `.ts` files (e.g., `sitemap.xml.ts`).
 - **`src/components/**`**
   - Feature components bundle `index.astro`, optional `index.ts` (for fragment exports), and CSS modules. Subdirectories cover Dato blocks (`components/blocks`), Structured Text renderers (`components/datocms/structuredText`), and design primitives (`components/ui`).
 - **`src/layouts`**
@@ -41,10 +41,10 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Data: `src/pages/index/_graphql.ts` (`home`, modular `banners`).
   - Primary components: `BaseLayout`, `FeaturedBookHighlight`, `BannerSection`, `BookCarouselSection`, `blocks/PillsBlock`, Structured Text blocks.
   - Notes: Hero copy (`home.claim`) flows through `toRichTextHtml`; sanitize per docs/guidelines/assets.md#html-fragments--sanitization.
-- **`/libri`**
-  - Data: `src/pages/libri/index/_graphql.ts` (`booksIndex`, `allBooks`).
-  - Primary components: `SectionIntro`, grid of `BookCard` instances.
-  - Notes: Still fetches `first: 500`; see docs/TODO.md CMS task **CD2** for pagination.
+- **`/libri`** and **`/libri/pagina/[page]`**
+  - Data: `src/pages/libri/index/_graphql.ts` (`booksIndexPage`, `allBooks` with `first/skip`, `_allBooksMeta`).
+  - Primary components: `BooksCatalogSection` (hero + grid of `BookCard` + `Pagination`).
+  - Notes: Paginated 40/page (since 2026-06-20). Page 1 canonical at `/libri`; pages 2..N at `/libri/pagina/<n>`; `/libri/pagina/1` → 301 `/libri`; invalid/out-of-range → 404. `BOOKS_PER_PAGE`/`buildBooksCataloguePaths` in `src/lib/books.ts`. Other listings still fetch `first: 500` (**CD2**).
 - **`/libri/[slug]`**
   - Data: `src/pages/libri/[slug]/_graphql.ts` plus related `authors`, `alternate formats`, and `collection` queries.
   - Primary components: `BookCarouselSection`, `AuthorsSection`, `AlternateFormatsList`, `DetailList`.
@@ -80,11 +80,9 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - **`/sitemap.xml`**
   - Data: `src/pages/sitemap.xml/_graphql.ts`.
   - Primary components: none (pure XML response).
-  - Notes: Falls back to `http://localhost:4321` when `PUBLIC_SITE_URL` is missing; enforce env per SEO task **SEO1**.
-- **`/llms-full.txt`**
-  - Data: `src/pages/llms-full/_graphql.ts` and `LLMS_BOOKS/INTRO` queries.
-  - Primary components: none (streamed text response).
-  - Notes: Dumps every book/author/page body without auth; lock it down via Security task **S4**.
+  - Notes: Falls back to `http://localhost:4321` when `PUBLIC_SITE_URL` is missing; enforce env per SEO task **SEO1**. Includes the paginated catalogue pages (`/libri/pagina/2..N`) via `buildBooksCataloguePaths`.
+
+> `/llms-full.txt` was removed 2026-06-20 (closed Security task **S4** + reduced Fast Origin Transfer — see decision-log `2026-06-20-fot-reduction`).
 
 ## API & preview routes
 (Deployed only when `SERVER=preview`; static builds omit all runtime endpoints.)
@@ -97,7 +95,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 ## Known gaps & violations
 - Structured Text links for blog posts still point to `/blog/...` although the published route is `/magazine/...`. Fix `LinkToRecord.astro` and add regression coverage (docs/TODO.md Project Structure task **PS2**).
 - GraphQL queries rely on `first: 500` almost everywhere (`/libri`, `/autori`, `/sitemap`, staff exports), which hammers the CDA and bloats build artifacts. Tackle pagination + cache tags under docs/TODO.md CMS task **CD2**.
-- `/staff/*` and `/llms-full.txt` are anonymously accessible yet expose internal data. Hardening plans live in docs/TODO.md Security tasks **S1** and **S4**.
+- `/staff/*` route gating is resolved (**S1**, middleware). `/llms-full.txt` was removed (**S4** closed 2026-06-20).
 - `public/generated` assets are not fingerprinted or validated; missing `npm run prebuild` results in broken `<script>` imports. Add integrity checks per docs/TODO.md Project Structure task **PS1**.
 - Cache tags/revalidation hooks are still absent even though the project relies on query listeners. Capture incremental cache invalidation in docs/TODO.md CMS task **CD3** and update data loaders accordingly.
 - The one-off `/api/post-deploy` endpoint remains deployed and can leak the preview secret if an attacker points it at their Dato project. Remove or protect it per docs/TODO.md Security task **S5**.

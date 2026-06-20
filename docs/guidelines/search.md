@@ -7,7 +7,7 @@ scope: How to implement search offered by DatoCMS
 DatoCMS Site Search powers `/cerca`. The page is fully client-driven but depends on two build-time artefacts, so any change touches both Astro and Node layers.
 
 ## Indexing & content sources
-- The Site Search index is configured entirely inside Dato. Flag **Book**, **Author**, **Page**, and **BlogPost** models as indexable; staff-only routes (`/staff`, `/llms-full.txt`) stay out of the index on purpose.
+- The Site Search index is configured entirely inside Dato. Flag **Book**, **Author**, **Page**, and **BlogPost** models as indexable; staff-only routes (`/staff`, `/libri/schede/*`) stay out of the index on purpose.
 - Each record contributes `title`, `body_excerpt`, and optional `[h]...[/h]` highlight ranges. The browser parses those markers (see `appendHighlightedText`) and renders `<mark>` tags.
 - The index is re-spidered **automatically on every publish**: `/api/revalidate` (the DatoCMS publish webhook) calls `buildTriggers.reindex` after invalidating the ISR cache — a re-crawl with no rebuild. Requires `DATOCMS_CMA_TOKEN` + `SITE_SEARCH_BUILD_TRIGGER_ID` (`37696`) on Vercel. See `docs/guidelines/preview-mode.md` §6. Manual fallback: **Settings → Site Search → Regenerate index** in Dato, or a manual Vercel build.
 - Requests go straight to `https://site-api.datocms.com/search-results` from the browser. There is no proxy, so rate limiting and ACLs must be enforced via the dedicated Site Search API token.

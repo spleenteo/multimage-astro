@@ -13,7 +13,7 @@ scope: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## CMS & Data
 
 - `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
-- DatoCMS data primarily flows through `@datocms/cda-client`; the LLM export now runs inside `src/pages/llms-full.txt.ts`, so `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
+- DatoCMS data primarily flows through `@datocms/cda-client`; `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
 
 ## Monitoring & Analytics
 

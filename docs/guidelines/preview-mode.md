@@ -25,7 +25,8 @@ Editor (draft cookies) → Vercel CDN sees __prerender_bypass cookie
                        → ContentLink client enables click-to-edit overlay
 
 DatoCMS publish → webhook → /api/revalidate
-                          → enumerates all public URLs
+                          → parses payload (api_key + slug)
+                          → maps to the affected URLs only (surgical)
                           → fetches each with x-prerender-revalidate header
                           → CDN regenerates + recaches
                           → buildTriggers.reindex → Site Search re-spidered
@@ -126,31 +127,45 @@ must be listed explicitly — the `*.datocms.com` wildcard does **not** match it
 
 DatoCMS publish → webhook → `POST /api/revalidate?token=<SECRET_API_TOKEN>`.
 
-The endpoint:
+The endpoint does **surgical** revalidation (since 2026-06-20 — see
+`docs/decision-log/2026-06-20-fot-reduction.md`):
 
 1. Validates the secret.
-2. Debounces if invoked less than 5 seconds ago (idempotent burst protection).
-3. Calls `getAllPublicUrls()` from `src/lib/datocms/publicUrls.ts` to enumerate
-   all public URLs (records via CDA + hard-coded statics — ~669 at current
-   catalogue size).
+2. Parses the webhook payload (`src/lib/datocms/webhookPayload.ts`): the
+   `event_type`, the record `slug` (`entity.attributes.slug`), and the model
+   `api_key` (from `related_entities`, referenced by
+   `entity.relationships.item_type`).
+3. Maps `api_key + slug` to the small set of affected URLs via
+   `getRevalidationUrls()` (`src/lib/datocms/revalidationUrls.ts`): the record's
+   own detail URL + a bounded set of listings. A **book** change also revalidates
+   the catalogue pages (`/libri` + `/libri/pagina/2..N`), the book sub-indexes,
+   `/`, `/sitemap.xml`, and the detail pages of its authors and collection
+   (resolved with one CDA query). Typically ~12–20 URLs for a book, fewer for
+   other models. Unknown / unmapped models → **no-op** (logs and returns 200).
 4. Fetches each URL with `x-prerender-revalidate: <BYPASS_TOKEN>` in chunks of
    20 in parallel, with a 250 ms pause between chunks (stays under the DatoCMS
-   40 req/sec rate limit during cascading regeneration).
+   40 req/sec rate limit).
 5. Triggers a **Site Search re-index** (`buildTriggers.reindex`) — re-spiders
    the search index with no rebuild and no ISR cache impact. Best-effort: a
    failure is logged but does not fail the revalidation. No-op unless both
    `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID` (currently `37696`)
    are set.
-6. Logs total/success/failures, elapsed time, and reindex result to `vercel logs`.
+6. Logs mode/total/success/failures, elapsed time, the revalidated `urls`, and
+   the reindex result to `vercel logs`. The JSON response echoes the `urls`.
 
-Measured completion: ~20 s per webhook for the current catalogue (~669 URLs).
+`POST /api/revalidate?mode=full` still runs the whole-surface sweep via
+`getAllPublicUrls()` (manual maintenance / emergency). The old in-memory 5 s
+debounce was removed: surgical calls are cheap and idempotent, and a debounce
+would wrongly drop a second distinct record published within the window.
 
 ### Cache TTL (safety net)
 
-`astro.config.mjs` sets `isr.expiration` to **7 days**. This is only a safety
+`astro.config.mjs` sets `isr.expiration` to **60 days**. This is only a safety
 net: content changes propagate on-demand through the webhook above, so the TTL
-just covers the rare case of a missed/failed webhook. A manual Vercel build
-forces a full refresh anytime.
+just covers the rare case of a missed/failed webhook. A short TTL was pure waste
+— it re-rendered the whole surface roughly weekly for unchanged content, burning
+Fast Origin Transfer. A manual Vercel build or `?mode=full` forces a full refresh
+anytime.
 
 ### The DatoCMS webhook (configured)
 

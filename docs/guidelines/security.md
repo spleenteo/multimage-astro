@@ -17,7 +17,7 @@ scope: Track security risks, mitigations, and review checkpoints for Multimage.
 ## Additional Observations
 
 - **Third-party scripts** — Google Analytics, Iubenda, and Vercel analytics are injected inline in `src/layouts/BaseLayout.astro:132-210` with no integrity hints. Load them with `async`/`defer`, monitor outages, and keep the snippet list minimal.
-- **LLM export** — `dist/llms-full.txt` republishes long-form bios and emails via `src/pages/llms-full.txt.ts`. Confirm stakeholders are comfortable sharing that corpus publicly before enabling crawlers.
+- **LLM export** — the `/llms-full.txt` route was removed (2026-06-20), closing **S4**: the full catalogue + long-form bios/emails are no longer published in plaintext to anonymous visitors.
 - **Environment documentation** — `.env.example` only mentions the published CDA token; document draft/CMA tokens separately so engineers do not reuse privileged keys accidentally.
 - **Search token scoping** — Ensure `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` is created with a Site Search–only role. Admin/CMA tokens must never be exposed because the value ships to the browser (`src/pages/cerca/index.astro:6-78`).
 

@@ -4,7 +4,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 # Current State
 
-> Last significant update: 2026-05-30 (ISR cutover live in production + DatoCMS field hardening). Update sections as features ship or gaps are closed.
+> Last significant update: 2026-06-20 (Fast Origin Transfer reduction: surgical revalidation, 60-day ISR TTL, lean card images, paginated `/libri`, `/llms-full.txt` removed). Update sections as features ship or gaps are closed.
 
 ## Project Structure
 
@@ -16,15 +16,16 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
   - `src/styles/global.css` imports fonts + Tailwind base layers; `tailwind.config.mjs` defines the design tokens.
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.
-- Known gaps: `/llms-full.txt` is public (**S4**), cache tags aren't wired (**CD3**), `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware.)
+- Known gaps: cache tags aren't wired (**CD3**), `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## Routing
 
-- Tutte le route pubbliche (`/`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/llms-full.txt`, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations.
+- Tutte le route pubbliche (`/`, `/libri` + `/libri/pagina/[page]`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations.
+- Il catalogo `/libri` è **paginato** (40 libri/pagina): pagina 1 canonica su `/libri`, pagine 2..N su `/libri/pagina/<n>` (path-based per chiavi ISR pulite). `/libri/pagina/1` → 301 `/libri`; pagine non numeriche o fuori range → 404. `BOOKS_PER_PAGE` + `buildBooksCataloguePaths()` in `src/lib/books.ts` sono la single source of truth condivisa da route, sitemap e revalidation.
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decision-log `2026-05-31-editor-session-gating` (**S1**).
-- API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/utils` remain SSR-only endpoints even during static builds.
-- Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `LinkToRecord.astro` to resolve URLs from Dato records.
-- Known issues: `/llms-full.txt` should be gated (**S4**); `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware.)
+- API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate`, `/api/utils` remain SSR-only endpoints even during static builds.
+- Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `LinkToRecord.astro` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) mirrors the same api_key → route table.
+- Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## CMS Data Loading
 
@@ -32,9 +33,11 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
 - Draft Mode detection happens through `resolveDraftMode(Astro)` → `draftModeEnabledFromAstro`. `executeQuery` opts into `contentLink: 'v1'` + `baseEditingUrl` for Visual Editing when `includeDrafts` is true **and** `DATOCMS_BASE_EDITING_URL` is set; without the env (e.g. local dev) it serves drafts but skips Content Link to avoid the CDA 422.
 - Editors enter draft mode through the DatoCMS Web Previews plugin (or `/api/preview?secret=...`). `enableDraftMode` sets a dual-cookie: the JWT app-level cookie + the Vercel-native `__prerender_bypass` cookie that bypasses CDN cache for the editor's requests.
-- Webhook `/api/revalidate` is called by DatoCMS on every publish/unpublish/delete event. The endpoint enumerates every public URL via `getAllPublicUrls()` (in `src/lib/datocms/publicUrls.ts`) and forces regeneration in chunked parallel fetches (~20s for the current catalogue), then re-spiders the Site Search index via `buildTriggers.reindex` (no rebuild). ISR `expiration` is 7 days (safety net only — see `docs/guidelines/preview-mode.md`).
-- No pagination yet — routes such as `/libri`, `/autori`, `/sitemap.xml`, and staff exports still request up to 500 items (**CD2**).
-- Cache tag propagation is not yet wired (**CD3**).
+- Webhook `/api/revalidate` is called by DatoCMS on publish/unpublish (delete optional). It now does **surgical** revalidation: `webhookPayload.ts` parses the payload (event_type, slug, model api_key from `related_entities`), and `revalidationUrls.ts` maps `api_key + slug` → the small set of affected URLs (~12–20 for a book, incl. its catalogue pages, sub-indexes, and its authors'/collection's detail pages; index/singleton records → their index URL). Unknown/unmapped models no-op. `?mode=full` still runs the whole-surface sweep via `getAllPublicUrls()`. After revalidating it re-spiders Site Search via `buildTriggers.reindex` (no rebuild). The ineffective in-memory debounce was removed (each call is cheap + idempotent). See decision-log `2026-06-20-fot-reduction`.
+- ISR `expiration` is **60 days** (safety net only; freshness is on-demand via the webhook — see `docs/guidelines/preview-mode.md`).
+- Card grids use `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`, no `srcSet`; `<Image srcSetCandidates={[1,2]}>` rebuilds a 2-candidate srcset client-side) to keep listing HTML — and thus FOT — small. `RESPONSIVE_IMAGE_FRAGMENT` (with base64 + srcSet) stays for hero/detail images.
+- Partial pagination — `/libri` + sitemap catalogue pages now paginate via `first/skip`; `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
+- Cache tag propagation is not yet wired (**CD3**); surgical revalidation covers the "revalidate only touched pages" goal via a URL map in the meantime.
 
 ## Blocks & Components
 
@@ -48,7 +51,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Fonts: `src/styles/global.css` imports Inter + Playfair Display from Google Fonts; stored in CSS variables consumed by Tailwind. No local font files.
 - Icons: `iconify-icon.min.js` loaded from CDN via `BaseLayout`. No tree-shaking or local sprite.
 - Third-party scripts: BaseLayout injects Google Analytics, Iubenda, Vercel Analytics, and Speed Insights; CSP/SRI hardening is open (**S3**).
-- Images: every CMS-driven image goes through `@datocms/astro/Image` with `ResponsiveImageFragment`, emitting AVIF/WebP + JPEG fallbacks. Header/footer logos are still remote PNGs without intrinsic dimensions.
+- Images: every CMS-driven image goes through `@datocms/astro/Image`. Hero/detail images use the full `RESPONSIVE_IMAGE_FRAGMENT` (with `base64` blur-up + DatoCMS `srcSet`). Card/thumbnail grids use the lean `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`/`srcSet`; flat `bgColor` placeholder + `srcSetCandidates={[1,2]}`) to keep listing HTML small (Fast Origin Transfer). Header/footer logos are still remote PNGs without intrinsic dimensions.
 - Videos: `VideoBlock.astro` handles YouTube/Vimeo/native MP4 from Structured Text blocks.
 - Generated bundles: `npm run prebuild` emits `public/generated/search-page.client.js` and `public/generated/swiper-element.js`. Missing bundles break `/cerca` and `BookCarouselSection` (**PS1**).
 - HTML sanitization: home hero copy, Banner sections, supplier bios, and staff notices call `toRichTextHtml`/`set:html` without render-time sanitization (**S2**, partial). Input-side mitigation relies on restricted WYSIWYG toolbars. As of 2026-05-31 **no WYSIWYG field carries the `sanitized_html` validator** (removed from all 16 fields after it re-surfaced on 7 and blocked saves / caused dirty-form loops — see decision-log §4); anti-spurious-HTML protection lives exclusively at the editor/toolbar layer.
@@ -70,7 +73,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 - Preview endpoints rely on JWT-signed cookies (`SIGNED_COOKIE_JWT_SECRET`) plus `SECRET_API_TOKEN`. Cookies are `secure`, `sameSite='none'`, and partitioned.
 - Internal routes (`/staff`, `/staff/archivio-catalogo`, `/libri/schede/*`) are gated in `src/middleware.ts`: a request without the editor session (signed draft-mode JWT cookie) gets a flat 404 before render. The cookie doubles as the editor session (drafts + staff access + affordances), expires after 30 days, and is activated via the existing magic link. (**S1** resolved 2026-05-31 — see decision-log.)
-- `/llms-full.txt` exposes the full catalogue in plaintext (**S4**).
+- `/llms-full.txt` (full catalogue + biographies in plaintext) was **removed** 2026-06-20, closing **S4**.
 - `/api/post-deploy` accepts arbitrary requests and can leak preview secrets; needs retirement or auth (**S5**).
 - Inline HTML renderers (`toRichTextHtml`, `set:html`) lack render-time sanitization, leaving XSS exposure (**S2**, now partial). Mitigated at input across WYSIWYG fields via restricted toolbars that strip paste-from-Word at source. The `sanitized_html` save/validation-time validator was removed from **all** WYSIWYG fields (2026-05-31) — it either looped (sanitize-on-save) or blocked saves (validate-only) and never coexisted with a WYSIWYG cleanly. Legacy values and other surfaces still unsanitized at render — see `docs/decision-log/2026-05-30-isr-cutover-fixes.md` §4.
 - CSP/SRI headers are not enforced (**S3**).
@@ -79,7 +82,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 ## Performance
 
 - Production ships pure static HTML + assets; preview runs SSR from the same codebase.
-- Images use Imgix transformations with AVIF/WebP fallbacks and base64 placeholders; hero sections still request large crops.
+- Images use Imgix transformations with AVIF/WebP fallbacks; hero/detail keep base64 placeholders, card grids dropped them (flat `bgColor` only) to shrink listing HTML. Hero sections still request large crops.
 - Search bundle loads only on `/cerca`; Swiper's custom element can be heavy on first interaction.
 - Vercel Analytics + Speed Insights provide Core Web Vitals monitoring; no custom RUM instrumentation.
 

@@ -5,11 +5,14 @@ import vercel from '@astrojs/vercel';
 const adapter = vercel({
   isr: {
     bypassToken: process.env.BYPASS_TOKEN,
-    // 7-day TTL as a safety net only. Content changes propagate on-demand via
-    // the /api/revalidate webhook (publish → invalidate + Site Search reindex),
-    // so the TTL just covers the rare case of a missed/failed webhook. Force a
-    // full refresh anytime with a manual build.
-    expiration: 60 * 60 * 24 * 7,
+    // 60-day TTL as a safety net only. Content changes propagate on-demand via
+    // the /api/revalidate webhook (publish → surgical invalidation of just the
+    // affected URLs + Site Search reindex), so the TTL only covers the rare case
+    // of a missed/failed webhook. A short TTL is pure waste here: it forces the
+    // whole surface (~670 URLs) to re-render in the background roughly weekly,
+    // burning Vercel Fast Origin Transfer for content that has not changed. Force
+    // a full refresh anytime with a manual build or POST /api/revalidate?mode=full.
+    expiration: 60 * 60 * 24 * 60,
     exclude: [/^\/api\//],
   },
 });

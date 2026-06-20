@@ -8,6 +8,8 @@ import {
 } from 'astro:env/server';
 import { PUBLIC_SITE_URL } from 'astro:env/client';
 import { getAllPublicUrls } from '~/lib/datocms/publicUrls';
+import { getRevalidationUrls } from '~/lib/datocms/revalidationUrls';
+import { parseWebhookPayload } from '~/lib/datocms/webhookPayload';
 import { handleUnexpectedError, invalidRequestResponse, json, withCORS } from '../utils';
 
 /**
@@ -32,48 +34,12 @@ async function reindexSiteSearch(): Promise<boolean> {
 
 export const prerender = false;
 
-const DEBOUNCE_MS = 5_000;
 const CHUNK_SIZE = 20;
 const CHUNK_PAUSE_MS = 250;
 
-let lastRunAt = 0;
-
 export const OPTIONS: APIRoute = () => new Response('OK', withCORS());
 
-export const POST: APIRoute = async ({ url }) => {
-  const token = url.searchParams.get('token');
-  if (token !== SECRET_API_TOKEN) {
-    return invalidRequestResponse('Invalid token', 401);
-  }
-
-  const bypassToken = BYPASS_TOKEN;
-  if (!bypassToken) {
-    return invalidRequestResponse('BYPASS_TOKEN is not configured', 500);
-  }
-
-  const now = Date.now();
-  if (now - lastRunAt < DEBOUNCE_MS) {
-    const elapsed = now - lastRunAt;
-    console.log(`[revalidate] Debounced (${elapsed}ms since last run)`);
-    return json({ debounced: true, sinceLastMs: elapsed }, withCORS());
-  }
-  lastRunAt = now;
-
-  const start = Date.now();
-  let urls: string[];
-  try {
-    urls = await getAllPublicUrls();
-  } catch (error) {
-    return handleUnexpectedError(error);
-  }
-
-  const baseUrl = (PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
-  if (!baseUrl) {
-    return invalidRequestResponse('PUBLIC_SITE_URL is not configured', 500);
-  }
-
-  console.log(`[revalidate] Starting invalidation of ${urls.length} URLs`);
-
+async function revalidateUrls(urls: string[], baseUrl: string, bypassToken: string) {
   let success = 0;
   let failures = 0;
 
@@ -94,12 +60,89 @@ export const POST: APIRoute = async ({ url }) => {
     }
   }
 
+  return { success, failures };
+}
+
+export const POST: APIRoute = async ({ url, request }) => {
+  const token = url.searchParams.get('token');
+  if (token !== SECRET_API_TOKEN) {
+    return invalidRequestResponse('Invalid token', 401);
+  }
+
+  const bypassToken = BYPASS_TOKEN;
+  if (!bypassToken) {
+    return invalidRequestResponse('BYPASS_TOKEN is not configured', 500);
+  }
+
+  const baseUrl = (PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+  if (!baseUrl) {
+    return invalidRequestResponse('PUBLIC_SITE_URL is not configured', 500);
+  }
+
+  const start = Date.now();
+  // Full sweep is opt-in via ?mode=full (manual maintenance / emergency).
+  const fullMode = url.searchParams.get('mode') === 'full';
+
+  // Surgical mode: parse the webhook payload (ignored if absent/invalid).
+  let payload: unknown = null;
+  try {
+    payload = await request.json();
+  } catch {
+    payload = null;
+  }
+
+  let urls: string[];
+  let mode: 'full' | 'surgical';
+
+  if (fullMode) {
+    mode = 'full';
+    try {
+      urls = await getAllPublicUrls();
+    } catch (error) {
+      return handleUnexpectedError(error);
+    }
+  } else {
+    mode = 'surgical';
+    const { eventType, apiKey, slug } = parseWebhookPayload(payload);
+
+    if (!apiKey) {
+      // Unknown / unparseable payload: no-op rather than re-rendering the site.
+      console.log(
+        `[revalidate] No model api_key in payload (event: ${eventType ?? 'n/a'}); nothing to do. Use ?mode=full to force a full sweep.`,
+      );
+      return json({ mode, eventType, revalidated: 0, urls: [], noop: true }, withCORS());
+    }
+
+    try {
+      urls = await getRevalidationUrls({ apiKey, slug });
+    } catch (error) {
+      return handleUnexpectedError(error);
+    }
+
+    if (urls.length === 0) {
+      console.log(`[revalidate] Model "${apiKey}" is not mapped to any URL; nothing to do.`);
+      return json({ mode, eventType, apiKey, revalidated: 0, urls: [], noop: true }, withCORS());
+    }
+
+    console.log(
+      `[revalidate] Surgical (event: ${eventType ?? 'n/a'}, model: ${apiKey}, slug: ${slug ?? 'n/a'}) → ${urls.length} URLs: ${urls.join(', ')}`,
+    );
+  }
+
+  if (mode === 'full') {
+    console.log(`[revalidate] Full sweep of ${urls.length} URLs`);
+  }
+
+  const { success, failures } = await revalidateUrls(urls, baseUrl, bypassToken);
   const reindexed = await reindexSiteSearch();
 
   const elapsedMs = Date.now() - start;
   console.log(
-    `[revalidate] Done. ${success} ok, ${failures} failed, total ${urls.length} URLs in ${elapsedMs}ms (search reindex: ${reindexed})`,
+    `[revalidate] Done (${mode}). ${success} ok, ${failures} failed, total ${urls.length} URLs in ${elapsedMs}ms (search reindex: ${reindexed})`,
   );
 
-  return json({ total: urls.length, success, failures, elapsedMs, reindexed }, withCORS());
+  return json(
+    { mode, total: urls.length, success, failures, elapsedMs, reindexed, urls },
+    withCORS(),
+  );
 };

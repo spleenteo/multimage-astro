@@ -20,4 +20,4 @@ scope: Document performance-sensitive code paths and tactics to keep Multimage f
 
 ## Build Costs
 
-- The LLM export (`src/pages/llms-full.txt.ts` + `_graphql.ts`) now runs during prerender, which is reliable but still heavy on the CDA. Monitor build times and consider caching the export when the catalogue grows.
+- `/libri` is paginated (40/page) to keep listing HTML — and Vercel Fast Origin Transfer — small; card grids use lean responsive images (no base64/srcSet). The heavy `/llms-full.txt` export was removed (2026-06-20). See decision-log `2026-06-20-fot-reduction`.

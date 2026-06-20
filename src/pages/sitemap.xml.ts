@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { executeQuery } from '~/lib/datocms/executeQuery';
+import { buildBooksCataloguePaths } from '~/lib/books';
 import { SITEMAP_QUERY, type SitemapQueryResult } from './sitemap.xml/_graphql';
 
 const STATIC_PATHS = [
@@ -69,7 +70,16 @@ export const GET: APIRoute = async ({ site }) => {
 
   const data = await executeQuery<SitemapQueryResult>(SITEMAP_QUERY);
 
-  const mapRecords = (records: SitemapQueryResult[keyof SitemapQueryResult], prefix: string) => {
+  // Paginated catalogue pages (/libri, /libri/pagina/2..N). Page 1 (/libri) is
+  // already in STATIC_PATHS and deduped by `seen`.
+  buildBooksCataloguePaths(data.catalogueBooksMeta?.count ?? 0).forEach((path) => {
+    pushEntry(path, buildTime);
+  });
+
+  const mapRecords = (
+    records: Array<{ slug: string | null; updatedAt: string | null }>,
+    prefix: string,
+  ) => {
     records.forEach((item) => {
       const slug = item.slug?.trim();
       if (!slug) {

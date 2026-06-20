@@ -1,9 +1,9 @@
+import { buildBooksCataloguePaths } from '~/lib/books';
 import { executeQuery } from './executeQuery';
 
 const STATIC_URLS: readonly string[] = [
   '/',
   '/sitemap.xml',
-  '/llms-full.txt',
   '/archived-books.json',
   '/libri',
   '/libri/ebooks',
@@ -19,6 +19,11 @@ const STATIC_URLS: readonly string[] = [
 
 const ALL_SLUGS_QUERY = /* GraphQL */ `
   query AllPublicSlugs {
+    catalogueBooksMeta: _allBooksMeta(
+      filter: { _status: { eq: published }, archive: { eq: false } }
+    ) {
+      count
+    }
     allBooks(first: 500) {
       slug
     }
@@ -40,6 +45,7 @@ const ALL_SLUGS_QUERY = /* GraphQL */ `
 type SlugRecord = { slug: string | null };
 
 type AllSlugsResult = {
+  catalogueBooksMeta: { count: number } | null;
   allBooks: SlugRecord[] | null;
   allAuthors: SlugRecord[] | null;
   allBlogPosts: SlugRecord[] | null;
@@ -55,13 +61,16 @@ function buildSlugUrls(records: SlugRecord[] | null | undefined, prefix: string)
 }
 
 /**
- * Enumerate every public URL that may be served by the site.
- * Used by /api/revalidate to invalidate the full surface after a CMS publish.
+ * Enumerate every public URL that may be served by the site. Used by
+ * /api/revalidate?mode=full to invalidate the full surface (manual maintenance
+ * / emergency). Per-publish revalidation uses the surgical map in
+ * `revalidationUrls.ts` instead.
  */
 export async function getAllPublicUrls(): Promise<string[]> {
   const data = await executeQuery<AllSlugsResult>(ALL_SLUGS_QUERY);
 
   const dynamic: string[] = [
+    ...buildBooksCataloguePaths(data.catalogueBooksMeta?.count ?? 0),
     ...buildSlugUrls(data.allBooks, '/libri'),
     ...buildSlugUrls(data.allAuthors, '/autori'),
     ...buildSlugUrls(data.allBlogPosts, '/magazine'),
@@ -69,5 +78,6 @@ export async function getAllPublicUrls(): Promise<string[]> {
     ...buildSlugUrls(data.allPages, '/info'),
   ];
 
-  return [...STATIC_URLS, ...dynamic];
+  // Dedupe: catalogue page 1 (/libri) is also in STATIC_URLS.
+  return [...new Set([...STATIC_URLS, ...dynamic])];
 }

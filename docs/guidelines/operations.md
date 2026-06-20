@@ -32,7 +32,7 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 ## Monitoring & Logging
 
 - Client monitoring uses Google Analytics (legacy UA), `@vercel/analytics`, and `@vercel/speed-insights`. There is no server-side logging or alerting yet.
-- `llms-full.txt` is generated during the build; track CDA rate limits and document any schema changes that require updates to the exporter (`src/pages/llms-full.txt.ts`).
+- The `/llms-full.txt` export route was removed (2026-06-20); no exporter to maintain.
 
 ## Testing & Automation
 

@@ -29,6 +29,22 @@ scope: A list to describe all components used in the project
   - Notes: pure markup, keeps focus logic next to link definitions.
 
 ## Sections, heroes & cards
+- `BooksCatalogSection` — **BooksCatalogSection** (`src/components/BooksCatalogSection/index.astro`)
+  - Purpose: shared catalogue view (hero + `BookCard` grid + `Pagination`) used by both `/libri` (page 1) and `/libri/pagina/[page]` so the two routes stay DRY.
+  - Key props: `title`, `subtitleHtml?`, `books` (`mapBooksToCards` output), `currentPage`, `totalPages`.
+  - Used in: `/libri`, `/libri/pagina/[page]`.
+  - Owner: @claude.
+  - Notes: introduced 2026-06-20 for catalogue pagination (FOT reduction).
+- `Pagination` — **Pagination** (`src/components/Pagination/index.astro`)
+  - Purpose: generic path-based pagination nav emitting real `<a href>` links (prev/next + windowed numbers with ellipsis) for ISR-cacheable pages.
+  - Key props: `currentPage`, `totalPages`, `firstPageHref`, `pagePathPrefix`, `siblingCount?`, `ariaLabel?`.
+  - Used in: `BooksCatalogSection` (`/libri` catalogue).
+  - Owner: @claude.
+  - Notes: page 1 → `firstPageHref`, pages 2..N → `${pagePathPrefix}${page}`. No query strings (keeps ISR cache keys clean).
+- `NewsletterCta` — **NewsletterCta** (`src/components/NewsletterCta.astro`)
+  - Purpose: site-wide newsletter call-to-action section linking to Brevo, rendered before the footer.
+  - Used in: `BaseLayout` / page chrome.
+  - Owner: @codex.
 - `SectionIntro` — **SectionIntro** (`src/components/SectionIntro/index.astro`)
   - Purpose: shared hero intro with optional alignment.
   - Key props: `title`, `description`, `descriptionHtml`, `align?`.

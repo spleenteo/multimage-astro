@@ -21,10 +21,10 @@ scope: A list to describe all models in pages
   - Feeds `/magazine` hero copy + SEO.
 
 ## Core records
-- **`BookRecord`** (`BookCardFragment`, `BOOK_DETAIL_QUERY`, staff/LLM queries)
+- **`BookRecord`** (`BookCardFragment`, `BOOK_DETAIL_QUERY`, staff queries)
   - Fields include `authors`, `license`, `format`, `coverImage`, `archive`, `promo`, `price`, structured review, etc.
-  - Used everywhere: listings, detail pages, sitemap, staff CSV, `/llms-full.txt`.
-  - Notes: most queries still fetch `first: 500`; see docs/TODO.md CMS task **CD2**.
+  - Used everywhere: listings (paginated `/libri`), detail pages, sitemap, staff CSV.
+  - Notes: `/libri` now paginates via `first/skip` + `_allBooksMeta`; other reads still fetch `first: 500` — see docs/TODO.md CMS task **CD2**.
 - **`AuthorRecord`** (`AUTHORS_PAGE_QUERY`, `AUTHOR_DETAIL_QUERY`)
   - Fields: `fullName`, `alias`, `slug`, `country`, `biography`, `picture`, `pseudonyms`.
   - Drives `/autori`, book detail sidebars, Structured Text inline references.

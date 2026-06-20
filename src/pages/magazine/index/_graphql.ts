@@ -1,10 +1,9 @@
 import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
-import { RESPONSIVE_IMAGE_FRAGMENT, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { RESPONSIVE_IMAGE_CARD_FIELDS, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { ResponsiveImage } from '~/lib/datocms/types';
 
 export const MAGAZINE_INDEX_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
-  ${RESPONSIVE_IMAGE_FRAGMENT}
   ${INDEX_HERO_FRAGMENT}
   query MagazineIndexPage {
     magazineIndexPage: allIndexPages(filter: { slug: { eq: "magazine" } }, first: 1) {
@@ -21,7 +20,7 @@ export const MAGAZINE_INDEX_QUERY = /* GraphQL */ `
         responsiveImage(
           imgixParams: { fit: crop, crop: focalpoint, w: 800, h: 520, auto: format }
         ) {
-          ...ResponsiveImageFragment
+          ${RESPONSIVE_IMAGE_CARD_FIELDS}
         }
       }
       category {

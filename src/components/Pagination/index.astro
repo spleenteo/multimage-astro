@@ -1,0 +1,114 @@
+---
+/**
+ * Generic, path-based pagination nav. Emits real <a href> links so every page
+ * is independently crawlable and cacheable by Vercel ISR (no query strings,
+ * which would fragment the ISR cache key). Page 1 lives at `firstPageHref`,
+ * pages 2..N at `${pagePathPrefix}${page}`.
+ */
+type Props = {
+  currentPage: number;
+  totalPages: number;
+  firstPageHref: string;
+  pagePathPrefix: string;
+  /** How many page numbers to show around the current one. */
+  siblingCount?: number;
+  ariaLabel?: string;
+};
+
+const {
+  currentPage,
+  totalPages,
+  firstPageHref,
+  pagePathPrefix,
+  siblingCount = 1,
+  ariaLabel = 'Paginazione',
+} = Astro.props;
+
+const hrefFor = (page: number) =>
+  page <= 1 ? firstPageHref : `${pagePathPrefix}${page}`;
+
+function buildPages(): Array<number | 'ellipsis'> {
+  if (totalPages <= 1) {
+    return [];
+  }
+
+  const pages = new Set<number>([1, totalPages]);
+  for (let p = currentPage - siblingCount; p <= currentPage + siblingCount; p += 1) {
+    if (p >= 1 && p <= totalPages) {
+      pages.add(p);
+    }
+  }
+
+  const sorted = [...pages].sort((a, b) => a - b);
+  const result: Array<number | 'ellipsis'> = [];
+  let previous = 0;
+  for (const page of sorted) {
+    if (previous && page - previous > 1) {
+      result.push('ellipsis');
+    }
+    result.push(page);
+    previous = page;
+  }
+  return result;
+}
+
+const pages = buildPages();
+const hasPrev = currentPage > 1;
+const hasNext = currentPage < totalPages;
+
+const baseItem =
+  'inline-flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-sm font-semibold transition';
+const inactive = 'bg-white/80 text-brand-slate hover:bg-brand-amber/20 shadow-soft';
+const active = 'bg-brand-ink text-white shadow-soft';
+const disabled = 'pointer-events-none opacity-40';
+---
+
+{
+  pages.length > 1 ? (
+    <nav class="mt-12 flex justify-center" aria-label={ariaLabel}>
+      <ul class="flex flex-wrap items-center gap-2">
+        <li>
+          <a
+            class:list={[baseItem, inactive, !hasPrev && disabled]}
+            href={hasPrev ? hrefFor(currentPage - 1) : undefined}
+            aria-disabled={hasPrev ? undefined : 'true'}
+            rel="prev"
+          >
+            <span aria-hidden="true">←</span>
+            <span class="sr-only">Pagina precedente</span>
+          </a>
+        </li>
+
+        {pages.map((page) =>
+          page === 'ellipsis' ? (
+            <li aria-hidden="true" class="px-1 text-brand-slate">
+              …
+            </li>
+          ) : (
+            <li>
+              <a
+                class:list={[baseItem, page === currentPage ? active : inactive]}
+                href={hrefFor(page)}
+                aria-current={page === currentPage ? 'page' : undefined}
+              >
+                {page}
+              </a>
+            </li>
+          ),
+        )}
+
+        <li>
+          <a
+            class:list={[baseItem, inactive, !hasNext && disabled]}
+            href={hasNext ? hrefFor(currentPage + 1) : undefined}
+            aria-disabled={hasNext ? undefined : 'true'}
+            rel="next"
+          >
+            <span aria-hidden="true">→</span>
+            <span class="sr-only">Pagina successiva</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  ) : null
+}

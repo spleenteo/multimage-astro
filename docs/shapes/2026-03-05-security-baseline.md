@@ -37,6 +37,6 @@ High-impact fixes that don't require a full auth system. S1 (staff auth) is the 
 ## Slices
 
 - [ ] S2: Add `sanitizeHtml()` helper, replace all `set:html` call sites, add regression test
-- [ ] S4: Gate `/llms-full.txt` with bearer token or remove it
+- [x] S4: Gate `/llms-full.txt` with bearer token or remove it — **removed 2026-06-20** (see decision-log `2026-06-20-fot-reduction`)
 - [ ] S5: Delete or secure `/api/post-deploy`
 - [ ] S1: Add simple auth gate to `/staff/**`

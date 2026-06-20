@@ -13,19 +13,27 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **`draftPreview` utilities** (`src/lib/draftPreview.ts`)
   - Purpose: centralises Draft Mode resolution and exposes `resolveDraftMode(Astro)` for components/pages.
   - Used in: every CMS-driven page, BaseLayout, DraftModeQueryListener.
-  - Notes: insieme al flag condiviso `~/lib/prerender`, assicura che le pagine leggano i cookie solo quando `SERVER=preview` (SSR). In produzione (`SERVER=static`) i template restano prerenderizzati.
-- **`prerender` flag** (`src/lib/prerender.ts`)
-  - Purpose: exports a shared `prerender` boolean so every page can `export { prerender } from '~/lib/prerender'`.
-  - Used in: tutte le rotte pubbliche (`src/pages/**/*.astro`, `sitemap.xml.ts`, `llms-full.txt.ts`).
-  - Notes: ritorna `true` quando `SERVER=static` (build ibrido) e `false` quando `SERVER=preview` (full SSR). Evita duplicare `if` o valori hard-coded nei singoli file.
+  - Notes: all routes are SSR with ISR; `resolveDraftMode` reads the signed draft-mode cookie so editors get drafts + Visual Editing while anonymous traffic serves from the CDN cache.
 - **`commonFragments`** (`src/lib/datocms/commonFragments.ts`)
-  - Purpose: exports shared `TagFragment` and `ResponsiveImageFragment`.
+  - Purpose: exports shared `TagFragment`, `ResponsiveImageFragment` (full: base64 + srcSet, for hero/detail), and `RESPONSIVE_IMAGE_CARD_FIELDS` (lean raw fields, no base64/srcSet, for card/thumbnail grids).
   - Used in: most `_graphql.ts` files to keep fragments DRY.
-  - Notes: Book/Collection components rely on width/height—update carefully.
+  - Notes: card grids must pair `RESPONSIVE_IMAGE_CARD_FIELDS` with `<Image srcSetCandidates={[1,2]}>`. Book/Collection components rely on width/height—update carefully.
 - **`recordInfo` helpers** (`src/lib/datocms/recordInfo.ts`)
   - Purpose: `recordToWebsiteRoute` and `recordToSlug` translate Dato records into site URLs/slugs.
   - Used in: `/api/preview-links`, `/api/seo-analysis`, and any future automations that need to resolve routes.
-  - Notes: extend the switch statements whenever you add a routable model so preview links stay accurate.
+  - Notes: extend the switch statements whenever you add a routable model so preview links stay accurate; keep the surgical revalidation map (`revalidationUrls.ts`) in sync with the same api_key → route table.
+- **`publicUrls` helper** (`src/lib/datocms/publicUrls.ts`)
+  - Purpose: `getAllPublicUrls()` enumerates every public URL (static + catalogue pages + record detail URLs) for the full-revalidation sweep.
+  - Used in: `/api/revalidate?mode=full`.
+  - Notes: dedupes against `STATIC_URLS`; per-publish revalidation uses `revalidationUrls.ts` instead.
+- **`revalidationUrls` helper** (`src/lib/datocms/revalidationUrls.ts`)
+  - Purpose: `getRevalidationUrls({ apiKey, slug })` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query.
+  - Used in: `/api/revalidate` (surgical mode).
+  - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Mirror `recordInfo.ts` routes.
+- **`webhookPayload` parser** (`src/lib/datocms/webhookPayload.ts`)
+  - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
+  - Used in: `/api/revalidate`.
+  - Notes: no env/network deps so it is unit testable; reads the item_type from `related_entities`.
 - **`structuredText` helpers** (`src/lib/datocms/structuredText.ts`)
   - Purpose: converts Structured Text to plain text, checks emptiness.
   - Used in: SEO fallbacks, author summaries, info pages.
@@ -38,9 +46,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year, and now exposes `buildEditionDetails` + `buildGraphicsDetails` to keep technical metadata consistent between detail and printable pages.
-  - Used in: listings, carousels, detail pages, staff exports, printable schede.
-  - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props.
+  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
+  - Used in: listings, carousels, detail pages, staff exports, printable schede; `/libri` route, sitemap, `publicUrls.ts`, `revalidationUrls.ts`.
+  - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props. Keep `BOOKS_PER_PAGE` here so route/sitemap/revalidation agree on page count.
 - **`authors` helper** (`src/lib/authors.ts`)
   - Purpose: formats author names, chips, sort letters, and related metadata.
   - Used in: `/autori`, book detail sidebars, Structured Text.
@@ -77,11 +85,11 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: scans `src/components/**` + helper directories and verifies `docs/list-*` includes every component/helper path.
   - Notes: fails `npm run docs:inventory` when entries drift; keep bullets aligned with the script’s parsed format.
 - **Dato sync script** (`scripts/sync-datocms.mjs`)
-  - Purpose: loads `.env`, regenerates `schema.ts`, and refreshes `docs/DATOCMS.md` from the official dump.
-  - Notes: requires `DATOCMS_API_TOKEN` or `DATOCMS_CMA_TOKEN` to run schema generation.
-- **LLM export handler** (`src/pages/llms-full.txt.ts` + `_graphql.ts`)
-  - Purpose: streams every book/author/page summary for AI tooling.
-  - Notes: currently public with no auth—see Security task **S4**.
+  - Purpose: loads env and regenerates `schema.ts`.
+  - Notes: requires `DATOCMS_API_TOKEN` or `DATOCMS_CMA_TOKEN` to run schema generation (schema generation only — no external doc download).
+- **`newsletter` helper** (`src/lib/newsletter.ts`)
+  - Purpose: provides the newsletter CTA copy/link data (Brevo) used by the site-wide newsletter section.
+  - Used in: `NewsletterCta` component / BaseLayout footer area.
 - **API response helpers** (`src/pages/api/utils.ts`)
   - Purpose: shared `withCORS`, `json`, `invalidRequestResponse`, `successfulResponse`, and `isRelativeUrl` utilities for every API route.
   - Used in: `/api/preview`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, etc.

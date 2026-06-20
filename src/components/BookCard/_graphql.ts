@@ -1,3 +1,5 @@
+import { RESPONSIVE_IMAGE_CARD_FIELDS } from '~/lib/datocms/commonFragments';
+
 export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
   fragment BookCardFragment on BookRecord {
     id
@@ -14,7 +16,7 @@ export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
         hex
       }
       responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 520, auto: format }) {
-        ...ResponsiveImageFragment
+        ${RESPONSIVE_IMAGE_CARD_FIELDS}
       }
     }
     price

@@ -1,3 +1,5 @@
+import { RESPONSIVE_IMAGE_CARD_FIELDS } from '~/lib/datocms/commonFragments';
+
 export const AUTHOR_CARD_FRAGMENT = /* GraphQL */ `
   fragment AuthorCardFragment on AuthorRecord {
     id
@@ -11,7 +13,7 @@ export const AUTHOR_CARD_FRAGMENT = /* GraphQL */ `
       url
       alt
       responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }) {
-        ...ResponsiveImageFragment
+        ${RESPONSIVE_IMAGE_CARD_FIELDS}
       }
     }
   }

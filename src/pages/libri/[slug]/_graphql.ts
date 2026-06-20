@@ -137,7 +137,6 @@ export const BOOK_ALTERNATE_FORMATS_QUERY = /* GraphQL */ `
 `;
 
 export const BOOK_COLLECTION_BOOKS_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
   ${BOOK_CARD_FRAGMENT}
   query BookCollectionBooks($collectionId: ItemId) {
     allBooks(filter: { collection: { eq: $collectionId } }, orderBy: printYear_DESC, first: 500) {
