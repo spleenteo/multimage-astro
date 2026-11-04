@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V1
-step: plan
+step: execute
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
@@ -38,3 +38,4 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 <!-- date — step — done — remaining — wall-clock — cost -->
 - 2026-11-04 — opening + slicing — profile recorded (`.flow.yml`, `docs/development-guidelines.md`), `decision-log/` moved to `decisions-log/`, guidelines frontmatter `scope:` → `description:`, six slices agreed — impact next — ~25 min — n/a
 - 2026-11-04 — impact — 18 problems (3 high: CLI 4.2 pulls CMA v6, cache procedure hit production, draft render cacheable without BYPASS_TOKEN), all fixed in slices.md; new slice V2 for revalidation map gaps, slices renumbered V1–V7 — plan V1 next — ~17 min — n/a
+- 2026-11-04 — V1 plan + review — 8 tasks; review: 0 high, 4 medium, 8 low, all fixes applied — execute next — ~20 min — n/a

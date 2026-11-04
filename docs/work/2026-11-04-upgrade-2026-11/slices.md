@@ -29,6 +29,10 @@ Out of scope: TypeScript 7 (`@astrojs/check` peer is `typescript ^5 || ^6`; goes
 **Done**: `caching.md` exists; procedure (a) and (b) run and recorded; (c) run once on production headers (read-only); gaps listed with their fate (V2 or TODO).
 **Gotchas**: never `?mode=full` on production; read-only on DatoCMS; the bypass token value never printed.
 
+**Deviations found while planning V1**
+- T7 also edits `docs/guidelines/cms-data-loading.md` (cache tags described as "planned") and adds a Caching row to the `CLAUDE.md` Quick Reference.
+- Stale `SERVER`/`prerender` passages in `docs/guidelines/project-structure.md` go to `TODO.md`, not fixed (mandate names only the preview docs and `operations.md`).
+
 ## V2 — Revalidation map fixes
 
 **In**: in `revalidationUrls.ts` and `recordInfo.ts` (shared with `/api/preview-links` and `/api/seo-analysis`): map `index_page` by slug (libri, ebooks, highlights, archivio, collane, autori, magazine, distributori) to its index URL and remove the 7 non-existent api_keys; map `supplier` → `/distributori`, `license` → the book pages/cards it appears on, `app` → the pages that read it. Unit-level check with the V1 no-network script, extended with the new cases.
