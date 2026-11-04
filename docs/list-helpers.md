@@ -31,7 +31,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `/api/revalidate` (surgical mode).
   - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Mirror `recordInfo.ts` routes.
 - **Revalidation-map check** (`check.ts`, `scripts/revalidation-map/register-stubs.mjs`, `scripts/revalidation-map/hooks.mjs`, `scripts/revalidation-map/stub-execute-query.mjs`)
-  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them) and reports `OK`/`GAP`/`MISMATCH`; the `.mjs` files stub env and `executeQuery` via `module.registerHooks`.
+  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them) and reports `OK`/`GAP`/`MISMATCH`; the `.mjs` files stub `executeQuery`, refuse `astro:env/*` and block `fetch` via `module.registerHooks`.
   - Used in: `npm run check:revalidation-map` (procedure (a) in `docs/guidelines/caching.md`).
   - Notes: needs Node >= 22.15; expectations describe the code before V2.
 - **`webhookPayload` parser** (`src/lib/datocms/webhookPayload.ts`)

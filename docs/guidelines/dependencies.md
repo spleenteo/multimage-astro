@@ -7,12 +7,12 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Runtime & UI
 
 - `astro@^6` with `output: 'server'` and `@astrojs/vercel` ISR (no prerendered routes), deployed to Vercel as a single project.
-- Styling stacks on `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer`, with brand tokens defined in `tailwind.config.mjs`.
+- Styling uses `tailwindcss` (3.x) and `autoprefixer` wired as PostCSS plugins (`postcss.config.mjs`/`.cjs`); there is no `@astrojs/tailwind` integration. Brand tokens defined in `tailwind.config.mjs`.
 - `swiper` provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required.
 
 ## CMS & Data
 
-- `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
+- `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is a runtime dependency: `/api/revalidate` (Site Search reindex) and `/api/post-deploy` call `buildClient`.
 - `tsx` is not a direct dependency: `npm run check:revalidation-map` uses the copy hoisted from the `datocms` CLI (also pulled by `vite`); the check needs Node >= 22.15.
 - DatoCMS data primarily flows through `@datocms/cda-client`; `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
 
