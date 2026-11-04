@@ -42,6 +42,7 @@ Four layers:
 | Search                        | `docs/guidelines/search.md`                |
 | Preview / draft mode          | `docs/guidelines/preview-mode.md`          |
 | Security                      | `docs/guidelines/security.md`              |
+| Caching / revalidation        | `docs/guidelines/caching.md`               |
 | Testing                       | `docs/guidelines/testing.md`               |
 | Operations (build, deploy)    | `docs/guidelines/operations.md`            |
 | Performance                   | `docs/guidelines/performance.md`           |

@@ -46,7 +46,7 @@ const { isEnabled: includeDrafts } = resolveDraftMode(Astro);
 const data = await executeQuery(QUERY, { includeDrafts });
 ```
 
-Draft mode is only active when `SERVER=preview` (Vercel preview deployment). Static builds (`SERVER=static`) always use published content.
+Draft mode is active per request, when the signed draft-mode cookie is present (ISR deployment, cache bypassed). Without the cookie, requests use published content.
 
 ## Pagination
 
@@ -64,12 +64,16 @@ Until a paginated helper ships: keep `first: 500` and annotate it with `// TODO 
 
 ## Error handling
 
-`executeQuery` propagates errors from `@datocms/cda-client`. Failures crash the build during SSG (desired — fail fast). In preview SSR, errors surface as Astro error pages.
+`executeQuery` propagates errors from `@datocms/cda-client`. Failures fail the request during the per-request render (desired — fail fast), surfacing as Astro error pages. Nothing is rendered at build time (ISR).
 
 ## Type generation
 
 Types come from `schema.ts`, managed by `npm run generate-schema`. Import CMS types from `~/lib/datocms/types`. Never write CMS types by hand.
 
-## Cache tags (planned)
+## Cache tags (not implemented)
+
+Not implemented: revalidation is URL-based, see `docs/guidelines/caching.md`.
+
+Original plan:
 
 Cache tag propagation is not yet implemented. Tracked as **CD3** in `docs/TODO.md`.
