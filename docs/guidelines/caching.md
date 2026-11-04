@@ -32,7 +32,7 @@ Read-only, through the `datocms` CLI (`cma:call webhooks find 33942`, `schema:in
 
 **Webhook 33942**, "Revalidate site cache (ISR)": enabled; payload API version 3; `auto_retry` true; `nested_items_in_payload` false; no custom payload, no filter; one event rule, `entity_type: item`, `event_types: publish, unpublish, delete`; URL `https://www.multimage.org/api/revalidate?token=<redacted>`. There are **no upload (asset) events** and no `update` event: saving a draft does nothing, an asset replaced in place does not revalidate anything.
 
-**Models** (`schema:inspect`, 40 total). Mapped in `getRevalidationUrls`: `book`, `author`, `collection`, `blog_post`, `page`, `home`, plus 7 api_keys that do not exist in the project (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`). The real model behind every index page is `index_page` (one record per page, read by `slug`: `libri`, `archivio`, `highlights`, `ebooks`, `collane`, `autori`, `magazine`, `distributori`), and it is unmapped.
+**Models** (`schema:inspect`, 36 total). Mapped in `getRevalidationUrls`: `book`, `author`, `collection`, `blog_post`, `page`, `home`, plus 7 api_keys that do not exist in the project (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`). The real model behind every index page is `index_page` (one record per page, read by `slug`: `libri`, `archivio`, `highlights`, `ebooks`, `collane`, `autori`, `magazine`, `distributori`), and it is unmapped.
 
 | api_key           | Kind      | Read by                                                           | Mapped |
 | ----------------- | --------- | ----------------------------------------------------------------- | ------ |
@@ -54,7 +54,7 @@ Read-only, through the `datocms` CLI (`cma:call webhooks find 33942`, `schema:in
 | `blog_post_old`   | record    | no route query (legacy)                                           | no     |
 | `project_comment` | record    | no route query (editor comments)                                  | no     |
 
-Block models (`modular_block: true`, 20 of them: `reprint`, `image_block`, `video`, `banner`, `question`, `single_book`, `book_carousel`, `pills_block`, `menu_item`, `newsletter_subscription`, `menu_dropdown`, `single_info_block`, `button`, `faq_section`, `footer_menu_block`, `social_link`, `single_author`, `menu_external_item`, `cta_button_with_image`) have no webhook events of their own: they live inside a parent record, and publishing the parent fires the event for the parent's model. They are excluded from the route audit below.
+Block models (`modular_block: true`, 19 of them: `reprint`, `image_block`, `video`, `banner`, `question`, `single_book`, `book_carousel`, `pills_block`, `menu_item`, `newsletter_subscription`, `menu_dropdown`, `single_info_block`, `button`, `faq_section`, `footer_menu_block`, `social_link`, `single_author`, `menu_external_item`, `cta_button_with_image`) have no webhook events of their own: they live inside a parent record, and publishing the parent fires the event for the parent's model. They are excluded from the route audit below.
 
 ## Route → models → revalidated?
 
@@ -63,7 +63,7 @@ Layout dependency for every HTML route: `BaseLayout.astro` `SITE_QUERY` reads `_
 | Route                         | Models read (besides layout `page`)                                              | Revalidated?                                                                                          |
 | ----------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | `/`                           | `home`, `book` (carousel/single book), `author` (card names)                     | partial: `home`, `book` yes; `author` no; `page` menus no                                             |
-| `/libri`                      | `index_page`, `book`, `author` (card names)                                      | partial: `book` yes (publish only; unpublish/delete still yes for static set); `index_page`, `author` no |
+| `/libri`                      | `index_page`, `book`, `author` (card names)                                      | partial: `book` yes; `index_page`, `author` no |
 | `/libri/pagina/[page]`        | `index_page`, `book`, `author`                                                   | partial: `book` yes while the page exists (count from published books); `index_page`, `author` no     |
 | `/libri/[slug]`               | `book`, `author`, `collection`, `license`, `cover_size`; sibling books by authors/collection/title | partial: the book's own save yes; `author`, `collection` rename, `license`, `cover_size`, sibling-book changes no; old slug after rename no |
 | `/libri/ebooks`               | `index_page`, `book`                                                             | partial: `book` yes; `index_page` no                                                                  |
