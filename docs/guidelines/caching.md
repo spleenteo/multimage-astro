@@ -107,3 +107,96 @@ Fate `V2` is fixed inside this work (slice V2, caching behaviour); `TODO` goes t
 | 12  | Unmapped model or payload without `api_key` returns 200 `noop`, and `success` counts 401/404 as ok (`index.ts:55`): DatoCMS and the JSON never show a failed revalidation                                                                                | TODO |
 | 13  | `revalidationUrls.ts` and `recordInfo.ts` are two hand-synced maps with no check between them                                                                                                                                                            | TODO |
 | 14  | `blog_post` or `blog_author` change does not refresh the books that link it as a review (`book.reviews`, shown on `/libri/[slug]`)                                                                                                                       | TODO |
+
+## Verification procedure
+
+Three checks, from the cheapest to the most real. None of them may call the production endpoint: locally `PUBLIC_SITE_URL` is the production URL, so `/api/revalidate` would fetch production pages with `x-prerender-revalidate` and trigger the production Site Search reindex.
+
+### (a) URL map, no network
+
+```bash
+npm run check:revalidation-map
+```
+
+It runs `parseWebhookPayload` and `getRevalidationUrls` on the sample payloads in `scripts/revalidation-map/payloads/` (one per model, plus `malformed`), with `executeQuery` replaced by a stub. It opens no connection and needs no token.
+
+- Needs **Node >= 22.15** (it uses `module.registerHooks`) and throws a clear error otherwise. `.nvmrc` is still 20: run it with a newer Node until `.nvmrc` moves.
+- `tsx` is not a devDependency: the script uses the copy hoisted by the `datocms` CLI.
+- Output, one line per payload: `file event api_key slug n STATUS`, where `n` is the number of URLs. Then `N payloads, M mismatches, fetch calls: K`. Exit code 1 if `M` or `K` is above 0, or if an entry never ran (sentinel), or if a payload file is missing.
+- `OK`: the URL list matches what the script expects today. `GAP`: the model is known to be under-served (see "Gaps and fate"): `0` URLs for an unmapped model (`supplier`, `license`, `app`, `index_page`), or a list that omits known dependants (`page` menus, `book` unpublish). A `GAP` is not a failure: it is the recorded state of the code. `MISMATCH` is a failure: the code changed and the expectation did not.
+- The expectations describe the code **before V2**. When V2 maps the missing models, the `GAP` lines must turn `OK` and the expectations in `scripts/revalidation-map/check.ts` change with them.
+
+### (b) Local `astro dev`, with overrides
+
+Overrides, for the shell session only (process env wins over `.env`):
+
+- `PUBLIC_SITE_URL=http://localhost:4321`: otherwise the endpoint fetches production URLs.
+- `SITE_SEARCH_BUILD_TRIGGER_ID=` (empty): otherwise the endpoint triggers the production Site Search reindex.
+- `BYPASS_TOKEN`: a throwaway value, because the ISR config reads it from the environment.
+
+Before starting, `lsof -nP -iTCP:4321 -sTCP:LISTEN` must print nothing.
+
+```bash
+PUBLIC_SITE_URL=http://localhost:4321 SITE_SEARCH_BUILD_TRIGGER_ID= \
+  BYPASS_TOKEN="$(openssl rand -hex 16)" npx astro dev --port 4321
+```
+
+Then POST the sample payloads, one request each: `book-publish`, `supplier-publish` (an unmapped model) and one with a wrong token.
+
+```bash
+curl -s -X POST "http://localhost:4321/api/revalidate?token=<SECRET_API_TOKEN>" \
+  -H "content-type: application/json" \
+  --data @scripts/revalidation-map/payloads/book-publish.json
+```
+
+Shell form, so the real token is never echoed or stored in history: wrap the call in single quotes and let `dotenv` expand the variable inside the child shell, for example `npx dotenv -e .env -- sh -c 'curl -s -X POST "http://localhost:4321/api/revalidate?token=$SECRET_API_TOKEN" -H "content-type: application/json" --data @scripts/revalidation-map/payloads/<file>.json'`. For the wrong-token case use `?token=wrong` and `-o /dev/null -w '%{http_code}'`.
+
+Rules:
+
+- **Never `?mode=full`**, locally or anywhere: it revalidates every route and reindexes.
+- **Judge by `urls`, `mode`, `reindexed` and the dev log** (one `[status] /path` line per URL), **not by `success`**: the count includes 401 and 404 as fulfilled (`index.ts:55`).
+- Expected today: `book-publish` returns `"mode":"surgical"` and `"reindexed":false`; `supplier-publish` returns `"noop":true`; the wrong token returns `401`.
+- Afterwards: stop the server (`lsof -nP -iTCP:4321 -sTCP:LISTEN`, then kill the PID) and restore the schema that `sync-datocms` may have rewritten: `git diff --quiet -- schema.ts || git checkout -- schema.ts`.
+- `astro preview` does not work with `@astrojs/vercel`: use `astro dev`.
+
+### (c) Deployed, passive only
+
+After a real editorial publish, read what DatoCMS sent and what the CDN holds. No POST to the endpoint, no resend of a webhook call, no `?mode=full`.
+
+```bash
+npx dotenv -e .env -- npx datocms cma:call webhookCalls list \
+  --params '{filter:{fields:{webhook_id:{eq:"33942"},status:{eq:"success"}}},order_by:"last_sent_at_desc",page:{limit:5}}' --json
+```
+
+Print only `last_sent_at`, `event_type`, `status`, `response_status`, and from `response_payload` the `mode`, `total` and `urls` (never the request URL, which carries the token). Then, on 3 to 5 of those URLs plus `/` and `/distributori`:
+
+```bash
+curl -sI https://www.multimage.org<path> | grep -iE '^(x-vercel-cache|age|date):'
+```
+
+Read: `x-vercel-cache: HIT` with `age` smaller than the seconds since `last_sent_at` means the page was refreshed by that publish; a large `age` means it was not (expected for URLs outside the list). `MISS` right after a deploy is normal: a fresh deployment starts with an empty ISR cache. Webhook calls expire, so an old publish may no longer be listed.
+
+### Runs — 2026-11-04
+
+Run on 2026-11-05, Node v24.18.0.
+
+#### (a) `npm run check:revalidation-map`
+
+```text
+app-publish publish app null 0 GAP
+author-publish publish author autore-uno 3 OK
+blog_post-publish publish blog_post articolo-uno 3 OK
+book-publish publish book libro-pubblicato 12 OK
+book-unpublish unpublish book libro-non-pubblicato 9 GAP
+books_index-publish publish books_index null 2 OK
+collection-publish publish collection collana-uno 3 OK
+home-publish publish home null 2 OK
+index_page-publish publish index_page autori 0 GAP
+license-publish publish license null 0 GAP
+malformed publish null senza-modello skipped OK
+page-publish publish page chi-siamo 3 GAP
+supplier-publish publish supplier null 0 GAP
+13 payloads, 0 mismatches, fetch calls: 0
+```
+
+Exit 0. The six `GAP` lines match the recorded gaps: `app` (4), `book-unpublish` (6), `index_page` (1), `license` (3), `page` (5), `supplier` (2). `books_index` still yields URLs because the stale api_key is mapped (gap 1).
