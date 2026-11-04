@@ -1,0 +1,107 @@
+---
+description: How page caching and revalidation work today (Vercel ISR, URL-based webhook), what each route depends on, and the known gaps
+---
+
+# Caching and revalidation
+
+Audited 2026-11-04 (work `upgrade-2026-11`, slice V1). This file describes the caching as it is, not as it should be.
+
+## Status
+
+**Cache tags: not implemented, revalidation is URL-based.** DatoCMS cache tags (shape `docs/shapes/2026-03-05-cache-tags.md`) are a separate, future work. Today a DatoCMS webhook calls `/api/revalidate`, which maps the changed record to a list of public URLs and refetches each one with the Vercel bypass header so the ISR copy is regenerated.
+
+## Configuration
+
+- **ISR** (`astro.config.mjs`, `@astrojs/vercel`): `output: 'server'`, nothing is prerendered; every page is an ISR function.
+  - `bypassToken: process.env.BYPASS_TOKEN` is read at **build time** from the process environment, so `BYPASS_TOKEN` must be exported when building locally (the build output differs without it).
+  - `expiration: 5184000` (60 days) is only a safety net for a missed webhook. Short TTLs re-render about 670 URLs and burn Fast Origin Transfer on the Hobby plan (decision `2026-06-20-fot-reduction`).
+  - `exclude: [/^\/api\//]`: API routes are never cached.
+- **Dual cookies** (`src/lib/draftMode.ts`): entering draft mode sets two cookies for 30 days, `multimage_draft_mode` (name overridable with `DRAFT_MODE_COOKIE_NAME`; signed JWT, app-level: unlocks drafts, `/staff`, editor affordances) and `__prerender_bypass` (value `BYPASS_TOKEN`, infra-level: the Vercel CDN skips the ISR copy and renders fresh). `__prerender_bypass` is only set when `BYPASS_TOKEN` exists. Both are `SameSite=None; Secure; Partitioned`.
+- **`POST /api/revalidate?token=<SECRET_API_TOKEN>`** (`src/pages/api/revalidate/index.ts`, helpers in `src/lib/datocms/`):
+  - **Surgical mode** (default): `parseWebhookPayload` extracts `event_type`, the record `slug` and the model `api_key` (looked up through `entity.relationships.item_type` in `related_entities`); `getRevalidationUrls` maps `api_key` + `slug` to URLs. No `api_key`, or a model not in the map, is a 200 no-op (`noop: true`), so DatoCMS sees success.
+  - **Book enrichment**: a `book` change runs one published-token query (`BookRevalidationContext`) to add the catalogue pages (`/libri`, `/libri/pagina/N`), the book's authors and its collection. On failure it falls back to `/libri` only. On unpublish/delete the book no longer resolves, so authors and collection are skipped.
+  - **`?mode=full`**: revalidates every public URL (`getAllPublicUrls`, about 670). Manual maintenance only; **never run it against production by hand**.
+  - Each URL is fetched with `x-prerender-revalidate: <BYPASS_TOKEN>` against `PUBLIC_SITE_URL`, in chunks of 20 with a 250 ms pause. Locally `PUBLIC_SITE_URL` is the production site.
+  - **Site Search reindex**: after every non-no-op call, `reindexSiteSearch` triggers the build trigger `SITE_SEARCH_BUILD_TRIGGER_ID` through the CMA (needs `DATOCMS_CMA_TOKEN`; best-effort, errors swallowed). Locally it hits the production search index unless the trigger id is emptied.
+  - **The `success` count lies**: `index.ts:55` counts every settled fetch as success, including 401 and 404 responses; only a rejected fetch is a failure. Judge by `x-vercel-cache` and `age` headers on the affected URLs, never by the JSON counts.
+- `recordToWebsiteRoute` in `recordInfo.ts` is the sibling map used by the Web Previews / SEO plugins; `revalidationUrls.ts` says to keep the two in sync (they carry the same 7 phantom api_keys, see Gaps).
+
+## DatoCMS side
+
+Read-only, through the `datocms` CLI (`cma:call webhooks find 33942`, `schema:inspect`).
+
+**Webhook 33942**, "Revalidate site cache (ISR)": enabled; payload API version 3; `auto_retry` true; `nested_items_in_payload` false; no custom payload, no filter; one event rule, `entity_type: item`, `event_types: publish, unpublish, delete`; URL `https://www.multimage.org/api/revalidate?token=<redacted>`. There are **no upload (asset) events** and no `update` event: saving a draft does nothing, an asset replaced in place does not revalidate anything.
+
+**Models** (`schema:inspect`, 40 total). Mapped in `getRevalidationUrls`: `book`, `author`, `collection`, `blog_post`, `page`, `home`, plus 7 api_keys that do not exist in the project (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`). The real model behind every index page is `index_page` (one record per page, read by `slug`: `libri`, `archivio`, `highlights`, `ebooks`, `collane`, `autori`, `magazine`, `distributori`), and it is unmapped.
+
+| api_key           | Kind      | Read by                                                           | Mapped |
+| ----------------- | --------- | ----------------------------------------------------------------- | ------ |
+| `home`            | singleton | `/`                                                               | yes    |
+| `book`            | record    | book pages, catalogue, home blocks, author/collection, sitemap    | yes    |
+| `author`          | record    | author pages, book cards, structured-text links                   | yes    |
+| `collection`      | record    | collection pages, book detail                                     | yes    |
+| `page`            | record    | `/info/[slug]`, header/footer menu on every page                  | yes    |
+| `blog_post`       | record    | `/magazine`, `/magazine/[slug]`                                   | yes    |
+| `index_page`      | record    | every index page (by slug)                                        | no     |
+| `supplier`        | record    | `/distributori`                                                   | no     |
+| `license`         | record    | `/libri/[slug]`                                                   | no     |
+| `app`             | singleton | `/libri/schede/[slug]` (`pdfFooter`)                              | no     |
+| `cover_size`      | record    | `/libri/[slug]` (`dimension`)                                     | no     |
+| `blog_category`   | record    | `/magazine`, `/magazine/[slug]`                                   | no     |
+| `blog_author`     | record    | `/magazine`, `/magazine/[slug]` (post `author`)                   | no     |
+| `keyword`         | record    | linked from `book.keywords`; no route query selects it            | no     |
+| `blog_tag`        | record    | no route query                                                    | no     |
+| `blog_post_old`   | record    | no route query (legacy)                                           | no     |
+| `project_comment` | record    | no route query (editor comments)                                  | no     |
+
+Block models (`modular_block: true`, 20 of them: `reprint`, `image_block`, `video`, `banner`, `question`, `single_book`, `book_carousel`, `pills_block`, `menu_item`, `newsletter_subscription`, `menu_dropdown`, `single_info_block`, `button`, `faq_section`, `footer_menu_block`, `social_link`, `single_author`, `menu_external_item`, `cta_button_with_image`) have no webhook events of their own: they live inside a parent record, and publishing the parent fires the event for the parent's model. They are excluded from the route audit below.
+
+## Route → models → revalidated?
+
+Layout dependency for every HTML route: `BaseLayout.astro` `SITE_QUERY` reads `_site` (favicon tags) and `allPages` filtered by `menu` / `menuFooter` (header and footer menus). Only the `page` model feeds it, and a `page` publish revalidates just `/info/[slug]`, `/info` and the sitemap, so **the menus of every other page stay stale** until their ISR copy expires (60 days) or another event touches them. Cell "partial" says which event is missing.
+
+| Route                         | Models read (besides layout `page`)                                              | Revalidated?                                                                                          |
+| ----------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `/`                           | `home`, `book` (carousel/single book), `author` (card names)                     | partial: `home`, `book` yes; `author` no; `page` menus no                                             |
+| `/libri`                      | `index_page`, `book`, `author` (card names)                                      | partial: `book` yes (publish only; unpublish/delete still yes for static set); `index_page`, `author` no |
+| `/libri/pagina/[page]`        | `index_page`, `book`, `author`                                                   | partial: `book` yes while the page exists (count from published books); `index_page`, `author` no     |
+| `/libri/[slug]`               | `book`, `author`, `collection`, `license`, `cover_size`; sibling books by authors/collection/title | partial: the book's own save yes; `author`, `collection` rename, `license`, `cover_size`, sibling-book changes no; old slug after rename no |
+| `/libri/ebooks`               | `index_page`, `book`                                                             | partial: `book` yes; `index_page` no                                                                  |
+| `/libri/highlights`           | `index_page`, `book`                                                             | partial: `book` yes; `index_page` no                                                                  |
+| `/libri/archivio`             | `index_page`, `book`                                                             | partial: `book` yes; `index_page` no                                                                  |
+| `/libri/schede/[slug]`        | `book`, `app` (internal, staff-gated, editor-only)                               | no: not in any list (editor cookie bypasses the cache)                                                |
+| `/autori`                     | `index_page`, `author`, `book`                                                   | partial: `author` yes; `book` no (book count on cards); `index_page` no                               |
+| `/autori/[slug]`              | `author`, `book` (author's books)                                                | partial: `author` yes; `book` add/remove yes on publish, not on unpublish/delete; old slug no         |
+| `/collane`                    | `index_page`, `collection`, `book`                                               | partial: `collection` yes; `book` no; `index_page` no                                                 |
+| `/collane/[slug]`             | `collection`, `book`                                                             | partial: `collection` yes; `book` yes on publish, not on unpublish/delete; old slug no                |
+| `/magazine`                   | `index_page`, `blog_post`, `blog_category`, `blog_author`                        | partial: `blog_post` yes; the others no                                                               |
+| `/magazine/[slug]`            | `blog_post`, `blog_category`, `blog_author`, linked `author`/`page`/`book`       | partial: `blog_post` yes; the others no; old slug no                                                  |
+| `/info`                       | no CMS data (static "coming soon" page)                                          | n/a (revalidated anyway on `page` events)                                                             |
+| `/info/[slug]`                | `page`, linked `author`/`book`/`blog_post`                                       | partial: `page` yes; linked records no; old slug no                                                   |
+| `/distributori`               | `index_page`, `supplier`                                                         | no: neither model is mapped                                                                           |
+| `/cerca`                      | no CMS data (Site Search runs client-side)                                       | n/a                                                                                                   |
+| `/cerca/search-page.client`   | not a page: client bundle source, no handler                                     | n/a                                                                                                   |
+| `/staff`                      | `book` (counts); internal, gated by middleware                                   | no: not in any list (editor cookie bypasses the cache)                                                |
+| `/staff/archivio-catalogo`    | `book`; internal, gated by middleware                                            | no: not in any list (editor cookie bypasses the cache)                                                |
+| `/archived-books.json`        | `book` (archived slugs)                                                          | no: `book` events do not include it                                                                   |
+| `/sitemap.xml`                | `book`, `page`, `collection`, `author`, `blog_post` (slug, `updatedAt`)          | yes for every mapped model (all add the sitemap); catalogue pages via `book` enrichment               |
+
+## Gaps and fate
+
+Fate `V2` is fixed inside this work (slice V2, caching behaviour); `TODO` goes to `docs/TODO.md`.
+
+| #   | Gap                                                                                                                                                                                  | Fate |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- |
+| 1   | 7 mapped api_keys do not exist (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`); real model `index_page` (by slug) is unmapped, in `revalidationUrls.ts` and `recordInfo.ts` | V2   |
+| 2   | `supplier` unmapped: `/distributori` never revalidates                                                                                                                               | V2   |
+| 3   | `license` unmapped: `/libri/[slug]` shows a stale license                                                                                                                            | V2   |
+| 4   | `app` unmapped (singleton; `pdfFooter` on the staff book sheet)                                                                                                                      | V2   |
+| 5   | `page` menus: header/footer menus on every page are fed by `page` (`menu`, `menuFooter`, `label`, `position`) but a page event only revalidates `/info/[slug]`, `/info` and the sitemap | TODO |
+| 6   | Book unpublish/delete: the enrichment query returns no book, so author and collection pages (and the old catalogue count) are skipped                                                | TODO |
+| 7   | Slug change: the event carries only the new slug, the old URL stays cached                                                                                                           | TODO |
+| 8   | No upload events on the webhook: replacing or editing an asset revalidates nothing                                                                                                   | TODO |
+| 9   | Referenced records: `author` or `collection` rename does not refresh book cards, book detail, catalogue or home; a book change does not refresh sibling books (same author/collection/title) | TODO |
+| 10  | `cover_size`, `blog_category`, `blog_author` unmapped (read by book detail and magazine pages)                                                                                       | TODO |
+| 11  | `/archived-books.json` is not in the `book` URL list                                                                                                                                 | TODO |
+| 12  | Unmapped model or payload without `api_key` returns 200 `noop`, and `success` counts 401/404 as ok (`index.ts:55`): DatoCMS and the JSON never show a failed revalidation          | TODO |
+| 13  | `revalidationUrls.ts` and `recordInfo.ts` are two hand-synced maps with no check between them                                                                                        | TODO |
