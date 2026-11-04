@@ -24,9 +24,9 @@
 
 Four layers:
 
-1. **`/docs/guidelines/`** — canonical policies (routing, assets, SEO, security, etc.). Modify carefully; document significant decisions in `docs/decision-log/`.
+1. **`/docs/guidelines/`** — canonical policies (routing, assets, SEO, security, etc.). Modify carefully; document significant decisions in `docs/decisions-log/`.
 2. **`/docs/current-state.md`** — living snapshot of actual implementation status. Update when features change.
-3. **`/docs/list-*.md` · `TODO.md` · `decision-log/`** — component/helper/model inventories, open tasks, and architectural decisions.
+3. **`/docs/list-*.md` · `TODO.md` · `decisions-log/`** — component/helper/model inventories, open tasks, and architectural decisions.
 4. **`/docs/shapes/`** — shaped work proposals and their slices. See below.
 
 ## Quick Reference

@@ -143,7 +143,7 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
 | D4.2 | Skill `datocms-cda`: review pattern query (colocate `_graphql.ts`, fragments, `executeQuery`), gql.tada potential | |
 | D4.3 | Skill `datocms-cma`: review uso v5 dopo D2.3 (publishing, asset upload patterns) | |
 | D4.4 | Skill `datocms-cli`: review setup `datocms.config.json` (assente?), migrations, profiles, eventuali nuove feature CLI v4 (`schema:inspect`, `cma:script`) | |
-| D4.5 | Produrre report findings in `docs/decision-log/2026-05-XX-datocms-review.md` | |
+| D4.5 | Produrre report findings in `docs/decisions-log/2026-05-XX-datocms-review.md` | |
 | **D5** | **Astro 6** — OUT-OF-SCOPE | |
 | D5.1 | → nuovo shape `YYYY-MM-DD-astro-6-migration.md` dopo D4 completato | |
 
@@ -235,17 +235,17 @@ Sequenza esplicita richiesta dall'utente: aggiornare prima tutto ciò che è non
   - [x] D4.2 CDA patterns review (executeQuery, _graphql.ts colocation, fragments, gql.tada gap) ✓
   - [x] D4.3 CMA v5 review (3 call site OK, nessuna azione) ✓
   - [x] D4.4 CLI v4 review (schema:inspect/cma:script come opportunità) ✓
-  - [x] D4.5 Report: `docs/decision-log/2026-05-16-datocms-review.md` ✓
+  - [x] D4.5 Report: `docs/decisions-log/2026-05-16-datocms-review.md` ✓
 - [x] **D5 — (post-D4) Creare shape Astro 6** (2026-05-16)
   - [x] Creato `docs/shapes/2026-05-16-astro-6-migration.md` (status: ready). Include findings CVE da D2, conferma compatibilità pattern DatoCMS da D4, blocker `@astrojs/tailwind` non-compat con piano sostituzione via PostCSS.
-- [ ] **Shape candidates emersi da D4** (vedi `docs/decision-log/2026-05-16-datocms-review.md`):
+- [ ] **Shape candidates emersi da D4** (vedi `docs/decisions-log/2026-05-16-datocms-review.md`):
   - [ ] **D4-R1 + R2**: shape `gql.tada + auto-pagination` (sostituisce result types manuali + `first: 500` hard caps)
   - [ ] **D4-R3**: shape `content-link-visual-editing` (DX editorial click-to-edit su preview)
 
 ## Open questions
 
 1. ✅ Sequenza D3 vs D2: deciso serie (D2 prima, fatto).
-2. D4 (DatoCMS review): output minimo? **Proposta**: un decision-log con lista di follow-up actions, non patch di codice immediati — diventa input per shape successivi.
+2. D4 (DatoCMS review): output minimo? **Proposta**: un decisions-log con lista di follow-up actions, non patch di codice immediati — diventa input per shape successivi.
 
 ## Findings da D2 (importante per priorità di Astro 6)
 

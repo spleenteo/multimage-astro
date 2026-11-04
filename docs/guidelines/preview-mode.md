@@ -128,7 +128,7 @@ must be listed explicitly — the `*.datocms.com` wildcard does **not** match it
 DatoCMS publish → webhook → `POST /api/revalidate?token=<SECRET_API_TOKEN>`.
 
 The endpoint does **surgical** revalidation (since 2026-06-20 — see
-`docs/decision-log/2026-06-20-fot-reduction.md`):
+`docs/decisions-log/2026-06-20-fot-reduction.md`):
 
 1. Validates the secret.
 2. Parses the webhook payload (`src/lib/datocms/webhookPayload.ts`): the

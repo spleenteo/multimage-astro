@@ -82,7 +82,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Primary components: none (pure XML response).
   - Notes: Falls back to `http://localhost:4321` when `PUBLIC_SITE_URL` is missing; enforce env per SEO task **SEO1**. Includes the paginated catalogue pages (`/libri/pagina/2..N`) via `buildBooksCataloguePaths`.
 
-> `/llms-full.txt` was removed 2026-06-20 (closed Security task **S4** + reduced Fast Origin Transfer — see decision-log `2026-06-20-fot-reduction`).
+> `/llms-full.txt` was removed 2026-06-20 (closed Security task **S4** + reduced Fast Origin Transfer — see decisions-log `2026-06-20-fot-reduction`).
 
 ## API & preview routes
 (Deployed only when `SERVER=preview`; static builds omit all runtime endpoints.)
