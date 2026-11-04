@@ -24,8 +24,7 @@ const {
   ariaLabel = 'Paginazione',
 } = Astro.props;
 
-const hrefFor = (page: number) =>
-  page <= 1 ? firstPageHref : `${pagePathPrefix}${page}`;
+const hrefFor = (page: number) => (page <= 1 ? firstPageHref : `${pagePathPrefix}${page}`);
 
 function buildPages(): Array<number | 'ellipsis'> {
   if (totalPages <= 1) {

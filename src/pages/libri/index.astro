@@ -39,8 +39,5 @@ const books = mapBooksToCards(data.allBooks ?? []);
     currentPage={1}
     totalPages={totalPages}
   />
-  <DraftModeQueryListener
-    query={BOOKS_PAGE_QUERY}
-    variables={{ first: BOOKS_PER_PAGE, skip: 0 }}
-  />
+  <DraftModeQueryListener query={BOOKS_PAGE_QUERY} variables={{ first: BOOKS_PER_PAGE, skip: 0 }} />
 </BaseLayout>
