@@ -9,7 +9,7 @@ description: Describe how Multimage is built, deployed, and configured across en
 - Vercel is the single supported target: link the repo, sync environment variables, and run `npm run build`. The site is one deployment running `output: 'server'` with ISR (`@astrojs/vercel`): every route is rendered per request and cached by the Vercel CDN, nothing is prerendered at build time. Draft Mode (the signed `__prerender_bypass` cookie) bypasses the cache on the same deployment, so there is no separate static/preview split.
 - `npm run dev` chains `npm run sync-datocms` before `astro dev`, ensuring `schema.ts` and `docs/DATOCMS.md` stay in sync when `DATOCMS_API_TOKEN` is available.
 - `npm run prebuild` currently rebuilds the Site Search client before `npm run build` invokes `astro check` and the production build.
-- Local checks use `astro dev` (`npm run dev`). `astro preview` does not work with `@astrojs/vercel`, so there is no `npm run preview`. ISR caching is a Vercel CDN feature and is not active locally; see `docs/guidelines/caching.md` for the revalidation checks.
+- Local checks use `astro dev` (`npm run dev`). `astro preview` does not work with `@astrojs/vercel`, so no preview script is provided. ISR caching is a Vercel CDN feature and is not active locally; see `docs/guidelines/caching.md` for the revalidation checks.
 - `tmp-sample/` is a read-only Astro starter kept in the repo for reference. It is excluded via `tsconfig.json` so `astro check`/`npm run build` ignore its missing React dependencies.
 
 ## Environment & Secrets
