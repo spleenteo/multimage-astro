@@ -1,0 +1,8 @@
+{
+  "expiration": 5184000,
+  "bypassToken": "<redacted>",
+  "allowQuery": [
+    "x_astro_path"
+  ],
+  "passQuery": true
+}

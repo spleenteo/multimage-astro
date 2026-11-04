@@ -1,0 +1,3 @@
+_isr.func
+_isr.prerender-config.json
+_render.func
