@@ -167,12 +167,10 @@ After a real editorial publish, read what DatoCMS sent and what the CDN holds. N
 ```bash
 npx dotenv -e .env -- npx --no-install datocms cma:call webhookCalls list \
   --params '{filter:{fields:{webhook_id:{eq:"33942"},status:{eq:"success"}}},order_by:"last_sent_at_desc",page:{limit:5}}' \
-  2>/dev/null > "$TMPDIR/wc.txt"
-node -e 'for (const a of JSON.parse(require("fs").readFileSync(process.env.TMPDIR+"/wc.txt","utf8"))) { let p={}; try{p=JSON.parse(a.response_payload)}catch(e){} console.log(a.last_sent_at,a.event_type,a.status,a.response_status,p.mode,p.total,JSON.stringify(p.urls)) }'
-/bin/rm "$TMPDIR/wc.txt"
+  2>/dev/null | node -e 'const s=require("fs").readFileSync(0,"utf8"); for (const a of JSON.parse(s.slice(s.search(/^[\[{]/m)))) { let p={}; try{p=JSON.parse(a.response_payload)}catch(e){} console.log(a.last_sent_at,a.event_type,a.status,a.response_status,p.mode,p.total,JSON.stringify(p.urls)) }'
 ```
 
-Do not add `--json`: it prints nothing here. Each call's `request_url` carries `?token=` and the headers hold secrets: never print the raw output, not even with `head`; the file stays under `$TMPDIR` and is deleted right after.
+Do not add `--json`: it prints nothing here. Each call's `request_url` carries `?token=` and the headers hold secrets: the raw output goes straight into the filter and never reaches the terminal or the disk. Never print it, `head` included.
 
 Print only `last_sent_at`, `event_type`, `status`, `response_status`, and from `response_payload` the `mode`, `total` and `urls` (never the request URL, which carries the token). Then, on 3 to 5 of those URLs plus `/` and `/distributori`:
 
