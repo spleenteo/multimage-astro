@@ -200,3 +200,25 @@ supplier-publish publish supplier null 0 GAP
 ```
 
 Exit 0. The six `GAP` lines match the recorded gaps: `app` (4), `book-unpublish` (6), `index_page` (1), `license` (3), `page` (5), `supplier` (2). `books_index` still yields URLs because the stale api_key is mapped (gap 1).
+
+#### (b) Local `astro dev`
+
+Run on 2026-11-05, Node v24.18.0, `astro` v6.3.3 on `localhost:4321`, with the three overrides above (port 4321 free before). Three requests, one each.
+
+1. `book-publish`: HTTP 200, `"mode":"surgical"`, `"total":15`, `"failures":0`, `"reindexed":false`, `"elapsedMs":3309`.
+
+   ```text
+   /libri/libro-pubblicato /libri/ebooks /libri/highlights /libri/archivio
+   / /sitemap.xml /libri /libri/pagina/2 ... /libri/pagina/9
+   ```
+
+   Dev log, one status line per URL (all `200`, 88 to 602 ms), then `[revalidate] Done (surgical). 15 ok, 0 failed, total 15 URLs in 3309ms (search reindex: false)`.
+   - 15 URLs, not the 12 of (a): the real CDA catalogue gives `/libri/pagina/2` to `/libri/pagina/9`, while the (a) stub (81 books) gives pages 2 and 3.
+   - No `/autori/*` or `/collane/*`: the fixture slug is unknown to the CDA, so there are no related authors or collection.
+   - `/libri/libro-pubblicato` has no `[200]` line: the page logged `Book not found for slug: libro-pubblicato`, yet the endpoint counted it among the 15 ok. This is the `success` gap (`index.ts:55`) seen live.
+   - The search reindex was skipped (empty `SITE_SEARCH_BUILD_TRIGGER_ID`).
+
+2. `supplier-publish`: `{"mode":"surgical","eventType":"publish","apiKey":"supplier","revalidated":0,"urls":[],"noop":true}`. Log: `Model "supplier" is not mapped to any URL; nothing to do.` This confirms gap 2.
+3. `?token=wrong`: HTTP `401`.
+
+After the stop: port 4321 free, `schema.ts` unchanged (`astro dev` was used, not `npm run dev`). No token value in the log. Every page fetch went to localhost; the only outbound calls were CDA reads.
