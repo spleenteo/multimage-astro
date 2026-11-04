@@ -91,22 +91,23 @@ Layout dependency for every HTML route: `BaseLayout.astro` `SITE_QUERY` reads `_
 
 Fate `V2` is fixed inside this work (slice V2, caching behaviour); `TODO` goes to `docs/TODO.md`.
 
-| #   | Gap                                                                                                                                                                                                                                                      | Fate |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| 1   | 7 mapped api_keys do not exist (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`); real model `index_page` (by slug) is unmapped, in `revalidationUrls.ts` and `recordInfo.ts` | V2   |
-| 2   | `supplier` unmapped: `/distributori` never revalidates                                                                                                                                                                                                   | V2   |
-| 3   | `license` unmapped: every page that shows a book card or the featured book (`/`, `/libri*`, `/autori/[slug]`, `/collane/[slug]`, `/info/[slug]`, `/magazine/[slug]`) and the book sheets shows a stale license                                           | V2   |
-| 4   | `app` unmapped (singleton; `pdfFooter` on the staff book sheet)                                                                                                                                                                                          | V2   |
-| 5   | `page` menus: header/footer menus on every page are fed by `page` (`menu`, `menuFooter`, `label`, `position`) but a page event only revalidates `/info/[slug]`, `/info` and the sitemap                                                                  | TODO |
-| 6   | Book unpublish/delete: the enrichment query returns no book, so author and collection pages (and the old catalogue count) are skipped; on a relation change the old author or collection page is never refreshed (enrichment reads current relations)    | TODO |
-| 7   | Slug change: the event carries only the new slug, the old URL stays cached                                                                                                                                                                               | TODO |
-| 8   | No upload events on the webhook: replacing or editing an asset revalidates nothing                                                                                                                                                                       | TODO |
-| 9   | Referenced records: `author` or `collection` rename does not refresh book cards, book detail, catalogue or home; a book change does not refresh sibling books (same author/collection/title)                                                             | TODO |
-| 10  | `cover_size`, `blog_category`, `blog_author`, `keyword` unmapped (read by book detail, book sheets, magazine pages and the staff catalogue)                                                                                                              | TODO |
-| 11  | `/archived-books.json` is not in the `book` URL list                                                                                                                                                                                                     | TODO |
-| 12  | Unmapped model or payload without `api_key` returns 200 `noop`, and `success` counts 401/404 as ok (`index.ts:55`): DatoCMS and the JSON never show a failed revalidation                                                                                | TODO |
-| 13  | `revalidationUrls.ts` and `recordInfo.ts` are two hand-synced maps with no check between them                                                                                                                                                            | TODO |
-| 14  | `blog_post` or `blog_author` change does not refresh the books that link it as a review (`book.reviews`, shown on `/libri/[slug]`)                                                                                                                       | TODO |
+| #   | Gap                                                                                                                                                                                                                                                                                                    | Fate |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- |
+| 1   | 7 mapped api_keys do not exist (`books_index`, `archive_index`, `highlights_index`, `ebooks_index`, `collections_index`, `authors_index`, `magazine_index`); real model `index_page` (by slug) is unmapped, in `revalidationUrls.ts` and `recordInfo.ts`                                               | V2   |
+| 2   | `supplier` unmapped: `/distributori` never revalidates                                                                                                                                                                                                                                                 | V2   |
+| 3   | `license` unmapped: every page that shows a book card or the featured book (`/`, `/libri*`, `/autori/[slug]`, `/collane/[slug]`, `/info/[slug]`, `/magazine/[slug]`) and the book sheets shows a stale license                                                                                         | V2   |
+| 4   | `app` unmapped (singleton; `pdfFooter` on the staff book sheet)                                                                                                                                                                                                                                        | V2   |
+| 5   | `page` menus: header/footer menus on every page are fed by `page` (`menu`, `menuFooter`, `label`, `position`) but a page event only revalidates `/info/[slug]`, `/info` and the sitemap                                                                                                                | TODO |
+| 6   | Book unpublish/delete: the enrichment query returns no book, so author and collection pages (and the old catalogue count) are skipped; on a relation change the old author or collection page is never refreshed (enrichment reads current relations)                                                  | TODO |
+| 7   | Slug change: the event carries only the new slug, the old URL stays cached                                                                                                                                                                                                                             | TODO |
+| 8   | No upload events on the webhook: replacing or editing an asset revalidates nothing                                                                                                                                                                                                                     | TODO |
+| 9   | Referenced records: `author` or `collection` rename does not refresh book cards, book detail, catalogue or home; a book change does not refresh sibling books (same author/collection/title)                                                                                                           | TODO |
+| 10  | `cover_size`, `blog_category`, `blog_author`, `keyword` unmapped (read by book detail, book sheets, magazine pages and the staff catalogue)                                                                                                                                                            | TODO |
+| 11  | `/archived-books.json` is not in the `book` URL list                                                                                                                                                                                                                                                   | TODO |
+| 12  | Unmapped model or payload without `api_key` returns 200 `noop`, and `success` counts 401/404 as ok (`index.ts:55`): DatoCMS and the JSON never show a failed revalidation                                                                                                                              | TODO |
+| 13  | `revalidationUrls.ts` and `recordInfo.ts` are two hand-synced maps with no check between them                                                                                                                                                                                                          | TODO |
+| 14  | `blog_post` or `blog_author` change does not refresh the books that link it as a review (`book.reviews`, shown on `/libri/[slug]`)                                                                                                                                                                     | TODO |
+| 15  | `/staff` without session: the middleware 404 is cached by Vercel (`x-vercel-cache: HIT`, run (c)). Verify an editor session reaches `/staff` and `/libri/schede` on production despite the cached anonymous 404; depends on `__prerender_bypass`, i.e. `BYPASS_TOKEN` set in the Vercel production env | TODO |
 
 ## Verification procedure
 
@@ -164,9 +165,14 @@ Rules:
 After a real editorial publish, read what DatoCMS sent and what the CDN holds. No POST to the endpoint, no resend of a webhook call, no `?mode=full`.
 
 ```bash
-npx dotenv -e .env -- npx datocms cma:call webhookCalls list \
-  --params '{filter:{fields:{webhook_id:{eq:"33942"},status:{eq:"success"}}},order_by:"last_sent_at_desc",page:{limit:5}}' --json
+npx dotenv -e .env -- npx --no-install datocms cma:call webhookCalls list \
+  --params '{filter:{fields:{webhook_id:{eq:"33942"},status:{eq:"success"}}},order_by:"last_sent_at_desc",page:{limit:5}}' \
+  2>/dev/null > "$TMPDIR/wc.txt"
+node -e 'for (const a of JSON.parse(require("fs").readFileSync(process.env.TMPDIR+"/wc.txt","utf8"))) { let p={}; try{p=JSON.parse(a.response_payload)}catch(e){} console.log(a.last_sent_at,a.event_type,a.status,a.response_status,p.mode,p.total,JSON.stringify(p.urls)) }'
+/bin/rm "$TMPDIR/wc.txt"
 ```
+
+Do not add `--json`: it prints nothing here. Each call's `request_url` carries `?token=` and the headers hold secrets: never print the raw output, not even with `head`; the file stays under `$TMPDIR` and is deleted right after.
 
 Print only `last_sent_at`, `event_type`, `status`, `response_status`, and from `response_payload` the `mode`, `total` and `urls` (never the request URL, which carries the token). Then, on 3 to 5 of those URLs plus `/` and `/distributori`:
 
@@ -174,7 +180,7 @@ Print only `last_sent_at`, `event_type`, `status`, `response_status`, and from `
 curl -sI https://www.multimage.org<path> | grep -iE '^(x-vercel-cache|age|date):'
 ```
 
-Read: `x-vercel-cache: HIT` with `age` smaller than the seconds since `last_sent_at` means the page was refreshed by that publish; a large `age` means it was not (expected for URLs outside the list). `MISS` right after a deploy is normal: a fresh deployment starts with an empty ISR cache. Webhook calls expire, so an old publish may no longer be listed.
+Read: `x-vercel-cache: HIT` with `age` smaller than the seconds since `last_sent_at` is consistent with a refresh by that publish. It shows the publish caused it only if a URL outside the list (e.g. `/distributori`) has a larger `age`, or no deploy came between the publish and the check. `MISS` right after a deploy is normal: a fresh deployment starts with an empty ISR cache. Webhook calls expire, so an old publish may no longer be listed.
 
 ### Runs — 2026-11-04
 
@@ -247,8 +253,7 @@ Headers for the latest call with URLs (now is 117930 s after 14:30:18):
 | `/autori/centro-nuovo-modello-di-sviluppo`                  | HIT              | 117294    | 2026-11-03 14:40:55          |
 | `/`                                                         | HIT              | 117253    | 2026-11-03 14:41:35          |
 | `/distributori` (not in the list)                           | HIT              | 117306    | 2026-11-03 14:40:43          |
-| `/staff` (no cookie)                                        | HIT              | 52780     | 2026-11-04 08:36:10          |
 
-- Every URL of the list: HIT, and `age` (about 117300) is smaller than the 117930 s since `last_sent_at`, so each page was regenerated after that publish. The `date` is 10 to 11 minutes after the call, not at 14:30:18: the page was rebuilt by a later request or revalidation, not by the 14:30 call itself (not determinable from headers alone).
+- Every URL of the list: HIT, and `age` (about 117300) is smaller than the 117930 s since `last_sent_at`, so each page was regenerated after that publish. The cached copy dates from 14:40 (10 to 11 minutes after the call), not from the 14:30 call; whether that call refreshed it before a later reset cannot be told from headers.
 - `/distributori` is not in the list yet has the same age (117306, generated 14:40:43): its regeneration is not caused by this publish. Either a production deploy at about 14:40 reset the ISR cache for all routes (a deploy resets `age`), or something else refreshed it. So this run cannot tell "refreshed by the publish" from "refreshed by a deploy"; for that, run (c) right after a publish with no deploy in between.
 - `/staff` without session: HTTP 404, `x-vercel-cache: HIT`, `cache-control: public, max-age=0, must-revalidate`, `age` 52780 (the 404 was cached at 2026-11-04 08:36 UTC). Vercel does cache the middleware 404 for `/staff`. Whether a request with a valid session cookie is served from that cache was not tested (headers only, no cookie).
