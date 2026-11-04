@@ -7,11 +7,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { parseWebhookPayload } from '../../src/lib/datocms/webhookPayload';
 import { getRevalidationUrls } from '../../src/lib/datocms/revalidationUrls';
 
-let fetchCalls = 0;
-globalThis.fetch = (() => {
-  fetchCalls += 1;
-  throw new Error('fetch is blocked in the revalidation-map check');
-}) as typeof fetch;
+// The fetch blocker and the counter are installed by register-stubs.mjs, before any import.
 
 const SITEMAP = '/sitemap.xml';
 const bookStatic = [
@@ -37,7 +33,7 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
       '/collane/collana-uno',
     ],
   },
-  // book unpublished: no author / collection pages, no catalogue pages beyond the page count
+  // book resolves to null: author/collection pages not revalidated
   'book-unpublish': {
     urls: [
       '/libri/libro-non-pubblicato',
@@ -104,5 +100,15 @@ for (const file of files) {
   );
 }
 
-console.log(`${files.length} payloads, ${mismatches} mismatches, fetch calls: ${fetchCalls}`);
-process.exit(mismatches > 0 || fetchCalls > 0 ? 1 : 0);
+for (const key of Object.keys(EXPECTED)) {
+  if (!files.includes(`${key}.json`)) {
+    mismatches += 1;
+    console.log(`${key} MISMATCH (no payload file)`);
+  }
+}
+
+// fetchCalls is read after the loop so calls made during it are counted.
+const fetchCallsNow = (globalThis as { __fetchCalls?: number }).__fetchCalls ?? -1;
+console.log(`${files.length} payloads, ${mismatches} mismatches, fetch calls: ${fetchCallsNow}`);
+// Sentinel: register-stubs.mjs sets exitCode = 1; only a completed run resets it.
+process.exitCode = mismatches > 0 || fetchCallsNow !== 0 ? 1 : 0;
