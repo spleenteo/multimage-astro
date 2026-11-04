@@ -222,3 +222,33 @@ Exit 0. The six `GAP` lines match the recorded gaps: `app` (4), `book-unpublish`
 3. `?token=wrong`: HTTP `401`.
 
 After the stop: port 4321 free, `schema.ts` unchanged (`astro dev` was used, not `npm run dev`). No token value in the log. Every page fetch went to localhost; the only outbound calls were CDA reads.
+
+#### (c) Production, passive
+
+Run on 2026-11-04 at 23:15 UTC (00:15 CET on 2026-11-05). Read-only: one `webhookCalls list` through the CLI (output filtered to the fields below, never the request URL or headers) and `curl -I` on `https://www.multimage.org`. No POST, no resend, no `?mode=full`.
+
+The CLI printed nothing with `--json` (only the update warning), so the call ran without it and the JSON was parsed from a file under `$TMPDIR`.
+
+Webhook 33942, last 5 successful calls (all `publish`, `status` success, `response_status` 200, `mode` surgical):
+
+| `last_sent_at` (UTC)                              | `total` | URLs                                                                                                                                                                                                            |
+| ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-03 14:30:18                               | 17      | book `/libri/dal-militare-al-sociale-invece-di-armarci-potremmo`, `/libri/ebooks`, `/libri/highlights`, `/libri/archivio`, `/`, `/sitemap.xml`, `/libri`, `/libri/pagina/2` to `/9`, one author, one collection |
+| 2026-11-03 14:29:53, 14:28:42, 14:27:59, 14:27:40 | none    | event on a `keyword` record: no URL (unmapped model, noop)                                                                                                                                                      |
+
+Headers for the latest call with URLs (now is 117930 s after 14:30:18):
+
+| Path                                                        | `x-vercel-cache` | `age` (s) | `date` (response generation) |
+| ----------------------------------------------------------- | ---------------- | --------- | ---------------------------- |
+| `/libri/dal-militare-al-sociale-invece-di-armarci-potremmo` | HIT              | 117300    | 2026-11-03 14:40:48          |
+| `/libri/ebooks`                                             | HIT              | 117298    | 2026-11-03 14:40:50          |
+| `/libri`                                                    | HIT              | 117304    | 2026-11-03 14:40:44          |
+| `/libri/pagina/2`                                           | HIT              | 117281    | 2026-11-03 14:41:07          |
+| `/autori/centro-nuovo-modello-di-sviluppo`                  | HIT              | 117294    | 2026-11-03 14:40:55          |
+| `/`                                                         | HIT              | 117253    | 2026-11-03 14:41:35          |
+| `/distributori` (not in the list)                           | HIT              | 117306    | 2026-11-03 14:40:43          |
+| `/staff` (no cookie)                                        | HIT              | 52780     | 2026-11-04 08:36:10          |
+
+- Every URL of the list: HIT, and `age` (about 117300) is smaller than the 117930 s since `last_sent_at`, so each page was regenerated after that publish. The `date` is 10 to 11 minutes after the call, not at 14:30:18: the page was rebuilt by a later request or revalidation, not by the 14:30 call itself (not determinable from headers alone).
+- `/distributori` is not in the list yet has the same age (117306, generated 14:40:43): its regeneration is not caused by this publish. Either a production deploy at about 14:40 reset the ISR cache for all routes (a deploy resets `age`), or something else refreshed it. So this run cannot tell "refreshed by the publish" from "refreshed by a deploy"; for that, run (c) right after a publish with no deploy in between.
+- `/staff` without session: HTTP 404, `x-vercel-cache: HIT`, `cache-control: public, max-age=0, must-revalidate`, `age` 52780 (the 404 was cached at 2026-11-04 08:36 UTC). Vercel does cache the middleware 404 for `/staff`. Whether a request with a valid session cookie is served from that cache was not tested (headers only, no cookie).
