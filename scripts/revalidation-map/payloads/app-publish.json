@@ -1,0 +1,27 @@
+{
+  "event_type": "publish",
+  "entity_type": "item",
+  "environment": "main",
+  "entity": {
+    "id": "rec-1011",
+    "type": "item",
+    "attributes": {},
+    "relationships": {
+      "item_type": {
+        "data": {
+          "id": "1011",
+          "type": "item_type"
+        }
+      }
+    }
+  },
+  "related_entities": [
+    {
+      "id": "1011",
+      "type": "item_type",
+      "attributes": {
+        "api_key": "app"
+      }
+    }
+  ]
+}

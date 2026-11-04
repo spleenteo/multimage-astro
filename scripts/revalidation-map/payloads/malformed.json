@@ -1,0 +1,11 @@
+{
+  "event_type": "publish",
+  "entity_type": "item",
+  "environment": "main",
+  "entity": {
+    "id": "rec-malformed",
+    "type": "item",
+    "attributes": { "slug": "senza-modello" },
+    "relationships": { "item_type": { "data": { "id": "9999", "type": "item_type" } } }
+  }
+}
