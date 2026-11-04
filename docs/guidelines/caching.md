@@ -155,7 +155,7 @@ Rules:
 
 - **Never `?mode=full`**, locally or anywhere: it revalidates every route and reindexes.
 - **Judge by `urls`, `mode`, `reindexed` and the dev log** (one `[status] /path` line per URL), **not by `success`**: the count includes 401 and 404 as fulfilled (`index.ts:55`).
-- Expected today: `book-publish` returns `"mode":"surgical"` and `"reindexed":false`; `supplier-publish` returns `"noop":true`; the wrong token returns `401`.
+- Expected today: `book-publish` returns `"mode":"surgical"` and `"reindexed":false`; `supplier-publish` returns `"noop":true`; the wrong token returns `401`. With the fixture slug, `book-publish` gives no status line for `/libri/libro-pubblicato` (the page throws), yet the endpoint counts it ok.
 - Afterwards: stop the server (`lsof -nP -iTCP:4321 -sTCP:LISTEN`, then kill the PID) and restore the schema that `sync-datocms` may have rewritten: `git diff --quiet -- schema.ts || git checkout -- schema.ts`.
 - `astro preview` does not work with `@astrojs/vercel`: use `astro dev`.
 
@@ -203,7 +203,7 @@ Exit 0. The six `GAP` lines match the recorded gaps: `app` (4), `book-unpublish`
 
 #### (b) Local `astro dev`
 
-Run on 2026-11-05, Node v24.18.0, `astro` v6.3.3 on `localhost:4321`, with the three overrides above (port 4321 free before). Three requests, one each.
+`astro` v6.3.3 on `localhost:4321`, with the three overrides above (port 4321 free before). Three requests, one each.
 
 1. `book-publish`: HTTP 200, `"mode":"surgical"`, `"total":15`, `"failures":0`, `"reindexed":false`, `"elapsedMs":3309`.
 
@@ -212,10 +212,10 @@ Run on 2026-11-05, Node v24.18.0, `astro` v6.3.3 on `localhost:4321`, with the t
    / /sitemap.xml /libri /libri/pagina/2 ... /libri/pagina/9
    ```
 
-   Dev log, one status line per URL (all `200`, 88 to 602 ms), then `[revalidate] Done (surgical). 15 ok, 0 failed, total 15 URLs in 3309ms (search reindex: false)`.
+   Dev log: a `[200]` line for 14 of the 15 URLs (88 to 602 ms); `/libri/libro-pubblicato` logged two `[ERROR] Book not found` lines and no status line (see below). Then `[revalidate] Done (surgical). 15 ok, 0 failed, total 15 URLs in 3309ms (search reindex: false)`.
    - 15 URLs, not the 12 of (a): the real CDA catalogue gives `/libri/pagina/2` to `/libri/pagina/9`, while the (a) stub (81 books) gives pages 2 and 3.
    - No `/autori/*` or `/collane/*`: the fixture slug is unknown to the CDA, so there are no related authors or collection.
-   - `/libri/libro-pubblicato` has no `[200]` line: the page logged `Book not found for slug: libro-pubblicato`, yet the endpoint counted it among the 15 ok. This is the `success` gap (`index.ts:55`) seen live.
+   - `/libri/libro-pubblicato` has no `[200]` line: the page logged `Book not found for slug: libro-pubblicato`, yet the endpoint counted it among the 15 ok. This is the `success` gap (`index.ts:55`) seen live: any HTTP response counts as ok, 4xx/5xx included; here the status code was not logged.
    - The search reindex was skipped (empty `SITE_SEARCH_BUILD_TRIGGER_ID`).
 
 2. `supplier-publish`: `{"mode":"surgical","eventType":"publish","apiKey":"supplier","revalidated":0,"urls":[],"noop":true}`. Log: `Model "supplier" is not mapped to any URL; nothing to do.` This confirms gap 2.
