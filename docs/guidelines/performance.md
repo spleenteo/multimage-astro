@@ -1,5 +1,5 @@
 ---
-scope: Document performance-sensitive code paths and tactics to keep Multimage fast.
+description: Document performance-sensitive code paths and tactics to keep Multimage fast.
 ---
 
 # Performance Notes

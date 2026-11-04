@@ -1,5 +1,5 @@
 ---
-scope: How Fastro uses Icons, Fonts and digital assets in general
+description: How Fastro uses Icons, Fonts and digital assets in general
 ---
 
 # Assets

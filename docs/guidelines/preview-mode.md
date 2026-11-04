@@ -1,5 +1,5 @@
 ---
-scope: How to manage draft preview, Visual Editing, and on-demand cache invalidation for editors
+description: How to manage draft preview, Visual Editing, and on-demand cache invalidation for editors
 ---
 
 # Preview, Draft Mode & Visual Editing

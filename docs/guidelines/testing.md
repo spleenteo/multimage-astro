@@ -1,5 +1,5 @@
 ---
-scope: How to run simple test
+description: How to run simple test
 ---
 
 # Testing

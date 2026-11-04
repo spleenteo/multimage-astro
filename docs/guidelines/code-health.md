@@ -1,5 +1,5 @@
 ---
-scope: Track maintainability issues, duplication, and refactors needed across the codebase.
+description: Track maintainability issues, duplication, and refactors needed across the codebase.
 ---
 
 # Code Health Checklist

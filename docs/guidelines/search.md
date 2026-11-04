@@ -1,5 +1,5 @@
 ---
-scope: How to implement search offered by DatoCMS
+description: How to implement search offered by DatoCMS
 ---
 
 # Search

@@ -1,5 +1,5 @@
 ---
-scope: The setup is enhanced with i18n routing, API routing, nested page routing and helpers to resolve routes.
+description: The setup is enhanced with i18n routing, API routing, nested page routing and helpers to resolve routes.
 ---
 
 # Routing

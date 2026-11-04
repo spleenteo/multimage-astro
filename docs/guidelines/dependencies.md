@@ -1,5 +1,5 @@
 ---
-scope: Summarise runtime, CMS, and tooling dependencies used by Multimage.
+description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ---
 
 # Dependencies

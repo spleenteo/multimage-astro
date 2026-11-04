@@ -1,5 +1,5 @@
 ---
-scope: provide SEO guidance for the single-locale Multimage site
+description: provide SEO guidance for the single-locale Multimage site
 ---
 
 # Search Engine Optimisation (SEO)

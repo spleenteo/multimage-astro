@@ -1,5 +1,5 @@
 ---
-scope: Track security risks, mitigations, and review checkpoints for Multimage.
+description: Track security risks, mitigations, and review checkpoints for Multimage.
 ---
 
 # Security Overview

@@ -1,5 +1,5 @@
 ---
-scope: GraphQL data loading conventions and patterns for Multimage.
+description: GraphQL data loading conventions and patterns for Multimage.
 ---
 
 # CMS Data Loading
