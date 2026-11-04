@@ -1,8 +1,8 @@
 ---
 status: open
-phase: impact
-slice: null
-step: null
+phase: slice
+slice: V1
+step: plan
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
@@ -21,12 +21,13 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 
 ## Slices
 
-- [ ] V1 — Cache baseline: audit of ISR + surgical revalidation, verification procedure
-- [ ] V2 — Patch/minor bumps, Node 24, TypeScript 6
-- [ ] V3 — Astro 7 + @astrojs/vercel 11, cache re-verified, preview deploy
-- [ ] V4 — DatoCMS clients: cda-client 0.3, cma-client 6
-- [ ] V5 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
-- [ ] V6 — Tailwind 4, visual check, final preview deploy
+- [ ] V1 — Cache baseline: audit route → models → revalidated, `caching.md` procedure, ISR snapshot
+- [ ] V2 — Revalidation map fixes (`index_page` by slug, supplier, license, app)
+- [ ] V3 — Patch/minor, Node 24, TypeScript 6 (CLI stays 4.0.x)
+- [ ] V4 — Astro 7 + @astrojs/vercel 11, preview deploy
+- [ ] V5 — DatoCMS clients + CLI 4.2, type shims removed
+- [ ] V6 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
+- [ ] V7 — Tailwind 4, visual check, final preview deploy
 
 ## Pending proposals
 
@@ -36,3 +37,4 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 
 <!-- date — step — done — remaining — wall-clock — cost -->
 - 2026-11-04 — opening + slicing — profile recorded (`.flow.yml`, `docs/development-guidelines.md`), `decision-log/` moved to `decisions-log/`, guidelines frontmatter `scope:` → `description:`, six slices agreed — impact next — ~25 min — n/a
+- 2026-11-04 — impact — 18 problems (3 high: CLI 4.2 pulls CMA v6, cache procedure hit production, draft render cacheable without BYPASS_TOKEN), all fixed in slices.md; new slice V2 for revalidation map gaps, slices renumbered V1–V7 — plan V1 next — ~17 min — n/a
