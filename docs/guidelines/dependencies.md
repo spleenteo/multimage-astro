@@ -6,13 +6,14 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 ## Runtime & UI
 
-- `astro@^5.15.1` outputs a fully static site deployed to Vercel.
+- `astro@^6` with `output: 'server'` and `@astrojs/vercel` ISR (no prerendered routes), deployed to Vercel as a single project.
 - Styling stacks on `@astrojs/tailwind`, `tailwindcss`, and `autoprefixer`, with brand tokens defined in `tailwind.config.mjs`.
 - `swiper` provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required.
 
 ## CMS & Data
 
-- `@datocms/astro`, `@datocms/cda-client`, and `@datocms/cli` handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
+- `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is only referenced for types and can be dropped if unused.
+- `tsx` is not a direct dependency: `npm run check:revalidation-map` uses the copy hoisted from the `datocms` CLI (also pulled by `vite`); the check needs Node >= 22.15.
 - DatoCMS data primarily flows through `@datocms/cda-client`; `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
 
 ## Monitoring & Analytics
@@ -26,4 +27,4 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Risk Notes
 
 - Keep `swiper` pinned to a specific version to avoid sudden bundle regressions introduced by caret releases.
-- Track `@datocms/cli` updates, especially when schema generation APIs change, and upgrade promptly to retain compatibility.
+- Track `datocms` CLI updates, especially when schema generation APIs change, and upgrade promptly to retain compatibility.

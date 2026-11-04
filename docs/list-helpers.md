@@ -30,6 +30,10 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: `getRevalidationUrls({ apiKey, slug })` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query.
   - Used in: `/api/revalidate` (surgical mode).
   - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Mirror `recordInfo.ts` routes.
+- **Revalidation-map check** (`check.ts`, `scripts/revalidation-map/register-stubs.mjs`, `scripts/revalidation-map/hooks.mjs`, `scripts/revalidation-map/stub-execute-query.mjs`)
+  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them) and reports `OK`/`GAP`/`MISMATCH`; the `.mjs` files stub env and `executeQuery` via `module.registerHooks`.
+  - Used in: `npm run check:revalidation-map` (procedure (a) in `docs/guidelines/caching.md`).
+  - Notes: needs Node >= 22.15; expectations describe the code before V2.
 - **`webhookPayload` parser** (`src/lib/datocms/webhookPayload.ts`)
   - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
   - Used in: `/api/revalidate`.

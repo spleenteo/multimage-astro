@@ -37,6 +37,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - ISR `expiration` is **60 days** (safety net only; freshness is on-demand via the webhook — see `docs/guidelines/preview-mode.md`).
 - Card grids use `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`, no `srcSet`; `<Image srcSetCandidates={[1,2]}>` rebuilds a 2-candidate srcset client-side) to keep listing HTML — and thus FOT — small. `RESPONSIVE_IMAGE_FRAGMENT` (with base64 + srcSet) stays for hero/detail images.
 - Partial pagination — `/libri` + sitemap catalogue pages now paginate via `first/skip`; `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
+- Caching audit and verification procedure: `docs/guidelines/caching.md`; ISR config and route baseline snapshot (reference for the V4 diff): `docs/work/2026-11-04-upgrade-2026-11/baseline/`. Cache tags: not implemented, revalidation is URL-based; open gaps are tracked as `Cache gap #n` in `docs/TODO.md`.
 - Cache tag propagation is not yet wired (**CD3**); surgical revalidation covers the "revalidate only touched pages" goal via a URL map in the meantime.
 
 ## Blocks & Components
