@@ -1,13 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
-      "~/components/*": ["src/components/*"],
-      "~/layouts/*": ["src/layouts/*"],
-      "~/lib/*": ["src/lib/*"],
-      "~/pages/*": ["src/pages/*"],
-      "~/schema": ["schema"]
+      "~/components/*": ["./src/components/*"],
+      "~/layouts/*": ["./src/layouts/*"],
+      "~/lib/*": ["./src/lib/*"],
+      "~/pages/*": ["./src/pages/*"],
+      "~/schema": ["./schema"]
     },
     "allowImportingTsExtensions": true,
     "plugins": [
