@@ -2,7 +2,7 @@
 
 High-level plan. Every slice is demonstrated by the gate (`npm run lint` + `npm run build`, 100% green locally) plus its own Done. Rule for the whole work: DatoCMS is touched only through the `datocms` CLI and the DatoCMS skills (`datocms-cli`, `datocms-cda`, `datocms-frontend-integrations`), never from memory.
 
-Deploy policy (user, 2026-11-04): during slices only Vercel **preview** deploys (`vercel deploy`). At the end of the work: local merge into `main`, then a **production** deploy (`vercel --prod`, asked first) and the cache procedure re-run on production; the user pushes `main` so the Git integration does not redeploy an older `main`. **Last step, after the production deploy: rotate `SECRET_API_TOKEN`** (TODO S6): the user sets the new value in Vercel env and in the webhook 33942 URL; then procedure (c) on a real publish. A fresh deployment starts with an empty ISR cache: expect MISS, warm a few URLs, then check HIT (FOT cost, Hobby plan).
+Deploy policy (user, 2026-11-04): during slices only Vercel **preview** deploys (`vercel deploy`). At the end of the work: local merge into `main`, then a **production** deploy (`vercel --prod`, asked first) and the cache procedure re-run on production; the user pushes `main` so the Git integration does not redeploy an older `main`. **Last step, after the production deploy: rotate `SECRET_API_TOKEN`** (TODO S6): the user sets the new value in Vercel env and in the webhook 33942 URL; then procedure (c) on a real publish, including one `index_page` publish whose index URL must show as revalidated (V2's deferred Done). A fresh deployment starts with an empty ISR cache: expect MISS, warm a few URLs, then check HIT (FOT cost, Hobby plan).
 
 Baseline (`npm outdated`, 2026-11-04): astro 6.3.3 (latest 7.4.5), @astrojs/vercel 10.0.7 (11.0.18), @datocms/cda-client 0.2.10 (0.3.2), @datocms/cma-client 5.4.18 (6.8.0), datocms CLI 4.0.28 (4.2.0), tailwindcss 3.4.19 (4.3.4), typescript 5.9.3 (7.0.2; 6.0.3 available), swiper 12.1.4 (14.4.0), jsdom 29.1.1 (30.1.3), @types/jsdom 28 (30), prettier-plugin-astro 0.14.1 (1.1.2), plus patch/minor on the rest. `.nvmrc` is Node 20 (EOL April 2026).
 
@@ -44,6 +44,15 @@ V1 delivered docs/guidelines/caching.md (status: cache tags not implemented, rev
 Also: give `getRevalidationUrls` an injectable query function (`query = executeQuery` parameter, the endpoint keeps calling it as today) so `check:revalidation-map` passes its stub directly; drop `hooks.mjs`, `register-stubs.mjs` and the `module.registerHooks` / Node >= 22.15 requirement. Build the URL lists from the route table in `docs/guidelines/caching.md` (license and blog_post/blog_author reach far more pages than the impact list said).
 **Out** (to TODO, design choices): `page` → menus on every page (would mean a full sweep, FOT cost); book unpublish/delete → author/collection pages; slug change → old URL; `success` count fix in the endpoint.
 **Done**: gate green; V1 procedure (a) green with the new cases; Web Previews links for index pages resolve (they share `recordInfo.ts`); after merge+deploy, a real publish of an index page shows the index URL revalidated.
+
+**Deviations found while planning V2**
+
+- Default query is a lazy `import('./executeQuery')`, not `query = executeQuery`: a static import pulls `astro:env`, which tsx cannot load (the hooks would have to stay).
+- The endpoint changes by one line to pass the payload `id`: `license` has no slug, so its books are found by record id.
+- `app` stays an explicit no-op: its only reader (`/libri/schede/[slug]`) is staff-gated; revalidating would only re-cache the anonymous 404.
+- `license` maps only to its books' `/libri/<slug>`: the plan review found it is rendered only on the book page (`BookCard` never renders its `license` prop), overturning V1's "license on every book card route"; no gap #16.
+- Extra reach of `blog_post`/`blog_author` (gaps #10, #14) stays TODO: the mandate's In list maps only `index_page`, `supplier`, `license`, `app`.
+- Done item "real publish of an index page after merge+deploy" is met only at the end of the work (procedure (c) after the production deploy); T6 shows it locally.
 
 ## V3 — Patch/minor, Node 24, TypeScript 6
 
