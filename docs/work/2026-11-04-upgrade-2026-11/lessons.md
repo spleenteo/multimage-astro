@@ -10,3 +10,7 @@ One rule per line; every subagent reads this.
 - `rm` and `/bin/rm` are blocked by the zsh hook in agent shells: delete with Python (os.remove) or `del`, or avoid temp files.
 - docs/ is in .prettierignore: format docs with `npx prettier --ignore-path /dev/null`, and don't claim a vacuous prettier pass.
 - A Verified line that expects "a status line per URL" must allow for fixture slugs unknown to the CDA: the page throws and logs no status.
+- Executors running in parallel share one checkout and index: never `git stash`, `git reset` or `git checkout -- .`; stage by path only.
+- Prove a preload's exit-code guard with an entry that returns without throwing; a thrown error exits 1 on its own and proves nothing.
+- An object used as a lookup table keyed by CMS input needs an own-property check (`Object.hasOwn`); `constructor` or `__proto__` slugs otherwise return inherited values.
+- On macOS, `sed -i` needs an empty suffix argument (`sed -i ''`); re-run the Verified grep after any in-place edit, before committing.
