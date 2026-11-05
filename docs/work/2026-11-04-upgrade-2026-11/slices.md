@@ -84,6 +84,13 @@ V3 put the repo on Node 24 (`.nvmrc` 24, `engines` 24.x), took every patch/minor
 **Done**: gate green; ISR config diff against V1 snapshot only as expected; dev smoke green; Vercel **preview** deploy: the smoke routes, `/staff` 404 checked **before and after** the draft test in a clean session, draft mode enable sets **`__prerender_bypass`**; `/api/revalidate` on the preview called only if the Preview build's `PUBLIC_SITE_URL` is the preview origin, otherwise only the unmapped-model no-op payload.
 **Gotchas**: never `throw new Response()` in frontmatter; Content Link header coupled to `DATOCMS_BASE_EDITING_URL`; without `BYPASS_TOKEN` an editor's draft render (carrying the draft CDA token) is cached for anonymous visitors — TODO: `/api/draft-mode/enable` refuses on Vercel when `BYPASS_TOKEN` is unset.
 
+**Deviations found while planning V4**
+
+- The T1/T4 DOM diff goes beyond the named dev smoke: the guide asks for a visual check after the Rust compiler change, and visitors must see no change.
+- The `/api/revalidate` preview condition is tightened: `SITE_SEARCH_BUILD_TRIGGER_ID` must also be absent from Preview, because a non-no-op call reindexes the production search.
+- The entry conditions (Node 24.x, Preview env, protection) are checked inside T5, as the user asked at resume; any failure stops the slice.
+- T6 fixes two stale lines left from V3's final review (caching.md:125, dependencies.md:32) and adds one sentence to operations.md on how `astro dev` behaves under an agent.
+
 ## V5 — DatoCMS clients and CLI
 
 **In**: @datocms/cda-client 0.3, @datocms/cma-client 6, **`datocms` CLI 4.2** (moved from V3), regenerate `schema.ts`; following the changelogs via the DatoCMS skills. Scope: `src/lib/datocms/executeQuery.ts` (Content Link, `baseEditingUrl`, `includeDrafts`, `excludeInvalid`, `environment`); **delete the type shims** `src/types/datocms-cma-client.d.ts` and `src/types/datocms.d.ts` so the real v6 types apply (they deep-import files that don't exist and resolve to `any` under `skipLibCheck`); `src/pages/api/utils.ts` (`ApiError`, `serializeError`), `/api/revalidate` (`buildTriggers.reindex`), `/api/seo-analysis` (`items.rawFind`), `/api/post-deploy` (`plugins.*`).

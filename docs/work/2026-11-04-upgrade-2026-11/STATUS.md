@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V4
-step: plan
+step: execute
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
