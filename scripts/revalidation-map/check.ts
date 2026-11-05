@@ -6,9 +6,15 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { parseWebhookPayload } from '../../src/lib/datocms/webhookPayload';
 import { recordToWebsiteRoute } from '../../src/lib/datocms/recordInfo';
-import { getRevalidationUrls } from '../../src/lib/datocms/revalidationUrls';
+import {
+  getRevalidationUrls,
+  type RevalidationQuery,
+} from '../../src/lib/datocms/revalidationUrls';
+import * as stub from './stub-execute-query.mjs';
 
-// The fetch blocker and the counter are installed by register-stubs.mjs, before any import.
+// The fetch blocker and the counter are installed by sentinel.mjs, before any import.
+// The stub is always passed in: the default query would load astro:env/server.
+const { executeQuery } = stub as { executeQuery: RevalidationQuery };
 
 const SITEMAP = '/sitemap.xml';
 const bookStatic = [
@@ -80,7 +86,8 @@ for (const file of files) {
   );
   const expected = EXPECTED[name];
   // Like the endpoint: no api_key means the map is skipped.
-  const actual = apiKey === null ? null : await getRevalidationUrls({ apiKey, slug, id });
+  const actual =
+    apiKey === null ? null : await getRevalidationUrls({ apiKey, slug, id }, executeQuery);
 
   let status: string;
   if (!expected) {
@@ -137,5 +144,5 @@ const fetchCallsNow = (globalThis as { __fetchCalls?: number }).__fetchCalls ?? 
 console.log(
   `${files.length} payloads, ${ROUTES.length} routes, ${mismatches} mismatches, fetch calls: ${fetchCallsNow}`,
 );
-// Sentinel: register-stubs.mjs sets exitCode = 1; only a completed run resets it.
+// Sentinel: sentinel.mjs sets exitCode = 1; only a completed run resets it.
 process.exitCode = mismatches > 0 || fetchCallsNow !== 0 ? 1 : 0;
