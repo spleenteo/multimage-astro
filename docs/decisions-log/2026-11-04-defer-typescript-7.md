@@ -39,3 +39,4 @@ The project stays one TypeScript major behind. TS 6 deprecations must be cleared
 ## Status log
 
 - 2026-11-04 — recorded
+- 2026-11-05 — TypeScript 6.0.3 applied in V3
