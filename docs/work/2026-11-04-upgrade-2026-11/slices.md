@@ -65,6 +65,13 @@ V2 mapped `index_page` (by slug, through `INDEX_PAGE_PATHS` and the `indexPagePa
 **Done**: gate green; `astro check` 0 errors; `npm ls` without peer errors.
 **Gotchas**: prettier minor may reformat files → `npm run format` once, committed separately; TS 6 deprecations (`baseUrl`, `moduleResolution: node`) in `tsconfig.json`.
 
+**Deviations found while planning V3**
+
+- A plain `npm update` would pull the CMA v6 family (datocms 4.0.29 → `@datocms/cli-utils ^4.0.25` → cli-utils 4.2.x needs `@datocms/cma-client-node ^6.1.0`): an `overrides` entry `"@datocms/cli-utils": "<4.2.0"` holds it back; V5 removes it.
+- swiper pinned exact at 12.1.4 (`npm update` would take 12.2.0); `dependencies.md` asks for a pin, V6 owns swiper.
+- The docs step also edits the README Node line, `docs/guidelines/operations.md` and the status log of the TS 7 decision.
+- User action, outside the checkout: Vercel project Node.js Version → 24.x (`engines` wins at build anyway); first visible on V4's preview.
+
 ## V4 — Astro 7 + @astrojs/vercel 11
 
 **Entry conditions** (user): `vercel link` to the existing Vercel project, confirmed; Node 24.x on the project; `BYPASS_TOKEN` and the other env vars present in the Preview environment (names only); preview Deployment Protection bypass known.
