@@ -17,3 +17,8 @@ One rule per line; every subagent reads this.
 - A `.d.ts` with `declare module 'x'` and no top-level import/export replaces package x's own types entirely: before editing or deleting one such shim, grep `src` for every `declare module 'x'` and treat them as one unit.
 - Plain `tsc -p tsconfig.json` cannot resolve `.astro` imports (TS2307 on every component `index.ts`): judge a TypeScript or tsconfig change by `astro check`, never by plain `tsc` alone.
 - A dev server log records the full `/api/draft-mode/enable?token=…` URL: write it to the scratchpad, print only redacted lines, delete it when the server stops.
+- Before asserting that a newer framework's option "keeps vN output", diff a normalized DOM of real pages before and after: Astro 7 `compressHTML: true` keeps a space v6 dropped.
+- A vercel deploy run under an agent prints JSON on stdout: take the URL from `.deployment.url`, not from the last line.
+- zsh doesn't word-split an unquoted `$var`: `set -- $p` in a loop silently passes empty arguments; use a function with explicit arguments.
+- Probe 404s with more than one shape of unknown path (top-level and under a dynamic route): a dynamic route that throws gives 500 where a top-level miss gives 404.
+- `vercel curl` on a protected project with no automation bypass creates one silently on the project: record it in TODO for revocation the moment it is created.
