@@ -34,3 +34,4 @@ pnpm-debug.log*
 
 # datocms CLI local link (per-developer siteId/orgId, no secrets)
 datocms.config.json
+.env*
