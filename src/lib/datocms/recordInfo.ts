@@ -30,6 +30,11 @@ export const INDEX_PAGE_PATHS: Readonly<Record<string, string>> = {
   distributori: '/distributori',
 };
 
+export function indexPagePath(slug: MaybeSlug): string | null {
+  const s = normalizeSlug(slug);
+  return s && Object.hasOwn(INDEX_PAGE_PATHS, s) ? INDEX_PAGE_PATHS[s] : null;
+}
+
 export async function recordToWebsiteRoute(
   item: DatoRecord,
   itemTypeApiKey: string,
@@ -46,10 +51,8 @@ export async function recordToWebsiteRoute(
       return buildUrl('/autori', item.attributes.slug as MaybeSlug);
     case 'blog_post':
       return buildUrl('/magazine', item.attributes.slug as MaybeSlug);
-    case 'index_page': {
-      const s = normalizeSlug(item.attributes.slug as MaybeSlug);
-      return s ? (INDEX_PAGE_PATHS[s] ?? null) : null;
-    }
+    case 'index_page':
+      return indexPagePath(item.attributes.slug as MaybeSlug);
     case 'supplier':
       return '/distributori';
     case 'page':

@@ -129,6 +129,7 @@ const ROUTES: Array<[string, string, string | null]> = [
   ['index_page', 'magazine', '/magazine'],
   ['index_page', 'distributori', '/distributori'],
   ['index_page', 'sconosciuta', null],
+  ['index_page', 'constructor', null],
   ['supplier', '', '/distributori'],
   ['books_index', '', null],
 ];

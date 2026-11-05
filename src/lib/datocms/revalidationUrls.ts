@@ -1,5 +1,5 @@
 import { buildBooksCataloguePaths } from '~/lib/books';
-import { INDEX_PAGE_PATHS } from './recordInfo';
+import { indexPagePath } from './recordInfo';
 
 /**
  * Maps a changed DatoCMS record (model `api_key` + `slug`) to the small set of
@@ -11,6 +11,8 @@ import { INDEX_PAGE_PATHS } from './recordInfo';
  * The api_key → route mapping mirrors `recordToWebsiteRoute` in `recordInfo.ts`
  * (the source of truth for the Web Previews / SEO plugins); index paths are
  * shared via `INDEX_PAGE_PATHS`. Keep the two in sync when routes change.
+ * The input is the model `api_key`, the record `slug` and, for `license`, the
+ * record `id`.
  */
 
 const HOME = '/';
@@ -147,14 +149,15 @@ export async function getRevalidationUrls(
       add(SITEMAP);
       break;
 
-    // Singleton / index records: revalidate only the page they back.
+    // Singleton: revalidate only the page it backs.
     case 'home':
       add(HOME);
       add(SITEMAP);
       break;
+
     // Index pages are matched by slug (one `index_page` model, many records).
     case 'index_page': {
-      const path = slug ? INDEX_PAGE_PATHS[slug] : undefined;
+      const path = indexPagePath(slug);
       if (!path) {
         return [];
       }
