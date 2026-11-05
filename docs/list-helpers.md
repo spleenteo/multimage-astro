@@ -27,15 +27,15 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `/api/revalidate?mode=full`.
   - Notes: dedupes against `STATIC_URLS`; per-publish revalidation uses `revalidationUrls.ts` instead.
 - **`revalidationUrls` helper** (`src/lib/datocms/revalidationUrls.ts`)
-  - Purpose: `getRevalidationUrls({ apiKey, slug, id, query })` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query (injectable through the `query` parameter, default `executeQuery`). `index_page` maps by slug to its index URL; `supplier` to `/distributori`; `license` (id) to the pages of the books carrying it (the license renders only on the book page); `app` is a deliberate no-op.
+  - Purpose: `getRevalidationUrls({ apiKey, slug, id }, query?)` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query (injectable through the `query` parameter, default `executeQuery`). `index_page` maps by slug to its index URL; `supplier` to `/distributori`; `license` (id) to the pages of the books carrying it (the license renders only on the book page); `app` is a deliberate no-op.
   - Used in: `/api/revalidate` (surgical mode).
   - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Index paths come from `INDEX_PAGE_PATHS` in `recordInfo.ts`.
 - **Revalidation-map check** (`check.ts`, `scripts/revalidation-map/stub-execute-query.mjs`, `scripts/revalidation-map/sentinel.mjs`)
-  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them) and reports `OK`/`GAP`/`MISMATCH`; the stub is passed directly as the `query` argument (no module hooks), and the `.mjs` files are only the stub and the sentinel.
+  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them), tests `recordToWebsiteRoute` through a route table, and reports `OK`/`GAP`/`MISMATCH`; the stub is passed directly as the `query` argument (no module hooks), and the `.mjs` files are only the stub and the sentinel.
   - Used in: `npm run check:revalidation-map` (procedure (a) in `docs/guidelines/caching.md`).
   - Notes: includes the V2 cases (`index_page`, `supplier`, `license`, `app`).
 - **`webhookPayload` parser** (`src/lib/datocms/webhookPayload.ts`)
-  - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
+  - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `id`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
   - Used in: `/api/revalidate`.
   - Notes: no env/network deps so it is unit testable; reads the item_type from `related_entities`.
 - **`structuredText` helpers** (`src/lib/datocms/structuredText.ts`)

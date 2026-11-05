@@ -24,7 +24,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Il catalogo `/libri` è **paginato** (40 libri/pagina): pagina 1 canonica su `/libri`, pagine 2..N su `/libri/pagina/<n>` (path-based per chiavi ISR pulite). `/libri/pagina/1` → 301 `/libri`; pagine non numeriche o fuori range → 404. `BOOKS_PER_PAGE` + `buildBooksCataloguePaths()` in `src/lib/books.ts` sono la single source of truth condivisa da route, sitemap e revalidation.
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decisions-log `2026-05-31-editor-session-gating` (**S1**).
 - API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate`, `/api/utils` remain SSR-only endpoints even during static builds.
-- Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `LinkToRecord.astro` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) uses the same api_key → route table (index paths shared via `INDEX_PAGE_PATHS`).
+- Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `/api/seo-analysis` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) mirrors the api_key → route table by hand (index paths shared via `INDEX_PAGE_PATHS`).
 - Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## CMS Data Loading
