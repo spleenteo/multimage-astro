@@ -22,6 +22,8 @@ export default defineConfig({
   output: 'server',
   adapter,
   site: 'https://www.multimage.org',
+  // Astro 7 defaults to 'jsx' (strips whitespace between inline elements); keep v6 HTML-aware compression.
+  compressHTML: true,
   env: {
     schema: {
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({
