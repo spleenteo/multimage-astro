@@ -1,4 +1,5 @@
 import { buildBooksCataloguePaths } from '~/lib/books';
+import { INDEX_PAGE_PATHS } from './recordInfo';
 
 /**
  * Maps a changed DatoCMS record (model `api_key` + `slug`) to the small set of
@@ -8,8 +9,8 @@ import { buildBooksCataloguePaths } from '~/lib/books';
  * Vercel Fast Origin Transfer.
  *
  * The api_key → route mapping mirrors `recordToWebsiteRoute` in `recordInfo.ts`
- * (the source of truth for the Web Previews / SEO plugins); keep the two in sync
- * when routes change.
+ * (the source of truth for the Web Previews / SEO plugins); index paths are
+ * shared via `INDEX_PAGE_PATHS`. Keep the two in sync when routes change.
  */
 
 const HOME = '/';
@@ -61,13 +62,34 @@ const BOOK_CONTEXT_QUERY = /* GraphQL */ `
   }
 `;
 
+// `/libri` pages come from `BOOKS_PAGE_QUERY` (booksIndexPage), so a change to
+// that index page also affects every catalogue page: count them.
+const CATALOGUE_COUNT_QUERY = /* GraphQL */ `
+  query CatalogueRevalidationCount {
+    catalogueBooksMeta: _allBooksMeta(
+      filter: { _status: { eq: published }, archive: { eq: false } }
+    ) {
+      count
+    }
+  }
+`;
+
+// The license is rendered only on the book page: find the books that link it.
+const LICENSE_BOOKS_QUERY = /* GraphQL */ `
+  query LicenseRevalidationBooks($id: ItemId) {
+    allBooks(filter: { license: { eq: $id } }, first: 500) {
+      slug
+    }
+  }
+`;
+
 /**
  * Returns the list of URLs to revalidate for a record change, or an empty array
  * for unknown / unmapped models (the caller then no-ops). Never throws: any
  * enrichment failure degrades gracefully to the bounded static set.
  */
 export async function getRevalidationUrls(
-  { apiKey, slug }: RevalidationInput,
+  { apiKey, slug, id }: RevalidationInput,
   query: RevalidationQuery = defaultQuery,
 ): Promise<string[]> {
   const urls = new Set<string>();
@@ -130,34 +152,56 @@ export async function getRevalidationUrls(
       add(HOME);
       add(SITEMAP);
       break;
-    case 'books_index':
-      add('/libri');
-      add(SITEMAP);
+    // Index pages are matched by slug (one `index_page` model, many records).
+    case 'index_page': {
+      const path = slug ? INDEX_PAGE_PATHS[slug] : undefined;
+      if (!path) {
+        return [];
+      }
+      add(path);
+      if (slug === 'libri') {
+        try {
+          const data = await query<Pick<BookContextResult, 'catalogueBooksMeta'>>(
+            CATALOGUE_COUNT_QUERY,
+            { variables: {} },
+          );
+          buildBooksCataloguePaths(data.catalogueBooksMeta?.count ?? 0).forEach(add);
+        } catch (error) {
+          console.error(
+            '[revalidate] index_page libri enrichment failed, using /libri only:',
+            error,
+          );
+        }
+      }
       break;
-    case 'archive_index':
-      add('/libri/archivio');
-      add(SITEMAP);
+    }
+
+    case 'supplier':
+      add('/distributori');
       break;
-    case 'highlights_index':
-      add('/libri/highlights');
-      add(SITEMAP);
+
+    // No slug: the books linking this license, by record id.
+    case 'license': {
+      if (!id) {
+        return [];
+      }
+      try {
+        // TODO CD2: first: 500 caps the books per license.
+        const data = await query<{ allBooks: Array<{ slug: string | null }> | null }>(
+          LICENSE_BOOKS_QUERY,
+          { variables: { id } },
+        );
+        data.allBooks?.forEach((book) => add(book.slug ? `/libri/${book.slug}` : null));
+      } catch (error) {
+        console.error('[revalidate] license enrichment failed:', error);
+        return [];
+      }
       break;
-    case 'ebooks_index':
-      add('/libri/ebooks');
-      add(SITEMAP);
-      break;
-    case 'collections_index':
-      add('/collane');
-      add(SITEMAP);
-      break;
-    case 'authors_index':
-      add('/autori');
-      add(SITEMAP);
-      break;
-    case 'magazine_index':
-      add('/magazine');
-      add(SITEMAP);
-      break;
+    }
+
+    // Only read by /libri/schede/[slug], which is staff-gated: nothing public to refresh.
+    case 'app':
+      return [];
 
     default:
       // Unknown / unmapped model: let the caller decide to no-op.

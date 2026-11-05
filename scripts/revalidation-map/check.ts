@@ -5,6 +5,7 @@
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { parseWebhookPayload } from '../../src/lib/datocms/webhookPayload';
+import { recordToWebsiteRoute } from '../../src/lib/datocms/recordInfo';
 import { getRevalidationUrls } from '../../src/lib/datocms/revalidationUrls';
 
 // The fetch blocker and the counter are installed by register-stubs.mjs, before any import.
@@ -54,12 +55,15 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
   // page feeds header/footer menus on every route, only /info is revalidated
   'page-publish': { urls: ['/info/chi-siamo', '/info', SITEMAP], note: 'GAP' },
   'home-publish': { urls: ['/', SITEMAP] },
-  // phantom model: the real one is index_page, but the map still has the key
-  'books_index-publish': { urls: ['/libri', SITEMAP] },
-  'index_page-publish': { urls: [], note: 'GAP' },
-  'supplier-publish': { urls: [], note: 'GAP' },
-  'license-publish': { urls: [], note: 'GAP' },
-  'app-publish': { urls: [], note: 'GAP' },
+  // phantom model: not in the schema, no longer mapped
+  'books_index-publish': { urls: [] },
+  'index_page-publish': { urls: ['/autori'] },
+  'index_page-libri-publish': { urls: ['/libri', '/libri/pagina/2', '/libri/pagina/3'] },
+  'index_page-unknown-publish': { urls: [] },
+  'supplier-publish': { urls: ['/distributori'] },
+  'license-publish': { urls: ['/libri/libro-cc', '/libri/libro-cc-due'] },
+  // staff-gated reader only: no-op by design
+  'app-publish': { urls: [] },
   malformed: { urls: null },
 };
 
@@ -71,12 +75,12 @@ const files = readdirSync(dir)
 let mismatches = 0;
 for (const file of files) {
   const name = file.replace(/\.json$/, '');
-  const { eventType, apiKey, slug } = parseWebhookPayload(
+  const { eventType, apiKey, slug, id } = parseWebhookPayload(
     JSON.parse(readFileSync(new URL(file, dir), 'utf8')),
   );
   const expected = EXPECTED[name];
   // Like the endpoint: no api_key means the map is skipped.
-  const actual = apiKey === null ? null : await getRevalidationUrls({ apiKey, slug });
+  const actual = apiKey === null ? null : await getRevalidationUrls({ apiKey, slug, id });
 
   let status: string;
   if (!expected) {
@@ -107,8 +111,31 @@ for (const key of Object.keys(EXPECTED)) {
   }
 }
 
+// recordToWebsiteRoute: the Web Previews / SEO side of the same map.
+const ROUTES: Array<[string, string, string | null]> = [
+  ['index_page', 'libri', '/libri'],
+  ['index_page', 'ebooks', '/libri/ebooks'],
+  ['index_page', 'highlights', '/libri/highlights'],
+  ['index_page', 'archivio', '/libri/archivio'],
+  ['index_page', 'collane', '/collane'],
+  ['index_page', 'autori', '/autori'],
+  ['index_page', 'magazine', '/magazine'],
+  ['index_page', 'distributori', '/distributori'],
+  ['index_page', 'sconosciuta', null],
+  ['supplier', '', '/distributori'],
+  ['books_index', '', null],
+];
+for (const [apiKey, slug, want] of ROUTES) {
+  const got = await recordToWebsiteRoute({ attributes: slug ? { slug } : {} }, apiKey, 'it');
+  const status = got === want ? 'OK' : 'MISMATCH';
+  if (status === 'MISMATCH') mismatches += 1;
+  console.log(`route ${apiKey} ${slug || '-'} ${got} ${status}`);
+}
+
 // fetchCalls is read after the loop so calls made during it are counted.
 const fetchCallsNow = (globalThis as { __fetchCalls?: number }).__fetchCalls ?? -1;
-console.log(`${files.length} payloads, ${mismatches} mismatches, fetch calls: ${fetchCallsNow}`);
+console.log(
+  `${files.length} payloads, ${ROUTES.length} routes, ${mismatches} mismatches, fetch calls: ${fetchCallsNow}`,
+);
 // Sentinel: register-stubs.mjs sets exitCode = 1; only a completed run resets it.
 process.exitCode = mismatches > 0 || fetchCallsNow !== 0 ? 1 : 0;
