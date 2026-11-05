@@ -7,7 +7,7 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Runtime & UI
 
 - Node 24.x (`.nvmrc` for local, `engines.node` in `package.json` for Vercel) and TypeScript 6 (`typescript@^6`; TypeScript 7 is deferred, see `docs/decisions-log/2026-11-04-defer-typescript-7.md`).
-- `astro@^6` with `output: 'server'` and `@astrojs/vercel` ISR (no prerendered routes), deployed to Vercel as a single project.
+- `astro@^7` (Rust compiler, Vite 8, `compressHTML: true` pinned) with `output: 'server'` and `@astrojs/vercel@^11` ISR (no prerendered routes), deployed to Vercel as a single project.
 - Styling uses `tailwindcss` (3.x) and `autoprefixer` wired as PostCSS plugins (`postcss.config.mjs`/`.cjs`); there is no `@astrojs/tailwind` integration. Brand tokens defined in `tailwind.config.mjs`.
 - `swiper` provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required.
 
@@ -29,4 +29,4 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Risk Notes
 
 - `swiper` is pinned at exactly 12.1.4 in `package.json`; keep it pinned to avoid sudden bundle regressions introduced by caret releases.
-- Track `datocms` CLI updates, especially when schema generation APIs change, and upgrade promptly to retain compatibility.
+- Track `datocms` CLI updates, especially when schema generation APIs change, and note that the CLI is held on ~4.0.x until V5.

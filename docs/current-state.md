@@ -110,10 +110,10 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Dependencies
 
-- Core: Node 24.x (`.nvmrc`, `engines`), Astro 6.4.8, Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 6.0.3, `@astrojs/vercel` 10.0.8 con ISR, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.8.1, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.0.29 (tenuto su 4.0.x fino a V5).
+- Core: Node 24.x (`.nvmrc`, `engines`), Astro 7.4.7 (`compressHTML: true` pinned), Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 6.0.3, `@astrojs/vercel` 11.0.20 con ISR, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.2.10, `@datocms/cma-client` 5.8.1, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.0.29 (tenuto su 4.0.x fino a V5).
 - Tooling: Prettier 3.9 + `prettier-plugin-astro`, esbuild 0.28, dotenv-cli 11.1.
 - Client bundles: Swiper 12 (fix CVE prototype pollution), Iconify CDN.
-- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto come transitive di `@vercel/routing-utils@5.3.3` — upstream issue, attende patch da Vercel; Tailwind 4 not yet; TypeScript 7 deferred (decisions-log/2026-11-04-defer-typescript-7.md).
+- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto (`npm audit --omit=dev` lo elenca) come transitive di `@vercel/routing-utils@6.6.1` (`path-to-regexp@6.1.0`) — upstream issue, attende patch da Vercel; Tailwind 4 not yet; TypeScript 7 deferred (decisions-log/2026-11-04-defer-typescript-7.md).
 
 ## Accessibility
 
