@@ -22,33 +22,36 @@
     "lint": "prettier --check --ignore-path .prettierignore ."
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.9",
-    "@astrojs/vercel": "^10.0.7",
-    "@datocms/astro": "^0.6.12",
+    "@astrojs/check": "^0.9.12",
+    "@astrojs/vercel": "^10.0.8",
+    "@datocms/astro": "^0.6.16",
     "@datocms/cda-client": "^0.2.10",
-    "@datocms/cma-client": "^5.4.18",
-    "@datocms/content-link": "^0.3.20",
+    "@datocms/cma-client": "^5.8.1",
+    "@datocms/content-link": "^0.3.23",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "^6.3.3",
-    "autoprefixer": "^10.5.0",
+    "astro": "^6.4.8",
+    "autoprefixer": "^10.6.2",
     "jsdom": "^29.1.1",
     "jsonwebtoken": "^9.0.3",
-    "postcss": "^8.5.14",
-    "serialize-error": "^13.0.1",
-    "swiper": "^12.1.4",
+    "postcss": "^8.5.32",
+    "serialize-error": "^13.1.0",
+    "swiper": "12.1.4",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@astrojs/ts-plugin": "^1.10.8",
+    "@astrojs/ts-plugin": "^1.10.12",
     "@types/jsdom": "^28.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "datocms": "^4.0.28",
-    "dotenv-cli": "^11.0.0",
-    "esbuild": "^0.28.0",
+    "datocms": "~4.0.29",
+    "dotenv-cli": "^11.1.0",
+    "esbuild": "^0.28.2",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.10",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "overrides": {
+    "@datocms/cli-utils": "<4.2.0"
   }
 }
