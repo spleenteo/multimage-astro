@@ -29,4 +29,4 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Risk Notes
 
 - `swiper` is pinned at exactly 12.1.4 in `package.json`; keep it pinned to avoid sudden bundle regressions introduced by caret releases.
-- Track `datocms` CLI updates, especially when schema generation APIs change, and note that the CLI is held on ~4.0.x until V5.
+- Track `datocms` CLI updates, especially when schema generation APIs change, and note that the CLI is held on ~4.0.x until the CMA client v6 upgrade (TODO UP-cli-utils-override).

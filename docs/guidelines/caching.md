@@ -143,7 +143,7 @@ Overrides, for the shell session only (process env wins over `.env`):
 - `PUBLIC_SITE_URL=http://localhost:$PORT`: the same port the server listens on, otherwise the endpoint fetches production URLs or the wrong server.
 - `SITE_SEARCH_BUILD_TRIGGER_ID=` (empty): otherwise the endpoint triggers the production Site Search reindex.
 - `BYPASS_TOKEN`: a throwaway value, because the ISR config reads it from the environment.
-- `--ignore-lock` (on the command below): Astro 7 `astro dev` refuses to start a second server while another one holds the project lock (the user's own on 4321), so the flag is needed for a separate server.
+- `--ignore-lock` (on the command below): Astro 7 `astro dev` takes a project lock in `.astro/`; `--ignore-lock` runs a one-off foreground server that neither takes nor checks it, so it does not interfere with the user's own server on 4321.
 
 ```bash
 PUBLIC_SITE_URL=http://localhost:$PORT SITE_SEARCH_BUILD_TRIGGER_ID= \
