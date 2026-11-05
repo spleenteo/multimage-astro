@@ -1,5 +1,4 @@
 import { buildBooksCataloguePaths } from '~/lib/books';
-import { executeQuery } from './executeQuery';
 
 /**
  * Maps a changed DatoCMS record (model `api_key` + `slug`) to the small set of
@@ -19,7 +18,18 @@ const SITEMAP = '/sitemap.xml';
 export type RevalidationInput = {
   apiKey: string | null | undefined;
   slug: string | null | undefined;
+  id?: string | null;
 };
+
+export type RevalidationQuery = <R>(
+  query: string,
+  options: { variables: Record<string, unknown> },
+) => Promise<R>;
+
+// Lazy default: executeQuery.ts imports `astro:env/server`, which plain tsx
+// cannot load, so it is only imported when no query is injected.
+const defaultQuery: RevalidationQuery = <R>(q: string, o: { variables: Record<string, unknown> }) =>
+  import('./executeQuery').then((m) => m.executeQuery<R>(q, o));
 
 type BookContextResult = {
   catalogueBooksMeta: { count: number } | null;
@@ -56,7 +66,10 @@ const BOOK_CONTEXT_QUERY = /* GraphQL */ `
  * for unknown / unmapped models (the caller then no-ops). Never throws: any
  * enrichment failure degrades gracefully to the bounded static set.
  */
-export async function getRevalidationUrls({ apiKey, slug }: RevalidationInput): Promise<string[]> {
+export async function getRevalidationUrls(
+  { apiKey, slug }: RevalidationInput,
+  query: RevalidationQuery = defaultQuery,
+): Promise<string[]> {
   const urls = new Set<string>();
   const add = (url: string | null | undefined) => {
     if (url) {
@@ -74,7 +87,7 @@ export async function getRevalidationUrls({ apiKey, slug }: RevalidationInput): 
       add(SITEMAP);
 
       try {
-        const data = await executeQuery<BookContextResult>(BOOK_CONTEXT_QUERY, {
+        const data = await query<BookContextResult>(BOOK_CONTEXT_QUERY, {
           variables: { slug: slug ?? null },
         });
         buildBooksCataloguePaths(data.catalogueBooksMeta?.count ?? 0).forEach(add);

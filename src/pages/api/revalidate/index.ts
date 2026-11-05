@@ -103,7 +103,7 @@ export const POST: APIRoute = async ({ url, request }) => {
     }
   } else {
     mode = 'surgical';
-    const { eventType, apiKey, slug } = parseWebhookPayload(payload);
+    const { eventType, apiKey, slug, id } = parseWebhookPayload(payload);
 
     if (!apiKey) {
       // Unknown / unparseable payload: no-op rather than re-rendering the site.
@@ -114,7 +114,7 @@ export const POST: APIRoute = async ({ url, request }) => {
     }
 
     try {
-      urls = await getRevalidationUrls({ apiKey, slug });
+      urls = await getRevalidationUrls({ apiKey, slug, id });
     } catch (error) {
       return handleUnexpectedError(error);
     }
