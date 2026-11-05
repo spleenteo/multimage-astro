@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V3
-step: execute
+slice: V4
+step: plan
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
@@ -23,7 +23,7 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 
 - [x] V1 — Cache baseline: audit route → models → revalidated, `caching.md` procedure, ISR snapshot
 - [x] V2 — Revalidation map fixes (`index_page` by slug, supplier, license, app)
-- [ ] V3 — Patch/minor, Node 24, TypeScript 6 (CLI stays 4.0.x)
+- [x] V3 — Patch/minor, Node 24, TypeScript 6 (CLI stays 4.0.x)
 - [ ] V4 — Astro 7 + @astrojs/vercel 11, preview deploy
 - [ ] V5 — DatoCMS clients + CLI 4.2, type shims removed
 - [ ] V6 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
@@ -42,3 +42,4 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 - 2026-11-05 — V1 close — caching.md, revalidation-map check, ISR baseline, procedures a/b/c run; 15 gaps (4 → V2, 11 → TODO); gate green after a formatting fix on 2 pre-existing src files; SECRET_API_TOKEN printed once in an agent terminal (rotation: user's call) — V2 plan next — ~32 min — n/a
 - 2026-11-05 — after V1 — token rotation scheduled as last step (TODO S6); dev-server rule (4321 is the user's); V2 gains executeQuery injection instead of the resolve hook (no decision recorded) — V2 plan next, after the user's /clear — n/a — n/a
 - 2026-11-05 — V2 plan + review + execute + close — plan review: 1 high (license rendered only on the book page, overturning V1), 3 medium, 7 low, all applied; 7 tasks, 10 commits, final review low only (3 ruled); gate green; real-CDA run on port 4331 green; pending: index_page publish via procedure (c) at the end of the work — V3 plan next — ~45 min — n/a
+- 2026-11-05 — V3 plan + review + execute + close — plan review: 1 high (T4/T7 both on README), 3 medium, 4 low, all applied; 7 tasks, 6 commits; cma-client 5.8 broke two ambient type shims, both deleted (decision candidate); final review 5 low, logged; gate green, dev smoke green on 4333; user action pending: Vercel Node 24.x — V4 plan next — ~50 min — n/a

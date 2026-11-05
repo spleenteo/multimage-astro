@@ -14,3 +14,6 @@ One rule per line; every subagent reads this.
 - Prove a preload's exit-code guard with an entry that returns without throwing; a thrown error exits 1 on its own and proves nothing.
 - An object used as a lookup table keyed by CMS input needs an own-property check (`Object.hasOwn`); `constructor` or `__proto__` slugs otherwise return inherited values.
 - On macOS, `sed -i` needs an empty suffix argument (`sed -i ''`); re-run the Verified grep after any in-place edit, before committing.
+- A `.d.ts` with `declare module 'x'` and no top-level import/export replaces package x's own types entirely: before editing or deleting one such shim, grep `src` for every `declare module 'x'` and treat them as one unit.
+- Plain `tsc -p tsconfig.json` cannot resolve `.astro` imports (TS2307 on every component `index.ts`): judge a TypeScript or tsconfig change by `astro check`, never by plain `tsc` alone.
+- A dev server log records the full `/api/draft-mode/enable?token=…` URL: write it to the scratchpad, print only redacted lines, delete it when the server stops.
