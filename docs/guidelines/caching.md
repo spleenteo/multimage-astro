@@ -122,7 +122,7 @@ npm run check:revalidation-map
 
 It runs `parseWebhookPayload` and `getRevalidationUrls` on the sample payloads in `scripts/revalidation-map/payloads/` (one per model, plus `malformed`), with the query function replaced by a stub passed in directly. It then checks `recordToWebsiteRoute` on a table of routes. It opens no connection and needs no token.
 
-- Any Node that supports `--import` (>= 20.6) runs it: no loader hooks, no Node >= 22.15 requirement, `.nvmrc` stays as it is. A preload (`sentinel.mjs`) sets the failing exit code and blocks `fetch`.
+- Any Node that supports `--import` (>= 20.6) runs it: no loader hooks, so no newer Node is needed and `.nvmrc` stays as it is. A preload (`sentinel.mjs`) sets the failing exit code and blocks `fetch`.
 - `tsx` is not a devDependency: the script uses the copy hoisted by the `datocms` CLI.
 - Output, one line per payload: `file event api_key slug n STATUS`, where `n` is the number of URLs. Then one line per route: `route api_key slug result STATUS`. Then `N payloads, R routes, M mismatches, fetch calls: K`. Exit code 1 if `M` or `K` is above 0, or if an entry never ran (sentinel), or if a payload file is missing.
 - `OK`: the result matches what the script expects. `GAP`: the model is known to be under-served (see "Gaps and fate"). After V2 only `page` (gap 5, menus) and `book-unpublish` (gap 6) print `GAP`. A `GAP` is not a failure: it is the recorded state of the code. `MISMATCH` is a failure: the code changed and the expectation did not.
