@@ -13,8 +13,8 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 ## CMS & Data
 
-- `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`, held on `~4.0.x`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is a runtime dependency: `/api/revalidate` (Site Search reindex) and `/api/post-deploy` call `buildClient`.
-- The `datocms` CLI is held on `~4.0.x` and `package.json` carries `overrides: { "@datocms/cli-utils": "<4.2.0" }`: cli-utils 4.2 requires `@datocms/cma-client-node` 6, which moves with the CMA v6 family in V5 (remove the override then, TODO UP-cli-utils-override).
+- `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is a runtime dependency: `/api/revalidate` (Site Search reindex), `/api/post-deploy` and `/api/seo-analysis` call `buildClient`.
+- `@datocms/cma-client` 6 and the `datocms` CLI 4.2 family share one `@datocms/rest-client-utils` 6 copy (no `overrides` in `package.json`); both clients redact tokens in their `ApiError` (`@datocms/cda-client` ≥ 0.3.1, `@datocms/rest-client-utils` ≥ 6.1.1).
 - `tsx` is not a direct dependency: `npm run check:revalidation-map` uses the copy hoisted from the `datocms` CLI (also pulled by `vite`).
 - DatoCMS data primarily flows through `@datocms/cda-client`; `dotenv-cli` is only needed for scripts like `npm run sync-datocms`.
 
@@ -29,4 +29,4 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Risk Notes
 
 - `swiper` is pinned at exactly 12.1.4 in `package.json`; keep it pinned to avoid sudden bundle regressions introduced by caret releases.
-- Track `datocms` CLI updates, especially when schema generation APIs change, and note that the CLI is held on ~4.0.x until the CMA client v6 upgrade (TODO UP-cli-utils-override).
+- Track `datocms` CLI updates, especially when schema generation APIs change.
