@@ -118,6 +118,14 @@ V5 moved the DatoCMS stack to @datocms/cda-client 0.3.2, @datocms/cma-client 6.8
 **In**: swiper 14 pinned to an **exact** version (as `docs/guidelines/dependencies.md` asks), jsdom 30 + @types/jsdom 30, prettier-plugin-astro 1.x.
 **Done**: gate green; dev smoke green; local call to `/api/seo-analysis` with a real record id (only place jsdom runs; read-only); carousels checked on the **production bundle** (`public/generated/`, built by esbuild in prebuild) on home, a book page and a structured-text page with `BookCarouselBlock`; prettier output stable (format diff committed separately).
 
+**Deviations found while planning V6**
+
+- `.prettierrc` gains `astroCompressHTML: "html"` and `astro.config.mjs` a sync comment: not named by the slice, but plugin 1.0 needs them so formatting never changes what the site renders.
+- The production bundle is checked locally: a globally installed Playwright (not a project dependency) serves `public/generated/swiper-element.js` in place of the dev source module, CSS and page from `astro dev`; no preview deploy (V7 ends with one).
+- Extra checks beyond the mandate: T1 baseline, a carousel probe proven to fail on a broken bundle, a DOM diff proving the format commit renders the same, a before/after seo-analysis metadata comparison.
+- jsdom 31.0.0 (published 2026-11-05) is left out, TODO `UP-jsdom-31`: the mandate says jsdom 30 and @types/jsdom stops at 30.
+- Swiper 14 raises the browser floor to Chrome/Edge 110+, Safari 16.4+, Firefox 110+ (narrower than Swiper 12, no polyfills from esbuild `es2019`): accepted by the user on 2026-11-06.
+
 ## V7 — Tailwind 4
 
 **In**: tailwindcss 4 with `@tailwindcss/vite`; theme from `tailwind.config.mjs` into `@theme`; **font stacks defined once in `@theme`**, removing `--font-sans`/`--font-serif` from `:root` in `global.css` and from the config (otherwise a cyclic variable drops the site to the default font); in all 37 `*.module.css`: replace `@tailwind components;` with `@reference` to the global/theme CSS and **remove the `@layer components {}` wrappers** (33 files) so the cascade stays unlayered as today (native layers would lose to `swiper/css/bundle`); `global.css` is the entry, no `@reference`; `container` rewritten as `@utility`; borderRadius/letterSpacing overrides; remove autoprefixer and the tailwind PostCSS plugin, delete the dead one of `postcss.config.cjs` / `postcss.config.mjs`; default changes (border colour, ring, shadow scale).
