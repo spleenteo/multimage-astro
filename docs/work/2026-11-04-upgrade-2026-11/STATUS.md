@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V6
-step: execute
+slice: V7
+step: plan
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
@@ -26,7 +26,7 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 - [x] V3 — Patch/minor, Node 24, TypeScript 6 (CLI stays 4.0.x)
 - [x] V4 — Astro 7 + @astrojs/vercel 11, preview deploy
 - [x] V5 — DatoCMS clients + CLI 4.2, type shims removed
-- [ ] V6 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
+- [x] V6 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
 - [ ] V7 — Tailwind 4, visual check, final preview deploy
 
 ## Pending proposals
@@ -45,3 +45,4 @@ Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`)
 - 2026-11-05 — V3 plan + review + execute + close — plan review: 1 high (T4/T7 both on README), 3 medium, 4 low, all applied; 7 tasks, 6 commits; cma-client 5.8 broke two ambient type shims, both deleted (decision candidate); final review 5 low, logged; gate green, dev smoke green on 4333; user action pending: Vercel Node 24.x — V4 plan next — ~50 min — n/a
 - 2026-11-05 — V4 plan + review + execute + close — plan review: 1 high (`vercel curl` leaks `?token=` in its hint), 3 medium, 6 low, all applied; Astro 7.4.7 + @astrojs/vercel 11.0.20, `compressHTML: true` pinned, no template fix; two T5 stops (Vercel Node 22.x → 24.x by the user; automation bypass created by `vercel curl` under the user's ok, revocation TODO S7); preview green (smoke, `/staff` 404 before/after session, both draft cookies, BYPASS vs HIT, unknown path 404, no-op revalidate); found TODO BOOK-404 (unknown book slug → 500, also on prod); final review low only; gate green — V5 plan next — ~70 min — n/a
 - 2026-11-06 — V5 plan + review + execute + close — plan review: 0 high, 3 medium (CMA 500 still echoes `request.body` → post-deploy can leak SECRET_API_TOKEN, S5; full gate after T2; sync-datocms skip undetected), 3 low, all applied; cda-client 0.3.2, cma-client 6.8.0, CLI 4.2.0, override removed, no src change; probe: CDA token echoed on 0.2.10, not on 0.3.2; schema.ts pure reorder; local `.env` has DATOCMS_CMA_TOKEN empty (TODO UP-cma-token-docs); final review pass; gate green; user's 4321 dev server may need a restart — V6 plan next — ~40 min — n/a
+- 2026-11-06 — V6 plan + review + execute + close — plan review: 0 high, 4 medium (draft CDA token in saved seo HTML, vacuous DOM-diff pass, Swiper 14 browser floor needing the user's ok, jsdom 30 Node floor unchecked on Vercel), 5 low, all applied; user accepted Swiper 14 floor (Chrome/Edge/Firefox 110+, Safari 16.4+); swiper 14.4.0 exact, jsdom 30.1.3, @types/jsdom 30.0.0, prettier-plugin-astro 1.1.2 + astroCompressHTML, no src change, format diff on 50 .astro files in its own commit; carousels green on the production bundle, DOM and seo output identical; one ruled whitespace change in /libri pagination; new TODO S8 and UP-jsdom-31; V7 carries Node ≥ 24.15 + seo-analysis GET on preview; final review low only; gate green — V7 plan next — ~45 min — n/a

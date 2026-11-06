@@ -26,3 +26,8 @@ One rule per line; every subagent reads this.
 - In `astro dev`, Vite answers every OPTIONS request with its own 204 before the route runs: prove a route module loads with a GET (404 or 401), and leave the OPTIONS handlers to a deploy.
 - On TypeScript 6, a standalone `tsc <file>` with flags fails with TS5112 when a `tsconfig.json` is present: add `--ignoreConfig`.
 - Before a smoke that needs a server-side token, check that it is non-empty in the env the server reads (names and emptiness only, never values); a local `.env` can hold the name with no value.
+- A plan's Files line lists every file its What edits, slices.md included: an executor finding an extra file must stop and ask, and a ruling patches a plan gap.
+- A normalized DOM diff (tag order and word tokens) can't see a space appearing or vanishing next to a tag: after a formatter change, also diff raw HTML with style/script bodies and dev-only attributes (`data-astro-source-*`) stripped and whitespace collapsed, one tag per line.
+- In `astro dev`, a raw-HTML diff must drop `data-astro-source-file`/`-loc` attributes first: a format diff shifts every source line number.
+- A browser probe that swaps a module through `page.route` proves the swap only with a hit counter and a `broken` mode that must fail.
+- Top-tier dispatches of a mid-tier role pass both `model` and `effort` from plan-reviewer.md, not the model alone.
