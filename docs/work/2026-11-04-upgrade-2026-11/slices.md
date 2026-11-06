@@ -101,6 +101,14 @@ V4 moved the site to Astro 7.4.7 and @astrojs/vercel 11.0.20 (vite 8.3.6, Rust c
 **Out**: query rewrites not required by the upgrade.
 **Done**: gate green with the shims gone; `reindex`, `rawFind`, `plugins.*` signatures checked against the CMA docs; dev smoke green (draft and published reads); a 500 from `api/utils.ts` no longer echoes the CDA token (cda-client 0.3.1 redacts it).
 
+**Deviations found while planning V5**
+
+- The type shims were already deleted in V3 (858c5da); `src/types/` is an empty, untracked directory. V5 only checks that no `declare module '@datocms…'` is left and removes the empty directory.
+- No preview deploy. `reindex` and `plugins.*` are never called for real (both touch production: search index, plugins); they are checked against the docs and `astro check`; their first real run is procedure (c) on production at the end of the work.
+- T4 goes beyond the named dev smoke: one read-only `rawFind` against the primary environment and a CMA-error 500; T1 adds a before/after token-leak probe, so the token Done does not rest on types alone.
+- Removing the `@datocms/cli-utils` override and closing TODO UP-cli-utils-override come from `dependencies.md` and `TODO.md`, not the slice text: CLI 4.2 cannot install while the override is in place.
+- T5 also edits `security.md` (the CMA `authorization` header and CDA options are redacted; `request.body` is still echoed, so a `/api/post-deploy` 500 can carry `SECRET_API_TOKEN`, S5) and the D4-R5 TODO line (cda-client 0.3.0 changes `instanceof ApiError`).
+
 ## V6 — Other majors
 
 **In**: swiper 14 pinned to an **exact** version (as `docs/guidelines/dependencies.md` asks), jsdom 30 + @types/jsdom 30, prettier-plugin-astro 1.x.
