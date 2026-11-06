@@ -26,12 +26,10 @@ const resolvedDescription = hasDescriptionHtml ? null : description;
   <div class={styles.background}></div>
   <div class:list={[styles.content, alignmentClass]}>
     <h1 class={styles.title}>{title}</h1>
-    {
-      hasDescriptionHtml ? (
-        <div class={styles.description} set:html={trimmedDescriptionHtml} />
-      ) : resolvedDescription ? (
-        <p class={styles.description}>{resolvedDescription}</p>
-      ) : null
-    }
+    {hasDescriptionHtml ? (
+      <div class={styles.description} set:html={trimmedDescriptionHtml} />
+    ) : resolvedDescription ? (
+      <p class={styles.description}>{resolvedDescription}</p>
+    ) : null}
   </div>
 </div>

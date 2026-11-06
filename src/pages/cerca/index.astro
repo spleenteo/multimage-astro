@@ -47,8 +47,8 @@ const seo = withFallbackSeo([], {
       <header class="search-page__intro">
         <h1 class="search-page__title">Cerca nel catalogo Multimage</h1>
         <p class="search-page__subtitle">
-          Digita almeno {MIN_QUERY_LENGTH} caratteri per avviare la ricerca. I risultati vengono aggiornati
-          in tempo reale senza ricaricare la pagina.
+          Digita almeno {MIN_QUERY_LENGTH} caratteri per avviare la ricerca. I risultati vengono
+          aggiornati in tempo reale senza ricaricare la pagina.
         </p>
       </header>
 
@@ -84,25 +84,41 @@ const seo = withFallbackSeo([], {
         <span class="search-filters__label">Filtra per:</span>
         <label class="search-filters__item">
           <input type="checkbox" value="books" data-search-filter />
-          <iconify-icon icon="iconoir:book" width="16" height="16" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:book"
+            width="16"
+            height="16"
+            aria-hidden="true"
           ></iconify-icon>
           <span>Libri</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="authors" data-search-filter />
-          <iconify-icon icon="iconoir:user-badge-check" width="16" height="16" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:user-badge-check"
+            width="16"
+            height="16"
+            aria-hidden="true"
           ></iconify-icon>
           <span>Autori</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="info" data-search-filter />
-          <iconify-icon icon="iconoir:post" width="16" height="16" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:post"
+            width="16"
+            height="16"
+            aria-hidden="true"
           ></iconify-icon>
           <span>Informazioni</span>
         </label>
         <label class="search-filters__item">
           <input type="checkbox" value="exact" data-search-exact />
-          <iconify-icon icon="iconoir:lock" width="16" height="16" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:lock"
+            width="16"
+            height="16"
+            aria-hidden="true"
           ></iconify-icon>
           <span>Ricerca esatta</span>
         </label>

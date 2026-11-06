@@ -132,48 +132,40 @@ const pageTitle = `${book.isbn ?? 'scheda'} - ${book.title} - Scheda Libro Multi
 
         <aside class="sheet__side">
           <div class="sheet__coverCard">
-            {
-              coverResponsiveImage ? (
-                <Image data={coverResponsiveImage} sizes="(min-width: 960px) 260px, 40vw" />
-              ) : fallbackCoverUrl ? (
-                <img src={`${fallbackCoverUrl}`} alt={`Copertina di ${book.title}`} />
-              ) : (
-                <div class="sheet__coverPlaceholder">Copertina in arrivo</div>
-              )
-            }
+            {coverResponsiveImage ? (
+              <Image data={coverResponsiveImage} sizes="(min-width: 960px) 260px, 40vw" />
+            ) : fallbackCoverUrl ? (
+              <img src={`${fallbackCoverUrl}`} alt={`Copertina di ${book.title}`} />
+            ) : (
+              <div class="sheet__coverPlaceholder">Copertina in arrivo</div>
+            )}
           </div>
 
           <div class="sheet__detailCard">
             <h3 class="sheet__detailTitle">Dettagli tecnici</h3>
             <dl class="sheet__detailList">
-              {
-                technicalDetails.map((detail) => (
-                  <>
-                    <dt>{detail.label}</dt>
-                    <dd>{detail.value}</dd>
-                  </>
-                ))
-              }
+              {technicalDetails.map((detail) => (
+                <>
+                  <dt>{detail.label}</dt>
+                  <dd>{detail.value}</dd>
+                </>
+              ))}
             </dl>
           </div>
 
-          {
-            pdfFooter ? (
-              <div class="sheet__publisherCard">
-                <h3 class="sheet__detailTitle">Multimage</h3>
-                <div class="sheet__publisherText" set:html={pdfFooter} />
-              </div>
-            ) : null
-          }
+          {pdfFooter ? (
+            <div class="sheet__publisherCard">
+              <h3 class="sheet__detailTitle">Multimage</h3>
+              <div class="sheet__publisherText" set:html={pdfFooter} />
+            </div>
+          ) : null}
         </aside>
       </div>
     </main>
 
-    {
-      draftModeEnabled ? (
-        <DraftModeQueryListener query={BOOK_SHEET_QUERY} variables={{ slug }} />
-      ) : null
-    }
+    {draftModeEnabled ? (
+      <DraftModeQueryListener query={BOOK_SHEET_QUERY} variables={{ slug }} />
+    ) : null}
   </body>
 </html>
 

@@ -82,17 +82,15 @@ const pictureResponsiveImage = author.picture?.responsiveImage
     <section class={styles.heroGrid}>
       <div class={styles.portraitPanel}>
         <div class={styles.portraitFrame}>
-          {
-            pictureResponsiveImage ? (
-              <Image
-                data={pictureResponsiveImage}
-                sizes="(min-width: 1024px) 320px, 60vw"
-                imgClass="h-auto w-full object-cover"
-              />
-            ) : (
-              <div class={styles.portraitFallback}>Ritratto in arrivo</div>
-            )
-          }
+          {pictureResponsiveImage ? (
+            <Image
+              data={pictureResponsiveImage}
+              sizes="(min-width: 1024px) 320px, 60vw"
+              imgClass="h-auto w-full object-cover"
+            />
+          ) : (
+            <div class={styles.portraitFallback}>Ritratto in arrivo</div>
+          )}
         </div>
       </div>
 
@@ -103,66 +101,60 @@ const pictureResponsiveImage = author.picture?.responsiveImage
           <p class={styles.booksLabel}>{booksLabel}</p>
         </div>
 
-        {
-          pseudonyms.length > 0 ? (
-            <div class="space-y-2 pt-4">
-              <p class={styles.metaLabel}>Pseudonimi</p>
-              <div class={styles.pseudonyms}>
-                {pseudonyms.map((person) =>
-                  person.slug ? (
-                    <a href={`/autori/${person.slug}`} class={styles.pseudonymLink}>
-                      {person.name}
-                    </a>
-                  ) : (
-                    <span>{person.name}</span>
-                  ),
-                )}
-              </div>
+        {pseudonyms.length > 0 ? (
+          <div class="space-y-2 pt-4">
+            <p class={styles.metaLabel}>Pseudonimi</p>
+            <div class={styles.pseudonyms}>
+              {pseudonyms.map((person) =>
+                person.slug ? (
+                  <a href={`/autori/${person.slug}`} class={styles.pseudonymLink}>
+                    {person.name}
+                  </a>
+                ) : (
+                  <span>{person.name}</span>
+                ),
+              )}
             </div>
-          ) : null
-        }
+          </div>
+        ) : null}
       </div>
     </section>
 
     <section class={styles.contentSection}>
-      {
-        biographyHasContent && author.biography ? (
-          <div class={styles.contentBlock}>
-            <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
-            <StructuredText
-              data={author.biography as any}
-              blockComponents={defaultBlockComponents as any}
-              linkToRecordComponents={defaultLinkToRecordComponents as any}
-            />
-          </div>
-        ) : null
-      }
+      {biographyHasContent && author.biography ? (
+        <div class={styles.contentBlock}>
+          <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
+          <StructuredText
+            data={author.biography as any}
+            blockComponents={defaultBlockComponents as any}
+            linkToRecordComponents={defaultLinkToRecordComponents as any}
+          />
+        </div>
+      ) : null}
     </section>
 
     <section class={styles.booksSection}>
       <h2 class={styles.booksHeader}>Libri pubblicati</h2>
-      {
-        relatedBooks.length === 0 ? (
-          <p class="text-sm text-brand-slate">Nessun libro ancora associato a questo autore.</p>
-        ) : (
-          <div class={styles.booksGrid}>
-            {relatedBooks.map((book) => (
-              <BookCard
-                title={book.title}
-                slug={book.slug}
-                subtitle={book.subtitle}
-                summary={book.summary}
-                coverImage={book.coverImage}
-                authors={book.authors}
-                license={book.license}
-                format={book.format}
-                price={book.price}
-                isArchived={book.isArchived}
-              />
-            ))}
-          </div>
-        )
-      }
+      {relatedBooks.length === 0 ? (
+        <p class="text-sm text-brand-slate">Nessun libro ancora associato a questo autore.</p>
+      ) : (
+        <div class={styles.booksGrid}>
+          {relatedBooks.map((book) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              subtitle={book.subtitle}
+              summary={book.summary}
+              coverImage={book.coverImage}
+              authors={book.authors}
+              license={book.license}
+              format={book.format}
+              price={book.price}
+              isArchived={book.isArchived}
+            />
+          ))}
+        </div>
+      )}
     </section>
   </article>
   <DraftModeQueryListener query={AUTHOR_DETAIL_QUERY} variables={{ slug }} />

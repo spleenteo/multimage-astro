@@ -69,15 +69,13 @@ if (!title) {
 
 <article class="not-prose my-4 rounded-lg border border-brand-mist/60 bg-white/90 p-4 shadow-soft">
   <h3 class="text-lg font-semibold text-brand-navy">
-    {
-      href ? (
-        <a href={href} class="hover:text-brand-sky focus:text-brand-sky">
-          {title}
-        </a>
-      ) : (
-        title
-      )
-    }
+    {href ? (
+      <a href={href} class="hover:text-brand-sky focus:text-brand-sky">
+        {title}
+      </a>
+    ) : (
+      title
+    )}
   </h3>
   {description ? <p class="mt-1 text-sm text-brand-charcoal/80">{description}</p> : null}
 </article>

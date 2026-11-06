@@ -66,18 +66,18 @@ const hasImage = Boolean(imageData);
   class="not-prose my-6 overflow-hidden rounded-2xl border border-brand-mist/40 bg-brand-mist/10 shadow-soft"
 >
   <div class:list={['flex flex-col gap-6', hasImage ? 'md:flex-row' : 'md:flex-col']}>
-    {
-      imageData ? (
-        <div class="flex w-full flex-shrink-0 items-center justify-center bg-brand-mist/40 p-6 md:w-2/5">
-          <Image
-            data={imageData}
-            sizes="(min-width: 1024px) 35vw, 90vw"
-            pictureClass="block"
-            imgClass="h-auto w-full max-w-xl rounded-xl object-cover"
-          />
-        </div>
-      ) : null
-    }
+    {imageData ? (
+      <div
+        class="flex w-full flex-shrink-0 items-center justify-center bg-brand-mist/40 p-6 md:w-2/5"
+      >
+        <Image
+          data={imageData}
+          sizes="(min-width: 1024px) 35vw, 90vw"
+          pictureClass="block"
+          imgClass="h-auto w-full max-w-xl rounded-xl object-cover"
+        />
+      </div>
+    ) : null}
 
     <div
       class:list={[
@@ -86,25 +86,19 @@ const hasImage = Boolean(imageData);
       ]}
     >
       <h3 class="text-3xl font-serif text-brand-navy">{title}</h3>
-      {
-        contentHtml ? (
-          <div
-            class="prose prose-brand max-w-none text-base leading-relaxed text-brand-charcoal/90"
-            set:html={contentHtml}
-          />
-        ) : null
-      }
-      {
-        hasButtons ? (
-          <div class="mt-2 flex flex-wrap items-center gap-3">
-            {buttons.map((button) => (
-              <Button href={button.url} primary={button.primary}>
-                {button.label}
-              </Button>
-            ))}
-          </div>
-        ) : null
-      }
+      {contentHtml ? (
+        <div
+          class="prose prose-brand max-w-none text-base leading-relaxed text-brand-charcoal/90"
+          set:html={contentHtml}
+        />
+      ) : null}
+      {hasButtons ? (
+        <div class="mt-2 flex flex-wrap items-center gap-3">
+          {buttons.map((button) => <Button href={button.url} primary={button.primary}>
+            {button.label}
+          </Button>)}
+        </div>
+      ) : null}
     </div>
   </div>
 </section>

@@ -65,17 +65,15 @@ for (const collection of data.allCollections ?? []) {
       <IndexHeroSection title={heroSection.title} subtitleHtml={heroSection.subtitleHtml} />
     </div>
 
-    {
-      collections.length === 0 ? (
-        <p class={styles.empty}>Nessuna collana pubblicata trovata.</p>
-      ) : (
-        <div class={styles.collectionsGrid}>
-          {collections.map((collection) => (
-            <CollectionCard {...collection} />
-          ))}
-        </div>
-      )
-    }
+    {collections.length === 0 ? (
+      <p class={styles.empty}>Nessuna collana pubblicata trovata.</p>
+    ) : (
+      <div class={styles.collectionsGrid}>
+        {collections.map((collection) => (
+          <CollectionCard {...collection} />
+        ))}
+      </div>
+    )}
   </section>
   <DraftModeQueryListener query={COLLECTIONS_PAGE_QUERY} />
 </BaseLayout>

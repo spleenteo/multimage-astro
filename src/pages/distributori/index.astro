@@ -55,49 +55,47 @@ const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anc
       />
     </div>
 
-    {
-      suppliers.length === 0 ? (
-        <p class="mx-auto max-w-4xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-          I nostri distributori saranno disponibili a breve.
-        </p>
-      ) : (
-        <div class={styles.sectionWrapper}>
-          {regionMenu.length > 1 ? (
-            <>
-              <div id="region-menu" class="sr-only" aria-hidden="true" />
-              <nav class={styles.menu} aria-label="Indice distributori per regione">
-                {regionMenu.map(({ region, anchorId }) => (
-                  <a href={`#${anchorId}`} class={styles.menuLink}>
-                    {region}
-                  </a>
-                ))}
-              </nav>
-            </>
-          ) : null}
+    {suppliers.length === 0 ? (
+      <p class="mx-auto max-w-4xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
+        I nostri distributori saranno disponibili a breve.
+      </p>
+    ) : (
+      <div class={styles.sectionWrapper}>
+        {regionMenu.length > 1 ? (
+          <>
+            <div id="region-menu" class="sr-only" aria-hidden="true" />
+            <nav class={styles.menu} aria-label="Indice distributori per regione">
+              {regionMenu.map(({ region, anchorId }) => <a
+                href={`#${anchorId}`}
+                class={styles.menuLink}
+              >
+                {region}
+              </a>)}
+            </nav>
+          </>
+        ) : null}
 
-          <div class="space-y-16">
-            {supplierSections.map(({ region, suppliers: items, anchorId }) => (
-              <section id={anchorId} class="space-y-8">
-                <div class={styles.regionHeader}>
-                  <h2 class={styles.regionTitle}>{region}</h2>
-                  {regionMenu.length > 1 ? (
-                    <a href="#region-menu" class={styles.backLink}>
-                      Torna al menu
-                    </a>
-                  ) : null}
-                </div>
+        <div class="space-y-16">
+          {supplierSections.map(({ region, suppliers: items, anchorId }) => <section
+            id={anchorId}
+            class="space-y-8"
+          >
+            <div class={styles.regionHeader}>
+              <h2 class={styles.regionTitle}>{region}</h2>
+              {regionMenu.length > 1 ? (
+                <a href="#region-menu" class={styles.backLink}> Torna al menu </a>
+              ) : null}
+            </div>
 
-                <div class={styles.regionList}>
-                  {items.map((supplier) => (
-                    <SupplierCard {...supplier} />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+            <div class={styles.regionList}>
+              {items.map((supplier) => (
+                <SupplierCard {...supplier} />
+              ))}
+            </div>
+          </section>)}
         </div>
-      )
-    }
+      </div>
+    )}
   </section>
   <DraftModeQueryListener query={SUPPLIERS_PAGE_QUERY} />
 </BaseLayout>

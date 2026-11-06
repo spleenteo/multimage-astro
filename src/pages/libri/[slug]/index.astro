@@ -348,32 +348,26 @@ const seo = sanitizeMetaTags(
 ---
 
 <BaseLayout seo={seo}>
-  {
-    reviewStructuredData ? (
-      <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(reviewStructuredData)}
-      />
-    ) : null
-  }
+  {reviewStructuredData ? (
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(reviewStructuredData)} />
+  ) : null}
   <article class="space-y-12">
     <div class={styles.heroGrid}>
       <div class={styles.coverPanel}>
         <div class={styles.coverFrame}>
-          {
-            coverResponsiveImage ? (
-              <Image
-                data={coverResponsiveImage}
-                sizes="(min-width: 1024px) 320px, 60vw"
-                imgClass="h-auto w-full object-contain"
-              />
-            ) : (
-              <div class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate">
-                Copertina in arrivo
-              </div>
-            )
-          }
+          {coverResponsiveImage ? (
+            <Image
+              data={coverResponsiveImage}
+              sizes="(min-width: 1024px) 320px, 60vw"
+              imgClass="h-auto w-full object-contain"
+            />
+          ) : (
+            <div
+              class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate"
+            >
+              Copertina in arrivo
+            </div>
+          )}
         </div>
       </div>
 
@@ -384,106 +378,100 @@ const seo = sanitizeMetaTags(
               {book.collection?.name ? `Collana ${book.collection.name}` : 'Catalogo Multimage'}
             </p>
             <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{book.title}</h1>
-            {
-              book.subtitle ? (
-                <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
-              ) : null
-            }
+            {book.subtitle ? (
+              <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
+            ) : null}
             <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
               <span>{authorPrefix}</span>
-              {
-                authorSegments.map((segment) =>
-                  segment.type === 'text' ? (
-                    <span>{segment.value}</span>
-                  ) : segment.href ? (
-                    <a href={segment.href} class="text-brand-sky hover:text-brand-navy">
-                      {segment.label}
-                    </a>
-                  ) : (
-                    <span>{segment.label}</span>
-                  ),
-                )
-              }
+              {authorSegments.map((segment) =>
+                segment.type === 'text' ? (
+                  <span>{segment.value}</span>
+                ) : segment.href ? (
+                  <a href={segment.href} class="text-brand-sky hover:text-brand-navy">
+                    {segment.label}
+                  </a>
+                ) : (
+                  <span>{segment.label}</span>
+                ),
+              )}
             </p>
           </div>
 
           {promoText ? <p class="text-base italic text-brand-charcoal/80">{promoText}</p> : null}
 
-          {
-            descriptionHtml ? (
-              <div
-                class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
-                set:html={descriptionHtml}
-              />
-            ) : null
-          }
+          {descriptionHtml ? (
+            <div
+              class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
+              set:html={descriptionHtml}
+            />
+          ) : null}
 
           <div class="space-y-4 pt-2">
-            {
-              isArchived ? (
-                <div class="space-y-3">
-                  <p class="bg-brand-mist/50 p-4 text-sm font-semibold uppercase tracking-wide text-brand-slate">
-                    Titolo fuori catalogo.
+            {isArchived ? (
+              <div class="space-y-3">
+                <p
+                  class="bg-brand-mist/50 p-4 text-sm font-semibold uppercase tracking-wide text-brand-slate"
+                >
+                  Titolo fuori catalogo.
+                </p>
+                <AlternateFormatsList formats={limitedAlternateFormats} />
+              </div>
+            ) : (
+              <>
+                {formattedPrice || formatValue ? (
+                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+                    {[formattedPrice, formatValue ? `Formato ${formatValue}` : null]
+                      .filter(Boolean)
+                      .join(' · ')}
                   </p>
-                  <AlternateFormatsList formats={limitedAlternateFormats} />
-                </div>
-              ) : (
-                <>
-                  {formattedPrice || formatValue ? (
-                    <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-                      {[formattedPrice, formatValue ? `Formato ${formatValue}` : null]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    </p>
+                ) : null}
+
+                <div class="flex flex-wrap gap-3">
+                  {showPrimaryCta && primaryCtaLabel.length > 0 ? (
+                    <Button
+                      href={primaryCtaHref}
+                      target={primaryCtaTarget ?? undefined}
+                      rel={primaryCtaRel ?? undefined}
+                      primary
+                    >
+                      {primaryCtaLabel}
+                    </Button>
                   ) : null}
 
-                  <div class="flex flex-wrap gap-3">
-                    {showPrimaryCta && primaryCtaLabel.length > 0 ? (
-                      <Button
-                        href={primaryCtaHref}
-                        target={primaryCtaTarget ?? undefined}
-                        rel={primaryCtaRel ?? undefined}
-                        primary
-                      >
-                        {primaryCtaLabel}
-                      </Button>
-                    ) : null}
+                  {!isEbookFormat && book.epubUrl ? (
+                    <Button
+                      href={book.epubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      primary={false}
+                    >
+                      Scarica eBook
+                    </Button>
+                  ) : null}
+                </div>
 
-                    {!isEbookFormat && book.epubUrl ? (
-                      <Button
-                        href={book.epubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        primary={false}
-                      >
-                        Scarica eBook
-                      </Button>
-                    ) : null}
-                  </div>
-
-                  <AlternateFormatsList formats={limitedAlternateFormats} />
-                </>
-              )
-            }
+                <AlternateFormatsList formats={limitedAlternateFormats} />
+              </>
+            )}
           </div>
         </div>
       </div>
     </div>
 
-    {
-      showReview && reviewContent ? (
-        <section class={styles.reviewSection}>
-          <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
-          <div class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic">
-            <StructuredText
-              data={reviewContent as any}
-              blockComponents={defaultBlockComponents as any}
-              linkToRecordComponents={defaultLinkToRecordComponents as any}
-            />
-          </div>
-        </section>
-      ) : null
-    }
+    {showReview && reviewContent ? (
+      <section class={styles.reviewSection}>
+        <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
+        <div
+          class="space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
+        >
+          <StructuredText
+            data={reviewContent as any}
+            blockComponents={defaultBlockComponents as any}
+            linkToRecordComponents={defaultLinkToRecordComponents as any}
+          />
+        </div>
+      </section>
+    ) : null}
 
     <AuthorsSection title={authorsSectionTitle} authors={authorsCards} />
 
@@ -495,94 +483,86 @@ const seo = sanitizeMetaTags(
         <DetailList title="Dettagli edizione" items={editionDetails} />
         <DetailList title="Dettagli grafica" items={graphicsDetails} />
       </div>
-      {
-        draftModeEnabled ? (
-          <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12 print:hidden">
-            <a
-              href={`/libri/schede/${book.slug}`}
-              class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Scheda libro (PDF) — staff
-            </a>
-          </div>
-        ) : null
-      }
+      {draftModeEnabled ? (
+        <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12 print:hidden">
+          <a
+            href={`/libri/schede/${book.slug}`}
+            class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Scheda libro (PDF) — staff
+          </a>
+        </div>
+      ) : null}
     </section>
 
-    {
-      reviewPreviews.length > 0 ? (
-        <section class={styles.reviewsSection}>
-          <div class="flex items-baseline justify-between gap-3">
-            <h2 class="text-3xl font-serif text-brand-navy">Recensioni</h2>
-          </div>
-          <ul class="space-y-5">
-            {reviewPreviews.map((review) => (
-              <li data-review-id={review.id}>
-                <a
-                  href={`/magazine/${review.slug}`}
-                  class="group block rounded-lg border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
-                >
-                  <div class="flex gap-3">
-                    <div class="mt-0.5 text-brand-sky">
-                      <iconify-icon icon="iconoir:design-pencil" class="text-xl sm:text-2xl" />
-                    </div>
-                    <div class="space-y-2">
-                      {review.dateLabel ? (
-                        <p class="text-xs font-semibold uppercase tracking-wide text-brand-slate">
-                          <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
-                          {review.authorName ? <span class="mx-2">•</span> : null}
-                          {review.authorName ? <span>A cura di {review.authorName}</span> : null}
-                        </p>
-                      ) : null}
-                      <p class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky">
-                        {review.title}
-                      </p>
-                      <p class="text-sm leading-relaxed text-brand-charcoal/90">
-                        {review.excerpt}{' '}
-                        <span class="inline-flex items-center gap-1 font-semibold text-brand-sky group-hover:text-brand-navy">
-                          Leggi recensione completa
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null
-    }
+    {reviewPreviews.length > 0 ? (
+      <section class={styles.reviewsSection}>
+        <div class="flex items-baseline justify-between gap-3">
+          <h2 class="text-3xl font-serif text-brand-navy">Recensioni</h2>
+        </div>
+        <ul class="space-y-5">
+          {reviewPreviews.map((review) => <li data-review-id={review.id}>
+            <a
+              href={`/magazine/${review.slug}`}
+              class="group block rounded-lg border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
+            >
+              <div class="flex gap-3">
+                <div class="mt-0.5 text-brand-sky">
+                  <iconify-icon icon="iconoir:design-pencil" class="text-xl sm:text-2xl" />
+                </div>
+                <div class="space-y-2">
+                  {review.dateLabel ? (
+                    <p class="text-xs font-semibold uppercase tracking-wide text-brand-slate">
+                      <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
+                      {review.authorName ? <span class="mx-2">•</span> : null}
+                      {review.authorName ? <span>A cura di {review.authorName}</span> : null}
+                    </p>
+                  ) : null}
+                  <p
+                    class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky"
+                  >
+                    {review.title}
+                  </p>
+                  <p class="text-sm leading-relaxed text-brand-charcoal/90">
+                    {review.excerpt}{' '}
+                    <span
+                      class="inline-flex items-center gap-1 font-semibold text-brand-sky group-hover:text-brand-navy"
+                    >
+                      Leggi recensione completa
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>)}
+        </ul>
+      </section>
+    ) : null}
 
-    {
-      collectionCarouselTitle && collectionCarouselId && collectionCarouselBooks.length > 0 ? (
-        <BookCarouselSection
-          id={collectionCarouselId}
-          title={collectionCarouselTitle}
-          description={collectionCarouselDescription}
-          descriptionLinkHref={collectionCarouselLinkHref ?? undefined}
-          descriptionLinkLabel={collectionCarouselLinkLabel ?? undefined}
-          books={collectionCarouselBooks}
-        />
-      ) : null
-    }
+    {collectionCarouselTitle && collectionCarouselId && collectionCarouselBooks.length > 0 ? (
+      <BookCarouselSection
+        id={collectionCarouselId}
+        title={collectionCarouselTitle}
+        description={collectionCarouselDescription}
+        descriptionLinkHref={collectionCarouselLinkHref ?? undefined}
+        descriptionLinkLabel={collectionCarouselLinkLabel ?? undefined}
+        books={collectionCarouselBooks}
+      />
+    ) : null}
   </article>
   <DraftModeQueryListener query={BOOK_DETAIL_QUERY} variables={{ slug }} />
-  {
-    book.collection?.id ? (
-      <DraftModeQueryListener
-        query={BOOK_COLLECTION_BOOKS_QUERY}
-        variables={{ collectionId: book.collection.id }}
-      />
-    ) : null
-  }
-  {
-    book.title ? (
-      <DraftModeQueryListener
-        query={BOOK_ALTERNATE_FORMATS_QUERY}
-        variables={{ title: book.title, excludeSlug: { neq: book.slug ?? '' } }}
-      />
-    ) : null
-  }
+  {book.collection?.id ? (
+    <DraftModeQueryListener
+      query={BOOK_COLLECTION_BOOKS_QUERY}
+      variables={{ collectionId: book.collection.id }}
+    />
+  ) : null}
+  {book.title ? (
+    <DraftModeQueryListener
+      query={BOOK_ALTERNATE_FORMATS_QUERY}
+      variables={{ title: book.title, excludeSlug: { neq: book.slug ?? '' } }}
+    />
+  ) : null}
 </BaseLayout>

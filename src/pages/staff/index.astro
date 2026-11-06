@@ -41,20 +41,14 @@ const tools = [
     </header>
 
     <div class={styles.tools}>
-      {
-        tools.map((tool) => (
-          <a href={tool.href} class={styles.toolCard}>
-            <div class={styles.toolHeader}>
-              <span class={styles.toolMeta}>{tool.meta}</span>
-              <h2 class={styles.toolTitle}>{tool.title}</h2>
-            </div>
-            <p class={styles.toolSummary}>{tool.summary}</p>
-            <span class={styles.toolLink}>
-              Apri strumento <span aria-hidden="true">→</span>
-            </span>
-          </a>
-        ))
-      }
+      {tools.map((tool) => <a href={tool.href} class={styles.toolCard}>
+        <div class={styles.toolHeader}>
+          <span class={styles.toolMeta}>{tool.meta}</span>
+          <h2 class={styles.toolTitle}>{tool.title}</h2>
+        </div>
+        <p class={styles.toolSummary}>{tool.summary}</p>
+        <span class={styles.toolLink}> Apri strumento <span aria-hidden="true">→</span> </span>
+      </a>)}
     </div>
   </section>
   <DraftModeQueryListener query={STAFF_INDEX_QUERY} />

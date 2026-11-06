@@ -27,17 +27,15 @@ const logoResponsiveImage = logo?.responsiveImage
     <p class={styles.label}>{booksLabel}</p>
     <h1 class={styles.title}>{name}</h1>
 
-    {
-      logoResponsiveImage ? (
-        <div class={styles.logoWrapper}>
-          <Image
-            data={logoResponsiveImage}
-            sizes="(min-width: 1024px) 220px, 40vw"
-            imgClass={styles.logoImage}
-          />
-        </div>
-      ) : null
-    }
+    {logoResponsiveImage ? (
+      <div class={styles.logoWrapper}>
+        <Image
+          data={logoResponsiveImage}
+          sizes="(min-width: 1024px) 220px, 40vw"
+          imgClass={styles.logoImage}
+        />
+      </div>
+    ) : null}
 
     {description ? <p class={styles.description}>{description}</p> : null}
   </div>

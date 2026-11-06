@@ -59,42 +59,36 @@ const isArchived = archivedFlag === true;
   <article class="flex h-full flex-col">
     <div class="relative w-full">
       <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
-        {
-          showFormatRibbon && formatLabel ? (
-            <div class={styles.formatRibbon}>
-              <span class={styles.badge}>{formatLabel}</span>
-            </div>
-          ) : null
-        }
+        {showFormatRibbon && formatLabel ? (
+          <div class={styles.formatRibbon}>
+            <span class={styles.badge}>{formatLabel}</span>
+          </div>
+        ) : null}
 
-        {
-          isArchived ? (
-            <div class={styles.archiveRibbon}>
-              <span class={styles.archiveBadge}>Fuori catalogo</span>
-            </div>
-          ) : null
-        }
+        {isArchived ? (
+          <div class={styles.archiveRibbon}>
+            <span class={styles.archiveBadge}>Fuori catalogo</span>
+          </div>
+        ) : null}
 
-        {
-          coverResponsiveImage ? (
-            <div class={styles.coverWrapper}>
-              <div
-                class={styles.dropShadow}
-                style={`background: ${shadowColor};`}
-                aria-hidden="true"
-              />
-              <Image
-                data={coverResponsiveImage}
-                sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
-                srcSetCandidates={[1, 2]}
-                imgClass={styles.coverImage}
-                imgStyle={{ filter: `drop-shadow(26px 36px 48px ${shadowColor})` }}
-              />
-            </div>
-          ) : (
-            <div class={styles.coverFallback}>Copertina in arrivo</div>
-          )
-        }
+        {coverResponsiveImage ? (
+          <div class={styles.coverWrapper}>
+            <div
+              class={styles.dropShadow}
+              style={`background: ${shadowColor};`}
+              aria-hidden="true"
+            />
+            <Image
+              data={coverResponsiveImage}
+              sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
+              srcSetCandidates={[1, 2]}
+              imgClass={styles.coverImage}
+              imgStyle={{ filter: `drop-shadow(26px 36px 48px ${shadowColor})` }}
+            />
+          </div>
+        ) : (
+          <div class={styles.coverFallback}>Copertina in arrivo</div>
+        )}
       </div>
     </div>
 
