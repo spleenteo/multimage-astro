@@ -22,3 +22,7 @@ One rule per line; every subagent reads this.
 - zsh doesn't word-split an unquoted `$var`: `set -- $p` in a loop silently passes empty arguments; use a function with explicit arguments.
 - Probe 404s with more than one shape of unknown path (top-level and under a dynamic route): a dynamic route that throws gives 500 where a top-level miss gives 404.
 - `vercel curl` on a protected project with no automation bypass creates one silently on the project: record it in TODO for revocation the moment it is created.
+- In a leak probe, guard each needle (`v ? body.includes(v) : 'unset'`): a variable present but empty in `.env` loads as `""`, and `includes("")` is always true.
+- In `astro dev`, Vite answers every OPTIONS request with its own 204 before the route runs: prove a route module loads with a GET (404 or 401), and leave the OPTIONS handlers to a deploy.
+- On TypeScript 6, a standalone `tsc <file>` with flags fails with TS5112 when a `tsconfig.json` is present: add `--ignoreConfig`.
+- Before a smoke that needs a server-side token, check that it is non-empty in the env the server reads (names and emptiness only, never values); a local `.env` can hold the name with no value.
