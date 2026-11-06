@@ -25,8 +25,8 @@
     "@astrojs/check": "^0.9.12",
     "@astrojs/vercel": "^11.0.20",
     "@datocms/astro": "^0.6.16",
-    "@datocms/cda-client": "^0.2.10",
-    "@datocms/cma-client": "^5.8.1",
+    "@datocms/cda-client": "^0.3.2",
+    "@datocms/cma-client": "^6.8.0",
     "@datocms/content-link": "^0.3.23",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
@@ -44,14 +44,11 @@
     "@astrojs/ts-plugin": "^1.10.12",
     "@types/jsdom": "^28.0.3",
     "@types/jsonwebtoken": "^9.0.10",
-    "datocms": "~4.0.29",
+    "datocms": "^4.2.0",
     "dotenv-cli": "^11.1.0",
     "esbuild": "^0.28.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^0.14.1"
-  },
-  "overrides": {
-    "@datocms/cli-utils": "<4.2.0"
   }
 }
