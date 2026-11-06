@@ -23,6 +23,7 @@ export default defineConfig({
   adapter,
   site: 'https://www.multimage.org',
   // Astro 7 defaults to 'jsx' (strips whitespace between inline elements); keep HTML-aware compression.
+  // Keep in sync with astroCompressHTML in .prettierrc (true = 'html').
   compressHTML: true,
   env: {
     schema: {
