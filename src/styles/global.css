@@ -123,11 +123,6 @@
     @apply text-brand-sky transition-colors duration-150;
   }
 
-  a:hover,
-  a:focus {
-    @apply text-brand-navy;
-  }
-
   strong {
     @apply font-semibold text-brand-charcoal;
   }
@@ -142,6 +137,16 @@
 
   ::selection {
     @apply bg-brand-sky/20;
+  }
+}
+
+/* Tailwind 3 kept a:hover/a:focus (0,1,1) above single-class colour utilities such as
+   text-white; in v4 the base layer sits below utilities, so the rule lives in the
+   utilities layer, where specificity still decides (hover:text-* at (0,2,0) keeps winning). */
+@layer utilities {
+  a:hover,
+  a:focus {
+    @apply text-brand-navy;
   }
 }
 
