@@ -29,5 +29,5 @@
 }
 
 .description {
-  @apply text-base leading-relaxed text-brand-charcoal/80 md:text-lg;
+  @apply text-base leading-relaxed text-brand-charcoal/80 md:text-lg md:leading-7;
 }

@@ -25,5 +25,5 @@
 }
 
 .description {
-  @apply text-lg leading-relaxed text-brand-slate md:text-xl;
+  @apply text-lg leading-relaxed text-brand-slate md:text-xl md:leading-7;
 }
