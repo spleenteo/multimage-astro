@@ -1,7 +1,7 @@
 @reference '../../../styles/global.css';
 
 .root {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2;
 }
 
 .primary {

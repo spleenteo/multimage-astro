@@ -41,7 +41,7 @@
 }
 
 .menuLink {
-  @apply inline-flex items-center justify-center bg-brand-mist/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-charcoal transition duration-150 hover:bg-brand-mist hover:text-brand-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-6 sm:py-3 sm:text-sm;
+  @apply inline-flex items-center justify-center bg-brand-mist/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-charcoal transition duration-150 hover:bg-brand-mist hover:text-brand-navy focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-6 sm:py-3 sm:text-sm;
 }
 
 .menuLinkActive {

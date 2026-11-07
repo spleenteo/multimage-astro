@@ -1,7 +1,7 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  @apply flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
 }
 
 .heroPanel {

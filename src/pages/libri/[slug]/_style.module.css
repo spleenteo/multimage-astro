@@ -13,7 +13,7 @@
 }
 
 .detailCard {
-  @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12;
+  @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-xs sm:p-12;
 }
 
 .reviewSection {

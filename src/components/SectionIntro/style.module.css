@@ -1,11 +1,11 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply relative overflow-hidden border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12;
+  @apply relative overflow-hidden border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-xs sm:p-12;
 }
 
 .background {
-  @apply pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-brand-mist/70 via-white/60 to-brand-sand/70;
+  @apply pointer-events-none absolute inset-0 -z-10 bg-linear-to-br/srgb from-brand-mist/70 via-white/60 to-brand-sand/70;
 }
 
 .content {
