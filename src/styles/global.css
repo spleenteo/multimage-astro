@@ -39,6 +39,17 @@
   --radius-3xl: 0px;
   --radius-full: 0px;
 
+  /* Tailwind 3 line heights: fixed rem values, not ratios, so they hold when page CSS sets only a font size */
+  --text-xs--line-height: 1rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl--line-height: 1;
+
   --default-ring-width: 3px;
   --default-ring-color: rgb(59 130 246 / 0.5);
 }
@@ -94,12 +105,8 @@
   h4,
   h5,
   h6 {
+    /* plain line-height, not leading-tight: that sets --tw-leading, which a text-* on the same element would then reuse */
     @apply font-serif text-brand-navy font-semibold;
-  }
-
-  h4,
-  h5,
-  h6 {
     line-height: 1.25;
   }
 
@@ -116,7 +123,14 @@
   }
 
   p {
-    @apply text-base md:text-lg;
+    /* v3: base 1rem/1.625 (leading-relaxed won over text-base), md 1.125rem/1.75rem */
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+
+    @media (width >= 48rem) {
+      font-size: var(--text-lg);
+      line-height: var(--text-lg--line-height);
+    }
   }
 
   a {
@@ -140,12 +154,14 @@
   }
 }
 
-/* Tailwind 3 kept a:hover/a:focus (0,1,1) above single-class colour utilities such as
-   text-white; in v4 the base layer sits below utilities, so the rule lives in the
-   utilities layer, where specificity still decides (hover:text-* at (0,2,0) keeps winning). */
+/* Tailwind 3 kept a:hover/a:focus (0,1,1) above single-class colour utilities such as text-white,
+   and below descendant utilities such as [&_a]:text-white (same specificity, later). In v4 the base
+   layer sits below utilities, so the rule lives at the end of the utilities layer with :where(a)
+   (0,1,0): it wins over (0,1,0) utilities by source order, loses to (0,1,1) ones, and hover:text-*
+   (0,2,0) still wins. */
 @layer utilities {
-  a:hover,
-  a:focus {
+  :where(a):hover,
+  :where(a):focus {
     @apply text-brand-navy;
   }
 }
