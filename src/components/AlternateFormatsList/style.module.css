@@ -13,5 +13,5 @@
 }
 
 .link {
-  @apply inline-flex items-center gap-1 bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist;
+  @apply inline-flex items-center gap-1 bg-brand-mist/60 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-sky transition hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy;
 }

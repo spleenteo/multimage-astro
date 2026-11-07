@@ -45,7 +45,7 @@
 }
 
 .pseudonymLink {
-  @apply text-brand-sky transition hover:text-brand-navy;
+  @apply text-brand-sky transition hover:text-brand-navy focus:text-brand-navy;
 }
 
 .contentSection {

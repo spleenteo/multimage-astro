@@ -158,7 +158,9 @@
    and below descendant utilities such as [&_a]:text-white (same specificity, later). In v4 the base
    layer sits below utilities, so the rule lives at the end of the utilities layer with :where(a)
    (0,1,0): it wins over (0,1,0) utilities by source order, loses to (0,1,1) ones, and hover:text-*
-   (0,2,0) still wins. */
+   (0,2,0) still wins. Unlayered CSS-module rules beat it whatever their specificity, so a module
+   restores v3 with its own hover:/focus: classes. Rules in the components layer (.btn-outline) lose
+   to it too: a .btn-outline:hover white on an <a> would turn navy (latent, no src use). */
 @layer utilities {
   :where(a):hover,
   :where(a):focus {
