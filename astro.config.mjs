@@ -1,6 +1,7 @@
 import { defineConfig, envField } from 'astro/config';
 
 import vercel from '@astrojs/vercel';
+import tailwindcss from '@tailwindcss/vite';
 
 const adapter = vercel({
   isr: {
@@ -82,5 +83,8 @@ export default defineConfig({
   integrations: [],
   build: {
     concurrency: 8,
+  },
+  vite: {
+    plugins: [tailwindcss()],
   },
 });

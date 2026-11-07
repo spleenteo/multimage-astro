@@ -1,15 +1,13 @@
-@tailwind components;
+@reference '../../styles/global.css';
 
-@layer components {
-  .section {
-    @apply space-y-6;
-  }
+.section {
+  @apply space-y-6;
+}
 
-  .title {
-    @apply text-3xl font-serif text-brand-navy;
-  }
+.title {
+  @apply text-3xl font-serif text-brand-navy;
+}
 
-  .paragraph {
-    @apply text-base leading-relaxed text-brand-charcoal/90;
-  }
+.paragraph {
+  @apply text-base leading-relaxed text-brand-charcoal/90;
 }

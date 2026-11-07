@@ -1,11 +1,9 @@
-@tailwind components;
+@reference '../../styles/global.css';
 
-@layer components {
-  .section {
-    @apply w-full;
-  }
+.section {
+  @apply w-full;
+}
 
-  .inner {
-    @apply mx-auto max-w-5xl;
-  }
+.inner {
+  @apply mx-auto max-w-5xl;
 }

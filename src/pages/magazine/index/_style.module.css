@@ -1,23 +1,21 @@
-@tailwind components;
+@reference '../../../styles/global.css';
 
-@layer components {
-  .layout {
-    @apply space-y-12;
-  }
+.layout {
+  @apply space-y-12;
+}
 
-  .heroSection {
-    @apply mx-auto max-w-5xl space-y-3 px-4 text-center;
-  }
+.heroSection {
+  @apply mx-auto max-w-5xl space-y-3 px-4 text-center;
+}
 
-  .label {
-    @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
-  }
+.label {
+  @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+}
 
-  .cardsGrid {
-    @apply mx-auto grid w-full max-w-6xl gap-8 px-4 sm:grid-cols-2 xl:grid-cols-3;
-  }
+.cardsGrid {
+  @apply mx-auto grid w-full max-w-6xl gap-8 px-4 sm:grid-cols-2 xl:grid-cols-3;
+}
 
-  .empty {
-    @apply mx-auto max-w-3xl rounded-2xl border border-dashed border-brand-mist/80 bg-white/80 px-6 py-10 text-center text-sm text-brand-charcoal/70;
-  }
+.empty {
+  @apply mx-auto max-w-3xl rounded-2xl border border-dashed border-brand-mist/80 bg-white/80 px-6 py-10 text-center text-sm text-brand-charcoal/70;
 }

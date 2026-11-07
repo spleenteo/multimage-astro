@@ -1,15 +1,83 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' source(none) theme(static);
+@source '../';
+@custom-variant hover (&:hover);
+
+@theme static {
+  --color-brand-navy: #004881;
+  --color-brand-navy-light: #005192;
+  --color-brand-navy-lighter: #f3f4f6;
+  --color-brand-sky: #088af2;
+  --color-brand-crimson: #ae0e0e;
+  --color-brand-charcoal: #343434;
+  --color-brand-slate: #6c757d;
+  --color-brand-sand: #f4f4f4;
+  --color-brand-mist: #f2f4f6;
+  --color-brand-orange: #fa7810;
+  --color-social-facebook: #4267b2;
+  --color-social-instagram: #c13584;
+  --color-social-newsletter: #53be42;
+
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', 'Times New Roman', serif;
+
+  --shadow-soft: 0 18px 45px rgba(0, 72, 129, 0.08);
+
+  --tracking-wide: 0em;
+  --tracking-wider: 0em;
+
+  --radius-*: initial;
+  --radius: 0px;
+  --radius-none: 0px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-full: 0px;
+
+  --default-ring-width: 3px;
+  --default-ring-color: rgb(59 130 246 / 0.5);
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+
+  @media (width >= 40rem) {
+    max-width: none;
+  }
+
+  @media (width >= 1200px) {
+    max-width: 1200px;
+  }
+}
 
 @layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: #e5e7eb;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+  }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
   :root {
     color-scheme: light;
     --header-height: 5rem;
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-serif: 'Playfair Display', 'Times New Roman', serif;
   }
 
   html {

@@ -1,71 +1,69 @@
-@tailwind components;
+@reference '../../../styles/global.css';
 
-@layer components {
-  .layout {
-    @apply space-y-12;
-  }
+.layout {
+  @apply space-y-12;
+}
 
-  .heroGrid {
-    @apply mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start;
-  }
+.heroGrid {
+  @apply mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start;
+}
 
-  .portraitPanel {
-    @apply overflow-hidden bg-white/95 shadow-soft;
-  }
+.portraitPanel {
+  @apply overflow-hidden bg-white/95 shadow-soft;
+}
 
-  .portraitFrame {
-    @apply bg-brand-mist;
-  }
+.portraitFrame {
+  @apply bg-brand-mist;
+}
 
-  .portraitFallback {
-    @apply flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate;
-  }
+.portraitFallback {
+  @apply flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate;
+}
 
-  .detailCard {
-    @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12;
-  }
+.detailCard {
+  @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-sm sm:p-12;
+}
 
-  .metaLabel {
-    @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
-  }
+.metaLabel {
+  @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+}
 
-  .name {
-    @apply text-4xl font-serif text-brand-navy md:text-5xl;
-  }
+.name {
+  @apply text-4xl font-serif text-brand-navy md:text-5xl;
+}
 
-  .booksLabel {
-    @apply text-sm font-semibold uppercase tracking-wide text-brand-sky;
-  }
+.booksLabel {
+  @apply text-sm font-semibold uppercase tracking-wide text-brand-sky;
+}
 
-  .summary {
-    @apply text-base leading-relaxed text-brand-charcoal/80;
-  }
+.summary {
+  @apply text-base leading-relaxed text-brand-charcoal/80;
+}
 
-  .pseudonyms {
-    @apply flex flex-wrap gap-3 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70;
-  }
+.pseudonyms {
+  @apply flex flex-wrap gap-3 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70;
+}
 
-  .pseudonymLink {
-    @apply text-brand-sky transition hover:text-brand-navy;
-  }
+.pseudonymLink {
+  @apply text-brand-sky transition hover:text-brand-navy;
+}
 
-  .contentSection {
-    @apply space-y-6;
-  }
+.contentSection {
+  @apply space-y-6;
+}
 
-  .contentBlock {
-    @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3;
-  }
+.contentBlock {
+  @apply space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3;
+}
 
-  .booksSection {
-    @apply space-y-8;
-  }
+.booksSection {
+  @apply space-y-8;
+}
 
-  .booksHeader {
-    @apply text-3xl font-serif text-brand-navy;
-  }
+.booksHeader {
+  @apply text-3xl font-serif text-brand-navy;
+}
 
-  .booksGrid {
-    @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
-  }
+.booksGrid {
+  @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
 }
