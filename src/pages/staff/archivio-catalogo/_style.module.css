@@ -45,7 +45,7 @@
 }
 
 .menuLinkActive {
-  @apply bg-brand-sky text-white shadow-soft hover:bg-brand-sky hover:text-white focus:text-brand-navy;
+  @apply bg-brand-sky text-white shadow-soft hover:bg-brand-sky hover:text-white focus:text-brand-navy hover:focus:text-white;
 }
 
 .tableWrapper {

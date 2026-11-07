@@ -21,7 +21,7 @@
 }
 
 .description {
-  @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_strong]:text-brand-charcoal;
+  @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_strong]:text-brand-charcoal;
 }
 
 .addressRow {
