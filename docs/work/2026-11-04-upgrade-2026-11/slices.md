@@ -136,3 +136,12 @@ Swiper 14.4.0 (exact), jsdom 30.1.3 + @types/jsdom 30.0.0 and prettier-plugin-as
 **Done**: gate green; dev smoke green; visual check page by page before/after (home, libri, libro, autori, autore, collane, magazine, info, distributori, staff), carousel and module headings in particular; final Vercel preview deploy green, cache procedure green.
 **Gotchas**: silent visual regressions; layer order.
 **Carried from V6**: on the preview, read the Node version from the build log (must be ≥ 24.15, jsdom 30) and make one GET /api/seo-analysis.
+
+**Deviations found while planning V7**
+
+- Only 33 of the 37 `*.module.css` hold `@tailwind components;`; the 4 plain ones (PillsBlock, BannerSection, FeaturedBookHighlight, pages/index) stay as they are.
+- Both PostCSS configs are deleted, not only the dead one, and the `postcss` dependency goes too: without the two plugins the live config would be empty.
+- Beyond border, ring and shadow, three more v3 behaviours are kept (placeholder colour, button cursor, `hover` on touch devices), and three utilities are renamed (T3: `outline-none`, `backdrop-blur-sm`, `bg-gradient-to-br`).
+- Tailwind 4 needs Firefox 128+ and Chrome/Edge 111+, newer than Swiper 14's 110+: accepted by the user on 2026-11-07; the Tailwind 4 decision records both floors as the site's browser baseline.
+- Theme tokens use `@theme static` with `theme(static)`: plain `@theme` leaves tokens used only through `@apply` in modules undefined (plan review H1).
+- The visual check goes beyond the mandate's page list: three viewports (390/1024/1280), `/libri/schede`, style and hover/focus dumps, a heading summary, a container probe, a noise-floor run, and a preview-vs-production compare.

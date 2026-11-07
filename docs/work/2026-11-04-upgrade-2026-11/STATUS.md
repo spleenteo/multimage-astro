@@ -2,11 +2,11 @@
 status: open
 phase: slice
 slice: V7
-step: plan
+step: execute
 work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
-updated: 2026-11-06
+updated: 2026-11-07
 tags: [work, upgrade-2026-11]
 description: "Manutenzione: aggiornare librerie e framework alle ultime versioni stabili (cura devops)"
 ---
