@@ -67,6 +67,19 @@
   }
 }
 
+/* Tailwind 3 space-y, for lists whose children can carry their own margins (CMS blocks with my-*,
+   [&_h3]:mt-* rules) or end with a hidden element (the <script> BookCarouselSection renders).
+   v4 space-y-* sets margin-bottom through :where() (no specificity) on every child but the last,
+   so a child's own margin wins and collapses with it, and a trailing <script> leaves a gap under
+   the last visible child. This keeps v3's selector and specificity (0,3,0): margin-top on every
+   visible child after the first, margin-bottom 0. */
+@utility v3-space-y-* {
+  & > :not([hidden]) ~ :not([hidden]) {
+    margin-top: --spacing(--value(integer));
+    margin-bottom: 0;
+  }
+}
+
 @layer base {
   *,
   ::after,

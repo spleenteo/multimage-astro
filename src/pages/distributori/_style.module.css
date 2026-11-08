@@ -13,7 +13,7 @@
 }
 
 .sectionWrapper {
-  @apply mx-auto max-w-5xl [&>:not([hidden])~:not([hidden])]:mt-16 [&>:not([hidden])~:not([hidden])]:mb-0;
+  @apply mx-auto max-w-5xl v3-space-y-16;
 }
 
 .regionHeader {

@@ -358,7 +358,7 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
     </section>
 
     {homeBannerEntries.length > 0 ? (
-      <div class="space-y-10">
+      <div class="v3-space-y-10">
         {homeBannerEntries.map((entry) => {
           if (entry.kind === 'banner') {
             return <BannerSection {...entry.data} />;
