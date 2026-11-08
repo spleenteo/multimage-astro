@@ -62,12 +62,14 @@
 - [ ] [Documentation] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-docs-ops** `docs/guidelines/operations.md:10` says `sync-datocms` keeps `docs/DATOCMS.md` in sync: the file no longer exists, fix the sentence.
 - [ ] [Documentation] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-bypass-env** `BYPASS_TOKEN` is intentionally absent from local `.env` (the ISR config reads `process.env`; local runs export a throwaway value, see caching.md (b)): keep it that way and mention it in docs/guidelines/operations.md.
 - [ ] [Refactoring] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-preview-script** remove or replace `"preview": "astro preview"` in `package.json`: it does not work with `@astrojs/vercel` (use `astro dev`).
+- [ ] [Refactoring] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-tw-compat** review the Tailwind 3 compat block in global.css (border colour, placeholder, button cursor, ring defaults, hover variant, v3 line heights, `v3-space-y`) at the next redesign.
 - [ ] [Refactoring] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-jsdom-31** move to jsdom 31 when @types/jsdom 31 exists (31 switches the canvas backend to `@napi-rs/canvas`).
 
 ## Documentation Hygiene
 - [ ] [Documentation] [Impact: L] [Effort: M] [Owner: @codex] [Status: todo] — **DH2** wire `npm run docs:inventory` into CI so `docs/list-*` files stay in sync with the filesystem (Due: 2025-12-05; Acceptance: script runs in CI, failures block merges, referenced in docs/guidelines/testing.md).
 
 ## Completed
+- 2026-11-08 - [Refactoring] **V7 — Tailwind 4** (work upgrade-2026-11): tailwindcss 4.3.5 + `@tailwindcss/vite` 4.3.5; theme in `@theme static` in `global.css`; `tailwind.config.mjs`, both PostCSS configs, autoprefixer and postcss removed; 33 CSS modules on `@reference`, unlayered; Tailwind 3 defaults, line heights, `space-y`, container and link hover/focus kept; page heights match Tailwind 3 (dev, 13 pages × 3 viewports). No preview deploy (user's call): the Vercel checks move to the production deploy.
 - 2026-11-06 - [Refactoring] **V6 — Other majors** (work upgrade-2026-11): swiper 14.4.0 (exact pin), jsdom 30.1.3 + @types/jsdom 30.0.0, prettier-plugin-astro 1.1.2 with `astroCompressHTML: "html"` in `.prettierrc` (mirrors `compressHTML: true`); the 50-file `.astro` format diff is a separate commit; carousels checked on the production bundle, `/api/seo-analysis` read through jsdom 30.
 - 2026-11-06 - [Refactoring] **UP-cli-utils-override**: `overrides` removed from `package.json`; cma-client 6 and CLI 4.2 share one `@datocms/rest-client-utils` copy.
 - 2026-11-06 - [Refactoring] **V5 — DatoCMS clients and CLI** (work upgrade-2026-11): `@datocms/cda-client` 0.3.2, `@datocms/cma-client` 6.8.0, `datocms` CLI 4.2.0; the type shims have been gone since V3; `schema.ts` regenerated with CLI 4.2 (same 39 types, reordering only).

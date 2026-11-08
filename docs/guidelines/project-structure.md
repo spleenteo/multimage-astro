@@ -14,7 +14,7 @@ description: Fastro is based on and extends the [Astro project structure](https:
 - **`src/lib`**
   - Framework-agnostic helpers such as Dato tooling (`datocms/*`), view-model mappers (`books.ts`, `authors.ts`, `suppliers.ts`), formatting utilities (`text.ts`, `colors.ts`, `currency.ts`), and SEO fallbacks (`seo.ts`).
 - **`src/styles`**
-  - Global Tailwind import (`global.css`) and CSS variables including font declarations to keep modules lean.
+  - `global.css`: the Tailwind import, `@theme static` (tokens and font stacks), `@utility container`, the Tailwind 3 compat rules and the base and components layers; CSS modules `@reference` it to stay lean.
 - **`scripts`**
   - `build-search-client.mjs` emits the browser bundles in `public/generated`; `sync-datocms.mjs` loads `.env` and regenerates `schema.ts`.
 - **`public/generated`**

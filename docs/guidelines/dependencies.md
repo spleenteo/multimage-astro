@@ -8,7 +8,7 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 - Node 24.x (`.nvmrc` for local, `engines.node` in `package.json` for Vercel) and TypeScript 6 (`typescript@^6`; TypeScript 7 is deferred, see `docs/decisions-log/2026-11-04-defer-typescript-7.md`).
 - `astro@^7` (Rust compiler, Vite 8, `compressHTML: true` pinned) with `output: 'server'` and `@astrojs/vercel@^11` ISR (no prerendered routes), deployed to Vercel as a single project.
-- Styling uses `tailwindcss` (3.x) and `autoprefixer` wired as PostCSS plugins (`postcss.config.mjs`/`.cjs`); there is no `@astrojs/tailwind` integration. Brand tokens defined in `tailwind.config.mjs`.
+- Styling uses `tailwindcss` 4 through `@tailwindcss/vite` in `astro.config.mjs`; there is no PostCSS config, no autoprefixer and no `@astrojs/tailwind` integration. The theme (brand tokens, fonts, Tailwind 3 line heights) sits in `@theme static` in `src/styles/global.css`, imported with `theme(static)` so tokens used only through `@apply` in CSS modules are still defined. Tailwind CSS modules start with `@reference` to `global.css` and use no `@layer`. Site browser baseline: Safari 16.4+, Chrome/Edge 111+, Firefox 128+ (Tailwind 4; Swiper 14 alone needs 110+). See `docs/decisions-log/2026-11-07-tailwind-4.md`.
 - `swiper` 14 (exact pin) provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required. Swiper 14 raises the browser baseline to Chrome/Edge 110+, Safari 16.4+, Firefox 110+.
 
 ## CMS & Data

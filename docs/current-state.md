@@ -13,7 +13,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). All routes are SSR with ISR caching (no more `prerender` flag branching).
 - Layout, styles, scripts:
   - `src/layouts/BaseLayout.astro` loads site-wide data, analytics, and icon scripts.
-  - `src/styles/global.css` imports fonts + Tailwind base layers; `tailwind.config.mjs` defines the design tokens.
+  - `src/styles/global.css` imports fonts + Tailwind 4 and defines the design tokens in `@theme static` (no JS config).
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.
 - Known gaps: cache tags aren't wired (**CD3**), `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
@@ -49,7 +49,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Assets
 
-- Fonts: `src/styles/global.css` imports Inter + Playfair Display from Google Fonts; stored in CSS variables consumed by Tailwind. No local font files.
+- Fonts: `src/styles/global.css` imports Inter + Playfair Display from Google Fonts; defined once in `@theme` (`--font-sans`/`--font-serif`). No local font files.
 - Icons: `iconify-icon.min.js` loaded from CDN via `BaseLayout`. No tree-shaking or local sprite.
 - Third-party scripts: BaseLayout injects Google Analytics, Iubenda, Vercel Analytics, and Speed Insights; CSP/SRI hardening is open (**S3**).
 - Images: every CMS-driven image goes through `@datocms/astro/Image`. Hero/detail images use the full `RESPONSIVE_IMAGE_FRAGMENT` (with `base64` blur-up + DatoCMS `srcSet`). Card/thumbnail grids use the lean `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`/`srcSet`; flat `bgColor` placeholder + `srcSetCandidates={[1,2]}`) to keep listing HTML small (Fast Origin Transfer). Header/footer logos are still remote PNGs without intrinsic dimensions.
@@ -110,16 +110,16 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Dependencies
 
-- Core: Node 24.x (`.nvmrc`, `engines`), Astro 7.4.7 (`compressHTML: true` pinned), Tailwind 3.4.19 (via PostCSS plugin, non più via `@astrojs/tailwind`), TypeScript 6.0.3, `@astrojs/vercel` 11.0.20 con ISR, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.3.2, `@datocms/cma-client` 6.8.0, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.2.0.
+- Core: Node 24.x (`.nvmrc`, `engines`), Astro 7.4.7 (`compressHTML: true` pinned), Tailwind 4.3.5 (via `@tailwindcss/vite`, no PostCSS), TypeScript 6.0.3, `@astrojs/vercel` 11.0.20 con ISR, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.3.2, `@datocms/cma-client` 6.8.0, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.2.0.
 - Tooling: Prettier 3.9 + `prettier-plugin-astro` 1.1, esbuild 0.28, dotenv-cli 11.1.
 - Client bundles: Swiper 14.4.0 (pinned exact), Iconify CDN.
-- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto (`npm audit --omit=dev` lo elenca) come transitive di `@vercel/routing-utils@6.6.1` (`path-to-regexp@6.1.0`) — upstream issue, attende patch da Vercel; Tailwind 4 not yet; TypeScript 7 deferred (decisions-log/2026-11-04-defer-typescript-7.md).
+- Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto (`npm audit --omit=dev` lo elenca) come transitive di `@vercel/routing-utils@6.6.1` (`path-to-regexp@6.1.0`) — upstream issue, attende patch da Vercel; TypeScript 7 deferred (decisions-log/2026-11-04-defer-typescript-7.md).
 
 ## Accessibility
 
 - Pages use semantic landmarks through `BaseLayout.astro`; no skip link yet (**A11Y2**).
 - Interactive blocks (search form, `BookCarouselSection`, staff tables) expose ARIA labels but have not been validated with screen readers (**A11Y1**).
-- Color contrast follows the Tailwind theme from `tailwind.config.mjs`; no automated contrast audit since 2025-11-01.
+- Color contrast follows the Tailwind theme in `src/styles/global.css`; no automated contrast audit since 2025-11-01.
 - No Playwright/Cypress suite to prevent regressions.
 
 ## i18n
