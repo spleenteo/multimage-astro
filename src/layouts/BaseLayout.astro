@@ -179,7 +179,8 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
       src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"
       type="module"
       defer
-      is:inline></script>
+      is:inline
+    ></script>
 
     <!-- Google Analytics (legacy UA profile kept from previous site) -->
     <script is:inline>
@@ -233,7 +234,11 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
         }
       })(window, document);
     </script>
-    <script async charset="utf-8" src="https://cdn.iubenda.com/cs/stable/iubenda_cs.js" is:inline
+    <script
+      async
+      charset="utf-8"
+      src="https://cdn.iubenda.com/cs/stable/iubenda_cs.js"
+      is:inline
     ></script>
 
     <!-- Stub + script Vercel Web Analytics -->

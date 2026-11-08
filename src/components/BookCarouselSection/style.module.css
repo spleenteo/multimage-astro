@@ -1,57 +1,55 @@
-@tailwind components;
+@reference '../../styles/global.css';
 
-@layer components {
-  .section {
-    @apply w-full bg-brand-navy-lighter py-8;
-  }
+.section {
+  @apply w-full bg-brand-navy-lighter py-8;
+}
 
-  .inner {
-    @apply flex w-full flex-col gap-8;
-  }
+.inner {
+  @apply flex w-full flex-col gap-8;
+}
 
-  .header {
-    @apply flex flex-col gap-6 px-6 md:flex-row md:items-end md:justify-between md:px-10 lg:px-16;
-  }
+.header {
+  @apply flex flex-col gap-6 px-6 md:flex-row md:items-end md:justify-between md:px-10 lg:px-16;
+}
 
-  .headingGroup {
-    @apply flex max-w-4xl flex-col gap-3;
-  }
+.headingGroup {
+  @apply flex max-w-4xl flex-col gap-3;
+}
 
-  .title {
-    @apply text-3xl font-serif tracking-tight  md:text-4xl;
-  }
+.title {
+  @apply text-3xl font-serif tracking-tight  md:text-4xl;
+}
 
-  .description {
-    @apply text-base leading-relaxed [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy;
-  }
+.description {
+  @apply text-base leading-relaxed [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy;
+}
 
-  .controls {
-    @apply flex items-center gap-4;
-  }
+.controls {
+  @apply flex items-center gap-4;
+}
 
-  .navButton {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/40 text-brand-navy transition hover:border-brand-sky hover:bg-brand-sky hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy;
-  }
+.navButton {
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/40 text-brand-navy transition hover:border-brand-sky hover:bg-brand-sky hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy;
+}
 
-  .pagination {
-    @apply flex items-center gap-2;
-  }
+.pagination {
+  @apply flex items-center gap-2;
+}
 
-  .carousel {
-    @apply relative;
-  }
+.carousel {
+  @apply relative;
+}
 
-  .swiper {
-    @apply block w-full;
-  }
+.swiper {
+  @apply block w-full;
+}
 
-  .slide {
-    @apply h-auto pb-6;
-  }
+.slide {
+  @apply h-auto pb-6;
+}
 
-  .card {
-    @apply h-full;
-  }
+.card {
+  @apply h-full;
 }
 
 :global(.swiper-pagination-bullet) {

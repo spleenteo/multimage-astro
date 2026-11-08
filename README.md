@@ -4,8 +4,8 @@ This project powers the multimage.org frontend with Astro and DatoCMS. Follow th
 
 ## Prerequisites
 
-- Node.js 20.x (use `nvm install 20` if needed)
-- npm 10.x (bundled with modern Node releases)
+- Node.js 24.x (`nvm use` reads `.nvmrc`; `nvm install 24` if needed)
+- npm (bundled with Node 24)
 - Access to the Multimage DatoCMS project (tokens listed in `datocms.json`)
 
 ## 1. Install Dependencies

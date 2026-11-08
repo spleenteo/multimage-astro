@@ -118,8 +118,7 @@ export function formatAuthorNames(
 }
 
 export type AuthorSegment =
-  | { type: 'text'; value: string }
-  | { type: 'author'; label: string; href?: string | null };
+  { type: 'text'; value: string } | { type: 'author'; label: string; href?: string | null };
 
 export function buildAuthorSegments(
   authors: AuthorSlugLike[],

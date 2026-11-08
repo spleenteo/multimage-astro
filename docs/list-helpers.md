@@ -19,19 +19,23 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: most `_graphql.ts` files to keep fragments DRY.
   - Notes: card grids must pair `RESPONSIVE_IMAGE_CARD_FIELDS` with `<Image srcSetCandidates={[1,2]}>`. Book/Collection components rely on width/height—update carefully.
 - **`recordInfo` helpers** (`src/lib/datocms/recordInfo.ts`)
-  - Purpose: `recordToWebsiteRoute` and `recordToSlug` translate Dato records into site URLs/slugs.
+  - Purpose: `recordToWebsiteRoute` and `recordToSlug` translate Dato records into site URLs/slugs. `index_page` records resolve by slug through the exported `INDEX_PAGE_PATHS` (shared with `revalidationUrls.ts`); `supplier` resolves to `/distributori`.
   - Used in: `/api/preview-links`, `/api/seo-analysis`, and any future automations that need to resolve routes.
-  - Notes: extend the switch statements whenever you add a routable model so preview links stay accurate; keep the surgical revalidation map (`revalidationUrls.ts`) in sync with the same api_key → route table.
+  - Notes: extend the switch statements whenever you add a routable model so preview links stay accurate; keep the surgical revalidation map (`revalidationUrls.ts`) in sync with the same api_key → route table (index paths are shared via `INDEX_PAGE_PATHS`).
 - **`publicUrls` helper** (`src/lib/datocms/publicUrls.ts`)
   - Purpose: `getAllPublicUrls()` enumerates every public URL (static + catalogue pages + record detail URLs) for the full-revalidation sweep.
   - Used in: `/api/revalidate?mode=full`.
   - Notes: dedupes against `STATIC_URLS`; per-publish revalidation uses `revalidationUrls.ts` instead.
 - **`revalidationUrls` helper** (`src/lib/datocms/revalidationUrls.ts`)
-  - Purpose: `getRevalidationUrls({ apiKey, slug })` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query.
+  - Purpose: `getRevalidationUrls({ apiKey, slug, id }, query?)` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query (injectable through the `query` parameter, default `executeQuery`). `index_page` maps by slug to its index URL; `supplier` to `/distributori`; `license` (id) to the pages of the books carrying it (the license renders only on the book page); `app` is a deliberate no-op.
   - Used in: `/api/revalidate` (surgical mode).
-  - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Mirror `recordInfo.ts` routes.
+  - Notes: unknown/unmapped models return `[]` (caller no-ops); never throws (degrades to the bounded static set). Index paths come from `INDEX_PAGE_PATHS` in `recordInfo.ts`.
+- **Revalidation-map check** (`check.ts`, `scripts/revalidation-map/stub-execute-query.mjs`, `scripts/revalidation-map/sentinel.mjs`)
+  - Purpose: `check.ts` (in scripts/revalidation-map) is a no-network check that runs `parseWebhookPayload` + `getRevalidationUrls` on sample payloads (the `payloads` folder beside them), tests `recordToWebsiteRoute` through a route table, and reports `OK`/`GAP`/`MISMATCH`; the stub is passed directly as the `query` argument (no module hooks), and the `.mjs` files are only the stub and the sentinel.
+  - Used in: `npm run check:revalidation-map` (procedure (a) in `docs/guidelines/caching.md`).
+  - Notes: includes the V2 cases (`index_page`, `supplier`, `license`, `app`).
 - **`webhookPayload` parser** (`src/lib/datocms/webhookPayload.ts`)
-  - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
+  - Purpose: pure `parseWebhookPayload()` extracting `event_type`, record `id`, record `slug`, and model `api_key` from a DatoCMS webhook (payload API v3).
   - Used in: `/api/revalidate`.
   - Notes: no env/network deps so it is unit testable; reads the item_type from `related_entities`.
 - **`structuredText` helpers** (`src/lib/datocms/structuredText.ts`)

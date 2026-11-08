@@ -70,28 +70,26 @@ const posts: PostCard[] = (data.allBlogPosts ?? [])
       />
     </section>
 
-    {
-      posts.length === 0 ? (
-        <p class={styles.empty}>Gli articoli del magazine saranno disponibili a breve.</p>
-      ) : (
-        <section>
-          <div class={styles.cardsGrid}>
-            {posts.map((post) => (
-              <MagazinePostCard
-                title={post.title}
-                slug={post.slug}
-                abstract={post.abstract}
-                publishedAt={post.publishedAt}
-                category={post.category}
-                authorName={post.authorName}
-                image={post.image}
-                sticky={post.sticky}
-              />
-            ))}
-          </div>
-        </section>
-      )
-    }
+    {posts.length === 0 ? (
+      <p class={styles.empty}>Gli articoli del magazine saranno disponibili a breve.</p>
+    ) : (
+      <section>
+        <div class={styles.cardsGrid}>
+          {posts.map((post) => (
+            <MagazinePostCard
+              title={post.title}
+              slug={post.slug}
+              abstract={post.abstract}
+              publishedAt={post.publishedAt}
+              category={post.category}
+              authorName={post.authorName}
+              image={post.image}
+              sticky={post.sticky}
+            />
+          ))}
+        </div>
+      </section>
+    )}
   </div>
   <DraftModeQueryListener query={MAGAZINE_INDEX_QUERY} />
 </BaseLayout>

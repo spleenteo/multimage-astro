@@ -1,5 +1,5 @@
 ---
-scope: Document performance-sensitive code paths and tactics to keep Multimage fast.
+description: Document performance-sensitive code paths and tactics to keep Multimage fast.
 ---
 
 # Performance Notes
@@ -20,4 +20,4 @@ scope: Document performance-sensitive code paths and tactics to keep Multimage f
 
 ## Build Costs
 
-- `/libri` is paginated (40/page) to keep listing HTML — and Vercel Fast Origin Transfer — small; card grids use lean responsive images (no base64/srcSet). The heavy `/llms-full.txt` export was removed (2026-06-20). See decision-log `2026-06-20-fot-reduction`.
+- `/libri` is paginated (40/page) to keep listing HTML — and Vercel Fast Origin Transfer — small; card grids use lean responsive images (no base64/srcSet). The heavy `/llms-full.txt` export was removed (2026-06-20). See decisions-log `2026-06-20-fot-reduction`.

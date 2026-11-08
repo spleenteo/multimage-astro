@@ -1,5 +1,5 @@
 ---
-scope: Fastro is based on and extends the [Astro project structure](https://docs.astro.build/en/core-concepts/project-structure/)
+description: Fastro is based on and extends the [Astro project structure](https://docs.astro.build/en/core-concepts/project-structure/)
 ---
 
 # Project Structure & Module Organization
@@ -14,7 +14,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
 - **`src/lib`**
   - Framework-agnostic helpers such as Dato tooling (`datocms/*`), view-model mappers (`books.ts`, `authors.ts`, `suppliers.ts`), formatting utilities (`text.ts`, `colors.ts`, `currency.ts`), and SEO fallbacks (`seo.ts`).
 - **`src/styles`**
-  - Global Tailwind import (`global.css`) and CSS variables including font declarations to keep modules lean.
+  - `global.css`: the Tailwind import, `@theme static` (tokens and font stacks), `@utility container`, the Tailwind 3 compat rules and the base and components layers; CSS modules `@reference` it to stay lean.
 - **`scripts`**
   - `build-search-client.mjs` emits the browser bundles in `public/generated`; `sync-datocms.mjs` loads `.env` and regenerates `schema.ts`.
 - **`public/generated`**
@@ -82,7 +82,7 @@ scope: Fastro is based on and extends the [Astro project structure](https://docs
   - Primary components: none (pure XML response).
   - Notes: Falls back to `http://localhost:4321` when `PUBLIC_SITE_URL` is missing; enforce env per SEO task **SEO1**. Includes the paginated catalogue pages (`/libri/pagina/2..N`) via `buildBooksCataloguePaths`.
 
-> `/llms-full.txt` was removed 2026-06-20 (closed Security task **S4** + reduced Fast Origin Transfer — see decision-log `2026-06-20-fot-reduction`).
+> `/llms-full.txt` was removed 2026-06-20 (closed Security task **S4** + reduced Fast Origin Transfer — see decisions-log `2026-06-20-fot-reduction`).
 
 ## API & preview routes
 (Deployed only when `SERVER=preview`; static builds omit all runtime endpoints.)

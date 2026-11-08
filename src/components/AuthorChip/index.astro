@@ -41,18 +41,16 @@ const hasLink = Wrapper === 'a';
 
 <Wrapper class:list={[styles.root, 'group', className]} {...wrapperProps}>
   <div class={styles.avatar}>
-    {
-      image ? (
-        <Image
-          data={{ ...image, alt: image.alt ?? imageAlt ?? name }}
-          sizes="96px"
-          pictureClass="block h-full w-full"
-          imgClass="h-full w-full object-cover"
-        />
-      ) : (
-        <div class={styles.placeholder}>{authorInitials}</div>
-      )
-    }
+    {image ? (
+      <Image
+        data={{ ...image, alt: image.alt ?? imageAlt ?? name }}
+        sizes="96px"
+        pictureClass="block h-full w-full"
+        imgClass="h-full w-full object-cover"
+      />
+    ) : (
+      <div class={styles.placeholder}>{authorInitials}</div>
+    )}
   </div>
 
   <div class="flex flex-1 items-center justify-between gap-4 md:gap-6">
@@ -61,16 +59,14 @@ const hasLink = Wrapper === 'a';
       <p class={styles.name}>{name}</p>
       {booksLabel ? <p class={styles.booksLabel}>{booksLabel}</p> : null}
     </div>
-    {
-      hasLink ? (
-        <iconify-icon
-          icon="iconoir:nav-arrow-right"
-          width="20"
-          height="20"
-          aria-hidden="true"
-          class={styles.icon}
-        />
-      ) : null
-    }
+    {hasLink ? (
+      <iconify-icon
+        icon="iconoir:nav-arrow-right"
+        width="20"
+        height="20"
+        aria-hidden="true"
+        class={styles.icon}
+      />
+    ) : null}
   </div>
 </Wrapper>

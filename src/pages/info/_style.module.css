@@ -1,7 +1,5 @@
-@tailwind components;
+@reference '../../styles/global.css';
 
-@layer components {
-  .wrapper {
-    @apply mx-auto max-w-4xl;
-  }
+.wrapper {
+  @apply mx-auto max-w-4xl;
 }

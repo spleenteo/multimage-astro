@@ -17,6 +17,24 @@ function buildUrl(basePath: string, slug: MaybeSlug) {
   return `${basePath}/${normalizedSlug}`;
 }
 
+// Index pages are `index_page` records told apart by slug (see the
+// `allIndexPages(filter: { slug: { eq } })` query of each index route).
+export const INDEX_PAGE_PATHS: Readonly<Record<string, string>> = {
+  libri: '/libri',
+  ebooks: '/libri/ebooks',
+  highlights: '/libri/highlights',
+  archivio: '/libri/archivio',
+  collane: '/collane',
+  autori: '/autori',
+  magazine: '/magazine',
+  distributori: '/distributori',
+};
+
+export function indexPagePath(slug: MaybeSlug): string | null {
+  const s = normalizeSlug(slug);
+  return s && Object.hasOwn(INDEX_PAGE_PATHS, s) ? INDEX_PAGE_PATHS[s] : null;
+}
+
 export async function recordToWebsiteRoute(
   item: DatoRecord,
   itemTypeApiKey: string,
@@ -27,26 +45,16 @@ export async function recordToWebsiteRoute(
       return '/';
     case 'book':
       return buildUrl('/libri', item.attributes.slug as MaybeSlug);
-    case 'books_index':
-      return '/libri';
-    case 'archive_index':
-      return '/libri/archivio';
-    case 'highlights_index':
-      return '/libri/highlights';
-    case 'ebooks_index':
-      return '/libri/ebooks';
     case 'collection':
       return buildUrl('/collane', item.attributes.slug as MaybeSlug);
-    case 'collections_index':
-      return '/collane';
     case 'author':
       return buildUrl('/autori', item.attributes.slug as MaybeSlug);
-    case 'authors_index':
-      return '/autori';
-    case 'magazine_index':
-      return '/magazine';
     case 'blog_post':
       return buildUrl('/magazine', item.attributes.slug as MaybeSlug);
+    case 'index_page':
+      return indexPagePath(item.attributes.slug as MaybeSlug);
+    case 'supplier':
+      return '/distributori';
     case 'page':
       return buildUrl('/info', item.attributes.slug as MaybeSlug);
     default:

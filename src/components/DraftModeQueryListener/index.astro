@@ -26,15 +26,13 @@ if (draftModeEnabled && !DATOCMS_DRAFT_CONTENT_CDA_TOKEN) {
 const enableContentLink = Boolean(DATOCMS_BASE_EDITING_URL);
 ---
 
-{
-  draftModeEnabled && DATOCMS_DRAFT_CONTENT_CDA_TOKEN && (
-    <QueryListener
-      {...props}
-      token={DATOCMS_DRAFT_CONTENT_CDA_TOKEN}
-      excludeInvalid
-      includeDrafts
-      contentLink={enableContentLink ? 'v1' : undefined}
-      baseEditingUrl={enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined}
-    />
-  )
-}
+{draftModeEnabled && DATOCMS_DRAFT_CONTENT_CDA_TOKEN && (
+  <QueryListener
+    {...props}
+    token={DATOCMS_DRAFT_CONTENT_CDA_TOKEN}
+    excludeInvalid
+    includeDrafts
+    contentLink={enableContentLink ? 'v1' : undefined}
+    baseEditingUrl={enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined}
+  />
+)}

@@ -1,0 +1,50 @@
+---
+status: closed
+phase: done
+slice: V7
+step: done
+work: upgrade-2026-11
+stacks: [astro, datocms]
+base: main
+updated: 2026-11-08
+tags: [work, upgrade-2026-11]
+description: "Manutenzione: aggiornare librerie e framework alle ultime versioni stabili (cura devops)"
+---
+
+# Status — Upgrade librerie novembre 2026
+
+> Update at the **end of every session**: done, remaining, blockers.
+
+**Entry**: technical, decided on 2026-11-04 because the visitors of the site must see no change: success is a 100% green local build and a working deploy.
+
+Work runs on branch `chire/upgrade-11-26` (user's choice, cut fresh from `main`), not on `work/upgrade-2026-11`.
+
+## Slices
+
+- [x] V1 — Cache baseline: audit route → models → revalidated, `caching.md` procedure, ISR snapshot
+- [x] V2 — Revalidation map fixes (`index_page` by slug, supplier, license, app)
+- [x] V3 — Patch/minor, Node 24, TypeScript 6 (CLI stays 4.0.x)
+- [x] V4 — Astro 7 + @astrojs/vercel 11, preview deploy
+- [x] V5 — DatoCMS clients + CLI 4.2, type shims removed
+- [x] V6 — Other majors: swiper 14, jsdom 30, prettier-plugin-astro 1.x
+- [x] V7 — Tailwind 4, visual check, final preview deploy
+
+## Pending proposals
+
+<!-- date — kind:name — link, when an adapter returns proposed -->
+
+## Log
+
+<!-- date — step — done — remaining — wall-clock — cost -->
+- 2026-11-04 — opening + slicing — profile recorded (`.flow.yml`, `docs/development-guidelines.md`), `decision-log/` moved to `decisions-log/`, guidelines frontmatter `scope:` → `description:`, six slices agreed — impact next — ~25 min — n/a
+- 2026-11-04 — impact — 18 problems (3 high: CLI 4.2 pulls CMA v6, cache procedure hit production, draft render cacheable without BYPASS_TOKEN), all fixed in slices.md; new slice V2 for revalidation map gaps, slices renumbered V1–V7 — plan V1 next — ~17 min — n/a
+- 2026-11-04 — V1 plan + review — 8 tasks; review: 0 high, 4 medium, 8 low, all fixes applied — execute next — ~20 min — n/a
+- 2026-11-05 — V1 close — caching.md, revalidation-map check, ISR baseline, procedures a/b/c run; 15 gaps (4 → V2, 11 → TODO); gate green after a formatting fix on 2 pre-existing src files; SECRET_API_TOKEN printed once in an agent terminal (rotation: user's call) — V2 plan next — ~32 min — n/a
+- 2026-11-05 — after V1 — token rotation scheduled as last step (TODO S6); dev-server rule (4321 is the user's); V2 gains executeQuery injection instead of the resolve hook (no decision recorded) — V2 plan next, after the user's /clear — n/a — n/a
+- 2026-11-05 — V2 plan + review + execute + close — plan review: 1 high (license rendered only on the book page, overturning V1), 3 medium, 7 low, all applied; 7 tasks, 10 commits, final review low only (3 ruled); gate green; real-CDA run on port 4331 green; pending: index_page publish via procedure (c) at the end of the work — V3 plan next — ~45 min — n/a
+- 2026-11-05 — V3 plan + review + execute + close — plan review: 1 high (T4/T7 both on README), 3 medium, 4 low, all applied; 7 tasks, 6 commits; cma-client 5.8 broke two ambient type shims, both deleted (decision candidate); final review 5 low, logged; gate green, dev smoke green on 4333; user action pending: Vercel Node 24.x — V4 plan next — ~50 min — n/a
+- 2026-11-05 — V4 plan + review + execute + close — plan review: 1 high (`vercel curl` leaks `?token=` in its hint), 3 medium, 6 low, all applied; Astro 7.4.7 + @astrojs/vercel 11.0.20, `compressHTML: true` pinned, no template fix; two T5 stops (Vercel Node 22.x → 24.x by the user; automation bypass created by `vercel curl` under the user's ok, revocation TODO S7); preview green (smoke, `/staff` 404 before/after session, both draft cookies, BYPASS vs HIT, unknown path 404, no-op revalidate); found TODO BOOK-404 (unknown book slug → 500, also on prod); final review low only; gate green — V5 plan next — ~70 min — n/a
+- 2026-11-06 — V5 plan + review + execute + close — plan review: 0 high, 3 medium (CMA 500 still echoes `request.body` → post-deploy can leak SECRET_API_TOKEN, S5; full gate after T2; sync-datocms skip undetected), 3 low, all applied; cda-client 0.3.2, cma-client 6.8.0, CLI 4.2.0, override removed, no src change; probe: CDA token echoed on 0.2.10, not on 0.3.2; schema.ts pure reorder; local `.env` has DATOCMS_CMA_TOKEN empty (TODO UP-cma-token-docs); final review pass; gate green; user's 4321 dev server may need a restart — V6 plan next — ~40 min — n/a
+- 2026-11-06 — V6 plan + review + execute + close — plan review: 0 high, 4 medium (draft CDA token in saved seo HTML, vacuous DOM-diff pass, Swiper 14 browser floor needing the user's ok, jsdom 30 Node floor unchecked on Vercel), 5 low, all applied; user accepted Swiper 14 floor (Chrome/Edge/Firefox 110+, Safari 16.4+); swiper 14.4.0 exact, jsdom 30.1.3, @types/jsdom 30.0.0, prettier-plugin-astro 1.1.2 + astroCompressHTML, no src change, format diff on 50 .astro files in its own commit; carousels green on the production bundle, DOM and seo output identical; one ruled whitespace change in /libri pagination; new TODO S8 and UP-jsdom-31; V7 carries Node ≥ 24.15 + seo-analysis GET on preview; final review low only; gate green — V7 plan next — ~45 min — n/a
+- 2026-11-08 — V7 plan + review + execute + close — plan review: 1 high (module-only theme tokens undefined → `@theme static`), 3 medium, 6 low, all applied; Tailwind 4.3.5 + @tailwindcss/vite, configs/autoprefixer/postcss removed, 33 modules on @reference; visual diff needed 9 fix commits (line heights, link hover/focus, dividers, container padding, space-y); loop stopped by the user after ~2 h on cost, remaining minor diffs accepted, heights 38/39 equal; T5 preview skipped by the user (checks move to the production deploy); decision 2026-11-07-tailwind-4 with browser baseline; final review pass; gate green — all slices done: closing sequence next — ~4 h (two network interruptions) — n/a
+- 2026-11-08 — work closed — V1–V7 done; production deploy, cache procedure on production and SECRET_API_TOKEN rotation (S6) remain after the merge — changelog next — n/a — n/a

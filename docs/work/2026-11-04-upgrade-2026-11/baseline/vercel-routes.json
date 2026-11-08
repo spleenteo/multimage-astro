@@ -1,0 +1,153 @@
+[
+  {
+    "handle": "filesystem"
+  },
+  {
+    "src": "^/_astro/(.*)$",
+    "headers": {
+      "cache-control": "public, max-age=31536000, immutable"
+    },
+    "continue": true
+  },
+  {
+    "src": "^/api/draft-mode/disable$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/draft-mode/enable$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/post-deploy$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/preview$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/preview-links$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/revalidate$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/seo-analysis$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/api/utils$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/_server-islands/([^/]+?)/?$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/_image/?$",
+    "dest": "_render"
+  },
+  {
+    "src": "^/archived-books\\.json$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/autori/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/autori/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/cerca/search-page\\.client$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/cerca/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/collane/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/collane/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/distributori/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/info/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/info/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/archivio/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/ebooks/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/highlights/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/pagina/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/schede/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/libri/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/magazine/([^/]+?)/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/magazine/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/sitemap\\.xml$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/staff/archivio-catalogo/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/staff/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/404/?$",
+    "dest": "/_isr?x_astro_path=$0"
+  },
+  {
+    "src": "^/.*$",
+    "dest": "_render",
+    "status": 404
+  }
+]

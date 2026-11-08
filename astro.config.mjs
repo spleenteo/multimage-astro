@@ -1,6 +1,7 @@
 import { defineConfig, envField } from 'astro/config';
 
 import vercel from '@astrojs/vercel';
+import tailwindcss from '@tailwindcss/vite';
 
 const adapter = vercel({
   isr: {
@@ -22,6 +23,9 @@ export default defineConfig({
   output: 'server',
   adapter,
   site: 'https://www.multimage.org',
+  // Astro 7 defaults to 'jsx' (strips whitespace between inline elements); keep HTML-aware compression.
+  // Keep in sync with astroCompressHTML in .prettierrc (true = 'html').
+  compressHTML: true,
   env: {
     schema: {
       DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN: envField.string({
@@ -79,5 +83,8 @@ export default defineConfig({
   integrations: [],
   build: {
     concurrency: 8,
+  },
+  vite: {
+    plugins: [tailwindcss()],
   },
 });

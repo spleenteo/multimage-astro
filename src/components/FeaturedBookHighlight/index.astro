@@ -81,26 +81,26 @@ const authorBooksLabel =
         class="flex h-full items-center justify-center p-12 md:p-14"
         style={`background: ${backdropColor};`}
       >
-        {
-          coverImageData ? (
-            <div class="relative flex items-center justify-center">
-              <Image
-                data={coverImageData}
-                sizes="(min-width: 1280px) 320px, (min-width: 1024px) 260px, 70vw"
-                pictureClass="block h-full w-full"
-                imgClass="relative z-10 h-72 w-auto max-w-[260px] object-contain"
-                imgStyle={{
-                  transform: 'rotate(5deg)',
-                  filter: `drop-shadow(24px 36px 48px ${shadowColor})`,
-                }}
-              />
-            </div>
-          ) : (
-            <div class="flex min-h-[280px] items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-brand-slate">
-              Copertina in arrivo
-            </div>
-          )
-        }
+        {coverImageData ? (
+          <div class="relative flex items-center justify-center">
+            <Image
+              data={coverImageData}
+              sizes="(min-width: 1280px) 320px, (min-width: 1024px) 260px, 70vw"
+              pictureClass="block h-full w-full"
+              imgClass="relative z-10 h-72 w-auto max-w-[260px] object-contain"
+              imgStyle={{
+                transform: 'rotate(5deg)',
+                filter: `drop-shadow(24px 36px 48px ${shadowColor})`,
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            class="flex min-h-[280px] items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-brand-slate"
+          >
+            Copertina in arrivo
+          </div>
+        )}
       </div>
     </div>
     <div class="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10 md:py-12">
@@ -116,105 +116,89 @@ const authorBooksLabel =
           >
             {label}
           </span>
-          {
-            collectionHref ? (
-              <a
-                href={collectionHref}
-                class="inline-flex items-center gap-2 rounded-full bg-brand-mist/70 px-4 py-1 text-brand-navy transition hover:bg-brand-mist hover:text-brand-sky"
-              >
-                <iconify-icon
-                  icon="iconoir:bookmark-book"
-                  width="16"
-                  height="16"
-                  aria-hidden="true"
-                />
-                <span>{collectionLabel}</span>
-              </a>
-            ) : collectionLabel ? (
-              <span class="inline-flex items-center rounded-full bg-brand-mist/70 px-4 py-1 text-brand-charcoal">
-                {collectionLabel}
-              </span>
-            ) : null
-          }
-        </div>
-        {
-          book.isArchived ? (
-            <span class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white shadow-soft">
-              Fuori catalogo
+          {collectionHref ? (
+            <a
+              href={collectionHref}
+              class="inline-flex items-center gap-2 rounded-full bg-brand-mist/70 px-4 py-1 text-brand-navy transition hover:bg-brand-mist hover:text-brand-sky"
+            >
+              <iconify-icon
+                icon="iconoir:bookmark-book"
+                width="16"
+                height="16"
+                aria-hidden="true"
+              />
+              <span>{collectionLabel}</span>
+            </a>
+          ) : collectionLabel ? (
+            <span
+              class="inline-flex items-center rounded-full bg-brand-mist/70 px-4 py-1 text-brand-charcoal"
+            >
+              {collectionLabel}
             </span>
-          ) : null
-        }
+          ) : null}
+        </div>
+        {book.isArchived ? (
+          <span
+            class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white shadow-soft"
+          >
+            Fuori catalogo
+          </span>
+        ) : null}
       </div>
 
       <div class="space-y-2 text-left">
         <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">{book.title}</h2>
-        {
-          book.subtitle ? (
-            <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
-          ) : null
-        }
+        {book.subtitle ? (
+          <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
+        ) : null}
       </div>
 
-      {
-        book.summary ? (
-          <p class="text-base leading-relaxed text-brand-charcoal/80">{book.summary}</p>
-        ) : null
-      }
+      {book.summary ? (
+        <p class="text-base leading-relaxed text-brand-charcoal/80">{book.summary}</p>
+      ) : null}
 
-      {
-        [book.priceLabel, book.format, book.printYear].filter((value): value is string =>
-          Boolean(value),
-        ).length > 0 ? (
-          <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
-            {[
-              book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
-              book.format ? `Formato ${book.format}` : null,
-              book.printYear ? `Anno ${book.printYear}` : null,
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-          </p>
-        ) : null
-      }
+      {[book.priceLabel, book.format, book.printYear].filter((value): value is string =>
+        Boolean(value),
+      ).length > 0 ? (
+        <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
+          {[
+            book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
+            book.format ? `Formato ${book.format}` : null,
+            book.printYear ? `Anno ${book.printYear}` : null,
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+        </p>
+      ) : null}
 
       <div class:list={['flex flex-wrap items-center', styles.actions]}>
-        {
-          book.link ? (
-            <Button href={book.link} primary>
-              Scopri il libro
-            </Button>
-          ) : null
-        }
-        {
-          collectionHref ? (
-            <Button href={collectionHref} primary={false} icon="iconoir:nav-arrow-right">
-              Vai alla collana
-            </Button>
-          ) : null
-        }
+        {book.link ? <Button href={book.link} primary> Scopri il libro </Button> : null}
+        {collectionHref ? (
+          <Button href={collectionHref} primary={false} icon="iconoir:nav-arrow-right">
+            Vai alla collana
+          </Button>
+        ) : null}
       </div>
 
-      {
-        author ? (
-          <div class="flex flex-col gap-3 border-t border-brand-mist pt-6">
-            <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-slate">
-              Autrice/Autore in evidenza
-            </span>
-            <div class="flex flex-wrap items-center gap-4">
-              <AuthorChip
-                name={author.name}
-                link={authorLink ?? undefined}
-                image={authorImageData ?? undefined}
-              />
-              {authorBooksLabel ? (
-                <span class="text-xs font-semibold uppercase tracking-widest text-brand-charcoal/60">
-                  {authorBooksLabel}
-                </span>
-              ) : null}
-            </div>
+      {author ? (
+        <div class="flex flex-col gap-3 border-t border-brand-mist pt-6">
+          <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-slate">
+            Autrice/Autore in evidenza
+          </span>
+          <div class="flex flex-wrap items-center gap-4">
+            <AuthorChip
+              name={author.name}
+              link={authorLink ?? undefined}
+              image={authorImageData ?? undefined}
+            />
+            {authorBooksLabel ? (
+              <span class="text-xs font-semibold uppercase tracking-widest text-brand-charcoal/60">
+                {authorBooksLabel}
+              </span>
+            ) : null}
           </div>
-        ) : null
-      }
+        </div>
+      ) : null}
     </div>
   </div>
 </section>

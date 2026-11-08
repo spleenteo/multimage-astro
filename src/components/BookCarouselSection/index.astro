@@ -47,19 +47,17 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
         <h2 id={headingId} class={styles.title}>
           {title}
         </h2>
-        {
-          hasDescription ? (
-            <p id={descriptionId} class={styles.description}>
-              {trimmedDescription}
-              {hasDescriptionLink ? (
-                <>
-                  {' '}
-                  <a href={descriptionLinkHref!}>{descriptionLinkLabel}</a>
-                </>
-              ) : null}
-            </p>
-          ) : null
-        }
+        {hasDescription ? (
+          <p id={descriptionId} class={styles.description}>
+            {trimmedDescription}
+            {hasDescriptionLink ? (
+              <>
+                {' '}
+                <a href={descriptionLinkHref!}>{descriptionLinkLabel}</a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
       </div>
       <div class={styles.controls} aria-hidden="false">
         <button
@@ -69,7 +67,11 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
           aria-label="Vedi libri precedenti"
           aria-controls={carouselId}
         >
-          <iconify-icon icon="iconoir:nav-arrow-left" width="18" height="18" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:nav-arrow-left"
+            width="18"
+            height="18"
+            aria-hidden="true"
           ></iconify-icon>
         </button>
         <div id={`${carouselId}-pagination`} class={styles.pagination} aria-hidden="true"></div>
@@ -80,7 +82,11 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
           aria-label="Vedi libri successivi"
           aria-controls={carouselId}
         >
-          <iconify-icon icon="iconoir:nav-arrow-right" width="18" height="18" aria-hidden="true"
+          <iconify-icon
+            icon="iconoir:nav-arrow-right"
+            width="18"
+            height="18"
+            aria-hidden="true"
           ></iconify-icon>
         </button>
       </div>
@@ -93,7 +99,7 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
         aria-live="polite"
         aria-roledescription="carousel"
         aria-label={`Scorri libri: ${title}`}
-        {...descriptionId ? { 'aria-describedby': descriptionId } : {}}
+        {...(descriptionId ? { 'aria-describedby': descriptionId } : {})}
         slides-per-view="1.15"
         space-between="16"
         navigation="true"
@@ -113,13 +119,9 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
           1280: { slidesPerView: 3.2, spaceBetween: 28 },
         })}
       >
-        {
-          books.map((book) => (
-            <swiper-slide class={styles.slide}>
-              <BookCard {...book} className={styles.card} />
-            </swiper-slide>
-          ))
-        }
+        {books.map((book) => <swiper-slide class={styles.slide}>
+          <BookCard {...book} className={styles.card} />
+        </swiper-slide>)}
       </swiper-container>
     </div>
   </div>

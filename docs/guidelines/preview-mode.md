@@ -1,5 +1,5 @@
 ---
-scope: How to manage draft preview, Visual Editing, and on-demand cache invalidation for editors
+description: How to manage draft preview, Visual Editing, and on-demand cache invalidation for editors
 ---
 
 # Preview, Draft Mode & Visual Editing
@@ -128,7 +128,7 @@ must be listed explicitly — the `*.datocms.com` wildcard does **not** match it
 DatoCMS publish → webhook → `POST /api/revalidate?token=<SECRET_API_TOKEN>`.
 
 The endpoint does **surgical** revalidation (since 2026-06-20 — see
-`docs/decision-log/2026-06-20-fot-reduction.md`):
+`docs/decisions-log/2026-06-20-fot-reduction.md`):
 
 1. Validates the secret.
 2. Parses the webhook payload (`src/lib/datocms/webhookPayload.ts`): the
@@ -178,11 +178,11 @@ the project:
   there is nothing to invalidate until the record is actually published.
 - **auto_retry**: on (DatoCMS retries on transient failures).
 
-The "invalidate everything" strategy (rather than mapping a record to only its
-dependent pages) is a deliberate decision from the shape: a book appears on its
-own page *and* in the home, lists, author/collection pages, so a full sweep is
-simpler and guarantees nothing stays stale. The cost is ~669 CDA reads per
-publish, accepted during shaping.
+Revalidation is surgical (since 2026-06-20): the endpoint maps the published
+record to its own URL plus a bounded set of listings, instead of sweeping the
+whole site (`?mode=full` is a manual fallback only). Cache tags are not
+implemented; revalidation is URL-based. See `docs/guidelines/caching.md` for the
+route-to-model audit and the verification procedure.
 
 To recreate it via CLI: `npx datocms cma:call webhooks create --data='{...}'`
 with the events above (see the shape doc for the full payload).
@@ -195,8 +195,8 @@ locally — every request is SSR'd. Draft mode works via the JWT cookie (visit
 `DATOCMS_BASE_EDITING_URL` is set in `.env`.
 
 `/api/revalidate` works locally but the `fetch` calls hit `PUBLIC_SITE_URL`
-(production), so it's effectively a no-op for local testing unless you point
-`PUBLIC_SITE_URL` at a tunnel.
+(production). Never call it locally without overriding the environment; follow
+procedure (b) in `docs/guidelines/caching.md`.
 
 ## 8. Troubleshooting
 

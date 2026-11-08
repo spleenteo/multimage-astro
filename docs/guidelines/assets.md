@@ -1,11 +1,11 @@
 ---
-scope: How Fastro uses Icons, Fonts and digital assets in general
+description: How Fastro uses Icons, Fonts and digital assets in general
 ---
 
 # Assets
 
 ## Fonts
-- `src/styles/global.css` imports Inter and Playfair Display from Google Fonts once and stores them in the CSS custom properties `--font-sans`/`--font-serif`. Tailwind extends these families globally, so new components only need to use the semantic `font-sans`/`font-serif` utilities instead of hard-coding font names.
+- `src/styles/global.css` imports Inter and Playfair Display from Google Fonts once and defines the font stacks once, in `@theme` (`--font-sans`/`--font-serif`, not in `:root`). Tailwind exposes these families globally, so new components only need to use the semantic `font-sans`/`font-serif` utilities instead of hard-coding font names.
 
 ## Icons & External Snippets
 - The only icon system is Iconify’s custom element. `BaseLayout` injects `https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js` with `defer` and every component uses `<iconify-icon>` directly (Buttons, navigation pills, PillsBlock cards, etc.). Keep the icon set consistent (`iconoir:*` by default) and add new icons by referencing that CDN payload—there is no local sprite.

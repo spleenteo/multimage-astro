@@ -66,62 +66,52 @@ const desktopColumnsClass = normalizedPills.length >= 3 ? 'lg:grid-cols-3' : 'lg
 ---
 
 <section id={`pills-block-${id}`} class="space-y-6">
-  {
-    normalizedTitle ? (
-      <h2 class="text-3xl font-serif text-brand-charcoal">{normalizedTitle}</h2>
-    ) : null
-  }
-  {
-    normalizedDescription ? (
-      <p class="text-base text-brand-charcoal/90">{normalizedDescription}</p>
-    ) : null
-  }
+  {normalizedTitle ? (
+    <h2 class="text-3xl font-serif text-brand-charcoal">{normalizedTitle}</h2>
+  ) : null}
+  {normalizedDescription ? (
+    <p class="text-base text-brand-charcoal/90">{normalizedDescription}</p>
+  ) : null}
   <div class:list={['grid gap-6', 'md:grid-cols-2', desktopColumnsClass]}>
-    {
-      normalizedPills.map((pill) => (
-        <article
-          class:list={[
-            styles.card,
-            'group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:bg-white',
-          ]}
-        >
-          <div class="space-y-3">
-            {pill.icon ? (
-              <span
-                class:list={[
-                  styles.icon,
-                  'inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy',
-                ]}
-              >
-                <iconify-icon icon={pill.icon} width="24" height="24" aria-hidden="true" />
-              </span>
-            ) : null}
-            {pill.title ? (
-              <h3 class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky">
-                {pill.title}
-              </h3>
-            ) : null}
-            {pill.contentParagraphs.length > 0 ? (
-              <div class="space-y-2 text-sm leading-relaxed">
-                {pill.contentParagraphs.map((paragraph) => (
-                  <p>{paragraph}</p>
-                ))}
-              </div>
-            ) : null}
+    {normalizedPills.map((pill) => <article
+      class:list={[
+        styles.card,
+        'group flex h-full flex-col justify-between bg-brand-mist p-6 text-brand-charcoal transition hover:bg-white',
+      ]}
+    >
+      <div class="space-y-3">
+        {pill.icon ? (
+          <span
+            class:list={[
+              styles.icon,
+              'inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-navy',
+            ]}
+          >
+            <iconify-icon icon={pill.icon} width="24" height="24" aria-hidden="true" />
+          </span>
+        ) : null}
+        {pill.title ? (
+          <h3 class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky">
+            {pill.title}
+          </h3>
+        ) : null}
+        {pill.contentParagraphs.length > 0 ? (
+          <div class="space-y-2 text-sm leading-relaxed">
+            {pill.contentParagraphs.map((paragraph) => <p>{paragraph}</p>)}
           </div>
-          {pill.button && pill.button.label && pill.button.url ? (
-            <div class="mt-6">
-              <Button
-                href={pill.button.url}
-                primary={pill.button.primary}
-                icon="iconoir:nav-arrow-right"
-              >
-                {pill.button.label}
-              </Button>
-            </div>
-          ) : null}
-        </article>
-      ))
-    }
+        ) : null}
+      </div>
+      {pill.button && pill.button.label && pill.button.url ? (
+        <div class="mt-6">
+          <Button
+            href={pill.button.url}
+            primary={pill.button.primary}
+            icon="iconoir:nav-arrow-right"
+          >
+            {pill.button.label}
+          </Button>
+        </div>
+      ) : null}
+    </article>)}
   </div>
 </section>

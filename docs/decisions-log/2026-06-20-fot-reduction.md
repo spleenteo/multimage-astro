@@ -139,6 +139,8 @@ this endpoint. Required configuration:
   `books_index`, `archive_index`, `highlights_index`, `ebooks_index`,
   `collections_index`, `authors_index`, `magazine_index`). Any other model
   no-ops safely.
+  *Note 2026-11-04: this list is wrong (several api_keys do not exist, others
+  are unmapped); see the audit in `docs/guidelines/caching.md`.*
 - **Payload:** default JSON, **payload API version `3`**,
   `nested_items_in_payload: false`. The endpoint consumes `event_type`,
   `entity.attributes.slug`, `entity.relationships.item_type.data.id`, and

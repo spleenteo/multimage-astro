@@ -1,5 +1,5 @@
 ---
-scope: Explains how to manage decision logs
+description: Explains how to manage decision logs
 ---
 
 # Decision Log

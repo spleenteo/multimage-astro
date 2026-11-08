@@ -61,21 +61,19 @@ const seo = withFallbackSeo(page._seoMetaTags, {
     </section>
 
     <section class={styles.bodySection}>
-      {
-        hasBodyContent && page.body ? (
-          <div class={styles.bodyContent}>
-            <StructuredText
-              data={page.body as any}
-              blockComponents={defaultBlockComponents as any}
-              linkToRecordComponents={defaultLinkToRecordComponents as any}
-            />
-          </div>
-        ) : (
-          <p class="text-sm text-brand-slate">
-            I contenuti di questa pagina saranno disponibili a breve.
-          </p>
-        )
-      }
+      {hasBodyContent && page.body ? (
+        <div class={styles.bodyContent}>
+          <StructuredText
+            data={page.body as any}
+            blockComponents={defaultBlockComponents as any}
+            linkToRecordComponents={defaultLinkToRecordComponents as any}
+          />
+        </div>
+      ) : (
+        <p class="text-sm text-brand-slate">
+          I contenuti di questa pagina saranno disponibili a breve.
+        </p>
+      )}
     </section>
   </article>
   <DraftModeQueryListener query={INFO_PAGE_QUERY} variables={{ slug }} />

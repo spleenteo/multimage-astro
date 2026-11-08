@@ -51,18 +51,16 @@ const title = attrs?.title ?? undefined;
 const hasLink = Boolean(href);
 ---
 
-{
-  hasLink ? (
-    <a
-      href={href}
-      target={target}
-      rel={rel}
-      title={title}
-      class="text-brand-sky underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
-    >
-      <slot />
-    </a>
-  ) : (
+{hasLink ? (
+  <a
+    href={href}
+    target={target}
+    rel={rel}
+    title={title}
+    class="text-brand-sky underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
+  >
     <slot />
-  )
-}
+  </a>
+) : (
+  <slot />
+)}

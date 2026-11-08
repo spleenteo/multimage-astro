@@ -206,7 +206,7 @@ scope: A list to describe all components used in the project
 - `EditorModeBadge` — **EditorModeBadge** (`src/components/EditorModeBadge.astro`)
   - Purpose: floating "Modalità editor" indicator shown while the editor session is active. Reminds the editor they are viewing drafts and offers a link to `/staff` plus an "Esci" that hits `/api/draft-mode/disable`.
   - Key props: `currentPath` (used to build the exit redirect back to the current page).
-  - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true; `print:hidden`. The printable book sheet has no layout, so it shows no badge. See `docs/decision-log/2026-05-31-editor-session-gating.md`.
+  - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true; `print:hidden`. The printable book sheet has no layout, so it shows no badge. See `docs/decisions-log/2026-05-31-editor-session-gating.md`.
 
 ## Deprecated or missing pieces
 - ResponsiveImage/VideoPlayer components referenced in legacy docs

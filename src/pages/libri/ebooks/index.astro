@@ -40,30 +40,28 @@ const ebooks = mapBooksToCards(data.allBooks ?? []);
       />
     </div>
 
-    {
-      ebooks.length === 0 ? (
-        <p class={styles.empty}>Il catalogo digitale sarà disponibile a breve.</p>
-      ) : (
-        <div class={styles.gridWrapper}>
-          <div class={styles.booksGrid}>
-            {ebooks.map((book) => (
-              <BookCard
-                title={book.title}
-                slug={book.slug}
-                subtitle={book.subtitle}
-                summary={book.summary}
-                coverImage={book.coverImage}
-                authors={book.authors}
-                license={book.license}
-                format={book.format}
-                price={book.price}
-                isArchived={book.isArchived}
-              />
-            ))}
-          </div>
+    {ebooks.length === 0 ? (
+      <p class={styles.empty}>Il catalogo digitale sarà disponibile a breve.</p>
+    ) : (
+      <div class={styles.gridWrapper}>
+        <div class={styles.booksGrid}>
+          {ebooks.map((book) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              subtitle={book.subtitle}
+              summary={book.summary}
+              coverImage={book.coverImage}
+              authors={book.authors}
+              license={book.license}
+              format={book.format}
+              price={book.price}
+              isArchived={book.isArchived}
+            />
+          ))}
         </div>
-      )
-    }
+      </div>
+    )}
   </section>
   <DraftModeQueryListener query={EBOOKS_PAGE_QUERY} />
 </BaseLayout>

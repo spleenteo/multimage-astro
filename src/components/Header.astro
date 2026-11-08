@@ -154,19 +154,15 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
     <div
       class="container flex flex-wrap items-center justify-end gap-2 py-2 text-[0.65rem] font-semibold uppercase tracking-wider"
     >
-      {
-        TOP_LINKS.map(({ label, href, icon, external, tone }) => (
-          <a
-            href={href}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noreferrer' : undefined}
-            class={`${socialBaseClass} ${tone ? toneClassMap[tone] : 'bg-brand-navy-light/40 hover:bg-brand-navy-light text-white'}`}
-          >
-            <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-            <span>{label}</span>
-          </a>
-        ))
-      }
+      {TOP_LINKS.map(({ label, href, icon, external, tone }) => <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer' : undefined}
+        class={`${socialBaseClass} ${tone ? toneClassMap[tone] : 'bg-brand-navy-light/40 hover:bg-brand-navy-light text-white'}`}
+      >
+        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+        <span>{label}</span>
+      </a>)}
     </div>
   </div>
 
@@ -196,11 +192,12 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           width="16"
           height="16"
           class="text-white/80"
-          aria-hidden="true"></iconify-icon>
+          aria-hidden="true"
+        ></iconify-icon>
         <input
           type="search"
           name="q"
-          class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-none"
+          class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-hidden"
           placeholder="Cerca libri, autori..."
           aria-label="Cerca libri o autori"
           data-search-input
@@ -226,14 +223,16 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           width="18"
           height="18"
           aria-hidden="true"
-          data-menu-icon="closed"></iconify-icon>
+          data-menu-icon="closed"
+        ></iconify-icon>
         <iconify-icon
           icon="iconoir:cancel"
           width="18"
           height="18"
           aria-hidden="true"
           data-menu-icon="open"
-          hidden></iconify-icon>
+          hidden
+        ></iconify-icon>
         <span class="text-xs font-semibold uppercase tracking-widest">Menu</span>
       </button>
     </div>
@@ -248,106 +247,98 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
         aria-label="Sezioni principali del sito"
         data-tablist
       >
-        {
-          PRIMARY_LINKS.map((link) => {
-            const isActive = linkIsActive(link, normalizedPath);
-            const hasChildren = Boolean(link.children && link.children.length > 0);
-            const { tabId, panelId } = buildTabIds(link.label);
+        {PRIMARY_LINKS.map((link) => {
+          const isActive = linkIsActive(link, normalizedPath);
+          const hasChildren = Boolean(link.children && link.children.length > 0);
+          const { tabId, panelId } = buildTabIds(link.label);
 
-            if (hasChildren) {
-              return (
-                <div class="relative flex flex-col items-stretch" data-tab-item>
-                  <button
-                    id={tabId}
-                    type="button"
-                    role="tab"
-                    aria-controls={panelId}
-                    aria-selected={isActive ? 'true' : 'false'}
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                    class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
-                      isActive
-                        ? 'bg-white text-brand-navy focus:text-brand-navy'
-                        : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
-                    }`}
-                    data-tab-trigger
-                    data-tab-target={panelId}
-                    data-has-panel="true"
-                    data-tab-initial={isActive ? 'true' : undefined}
-                  >
-                    <span>{link.label}</span>
-                    <iconify-icon
-                      icon="iconoir:nav-arrow-down"
-                      width="16"
-                      height="16"
-                      aria-hidden="true"
-                    />
-                  </button>
-                  <div
-                    id={panelId}
-                    role="tabpanel"
-                    tabindex="-1"
-                    aria-labelledby={tabId}
-                    aria-hidden="true"
-                    class="mt-2 hidden rounded-2xl border border-brand-navy/40 bg-brand-navy text-white shadow-2xl focus:outline-none md:absolute md:left-1/2 md:top-full md:z-30 md:mt-3 md:w-64 md:-translate-x-1/2"
-                    data-tab-panel
-                    data-tab-parent={tabId}
-                  >
-                    <p class="sr-only" id={`${panelId}-desc`}>
-                      Seleziona un collegamento per visitare la sezione {link.label}.
-                    </p>
-                    <ul
-                      class="flex flex-col divide-y divide-white/10 py-3"
-                      aria-describedby={`${panelId}-desc`}
-                    >
-                      {link.children?.map((child) => (
-                        <li>
-                          <a
-                            href={child.href}
-                            class="flex items-center justify-between px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light/80 hover:text-white focus:bg-brand-navy-light/80 focus:text-white focus:outline-none"
-                          >
-                            <span>{child.label}</span>
-                            <iconify-icon
-                              icon="iconoir:nav-arrow-right"
-                              width="16"
-                              height="16"
-                              aria-hidden="true"
-                              class="text-white/80"
-                            />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              );
-            }
-
-            return (
-              <a
+          if (hasChildren) {
+            return <div class="relative flex flex-col items-stretch" data-tab-item>
+              <button
                 id={tabId}
-                href={link.href ?? '#'}
+                type="button"
                 role="tab"
+                aria-controls={panelId}
                 aria-selected={isActive ? 'true' : 'false'}
-                class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky ${
+                aria-expanded="false"
+                aria-haspopup="true"
+                class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky ${
                   isActive
                     ? 'bg-white text-brand-navy focus:text-brand-navy'
-                    : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'
+                    : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
                 }`}
                 data-tab-trigger
-                data-tab-link="true"
+                data-tab-target={panelId}
+                data-has-panel="true"
                 data-tab-initial={isActive ? 'true' : undefined}
               >
-                {link.label}
-              </a>
-            );
-          })
-        }
+                <span>{link.label}</span>
+                <iconify-icon
+                  icon="iconoir:nav-arrow-down"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                id={panelId}
+                role="tabpanel"
+                tabindex="-1"
+                aria-labelledby={tabId}
+                aria-hidden="true"
+                class="mt-2 hidden rounded-2xl border border-brand-navy/40 bg-brand-navy text-white shadow-2xl focus:outline-hidden md:absolute md:left-1/2 md:top-full md:z-30 md:mt-3 md:w-64 md:-translate-x-1/2"
+                data-tab-panel
+                data-tab-parent={tabId}
+              >
+                <p class="sr-only" id={`${panelId}-desc`}>
+                  Seleziona un collegamento per visitare la sezione {link.label}.
+                </p>
+                <ul
+                  class="flex flex-col divide-y divide-white/10 py-3"
+                  aria-describedby={`${panelId}-desc`}
+                >
+                  {link.children?.map((child) => <li>
+                    <a
+                      href={child.href}
+                      class="flex items-center justify-between px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light/80 hover:text-white focus:bg-brand-navy-light/80 focus:text-white focus:outline-hidden"
+                    >
+                      <span>{child.label}</span>
+                      <iconify-icon
+                        icon="iconoir:nav-arrow-right"
+                        width="16"
+                        height="16"
+                        aria-hidden="true"
+                        class="text-white/80"
+                      />
+                    </a>
+                  </li>)}
+                </ul>
+              </div>
+            </div>;
+          }
+
+          return <a
+            id={tabId}
+            href={link.href ?? '#'}
+            role="tab"
+            aria-selected={isActive ? 'true' : 'false'}
+            class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky ${
+              isActive
+                ? 'bg-white text-brand-navy focus:text-brand-navy'
+                : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'
+            }`}
+            data-tab-trigger
+            data-tab-link="true"
+            data-tab-initial={isActive ? 'true' : undefined}
+          >
+            {link.label}
+          </a>;
+        })}
       </div>
     </nav>
 
     <div
-      class="fixed inset-0 z-50 hidden bg-brand-navy/95 backdrop-blur-sm md:hidden"
+      class="fixed inset-0 z-50 hidden bg-brand-navy/95 backdrop-blur-xs md:hidden"
       role="dialog"
       aria-modal="true"
       id="mobile-menu"
@@ -362,7 +353,11 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
               class="flex items-center gap-2 border border-white/40 px-3 py-2 text-xs uppercase tracking-widest text-white"
               data-close-menu
             >
-              <iconify-icon icon="iconoir:cancel" width="16" height="16" aria-hidden="true"
+              <iconify-icon
+                icon="iconoir:cancel"
+                width="16"
+                height="16"
+                aria-hidden="true"
               ></iconify-icon>
               <span>Chiudi</span>
             </button>
@@ -370,59 +365,53 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
 
           <nav class="space-y-4" aria-label="Navigazione mobile">
             <ul class="space-y-4 text-sm font-semibold uppercase tracking-[0.12em]">
-              {
-                PRIMARY_LINKS.map((link) => {
-                  const hasChildren = Boolean(link.children && link.children.length > 0);
-                  const isActive = linkIsActive(link, normalizedPath);
+              {PRIMARY_LINKS.map((link) => {
+                const hasChildren = Boolean(link.children && link.children.length > 0);
+                const isActive = linkIsActive(link, normalizedPath);
 
-                  return (
-                    <li data-mobile-accordion>
-                      {hasChildren ? (
-                        <>
-                          <button
-                            type="button"
-                            class={`flex w-full items-center justify-between bg-white/10 px-4 py-3 text-left ${
-                              isActive ? 'text-white' : 'text-white/90'
-                            }`}
-                            aria-expanded="false"
-                            data-accordion-trigger
-                          >
-                            <span>{link.label}</span>
-                            <iconify-icon
-                              icon="iconoir:nav-arrow-down"
-                              width="16"
-                              height="16"
-                              aria-hidden="true"
-                            />
-                          </button>
-                          <div
-                            class="hidden space-y-2 pl-4 text-xs tracking-[0.2em]"
-                            data-accordion-panel
-                          >
-                            {link.children?.map((child) => (
-                              <a
-                                href={child.href}
-                                class="block px-2 py-2 text-white/80 transition hover:text-white"
-                                data-mobile-nav-target
-                              >
-                                {child.label}
-                              </a>
-                            ))}
-                          </div>
-                        </>
-                      ) : (
-                        <a
-                          href={link.href ?? '#'}
-                          class={`block bg-white/10 px-4 py-3 ${isActive ? 'text-white' : 'text-white/90'}`}
+                return <li data-mobile-accordion>
+                  {hasChildren ? (
+                    <>
+                      <button
+                        type="button"
+                        class={`flex w-full items-center justify-between bg-white/10 px-4 py-3 text-left ${
+                          isActive ? 'text-white' : 'text-white/90'
+                        }`}
+                        aria-expanded="false"
+                        data-accordion-trigger
+                      >
+                        <span>{link.label}</span>
+                        <iconify-icon
+                          icon="iconoir:nav-arrow-down"
+                          width="16"
+                          height="16"
+                          aria-hidden="true"
+                        />
+                      </button>
+                      <div
+                        class="hidden space-y-2 pl-4 text-xs tracking-[0.2em]"
+                        data-accordion-panel
+                      >
+                        {link.children?.map((child) => <a
+                          href={child.href}
+                          class="block px-2 py-2 text-white/80 transition hover:text-white"
                           data-mobile-nav-target
                         >
-                          {link.label}
-                        </a>
-                      )}
-                    </li>
-                  );
-                })
-              }
+                          {child.label}
+                        </a>)}
+                      </div>
+                    </>
+                  ) : (
+                    <a
+                      href={link.href ?? '#'}
+                      class={`block bg-white/10 px-4 py-3 ${isActive ? 'text-white' : 'text-white/90'}`}
+                      data-mobile-nav-target
+                    >
+                      {link.label}
+                    </a>
+                  )}
+                </li>;
+              })}
             </ul>
           </nav>
 
@@ -439,11 +428,12 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
               width="16"
               height="16"
               class="text-white/80"
-              aria-hidden="true"></iconify-icon>
+              aria-hidden="true"
+            ></iconify-icon>
             <input
               type="search"
               name="q"
-              class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-none"
+              class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-hidden"
               placeholder="Cerca libri, autori..."
               aria-label="Cerca libri o autori"
               data-search-input
@@ -460,22 +450,18 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           <div class="space-y-3">
             <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">Seguici</p>
             <div class="flex flex-col gap-3">
-              {
-                TOP_LINKS.map(({ label, href, icon, external, tone }) => (
-                  <a
-                    href={href}
-                    target={external ? '_blank' : undefined}
-                    rel={external ? 'noreferrer' : undefined}
-                    class={`flex items-center gap-3 px-4 py-3 text-xs uppercase tracking-[0.25em] ${
-                      tone ? toneClassMap[tone] : 'bg-white/10'
-                    }`}
-                    data-mobile-nav-target
-                  >
-                    <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-                    <span>{label}</span>
-                  </a>
-                ))
-              }
+              {TOP_LINKS.map(({ label, href, icon, external, tone }) => <a
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noreferrer' : undefined}
+                class={`flex items-center gap-3 px-4 py-3 text-xs uppercase tracking-[0.25em] ${
+                  tone ? toneClassMap[tone] : 'bg-white/10'
+                }`}
+                data-mobile-nav-target
+              >
+                <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+                <span>{label}</span>
+              </a>)}
             </div>
           </div>
         </div>
@@ -483,15 +469,13 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
     </div>
   </div>
 
-  {
-    showBooksNav ? (
-      <div class="border-t border-white/60 bg-white/80 py-4">
-        <div class="container">
-          <BooksSectionNav currentPath={normalizedPath} />
-        </div>
+  {showBooksNav ? (
+    <div class="border-t border-white/60 bg-white/80 py-4">
+      <div class="container">
+        <BooksSectionNav currentPath={normalizedPath} />
       </div>
-    ) : null
-  }
+    </div>
+  ) : null}
 </header>
 
 <script type="module" is:inline>

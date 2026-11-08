@@ -25,20 +25,18 @@ const pictureResponsiveImage = picture?.responsiveImage
 ---
 
 <a href={`/autori/${slug}`} class:list={[styles.root, 'group']}>
-  {
-    pictureResponsiveImage ? (
-      <div class={styles.imageWrapper}>
-        <Image
-          data={pictureResponsiveImage}
-          sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
-          srcSetCandidates={[1, 2]}
-          imgClass={styles.image}
-        />
-      </div>
-    ) : (
-      <div class={styles.fallback}>Ritratto in arrivo</div>
-    )
-  }
+  {pictureResponsiveImage ? (
+    <div class={styles.imageWrapper}>
+      <Image
+        data={pictureResponsiveImage}
+        sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
+        srcSetCandidates={[1, 2]}
+        imgClass={styles.image}
+      />
+    </div>
+  ) : (
+    <div class={styles.fallback}>Ritratto in arrivo</div>
+  )}
 
   <article class={styles.body}>
     <div class="space-y-2">

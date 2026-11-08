@@ -1,20 +1,21 @@
 ---
-scope: Describe how Multimage is built, deployed, and configured across environments.
+description: Describe how Multimage is built, deployed, and configured across environments.
 ---
 
 # Operations Runbook
 
 ## Deployments
 
-- Vercel is the single supported target: link the repo, sync environment variables, and run `npm run build`. Production uses `SERVER=static`, which builds Astro in `output: 'static'` (pure SSG, no runtime endpoints). The dedicated preview Vercel project sets `SERVER=preview`, keeping the exact same codebase but running every route + `/api/preview`, `/api/draft-mode/*`, `/api/preview-links`, and `/api/seo-analysis` as SSR so Draft Mode cookies and live drafts work end-to-end.
+- Vercel is the single supported target: link the repo, sync environment variables, and run `npm run build`. The site is one deployment running `output: 'server'` with ISR (`@astrojs/vercel`): every route is rendered per request and cached by the Vercel CDN, nothing is prerendered at build time. Draft Mode (the signed JWT cookie plus Vercel's `__prerender_bypass` cookie) bypasses the cache on the same deployment, so there is no separate static/preview split.
+- Vercel builds on Node 24.x with the Vercel project Node setting kept on 24.x to match `engines.node` (`24.x`) in `package.json` and `.nvmrc` (local work). `.vercelignore` keeps `.env*` (plus `dist/`, `.astro/`, `.claude/`) out of CLI uploads (`vercel deploy`).
 - `npm run dev` chains `npm run sync-datocms` before `astro dev`, ensuring `schema.ts` and `docs/DATOCMS.md` stay in sync when `DATOCMS_API_TOKEN` is available.
 - `npm run prebuild` currently rebuilds the Site Search client before `npm run build` invokes `astro check` and the production build.
-- `npm run preview` simply serves `dist/` via `astro preview`; it is useful for checking the published snapshot, but preview mode and Draft Mode cookies never work there because no server runtime executes.
+- Local checks use `astro dev` (`npm run dev`). `astro preview` does not work with `@astrojs/vercel`, so no preview script is provided. ISR caching is a Vercel CDN feature and is not active locally; see `docs/guidelines/caching.md` for the revalidation checks. Under an AI agent, Astro 7 `astro dev` starts in the background (stop it with `npx astro dev stop`), and `--ignore-lock` keeps a one-off foreground server.
 - `tmp-sample/` is a read-only Astro starter kept in the repo for reference. It is excluded via `tsconfig.json` so `astro check`/`npm run build` ignore its missing React dependencies.
 
 ## Environment & Secrets
 
-- Required env vars on Vercel: `SERVER` (`static` for the public project, `preview` for the draft project), `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, and `NODE_ENV=production`. CLI-specific `DATOCMS_API_TOKEN`/`DATOCMS_CMA_TOKEN` can remain local unless schema generation runs in CI.
+- Required env vars on Vercel: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, and `NODE_ENV=production`. CLI-specific `DATOCMS_API_TOKEN`/`DATOCMS_CMA_TOKEN` can remain local unless schema generation runs in CI.
 - `datocms.json` enumerates the CDA/CMA tokens used during automation; keep it updated when tokens rotate so `vercel env pull` stays in sync.
 - `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` ships to the browser; provision it from a role limited to **Perform Site Search API calls** to prevent privileged access. See `docs/guidelines/security.md` for scoping details.
 - Runtime also reads standard flags (`NODE_ENV`, `CI`, `CONTINUOUS_INTEGRATION`, `VERCEL`). Only set what the deploy target actually needs to keep the surface minimal.
@@ -23,7 +24,7 @@ scope: Describe how Multimage is built, deployed, and configured across environm
 ## Preview & Drafts
 
 - `/api/preview` ora gestisce l’ingresso in Draft Mode firmando il cookie e reindirizzando alla rotta desiderata. `/api/draft-mode/enable|disable` vengono usate dal plugin DatoCMS Web Previews per generare i link “Draft/Published”.
-- `executeQuery` accetta `{ includeDrafts: true }` e grazie a `resolveDraftMode(Astro)` (vedi `~/lib/draftPreview`) legge i cookie su ogni richiesta — il flag condiviso `~/lib/prerender` assicura che le pagine siano SSR solo quando `SERVER=preview`.
+- `executeQuery` accetta `{ includeDrafts: true }` e grazie a `resolveDraftMode(Astro)` (vedi `~/lib/draftPreview`) legge i cookie su ogni richiesta: il cookie di Draft Mode fa saltare la cache ISR sulla stessa deployment.
 - `/api/post-deploy` è invocato automaticamente da Vercel (via `datocms.json`) e si occupa di installare/aggiornare plug-in ufficiali DatoCMS:
   - **Web Previews** → aggiunge due frontends (Production + Preview) che puntano a `/api/preview-links?token=...`.
   - **SEO/Readability Analysis** → punta `htmlGeneratorUrl` al `/api/seo-analysis` dell’ambiente corrente.

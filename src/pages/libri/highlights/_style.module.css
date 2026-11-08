@@ -1,23 +1,21 @@
-@tailwind components;
+@reference '../../../styles/global.css';
 
-@layer components {
-  .section {
-    @apply space-y-12;
-  }
+.section {
+  @apply space-y-12;
+}
 
-  .intro {
-    @apply mx-auto max-w-5xl;
-  }
+.intro {
+  @apply mx-auto max-w-5xl;
+}
 
-  .gridWrapper {
-    @apply mx-auto max-w-6xl;
-  }
+.gridWrapper {
+  @apply mx-auto max-w-6xl;
+}
 
-  .booksGrid {
-    @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
-  }
+.booksGrid {
+  @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
+}
 
-  .empty {
-    @apply bg-white/80 p-6 text-center text-brand-slate shadow-soft;
-  }
+.empty {
+  @apply bg-white/80 p-6 text-center text-brand-slate shadow-soft;
 }

@@ -118,24 +118,21 @@ const LEGAL_LINKS: LegalLink[] = [
         </p>
       </div>
 
-      {
-        FOOTER_GROUPS.map(({ title, links }) => (
-          <div class="md:col-span-2">
-            <div class="space-y-3">
-              {title ? (
-                <p class="text-xs font-semibold uppercase tracking-wider text-white/70">{title}</p>
-              ) : null}
-              <div class="flex flex-col gap-2">
-                {links.map(({ label, href }) => (
-                  <a href={href} class="text-sm text-brand-mist transition hover:text-white">
-                    {label}
-                  </a>
-                ))}
-              </div>
-            </div>
+      {FOOTER_GROUPS.map(({ title, links }) => <div class="md:col-span-2">
+        <div class="space-y-3">
+          {title ? (
+            <p class="text-xs font-semibold uppercase tracking-wider text-white/70">{title}</p>
+          ) : null}
+          <div class="flex flex-col gap-2">
+            {links.map(({ label, href }) => <a
+              href={href}
+              class="text-sm text-brand-mist transition hover:text-white"
+            >
+              {label}
+            </a>)}
           </div>
-        ))
-      }
+        </div>
+      </div>)}
     </div>
   </div>
 
@@ -143,23 +140,19 @@ const LEGAL_LINKS: LegalLink[] = [
     <div class="container flex flex-col items-center gap-4">
       <p class="text-xs font-semibold uppercase tracking-wider text-white/70">Seguici</p>
       <ul class="flex flex-wrap justify-center gap-6">
-        {
-          SOCIAL_LINKS.map(({ label, href, icon }) => (
-            <li>
-              <a
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white"
-              >
-                <span class="flex h-9 w-9 items-center justify-center bg-white/10">
-                  <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-                </span>
-                <span>{label}</span>
-              </a>
-            </li>
-          ))
-        }
+        {SOCIAL_LINKS.map(({ label, href, icon }) => <li>
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white"
+          >
+            <span class="flex h-9 w-9 items-center justify-center bg-white/10">
+              <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+            </span>
+            <span>{label}</span>
+          </a>
+        </li>)}
       </ul>
     </div>
   </div>
@@ -173,18 +166,14 @@ const LEGAL_LINKS: LegalLink[] = [
       &mdash; P.I. 06987750012
     </address>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-      {
-        LEGAL_LINKS.map(({ label, href, external }) => (
-          <a
-            href={href}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noreferrer' : undefined}
-            class="text-xs transition hover:text-white"
-          >
-            {label}
-          </a>
-        ))
-      }
+      {LEGAL_LINKS.map(({ label, href, external }) => <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer' : undefined}
+        class="text-xs transition hover:text-white"
+      >
+        {label}
+      </a>)}
     </div>
   </div>
 </footer>

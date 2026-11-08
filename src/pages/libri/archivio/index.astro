@@ -40,32 +40,28 @@ const archiveBooks = mapBooksToCards(data.allBooks ?? []);
       />
     </div>
 
-    {
-      archiveBooks.length === 0 ? (
-        <p class={styles.empty}>
-          Stiamo completando la digitalizzazione dei titoli fuori catalogo.
-        </p>
-      ) : (
-        <div class={styles.gridWrapper}>
-          <div class={styles.booksGrid}>
-            {archiveBooks.map((book) => (
-              <BookCard
-                title={book.title}
-                slug={book.slug}
-                subtitle={book.subtitle}
-                summary={book.summary}
-                coverImage={book.coverImage}
-                authors={book.authors}
-                license={book.license}
-                format={book.format}
-                price={book.price}
-                isArchived={book.isArchived}
-              />
-            ))}
-          </div>
+    {archiveBooks.length === 0 ? (
+      <p class={styles.empty}>Stiamo completando la digitalizzazione dei titoli fuori catalogo.</p>
+    ) : (
+      <div class={styles.gridWrapper}>
+        <div class={styles.booksGrid}>
+          {archiveBooks.map((book) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              subtitle={book.subtitle}
+              summary={book.summary}
+              coverImage={book.coverImage}
+              authors={book.authors}
+              license={book.license}
+              format={book.format}
+              price={book.price}
+              isArchived={book.isArchived}
+            />
+          ))}
         </div>
-      )
-    }
+      </div>
+    )}
   </section>
   <DraftModeQueryListener query={ARCHIVE_PAGE_QUERY} />
 </BaseLayout>

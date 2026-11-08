@@ -64,28 +64,26 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
     />
 
     <section class={styles.booksSection}>
-      {
-        relatedBooks.length === 0 ? (
-          <p class="text-sm text-brand-slate">Nessun libro presente in questa collana.</p>
-        ) : (
-          <div class={styles.booksGrid}>
-            {relatedBooks.map((book) => (
-              <BookCard
-                title={book.title}
-                slug={book.slug}
-                subtitle={book.subtitle}
-                summary={book.summary}
-                coverImage={book.coverImage}
-                authors={book.authors}
-                license={book.license}
-                format={book.format}
-                price={book.price}
-                isArchived={book.isArchived}
-              />
-            ))}
-          </div>
-        )
-      }
+      {relatedBooks.length === 0 ? (
+        <p class="text-sm text-brand-slate">Nessun libro presente in questa collana.</p>
+      ) : (
+        <div class={styles.booksGrid}>
+          {relatedBooks.map((book) => (
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              subtitle={book.subtitle}
+              summary={book.summary}
+              coverImage={book.coverImage}
+              authors={book.authors}
+              license={book.license}
+              format={book.format}
+              price={book.price}
+              isArchived={book.isArchived}
+            />
+          ))}
+        </div>
+      )}
     </section>
   </article>
   <DraftModeQueryListener query={COLLECTION_DETAIL_QUERY} variables={{ slug }} />

@@ -1,11 +1,9 @@
-@tailwind components;
+@reference '../../../styles/global.css';
 
-@layer components {
-  .root {
-    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-soft;
-  }
+.root {
+  @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-soft;
+}
 
-  .muted {
-    @apply bg-brand-slate;
-  }
+.muted {
+  @apply bg-brand-slate;
 }

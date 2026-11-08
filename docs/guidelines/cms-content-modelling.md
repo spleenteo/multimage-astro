@@ -1,5 +1,5 @@
 ---
-scope: Fastro uses DatoCMS and uses content modelling and naming conventions for models and fields
+description: Fastro uses DatoCMS and uses content modelling and naming conventions for models and fields
 ---
 
 # CMS Content Modelling

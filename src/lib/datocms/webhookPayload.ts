@@ -17,7 +17,8 @@
  *   }
  *
  * The item_type is sideloaded in `related_entities` and referenced from
- * `entity.relationships.item_type`. Pure (no env / network) so it is unit
+ * `entity.relationships.item_type`. `id` is the record id (`entity.id`), null when
+ * absent. Pure (no env / network) so it is unit
  * testable on its own.
  */
 
@@ -25,6 +26,7 @@ export type ParsedWebhook = {
   eventType: string | null;
   apiKey: string | null;
   slug: string | null;
+  id: string | null;
 };
 
 export function parseWebhookPayload(payload: unknown): ParsedWebhook {
@@ -34,6 +36,8 @@ export function parseWebhookPayload(payload: unknown): ParsedWebhook {
   const entity = body.entity as Record<string, any> | undefined;
   const slug =
     typeof entity?.attributes?.slug === 'string' ? (entity.attributes.slug as string) : null;
+
+  const id = typeof entity?.id === 'string' ? (entity.id as string) : null;
 
   const itemTypeId = entity?.relationships?.item_type?.data?.id;
   const related = Array.isArray(body.related_entities) ? body.related_entities : [];
@@ -45,5 +49,5 @@ export function parseWebhookPayload(payload: unknown): ParsedWebhook {
       ? (itemType.attributes.api_key as string)
       : null;
 
-  return { eventType, apiKey, slug };
+  return { eventType, apiKey, slug, id };
 }

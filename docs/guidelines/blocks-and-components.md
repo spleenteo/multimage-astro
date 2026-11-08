@@ -1,5 +1,5 @@
 ---
-scope: Fastro distinguishes between CMS content related Blocks and regular UI Components.
+description: Fastro distinguishes between CMS content related Blocks and regular UI Components.
 ---
 
 # Blocks and Components

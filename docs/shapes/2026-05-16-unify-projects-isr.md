@@ -258,7 +258,7 @@ A 9K page views/mese serve un traffico **100x** per saturare il free plan. Spike
   - Merge in main + deploy ✓
   - Plugin Web Previews aggiornato via CLI: `previewWebhook` → `https://www.multimage.org/api/preview-links?token=...` + blocco `visualEditing.enableDraftModeUrl` (mancava → Visual Editing non si attivava)
   - Webhook DatoCMS creato via CLI: "Revalidate site cache (ISR)" id `33942`, eventi `item:publish/unpublish/delete`, auto_retry on
-  - **Fix post-cutover** (vedi `docs/decision-log/2026-05-30-isr-cutover-fixes.md`):
+  - **Fix post-cutover** (vedi `docs/decisions-log/2026-05-30-isr-cutover-fixes.md`):
     - CSP `frame-ancestors` esteso a `https://*.datocms.com https://admin.multimage.org` (catena iframe annidata — commit `17c9e43`)
     - `DATOCMS_BASE_EDITING_URL` corretto a URL bare senza `/environments/main` (mismatch environment)
   - Decommissioning secondo progetto Vercel: **azione utente residua** (non bloccante)

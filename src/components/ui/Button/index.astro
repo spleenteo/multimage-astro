@@ -40,38 +40,36 @@ if (fullWidth) {
 }
 ---
 
-{
-  href ? (
-    <a
-      href={href}
-      aria-label={ariaLabel}
-      class:list={[...baseClasses, className]}
-      data-variant={normalizedVariant}
-      target={target ?? undefined}
-      rel={rel ?? undefined}
-    >
-      {icon && iconPosition === 'left' ? (
-        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-      ) : null}
-      <slot />
-      {icon && iconPosition === 'right' ? (
-        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-      ) : null}
-    </a>
-  ) : (
-    <button
-      type={type}
-      aria-label={ariaLabel}
-      class:list={[...baseClasses, className]}
-      data-variant={normalizedVariant}
-    >
-      {icon && iconPosition === 'left' ? (
-        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-      ) : null}
-      <slot />
-      {icon && iconPosition === 'right' ? (
-        <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
-      ) : null}
-    </button>
-  )
-}
+{href ? (
+  <a
+    href={href}
+    aria-label={ariaLabel}
+    class:list={[...baseClasses, className]}
+    data-variant={normalizedVariant}
+    target={target ?? undefined}
+    rel={rel ?? undefined}
+  >
+    {icon && iconPosition === 'left' ? (
+      <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+    ) : null}
+    <slot />
+    {icon && iconPosition === 'right' ? (
+      <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+    ) : null}
+  </a>
+) : (
+  <button
+    type={type}
+    aria-label={ariaLabel}
+    class:list={[...baseClasses, className]}
+    data-variant={normalizedVariant}
+  >
+    {icon && iconPosition === 'left' ? (
+      <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+    ) : null}
+    <slot />
+    {icon && iconPosition === 'right' ? (
+      <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
+    ) : null}
+  </button>
+)}

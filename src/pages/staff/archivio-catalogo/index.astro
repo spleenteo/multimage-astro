@@ -89,25 +89,19 @@ const toolsNavigation = [
   <section class={styles.section}>
     <div class={styles.container}>
       <nav class={styles.menu} aria-label="Strumenti area staff">
-        {
-          toolsNavigation.map((item) => (
-            <a
-              href={item.href}
-              class:list={[styles.menuLink, item.current ? styles.menuLinkActive : null]}
-              aria-current={item.current ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          ))
-        }
+        {toolsNavigation.map((item) => <a
+          href={item.href}
+          class:list={[styles.menuLink, item.current ? styles.menuLinkActive : null]}
+          aria-current={item.current ? 'page' : undefined}
+        >
+          {item.label}
+        </a>)}
       </nav>
 
       <header class={styles.header}>
         <div class={styles.titleGroup}>
           <h1 class={styles.title}>Archivio catalogo</h1>
-          <p class={styles.count}>
-            {formattedBooks.length.toLocaleString('it-IT')} libri totali
-          </p>
+          <p class={styles.count}>{formattedBooks.length.toLocaleString('it-IT')} libri totali</p>
           <p class={styles.description}>
             Esporta l’intero catalogo di DatoCMS per attività editoriali e amministrative. I dati
             vengono aggiornati ad ogni pubblicazione.
@@ -159,78 +153,70 @@ const toolsNavigation = [
             </tr>
           </thead>
           <tbody>
-            {
-              formattedBooks.map((book) => (
-                <tr>
-                  <td class={`${styles.cell} ${styles.cellStrong}`}>{book.isbn ?? ''}</td>
-                  <td class={styles.cell}>{book.archiveLabel}</td>
-                  <td class={`${styles.cell} ${styles.cellStrong}`}>{book.title}</td>
-                  <td class={styles.cell}>{book.subtitle ?? ''}</td>
-                  <td class={styles.cell}>
-                    {book.authors.length > 0 ? book.authors.join(', ') : ''}
-                  </td>
-                  <td class={styles.cell}>
-                    {book.collection?.name ? (
-                      book.collectionUrl ? (
-                        <a href={book.collectionUrl} class={styles.link}>
-                          {book.collection.name}
-                        </a>
-                      ) : (
-                        book.collection.name
-                      )
-                    ) : (
-                      ''
-                    )}
-                  </td>
-                  <td class={styles.cell}>{book.format ?? ''}</td>
-                  <td class={styles.cell}>{book.layoutArtist ?? ''}</td>
-                  <td class={styles.cell}>{book.illustrator ?? ''}</td>
-                  <td class={styles.cell}>{book.coverDesigner ?? ''}</td>
-                  <td class={styles.cell}>{book.pages ?? ''}</td>
-                  <td class={styles.cell}>{book.edition ?? ''}</td>
-                  <td class={styles.cell}>{book.printYearLabel ?? ''}</td>
-                  <td class={styles.cell}>{book.firstPrintYearLabel ?? ''}</td>
-                  <td class={styles.cell}>
-                    {book.reprints.length > 0 ? (
-                      <div class={styles.multiValue}>
-                        {book.reprints.map((entry) => (
-                          <div>{entry}</div>
-                        ))}
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </td>
-                  <td class={styles.cell}>{book.dimensionsLabel ?? ''}</td>
-                  <td class={styles.cell}>{book.originalLang ?? ''}</td>
-                  <td class={styles.cell}>{book.originalTitle ?? ''}</td>
-                  <td class={styles.cell}>{book.translator ?? ''}</td>
-                  <td
-                    class={styles.cell}
-                    data-export-value={book.keywords.length > 0 ? book.keywords.join(', ') : ''}
-                  >
-                    {book.keywords.length > 0 ? (
-                      <div class={styles.multiValue}>
-                        {book.keywords.map((keyword) => (
-                          <span class={styles.tag}>{keyword}</span>
-                        ))}
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </td>
-                  <td class={styles.cell}>{book.priceLabel ?? ''}</td>
-                  <td class={styles.cell}>{book.promo ?? ''}</td>
-                  <td class={styles.cell}>{book.stock ?? ''}</td>
-                  <td class={styles.cell}>{book.copyright ?? ''}</td>
-                  <td class={styles.cell}>
-                    <a href={book.publicUrl} class={styles.link}>
-                      {book.publicUrl}
+            {formattedBooks.map((book) => <tr>
+              <td class={`${styles.cell} ${styles.cellStrong}`}>{book.isbn ?? ''}</td>
+              <td class={styles.cell}>{book.archiveLabel}</td>
+              <td class={`${styles.cell} ${styles.cellStrong}`}>{book.title}</td>
+              <td class={styles.cell}>{book.subtitle ?? ''}</td>
+              <td class={styles.cell}>
+                {book.authors.length > 0 ? book.authors.join(', ') : ''}
+              </td>
+              <td class={styles.cell}>
+                {book.collection?.name ? (
+                  book.collectionUrl ? (
+                    <a href={book.collectionUrl} class={styles.link}>
+                      {book.collection.name}
                     </a>
-                  </td>
-                </tr>
-              ))
-            }
+                  ) : (
+                    book.collection.name
+                  )
+                ) : (
+                  ''
+                )}
+              </td>
+              <td class={styles.cell}>{book.format ?? ''}</td>
+              <td class={styles.cell}>{book.layoutArtist ?? ''}</td>
+              <td class={styles.cell}>{book.illustrator ?? ''}</td>
+              <td class={styles.cell}>{book.coverDesigner ?? ''}</td>
+              <td class={styles.cell}>{book.pages ?? ''}</td>
+              <td class={styles.cell}>{book.edition ?? ''}</td>
+              <td class={styles.cell}>{book.printYearLabel ?? ''}</td>
+              <td class={styles.cell}>{book.firstPrintYearLabel ?? ''}</td>
+              <td class={styles.cell}>
+                {book.reprints.length > 0 ? (
+                  <div class={styles.multiValue}>
+                    {book.reprints.map((entry) => <div>{entry}</div>)}
+                  </div>
+                ) : (
+                  ''
+                )}
+              </td>
+              <td class={styles.cell}>{book.dimensionsLabel ?? ''}</td>
+              <td class={styles.cell}>{book.originalLang ?? ''}</td>
+              <td class={styles.cell}>{book.originalTitle ?? ''}</td>
+              <td class={styles.cell}>{book.translator ?? ''}</td>
+              <td
+                class={styles.cell}
+                data-export-value={book.keywords.length > 0 ? book.keywords.join(', ') : ''}
+              >
+                {book.keywords.length > 0 ? (
+                  <div class={styles.multiValue}>
+                    {book.keywords.map((keyword) => <span class={styles.tag}>{keyword}</span>)}
+                  </div>
+                ) : (
+                  ''
+                )}
+              </td>
+              <td class={styles.cell}>{book.priceLabel ?? ''}</td>
+              <td class={styles.cell}>{book.promo ?? ''}</td>
+              <td class={styles.cell}>{book.stock ?? ''}</td>
+              <td class={styles.cell}>{book.copyright ?? ''}</td>
+              <td class={styles.cell}>
+                <a href={book.publicUrl} class={styles.link}>
+                  {book.publicUrl}
+                </a>
+              </td>
+            </tr>)}
           </tbody>
         </table>
       </div>

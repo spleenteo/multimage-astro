@@ -1,34 +1,32 @@
-@tailwind components;
+@reference '../../../styles/global.css';
 
-@layer components {
-  .root {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
-  }
+.root {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2;
+}
 
-  .primary {
-    @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange hover:bg-brand-crimson;
-  }
-  .primary:hover {
-    color: white;
-  }
+.primary {
+  @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange hover:bg-brand-crimson;
+}
+.primary:hover {
+  color: white;
+}
 
-  .secondary {
-    @apply bg-brand-mist text-brand-navy shadow-soft transition hover:bg-brand-mist/80 focus-visible:ring-brand-navy/30;
-  }
+.secondary {
+  @apply bg-brand-mist text-brand-navy shadow-soft transition hover:bg-brand-mist/80 focus-visible:ring-brand-navy/30;
+}
 
-  .ghost {
-    @apply bg-transparent text-brand-navy hover:bg-brand-mist/70 focus-visible:ring-brand-navy/40;
-  }
+.ghost {
+  @apply bg-transparent text-brand-navy hover:bg-brand-mist/70 focus-visible:ring-brand-navy/40;
+}
 
-  .fullWidth {
-    @apply w-full;
-  }
+.fullWidth {
+  @apply w-full;
+}
 
-  .root :global(a),
-  .root :global(a:visited),
-  .root :global(a:hover),
-  .root :global(a:focus) {
-    color: inherit !important;
-    text-decoration: none;
-  }
+.root :global(a),
+.root :global(a:visited),
+.root :global(a:hover),
+.root :global(a:focus) {
+  color: inherit !important;
+  text-decoration: none;
 }
