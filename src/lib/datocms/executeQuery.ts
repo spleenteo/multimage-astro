@@ -1,9 +1,10 @@
-import { executeQuery as libExecuteQuery } from '@datocms/cda-client';
+import { executeQuery as libExecuteQuery, rawExecuteQuery } from '@datocms/cda-client';
 import {
   DATOCMS_BASE_EDITING_URL,
   DATOCMS_DRAFT_CONTENT_CDA_TOKEN,
   DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
 } from 'astro:env/server';
+import { addCacheTags, cacheTagStore } from './cacheTags';
 
 /**
  * Executes a GraphQL query using the DatoCMS Content Delivery API, using a
@@ -25,17 +26,34 @@ export async function executeQuery<
   // editing; local dev (env unset) still sees drafts, just without the overlay.
   const enableContentLink = includeDrafts && Boolean(DATOCMS_BASE_EDITING_URL);
 
-  const result = await libExecuteQuery<Result, Variables>(query, {
+  const clientOptions = {
     variables: options?.variables,
     excludeInvalid: options?.excludeInvalid ?? true,
     includeDrafts,
     token,
     environment: options?.environment,
-    contentLink: enableContentLink ? 'v1' : undefined,
+    contentLink: enableContentLink ? ('v1' as const) : undefined,
     baseEditingUrl: enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined,
-  });
+  };
 
-  return result;
+  // The request store exists only on Cloudflare (opened by the middleware).
+  // Queries never call `cache.set`: they only feed the store, and the middleware
+  // makes the one final cache decision.
+  const state = cacheTagStore.getStore();
+
+  if (state && includeDrafts) {
+    state.disabled = true;
+  } else if (state) {
+    const [data, response] = await rawExecuteQuery<Result, Variables>(query, {
+      ...clientOptions,
+      returnCacheTags: true,
+    });
+    addCacheTags(state, response.headers.get('x-cache-tags'), options?.cacheTagScope);
+
+    return data;
+  }
+
+  return libExecuteQuery<Result, Variables>(query, clientOptions);
 }
 
 function resolveToken(includeDrafts: boolean) {
@@ -62,4 +80,6 @@ type ExecuteQueryOptions<Variables extends Record<string, unknown>> = {
   token?: string;
   excludeInvalid?: boolean;
   environment?: string;
+  /** Marks the query as the site layout's, so its tags set the `layout` flag (BaseLayout only). */
+  cacheTagScope?: 'layout';
 };

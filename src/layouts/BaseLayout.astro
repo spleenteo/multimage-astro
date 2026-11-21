@@ -82,6 +82,7 @@ const draftModeEnabled = resolveDraftMode(Astro);
 
 const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY, {
   includeDrafts: draftModeEnabled,
+  cacheTagScope: 'layout',
 });
 const faviconTags = _site?.faviconMetaTags ?? [];
 const currentPath = Astro.url.pathname;
