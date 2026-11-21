@@ -1,5 +1,11 @@
 import { defineMiddleware } from 'astro:middleware';
 import { isDraftModeEnabled } from '~/lib/draftMode';
+import {
+  cacheTagStore,
+  COARSE_MAX_AGE,
+  createCacheTagState,
+  decidePageTags,
+} from '~/lib/datocms/cacheTags';
 
 /**
  * Origins allowed to embed the site in an iframe during draft mode.
@@ -76,48 +82,88 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return withHeader(notFound, 'Cache-Control', 'private, no-store');
   }
 
-  const response = await next();
+  // Cloudflare GET requests outside /api open the per-request tag store that
+  // `executeQuery` fills (internal paths included: they end up private anyway).
+  // Vercel has no cache provider: no store, the handler runs as before.
+  const state =
+    context.cache.enabled && context.request.method === 'GET' && !isApiPath(pathname)
+      ? createCacheTagState()
+      : undefined;
 
-  // When the editor is in draft mode, allow the DatoCMS Web Previews plugin
-  // to embed the site inside the "Visual" tab iframe. Outside draft mode the
-  // header is left untouched (Vercel applies its own defaults).
-  // Read again after next(): the draft endpoints set or delete the cookie during
-  // the request, and AstroCookies.get() sees those changes first.
-  const draftNow = isDraftModeEnabled(context.cookies);
-  if (draftNow) {
-    response.headers.set('Content-Security-Policy', `frame-ancestors ${FRAME_ANCESTORS}`);
-  }
+  const handle = async () => {
+    const response = await next();
 
-  // Cloudflare only (the cache provider is absent on Vercel, which keeps its
-  // ISR behaviour untouched). Exactly one `cache.set` call per request, made
-  // here after `next()`: the body is buffered for cached rows because the
-  // DatoCMS tags collected during rendering (V2) are only known at this point.
-  if (!context.cache.enabled) return response;
+    // When the editor is in draft mode, allow the DatoCMS Web Previews plugin
+    // to embed the site inside the "Visual" tab iframe. Outside draft mode the
+    // header is left untouched (Vercel applies its own defaults).
+    // Read again after next(): the draft endpoints set or delete the cookie during
+    // the request, and AstroCookies.get() sees those changes first.
+    const draftNow = isDraftModeEnabled(context.cookies);
+    if (draftNow) {
+      response.headers.set('Content-Security-Policy', `frame-ancestors ${FRAME_ANCESTORS}`);
+    }
 
-  const isHtml = response.headers.get('content-type')?.startsWith('text/html') ?? false;
+    // Cloudflare only (the cache provider is absent on Vercel, which keeps its
+    // ISR behaviour untouched). Exactly one `cache.set` call per request, made
+    // here after `next()`: for cached rows the body is buffered first, because
+    // the DatoCMS tags are collected while the page streams and a draft query
+    // during the stream (state.disabled) turns the row private.
+    if (!context.cache.enabled) return response;
 
-  if (
-    draftNow ||
-    isInternalPath(pathname) ||
-    isApiPath(pathname) ||
-    context.request.method !== 'GET' ||
-    response.status !== 200
-  ) {
-    context.cache.set(false);
-    return withHeader(response, 'Cache-Control', 'private, no-store');
-  }
+    const isHtml = response.headers.get('content-type')?.startsWith('text/html') ?? false;
+    const cacheable =
+      !draftNow &&
+      !state?.disabled &&
+      !isInternalPath(pathname) &&
+      !isApiPath(pathname) &&
+      context.request.method === 'GET' &&
+      response.status === 200 &&
+      (isHtml || CACHED_NON_HTML_PATHS.has(pathname));
 
-  if (isHtml || CACHED_NON_HTML_PATHS.has(pathname)) {
+    if (!cacheable) {
+      // Private row, or an endpoint with no CDA query (robots.txt, llms*.txt).
+      const isPrivate =
+        draftNow ||
+        state?.disabled ||
+        isInternalPath(pathname) ||
+        isApiPath(pathname) ||
+        context.request.method !== 'GET' ||
+        response.status !== 200;
+      context.cache.set(false);
+      return isPrivate ? withHeader(response, 'Cache-Control', 'private, no-store') : response;
+    }
+
     const body = await response.arrayBuffer();
     const buffered = new Response(body, {
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,
     });
-    context.cache.set({ maxAge: SIXTY_DAYS });
-    return buffered;
-  }
 
-  context.cache.set(false);
-  return response;
+    // The final decision runs after buffering: a draft query that ran while the
+    // body streamed makes the page private whatever `draftNow` said.
+    const decision = decidePageTags(state, isHtml);
+    if (decision.disabled) {
+      context.cache.set(false);
+      return withHeader(buffered, 'Cache-Control', 'private, no-store');
+    }
+
+    context.cache.set({
+      maxAge: decision.coarse ? COARSE_MAX_AGE : SIXTY_DAYS,
+      tags: decision.tags,
+    });
+    const line = JSON.stringify({
+      event: 'cache-tags',
+      path: pathname,
+      tagCount: decision.tagCount,
+      hasLayoutTags: decision.hasLayoutTags,
+      coarse: decision.coarse,
+      reason: decision.reason,
+    });
+    if (decision.coarse) console.warn(line);
+    else console.log(line);
+    return buffered;
+  };
+
+  return state ? cacheTagStore.run(state, handle) : handle();
 });
