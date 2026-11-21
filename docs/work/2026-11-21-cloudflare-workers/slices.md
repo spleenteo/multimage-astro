@@ -84,3 +84,7 @@ Build and deploy: `npx dotenv -e <env file> -- npm run deploy:cf`, the env file 
 3. Draft mode and `/api/seo-analysis` answer correctly on the trial Worker, or the gap is written in the runbook with its fix.
 
 ## Deviations found while planning
+
+### Deviations found while planning V1
+
+- `/robots.txt` is `public/robots.txt`, a static asset served before the Worker code, and no `/llms*.txt` route exists: the "endpoints with no CDA query" row has no route today. It stays in the middleware for future endpoints; V1 Done 4 on `/robots.txt` is an observation, not a stop.
