@@ -81,7 +81,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // When the editor is in draft mode, allow the DatoCMS Web Previews plugin
   // to embed the site inside the "Visual" tab iframe. Outside draft mode the
   // header is left untouched (Vercel applies its own defaults).
-  if (draft) {
+  // Read again after next(): the draft endpoints set or delete the cookie during
+  // the request, and AstroCookies.get() sees those changes first.
+  const draftNow = isDraftModeEnabled(context.cookies);
+  if (draftNow) {
     response.headers.set('Content-Security-Policy', `frame-ancestors ${FRAME_ANCESTORS}`);
   }
 
@@ -94,7 +97,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const isHtml = response.headers.get('content-type')?.startsWith('text/html') ?? false;
 
   if (
-    draft ||
+    draftNow ||
     isInternalPath(pathname) ||
     isApiPath(pathname) ||
     context.request.method !== 'GET' ||
