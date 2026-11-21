@@ -1,8 +1,8 @@
 ---
 status: open
-phase: impact
-slice: null
-step: null
+phase: slice
+slice: V1
+step: plan
 work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
@@ -28,3 +28,4 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 ## Log
 
 - 2026-11-21 — opening + shaping + slicing — shape A picked (Astro route cache, native DatoCMS tags, gateway entrypoint, invalidation endpoint); frame and breadboard skipped (technical work, no new UI) — 25 min — n/a
+- 2026-11-21 — impact — 2 agents, 23 findings (4 high: purge result ignored, late cache.set re-enables caching, non-HTML routes cached by default, middleware would change Vercel); all fixes applied to slices.md as cross-slice rules and per-slice items (user asleep: recommended fixes accepted) — 12 min — n/a
