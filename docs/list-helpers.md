@@ -6,6 +6,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: wraps `@datocms/cda-client`, automatically swapping the CDA token and `includeDrafts` flag when Draft Mode is enabled.
   - Used in: every GraphQL request (`BaseLayout`, pages, APIs).
   - Notes: throws descriptive errors if the required token is missing to avoid silent preview failures.
+  - Cloudflare: when the middleware has opened the request tag store (`cacheTagStore`), published queries run through `rawExecuteQuery` with `returnCacheTags` and push the `x-cache-tags` into the store; draft queries mark it `disabled`. The optional `cacheTagScope: 'layout'` (BaseLayout only) flags the layout tags. It never calls `cache.set`; with no store (Vercel) nothing changes.
 - **`draftMode` helpers** (`src/lib/draftMode.ts`)
   - Purpose: exposes `enableDraftMode`, `disableDraftMode`, `isDraftModeEnabled`, and `draftModeHeaders` so API routes and pages share the same logic.
   - Used in: `/api/preview`, `/api/draft-mode/*`, `BaseLayout`, and every page that needs to check whether previews are active.
@@ -26,6 +27,22 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: `getAllPublicUrls()` enumerates every public URL (static + catalogue pages + record detail URLs) for the full-revalidation sweep.
   - Used in: `/api/revalidate?mode=full`.
   - Notes: dedupes against `STATIC_URLS`; per-publish revalidation uses `revalidationUrls.ts` instead.
+- **`cacheTags` helper** (`src/lib/datocms/cacheTags.ts`)
+  - Purpose: per-request cache tag collection (Cloudflare only). Exports `cacheTagStore` (AsyncLocalStorage), `createCacheTagState`, `addCacheTags` (parses an `x-cache-tags` header), `decidePageTags` (tags, or the coarse `site` fallback on empty, overflow, invalid, no-layout or draft), `isValidCacheTag`, and the constants `SITE_TAG`, `MAX_PAGE_TAGS` (990) and `COARSE_MAX_AGE` (1 day).
+  - Used in: `src/middleware.ts` (opens the store, makes the one final `cache.set`), `executeQuery`, `cacheInvalidation.ts`.
+  - Notes: pure module, no env or network; checked by `npm run check:cache-tags`.
+- **`cacheInvalidation` helper** (`src/lib/datocms/cacheInvalidation.ts`)
+  - Purpose: pure helpers of the invalidation endpoint. `invalidationTags(payload)` reads `entity.attributes.tags` (null when malformed; valid deduped tags plus `site`, with a `dropped` count); `purgeInBatches(purge, tags)` purges in sequence, `PURGE_BATCH_SIZE` (100) tags per call, stopping at the first failure. Types `PurgeFn`, `CachePurgeResult`.
+  - Used in: `POST /api/invalidate-cache` (Bearer `CACHE_INVALIDATION_WEBHOOK_SECRET`, Cloudflare only: 503 elsewhere).
+  - Notes: the purge function is injected, so it runs under plain `tsx`; checked by `npm run check:cache-tags`.
+- **`siteSearch` helper** (`src/lib/datocms/siteSearch.ts`)
+  - Purpose: `reindexSiteSearch(logPrefix)` triggers the Site Search build trigger through the CMA; best-effort, returns false (no throw) when the tokens are missing or the call fails.
+  - Used in: `/api/revalidate`, `/api/invalidate-cache`.
+  - Notes: needs `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID`; imports `astro:env/server`, so it does not load under plain `tsx`.
+- **Cache-tags check** (`check.ts` in scripts/cache-tags)
+  - Purpose: no-network check of `decidePageTags`, `addCacheTags`, `invalidationTags` and `purgeInBatches` (stub purge function), printing `OK`/`MISMATCH` per case.
+  - Used in: `npm run check:cache-tags`.
+  - Notes: runs with the same sentinel preload as the revalidation-map check, which blocks `fetch`.
 - **`revalidationUrls` helper** (`src/lib/datocms/revalidationUrls.ts`)
   - Purpose: `getRevalidationUrls({ apiKey, slug, id }, query?)` maps a changed record to the small set of affected URLs (surgical revalidation). Book changes enrich with catalogue pages + the book's authors'/collection's detail pages via one CDA query (injectable through the `query` parameter, default `executeQuery`). `index_page` maps by slug to its index URL; `supplier` to `/distributori`; `license` (id) to the pages of the books carrying it (the license renders only on the book page); `app` is a deliberate no-op.
   - Used in: `/api/revalidate` (surgical mode).
