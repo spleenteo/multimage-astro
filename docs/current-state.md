@@ -10,20 +10,20 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 - Astro pages live under `src/pages/**`, each with a sibling `_graphql.ts` defining queries/fragments. API routes exist under `src/pages/api/**` and power preview/draft tooling plus automations (`post-deploy`, `seo-analysis`, `preview-links`).
 - Components are grouped by feature: `src/components/blocks`, `src/components/datocms/structuredText`, `src/components/ui`, and utility components like `DraftModeQueryListener`.
-- Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). All routes are SSR with ISR caching (no more `prerender` flag branching).
+- Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). All routes are SSR (no more `prerender` flag branching), cached by Vercel ISR in production and, on branch `chore/cloudflare`, by the Workers Cache with DatoCMS cache tags (`DEPLOY_TARGET=cloudflare`).
 - Layout, styles, scripts:
   - `src/layouts/BaseLayout.astro` loads site-wide data, analytics, and icon scripts.
   - `src/styles/global.css` imports fonts + Tailwind 4 and defines the design tokens in `@theme static` (no JS config).
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.
-- Known gaps: cache tags aren't wired (**CD3**), `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
+- Known gaps: `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## Routing
 
-- Tutte le route pubbliche (`/`, `/libri` + `/libri/pagina/[page]`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations.
+- Tutte le route pubbliche (`/`, `/libri` + `/libri/pagina/[page]`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR (produzione oggi) — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations. Sul branch `chore/cloudflare` (`DEPLOY_TARGET=cloudflare`, Worker di prova, switch non ancora eseguito) le stesse pagine sono nella Workers Cache per 60 giorni con cache tag DatoCMS; editor, `/api/*`, route interne e risposte non-200 non vengono mai messe in cache (policy nel middleware).
 - Il catalogo `/libri` è **paginato** (40 libri/pagina): pagina 1 canonica su `/libri`, pagine 2..N su `/libri/pagina/<n>` (path-based per chiavi ISR pulite). `/libri/pagina/1` → 301 `/libri`; pagine non numeriche o fuori range → 404. `BOOKS_PER_PAGE` + `buildBooksCataloguePaths()` in `src/lib/books.ts` sono la single source of truth condivisa da route, sitemap e revalidation.
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decisions-log `2026-05-31-editor-session-gating` (**S1**).
-- API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate`, `/api/utils` remain SSR-only endpoints even during static builds.
+- API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate` (Vercel), `/api/invalidate-cache` (Cloudflare: webhook `cda_cache_tags`, purge dei tag + reindex Site Search), `/api/utils` remain SSR-only endpoints even during static builds.
 - Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `/api/seo-analysis` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) mirrors the api_key → route table by hand (index paths shared via `INDEX_PAGE_PATHS`).
 - Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
@@ -32,13 +32,14 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - All GraphQL calls go through `src/lib/datocms/executeQuery.ts`, which swaps CDA tokens based on `includeDrafts`.
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
 - Draft Mode detection happens through `resolveDraftMode(Astro)` → `draftModeEnabledFromAstro`. `executeQuery` opts into `contentLink: 'v1'` + `baseEditingUrl` for Visual Editing when `includeDrafts` is true **and** `DATOCMS_BASE_EDITING_URL` is set; without the env (e.g. local dev) it serves drafts but skips Content Link to avoid the CDA 422.
-- Editors enter draft mode through the DatoCMS Web Previews plugin (or `/api/preview?secret=...`). `enableDraftMode` sets a dual-cookie: the JWT app-level cookie + the Vercel-native `__prerender_bypass` cookie that bypasses CDN cache for the editor's requests.
+- Editors enter draft mode through the DatoCMS Web Previews plugin (or `/api/preview?secret=...`). `enableDraftMode` sets a dual-cookie: the JWT app-level cookie + the Vercel-native `__prerender_bypass` cookie that bypasses CDN cache for the editor's requests (Vercel only). On Cloudflare the gateway entrypoint (`src/worker.ts`) forwards requests carrying the draft-mode cookie to the `Backend` entrypoint with `cache: "no-store"`, and the middleware never caches a draft request.
 - Webhook `/api/revalidate` is called by DatoCMS on publish/unpublish/delete (webhook 33942). It now does **surgical** revalidation: `webhookPayload.ts` parses the payload (event_type, slug, model api_key from `related_entities`), and `revalidationUrls.ts` maps `api_key + slug` → the small set of affected URLs (~12–20 for a book, incl. its catalogue pages, sub-indexes, and its authors'/collection's detail pages; `home` → the home page; `index_page` → its index URL by slug; `supplier` → `/distributori`; `license` → its books' pages; `app` no-op). Unknown/unmapped models no-op. `?mode=full` still runs the whole-surface sweep via `getAllPublicUrls()`. After revalidating it re-spiders Site Search via `buildTriggers.reindex` (no rebuild). The ineffective in-memory debounce was removed (each call is cheap + idempotent). See decisions-log `2026-06-20-fot-reduction`.
+- On Cloudflare, `executeQuery` asks the CDA for cache tags (`returnCacheTags`) and the middleware attaches them to the cached response; `POST /api/invalidate-cache` (DatoCMS `cda_cache_tags` webhook, Bearer `CACHE_INVALIDATION_WEBHOOK_SECRET`) purges them (`src/lib/datocms/cacheTags.ts`, `cacheInvalidation.ts`), falling back to the coarse `site` tag, then reindexes Site Search. Decision: `docs/decisions-log/2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge.md`; switch-day runbook: `docs/guidelines/cloudflare-switch.md`.
 - ISR `expiration` is **60 days** (safety net only; freshness is on-demand via the webhook — see `docs/guidelines/preview-mode.md`).
 - Card grids use `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`, no `srcSet`; `<Image srcSetCandidates={[1,2]}>` rebuilds a 2-candidate srcset client-side) to keep listing HTML — and thus FOT — small. `RESPONSIVE_IMAGE_FRAGMENT` (with base64 + srcSet) stays for hero/detail images.
 - Partial pagination — `/libri` + sitemap catalogue pages now paginate via `first/skip`; `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
-- Caching audit and verification procedure: `docs/guidelines/caching.md`; ISR config and route baseline snapshot (reference for the V4 diff): `docs/work/2026-11-04-upgrade-2026-11/baseline/`. Cache tags: not implemented, revalidation is URL-based; open gaps are tracked as `Cache gap #n` in `docs/TODO.md`.
-- Cache tag propagation is not yet wired (**CD3**); surgical revalidation covers the "revalidate only touched pages" goal via a URL map in the meantime.
+- Caching audit and verification procedure: `docs/guidelines/caching.md`; ISR config and route baseline snapshot (reference for the V4 diff): `docs/work/2026-11-04-upgrade-2026-11/baseline/`. On Vercel (production today) cache tags are not used and revalidation is URL-based; on the Cloudflare branch they are (V1–V3 of shape `cache-tags`). Open gaps are tracked as `Cache gap #n` in `docs/TODO.md`.
+- Cache tag propagation (**CD3**) is implemented for the Cloudflare target on branch `chore/cloudflare` and goes live with the switch (TODO **CF-switch**); until then Vercel keeps the URL map (surgical revalidation).
 
 ## Blocks & Components
 
@@ -103,14 +104,14 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Operations
 
-- Hosting: **un solo progetto Vercel** con `output: 'server'` + ISR. Anonymous → CDN cache. Editor con draft cookie → CDN bypass + SSR + Visual Editing.
+- Hosting: **un solo progetto Vercel** con `output: 'server'` + ISR. Anonymous → CDN cache. Editor con draft cookie → CDN bypass + SSR + Visual Editing. Sul branch `chore/cloudflare`: Worker `multimage-astro` nell'account Cloudflare Multimage (`npm run build:cf` / `deploy:cf`, URL di prova `multimage-astro.matteo-59f.workers.dev`), Workers Cache + cache tag; il passaggio del dominio segue `docs/guidelines/cloudflare-switch.md` (non ancora eseguito).
 - Required env vars: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `BYPASS_TOKEN`, `DATOCMS_BASE_EDITING_URL`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`. (`SERVER` rimossa.)
 - `npm run dev`/`start` auto-runs `npm run sync-datocms` (schema generation).
 - Preview workflow: editors hit `/api/preview` or the Web Preview plugin to enable draft cookies, then browse the preview deployment for live drafts.
 
 ## Dependencies
 
-- Core: Node 24.x (`.nvmrc`, `engines`), Astro 7.4.7 (`compressHTML: true` pinned), Tailwind 4.3.5 (via `@tailwindcss/vite`, no PostCSS), TypeScript 6.0.3, `@astrojs/vercel` 11.0.20 con ISR, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.3.2, `@datocms/cma-client` 6.8.0, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.2.0.
+- Core: Node 24.x (`.nvmrc`, `engines`), Astro 7.4.7 (`compressHTML: true` pinned), Tailwind 4.3.5 (via `@tailwindcss/vite`, no PostCSS), TypeScript 6.0.3, `@astrojs/vercel` 11.0.20 con ISR, `@astrojs/cloudflare` 14.4.9, `wrangler` 4.147.0, `@datocms/astro` 0.6.16, `@datocms/cda-client` 0.3.2, `@datocms/cma-client` 6.8.0, `@datocms/content-link` 0.3.23 (Visual Editing), `datocms` (CLI) 4.2.0.
 - Tooling: Prettier 3.9 + `prettier-plugin-astro` 1.1, esbuild 0.28, dotenv-cli 11.1.
 - Client bundles: Swiper 14.4.0 (pinned exact), Iconify CDN.
 - Known debt: still shipping GA UA snippet; no automated dependency audit; `experimental.svgo` not yet evaluated (**P1**); `path-to-regexp` ReDoS (GHSA-9wv6-86v2-598j) ancora aperto (`npm audit --omit=dev` lo elenca) come transitive di `@vercel/routing-utils@6.6.1` (`path-to-regexp@6.1.0`) — upstream issue, attende patch da Vercel; TypeScript 7 deferred (decisions-log/2026-11-04-defer-typescript-7.md).
