@@ -37,8 +37,7 @@ export async function executeQuery<
   };
 
   // The request store exists only on Cloudflare (opened by the middleware).
-  // Queries never call `cache.set`: they only feed the store, and the middleware
-  // makes the one final cache decision.
+  // Queries only feed the store; the middleware makes the one final cache decision.
   const state = cacheTagStore.getStore();
 
   if (state && includeDrafts) {
