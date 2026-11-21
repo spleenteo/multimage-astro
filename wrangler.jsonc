@@ -4,11 +4,20 @@
   // Build with DEPLOY_TARGET=cloudflare so astro.config.mjs picks @astrojs/cloudflare.
   "name": "multimage-astro",
   "account_id": "59fd5121a90b86d19e5a982e6fc41696",
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  // Gateway entry (src/worker.ts): draft bypass and cache key, then forwards to Backend.
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "binding": "ASSETS" },
   "workers_dev": true,
   "preview_urls": true,
+  // Workers Cache on for the Worker; the default entrypoint turns it off below.
+  "cache": { "enabled": true },
+  "exports": {
+    // Gateway: caching off, so it always runs and decides bypass/cache key.
+    "default": { "type": "worker", "cache": { "enabled": false } },
+    // Backend: the cache sits in front of it, every render and purge runs here.
+    "Backend": { "type": "worker", "cache": { "enabled": true } },
+  },
   "observability": { "enabled": true },
 }

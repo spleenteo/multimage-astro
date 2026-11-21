@@ -1,6 +1,7 @@
 import { defineConfig, envField } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
+import { cacheCloudflare } from '@astrojs/cloudflare/cache';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -29,6 +30,8 @@ const adapter = isCloudflare
 export default defineConfig({
   output: 'server',
   adapter,
+  // Workers Cache provider, Cloudflare only: on Vercel there is no `cache` key (ISR does the caching).
+  ...(isCloudflare ? { cache: { provider: cacheCloudflare() } } : {}),
   site: 'https://www.multimage.org',
   // Astro 7 defaults to 'jsx' (strips whitespace between inline elements); keep HTML-aware compression.
   // Keep in sync with astroCompressHTML in .prettierrc (true = 'html').
