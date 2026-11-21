@@ -32,7 +32,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `src/middleware.ts` (opens the store, makes the one final `cache.set`), `executeQuery`, `cacheInvalidation.ts`.
   - Notes: pure module, no env or network; checked by `npm run check:cache-tags`.
 - **`cacheInvalidation` helper** (`src/lib/datocms/cacheInvalidation.ts`)
-  - Purpose: pure helpers of the invalidation endpoint. `invalidationTags(payload)` reads `entity.attributes.tags` (null when malformed; valid deduped tags plus `site`, with a `dropped` count); `purgeInBatches(purge, tags)` purges in sequence, `PURGE_BATCH_SIZE` (100) tags per call, stopping at the first failure. Types `PurgeFn`, `CachePurgeResult`.
+  - Purpose: pure helpers of the invalidation endpoint. `invalidationTags(payload)` reads `entity.attributes.tags` (null when malformed; valid deduped tags plus `site`, with a `dropped` count); `purgeInBatches(tags, purge)` purges in sequence, `PURGE_BATCH_SIZE` (100) tags per call, stopping at the first failure. Types `PurgeFn`, `CachePurgeResult`.
   - Used in: `POST /api/invalidate-cache` (Bearer `CACHE_INVALIDATION_WEBHOOK_SECRET`, Cloudflare only: 503 elsewhere).
   - Notes: the purge function is injected, so it runs under plain `tsx`; checked by `npm run check:cache-tags`.
 - **`siteSearch` helper** (`src/lib/datocms/siteSearch.ts`)
