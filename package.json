@@ -8,6 +8,7 @@
   "scripts": {
     "sync-datocms": "node scripts/sync-datocms.mjs",
     "dev": "npm run sync-datocms && astro dev",
+    "check:cache-tags": "node --import tsx --import ./scripts/revalidation-map/sentinel.mjs scripts/cache-tags/check.ts",
     "check:revalidation-map": "node --import tsx --import ./scripts/revalidation-map/sentinel.mjs scripts/revalidation-map/check.ts",
     "docs:inventory": "node scripts/check-docs-inventory.mjs",
     "start": "npm run sync-datocms && astro dev",
