@@ -4,16 +4,21 @@ description: How to manage draft preview, Visual Editing, and on-demand cache in
 
 # Preview, Draft Mode & Visual Editing
 
-Multimage runs as a **single Astro project on Vercel** with `output: 'server'`
-and ISR (Incremental Static Regeneration). Anonymous visitors get
-CDN-cached responses (effectively static); editors with the draft cookie bypass
-the CDN and see live draft content with click-to-edit overlays.
+Multimage runs as a **single Astro project** with `output: 'server'`, on two
+targets: **Vercel** with ISR (Incremental Static Regeneration) today, and
+**Cloudflare Workers** with Workers Cache on branch `chore/cloudflare` (switch
+procedure: `docs/guidelines/cloudflare-switch.md`). On both, anonymous visitors
+get cached responses (effectively static); editors with the draft cookie bypass
+the cache and see live draft content with click-to-edit overlays. Sections
+marked **Vercel** or **Cloudflare** apply to one target only.
 
 Le architetture precedenti (due progetti Vercel separati con `SERVER=static` e
 `SERVER=preview`) sono state ritirate il 2026-05-17 con la shape
 `2026-05-16-unify-projects-isr.md`.
 
 ## 1. Architecture overview
+
+### Vercel (production today)
 
 ```
 Anonymous visitor → Vercel CDN → cached response (no function invocation)
@@ -33,32 +38,66 @@ DatoCMS publish → webhook → /api/revalidate
                             (no rebuild, no cache impact)
 ```
 
-### Cookies that drive draft mode (dual-cookie pattern)
+### Cloudflare (branch `chore/cloudflare`)
 
-When `/api/draft-mode/enable` runs, the app sets **two cookies**:
+```
+Anonymous visitor → gateway (src/worker.ts, cache off)
+                  → Backend (cache on): Workers Cache HIT → cached page
+                                        MISS → Astro render, tagged, stored
+
+Editor (draft cookie) → gateway sees the cookie (name rule below)
+                      → forwards with cache: 'no-store'
+                      → middleware also calls cache.set(false)
+                      → Cache-Control: private, no-store (never stored)
+                      → executeQuery uses draft token + contentLink:'v1'
+
+DatoCMS publish → cda_cache_tags webhook (event `invalidate`, Bearer
+                  CACHE_INVALIDATION_WEBHOOK_SECRET)
+                → POST /api/invalidate-cache
+                → purge by tag in Backend (cache.purge)
+                → Site Search reindex (DATOCMS_CMA_TOKEN +
+                  SITE_SEARCH_BUILD_TRIGGER_ID)
+```
+
+Draft HTML carries the draft CDA token (`DraftModeQueryListener`), so a stored
+draft render would leak it: the bypass is double, gateway `no-store` plus the
+middleware's `cache.set(false)`. The gateway reads the cookie name with the same
+rule as `src/lib/draftMode.ts` (`env.DRAFT_MODE_COOKIE_NAME?.trim() ||
+'multimage_draft_mode'`, `src/worker.ts`). Details and the route policy:
+`docs/guidelines/caching.md`.
+
+### Cookies that drive draft mode (dual-cookie pattern on Vercel)
+
+When `/api/draft-mode/enable` runs, the app sets the app-level cookie, plus on
+Vercel a second one:
 
 | Cookie | Role | Value |
 | --- | --- | --- |
 | `multimage_draft_mode` (configurable via `DRAFT_MODE_COOKIE_NAME`) | App-level auth. The site reads this to know the editor is authenticated and to switch to the draft CDA token. | Signed JWT (`SIGNED_COOKIE_JWT_SECRET`) with payload `{ enabled: true }`. |
-| `__prerender_bypass` | CDN-level cache bypass. Vercel recognizes this cookie name natively and forces the request to bypass the ISR cache. | Plain opaque token equal to `BYPASS_TOKEN`. |
+| `__prerender_bypass` (**Vercel only**) | CDN-level cache bypass. Vercel recognizes this cookie name natively and forces the request to bypass the ISR cache. Only set when `BYPASS_TOKEN` exists, so never on the Worker. | Plain opaque token equal to `BYPASS_TOKEN`. |
 
-Both cookies are required. The disable endpoint deletes both.
+On Vercel both cookies are required; on Cloudflare the app-level cookie alone
+drives the bypass. The disable endpoint deletes both. Both are `SameSite=None;
+Secure; Partitioned`, 30 days.
 
 ## 2. Required environment variables
 
-Set every variable in this table both locally (`.env`) and on Vercel for every
-environment (Production / Preview).
+Set every variable in this table both locally (`.env`) and on the deploy target:
+Vercel for every environment (Production / Preview), or Worker secrets on
+Cloudflare (`wrangler secret put`, see `docs/guidelines/security.md`).
 
 | Variable | Required | Notes |
 | --- | --- | --- |
 | `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` | yes | Published-only CDA token. |
 | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` | yes | Draft-only CDA token (must include "Access in Preview Mode"). |
-| `DATOCMS_CMA_TOKEN` | yes (only if SEO Analysis plugin is enabled) | CMA token for `/api/seo-analysis`. |
+| `DATOCMS_CMA_TOKEN` | optional | CMA token for `/api/seo-analysis` and the Site Search reindex. |
 | `SECRET_API_TOKEN` | yes | Shared secret for `/api/preview`, `/api/draft-mode/enable`, `/api/preview-links`, `/api/revalidate`. |
 | `SIGNED_COOKIE_JWT_SECRET` | yes | Random string used to sign the draft JWT cookie (`openssl rand -hex 32`). |
 | `DRAFT_MODE_COOKIE_NAME` | optional | Defaults to `multimage_draft_mode`. |
-| `BYPASS_TOKEN` | yes on Vercel | Opaque token used both as the `__prerender_bypass` cookie value (Draft Mode) and as the `x-prerender-revalidate` header (on-demand ISR via `/api/revalidate`). Generate with `openssl rand -hex 32`. |
+| `BYPASS_TOKEN` | yes on Vercel, **Vercel only** (not set on the Worker) | Opaque token used both as the `__prerender_bypass` cookie value (Draft Mode) and as the `x-prerender-revalidate` header (on-demand ISR via `/api/revalidate`). Generate with `openssl rand -hex 32`. |
 | `DATOCMS_BASE_EDITING_URL` | yes for Visual Editing | **Bare admin URL with no `/environments/...` suffix**: `https://multimage.admin.datocms.com`. Used by Content Link to construct edit-URLs. ⚠️ Appending `/environments/main` (even though `main` *is* the primary) makes the stega edit-URLs take the *sandbox* form, and the plugin then reports "Environment Mismatch Detected" — the sandbox URL shape doesn't match a primary-environment editing session. Only append `/environments/<name>` when targeting a genuine non-primary sandbox. |
+| `CACHE_INVALIDATION_WEBHOOK_SECRET` | Cloudflare only | Bearer secret of the `cda_cache_tags` webhook calling `/api/invalidate-cache`. Lives on the Worker and in the DatoCMS webhook header, nowhere else. |
+| `SITE_SEARCH_BUILD_TRIGGER_ID` | optional | Site Search build trigger (`37696`) reindexed after a publish; with `DATOCMS_CMA_TOKEN` or it is a no-op. Set on switch day on Cloudflare. |
 | `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` | yes | Site Search token (ships to the browser — must be read-only Site Search scope). |
 | `PUBLIC_SITE_URL` | yes | Site origin without trailing slash. |
 
@@ -71,14 +110,15 @@ Editors enter preview through one of:
 - The **DatoCMS Web Previews** plugin sidebar in DatoCMS — clicks "Draft version".
   The plugin hits `/api/preview-links?token=...` (no manual setup beyond
   installing the plugin via `/api/post-deploy`). Each preview link goes through
-  `/api/draft-mode/enable?redirect=<recordUrl>&token=...` so both cookies are
+  `/api/draft-mode/enable?url=<recordUrl>&token=...` so both cookies are
   set, then redirects to the record page.
 - A direct call to `/api/preview?secret=<SECRET_API_TOKEN>&redirect=/percorso`
   (useful for manual smoke tests).
 
 Exiting preview is automatic when the plugin emits a "Published version" link
 (it calls `/api/draft-mode/disable`). Manual exit:
-`/api/draft-mode/disable?redirect=/percorso`.
+`/api/draft-mode/disable?url=/percorso`. The `enable` and `disable` endpoints
+read `url=` only; `/api/preview` accepts `redirect=`, `url=` or `path=`.
 
 ## 4. Draft data flow
 
@@ -124,6 +164,12 @@ https://admin.multimage.org`. The custom admin domain (`admin.multimage.org`)
 must be listed explicitly — the `*.datocms.com` wildcard does **not** match it.
 
 ## 6. On-demand cache invalidation (webhook)
+
+On **Cloudflare** invalidation is by cache tag: the `cda_cache_tags` webhook
+calls `/api/invalidate-cache`, which purges the tagged entries and reindexes Site
+Search (diagram in § 1, procedure in `docs/guidelines/caching.md`). The rest of
+this section describes the **Vercel** URL-based webhook (`/api/revalidate`),
+which is disabled at the switch.
 
 DatoCMS publish → webhook → `POST /api/revalidate?token=<SECRET_API_TOKEN>`.
 
@@ -180,8 +226,8 @@ the project:
 
 Revalidation is surgical (since 2026-06-20): the endpoint maps the published
 record to its own URL plus a bounded set of listings, instead of sweeping the
-whole site (`?mode=full` is a manual fallback only). Cache tags are not
-implemented; revalidation is URL-based. See `docs/guidelines/caching.md` for the
+whole site (`?mode=full` is a manual fallback only). On Vercel revalidation is
+URL-based; cache tags exist only on the Cloudflare target. See `docs/guidelines/caching.md` for the
 route-to-model audit and the verification procedure.
 
 To recreate it via CLI: `npx datocms cma:call webhooks create --data='{...}'`
@@ -189,8 +235,8 @@ with the events above (see the shape doc for the full payload).
 
 ## 7. Local development
 
-`npm run dev` runs `astro dev`. ISR caching is a Vercel CDN feature, not active
-locally — every request is SSR'd. Draft mode works via the JWT cookie (visit
+`npm run dev` runs `astro dev`. ISR caching (Vercel) and Workers Cache
+(Cloudflare) are not active locally — every request is SSR'd. Draft mode works via the JWT cookie (visit
 `/api/preview?secret=...&redirect=/`). Content Link works locally if
 `DATOCMS_BASE_EDITING_URL` is set in `.env`.
 
@@ -200,14 +246,29 @@ procedure (b) in `docs/guidelines/caching.md`.
 
 ## 8. Troubleshooting
 
-- **Editor sees published content despite cookies** → check both cookies are
-  set in DevTools → Application → Cookies (the JWT cookie *and*
+- **Editor sees published content despite cookies (Vercel)** → check both
+  cookies are set in DevTools → Application → Cookies (the JWT cookie *and*
   `__prerender_bypass`). If only the JWT is set, `BYPASS_TOKEN` is probably
   missing from Vercel env, so `enableDraftMode` skipped setting the bypass
   cookie. The CDN serves the cached published response.
-- **`/api/revalidate` returns 500 "BYPASS_TOKEN not configured"** → set
+- **Editor sees published content despite the cookie (Cloudflare)** → the
+  gateway looks for the cookie by name (`DRAFT_MODE_COOKIE_NAME`, default
+  `multimage_draft_mode`, rule in `src/worker.ts`). If the Worker secret
+  `DRAFT_MODE_COOKIE_NAME` differs from the name the cookie was set with, the
+  gateway does not see it and serves the shared copy. The name on the Worker must
+  match the one the app sets.
+- **`/api/seo-analysis` on Cloudflare** → checked on the trial Worker
+  (2026-11-21): 401 with a wrong token; with the signed token it answers 500
+  `DATOCMS_CMA_TOKEN is not configured on this environment.` (the route and
+  `linkedom` load on the Worker; no CMA token is set there by rule). The full
+  render, which fetches its own host, is not tested: on `workers.dev` a Worker
+  fetching itself is expected to fail. It is checked on www after the custom
+  domains (step 9 of `docs/guidelines/cloudflare-switch.md`), with the Backend
+  patch (fetch through `locals.cfContext.exports.Backend`, `cache: 'no-store'`)
+  as the fix if it fails.
+- **`/api/revalidate` returns 500 (Vercel) "BYPASS_TOKEN not configured"** → set
   `BYPASS_TOKEN` on Vercel (and re-deploy so the adapter picks it up).
-- **Webhook fires but pages don't update** → check `vercel logs` for the
+- **Webhook fires but pages don't update (Vercel)** → check `vercel logs` for the
   `[revalidate]` lines. Most common cause is the `x-prerender-revalidate`
   header value not matching `bypassToken` configured in `astro.config.mjs`.
   Both must come from the same `BYPASS_TOKEN` env var.
@@ -235,6 +296,6 @@ procedure (b) in `docs/guidelines/caching.md`.
   Increase `CHUNK_PAUSE_MS` in `src/pages/api/revalidate/index.ts` if you see
   429 errors.
 - **Need to revoke editor access** → rotate `SECRET_API_TOKEN`,
-  `SIGNED_COOKIE_JWT_SECRET`, and `BYPASS_TOKEN`. Editors with old cookies
+  `SIGNED_COOKIE_JWT_SECRET`, and `BYPASS_TOKEN` (Vercel only). Editors with old cookies
   immediately stop receiving drafts; the cookies are still set in their
   browser but no longer recognized.
