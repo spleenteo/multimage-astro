@@ -1,0 +1,89 @@
+---
+description: Switch-day runbook to move multimage.org from Vercel to Cloudflare Workers, with the check and the rollback of every step.
+---
+
+# Cloudflare switch runbook
+
+**Status: written 2026-11-21, not yet run.** It moves production from Vercel (ISR plus the URL webhook `/api/revalidate`) to the Cloudflare Worker `multimage-astro` (gateway, Workers Cache, tag purge). The code is on branch `chore/cloudflare`; the design is in `docs/decisions-log/2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge.md`, the day-to-day caching in `caching.md`. Secrets are written as `<NAME>` and never printed, pasted in chat or committed.
+
+## Starting point
+
+- **Accounts.** The zone `multimage.org` is active on Cloudflare (registrar Cloudflare, plan Free Website) in the **personal** account (`1ed0bcbfc2f1e696c278f37de34d8ef2`). The Worker lives in the account **Multimage** (`59fd5121a90b86d19e5a982e6fc41696`, also `account_id` in `wrangler.jsonc`). A Custom Domain needs the Worker and the zone in the same account, hence the zone move (step 3).
+- **The 12 DNS records of today.** `A multimage.org → 216.198.79.1` (Vercel, DNS only); `CNAME www → 3c2d4db54eb82902.vercel-dns-017.com` (Vercel, DNS only); `CNAME admin → admin.datocms.com` (proxied); `CNAME mail → ghs.google.com` (proxied); 6 `MX` (Google); 2 `TXT` `google-site-verification`. Only the apex `A` and the `www` `CNAME` change on switch day.
+- **Trial Worker.** `https://multimage-astro.matteo-59f.workers.dev`, checked on 2026-11-21: draft mode enable (401 wrong token, 422 external `url`, 307 and a 30-day `__draftMode` cookie), draft pages 200 with `Strumenti staff`, `private, no-store`, CSP `frame-ancestors`, `cf-cache-status: DYNAMIC`; disable 307, then `/staff` 404; `/api/preview-links` 401 with a wrong token, 200 signed, links on the request origin; `/api/seo-analysis` 401 with a wrong token and 500 `DATOCMS_CMA_TOKEN is not configured` when signed (route and `linkedom` load).
+- **Not tested before the switch.** The full `/api/seo-analysis` render: the trial Worker has no `DATOCMS_CMA_TOKEN` by rule. On `workers.dev` a Worker fetching its own hostname is expected to fail (Cloudflare error 1042), so the check runs on www (step 9), with the fix written there.
+- **Worker secrets today.** `CACHE_INVALIDATION_WEBHOOK_SECRET`, `DATOCMS_BASE_EDITING_URL`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DRAFT_MODE_COOKIE_NAME`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`. Missing on purpose: `BYPASS_TOKEN` (Vercel ISR only). Added on switch day: `SITE_SEARCH_BUILD_TRIGGER_ID`, `DATOCMS_CMA_TOKEN`.
+
+## Rollback in one paragraph
+
+Vercel stays deployed and keeps serving as soon as DNS points back. To go back: in Workers & Pages › multimage-astro › Settings › Domains & Routes, **remove both custom domains**; remove the `routes` block from `wrangler.jsonc` and run `npx dotenv -e <ENV_FILE> -- npx wrangler deploy`, so a later deploy does not recreate them; re-create the two Vercel records in DNS, both **DNS only**: `A multimage.org 216.198.79.1` and `CNAME www 3c2d4db54eb82902.vercel-dns-017.com`; re-enable DatoCMS webhook 33942 and disable the new `Cloudflare cache tags` webhook. Disable the apex redirect rule (step 6) if it is on. Count the DNS propagation, a few minutes, before telling anyone it is back.
+
+**Editorial freeze.** From step 5 to step 8 the editors do not publish: the old webhook would get a 500 from the Worker (it has no `BYPASS_TOKEN`) and the tag webhook does not exist yet, so a publish in that window refreshes nothing. Step 8 redeploys, which empties the cache, so anything cached before it is gone anyway.
+
+## Steps
+
+### 0. Merge, deploy from `main`, prepare the env file
+
+**Do**: the user merges `chore/cloudflare` into `main` (nobody else pushes). Merging redeploys Vercel production: on `https://www.multimage.org` read `curl -sI https://www.multimage.org/libri | grep -iE '^(x-vercel-cache|age):'` and open an editor session (magic link `/api/draft-mode/enable?token=<SECRET_API_TOKEN>&url=/`) before going on. Then prepare the build env file, outside the repo, in a durable place (for example `~/.config/multimage/cf.env`, mode 600, `chmod 600`). It holds the production variables, because every build runs `validateSecrets` and `PUBLIC_SITE_URL` has `context: client`, so the build **inlines** it: it must be `https://www.multimage.org` (not the workers.dev URL) or the canonical, sitemap and OG URLs will be wrong. Rebuild the file from `vercel env pull --environment=production <ENV_FILE>` plus the Cloudflare-only values (`CACHE_INVALIDATION_WEBHOOK_SECRET`, and later `SITE_SEARCH_BUILD_TRIGGER_ID`, `DATOCMS_CMA_TOKEN`). If `CACHE_INVALIDATION_WEBHOOK_SECRET` is lost, generate a new random value and `wrangler secret put` it: it only has to match the header of the DatoCMS webhook (step 7). Every command below that builds, deploys or puts a secret runs as `npx dotenv -e <ENV_FILE> -- <command>`. This runbook never creates or moves the file.
+**Check**: `npx dotenv -e <ENV_FILE> -- npx wrangler whoami` lists the account Multimage; `npx dotenv -e <ENV_FILE> -- sh -c 'printf %s "$PUBLIC_SITE_URL"'` prints `https://www.multimage.org`; after the first `npm run build:cf` (step 5) `curl -s https://multimage-astro.matteo-59f.workers.dev/ | grep -o '<link rel="canonical"[^>]*>'` shows a `www.multimage.org` href; Vercel answers `x-vercel-cache` on a page and the editor session reaches `/staff`.
+**Rollback**: none (nothing public changes; a bad Vercel redeploy is reverted from the Vercel dashboard).
+
+### 1. Choose Free or Paid
+
+**Do**: dashboard, account Multimage › Workers & Pages › Plans. **Workers Paid ($5/month per account) is the recommendation.** Free: 100k requests/day, **10 ms CPU per request**, Worker up to 3 MiB gzip. Paid: 10M requests and 30M CPU-ms included per month, 10 MiB Worker. Requests are not the issue: Vercel served 202,943 requests in 30 days (about 6.8k/day), at most about 14k/day here with the two billed requests per view (gateway plus Backend) and the static assets, against 100k/day on Free. CPU is the issue: a cache miss renders in 26 ms median and up to 100 ms on `/autori`, over Free's 10 ms. Every deploy, purge, draft view and `/api` call is a miss. Paid covers it: 140k renders at 26 ms is about 3.6M CPU-ms, even with no cache at all. The Worker is about 2.3 MiB gzip, close to Free's 3 MiB limit.
+**Check**: the Plans page shows Workers Paid on the Multimage account.
+**Rollback**: downgrade on the same page (on Free, cache misses may exceed the 10 ms CPU limit and fail).
+
+### 2. Export the DNS and note the zone settings
+
+**Do**: source (personal) account › multimage.org › DNS › Records › Import and Export › **Export**, and keep the file. Note the SSL/TLS mode (SSL/TLS › Overview) and any rule or setting you rely on, because settings are lost in the source after the move. Turn **DNSSEC off** (DNS › Settings), and remove any zone hold.
+**Check**: the export has 12 records; `dig +short DS multimage.org` prints nothing.
+**Rollback**: none (read-only; turn DNSSEC back on only after step 3 if it was on).
+
+### 3. Move the zone to the Multimage account
+
+**Do**: in Multimage › Add a domain › `multimage.org`, plan Free. **Import the step-2 export** into that zone (DNS › Records › Import) and diff it against the 12 records (6 `MX`, `mail`, `admin`, 2 `TXT`, apex `A`, `www`); re-apply the SSL/TLS mode noted in step 2. Then in the source account: Domain Registration › Manage Domains › multimage.org › Configuration › move to the account `59fd5121a90b86d19e5a982e6fc41696`, and **accept in Multimage within 5 days**. Docs: https://developers.cloudflare.com/registrar/account-options/inter-account-transfer/ and https://developers.cloudflare.com/fundamentals/manage-domains/move-domain/. Certificates are reissued, settings are lost in the source, a 30-day transfer lock follows.
+**Check**: zone Active in Multimage with the same 12 records; `dig +short NS multimage.org` returns the nameservers; `dig +short MX multimage.org` returns the 6 Google hosts; a mail delivery test (send and receive); `curl -sI https://www.multimage.org/ | grep -i '^server:'` still shows Vercel; `https://admin.multimage.org` loads.
+**Rollback**: a second inter-account move back (check the 30-day lock in the Cloudflare docs above first), or fix the records in place in the zone; a missing record is added by hand from the export.
+
+### 4. Set the extra Worker secrets
+
+**Do**: with the env file, `npx dotenv -e <ENV_FILE> -- npx wrangler secret put SITE_SEARCH_BUILD_TRIGGER_ID` (the build trigger id is 37696, decision 2026-05-30) and `npx dotenv -e <ENV_FILE> -- npx wrangler secret put DATOCMS_CMA_TOKEN` (the CMA token is not set on Vercel either: take it from the DatoCMS API tokens page). Check also that `SIGNED_COOKIE_JWT_SECRET` on the Worker equals Vercel's, so the editors' 30-day sessions survive the switch (put the Vercel value again if unsure). The prompt takes the value; do not echo it.
+**Check**: `npx dotenv -e <ENV_FILE> -- npx wrangler secret list --format json` lists the 9 names of the starting point plus these two, and no `BYPASS_TOKEN`.
+**Rollback**: `npx dotenv -e <ENV_FILE> -- npx wrangler secret delete <NAME>`.
+
+### 5. Custom domains on the Worker
+
+**Do**: the editorial freeze starts here. Add to `wrangler.jsonc`: `"routes": [{ "pattern": "www.multimage.org", "custom_domain": true }, { "pattern": "multimage.org", "custom_domain": true }]` (as code, so a later deploy cannot drift from the dashboard). Run `npx dotenv -e <ENV_FILE> -- npm run build:cf` first (the longest part), then delete the two Vercel records in DNS › Records (`A multimage.org`, `CNAME www`: a Custom Domain cannot be created while a record exists for its hostname), then run `npx dotenv -e <ENV_FILE> -- npx wrangler deploy` **without rebuilding**, to keep the gap short.
+**Check**: `dig +short www.multimage.org` returns Cloudflare IPs; `curl -sI https://www.multimage.org/ | grep -iE '^(server|cf-cache-status):'` shows `server: cloudflare` and `cf-cache-status` MISS, then HIT on the second call; Workers & Pages › multimage-astro › Settings › Domains & Routes lists both domains as Active. Apex without step 6 serves a duplicate site: do step 6 now.
+**Rollback**: the paragraph "Rollback in one paragraph" above.
+
+### 6. Redirect the apex to www
+
+**Do**: Rules › Redirect Rules › Create rule, template "Redirect from root to WWW": status **301**, preserve the query string, and keep the path (dynamic expression). Today Vercel answers `307 https://www.multimage.org/libri` for `https://multimage.org/libri`; without the rule the apex would serve the same site on a second host.
+**Check**: `curl -sI https://multimage.org/libri -o /dev/null -w '%{http_code} %{redirect_url}\n'` prints `301 https://www.multimage.org/libri`.
+**Rollback**: disable the rule (the apex then serves the site directly, which is acceptable only for a short time).
+
+### 7. Swap the DatoCMS webhooks
+
+**Do**: DatoCMS › Project settings › Webhooks. **Disable** webhook 33942 ("Revalidate site cache (ISR)"); do not delete it yet (deletion is in the Vercel follow-up). Reason: after the DNS change its URL reaches the Worker, which has no `BYPASS_TOKEN`: `/api/revalidate` would fail and retry, and both endpoints would reindex Site Search. Create **"Cloudflare cache tags"**: URL `https://www.multimage.org/api/invalidate-cache`, event **CDA cache tags › invalidate**, header `Authorization: Bearer <CACHE_INVALIDATION_WEBHOOK_SECRET>` (exactly `Bearer` and one space, the value being the Worker secret), auto retry on.
+**Check**: on the next publish (after the freeze, step 8), the webhook activity log shows 200 with `purged`; the affected page goes MISS then HIT; `npx dotenv -e <ENV_FILE> -- npx wrangler tail multimage-astro --format json` shows the `[invalidate-cache]` line and the reindex line. A 401 means the header or the secret differ, a 503 means the secret is missing on the Worker.
+**Rollback**: disable the new webhook, re-enable 33942 (only valid while Vercel serves production).
+
+### 8. Full purge by redeploy
+
+**Do**: `npx dotenv -e <ENV_FILE> -- npm run deploy:cf`. The cache is partitioned by Worker version, so a new version is a full purge, and the app has no purge-everything endpoint. It runs after the webhook exists, which closes the window in which a publish would be missed. The editorial freeze ends once this check passes.
+**Check**: `curl -sI https://www.multimage.org/ | grep -i '^cf-cache-status:'` shows MISS, then HIT.
+**Rollback**: `npx dotenv -e <ENV_FILE> -- npx wrangler rollback` to the previous version (this empties the cache again).
+
+### 9. Editor and plugin checks on www
+
+**Do**: (a) Web Previews › **Draft version**: the badge `Strumenti staff`, the CSP `frame-ancestors`, draft pages `private, no-store`. The magic link works on www, and an editor's cookie from before the switch still opens `/staff` (same `SIGNED_COOKIE_JWT_SECRET`). (b) Plugins and preview URLs: `src/pages/api/post-deploy/index.ts` (lines 62-72 and 97) builds the `htmlGeneratorUrl` and a "Preview" frontend from Vercel's `frontendUrl`, so list the installed plugins **read-only**, printing only each URL's **origin**, never a token (for example `npx dotenv -e <ENV_FILE> -- npx datocms cma:call plugins list`, filtered to `attributes.url` origins), and fix any non-www origin in Configuration › Plugins (SEO analysis, Web Previews, Visual tab). (c) **SEO analysis on www**: with `DATOCMS_CMA_TOKEN` set (step 4), open a record in DatoCMS with the SEO plugin, or call `GET https://www.multimage.org/api/seo-analysis?token=<SECRET_API_TOKEN>&itemId=<ID>&itemTypeId=book&itemTypeApiKey=book&locale=it&sandboxEnvironmentId=main` from a child shell (`npx dotenv -e <ENV_FILE> -- sh -c '… $SECRET_API_TOKEN …'`). Expected: 200, `permalink` `/libri/<slug>`, non-null `title`, `locale` `it`, `content` holding `Strumenti staff` (a draft render). The route fetches its own host: on workers.dev this fails with Cloudflare error 1042, on www it should work. **If it fails on www** (an `Invalid status for …` message, 1042 or a 52x), apply the T2 patch in `src/pages/api/seo-analysis/index.ts`: `GET` also takes `locals`, `const backend = (locals as unknown as { cfContext?: { exports?: { Backend?: { fetch(input: string, init?: RequestInit): Promise<Response> } } } }).cfContext?.exports?.Backend;`, and the page fetch becomes `backend ? backend.fetch(target, { headers: draftModeHeaders(), cache: 'no-store' }) : fetch(target, { headers: draftModeHeaders() })` with `target = new URL(websitePath, url).toString()`. Comment why: a Worker cannot fetch its own hostname, and a direct `Backend` call skips the gateway, so `no-store` is passed here; Vercel has no `cfContext`, so its path is unchanged. Do not import `cloudflare:workers` (it breaks the Vercel build and `astro check`). Then `npm run lint`, `npx dotenv -e <ENV_FILE> -- npm run build`, `npx dotenv -e <ENV_FILE> -- npm run deploy:cf`, and re-run the check. (d) Anonymous `/staff` returns 404; `/sitemap.xml` returns 200; a publish of a test record makes the build trigger 37696 show a reindex.
+**Check**: all four items above pass; the tail shows no 1042 or exception on `/api/seo-analysis`.
+**Rollback**: the paragraph "Rollback in one paragraph", if a check cannot be fixed in place; a patch to `seo-analysis` is reverted with a normal commit.
+
+### 10. Afterwards, not on switch day
+
+**Do**: the follow-ups live in `docs/TODO.md`: `CF-switch` (this runbook, tick it when step 9 passes) and `CF-vercel-cleanup`, after the switch is stable: remove `@astrojs/vercel` and the ISR config, `BYPASS_TOKEN` and `__prerender_bypass` (`draftMode.ts`), `/api/revalidate` with `revalidationUrls.ts`, `webhookPayload.ts` and `check:revalidation-map`, `@vercel/analytics` and `@vercel/speed-insights`, the Vercel post-deploy hook; delete webhook 33942, remove the domains from the Vercel project, downgrade Pro; turn off `workers_dev` and `preview_urls` in `wrangler.jsonc`.
+**Check**: the two entries are in `docs/TODO.md`.
+**Rollback**: none.
