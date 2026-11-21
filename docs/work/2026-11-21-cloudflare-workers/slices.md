@@ -92,3 +92,9 @@ V1 put Workers Cache in front of the trial Worker. A custom entry `src/worker.ts
 ### Deviations found while planning V1
 
 - `/robots.txt` is `public/robots.txt`, a static asset served before the Worker code, and no `/llms*.txt` route exists: the "endpoints with no CDA query" row has no route today. It stays in the middleware for future endpoints; V1 Done 4 on `/robots.txt` is an observation, not a stop.
+
+### Deviations found while planning V2
+
+- The purge goes through the Backend's execution context (`locals.cfContext.cache.purge`, `@astrojs/cloudflare` `cf-helpers.js:42`), not `cache.purge` imported from `cloudflare:workers`: a literal import would break the Vercel build (Vite fails on the unresolved module) and `astro check` (no Workers types). The docs call the two equivalent; both return `{ success, errors }`.
+- V2 Done 4's `hasLayoutTags: true` cannot hold for `/sitemap.xml` and `/archived-books.json` (endpoints, no BaseLayout): for them the check is `tagCount > 0`; `coarse: true` is accepted only with `reason: 'overflow'` logged (the sitemap may exceed the limit).
+- The coarse `site` fallback covers more than overflow: zero tags, an invalid tag (comma, characters outside `0x21–0x7E`, over 1024 chars) and an HTML page with no layout tags; each would otherwise leave a page unpurgeable for 60 days.

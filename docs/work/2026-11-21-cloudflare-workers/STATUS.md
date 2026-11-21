@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V2
-step: plan
+step: execute
 work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
@@ -31,3 +31,4 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 - 2026-11-21 — impact — 2 agents, 23 findings (4 high: purge result ignored, late cache.set re-enables caching, non-HTML routes cached by default, middleware would change Vercel); all fixes applied to slices.md as cross-slice rules and per-slice items (user asleep: recommended fixes accepted) — 12 min — n/a
 - 2026-11-21 — V1 plan + review — 3 tasks; review: 0 high, 3 medium (robots.txt is a static asset, tail counts, no Vercel header check), 3 low; all fixes applied (user asleep) — 20 min — n/a
 - 2026-11-21 — V1 close — cache in front of the Worker works on workers.dev (MISS→HIT, drafts bypass, internal BYPASS); gate green; 4 commits; decision candidate (gateway as second entrypoint) held for V3's decisions update — 12 min — n/a
+- 2026-11-21 — V2 plan + review — 6 tasks, 3 deviations recorded; review: 0 high, 3 medium (draft flag checked before buffer, sitemap may go coarse, no Vercel diff), 4 low; fixes appended to the plan as binding amendments (user asleep) — 18 min — n/a
