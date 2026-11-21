@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V3
-step: plan
+step: execute
 work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
@@ -33,3 +33,4 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 - 2026-11-21 — V1 close — cache in front of the Worker works on workers.dev (MISS→HIT, drafts bypass, internal BYPASS); gate green; 4 commits; decision candidate (gateway as second entrypoint) held for V3's decisions update — 12 min — n/a
 - 2026-11-21 — V2 plan + review — 6 tasks, 3 deviations recorded; review: 0 high, 3 medium (draft flag checked before buffer, sitemap may go coarse, no Vercel diff), 4 low; fixes appended to the plan as binding amendments (user asleep) — 18 min — n/a
 - 2026-11-21 — V2 close — DatoCMS tags in Workers Cache, /api/invalidate-cache purges by tag (book MISS, unrelated HIT, 401/400, 25×200 then 502 on rate limit); tag counts 27–515, none coarse; gate green; 7 commits; second decision candidate (purge via Backend ctx.cache) held for V3 — 25 min — n/a
+- 2026-11-21 — V3 plan + review — 6 tasks; conductor amendment: no CMA token on the trial Worker, no .env read; review: 2 high (DNS records on zone move, plugin URLs unchecked), 4 medium, 3 low; all fixes appended as binding amendments (user asleep) — 20 min — n/a

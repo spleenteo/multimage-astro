@@ -102,3 +102,10 @@ V2 wired DatoCMS cache tags into the Workers Cache and added the purge endpoint.
 - The purge goes through the Backend's execution context (`locals.cfContext.cache.purge`, `@astrojs/cloudflare` `cf-helpers.js:42`), not `cache.purge` imported from `cloudflare:workers`: a literal import would break the Vercel build (Vite fails on the unresolved module) and `astro check` (no Workers types). The docs call the two equivalent; both return `{ success, errors }`.
 - V2 Done 4's `hasLayoutTags: true` cannot hold for `/sitemap.xml` and `/archived-books.json` (endpoints, no BaseLayout): for them the check is `tagCount > 0`; `coarse: true` is accepted only with `reason: 'overflow'` logged (the sitemap may exceed the limit).
 - The coarse `site` fallback covers more than overflow: zero tags, an invalid tag (comma, characters outside `0x21–0x7E`, over 1024 chars) and an HTML page with no layout tags; each would otherwise leave a page unpurgeable for 60 days.
+
+### Deviations found while planning V3
+
+- The runbook adds an apex → www Redirect Rule (301): without it the apex would serve a duplicate site (Vercel answers 307 to www today).
+- `security.md` also gets the missing `SITE_SEARCH_BUILD_TRIGGER_ID` row and a corrected `DATOCMS_CMA_TOKEN` column (V2 low findings).
+- The full purge after the switch is a redeploy (the cache is partitioned by Worker version; no purge-everything endpoint).
+- Conductor: no CMA token on the trial Worker and no `.env` read (project rule); the full `/api/seo-analysis` check moves to the switch-day runbook, with the self-fetch fix written there.
