@@ -69,6 +69,11 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      CACHE_INVALIDATION_WEBHOOK_SECRET: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
       DATOCMS_BASE_EDITING_URL: envField.string({
         context: 'server',
         access: 'public',
