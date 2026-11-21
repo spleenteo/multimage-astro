@@ -41,12 +41,39 @@ function isInternalPath(pathname: string) {
   );
 }
 
+const SIXTY_DAYS = 60 * 60 * 24 * 60;
+
+/** Non-HTML routes that run CDA queries, so a purge keeps them fresh. */
+const CACHED_NON_HTML_PATHS = new Set(['/sitemap.xml', '/archived-books.json']);
+
+function isApiPath(pathname: string) {
+  return pathname === '/api' || pathname.startsWith('/api/');
+}
+
+/** Set a header; if the headers are immutable, rebuild the response with it. */
+function withHeader(response: Response, name: string, value: string) {
+  try {
+    response.headers.set(name, value);
+    return response;
+  } catch {
+    const copy = new Response(response.body, response);
+    copy.headers.set(name, value);
+    return copy;
+  }
+}
+
 export const onRequest = defineMiddleware(async (context, next) => {
+  const draft = isDraftModeEnabled(context.cookies);
+  const { pathname } = context.url;
+
   // Gate internal routes behind the editor session. Without it the public must
   // not even learn these paths exist, so we answer a flat 404 (CWE-200). This
   // is the single enforcement point — pages no longer guard themselves.
-  if (isInternalPath(context.url.pathname) && !isDraftModeEnabled(context.cookies)) {
-    return new Response('Not found', { status: 404 });
+  if (isInternalPath(pathname) && !draft) {
+    const notFound = new Response('Not found', { status: 404 });
+    if (!context.cache.enabled) return notFound;
+    context.cache.set(false);
+    return withHeader(notFound, 'Cache-Control', 'private, no-store');
   }
 
   const response = await next();
@@ -54,9 +81,40 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // When the editor is in draft mode, allow the DatoCMS Web Previews plugin
   // to embed the site inside the "Visual" tab iframe. Outside draft mode the
   // header is left untouched (Vercel applies its own defaults).
-  if (isDraftModeEnabled(context.cookies)) {
+  if (draft) {
     response.headers.set('Content-Security-Policy', `frame-ancestors ${FRAME_ANCESTORS}`);
   }
 
+  // Cloudflare only (the cache provider is absent on Vercel, which keeps its
+  // ISR behaviour untouched). Exactly one `cache.set` call per request, made
+  // here after `next()`: the body is buffered for cached rows because the
+  // DatoCMS tags collected during rendering (V2) are only known at this point.
+  if (!context.cache.enabled) return response;
+
+  const isHtml = response.headers.get('content-type')?.startsWith('text/html') ?? false;
+
+  if (
+    draft ||
+    isInternalPath(pathname) ||
+    isApiPath(pathname) ||
+    context.request.method !== 'GET' ||
+    response.status !== 200
+  ) {
+    context.cache.set(false);
+    return withHeader(response, 'Cache-Control', 'private, no-store');
+  }
+
+  if (isHtml || CACHED_NON_HTML_PATHS.has(pathname)) {
+    const body = await response.arrayBuffer();
+    const buffered = new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
+    context.cache.set({ maxAge: SIXTY_DAYS });
+    return buffered;
+  }
+
+  context.cache.set(false);
   return response;
 });
