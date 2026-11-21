@@ -1,22 +1,29 @@
 import { defineConfig, envField } from 'astro/config';
 
+import cloudflare from '@astrojs/cloudflare';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 
-const adapter = vercel({
-  isr: {
-    bypassToken: process.env.BYPASS_TOKEN,
-    // 60-day TTL as a safety net only. Content changes propagate on-demand via
-    // the /api/revalidate webhook (publish → surgical invalidation of just the
-    // affected URLs + Site Search reindex), so the TTL only covers the rare case
-    // of a missed/failed webhook. A short TTL is pure waste here: it forces the
-    // whole surface (~670 URLs) to re-render in the background roughly weekly,
-    // burning Vercel Fast Origin Transfer for content that has not changed. Force
-    // a full refresh anytime with a manual build or POST /api/revalidate?mode=full.
-    expiration: 60 * 60 * 24 * 60,
-    exclude: [/^\/api\//],
-  },
-});
+// DEPLOY_TARGET=cloudflare builds for Cloudflare Workers (trial, branch chore/cloudflare).
+// Anything else keeps the Vercel adapter with ISR.
+const isCloudflare = process.env.DEPLOY_TARGET === 'cloudflare';
+
+const adapter = isCloudflare
+  ? cloudflare({ imageService: 'passthrough', imagesBindingName: false })
+  : vercel({
+      isr: {
+        bypassToken: process.env.BYPASS_TOKEN,
+        // 60-day TTL as a safety net only. Content changes propagate on-demand via
+        // the /api/revalidate webhook (publish → surgical invalidation of just the
+        // affected URLs + Site Search reindex), so the TTL only covers the rare case
+        // of a missed/failed webhook. A short TTL is pure waste here: it forces the
+        // whole surface (~670 URLs) to re-render in the background roughly weekly,
+        // burning Vercel Fast Origin Transfer for content that has not changed. Force
+        // a full refresh anytime with a manual build or POST /api/revalidate?mode=full.
+        expiration: 60 * 60 * 24 * 60,
+        exclude: [/^\/api\//],
+      },
+    });
 
 // https://astro.build/config
 export default defineConfig({
@@ -86,5 +93,8 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      'import.meta.env.DEPLOY_TARGET': JSON.stringify(process.env.DEPLOY_TARGET ?? 'vercel'),
+    },
   },
 });

@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Trial deploy of the Astro app on Cloudflare Workers (branch chore/cloudflare).
+  // Build with DEPLOY_TARGET=cloudflare so astro.config.mjs picks @astrojs/cloudflare.
+  "name": "multimage-astro",
+  "account_id": "59fd5121a90b86d19e5a982e6fc41696",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "binding": "ASSETS" },
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": { "enabled": true },
+}

@@ -1,7 +1,7 @@
 import { buildClient } from '@datocms/cma-client';
 import type { APIRoute } from 'astro';
 import { DATOCMS_CMA_TOKEN, SECRET_API_TOKEN } from 'astro:env/server';
-import { JSDOM } from 'jsdom';
+import { parseHTML } from 'linkedom';
 import { recordToSlug, recordToWebsiteRoute } from '~/lib/datocms/recordInfo';
 import { draftModeHeaders } from '~/lib/draftMode';
 import { handleUnexpectedError, invalidRequestResponse, json, withCORS } from '../utils';
@@ -92,7 +92,7 @@ export const GET: APIRoute = async ({ url }) => {
     }
 
     // Parse the HTML response into a DOM tree
-    const { document } = new JSDOM(await pageRequest.text()).window;
+    const { document } = parseHTML(await pageRequest.text());
 
     /*
      * To get only the page content without the header/footer, use a specific

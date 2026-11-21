@@ -19,7 +19,7 @@ import { decodeEntities, toPlainText, truncateToLength } from '~/lib/text';
 const { seo = [] } = Astro.props as {
   seo?: TitleMetaLinkTag[];
 };
-const enableVercelInsights = import.meta.env.PROD;
+const enableVercelInsights = import.meta.env.PROD && import.meta.env.DEPLOY_TARGET !== 'cloudflare';
 
 const SITE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
@@ -242,23 +242,25 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     ></script>
 
     <!-- Stub + script Vercel Web Analytics -->
-    <script is:inline>
-      window.va =
-        window.va ||
-        function () {
-          (window.vaq = window.vaq || []).push(arguments);
-        };
-    </script>
-    <script defer src="/_vercel/insights/script.js" is:inline></script>
+    {enableVercelInsights && <Fragment>
+      <script is:inline>
+        window.va =
+          window.va ||
+          function () {
+            (window.vaq = window.vaq || []).push(arguments);
+          };
+      </script>
+      <script defer src="/_vercel/insights/script.js" is:inline></script>
 
-    <script is:inline>
-      window.si =
-        window.si ||
-        function () {
-          (window.siq = window.siq || []).push(arguments);
-        };
-    </script>
-    <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
+      <script is:inline>
+        window.si =
+          window.si ||
+          function () {
+            (window.siq = window.siq || []).push(arguments);
+          };
+      </script>
+      <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
+    </Fragment>}
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
     <Header currentPath={currentPath} infoPages={infoPages} />
