@@ -47,6 +47,10 @@ Build and deploy: `npx dotenv -e <env file> -- npm run deploy:cf`, the env file 
 - An unknown slug on the `[slug]` pages throws and returns 500 (not 404): use `/libri/pagina/999` for the 404 check.
 - The host is not part of the cache key: output must stay host-independent (it builds URLs from `PUBLIC_SITE_URL`). Any `noindex` for `workers.dev` would go in the gateway only, never in `Backend`; none is added in this work.
 
+### V1 — done on 2026-11-21
+
+V1 put Workers Cache in front of the trial Worker. A custom entry `src/worker.ts` runs a cache-off default gateway that forwards every request to a cache-on `Backend` entrypoint through `ctx.exports.Backend.fetch`: path-only `cf.cacheKey` outside `/api`, `cache: 'no-store'` when the draft cookie is present. The middleware applies the route → policy table behind `context.cache.enabled` (60-day `maxAge`, body buffered only on cached rows, `private, no-store` elsewhere), and `cacheCloudflare()` is wired only under `DEPLOY_TARGET=cloudflare`. The flagged part held: `ctx.exports` and per-entrypoint cache worked on the first deploy, with no `enable_ctx_exports` flag and no fallback Worker. On the trial Worker, `/` and a book page went MISS then HIT, HITs never reached `Backend` (confirmed by wrangler tail), `?utm_source` shared the entry, the draft request was DYNAMIC and private while the anonymous copy stayed a HIT, and `/staff`, `/api/draft-mode/disable` and `/libri/pagina/999` were BYPASS every time. The T2 review caught a Vercel regression: reading the draft flag once, before `next()`, flipped the CSP on the draft-mode endpoints, because Astro's cookies return the values set during the request. It is now read again after `next()`. `/robots.txt` is a static asset served by Workers Assets and was a HIT both times, outside the middleware's reach, as the plan expected. The lint gate went red on the git-ignored `.wrangler/deploy/config.json`; `.wrangler/` is now prettier-ignored. Rulings: the packet went to the agents as a file path, not pasted inline.
+
 ## V2 — DatoCMS tags and the invalidation endpoint
 
 **In:**
