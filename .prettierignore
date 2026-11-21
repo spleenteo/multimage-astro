@@ -5,6 +5,7 @@ schema.ts
 docs/
 dist/
 .vercel/
+.wrangler/
 public/generated/
 AGENTS.md
 datocms.config.json
