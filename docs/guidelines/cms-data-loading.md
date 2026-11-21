@@ -46,7 +46,7 @@ const { isEnabled: includeDrafts } = resolveDraftMode(Astro);
 const data = await executeQuery(QUERY, { includeDrafts });
 ```
 
-Draft mode is active per request, when the signed draft-mode cookie is present (ISR deployment, cache bypassed). Without the cookie, requests use published content.
+Draft mode is active per request, when the signed draft-mode cookie is present. On Vercel the ISR copy is skipped through `__prerender_bypass`; on Cloudflare the gateway sends the request with `cache: 'no-store'` and the middleware makes the response private. Without the cookie, requests use published content.
 
 ## Pagination
 
@@ -70,10 +70,12 @@ Until a paginated helper ships: keep `first: 500` and annotate it with `// TODO 
 
 Types come from `schema.ts`, managed by `npm run generate-schema`. Import CMS types from `~/lib/datocms/types`. Never write CMS types by hand.
 
-## Cache tags (not implemented)
+## Cache tags (Cloudflare only)
 
-Not implemented: revalidation is URL-based, see `docs/guidelines/caching.md`.
+Cache tags drive the Workers Cache on the Cloudflare target (branch `chore/cloudflare`). Vercel production does not use them: it revalidates by URL, see `docs/guidelines/caching.md`.
 
-Original plan:
-
-Cache tag propagation is not yet implemented. Tracked as **CD3** in `docs/TODO.md`.
+- `executeQuery` feeds a per-request store. On Cloudflare the middleware opens it for GET requests outside `/api`; a published query then runs through `rawExecuteQuery` with `returnCacheTags` and adds the response's `x-cache-tags` to the store. On Vercel there is no store and the query runs as before.
+- A draft query (`includeDrafts: true`) marks the store disabled: the page becomes `private, no-store`, never cached.
+- `BaseLayout` passes `cacheTagScope: 'layout'` on its site query. That flag tells the middleware the page carries the layout's tags (menus, favicon), so a page publish purges it. Pass it only from the layout.
+- Queries never call `cache.set` or `cache.invalidate`: the middleware makes the one cache decision after the response, and `POST /api/invalidate-cache` purges. A new query needs nothing: its tags are collected automatically.
+- Code: `src/lib/datocms/cacheTags.ts`, `executeQuery.ts`, `cacheInvalidation.ts`. Check with `npm run check:cache-tags`. Policy, limits and purge answers are in `caching.md`.
