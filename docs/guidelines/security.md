@@ -56,8 +56,8 @@ description: Track security risks, mitigations, and review checkpoints for Multi
 On the Cloudflare target the variables above are Worker secrets, not Vercel env vars (switch procedure: `docs/guidelines/cloudflare-switch.md`):
 
 - Set with `npx wrangler secret put <NAME>` (or `wrangler secret bulk`), through the env-file wrapper described in `docs/guidelines/operations.md`; list the names with `npx wrangler secret list` (it never prints values). Never commit a secret file or print a value.
-- The Worker has the nine secrets of the matrix except `BYPASS_TOKEN`, which is Vercel-only and must not be created there. `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID` are added on switch day.
-- `CACHE_INVALIDATION_WEBHOOK_SECRET` exists only on the Worker and in the Authorization header of the DatoCMS `cda_cache_tags` webhook; it can be regenerated and re-put if lost, as long as the two match. `/api/invalidate-cache` rejects any other bearer.
+- The Worker has the nine secrets listed in `docs/guidelines/operations.md` (Environment & Secrets) and `cloudflare-switch.md` (Starting point); `BYPASS_TOKEN` is Vercel-only and must not be created there. `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID` are added on switch day.
+- `CACHE_INVALIDATION_WEBHOOK_SECRET` exists only on the Worker, in the Authorization header of the DatoCMS `cda_cache_tags` webhook and in the build env file outside the repo (runbook step 0); it can be regenerated and re-put if lost, as long as the two match. `/api/invalidate-cache` rejects any other bearer.
 - `SIGNED_COOKIE_JWT_SECRET` on the Worker must equal the Vercel value, otherwise editors' 30-day sessions end at the switch.
 - Draft HTML is never stored: it carries the draft CDA token, so the gateway sends draft requests `no-store` and the middleware sets `Cache-Control: private, no-store` (`docs/guidelines/preview-mode.md` § 1).
 

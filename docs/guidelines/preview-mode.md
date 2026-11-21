@@ -82,7 +82,7 @@ Secure; Partitioned`, 30 days.
 
 ## 2. Required environment variables
 
-Set every variable in this table both locally (`.env`) and on the deploy target:
+Set the variables of this table that the code needs on the deploy target (not `BYPASS_TOKEN` or `CACHE_INVALIDATION_WEBHOOK_SECRET` locally) and in `.env`:
 Vercel for every environment (Production / Preview), or Worker secrets on
 Cloudflare (`wrangler secret put`, see `docs/guidelines/security.md`).
 
@@ -96,8 +96,8 @@ Cloudflare (`wrangler secret put`, see `docs/guidelines/security.md`).
 | `DRAFT_MODE_COOKIE_NAME` | optional | Defaults to `multimage_draft_mode`. |
 | `BYPASS_TOKEN` | yes on Vercel, **Vercel only** (not set on the Worker) | Opaque token used both as the `__prerender_bypass` cookie value (Draft Mode) and as the `x-prerender-revalidate` header (on-demand ISR via `/api/revalidate`). Generate with `openssl rand -hex 32`. |
 | `DATOCMS_BASE_EDITING_URL` | yes for Visual Editing | **Bare admin URL with no `/environments/...` suffix**: `https://multimage.admin.datocms.com`. Used by Content Link to construct edit-URLs. ⚠️ Appending `/environments/main` (even though `main` *is* the primary) makes the stega edit-URLs take the *sandbox* form, and the plugin then reports "Environment Mismatch Detected" — the sandbox URL shape doesn't match a primary-environment editing session. Only append `/environments/<name>` when targeting a genuine non-primary sandbox. |
-| `CACHE_INVALIDATION_WEBHOOK_SECRET` | Cloudflare only | Bearer secret of the `cda_cache_tags` webhook calling `/api/invalidate-cache`. Lives on the Worker and in the DatoCMS webhook header, nowhere else. |
-| `SITE_SEARCH_BUILD_TRIGGER_ID` | optional | Site Search build trigger (`37696`) reindexed after a publish; with `DATOCMS_CMA_TOKEN` or it is a no-op. Set on switch day on Cloudflare. |
+| `CACHE_INVALIDATION_WEBHOOK_SECRET` | Cloudflare only | Bearer secret of the `cda_cache_tags` webhook calling `/api/invalidate-cache`. Lives on the Worker, in the DatoCMS webhook header and in the build env file outside the repo (runbook step 0), nowhere else. |
+| `SITE_SEARCH_BUILD_TRIGGER_ID` | optional | Site Search build trigger (`37696`) reindexed after a publish; needs `DATOCMS_CMA_TOKEN` as well, otherwise a no-op. Set on switch day on Cloudflare. |
 | `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` | yes | Site Search token (ships to the browser — must be read-only Site Search scope). |
 | `PUBLIC_SITE_URL` | yes | Site origin without trailing slash. |
 

@@ -105,7 +105,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 ## Operations
 
 - Hosting: **un solo progetto Vercel** con `output: 'server'` + ISR. Anonymous → CDN cache. Editor con draft cookie → CDN bypass + SSR + Visual Editing. Sul branch `chore/cloudflare`: Worker `multimage-astro` nell'account Cloudflare Multimage (`npm run build:cf` / `deploy:cf`, URL di prova `multimage-astro.matteo-59f.workers.dev`), Workers Cache + cache tag; il passaggio del dominio segue `docs/guidelines/cloudflare-switch.md` (non ancora eseguito).
-- Required env vars: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `BYPASS_TOKEN`, `DATOCMS_BASE_EDITING_URL`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`; solo Cloudflare: `CACHE_INVALIDATION_WEBHOOK_SECRET` (e `SITE_SEARCH_BUILD_TRIGGER_ID`, `DATOCMS_CMA_TOKEN` come secret del Worker). (`SERVER` rimossa.)
+- Required env vars: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `SECRET_API_TOKEN`, `SIGNED_COOKIE_JWT_SECRET`, `BYPASS_TOKEN`, `DATOCMS_BASE_EDITING_URL`, `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN`, `PUBLIC_SITE_URL`; solo Cloudflare: `CACHE_INVALIDATION_WEBHOOK_SECRET`; `SITE_SEARCH_BUILD_TRIGGER_ID` e `DATOCMS_CMA_TOKEN` sono anche variabili runtime su Vercel e arrivano sul Worker il giorno del passaggio. (`SERVER` rimossa.)
 - `npm run dev`/`start` auto-runs `npm run sync-datocms` (schema generation).
 - Preview workflow: editors hit `/api/preview` or the Web Preview plugin to enable draft cookies, then browse the preview deployment for live drafts.
 
