@@ -32,5 +32,5 @@ The site is moving from Vercel to Cloudflare Workers. Vercel's ISR kept pages ca
 ## Slices
 
 - [x] V1: Cache in front of the Worker, editors bypass it
-- [ ] V2: DatoCMS tags and the invalidation endpoint
+- [x] V2: DatoCMS tags and the invalidation endpoint
 - [ ] V3: Switch runbook and docs

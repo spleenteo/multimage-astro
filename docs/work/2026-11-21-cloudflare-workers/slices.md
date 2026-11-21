@@ -73,6 +73,10 @@ V1 put Workers Cache in front of the trial Worker. A custom entry `src/worker.ts
 **Gotchas:**
 - `BaseLayout`'s site query runs while the page streams: the store must survive it (the `hasLayoutTags` check proves it).
 
+### V2 — done on 2026-11-21
+
+V2 wired DatoCMS cache tags into the Workers Cache and added the purge endpoint. `executeQuery` pushes the CDA `x-cache-tags` into a per-request AsyncLocalStorage store that the middleware opens only on Cloudflare GET requests outside `/api`; draft queries mark it disabled, and the one final `cache.set` runs after buffering, so BaseLayout's streamed site query lands in the store (`hasLayoutTags: true` on every HTML page). Deployed counts (version 35f0afe7): `/` 66, `/libri` 156, `/libri/pagina/2` 155, `/autori` 515, `/sitemap.xml` 500, `/archived-books.json` 27, `/distributori` 81, the book page 49; none coarse, the largest at about half the 990 limit. `POST /api/invalidate-cache` purges through the Backend's `locals.cfContext.cache.purge` (not `cloudflare:workers`, which breaks the Vercel bundle and `astro check`), 100 tags per call: one book tag purged the book page (MISS on the first retry) and left `/distributori` HIT; bad auth gave 401 twice, malformed bodies 400 twice, nothing purged; 30 calls in a row gave exactly 25×200 then 502 with Cloudflare code 1134, so the Free burst of 25 is real and DatoCMS's retry is the recovery. The trial Worker never had `DATOCMS_CMA_TOKEN` or `SITE_SEARCH_BUILD_TRIGGER_ID`, so `reindexed` was false throughout. Rulings: the packet passed by path, as in V1; T4's refactor and feature landed in one commit (accepted); the stale cache-tag docs are left to V3, whose mandate names them. Open for cutover: a purge and `/api/revalidate` both reindex Site Search, so one publish would reindex twice; `wrangler tail` dropped some lines during the burst, so HTTP answers, not the tail, are the record for rate-limit checks.
+
 ## V3 — Switch runbook and docs
 
 **In:**
