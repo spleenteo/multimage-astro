@@ -1,8 +1,8 @@
 ---
 status: open
-phase: slice
+phase: close
 slice: V3
-step: execute
+step: close
 work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
@@ -23,7 +23,7 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 
 - [x] V1 — Cache in front of the Worker, editors bypass it
 - [x] V2 — DatoCMS tags and the invalidation endpoint
-- [ ] V3 — Switch runbook and docs
+- [x] V3 — Switch runbook and docs
 
 ## Log
 
@@ -34,3 +34,4 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 - 2026-11-21 — V2 plan + review — 6 tasks, 3 deviations recorded; review: 0 high, 3 medium (draft flag checked before buffer, sitemap may go coarse, no Vercel diff), 4 low; fixes appended to the plan as binding amendments (user asleep) — 18 min — n/a
 - 2026-11-21 — V2 close — DatoCMS tags in Workers Cache, /api/invalidate-cache purges by tag (book MISS, unrelated HIT, 401/400, 25×200 then 502 on rate limit); tag counts 27–515, none coarse; gate green; 7 commits; second decision candidate (purge via Backend ctx.cache) held for V3 — 25 min — n/a
 - 2026-11-21 — V3 plan + review — 6 tasks; conductor amendment: no CMA token on the trial Worker, no .env read; review: 2 high (DNS records on zone move, plugin URLs unchecked), 4 medium, 3 low; all fixes appended as binding amendments (user asleep) — 20 min — n/a
+- 2026-11-21 — V3 close — runbook docs/guidelines/cloudflare-switch.md, guidelines/state/TODO updated, editor flows verified on workers.dev; full seo-analysis check moved to switch day; gate green; 8 commits. All slices done; merge/push/tag left to the user (asked: no merge to main) — 20 min — n/a

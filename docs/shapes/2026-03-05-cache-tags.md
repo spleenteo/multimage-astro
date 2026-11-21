@@ -1,6 +1,6 @@
 # Shape: Cache Tags & Selective Revalidation
 
-**Status**: in-progress
+**Status**: done (switch pending, see docs/guidelines/cloudflare-switch.md)
 **Date**: 2026-03-05 (rewritten 2026-11-21 for Cloudflare Workers)
 **Appetite**: medium (3 slices)
 **Work**: `docs/work/2026-11-21-cloudflare-workers/` (shaping in `shaping.md`, slices in `slices.md`), branch `chore/cloudflare`
@@ -33,4 +33,4 @@ The site is moving from Vercel to Cloudflare Workers. Vercel's ISR kept pages ca
 
 - [x] V1: Cache in front of the Worker, editors bypass it
 - [x] V2: DatoCMS tags and the invalidation endpoint
-- [ ] V3: Switch runbook and docs — runbook: `docs/guidelines/cloudflare-switch.md`
+- [x] V3: Switch runbook and docs — runbook: `docs/guidelines/cloudflare-switch.md`
