@@ -1,39 +1,36 @@
 # Shape: Cache Tags & Selective Revalidation
 
-**Status**: idea
-**Date**: 2026-03-05
-**Appetite**: medium–large (3+ sessions)
+**Status**: in-progress
+**Date**: 2026-03-05 (rewritten 2026-11-21 for Cloudflare Workers)
+**Appetite**: medium (3 slices)
+**Work**: `docs/work/2026-11-21-cloudflare-workers/` (shaping in `shaping.md`, slices in `slices.md`), branch `chore/cloudflare`
 
 ## Problem
 
-Currently there is no cache tag plumbing. When an editor publishes a change in DatoCMS, the entire site needs to be redeployed or all cached pages invalidated — there's no way to revalidate only the pages affected by the change.
-
-`executeQuery` accepts an `environment` option but no `cacheTags` option. No route annotates its queries with cache tags, so Vercel's on-demand ISR cannot be used.
+The site is moving from Vercel to Cloudflare Workers. Vercel's ISR kept pages cached and `/api/revalidate` refreshed them through a hand-kept record → URL map (`src/lib/datocms/revalidationUrls.ts`). Workers have no ISR: without a cache every request renders (median 26 ms CPU, up to 100 ms on `/autori`, against the 10 ms per request of the Free plan) and every request queries DatoCMS. The URL map is also code to keep in sync with every new route.
 
 ## Solution sketch
 
-- Extend `executeQuery` options to accept `cacheTags?: string[]` and forward them to `@datocms/cda-client`'s `rawExecuteQuery`.
-- Define a tagging convention: `book-{slug}`, `author-{slug}`, `collection-{slug}`, `magazine-{slug}`, `site` (for global data).
-- Update key queries in routes to pass their tags.
-- Add a DatoCMS webhook → `/api/revalidate` endpoint that calls Vercel's `revalidatePath`/`revalidateTag` for the affected resources.
-- Document the tagging convention in `docs/guidelines/cms-data-loading.md`.
+- **Workers Cache** in front of the Worker, driven by Astro 7's route cache with the adapter's `cacheCloudflare()` provider (only under `DEPLOY_TARGET=cloudflare`; Vercel keeps ISR until the switch).
+- **Native DatoCMS cache tags**: `executeQuery` asks the CDA for the query's tags (`returnCacheTags`) and adds them to the request's cache through an AsyncLocalStorage set in the middleware, so no call site changes.
+- **Middleware cache policy**: public GET HTML 200 cached for 60 days (safety net) and buffered so late tags land; internal routes, API, errors and drafts never cached.
+- **Draft bypass before the cache**: the Workers Cache is looked up before the Worker and ignores cookies, so a gateway entrypoint (cache off) forwards to a cached `Backend` entrypoint, with `cache: "no-store"` when the draft-mode cookie is present.
+- **`POST /api/invalidate-cache`**: the DatoCMS `cda_cache_tags` webhook (Bearer secret) purges the tags; failures return 5xx so DatoCMS retries; the Site Search reindex follows.
+- Fallback if tag sets prove unreliable: one site-wide tag purged on every publish.
 
 ## Rabbit holes
 
-- `@datocms/cda-client` must support `rawExecuteQuery` with tag extraction — verify the version in use.
-- Vercel's `revalidateTag` API requires the Vercel KV or Edge Cache — verify it's available on the current plan.
-- The `BaseLayout` query (`_site`, header/footer menus) is run on every page and tagged with `site` — a site-wide change would still invalidate everything, which is expected.
+- Tag count: at most 1000 tags per response, extra ones dropped silently. `/libri` and `/sitemap.xml` must be measured.
+- Every deploy starts from an empty cache (the Worker version is in the key). Accepted.
+- Purge rate limits are always the Free tier ones for Workers Cache.
 
 ## No-gos
 
-- Don't implement a full webhook signature verification system in this shape — use `SECRET_API_TOKEN` as a simple shared secret for now.
-- Don't refactor pagination at the same time as cache tags (separate shapes).
+- No DNS change, no domain move, no custom domain in this shape (switch-day runbook in V3).
+- No DatoCMS webhook created here; no removal of the Vercel path before the switch.
 
 ## Slices
 
-- [ ] CD3a: Extend `executeQuery` to accept and forward `cacheTags`
-- [ ] CD3b: Annotate key routes with cache tags (`BookRecord`, `AuthorRecord`, `CollectionRecord`, `BlogPostRecord`)
-- [ ] CD3c: Add `/api/revalidate` webhook endpoint
-- [ ] CD3d: Configure DatoCMS webhook to call `/api/revalidate` on publish/unpublish
-- [ ] Update `docs/guidelines/cms-data-loading.md` with tagging convention
-- [ ] Update `docs/current-state.md`
+- [ ] V1: Cache in front of the Worker, editors bypass it
+- [ ] V2: DatoCMS tags and the invalidation endpoint
+- [ ] V3: Switch runbook and docs
