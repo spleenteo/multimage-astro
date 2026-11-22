@@ -8,7 +8,7 @@ updated: 2026-11-21
 
 # V2 plan — DatoCMS tags and the invalidation endpoint
 
-**Mandate**: [slices.md § V2](slices.md#v2--datocms-tags-and-the-invalidation-endpoint) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [caching.md](../../guidelines/caching.md), [cms-data-loading.md](../../guidelines/cms-data-loading.md), [security.md](../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Shape facts**: [shaping.md](shaping.md#facts-that-constrain-the-shapes)
+**Mandate**: [slices.md § V2](slices.md#v2--datocms-tags-and-the-invalidation-endpoint) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [caching.md](../../../guidelines/caching.md), [cms-data-loading.md](../../../guidelines/cms-data-loading.md), [security.md](../../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Shape facts**: [shaping.md](shaping.md#facts-that-constrain-the-shapes)
 
 **Summary**
 1. T1: pure helpers in `src/lib/datocms/` (request tag store, tag decision with the coarse `site` fallback, payload parsing, batched purge) and a no-network check `npm run check:cache-tags` in the style of `check:revalidation-map`.

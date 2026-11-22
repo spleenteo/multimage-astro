@@ -43,10 +43,10 @@ Test level: essential (project). No test runner is configured: verification is t
 
 
 ## What V1 built (read the code)
-- `src/worker.ts` (gateway default entry, cache off → `ctx.exports.Backend`, cache on), `src/middleware.ts` (route → policy table behind `context.cache.enabled`, one final `cache.set`), `astro.config.mjs` (`cacheCloudflare()` under `DEPLOY_TARGET=cloudflare`), `wrangler.jsonc` (cache + exports). V1 plan for tone: docs/work/2026-11-21-cloudflare-workers/V1-plan.md; V1 narrative in slices.md.
+- `src/worker.ts` (gateway default entry, cache off → `ctx.exports.Backend`, cache on), `src/middleware.ts` (route → policy table behind `context.cache.enabled`, one final `cache.set`), `astro.config.mjs` (`cacheCloudflare()` under `DEPLOY_TARGET=cloudflare`), `wrangler.jsonc` (cache + exports). V1 plan for tone: docs/work/archive/2026-11-21-cloudflare-workers/V1-plan.md; V1 narrative in slices.md.
 
 ## Shaping reference
-/Users/spleenteo/Sites/multimage/multimage-astro/docs/work/2026-11-21-cloudflare-workers/shaping.md ('Facts that constrain the shapes'). DatoCMS Astro cache-tags reference: /Users/spleenteo/.claude/plugins/marketplaces/datocms-skills/skills/datocms-frontend-integrations/references/astro.md, section 'Cache Tags (Optional)' (~line 736).
+/Users/spleenteo/Sites/multimage/multimage-astro/docs/work/archive/2026-11-21-cloudflare-workers/shaping.md ('Facts that constrain the shapes'). DatoCMS Astro cache-tags reference: /Users/spleenteo/.claude/plugins/marketplaces/datocms-skills/skills/datocms-frontend-integrations/references/astro.md, section 'Cache Tags (Optional)' (~line 736).
 
 ## lessons.md
 - In Astro middleware, read any cookie-derived flag after `next()` when the response depends on it: `context.cookies.get()` returns the cookies the endpoint set or deleted during the request, so a value read before `next()` is stale on the endpoints that change it.

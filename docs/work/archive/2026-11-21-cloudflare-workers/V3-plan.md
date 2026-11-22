@@ -8,7 +8,7 @@ updated: 2026-11-21
 
 # V3 plan — Switch runbook and docs
 
-**Mandate**: [slices.md § V3](slices.md#v3--switch-runbook-and-docs) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [operations.md](../../guidelines/operations.md), [caching.md](../../guidelines/caching.md), [preview-mode.md](../../guidelines/preview-mode.md), [cms-data-loading.md](../../guidelines/cms-data-loading.md), [security.md](../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Decision**: [2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge](../../decisions-log/2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge.md)
+**Mandate**: [slices.md § V3](slices.md#v3--switch-runbook-and-docs) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [operations.md](../../../guidelines/operations.md), [caching.md](../../../guidelines/caching.md), [preview-mode.md](../../../guidelines/preview-mode.md), [cms-data-loading.md](../../../guidelines/cms-data-loading.md), [security.md](../../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Decision**: [2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge](../../../decisions-log/2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge.md)
 
 **Summary**
 1. T1 (conductor): end-to-end `curl` checks on the trial Worker: draft mode enable/disable, `/api/preview-links`, `/api/seo-analysis` (with a temporary `DATOCMS_CMA_TOKEN`, so its own-host fetch runs).

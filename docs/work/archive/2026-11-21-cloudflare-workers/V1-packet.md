@@ -44,7 +44,7 @@ Test level: essential (project). No test runner is configured: verification is t
 
 
 ## Shaping reference
-Selected shape A and its verified facts: /Users/spleenteo/Sites/multimage/multimage-astro/docs/work/2026-11-21-cloudflare-workers/shaping.md (read the 'Facts that constrain the shapes' section).
+Selected shape A and its verified facts: /Users/spleenteo/Sites/multimage/multimage-astro/docs/work/archive/2026-11-21-cloudflare-workers/shaping.md (read the 'Facts that constrain the shapes' section).
 
 ## lessons.md
 none yet

@@ -7,6 +7,7 @@ work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
 updated: 2026-11-23
+archived: 2026-11-23
 tags: [work, cloudflare-workers]
 description: "Migrare Multimage da Vercel a Cloudflare Workers, con la Workers Cache invalidata dai cache tag DatoCMS al posto dell'ISR di Vercel (verifica sul Worker workers.dev, senza toccare DNS né produzione)"
 ---

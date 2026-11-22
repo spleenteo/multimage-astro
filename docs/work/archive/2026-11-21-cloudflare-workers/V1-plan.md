@@ -8,7 +8,7 @@ updated: 2026-11-21
 
 # V1 plan — Cache in front of the Worker, editors bypass it
 
-**Mandate**: [slices.md § V1](slices.md#v1--cache-in-front-of-the-worker-editors-bypass-it) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [caching.md](../../guidelines/caching.md), [preview-mode.md](../../guidelines/preview-mode.md), [security.md](../../guidelines/security.md), [operations.md](../../guidelines/operations.md), [dependencies.md](../../guidelines/dependencies.md) · **Lessons**: none yet · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Shape facts**: [shaping.md](shaping.md#facts-that-constrain-the-shapes)
+**Mandate**: [slices.md § V1](slices.md#v1--cache-in-front-of-the-worker-editors-bypass-it) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [caching.md](../../../guidelines/caching.md), [preview-mode.md](../../../guidelines/preview-mode.md), [security.md](../../../guidelines/security.md), [operations.md](../../../guidelines/operations.md), [dependencies.md](../../../guidelines/dependencies.md) · **Lessons**: none yet · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Shape facts**: [shaping.md](shaping.md#facts-that-constrain-the-shapes)
 
 **Summary**
 1. T1: `cacheCloudflare()` provider under `DEPLOY_TARGET=cloudflare` only; a custom Worker entry `src/worker.ts` (cache-off gateway `default` + cache-on `Backend` wrapping `handle`); `main`, `cache` and `exports` in `wrangler.jsonc`; the worker file kept out of `astro check`.

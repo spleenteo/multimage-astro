@@ -40,8 +40,8 @@ Cloudflare lifts the Free purge limits for Workers Cache, @astrojs/cloudflare's 
 
 ## References
 
-- docs/work/2026-11-21-cloudflare-workers/shaping.md
-- docs/work/2026-11-21-cloudflare-workers/slices.md (V1, V2 narratives)
+- docs/work/archive/2026-11-21-cloudflare-workers/shaping.md
+- docs/work/archive/2026-11-21-cloudflare-workers/slices.md (V1, V2 narratives)
 - docs/shapes/2026-03-05-cache-tags.md
 - docs/guidelines/cloudflare-switch.md (switch-day runbook)
 
