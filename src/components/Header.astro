@@ -397,7 +397,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                       >
                         {link.children?.map((child) => <a
                           href={child.href}
-                          class="block px-2 py-2 text-white/80 transition hover:text-white"
+                          class="block px-2 py-2 text-white/80 transition hover:text-white focus:text-white"
                           data-mobile-nav-target
                         >
                           {child.label}
@@ -407,7 +407,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                   ) : (
                     <a
                       href={link.href ?? '#'}
-                      class={`block bg-white/10 px-4 py-3 ${isActive ? 'text-white' : 'text-white/90'}`}
+                      class={`block bg-white/10 px-4 py-3 hover:text-white focus:text-white ${isActive ? 'text-white' : 'text-white/90'}`}
                       data-mobile-nav-target
                     >
                       {link.label}
