@@ -318,6 +318,16 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 ### Book Card
 White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
 
+### Collections Shelf (`/collane`)
+The catalogue as the editors think it.
+- **Title row:** the catalogue's slim row: h1, the serif size line "18 collane · 363 libri in catalogo", and the CMS lede.
+- **Shelves:** one per collection, largest first, "Fuori Collana" last, divided by navy-at-10% hairlines.
+- **Each shelf:** text on the left (5fr) and a cover field on the right (7fr). On phones the field comes first.
+  - Text: Playfair name (h2, a link), slate serif count, description clamped to 3 lines (2 on phones), "Ultima uscita: *titolo*, anno", and the navy link "Sfoglia nel catalogo" to `/libri?collana=<slug>`.
+  - Field: tinted from the newest cover (`coverFieldPalette`), with the latest covers standing on its floor (`object-position: bottom`), each with a small coloured drop shadow (10px 16px 18px). They rise 6px together on hover.
+- **Logos:** left out of the shelf, because they vary too much in shape. They appear only on the collection page, contained in a fixed box beside its title row.
+- **Collection page:** h2 "I libri della collana", then the catalogue's grid of `catalogue` BookCards, newest print year first, with out-of-catalogue titles last.
+
 ### Faceted Catalogue (signature)
 The `/libri` surface. Toolbar: the Playfair result count as h2 on the left; search field, "Ordina per" select and (below 1024px) the navy "Filtri" button on the right, over a navy-at-10% rule. Active filters appear as a chip row under it. Facets are fieldsets (Collana, Formato, Periodo, Altro) plus an author field with suggestions ("Autrice o autore"); legends are semibold navy 0.875rem, groups divided by navy-at-10% rules. Collections show the largest eight, then a "Tutte le collane (n)" text toggle. Options with no matching books turn slate but stay selectable.
 

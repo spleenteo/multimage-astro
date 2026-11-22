@@ -50,11 +50,11 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: replace hard-coded Italian copy once CMS data is available.
 - `CollectionDetailHero` — **CollectionDetailHero** (`src/components/CollectionDetailHero/index.astro`)
-  - Purpose: hero for collection detail pages showing title, book count, logo, and description.
-  - Key props: `name`, `booksCount`, `description?`, `logo?`.
+  - Purpose: slim title row of a collection page: h1, serif size line ("44 libri in catalogo · 2 fuori catalogo"), description, links "Sfoglia nel catalogo, con i filtri" (`/libri?collana=<slug>`) and "Tutte le collane"; the logo contained in a fixed box beside it.
+  - Key props: `name`, `slug`, `inCatalogue`, `archived`, `description?`, `logo?`.
   - Used in: `collane/[slug]`.
   - Owner: @codex.
-  - Notes: pass counts from `mapBooksToCards`.
+  - Notes: counts come from `_allBooksMeta` (total and `archive: true`) in the page query.
 - `AuthorsSection` — **AuthorsSection** (`src/components/AuthorsSection/index.astro`)
   - Purpose: the book page's authors as flat rows under a hairline: 128px portrait (decorative, `alt=""`), name as the only link to the profile, book count, short bio at 68ch.
   - Key props: `title` (paired forms, "Autrice/Autore del libro"), `authors[]` view-model.
@@ -117,12 +117,12 @@ scope: A list to describe all components used in the project
   - Used in: home page, book detail related lists, Structured Text block.
   - Owner: @codex.
   - Notes: requires `public/generated/swiper-element.js`; run `npm run prebuild` (see docs/TODO.md Project Structure task **PS1**).
-- `CollectionCard` — **CollectionCard** (`src/components/CollectionCard/index.astro` + `_graphql.ts`)
-  - Purpose: renders collection tiles with logo, stats, and description.
-  - Key props: `name`, `slug`, `description`, `booksCount`, `logo`.
-  - Used in: `/collane` listing.
+- `CollectionShelf` — **CollectionShelf** (`src/components/CollectionShelf/index.astro`)
+  - Purpose: one collection on the `/collane` shelf: name (h2, link), serif size line, description clamped to 2/3 lines, "Ultima uscita", "Sfoglia nel catalogo"; beside it a field tinted from the newest cover (`coverFieldPalette`) with up to four latest covers (three on phones) standing on its floor.
+  - Key props: `name`, `slug`, `description?`, `inCatalogue`, `archived`, `latest?`, `covers[]`.
+  - Used in: `/collane`.
   - Owner: @codex.
-  - Notes: includes fallbacks when logos are missing.
+  - Notes: the cover field is a mouse-only link (`tabindex=-1`, `aria-hidden`); the name carries the keyboard link. No placeholder copy when the description is missing.
 - `SupplierCard` — **SupplierCard** (`src/components/SupplierCard/index.astro`)
   - Purpose: distributor contact card showing region, contacts, and map links.
   - Key props: `SupplierCardViewModel` fields.

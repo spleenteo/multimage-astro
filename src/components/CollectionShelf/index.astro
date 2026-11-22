@@ -1,0 +1,71 @@
+---
+// One collection on the /collane shelf: name, size, a line of description, the latest title and
+// the ways in (the collection page, the catalogue filtered by it); beside it a field tinted from
+// the newest cover with the latest covers standing on it (Book Cover Field, DESIGN.md).
+import { Image } from '@datocms/astro/Image';
+import type { AssetImage } from '~/lib/datocms/types';
+import { coverFieldPalette } from '~/lib/colors';
+import styles from './style.module.css';
+
+type Props = {
+  name: string;
+  slug: string;
+  description?: string | null;
+  inCatalogue: number;
+  archived: number;
+  latest?: { title: string; year: string | null } | null;
+  covers: Array<{ id: string; title: string; image: AssetImage }>;
+};
+
+const { name, slug, description = null, inCatalogue, archived, latest = null, covers }: Props =
+  Astro.props;
+
+const href = `/collane/${slug}`;
+const headingId = `collana-${slug}`;
+const palette = coverFieldPalette(covers[0]?.image.colors);
+const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
+const sizeLine =
+  inCatalogue > 0
+    ? [plural(inCatalogue), archived > 0 ? `${archived} fuori catalogo` : null].filter(Boolean).join(' · ')
+    : `${plural(archived)} fuori catalogo`;
+---
+
+<section class={styles.shelf} aria-labelledby={headingId}>
+  <div class={styles.copy}>
+    <h2 id={headingId} class={styles.name}>
+      <a href={href}>{name}</a>
+    </h2>
+    <p class={styles.size}>{sizeLine}</p>
+    {description ? <p class={styles.description}>{description}</p> : null}
+    {latest ? (
+      <p class={styles.latest}>
+        Ultima uscita: <span class={styles.latestTitle}>{latest.title}</span>{latest.year ? `, ${latest.year}` : null}
+      </p>
+    ) : null}
+    {inCatalogue > 0 ? (
+      <p class={styles.ways}>
+        <a href={`/libri?collana=${encodeURIComponent(slug)}`}>Sfoglia nel catalogo</a>
+      </p>
+    ) : null}
+  </div>
+
+  <a
+    href={href}
+    class={styles.field}
+    style={`background: ${palette.field};`}
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    {covers.map((cover, index) =>
+      cover.image.responsiveImage ? (
+        <Image
+          data={{ ...cover.image.responsiveImage, alt: '' }}
+          sizes="(min-width: 768px) 120px, 80px"
+          pictureClass={index >= 3 ? styles.fourth : 'block'}
+          imgClass={styles.cover}
+          imgStyle={{ filter: `drop-shadow(10px 16px 18px ${palette.shadow})` }}
+        />
+      ) : null,
+    )}
+  </a>
+</section>
