@@ -98,7 +98,7 @@ const LEGAL_LINKS: LegalLink[] = [
 ] as const;
 ---
 
-<footer class="bg-brand-navy text-brand-mist">
+<footer class="bg-brand-navy text-brand-mist [--focus-ring:var(--color-white)]">
   <div class="border-b border-white/10">
     <div class="container grid gap-8 py-12 md:grid-cols-12">
       <div class="space-y-4 md:col-span-3">
@@ -126,7 +126,7 @@ const LEGAL_LINKS: LegalLink[] = [
           <div class="flex flex-col gap-2">
             {links.map(({ label, href }) => <a
               href={href}
-              class="text-sm text-brand-mist transition hover:text-white"
+              class="text-sm text-brand-mist transition hover:text-white focus:text-white"
             >
               {label}
             </a>)}
@@ -145,7 +145,7 @@ const LEGAL_LINKS: LegalLink[] = [
             href={href}
             target="_blank"
             rel="noreferrer"
-            class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white"
+            class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white focus:text-white"
           >
             <span class="flex h-9 w-9 items-center justify-center bg-white/10">
               <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
@@ -162,7 +162,11 @@ const LEGAL_LINKS: LegalLink[] = [
   >
     <address class="not-italic leading-relaxed text-brand-mist/70">
       Associazione Multimage APS &mdash; Via Mario Pagano 7, 50133 Firenze &mdash;
-      <a href="mailto:info@multimage.org" class="transition hover:text-white">info@multimage.org</a>
+      <a
+        href="mailto:info@multimage.org"
+        class="text-brand-mist transition hover:text-white focus:text-white"
+        >info@multimage.org</a
+      >
       &mdash; P.I. 06987750012
     </address>
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -170,7 +174,7 @@ const LEGAL_LINKS: LegalLink[] = [
         href={href}
         target={external ? '_blank' : undefined}
         rel={external ? 'noreferrer' : undefined}
-        class="text-xs transition hover:text-white"
+        class="text-xs text-brand-mist transition hover:text-white focus:text-white"
       >
         {label}
       </a>)}

@@ -15,9 +15,11 @@
   --color-brand-sand: #f4f4f4;
   --color-brand-mist: #f2f4f6;
   --color-brand-orange: #fa7810;
+  /* Action fill for white text: #fa7810 gives 2.7:1 with white, this gives 5.05:1 (WCAG AA) */
+  --color-brand-orange-deep: #b84f00;
   --color-social-facebook: #4267b2;
   --color-social-instagram: #c13584;
-  --color-social-newsletter: #53be42;
+  --color-social-newsletter: #2e7d32;
 
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', 'Times New Roman', serif;
@@ -91,7 +93,16 @@
 
   input::placeholder,
   textarea::placeholder {
-    color: #9ca3af;
+    /* brand-slate: 4.7:1 on white (the old #9ca3af was 2.5:1) */
+    color: var(--color-brand-slate);
+  }
+
+  /* One focus indicator for the whole site. Light surfaces get navy; a dark surface sets
+     --focus-ring (the header and footer use white). Components that still add
+     focus:outline-hidden plus a ring of their own opt out of this. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+    outline-offset: 2px;
   }
 
   button:not(:disabled),

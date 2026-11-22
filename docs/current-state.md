@@ -118,9 +118,11 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Accessibility
 
-- Pages use semantic landmarks through `BaseLayout.astro`; no skip link yet (**A11Y2**).
+- Pages use semantic landmarks through `BaseLayout.astro`, with a "Vai al contenuto" skip link to `<main id="contenuto">`.
+- Keyboard focus: one global `:focus-visible` outline (navy, white on the header and footer via `--focus-ring`); see `docs/guidelines/blocks-and-components.md` § Focus and colour contrast.
+- `BookCarouselSection`: pagination bullets are display-only (`pagination-clickable="false"`, out of the tab order), no extra `aria-live` on the container; Swiper's a11y module brings a focused slide into view.
 - Interactive blocks (search form, `BookCarouselSection`, staff tables) expose ARIA labels but have not been validated with screen readers (**A11Y1**).
-- Color contrast follows the Tailwind theme in `src/styles/global.css`; no automated contrast audit since 2025-11-01.
+- Color contrast: home-page actions fixed on 2026-11-22 (orange CTA → `brand-orange-deep`, newsletter green #2e7d32, footer links `brand-mist`, placeholders `brand-slate`). Banner colours come from CMS images and can still fall below AA (**HOME-banners**). Last critique snapshot: `.impeccable/critique/`.
 - No Playwright/Cypress suite to prevent regressions.
 
 ## i18n

@@ -83,14 +83,17 @@ function buildPrimaryLinks(infoPages: Array<{ label: string; href: string }>): N
 }
 
 const toneClassMap: Record<string, string> = {
-  instagram: 'bg-social-instagram hover:bg-social-instagram/80 text-white',
-  facebook: 'bg-social-facebook hover:bg-social-facebook/80 text-white',
-  newsletter: 'bg-social-newsletter hover:bg-social-newsletter/80 text-white',
-  cta: 'bg-brand-orange hover:bg-brand-crimson text-white',
+  instagram:
+    'bg-social-instagram hover:bg-social-instagram/80 text-white hover:text-white focus:text-white',
+  facebook:
+    'bg-social-facebook hover:bg-social-facebook/80 text-white hover:text-white focus:text-white',
+  newsletter:
+    'bg-social-newsletter hover:bg-social-newsletter/80 text-white hover:text-white focus:text-white',
+  cta: 'bg-brand-orange-deep hover:bg-brand-crimson text-white hover:text-white focus:text-white',
 };
 
 const socialBaseClass =
-  'inline-flex items-center gap-2 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-wider transition';
+  'inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition';
 
 const { currentPath, infoPages = [] }: Props = Astro.props;
 const PRIMARY_LINKS = buildPrimaryLinks(infoPages);
@@ -149,10 +152,10 @@ function linkIsActive(link: NavLink, pathname: string) {
 const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.startsWith('/collane');
 ---
 
-<header class="relative z-40 shadow-soft" data-header>
+<header class="relative z-40 shadow-soft [--focus-ring:var(--color-white)]" data-header>
   <div class="hidden bg-brand-navy text-white md:block">
     <div
-      class="container flex flex-wrap items-center justify-end gap-2 py-2 text-[0.65rem] font-semibold uppercase tracking-wider"
+      class="container flex flex-wrap items-center justify-end gap-2 py-2 text-xs font-semibold uppercase tracking-wider"
     >
       {TOP_LINKS.map(({ label, href, icon, external, tone }) => <a
         href={href}
@@ -197,7 +200,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
         <input
           type="search"
           name="q"
-          class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-hidden"
+          class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/80 focus-visible:outline-offset-0"
           placeholder="Cerca libri, autori..."
           aria-label="Cerca libri o autori"
           data-search-input
@@ -262,7 +265,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                 aria-selected={isActive ? 'true' : 'false'}
                 aria-expanded="false"
                 aria-haspopup="true"
-                class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky ${
+                class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
                   isActive
                     ? 'bg-white text-brand-navy focus:text-brand-navy'
                     : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
@@ -300,7 +303,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                   {link.children?.map((child) => <li>
                     <a
                       href={child.href}
-                      class="flex items-center justify-between px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light/80 hover:text-white focus:bg-brand-navy-light/80 focus:text-white focus:outline-hidden"
+                      class="flex items-center justify-between px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light/80 hover:text-white focus:bg-brand-navy-light/80 focus:text-white focus-visible:-outline-offset-4"
                     >
                       <span>{child.label}</span>
                       <iconify-icon
@@ -322,7 +325,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
             href={link.href ?? '#'}
             role="tab"
             aria-selected={isActive ? 'true' : 'false'}
-            class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky ${
+            class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
               isActive
                 ? 'bg-white text-brand-navy focus:text-brand-navy'
                 : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'
@@ -433,7 +436,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
             <input
               type="search"
               name="q"
-              class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/60 focus:outline-hidden"
+              class="w-full bg-transparent px-2 py-2 text-white placeholder:text-white/80 focus-visible:outline-offset-0"
               placeholder="Cerca libri, autori..."
               aria-label="Cerca libri o autori"
               data-search-input

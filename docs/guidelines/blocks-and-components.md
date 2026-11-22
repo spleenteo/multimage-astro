@@ -119,3 +119,10 @@ export type AnyBlock =
 ## Client-side scripts
 
 Astro supports [client-side scripts inside components](https://docs.astro.build/en/guides/client-side-scripts/#client-side-scripts). Fastro uses the convention to include these as external scripts for better TypeScript intellisense and linting. To distinguish server-side files (most in Astro) from client-side scripts we use a `.client.ts` extension. So blocks and components can include these as `<script src="./SomeComponent.client.ts"></script>`.
+
+## Focus and colour contrast
+
+- **Focus**: one global `:focus-visible` rule in `src/styles/global.css` draws a 3px outline in `var(--focus-ring)`, navy by default. A dark surface sets `[--focus-ring:var(--color-white)]` on its root (the header and footer do). Do not add `focus:outline-hidden`; if an outline needs to sit inside its box (dropdown items), use `focus-visible:-outline-offset-4`.
+- **Link colour on focus**: the compat rule `:where(a):focus` turns links navy. On a dark or coloured surface, add `focus:text-white` (and `hover:text-white`) to links, or their text disappears while focused.
+- **Action colour**: white text sits on `bg-brand-orange-deep` (#b84f00, 5.05:1), never on `bg-brand-orange` (#fa7810, 2.7:1). Keep `brand-orange` for decoration with no text on it. Text on a coloured fill needs 4.5:1 (3:1 only from 18.66px bold or 24px).
+- **Skip link**: `BaseLayout.astro` renders "Vai al contenuto" before the header, pointing at `<main id="contenuto">`.
