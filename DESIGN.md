@@ -368,6 +368,30 @@ The catalogue as the editors think it.
 - **Logos:** left out of the shelf, because they vary too much in shape. They appear only on the collection page, contained in a fixed box beside its title row.
 - **Collection page:** h2 "I libri della collana", then the catalogue's grid of `catalogue` BookCards, newest print year first, with out-of-catalogue titles last.
 
+### Magazine (`/magazine`, `/magazine/[slug]`)
+- **Index title row:** the h1 and the CMS lede (hidden on phones). No size line: article counts mean nothing to a reader.
+- **Category strip:** a flat strip between hairlines, like the /autori letters. "Tutti" comes first, then the categories (most used first, no counts); the current one is on navy. Labels are normalised in code (`news` → "Notizie"), whatever their case in the CMS. `?categoria=<slug>` filters on the server.
+- **Entries:** flat, with no shadow and no chip. They are in 1, 2 or 3 columns (640px, 1024px).
+  - An 8/5 image on mist.
+  - The Playfair title as h2. It is the only link, stretched over the entry.
+  - One slate line: "Recensione · 21 ottobre 2026".
+  - The abstract on 3 lines, without URLs.
+  - 12 entries show at first. "Mostra altri articoli (12 di 27)" reveals 12 more, announces them and focuses the first new one. Without JavaScript every entry stays visible.
+- **Article title row:** left-aligned.
+  - The h1.
+  - One slate line: the category, as a navy link to the filtered index, then the date, then "di …".
+  - The lede, without pasted URLs; it is dropped when it only repeats the title.
+- **Featured image:** whole (`fit: max`) on a mist field, never cropped. Posters and press clippings carry text.
+- **Text:** a 68ch reading column, as in the author profile.
+  - The editors' headings shift so the highest becomes h2.
+  - Blockquotes sit between hairlines; `hr` is a hairline.
+  - Links typed to multimage.org become relative.
+- **Blocks placed by the editors:**
+  - **Book:** the cover whole on its `coverFieldPalette` field, with the pale copy half: title, subtitle, "di …", a Playfair price and "Vai al libro e ordinalo". It is visible on phones.
+  - **Author:** a 72px portrait or the initial, the name and "Vedi il profilo e i suoi libri", between hairlines.
+  - The magazine never infers a book: books appear only where the editors place them.
+- **End:** "Altre recensioni" (the same category, newest 3, with dates on hairlines), then "Tutte le recensioni" and "Torna al magazine". There is no orange action.
+
 ### Faceted Catalogue (signature)
 The `/libri` surface. Toolbar: the Playfair result count as h2 on the left; search field, "Ordina per" select and (below 1024px) the navy "Filtri" button on the right, over a navy-at-10% rule. Active filters appear as a chip row under it. Facets are fieldsets (Collana, Formato, Periodo, Altro) plus an author field with suggestions ("Autrice o autore"); legends are semibold navy 0.875rem, groups divided by navy-at-10% rules. Collections show the largest eight, then a "Tutte le collane (n)" text toggle. Options with no matching books turn slate but stay selectable.
 

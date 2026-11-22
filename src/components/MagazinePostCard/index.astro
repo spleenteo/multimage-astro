@@ -1,7 +1,10 @@
 ---
+// A magazine entry, flat: the image, the title (h2, the only link, stretched over the entry), one
+// slate line "Recensione · 9 marzo 2026", and the abstract on three lines.
 import { Image } from '@datocms/astro/Image';
 import type { ResponsiveImage } from '~/lib/datocms/types';
-import { toPlainText, truncateToLength } from '~/lib/text';
+import { toPlainText, truncateToLength, withoutUrls } from '~/lib/text';
+import { categoryLabel, formatPostDate, type PostCategory } from '~/lib/magazine';
 import styles from './style.module.css';
 
 type Props = {
@@ -9,92 +12,42 @@ type Props = {
   slug: string;
   abstract?: string | null;
   publishedAt?: string | null;
-  category?: {
-    name?: string | null;
-    slug?: string | null;
-  } | null;
-  authorName?: string | null;
+  category?: PostCategory;
   image?: ResponsiveImage | null;
   sticky?: boolean | null;
+  priority?: boolean;
 };
 
-const {
-  title,
-  slug,
-  abstract = null,
-  publishedAt = null,
-  category = null,
-  authorName = null,
-  image = null,
-  sticky = false,
-}: Props = Astro.props;
+const { title, slug, abstract = null, publishedAt = null, category = null, image = null, sticky = false, priority = false }: Props = Astro.props;
 
 const href = `/magazine/${slug}`;
-// L'abstract arriva da un WYSIWYG (HTML): lo riduciamo a testo semplice
-// prima di troncarlo, così non vengono mostrati i tag né si spezza il markup.
-const plainAbstract = toPlainText(abstract);
-const summary = plainAbstract ? truncateToLength(plainAbstract, 190) : null;
-
-const formattedDate = publishedAt
-  ? new Intl.DateTimeFormat('it-IT', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }).format(new Date(publishedAt))
-  : null;
-
-const authorLabel =
-  typeof authorName === 'string' && authorName.trim().length > 0 ? authorName.trim() : null;
+const plain = withoutUrls(toPlainText(abstract));
+// An abstract that only repeats the title adds nothing.
+const summary = plain && plain.toLowerCase() !== title.trim().toLowerCase() ? truncateToLength(plain, 220) : null;
+const date = formatPostDate(publishedAt);
+const label = categoryLabel(category, 'singular');
 ---
 
-<a href={href} class:list={[styles.root, 'group']}>
-  <article class="flex h-full flex-col">
-    <div class={styles.imageWrapper}>
-      {image ? (
-        <Image
-          data={image}
-          sizes="(min-width: 1280px) 320px, (min-width: 768px) 45vw, 90vw"
-          srcSetCandidates={[1, 2]}
-          pictureClass="block h-full w-full"
-          imgClass={styles.image}
-        />
-      ) : (
-        <div
-          class="flex h-full w-full items-center justify-center text-xs font-semibold uppercase text-brand-slate"
-        >
-          Immagine in arrivo
-        </div>
-      )}
-    </div>
-
-    <div class={styles.content}>
-      <div class={styles.meta}>
-        {sticky ? <span class={styles.stickyTag}>In evidenza</span> : null}
-        {category?.name ? <span class={styles.categoryTag}>{category.name}</span> : null}
-        {formattedDate ? (
-          <time datetime={publishedAt ?? undefined} class={styles.date}>
-            {formattedDate}
-          </time>
-        ) : null}
-      </div>
-
-      <h3 class={styles.title}>{title}</h3>
-      {summary ? <p class={styles.abstract}>{summary}</p> : null}
-
-      <div class={styles.footer}>
-        {authorLabel ? <span class={styles.author}>Di {authorLabel}</span> : null}
-        <span
-          class="flex items-center gap-2 text-xs font-semibold uppercase text-brand-navy transition group-hover:text-brand-navy"
-        >
-          Leggi
-          <iconify-icon
-            icon="iconoir:nav-arrow-right"
-            width="18"
-            height="18"
-            aria-hidden="true"
-          ></iconify-icon>
-        </span>
-      </div>
-    </div>
-  </article>
-</a>
+<article class={styles.root}>
+  <div class={styles.media}>
+    {image ? (
+      <Image
+        data={{ ...image, alt: '' }}
+        priority={priority}
+        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+        srcSetCandidates={[0.5, 1, 1.5, 2]}
+        pictureClass="block h-full w-full"
+        imgClass={styles.image}
+      />
+    ) : null}
+  </div>
+  <h2 class={styles.title}><a href={href}>{title}</a></h2>
+  {label || date || sticky ? (
+    <p class={styles.meta}>
+      {sticky ? <span class={styles.pinned}>In evidenza</span> : null}
+      {label ? <span>{label}</span> : null}
+      {date ? <time datetime={publishedAt ?? undefined}>{date}</time> : null}
+    </p>
+  ) : null}
+  {summary ? <p class={styles.summary}>{summary}</p> : null}
+</article>

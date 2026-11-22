@@ -16,7 +16,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
   - `src/styles/global.css` imports fonts + Tailwind 4 and defines the design tokens in `@theme static` (no JS config).
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.
-- Known gaps: `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
+- Known gaps: (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## Routing
 
@@ -40,7 +40,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decisions-log `2026-05-31-editor-session-gating` (**S1**).
 - API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate` (Vercel), `/api/invalidate-cache` (Cloudflare: webhook `cda_cache_tags`, purge dei tag + reindex Site Search), `/api/utils` remain SSR-only endpoints even during static builds.
 - Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `/api/seo-analysis` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) mirrors the api_key → route table by hand (index paths shared via `INDEX_PAGE_PATHS`).
-- Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
+- Known issues: (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## CMS Data Loading
 - Optional `DATOCMS_ENVIRONMENT` (`astro:env`, server): when set, `executeQuery` and `DraftModeQueryListener` read from that DatoCMS environment (e.g. a sandbox); unset = primary. The CDA tokens' role must allow sandbox access (Editor role opened to all environments on 2026-11-22), otherwise every page fails with `ApiError`.
@@ -61,7 +61,19 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Home (`src/pages/index.astro`, rebuilt 2026-11-22): fixed top = `HomeHero` (book of the moment from `home.featured_book`, fallback first SingleBook block, then latest non-archived book) → `HomeDoors` → first `BookCarouselRecord`; then the other `home.banners` blocks in editor order (a pills block that only links to the three doors is skipped); `HomeAbout` closes the page. `featured_book` is queried separately (`HOME_FEATURED_BOOK_QUERY`) and fails soft on environments where migration `1795348395_addFeaturedBookToHome` has not run.
 
 - CMS-driven blocks map to files under `src/components/blocks/**`. Each block pairs with a `_graphql.ts` fragment collocated with its consumer page.
-- Structured Text renders through `src/components/datocms/structuredText/*`; `LinkToRecord.astro` still needs a `/magazine/${slug}` fix (**PS2**).
+- Structured Text renders through `src/components/datocms/structuredText/*`.
+  - Record links and inline records resolve through `recordPath` (`src/lib/recordUrls.ts`); articles go to `/magazine/<slug>`.
+  - The magazine passes inline records as `inlineRecordComponents`, plus a `link` node override that makes multimage.org URLs relative.
+  - The magazine body field does not allow collection links: the query must not spread `CollectionRecord` in `links`, or the CDA rejects it and the page answers 500.
+- `/magazine` (2026-11-22):
+  - A slim title row, a category strip with a server filter (`?categoria=`) and flat entries.
+  - 12 entries shown at first, then "Mostra altri".
+  - All posts are read in pages of 100 (no 60 cap), sorted by `_firstPublishedAt`.
+  - The Cloudflare worker keeps `?categoria=` in the cache key for `/magazine` only.
+- `/magazine/[slug]`:
+  - A left-aligned title row; the image whole; a 68ch column with headings shifted to h2.
+  - Redesigned book and author blocks.
+  - "Altre <categoria>" (`MAGAZINE_RELATED_QUERY`) and "Torna al magazine".
 - UI primitives such as `Button`, `Card`, `SectionIntro`, and `BookCarouselSection` live under `src/components/ui` and expect Tailwind utility classes.
 - Draft-mode specific UI (`DraftModeQueryListener`) sits under `src/components` and is conditionally rendered based on the cookie helper in `~/lib/draftPreview`.
 

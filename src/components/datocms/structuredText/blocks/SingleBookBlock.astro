@@ -1,71 +1,75 @@
 ---
-import { Image } from '@datocms/astro/Image';
-import type { ResponsiveImageType } from '@datocms/astro/Image';
+// A book placed in the text by the editors: flat, its whole cover on a field tinted from its own
+// colours (as on the book page), title, authors, price and the way to the book. Visible on phones.
+import { coverFieldPalette } from '~/lib/colors';
+import { formatBookPrice } from '~/lib/books';
+import { formatAuthorNames } from '~/lib/authors';
+import styles from './SingleBookBlock.module.css';
 
 type BookData = {
   id: string;
   title: string | null;
   subtitle?: string | null;
   slug?: string | null;
+  price?: number | null;
+  format?: string | null;
+  archive?: boolean | null;
+  authors?: Array<{ fullName?: string | null; alias?: string | null }> | null;
   coverImage?: {
-    responsiveImage?:
-      | ({
-          alt?: string | null;
-        } & Record<string, unknown>)
-      | null;
+    url: string;
+    width?: number | null;
+    height?: number | null;
+    colors?: Array<{ hex: string }> | null;
   } | null;
 };
 
-type Props = {
-  block: {
-    book?: BookData | null;
-  };
-};
+type Props = { block: { book?: BookData | null } };
 
-const { block }: Props = Astro.props;
-const book = block.book ?? null;
-
+const book = Astro.props.block.book ?? null;
 if (!book) {
   return null;
 }
 
 const href = book.slug ? `/libri/${book.slug}` : null;
 const title = book.title ?? 'Titolo in arrivo';
-const subtitle = book.subtitle ?? null;
-const image = (book.coverImage?.responsiveImage as ResponsiveImageType | null) ?? null;
-const alt = image?.alt ?? title;
-const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
+const authors = formatAuthorNames(book.authors ?? [], { fallback: '' });
+const isArchived = book.archive === true;
+const price = isArchived ? null : formatBookPrice(book.price);
+const isEbook = (book.format ?? '').trim().toLowerCase() !== 'cartaceo' && Boolean(book.format);
+const palette = coverFieldPalette(book.coverImage?.colors);
+const COVER_HEIGHT = 176;
+const cover = book.coverImage?.url ?? null;
+const ratio = book.coverImage?.width && book.coverImage?.height ? book.coverImage.width / book.coverImage.height : 0.68;
+const src = (h: number) => `${cover}?h=${h}&fit=max&auto=format`;
 ---
 
-<article
-  data-datocms-content-link-boundary
-  class="not-prose my-6 flex gap-4 border border-brand-mist/60 bg-white/90 p-4 shadow-soft"
->
-  {imageData ? (
-    <div class="hidden max-w-[160px] flex-shrink-0 md:block">
-      <Image
-        data={imageData}
-        sizes="160px"
-        pictureClass="block"
-        imgClass="h-auto w-full object-cover"
+<aside data-datocms-content-link-boundary class={styles.root} aria-label={`Il libro: ${title}`}>
+  {cover ? (
+    <a href={href} class={styles.field} style={`background: ${palette.field};`} tabindex="-1" aria-hidden="true">
+      <img
+        src={src(COVER_HEIGHT)}
+        srcset={`${src(COVER_HEIGHT * 2)} 2x`}
+        width={Math.round(COVER_HEIGHT * ratio)}
+        height={COVER_HEIGHT}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class={styles.cover}
+        style={`filter: drop-shadow(10px 16px 18px ${palette.shadow});`}
       />
-    </div>
+    </a>
   ) : null}
-  <div class="flex flex-col justify-center gap-2">
-    <h3 class="text-xl font-semibold text-brand-navy">
-      {href ? (
-        <a href={href} class="hover:underline focus:underline">
-          {title}
-        </a>
-      ) : (
-        title
-      )}
-    </h3>
-    {subtitle ? <p class="text-sm text-brand-charcoal/80">{subtitle}</p> : null}
-    {href ? (
-      <a href={href} class="text-sm font-semibold uppercase text-brand-navy hover:text-brand-navy">
-        Scopri il libro →
-      </a>
-    ) : null}
+  <div class={styles.copy} style={`background: ${palette.copy};`}>
+    <p class={styles.title}>
+      {href ? <a href={href}>{title}</a> : title}
+    </p>
+    {book.subtitle ? <p class={styles.subtitle}>{book.subtitle}</p> : null}
+    {authors ? <p class={styles.by}>di {authors}</p> : null}
+    <p class={styles.ways}>
+      {price ? <span class={styles.price}>{price}</span> : null}
+      {isEbook ? <span class={styles.note}>{book.format?.trim()}</span> : null}
+      {isArchived ? <span class={styles.note}>Fuori catalogo</span> : null}
+      {href ? <a href={href}>{isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a> : null}
+    </p>
   </div>
-</article>
+</aside>

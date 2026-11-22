@@ -1,0 +1,34 @@
+@reference '../../../../styles/global.css';
+
+.root {
+  @apply my-8 flex items-center gap-4 border-y border-brand-navy/10 py-4;
+}
+
+.portrait,
+.initial {
+  @apply h-18 w-18 shrink-0 object-cover;
+}
+
+.initial {
+  @apply flex items-center justify-center bg-brand-mist font-serif text-3xl text-brand-navy;
+}
+
+.copy {
+  @apply min-w-0;
+}
+
+.name {
+  @apply font-serif text-xl text-brand-navy;
+}
+
+.name a {
+  @apply text-brand-navy no-underline hover:underline focus:text-brand-navy;
+}
+
+.legal {
+  @apply text-sm text-brand-charcoal;
+}
+
+.ways a {
+  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+}

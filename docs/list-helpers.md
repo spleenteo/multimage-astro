@@ -60,10 +60,23 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: SEO fallbacks, author summaries, info pages.
   - Notes: safe alternative to `toRichTextHtml` when sanitization is required.
 - **`structuredTextComponents`** (`src/lib/datocms/structuredTextComponents.ts`)
-  - Purpose: maps Structured Text blocks/inline/link nodes to Astro components (VideoBlock, LinkToRecord, etc.).
+  - Purpose: maps Structured Text blocks, inline records (`defaultInlineRecordComponents`), record links and node overrides (`defaultNodeOverrides`: plain links) to Astro components.
   - Notes: update this registry whenever components change (keep docs/list-components.md aligned).
+- **`structuredTextHeadings`** (`src/lib/datocms/structuredTextHeadings.ts`)
+  - Purpose: `shiftHeadings(field, top = 2)` shifts every heading of a Structured Text value so the highest becomes h2 (editors often start at h3); returns a copy.
+  - Used in: `/magazine/[slug]`.
+- **`recordUrls`** (`src/lib/recordUrls.ts`)
+  - Purpose: `recordPath(typename, slug)`, the public path of a linked record (`AuthorRecord` → `/autori`, `BookRecord` → `/libri`, `CollectionRecord` → `/collane`, `PageRecord` → `/info`, `BlogPostRecord` → `/magazine`); `toSitePath(url)` makes multimage.org URLs relative.
+  - Used in: `LinkToRecord`, `InlineRecordBlock`, the Structured Text `Link` override.
+- **`magazine` helpers** (`src/lib/magazine.ts`)
+  - Purpose:
+    - `postDate` (`_firstPublishedAt`, then `createdAt`);
+    - `formatPostDate`;
+    - `categoryLabel(category, 'plural' | 'singular' | 'others' | 'all')`: normalised labels by slug, `news` → "Notizie", with agreement ("Altri eventi", "Tutte le recensioni");
+    - `categoryHref` (`/magazine?categoria=<slug>`).
+  - Used in: `/magazine`, `/magazine/[slug]`, `MagazinePostCard`.
 - **`text` utilities** (`src/lib/text.ts`)
-  - Purpose: `toPlainText`, `truncateToLength`, entity decoding, `toRichTextHtml`.
+  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`.
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`books` helper** (`src/lib/books.ts`)

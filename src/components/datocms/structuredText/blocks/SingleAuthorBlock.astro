@@ -1,70 +1,40 @@
 ---
-import { Image } from '@datocms/astro/Image';
-import type { ResponsiveImageType } from '@datocms/astro/Image';
+// An author placed in the text: flat, on hairlines; a small square portrait (or the initial on
+// mist), the name and the way to the profile.
 import { getAuthorDisplayName } from '~/lib/authors';
+import styles from './SingleAuthorBlock.module.css';
 
 type AuthorData = {
   id: string;
   fullName?: string | null;
   alias?: string | null;
   slug?: string | null;
-  picture?: {
-    responsiveImage?:
-      | ({
-          alt?: string | null;
-        } & Record<string, unknown>)
-      | null;
-  } | null;
+  picture?: { url: string } | null;
 };
 
-type Props = {
-  block: {
-    author?: AuthorData | null;
-  };
-};
+type Props = { block: { author?: AuthorData | null } };
 
-const { block }: Props = Astro.props;
-const author = block.author ?? null;
-
+const author = Astro.props.block.author ?? null;
 if (!author) {
   return null;
 }
 
 const name = getAuthorDisplayName(author);
 const href = author.slug ? `/autori/${author.slug}` : null;
-const image = (author.picture?.responsiveImage as ResponsiveImageType | null) ?? null;
-const alt = image?.alt ?? name;
-const imageData = image ? ({ ...image, alt } as ResponsiveImageType) : null;
+const legal = author.alias?.trim() && author.fullName?.trim() && author.fullName.trim() !== name ? author.fullName.trim() : null;
+const photo = author.picture?.url ?? null;
+const src = (size: number) => `${photo}?w=${size}&h=${size}&fit=crop&crop=faces&auto=format`;
 ---
 
-<article
-  data-datocms-content-link-boundary
-  class="not-prose my-6 flex gap-4 border border-brand-mist/60 bg-white/90 p-4 shadow-soft"
->
-  {imageData ? (
-    <div class="hidden max-w-[140px] flex-shrink-0 md:block">
-      <Image
-        data={imageData}
-        sizes="140px"
-        pictureClass="block"
-        imgClass="h-auto w-full object-cover"
-      />
-    </div>
-  ) : null}
-  <div class="flex flex-col justify-center gap-2">
-    <h3 class="text-xl font-semibold text-brand-navy">
-      {href ? (
-        <a href={href} class="hover:underline focus:underline">
-          {name}
-        </a>
-      ) : (
-        name
-      )}
-    </h3>
-    {href ? (
-      <a href={href} class="text-sm font-semibold uppercase text-brand-navy hover:text-brand-navy">
-        Scopri il profilo →
-      </a>
-    ) : null}
+<aside data-datocms-content-link-boundary class={styles.root} aria-label={`Autrice o autore: ${name}`}>
+  {photo ? (
+    <img src={src(72)} srcset={`${src(144)} 2x`} width="72" height="72" alt="" loading="lazy" decoding="async" class={styles.portrait} />
+  ) : (
+    <span class={styles.initial} aria-hidden="true">{name.charAt(0).toUpperCase()}</span>
+  )}
+  <div class={styles.copy}>
+    <p class={styles.name}>{href ? <a href={href}>{name}</a> : name}</p>
+    {legal ? <p class={styles.legal}>{legal}</p> : null}
+    {href ? <p class={styles.ways}><a href={href}>Vedi il profilo e i suoi libri</a></p> : null}
   </div>
-</article>
+</aside>

@@ -5,6 +5,16 @@
 - [ ] [Security] [Impact: H] [Effort: L] [Owner: @spleenteo] [Status: todo] — **S7** revoke (or rotate) the Vercel Deployment Protection automation bypass that `vercel curl` created on the `multimage-astro` project during V4 (user-authorized), at the end of upgrade-2026-11 together with the `SECRET_API_TOKEN` rotation (S6); a leaked bypass opens every preview deployment (Acceptance: no automation bypass secret left in Project Settings > Deployment Protection, or a new one stored only in Vercel).
 - [ ] [Security] [Impact: H] [Effort: M] [Owner: @codex] [Status: wip] — **S2** sanitize every `set:html` surface fed by `toRichTextHtml` (home hero, BannerSection, Cta blocks, book descriptions, supplier bios) (Due: 2025-12-05; Acceptance: introduce a shared HTML sanitizer, add regression tests for script injection, cross-reference docs/guidelines/assets.md#html-fragments--sanitization). **Partial (2026-05-30 → 2026-05-31)**: WYSIWYG fields rely on restricted toolbars to strip paste-from-Word at input time. The `sanitized_html` validator has been removed from **all 16** WYSIWYG fields (it re-surfaced on 7 and blocked saves / caused dirty-form loops); policy is now **no `sanitized_html` on WYSIWYG fields** — see decisions-log §4. Still open: render-time sanitization of `set:html`/`toRichTextHtml` for legacy values and all other surfaces.
 - [ ] [Security] [Impact: M] [Effort: L] [Owner: @spleenteo] [Status: todo] — **DIST-map-privacy**: the `/distributori` map loads vector tiles from `tiles.openfreemap.org`, which receives the visitor's IP. Add OpenFreeMap to the iubenda privacy policy (third-party map service, no cookies). Alternatively, gate the map behind a click ("Mostra la mappa") if consent is required.
+- [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @spleenteo] [Status: todo] — **MAG-cms-data**: magazine content to fix in DatoCMS (found in the magazine critique, 2026-11-22).
+  - **Dates:** posts migrated in October 2025 show the migration day (`_firstPublishedAt`, e.g. "Eirenefest 2024" on 29 ottobre 2025). An editorial "Data" field on `blog_post` (a reversible migration, initialised from `_firstPublishedAt`) would let the editors set the real dates; the code would then sort and show it first.
+  - **Categories:** names in mixed case ("eventi", "News", "libri"). The site normalises them in display; renaming them in the CMS keeps the CMS consistent.
+  - **Titles and slugs:** "UN POdcast DI PACE", "articolo su Ritorno al Lago Madre" (lowercase start), slug `rcensioni-a-piu-eterno…` (typo; changing it needs a redirect).
+  - **Bodies:**
+    - `recensioni-a-sul-filo-rosso-del-tempo` is only two bare URLs.
+    - Several posts link to their own site with absolute `https://www.multimage.org/…` URLs (now made relative in display).
+    - "👉" is used as a list bullet.
+    - Reviews of catalogue books often do not place the book block: Sul filo rosso del tempo, Ritorno al Lago Madre, Disonorare la guerra, La sventura.
+  - **Abstracts and lede:** an abstract pasted as a URL (Ritorno al Lago Madre); "I risultati della promozione natalizia" repeats the title. The index lede says "interviste agli autori": suggest "alle autrici e agli autori".
 - [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @spleenteo] [Status: todo] — **DIST-cms-data**: supplier records to fix in DatoCMS (found in the /distributori critique, 2026-11-22).
   - **Links:** Libriammare's website points to greatbookstores.com. "Energia per i Diritti Umani" and "Casa Umanista Roma" are two records with the same address, phone and description: keep one? Check the Terminal Distribuzione link (terminalvideo.com) in the copy.
   - **Contacts:** Libreria Utopia's email is a PEC. Libreria Robin's phone "01526274" looks truncated. EquAzione (Firenze) and Cartolibreria Marzocco have no contact.
@@ -69,7 +79,6 @@
 
 ## Project Structure
 - [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS1** add a prebuild verification that fails the build when `public/generated/search-page.client.js` or `swiper-element.js` are missing or stale (Due: 2025-11-18; Acceptance: CI step or `astro build` guard runs before deployment, docs/guidelines/assets.md and docs/guidelines/project-structure.md updated).
-- [ ] [Refactoring] [Impact: M] [Effort: L] [Owner: @codex] [Status: todo] — **PS2** fix `LinkToRecord.astro` so `BlogPostRecord` links point to `/magazine/${slug}` and add coverage to stop regressions (Due: 2025-11-21; Acceptance: Structured Text links resolve correctly, docs/list-components.md#structured-text-blocks annotated, regression test in place).
 - [ ] [Refactoring] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-tsx** if the `datocms` CLI drops its `tsx` dependency, add `tsx` as a devDependency: `npm run check:revalidation-map` currently relies on the CLI's hoisted copy (Acceptance: `npm ls tsx` shows a direct dependency).
 - [ ] [Refactoring] [Impact: L] [Effort: L] [Owner: @claude] [Status: todo] — **UP-ts7** move to TypeScript 7 when `@astrojs/check` supports it (peer is `typescript ^5 || ^6`; see docs/decisions-log/2026-11-04-defer-typescript-7.md).
 - [ ] [Documentation] [Impact: M] [Effort: L] [Owner: @claude] [Status: todo] — **UP-docs-structure** rewrite the stale `SERVER`/`prerender` passages in `docs/guidelines/project-structure.md` and the old dual runtime in `README.md` (lines 26-123: `SERVER=static|preview`, `npm run preview`, two Vercel projects) for the single `output: 'server'` + ISR project.
@@ -147,4 +156,19 @@
   - **Closing:** a "Sei una libreria?" section.
   - **Result:** the page drops from 22,254 to ~12,800px on phones and from 13,473 to ~6,500px on desktop.
 - 2026-11-22 - [Features] **Distributors map**: `/distributori` gains a map of all places (`SuppliersMap`, MapLibre 6.17.0 + OpenFreeMap tiles, lazy-loaded, clustered, Italian labels and gesture hints, popup linking to the list entry and directions). In DatoCMS, the empty `map` field of 24 supplier records was filled by geocoding the text addresses (OpenStreetMap Nominatim, then checked by hand for 6 imprecise hits) and the records republished.
-
+- 2026-11-22 - [Refactoring] **PS2 / magazine links**:
+  - Structured Text record links and inline records resolve through one map (`recordPath`, `src/lib/recordUrls.ts`); articles now go to `/magazine/<slug>`, not the dead `/blog/…`.
+  - The article passes inline records as `inlineRecordComponents` (it used `inlineBlockComponents`, so they never rendered).
+  - A `link` node override makes typed multimage.org URLs relative and announces new tabs.
+- 2026-11-22 - [Features] **Magazine article**:
+  - **Layout:**
+    - A left-aligned slim title row: h1, a category · date · byline line (category links to the filtered index), a lede without URLs (fixes the sideways scroll on "Ritorno al Lago Madre": 1,812px wide at 1440).
+    - The featured image whole on mist, no longer cropped to 16:9.
+    - A 68ch reading column with headings shifted to start at h2.
+  - **Ending:** "Altre <categoria>" and "Torna al magazine".
+  - **Blocks:** redesigned SingleBook (the cover on its field, price, "Vai al libro e ordinalo", visible on phones) and SingleAuthor (flat, between hairlines). Banner, CTA and Section blocks lose their shadow; ImageBlock no longer falls back to alt "Immagine".
+- 2026-11-22 - [Features] **Magazine index**:
+  - **Layout:** a slim title row (h1 and lede, no counts); flat entries (h2 title as the only, stretched link; "Recensione · data"; 3-line abstract).
+  - **Navigation:** a category strip with a server filter (`?categoria=`, kept in the Cloudflare cache key for `/magazine` only); "Mostra altri" by 12.
+  - **Data:** posts read in pages of 100 (no silent 60 cap), sorted by `_firstPublishedAt`.
+  - **Result:** the page drops from 23,270 to 7,230px on phones.

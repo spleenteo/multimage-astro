@@ -143,11 +143,15 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: `descriptionHtml` is injected via `set:html`; sanitize upstream (Security task **S2**).
 - `MagazinePostCard` — **MagazinePostCard** (`src/components/MagazinePostCard/index.astro`)
-  - Purpose: magazine teaser card with badges, excerpt, and CTA.
-  - Key props: `title`, `slug`, `abstract`, `category`, `authorName`, `image`, `sticky`.
-  - Used in: `/magazine` listing.
+  - Purpose: a flat magazine entry.
+    - An 8/5 image on mist.
+    - The h2 title as the only link, stretched over the entry.
+    - A slate line: "In evidenza", the category (singular), the date.
+    - The abstract clamped to 3 lines, without URLs; dropped when it repeats the title.
+  - Key props: `title`, `slug`, `abstract?`, `publishedAt?`, `category?`, `image?`, `sticky?`, `priority?` (eager image for the first row).
+  - Used in: `/magazine`.
   - Owner: @codex.
-  - Notes: uses `truncateToLength` for summary; dates formatted with `Intl.DateTimeFormat`.
+  - Notes: labels and dates come from `src/lib/magazine.ts`.
 - `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
   - Purpose: a flat card in the `/autori` grid.
     - A 48–56px portrait, or the initial on mist.
@@ -180,25 +184,34 @@ scope: A list to describe all components used in the project
   - Notes: enforces label/url validation and sanitization checklist from docs/guidelines/assets.md.
 - `ImageBlock` — **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
   - Purpose: responsive image with optional caption.
-  - Notes: injects fallback `alt` text when Dato omits it.
+  - Notes: an image without alt in the CMS gets `alt=""` (no generic "Immagine").
 - `SectionBlock` — **SectionBlock** (`src/components/datocms/structuredText/blocks/SectionBlock.astro`)
   - Purpose: basic text section derived from multiline strings.
   - Notes: splits on blank lines to build paragraphs.
 - `SingleBookBlock` — **SingleBookBlock** (`src/components/datocms/structuredText/blocks/SingleBookBlock.astro`)
-  - Purpose: inline book callout with link and subtitle.
-  - Notes: wraps card in `<a>` when a slug exists.
+  - Purpose: a book placed in the text by the editors.
+    - The whole cover on its `coverFieldPalette` field, tilted, also on phones.
+    - The pale copy half: title, subtitle, "di …", a Playfair price, the format if not paper, "Fuori catalogo".
+    - "Vai al libro e ordinalo" (or "Vai alla scheda del libro" when archived).
+  - Notes: fields come from `SINGLE_BOOK_BLOCK_FIELDS` (`structuredText/_graphql.ts`), shared by the magazine and info queries. The cover is a plain imgix `<img>` (h=176, 2x).
 - `SingleAuthorBlock` — **SingleAuthorBlock** (`src/components/datocms/structuredText/blocks/SingleAuthorBlock.astro`)
-  - Purpose: inline author highlight referencing Dato records.
-  - Notes: uses `getAuthorDisplayName` and optional portrait image.
+  - Purpose: an author placed in the text.
+    - Between hairlines: a 72px square portrait (faces crop) or the initial on mist.
+    - The name; the legal name under an alias.
+    - "Vedi il profilo e i suoi libri".
+  - Notes: fields from `SINGLE_AUTHOR_BLOCK_FIELDS`.
 - `VideoBlock` — **VideoBlock** (`src/components/datocms/structuredText/blocks/VideoBlock.astro`)
   - Purpose: embeds YouTube/Vimeo or native video assets, falling back to `<video>`.
   - Notes: constructs provider-specific embed URLs and poster images.
 - `InlineRecordBlock` — **InlineRecordBlock** (`src/components/datocms/structuredText/InlineRecordBlock.astro`)
-  - Purpose: pill-styled inline references for authors, collections, pages, books, and blog posts.
-  - Notes: defaults to “Contenuto correlato” when data is incomplete.
+  - Purpose: a record placed inline in the text (`inlineItem`): a navy link with its name, in the flow of the text.
+  - Notes: pass the map as `inlineRecordComponents` (not `inlineBlockComponents`). Paths come from `recordPath`.
 - `LinkToRecord` — **LinkToRecord** (`src/components/datocms/structuredText/LinkToRecord.astro`)
-  - Purpose: custom link renderer for Structured Text record nodes.
-  - Notes: currently routes blog posts to `/blog/...`; fix via docs/TODO.md Project Structure task **PS2**.
+  - Purpose: custom link renderer for Structured Text record links (`itemLink`).
+  - Notes: paths come from `recordPath` (`src/lib/recordUrls.ts`); articles go to `/magazine/<slug>`.
+- `Link` node override — **Link** (`src/components/datocms/structuredText/nodes/Link.astro`)
+  - Purpose: plain links in Structured Text. URLs typed to multimage.org become relative; new tabs get `noopener` and an sr-only "(si apre in una nuova scheda)".
+  - Used in: `/magazine/[slug]` via `defaultNodeOverrides`.
 
 ## UI primitives
 - `Button` — **Button** (`src/components/ui/Button/index.astro`)

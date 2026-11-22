@@ -1,3 +1,4 @@
+import { SINGLE_AUTHOR_BLOCK_FIELDS, SINGLE_BOOK_BLOCK_FIELDS } from '~/components/datocms/structuredText/_graphql';
 import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 
@@ -24,38 +25,8 @@ export const INFO_PAGE_QUERY = /* GraphQL */ `
               providerUid
             }
           }
-          ... on SingleBookRecord {
-            id
-            book {
-              id
-              title
-              subtitle
-              slug
-              coverImage {
-                responsiveImage(
-                  imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }
-                ) {
-                  ...ResponsiveImageFragment
-                }
-              }
-            }
-          }
-          ... on SingleAuthorRecord {
-            id
-            author {
-              id
-              fullName
-              alias
-              slug
-              picture {
-                responsiveImage(
-                  imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }
-                ) {
-                  ...ResponsiveImageFragment
-                }
-              }
-            }
-          }
+          ${SINGLE_BOOK_BLOCK_FIELDS}
+          ${SINGLE_AUTHOR_BLOCK_FIELDS}
           ... on BannerRecord {
             id
             title

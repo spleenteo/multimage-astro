@@ -22,7 +22,7 @@ if (!image) {
   return null;
 }
 
-const alt = image.alt ?? 'Immagine';
+const alt = image.alt?.trim() ?? '';
 const imageData = { ...image, alt } as ResponsiveImageType;
 const caption = typeof block.caption === 'string' ? block.caption.trim() : '';
 const showCaption = caption.length > 0;

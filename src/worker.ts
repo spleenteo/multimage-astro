@@ -9,7 +9,9 @@
 //   the shared copy. The middleware also calls `cache.set(false)` for drafts:
 //   the bypass is double, because draft HTML carries the draft CDA token.
 // - Outside /api: `cf.cacheKey` is the path only, so ?utm_*, ?fbclid and other
-//   query strings share one entry (no server code reads the query string).
+//   query strings share one entry. The one query string the server reads is
+//   `/magazine?categoria=<slug>` (the category filter): it gets its own entry,
+//   and the page's cache tags purge every variant together.
 //
 // The cookie name rule is copied from src/lib/draftMode.ts:9 (keep in sync; the
 // worker cannot import `astro:env`).
@@ -31,6 +33,11 @@ function hasCookie(header: string | null, name: string) {
   return (header ?? '').split(';').some((part) => part.trim().startsWith(`${name}=`));
 }
 
+function cacheKeyFor(url: URL) {
+  const category = url.pathname === '/magazine' ? url.searchParams.get('categoria')?.trim().toLowerCase() : '';
+  return category && /^[a-z0-9-]{1,60}$/.test(category) ? `${url.pathname}?categoria=${category}` : url.pathname;
+}
+
 export default {
   async fetch(request: Request, env: any, ctx: any) {
     const url = new URL(request.url);
@@ -41,7 +48,7 @@ export default {
     if (hasCookie(request.headers.get('cookie'), cookieName)) {
       init = { cache: 'no-store' };
     } else if (!isApi) {
-      init = { cf: { cacheKey: url.pathname } } as RequestInit;
+      init = { cf: { cacheKey: cacheKeyFor(url) } } as RequestInit;
     }
     return ctx.exports.Backend.fetch(request, init);
   },
