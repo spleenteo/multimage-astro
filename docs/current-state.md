@@ -97,7 +97,12 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 ## Search
 
 - Uses DatoCMS Site Search. `/cerca/index.astro` renders an accessible form and lazy-loads `public/generated/search-page.client.js`.
-- The bundled client applies debounced queries, renders grouped filters, and expects configuration via `data-*` attributes. Missing config fails silently (**CH2**).
+- The bundled client applies debounced queries and type filters (Libri, Autrici/Autori, Magazine, Collane e pagine), and expects configuration via `data-*` attributes. Missing config fails silently (**CH2**).
+- Since 2026-11-22 the results are flat rows: clean title, a type or book meta line, the excerpt.
+  - Books show their cover, authors, year, format and price from `/search-books.json`, with print and ebook merged into one row.
+  - The real total is shown and "Mostra altri risultati" loads the next page.
+  - The empty and no-result states offer ways on.
+  - Header, footer and newsletter band carry `data-datocms-noindex`, which takes effect after the next crawl (TODO **SEARCH-rescan**).
 - Search results rely on highlight snippets; client-side code escapes `[h]...[/h]` markers into `<mark>` elements before injecting HTML.
 
 ## Security

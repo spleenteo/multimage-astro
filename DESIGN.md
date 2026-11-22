@@ -392,6 +392,21 @@ The catalogue as the editors think it.
   - The magazine never infers a book: books appear only where the editors place them.
 - **End:** "Altre recensioni" (the same category, newest 3, with dates on hairlines), then "Tutte le recensioni" and "Torna al magazine". There is no orange action.
 
+### Search (`/cerca`)
+- **Title row:** h1 "Cerca", then a one-line lede of what can be found.
+- **Field:** the field is flat: a hairline frame, a search icon, a 48px input and a navy "Cerca" button that stays visible on phones. The focus outline goes on the whole field.
+- **Toggles:** one row between hairlines.
+  - "Mostra solo": Libri · Autrici/Autori · Magazine · Collane e pagine, as flat cells that turn navy when on. Each has a visible 3px focus outline.
+  - "Solo la frase esatta" is a plain checkbox, apart.
+- **Status line:** the real total ("321 risultati per “pace”: eccone 25, i più pertinenti.").
+- **Results:** flat rows on hairlines, with no card, shadow or badge.
+  - The Playfair title is the only link, stretched over the row.
+  - One slate meta line: the type ("Autrice o autore", "Dal magazine", "Collana", "Catalogo", "Pagina"). For a book it reads "di … · anno · formato · prezzo", with a Playfair price and "Anche in ebook · 2,99 €" linking to the other edition.
+  - The excerpt runs to 3 lines, with matches on a sky/20 `mark` in navy semibold.
+  - Books carry a small cover (72px, 96px from 768px) on the pale tint of their cover field.
+- **More:** "Mostra altri risultati" (outlined navy) loads the next 25.
+- **Ways on:** "Oppure parti da qui" (catalogue, authors, collections, magazine, where to find the books) when nothing is typed or nothing is found.
+
 ### Faceted Catalogue (signature)
 The `/libri` surface. Toolbar: the Playfair result count as h2 on the left; search field, "Ordina per" select and (below 1024px) the navy "Filtri" button on the right, over a navy-at-10% rule. Active filters appear as a chip row under it. Facets are fieldsets (Collana, Formato, Periodo, Altro) plus an author field with suggestions ("Autrice o autore"); legends are semibold navy 0.875rem, groups divided by navy-at-10% rules. Collections show the largest eight, then a "Tutte le collane (n)" text toggle. Options with no matching books turn slate but stay selectable.
 

@@ -5,6 +5,7 @@ const STATIC_URLS: readonly string[] = [
   '/',
   '/sitemap.xml',
   '/archived-books.json',
+  '/search-books.json',
   '/libri',
   '/libri/archivio',
   '/autori',
