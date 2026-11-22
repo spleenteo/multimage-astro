@@ -9,9 +9,12 @@ export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
     promo
     description
     printYear
+    pages
     coverImage {
       url
       alt
+      width
+      height
       colors {
         hex
       }
@@ -32,5 +35,10 @@ export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
     }
     format
     archive
+    collection {
+      id
+      name
+      slug
+    }
   }
 `;

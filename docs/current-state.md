@@ -16,18 +16,34 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
   - `src/styles/global.css` imports fonts + Tailwind 4 and defines the design tokens in `@theme static` (no JS config).
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.
-- Known gaps: `LinkToRecord` still links `/blog/...` (**PS2**). (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
+- Known gaps: (**S1** resolved 2026-05-31 — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## Routing
 
-- Tutte le route pubbliche (`/`, `/libri` + `/libri/pagina/[page]`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR (produzione oggi) — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations. Sul branch `chore/cloudflare` (`DEPLOY_TARGET=cloudflare`, Worker di prova, switch non ancora eseguito) le stesse pagine sono nella Workers Cache per 60 giorni con cache tag DatoCMS; editor, `/api/*`, route interne e risposte non-200 non vengono mai messe in cache (policy nel middleware).
-- Il catalogo `/libri` è **paginato** (40 libri/pagina): pagina 1 canonica su `/libri`, pagine 2..N su `/libri/pagina/<n>` (path-based per chiavi ISR pulite). `/libri/pagina/1` → 301 `/libri`; pagine non numeriche o fuori range → 404. `BOOKS_PER_PAGE` + `buildBooksCataloguePaths()` in `src/lib/books.ts` sono la single source of truth condivisa da route, sitemap e revalidation.
+- Tutte le route pubbliche (`/`, `/libri`, `/libri/[slug]`, `/autori/[slug]`, `/magazine/[slug]`, `/collane/[slug]`, `/info/[slug]`, le index, `/sitemap.xml`, `/archived-books.json`, `/cerca`, `/distributori`) sono SSR ma servite dalla CDN Vercel via ISR (produzione oggi) — funzionalmente statiche per anonymous, on-demand SSR per editor. API routes (`/api/**`) sono escluse dall'ISR e girano sempre come function invocations. Sul branch `chore/cloudflare` (`DEPLOY_TARGET=cloudflare`, Worker di prova, switch non ancora eseguito) le stesse pagine sono nella Workers Cache per 60 giorni con cache tag DatoCMS; editor, `/api/*`, route interne e risposte non-200 non vengono mai messe in cache (policy nel middleware).
+- Il catalogo `/libri` è **una sola pagina a faccette** (dal 2026-11-22): il server rende tutti i libri pubblicati, lo script nel browser filtra (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, ricerca), ordina e mostra 40 card alla volta; i filtri stanno nell'URL. `/libri/pagina/<n>` → 301 `/libri`; `/libri/ebooks` e `/libri/highlights` → 301 al catalogo con il filtro (`formato=ebook`, `evidenza=1`). Nel menu principale "Catalogo" e "Collane" sono voci di primo livello. Vedi decisions-log `2026-11-22-faceted-catalogue` (rischio CPU su miss: TODO **CAT-cpu**).
+- `/autori` (dal 2026-11-22) è un indice A–Z a card piatte. Ogni card mostra ritratto o iniziale, nome, nome anagrafico sotto l'alias, conteggio, biografia su 2 righe, ultime copertine e "Vedi i libri" → `/libri?autore=<slug>`. Le schede senza libri sono escluse. I conteggi e le copertine arrivano da una lettura paginata di tutti i libri (500 per pagina). La ricerca copre anche il nome anagrafico e annuncia il numero di risultati. - `/autori/[slug]` (dal 2026-11-22) apre con una riga di titolo (ritratto piccolo o iniziale, nome anagrafico sotto l'alias, "25 libri · 6 fuori catalogo", "Firma anche come …"). Seguono:
+  - l'ultimo libro in catalogo su un campo dal colore della copertina;
+  - la biografia a 68ch, con il resto in `<details>` oltre i tre paragrafi;
+  - "Tutti i libri" nella griglia catalogo, con i fuori catalogo in un sottogruppo, una riga sull'ordine e la chiusura per chi vuole pubblicare.
+  Le identità collegate in `pseudonyms` sono unite: i libri di Gandalf il Viola compaiono anche su Olivier Turquet e viceversa. Il limite è di 100 libri, con link al catalogo oltre.
+- `/collane` (dal 2026-11-22) è uno scaffale. Per ogni collana mostra le ultime copertine su un campo tinto dalla più recente, il conteggio, l'ultima uscita e il link al catalogo filtrato (`/libri?collana=<slug>`). L'ordine è per numero di libri in catalogo, con "Fuori Collana" in fondo. I dati arrivano da due query: le collane (`first: 100`), poi una query generata dagli id con alias per collana (6 libri recenti, totale, fuori catalogo). La pagina di una collana mostra fino a 100 libri, ordinati per anno di stampa; oltre quel numero compare il link al catalogo.
+- `/distributori` (dal 2026-11-22) risponde a "come lo trovo".
+  - Riga di titolo con il conteggio, poi tre strade: qualsiasi libreria con l'ISBN tramite Libri Diffusi/Fastbook e Terminal, i luoghi amici, l'ordine via email con l'unico pulsante arancio.
+  - Sopra l'elenco c'è una mappa interattiva (MapLibre + tessere OpenFreeMap), caricata solo quando si avvicina allo schermo. I punti sono raggruppati e ogni punto apre una scheda con "Vedi nell'elenco" e "Indicazioni". Le coordinate vengono dal campo `map` del modello `supplier`: il 2026-11-22 sono state ricavate dagli indirizzi (Nominatim) per le 24 voci che non le avevano, verificate e pubblicate.
+  - L'elenco per regione ha una striscia piatta, fissa solo da 768px, e voci piatte.
+  - I telefoni sono normalizzati e chiamabili; le descrizioni lunghe sono dietro "Continua".
+  - In fondo, la sezione "Sei una libreria?".
+  - Il sottotitolo CMS della pagina indice serve solo come meta description.
+- La scheda libro `/libri/[slug]` (dal 2026-11-22) si apre con il campo colorato dalla copertina (Book Cover Field); la copertina è un libro 3D (`Book3D`) che al passaggio del mouse ruota e mostra costola o taglio, come nelle card del catalogo. L'azione principale è "Ordina via email", un `mailto:ordini@multimage.org` già compilato con titolo, autori, ISBN e prezzo; non c'è carrello. Per l'ebook c'è un solo pulsante verso Bookrepublic. Sotto l'ordine compaiono la riga spedizione/soci e i link a `/distributori` e `/info/ordinare`. Le edizioni fuori catalogo rimandano all'edizione cartacea più recente ancora in catalogo. Sotto l'hero c'è una colonna di lettura piatta: descrizione, quarta, autrici/autori, dettagli, recensioni, carosello della collana.
+- Pagina 404 del sito (`src/pages/404.astro`): gli slug sconosciuti delle pagine di dettaglio fanno `Astro.rewrite('/404')`.
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decisions-log `2026-05-31-editor-session-gating` (**S1**).
 - API routes: `/api/preview`, `/api/draft-mode/enable|disable`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, `/api/revalidate` (Vercel), `/api/invalidate-cache` (Cloudflare: webhook `cda_cache_tags`, purge dei tag + reindex Site Search), `/api/utils` remain SSR-only endpoints even during static builds.
 - Route helpers: `recordToWebsiteRoute` is used by `/api/preview-links` and `/api/seo-analysis` to resolve URLs from Dato records; the surgical revalidation map (`revalidationUrls.ts`) mirrors the api_key → route table by hand (index paths shared via `INDEX_PAGE_PATHS`).
-- Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
+- Known issues: (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## CMS Data Loading
+- Optional `DATOCMS_ENVIRONMENT` (`astro:env`, server): when set, `executeQuery` and `DraftModeQueryListener` read from that DatoCMS environment (e.g. a sandbox); unset = primary. The CDA tokens' role must allow sandbox access (Editor role opened to all environments on 2026-11-22), otherwise every page fails with `ApiError`.
 
 - All GraphQL calls go through `src/lib/datocms/executeQuery.ts`, which swaps CDA tokens based on `includeDrafts`.
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
@@ -37,14 +53,27 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - On Cloudflare, `executeQuery` asks the CDA for cache tags (`returnCacheTags`) and the middleware attaches them to the cached response; `POST /api/invalidate-cache` (DatoCMS `cda_cache_tags` webhook, Bearer `CACHE_INVALIDATION_WEBHOOK_SECRET`) purges them (`src/lib/datocms/cacheTags.ts`, `cacheInvalidation.ts`), falling back to the coarse `site` tag, then reindexes Site Search. Decision: `docs/decisions-log/2026-11-21-cloudflare-workers-cache-gateway-and-tag-purge.md`; switch-day runbook: `docs/guidelines/cloudflare-switch.md`.
 - ISR `expiration` is **60 days** (safety net only; freshness is on-demand via the webhook — see `docs/guidelines/preview-mode.md`).
 - Card grids use `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`, no `srcSet`; `<Image srcSetCandidates={[1,2]}>` rebuilds a 2-candidate srcset client-side) to keep listing HTML — and thus FOT — small. `RESPONSIVE_IMAGE_FRAGMENT` (with base64 + srcSet) stays for hero/detail images.
-- Partial pagination — `/libri` + sitemap catalogue pages now paginate via `first/skip`; `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
+- Partial pagination — `/libri` reads the catalogue in pages of 500 (faceted single page since 2026-11-22); `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
 - Caching audit and verification procedure: `docs/guidelines/caching.md`; ISR config and route baseline snapshot (reference for the V4 diff): `docs/work/2026-11-04-upgrade-2026-11/baseline/`. On Vercel (production today) cache tags are not used and revalidation is URL-based; on the Cloudflare branch they are (V1–V3 of shape `cache-tags`). Open gaps are tracked as `Cache gap #n` in `docs/TODO.md`.
 - Production runs on Cloudflare Workers since 2026-11-22 (`www.multimage.org` and apex as custom domains of the Worker `multimage-astro`, account Multimage, Workers Free). Pages are cached in the Workers Cache and purged by DatoCMS cache tags (**CD3**) through the webhook "Cloudflare cache tags" → `/api/invalidate-cache`; the ISR webhook 33942 is disabled. The Vercel deployment still exists but receives no traffic until **CF-vercel-cleanup**.
 
 ## Blocks & Components
+- Home (`src/pages/index.astro`, rebuilt 2026-11-22): fixed top = `HomeHero` (book of the moment from `home.featured_book`, fallback first SingleBook block, then latest non-archived book) → `HomeDoors` → first `BookCarouselRecord`; then the other `home.banners` blocks in editor order (a pills block that only links to the three doors is skipped); `HomeAbout` closes the page. `featured_book` is queried separately (`HOME_FEATURED_BOOK_QUERY`) and fails soft on environments where migration `1795348395_addFeaturedBookToHome` has not run.
 
 - CMS-driven blocks map to files under `src/components/blocks/**`. Each block pairs with a `_graphql.ts` fragment collocated with its consumer page.
-- Structured Text renders through `src/components/datocms/structuredText/*`; `LinkToRecord.astro` still needs a `/magazine/${slug}` fix (**PS2**).
+- Structured Text renders through `src/components/datocms/structuredText/*`.
+  - Record links and inline records resolve through `recordPath` (`src/lib/recordUrls.ts`); articles go to `/magazine/<slug>`.
+  - The magazine passes inline records as `inlineRecordComponents`, plus a `link` node override that makes multimage.org URLs relative.
+  - The magazine body field does not allow collection links: the query must not spread `CollectionRecord` in `links`, or the CDA rejects it and the page answers 500.
+- `/magazine` (2026-11-22):
+  - A slim title row, a category strip with a server filter (`?categoria=`) and flat entries.
+  - 12 entries shown at first, then "Mostra altri".
+  - All posts are read in pages of 100 (no 60 cap), sorted by `_firstPublishedAt`.
+  - The Cloudflare worker keeps `?categoria=` in the cache key for `/magazine` only.
+- `/magazine/[slug]`:
+  - A left-aligned title row; the image whole; a 68ch column with headings shifted to h2.
+  - Redesigned book and author blocks.
+  - "Altre <categoria>" (`MAGAZINE_RELATED_QUERY`) and "Torna al magazine".
 - UI primitives such as `Button`, `Card`, `SectionIntro`, and `BookCarouselSection` live under `src/components/ui` and expect Tailwind utility classes.
 - Draft-mode specific UI (`DraftModeQueryListener`) sits under `src/components` and is conditionally rendered based on the cookie helper in `~/lib/draftPreview`.
 
@@ -68,7 +97,12 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 ## Search
 
 - Uses DatoCMS Site Search. `/cerca/index.astro` renders an accessible form and lazy-loads `public/generated/search-page.client.js`.
-- The bundled client applies debounced queries, renders grouped filters, and expects configuration via `data-*` attributes. Missing config fails silently (**CH2**).
+- The bundled client applies debounced queries and type filters (Libri, Autrici/Autori, Magazine, Collane e pagine), and expects configuration via `data-*` attributes. Missing config fails silently (**CH2**).
+- Since 2026-11-22 the results are flat rows: clean title, a type or book meta line, the excerpt.
+  - Books show their cover, authors, year, format and price from `/search-books.json`, with print and ebook merged into one row.
+  - The real total is shown and "Mostra altri risultati" loads the next page.
+  - The empty and no-result states offer ways on.
+  - Header, footer and newsletter band carry `data-datocms-noindex`, which takes effect after the next crawl (TODO **SEARCH-rescan**).
 - Search results rely on highlight snippets; client-side code escapes `[h]...[/h]` markers into `<mark>` elements before injecting HTML.
 
 ## Security
@@ -118,9 +152,11 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 ## Accessibility
 
-- Pages use semantic landmarks through `BaseLayout.astro`; no skip link yet (**A11Y2**).
+- Pages use semantic landmarks through `BaseLayout.astro`, with a "Vai al contenuto" skip link to `<main id="contenuto">`.
+- Keyboard focus: one global `:focus-visible` outline (navy, white on the header and footer via `--focus-ring`); see `docs/guidelines/blocks-and-components.md` § Focus and colour contrast.
+- `BookCarouselSection`: pagination bullets are display-only (`pagination-clickable="false"`, out of the tab order), no extra `aria-live` on the container; Swiper's a11y module brings a focused slide into view.
 - Interactive blocks (search form, `BookCarouselSection`, staff tables) expose ARIA labels but have not been validated with screen readers (**A11Y1**).
-- Color contrast follows the Tailwind theme in `src/styles/global.css`; no automated contrast audit since 2025-11-01.
+- Color contrast: home-page actions fixed on 2026-11-22 (orange CTA → `brand-orange-deep`, newsletter green #2e7d32, footer links `brand-mist`, placeholders `brand-slate`). Banner colours come from CMS images and can still fall below AA (**HOME-banners**). Last critique snapshot: `.impeccable/critique/`.
 - No Playwright/Cypress suite to prevent regressions.
 
 ## i18n

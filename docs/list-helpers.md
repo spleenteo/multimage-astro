@@ -60,14 +60,27 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: SEO fallbacks, author summaries, info pages.
   - Notes: safe alternative to `toRichTextHtml` when sanitization is required.
 - **`structuredTextComponents`** (`src/lib/datocms/structuredTextComponents.ts`)
-  - Purpose: maps Structured Text blocks/inline/link nodes to Astro components (VideoBlock, LinkToRecord, etc.).
+  - Purpose: maps Structured Text blocks, inline records (`defaultInlineRecordComponents`), record links and node overrides (`defaultNodeOverrides`: plain links) to Astro components.
   - Notes: update this registry whenever components change (keep docs/list-components.md aligned).
+- **`structuredTextHeadings`** (`src/lib/datocms/structuredTextHeadings.ts`)
+  - Purpose: `shiftHeadings(field, top = 2)` shifts every heading of a Structured Text value so the highest becomes h2 (editors often start at h3); returns a copy.
+  - Used in: `/magazine/[slug]`.
+- **`recordUrls`** (`src/lib/recordUrls.ts`)
+  - Purpose: `recordPath(typename, slug)`, the public path of a linked record (`AuthorRecord` → `/autori`, `BookRecord` → `/libri`, `CollectionRecord` → `/collane`, `PageRecord` → `/info`, `BlogPostRecord` → `/magazine`); `toSitePath(url)` makes multimage.org URLs relative.
+  - Used in: `LinkToRecord`, `InlineRecordBlock`, the Structured Text `Link` override.
+- **`magazine` helpers** (`src/lib/magazine.ts`)
+  - Purpose:
+    - `postDate` (`_firstPublishedAt`, then `createdAt`);
+    - `formatPostDate`;
+    - `categoryLabel(category, 'plural' | 'singular' | 'others' | 'all')`: normalised labels by slug, `news` → "Notizie", with agreement ("Altri eventi", "Tutte le recensioni");
+    - `categoryHref` (`/magazine?categoria=<slug>`).
+  - Used in: `/magazine`, `/magazine/[slug]`, `MagazinePostCard`.
 - **`text` utilities** (`src/lib/text.ts`)
-  - Purpose: `toPlainText`, `truncateToLength`, entity decoding, `toRichTextHtml`.
+  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`.
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
+  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book: subject, title, authors, ISBN, price, copies, address), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
   - Used in: listings, carousels, detail pages, staff exports, printable schede; `/libri` route, sitemap, `publicUrls.ts`, `revalidationUrls.ts`.
   - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props. Keep `BOOKS_PER_PAGE` here so route/sitemap/revalidation agree on page count.
 - **`authors` helper** (`src/lib/authors.ts`)
@@ -78,12 +91,17 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: converts Dato supplier records into card view models and region groups.
   - Used in: `/distributori`.
   - Notes: generates Google Maps URLs and rich-text HTML strings that must be sanitized (Security task **S2**).
+    - `parseSupplierPhones(raw)` pulls every number out of the free-text phone field ("Tel … - Fax …", "Nome tel. …", "011.188…-347.…") and formats it the Italian way. It returns a `tel:+39…` href and the person's name when given. Unparseable text is kept.
+    - `supplierWebsiteLabel(url)` returns "Facebook"/"Instagram" or the bare host.
 - **`colors` helper** (`src/lib/colors.ts`)
-  - Purpose: derives palette colors from Imgix metadata and blends shades.
-  - Used in: `BookCard`, `FeaturedBookHighlight`, color-aware UI.
+  - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background); `coverFieldPalette(colors)` returns the Book Cover Field set (field 16%, copy half 88%, cover shadow, caption colour).
+  - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, `libri/[slug]`, color-aware UI.
+- **`catalogue` helper** (`src/lib/catalogue.ts`)
+  - Purpose: rules of the faceted `/libri` catalogue shared by server and browser: `CatalogueEntry` (compact per-book facet record), `matchesCatalogue` (with an `ignore` facet for option counts), `parseCatalogueState`/`serializeCatalogueState` (URL), `buildPeriodOptions`, `isTranslated`, `normalizeForSearch`, `CATALOGUE_CHUNK` (40).
+  - Used in: `/libri`, `BooksCatalogue`.
 - **`currency` helper** (`src/lib/currency.ts`)
   - Purpose: formats `EUR` values (`it-IT`).
-  - Used in: `PriceTag`, `BookCard`, staff exports.
+  - Used in: `BookCard`, staff exports.
 - **`seo` helper** (`src/lib/seo.ts`)
   - Purpose: attaches fallback `<title>`/`<meta name="description">` tags when `_seoMetaTags` omit them.
   - Used in: every page via `withFallbackSeo`.
@@ -115,3 +133,5 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: shared `withCORS`, `json`, `invalidRequestResponse`, `successfulResponse`, and `isRelativeUrl` utilities for every API route.
   - Used in: `/api/preview`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, etc.
   - Notes: keep `withCORS` in sync with Dato plugin requirements and reuse `isRelativeUrl` for any new redirect-bearing endpoints.
+
+- `bookPose(key)` / `bookSpineColors(colors)` — `src/lib/bookPose.ts`. Deterministic hover pose for `Book3D` from a book slug (side, angles, offset, scale: random-looking across a grid, stable across visits and cache), and spine/band/ink colours from the cover's palette.

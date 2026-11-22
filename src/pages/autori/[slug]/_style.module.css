@@ -1,69 +1,214 @@
 @reference '../../../styles/global.css';
 
-.layout {
-  @apply space-y-12;
+.page {
+  @apply space-y-10 md:space-y-14;
 }
 
-.heroGrid {
-  @apply mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start;
+/* Slim title row: a small square portrait (or the initial on mist) beside the name. */
+.intro {
+  @apply flex items-start gap-4 md:items-center md:gap-8;
 }
 
-.portraitPanel {
-  @apply overflow-hidden bg-white/95 shadow-soft;
+.portrait,
+.initial {
+  @apply h-20 w-20 shrink-0 overflow-hidden md:h-36 md:w-36;
 }
 
-.portraitFrame {
-  @apply bg-brand-mist;
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
+.portraitImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
 }
 
-.portraitFallback {
-  @apply flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate;
+.initial {
+  @apply flex items-center justify-center bg-brand-mist font-serif text-4xl text-brand-navy md:text-6xl;
 }
 
-.detailCard {
-  @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-xs sm:p-12;
-}
-
-.metaLabel {
-  @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+.introText {
+  @apply min-w-0 space-y-1;
 }
 
 .name {
-  @apply text-4xl font-serif text-brand-navy md:text-5xl;
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-5xl;
 }
 
-.booksLabel {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-sky;
+.legal {
+  @apply text-base text-brand-charcoal md:text-lg;
 }
 
-.summary {
-  @apply text-base leading-relaxed text-brand-charcoal/80;
+.size {
+  @apply font-serif text-lg text-brand-slate lining-nums md:text-xl;
 }
 
-.pseudonyms {
-  @apply flex flex-wrap gap-3 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70;
+.alsoAs {
+  @apply pt-1 text-base text-brand-charcoal;
 }
 
-.pseudonymLink {
-  @apply text-brand-sky transition hover:text-brand-navy focus:text-brand-navy;
+.alsoAs a,
+.note a,
+.publish a,
+.featuredWays a,
+.featuredTitle a {
+  @apply text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
 }
 
-.contentSection {
-  @apply space-y-6;
+.alsoAs a,
+.note a,
+.publish a,
+.featuredWays a {
+  @apply font-semibold;
 }
 
-.contentBlock {
-  @apply v3-space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3;
+/* The latest book on a field tinted from its cover; the copy half carries a pale tint. */
+.featured {
+  @apply grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)];
 }
 
-.booksSection {
-  @apply space-y-8;
+.featuredField {
+  @apply flex items-center justify-center overflow-clip px-6 py-8 md:order-2 md:min-h-[24rem] md:py-12;
 }
 
-.booksHeader {
-  @apply text-3xl font-serif text-brand-navy;
+.featuredCover {
+  display: block;
+  width: auto !important;
+  max-width: min(45vw, 160px) !important;
+  height: 13rem !important;
+  object-fit: contain;
+  transform: rotate(4deg);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (width >= 48rem) {
+    max-width: 240px !important;
+    height: 19rem !important;
+  }
 }
 
-.booksGrid {
-  @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
+@media (prefers-reduced-motion: no-preference) {
+  .featuredField:hover .featuredCover {
+    transform: rotate(2deg) translateY(-6px);
+  }
+}
+
+.featuredCopy {
+  @apply flex flex-col justify-center gap-2 px-6 py-8 md:order-1 md:px-10 md:py-12;
+}
+
+.featuredCopy > * {
+  max-width: 36rem;
+}
+
+.featuredMeta {
+  @apply text-sm text-brand-charcoal;
+}
+
+.featuredTitle {
+  @apply font-serif text-2xl text-balance text-brand-navy md:text-4xl;
+}
+
+.featuredTitle a {
+  @apply no-underline hover:underline;
+}
+
+.featuredSubtitle {
+  @apply text-base font-medium text-pretty text-brand-charcoal md:text-lg;
+}
+
+.featuredBy {
+  @apply text-base text-brand-charcoal;
+}
+
+.featuredSummary {
+  @apply pt-1 text-base leading-relaxed text-brand-charcoal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+.featuredWays {
+  @apply flex flex-wrap items-baseline gap-x-5 gap-y-2 pt-3 text-base;
+}
+
+.featuredWays a {
+  @apply inline-flex min-h-11 items-center md:min-h-8;
+}
+
+.featuredPrice {
+  @apply font-serif text-2xl text-brand-navy lining-nums;
+}
+
+.sectionTitle {
+  @apply font-serif text-2xl text-brand-navy md:text-3xl;
+}
+
+/* Biography in the book page's reading column; blockquotes on a 1px hairline, not a stripe. */
+.bio {
+  @apply space-y-4 border-t border-brand-navy/10 pt-8;
+}
+
+.prose {
+  @apply max-w-[68ch] space-y-4 text-base leading-relaxed text-brand-charcoal md:text-lg;
+}
+
+.prose :global(a) {
+  @apply text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
+}
+
+.prose :global(blockquote) {
+  @apply border-y border-brand-navy/10 py-4 font-serif text-brand-navy italic;
+}
+
+.prose :global(ul) {
+  @apply list-disc space-y-1 pl-6;
+}
+
+.prose :global(ol) {
+  @apply list-decimal space-y-1 pl-6;
+}
+
+.more {
+  @apply max-w-[68ch];
+}
+
+.more summary {
+  @apply inline-flex min-h-11 cursor-pointer items-center font-semibold text-brand-navy underline underline-offset-2 md:min-h-8;
+}
+
+.more[open] summary {
+  @apply mb-4;
+}
+
+.books {
+  @apply space-y-6 border-t border-brand-navy/10 pt-8;
+}
+
+.booksHead {
+  @apply flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2;
+}
+
+.catalogueLink {
+  @apply inline-flex min-h-11 items-center text-base font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+}
+
+.note {
+  @apply text-base text-brand-charcoal;
+}
+
+/* The catalogue's grid: two up on phones, three from 768px, four from 1280px. */
+.grid {
+  @apply grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-6 md:grid-cols-3 xl:grid-cols-4;
+}
+
+.archived {
+  @apply space-y-4 border-t border-brand-navy/10 pt-6;
+}
+
+.archivedTitle {
+  @apply font-serif text-xl text-brand-navy md:text-2xl;
+}
+
+.publish {
+  @apply border-t border-brand-navy/10 pt-8 text-base text-brand-charcoal;
 }

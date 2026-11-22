@@ -2,6 +2,8 @@
 
 .section {
   @apply w-full bg-brand-navy-lighter py-8;
+  /* The slides peek past the edge on purpose; the page itself must not scroll sideways. */
+  overflow-x: clip;
 }
 
 .inner {
@@ -21,7 +23,7 @@
 }
 
 .description {
-  @apply text-base leading-relaxed [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy;
+  @apply text-base leading-relaxed [&_a]:text-brand-navy [&_a]:underline [&_a]:decoration-brand-navy [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy;
 }
 
 .controls {
@@ -29,7 +31,7 @@
 }
 
 .navButton {
-  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/40 text-brand-navy transition hover:border-brand-sky hover:bg-brand-sky hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy;
+  @apply inline-flex h-11 w-11 shrink-0 items-center justify-center border border-black/40 text-brand-navy transition hover:border-brand-sky hover:bg-brand-sky hover:text-white;
 }
 
 .pagination {
@@ -53,7 +55,7 @@
 }
 
 :global(.swiper-pagination-bullet) {
-  @apply h-2 w-2 rounded-full bg-brand-navy/30 transition;
+  @apply h-2 w-2 bg-brand-navy/30 transition;
 }
 
 :global(.swiper-pagination-bullet-active) {

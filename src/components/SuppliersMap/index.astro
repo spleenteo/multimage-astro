@@ -1,0 +1,67 @@
+---
+// The bookshops and friendly places on a map (MapLibre + OpenFreeMap tiles, no key, no cookies).
+// The library loads only when the map scrolls into view. The list below carries the same places,
+// so the map is a visual aid, not the only way in.
+import styles from './style.module.css';
+
+export type SuppliersMapPoint = {
+  id: string;
+  name: string;
+  place: string;
+  latitude: number;
+  longitude: number;
+  directionsUrl: string | null;
+};
+
+type Props = { points: SuppliersMapPoint[] };
+const { points }: Props = Astro.props;
+---
+
+{points.length > 0 ? (
+  <figure class={styles.root}>
+    <div
+      class={styles.map}
+      data-suppliers-map
+      role="region"
+      aria-label="Mappa delle librerie e dei luoghi amici"
+    >
+      <p class={styles.loading}>Carico la mappa…</p>
+    </div>
+    <figcaption class={styles.caption}>
+      {points.length} punti sulla mappa. Tocca un punto per l'indirizzo; gli stessi luoghi sono
+      nell'elenco qui sotto. Mappa ©{' '}
+      <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a>{' '}
+      e{' '}
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+    </figcaption>
+    <script type="application/json" data-suppliers-points set:html={JSON.stringify(points)} />
+  </figure>
+) : null}
+
+<script>
+  import { mountSuppliersMap } from './map.client';
+
+  const container = document.querySelector<HTMLElement>('[data-suppliers-map]');
+  if (container) {
+    const start = () => {
+      mountSuppliersMap(container).catch(() => {
+        container.innerHTML =
+          '<p class="flex h-full items-center justify-center p-6 text-center text-sm text-brand-slate">La mappa non si è caricata. Trovi tutti i luoghi nell’elenco qui sotto.</p>';
+      });
+    };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            start();
+          }
+        },
+        { rootMargin: '300px' },
+      );
+      observer.observe(container);
+    } else {
+      start();
+    }
+  }
+</script>

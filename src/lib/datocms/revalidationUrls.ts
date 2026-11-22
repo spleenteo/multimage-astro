@@ -104,8 +104,6 @@ export async function getRevalidationUrls(
   switch (apiKey) {
     case 'book': {
       add(slug ? `/libri/${slug}` : null);
-      add('/libri/ebooks');
-      add('/libri/highlights');
       add('/libri/archivio');
       add(HOME); // homepage carousels / single-book blocks may feature this book
       add(SITEMAP);

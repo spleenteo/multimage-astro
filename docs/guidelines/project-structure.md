@@ -41,10 +41,10 @@ description: Fastro is based on and extends the [Astro project structure](https:
   - Data: `src/pages/index/_graphql.ts` (`home`, modular `banners`).
   - Primary components: `BaseLayout`, `FeaturedBookHighlight`, `BannerSection`, `BookCarouselSection`, `blocks/PillsBlock`, Structured Text blocks.
   - Notes: Hero copy (`home.claim`) flows through `toRichTextHtml`; sanitize per docs/guidelines/assets.md#html-fragments--sanitization.
-- **`/libri`** and **`/libri/pagina/[page]`**
-  - Data: `src/pages/libri/index/_graphql.ts` (`booksIndexPage`, `allBooks` with `first/skip`, `_allBooksMeta`).
-  - Primary components: `BooksCatalogSection` (hero + grid of `BookCard` + `Pagination`).
-  - Notes: Paginated 40/page (since 2026-06-20). Page 1 canonical at `/libri`; pages 2..N at `/libri/pagina/<n>`; `/libri/pagina/1` → 301 `/libri`; invalid/out-of-range → 404. `BOOKS_PER_PAGE`/`buildBooksCataloguePaths` in `src/lib/books.ts`. Other listings still fetch `first: 500` (**CD2**).
+- **`/libri`** (and **`/libri/pagina/[page]`**, now a 301 to `/libri`)
+  - Data: `src/pages/libri/index/_graphql.ts` (`booksIndexPage`, `allCollections`, every published book incl. archive, read in pages of 500).
+  - Primary components: `BooksCatalogue` (faceted catalogue, `BookCard` catalogue variant).
+  - Notes: single faceted page since 2026-11-22 (decisions-log `2026-11-22-faceted-catalogue`); filters run in the browser and live in the URL. `buildBooksCataloguePaths` returns `['/libri']`.
 - **`/libri/[slug]`**
   - Data: `src/pages/libri/[slug]/_graphql.ts` plus related `authors`, `alternate formats`, and `collection` queries.
   - Primary components: `BookCarouselSection`, `AuthorsSection`, `AlternateFormatsList`, `DetailList`.

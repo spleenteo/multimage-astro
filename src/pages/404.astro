@@ -1,0 +1,41 @@
+---
+// Site-wide "not found" page, also used by Astro.rewrite('/404') from dynamic routes whose record
+// does not exist. It keeps the header and footer so the reader always has a way on.
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+Astro.response.status = 404;
+
+const seo = [
+  { tag: 'title', content: 'Pagina non trovata · Multimage' },
+  { tag: 'meta', attributes: { name: 'robots', content: 'noindex' } },
+];
+
+const ways = [
+  { href: '/libri', label: 'Il catalogo', note: 'tutti i libri, con i filtri per collana, formato e periodo' },
+  { href: '/collane', label: 'Le collane', note: 'il catalogo come lo pensa la redazione' },
+  { href: '/autori', label: 'Autrici e autori', note: 'chi scrive per Multimage' },
+  { href: '/cerca', label: 'Cerca nel sito', note: 'libri, persone e articoli' },
+];
+---
+
+<BaseLayout seo={seo}>
+  <section class="mx-auto max-w-3xl space-y-8 py-8 md:py-16">
+    <div class="space-y-4">
+      <h1 class="font-serif text-4xl text-brand-navy md:text-5xl">Questa pagina non c'è</h1>
+      <p class="text-lg leading-relaxed text-brand-charcoal">
+        Forse il link è vecchio, o il libro ha cambiato indirizzo. Da qui puoi ritrovare la strada:
+      </p>
+    </div>
+
+    <ul class="divide-y divide-brand-navy/10 border-y border-brand-navy/10">
+      {ways.map((way) => (
+        <li>
+          <a href={way.href} class="group flex min-h-16 flex-col justify-center gap-0.5 py-4">
+            <span class="font-serif text-xl text-brand-navy group-hover:underline">{way.label}</span>
+            <span class="text-sm text-brand-slate">{way.note}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

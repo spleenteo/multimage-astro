@@ -15,9 +15,11 @@
   --color-brand-sand: #f4f4f4;
   --color-brand-mist: #f2f4f6;
   --color-brand-orange: #fa7810;
+  /* Action fill for white text: #fa7810 gives 2.7:1 with white, this gives 5.05:1 (WCAG AA) */
+  --color-brand-orange-deep: #b84f00;
   --color-social-facebook: #4267b2;
   --color-social-instagram: #c13584;
-  --color-social-newsletter: #53be42;
+  --color-social-newsletter: #2e7d32;
 
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-serif: 'Playfair Display', 'Times New Roman', serif;
@@ -91,7 +93,16 @@
 
   input::placeholder,
   textarea::placeholder {
-    color: #9ca3af;
+    /* brand-slate: 4.7:1 on white (the old #9ca3af was 2.5:1) */
+    color: var(--color-brand-slate);
+  }
+
+  /* One focus indicator for the whole site. Light surfaces get navy; a dark surface sets
+     --focus-ring (the header and footer use white). Components that still add
+     focus:outline-hidden plus a ring of their own opt out of this. */
+  :focus-visible {
+    outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+    outline-offset: 2px;
   }
 
   button:not(:disabled),
@@ -146,8 +157,15 @@
     }
   }
 
+  /* Links are navy (sky #088af2 was 3.54:1 on white). Navy is close to the charcoal body text, so
+     links inside running text also carry an underline (WCAG 1.4.1); component links (nav, cards,
+     buttons) keep their own styling, and any utility such as no-underline still wins. */
   a {
-    @apply text-brand-sky transition-colors duration-150;
+    @apply text-brand-navy transition-colors duration-150;
+  }
+
+  :where(p, blockquote, dd, td, figcaption) a {
+    @apply underline decoration-1 underline-offset-2;
   }
 
   strong {
@@ -172,8 +190,7 @@
    layer sits below utilities, so the rule lives at the end of the utilities layer with :where(a)
    (0,1,0): it wins over (0,1,0) utilities by source order, loses to (0,1,1) ones, and hover:text-*
    (0,2,0) still wins. Unlayered CSS-module rules beat it whatever their specificity, so a module
-   restores v3 with its own hover:/focus: classes. Rules in the components layer (.btn-outline) lose
-   to it too: a .btn-outline:hover white on an <a> would turn navy (latent, no src use). */
+   restores v3 with its own hover:/focus: classes. Rules in the components layer lose to it too. */
 @layer utilities {
   :where(a):hover,
   :where(a):focus {
@@ -184,13 +201,5 @@
 @layer components {
   .chip {
     @apply inline-flex items-center bg-brand-mist px-3 py-1 text-xs font-semibold uppercase text-brand-charcoal;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-brand-orange px-5 py-2 text-sm font-semibold uppercase text-white shadow-soft transition hover:bg-brand-crimson;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-brand-orange px-5 py-2 text-sm font-semibold uppercase text-brand-orange transition hover:bg-brand-orange hover:text-white;
   }
 }

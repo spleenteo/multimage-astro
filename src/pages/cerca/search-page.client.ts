@@ -1,3 +1,8 @@
+// /cerca: DatoCMS Site Search from the browser. Results are flat rows: a clean title (the only
+// link), one slate line saying what the result is, and the highlighted excerpt. Books also show
+// their cover, authors, year, format and price, read from /search-books.json; print and ebook
+// editions of the same book share one row.
+
 type SearchResultAttributes = {
   title: string;
   body_excerpt?: string | null;
@@ -28,22 +33,61 @@ type SearchConfig = {
   fuzzy: boolean;
 };
 
-type FilterKey = 'books' | 'authors' | 'info';
+/** See src/pages/search-books.json.ts. */
+type BookEntry = {
+  t: string;
+  a?: string;
+  y?: string;
+  f?: string;
+  p?: string;
+  x?: 1;
+  c?: string;
+  r?: number;
+  k?: string;
+};
+
+type Kind = 'book' | 'author' | 'article' | 'collection' | 'catalogue' | 'page';
+type FilterKey = 'books' | 'authors' | 'magazine' | 'other';
 
 type CleanupFn = () => void;
 
-const FILTERS: Record<FilterKey, { label: string; icon: string }> = {
-  books: { label: 'Libri', icon: 'iconoir:book' },
-  authors: { label: 'Autori', icon: 'iconoir:user-badge-check' },
-  info: { label: 'Informazioni', icon: 'iconoir:post' },
+const KIND_LABEL: Record<Kind, string> = {
+  book: 'Libro',
+  author: 'Autrice o autore',
+  article: 'Dal magazine',
+  collection: 'Collana',
+  catalogue: 'Catalogo',
+  page: 'Pagina',
 };
 
-const classifyEntry = (url: string): FilterKey => {
-  if (/\/libri\//.test(url)) return 'books';
-  if (/\/autori\//.test(url)) return 'authors';
-  if (/\/(info|magazine)\//.test(url)) return 'info';
-  return 'info';
+const FILTER_LABEL: Record<FilterKey, string> = {
+  books: 'libri',
+  authors: 'autrici e autori',
+  magazine: 'magazine',
+  other: 'collane e pagine',
 };
+
+const pathFromUrl = (url: string): string => {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname + parsed.search;
+  } catch {
+    return url;
+  }
+};
+
+const kindOf = (url: string): Kind => {
+  const path = pathFromUrl(url);
+  if (/^\/libri(\/(pagina|archivio)(\/|$)|\/?$)/.test(path)) return 'catalogue';
+  if (/^\/libri\/[^/]+/.test(path)) return 'book';
+  if (/^\/autori\/[^/]+/.test(path)) return 'author';
+  if (/^\/magazine\/[^/]+/.test(path)) return 'article';
+  if (/^\/collane\/[^/]+/.test(path)) return 'collection';
+  return 'page';
+};
+
+const filterOf = (kind: Kind): FilterKey =>
+  kind === 'book' ? 'books' : kind === 'author' ? 'authors' : kind === 'article' ? 'magazine' : 'other';
 
 const getRootConfig = (root: HTMLElement): SearchConfig => {
   const { endpoint, token, minLength = '3', limit = '25', fuzzy = 'true' } = root.dataset;
@@ -68,18 +112,11 @@ const getRootConfig = (root: HTMLElement): SearchConfig => {
   };
 };
 
-const labelForUrl = (url: string): string => FILTERS[classifyEntry(url)].label;
-
-const pathFromUrl = (url: string): string => {
-  try {
-    const parsed = new URL(url);
-    return parsed.pathname + parsed.search;
-  } catch {
-    return url;
-  }
-};
-
 const isHiddenUrl = (url: string): boolean => /\/libri\/schede\//.test(pathFromUrl(url));
+
+/** Page titles carry the SEO suffix ("Ciecam | Multimage Editrice"): the reader only needs the name. */
+const cleanTitle = (value: string): string =>
+  value.replace(/\s*[|–—-]\s*Multimage(\s+Editrice)?\s*$/i, '').trim();
 
 const appendHighlightedText = (target: HTMLElement, source: string | null | undefined) => {
   const text = source ?? '';
@@ -111,7 +148,7 @@ const normalizeText = (value: string): string =>
   stripHighlightMarkers(value)
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -124,149 +161,170 @@ const entryContainsPhrase = (entry: SearchResult, phrase: string): boolean => {
   const sources: Array<string | null | undefined> = [
     entry.attributes.title,
     entry.attributes.body_excerpt,
+    ...(entry.attributes.highlight?.title ?? []),
+    ...(entry.attributes.highlight?.body ?? []),
   ];
 
-  if (entry.attributes.highlight?.title) {
-    sources.push(...entry.attributes.highlight.title);
-  }
-
-  if (entry.attributes.highlight?.body) {
-    sources.push(...entry.attributes.highlight.body);
-  }
-
-  return sources.some((source) => {
-    if (!source) {
-      return false;
-    }
-    const normalizedSource = normalizeText(source);
-    return normalizedSource.includes(normalizedPhrase);
-  });
+  return sources.some((source) => Boolean(source) && normalizeText(source!).includes(normalizedPhrase));
 };
 
-const extractBookSlugFromUrl = (url: string | null | undefined): string | null => {
+const bookSlugOf = (url: string | null | undefined): string | null => {
   if (!url) return null;
-  const path = pathFromUrl(url);
-  const match = path.match(/\/libri\/([^/?#]+)/);
+  const match = pathFromUrl(url).match(/^\/libri\/([^/?#]+)/);
   return match?.[1] ?? null;
 };
 
-let archivedSlugs: Set<string> | null = null;
-let archivedSlugsPromise: Promise<Set<string>> | null = null;
+// Book details, loaded once, after the first search that finds a book.
+let booksIndex: Record<string, BookEntry> | null = null;
+let booksIndexPromise: Promise<Record<string, BookEntry> | null> | null = null;
 
-const fetchArchivedSlugs = async (): Promise<Set<string>> => {
-  if (archivedSlugs) {
-    return archivedSlugs;
-  }
-
-  if (!archivedSlugsPromise) {
-    archivedSlugsPromise = fetch('/archived-books.json')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Unable to load archived books index');
-        }
-        return response.json() as Promise<{ slugs?: string[] }>;
-      })
-      .then((payload) => new Set(payload.slugs ?? []))
-      .catch(() => new Set<string>())
-      .finally(() => {
-        archivedSlugsPromise = null;
-      });
-
-    archivedSlugs = await archivedSlugsPromise;
-    return archivedSlugs;
-  }
-
-  archivedSlugs = await archivedSlugsPromise;
-  return archivedSlugs;
+const loadBooksIndex = (): Promise<Record<string, BookEntry> | null> => {
+  if (booksIndex) return Promise.resolve(booksIndex);
+  booksIndexPromise ??= fetch('/search-books.json')
+    .then((response) => (response.ok ? (response.json() as Promise<Record<string, BookEntry>>) : null))
+    .catch(() => null)
+    .then((payload) => {
+      booksIndex = payload;
+      return payload;
+    });
+  return booksIndexPromise;
 };
 
-const isArchivedBook = (entry: SearchResult, filterKey: FilterKey): boolean => {
-  if (filterKey !== 'books') {
-    return false;
-  }
-
-  const slug = extractBookSlugFromUrl(entry.attributes.url);
-  if (!slug) {
-    return false;
-  }
-
-  return archivedSlugs?.has(slug) ?? false;
+const bookOf = (entry: SearchResult): BookEntry | null => {
+  const slug = bookSlugOf(entry.attributes.url);
+  return slug ? (booksIndex?.[slug] ?? null) : null;
 };
 
-const createResultItem = (entry: SearchResult): HTMLLIElement => {
+const isArchivedBook = (entry: SearchResult): boolean => bookOf(entry)?.x === 1;
+
+/** One row per book: a print and an ebook edition (same title and authors) share a row. */
+type Row = { entry: SearchResult; kind: Kind; editions: SearchResult[] };
+
+const buildRows = (entries: SearchResult[]): Row[] => {
+  const rows: Row[] = [];
+  const byBook = new Map<string, Row>();
+  for (const entry of entries) {
+    const kind = kindOf(entry.attributes.url ?? '');
+    if (kind === 'book') {
+      const book = bookOf(entry);
+      const key = normalizeText(`${book?.t ?? cleanTitle(entry.attributes.title ?? '')}|${book?.a ?? ''}`);
+      const existing = byBook.get(key);
+      if (existing) {
+        existing.editions.push(entry);
+        continue;
+      }
+      const row: Row = { entry, kind, editions: [] };
+      byBook.set(key, row);
+      rows.push(row);
+      continue;
+    }
+    rows.push({ entry, kind, editions: [] });
+  }
+  return rows;
+};
+
+const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&auto=format`;
+
+const createLink = (href: string, className?: string): HTMLAnchorElement => {
+  const link = document.createElement('a');
+  link.href = href;
+  if (/^https?:\/\//.test(href)) link.rel = 'noopener';
+  if (className) link.className = className;
+  return link;
+};
+
+const createResultItem = (row: Row): HTMLLIElement => {
+  const { entry, kind, editions } = row;
   const { attributes } = entry;
-  const filterKey = classifyEntry(attributes.url ?? '');
-  const filterMeta = FILTERS[filterKey];
+  const href = pathFromUrl(attributes.url ?? '#');
+  const book = kind === 'book' ? bookOf(entry) : null;
+
   const item = document.createElement('li');
   item.className = 'search-result';
+  item.dataset.kind = kind;
 
-  const badges = document.createElement('div');
-  badges.className = 'search-result__badges';
-
-  const badge = document.createElement('span');
-  badge.className = 'search-result__badge';
-  const badgeIcon = document.createElement('iconify-icon');
-  badgeIcon.setAttribute('icon', filterMeta.icon);
-  badgeIcon.setAttribute('width', '20');
-  badgeIcon.setAttribute('height', '20');
-  badge.append(badgeIcon);
-  const badgeText = document.createElement('span');
-  badgeText.textContent = filterMeta.label.toUpperCase();
-  badge.append(badgeText);
-  badges.append(badge);
-
-  if (isArchivedBook(entry, filterKey)) {
-    const archivedBadge = document.createElement('span');
-    archivedBadge.className = 'search-result__badge search-result__badge--archived';
-    archivedBadge.textContent = 'Fuori catalogo';
-    badges.append(archivedBadge);
+  if (book?.c) {
+    const field = createLink(href, 'search-result__cover');
+    field.tabIndex = -1;
+    field.setAttribute('aria-hidden', 'true');
+    if (book.k) field.style.background = book.k;
+    const img = document.createElement('img');
+    img.src = coverSrc(book.c, 96);
+    img.srcset = `${coverSrc(book.c, 192)} 2x`;
+    img.alt = '';
+    img.width = Math.round(96 * (book.r ?? 0.68));
+    img.height = 96;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    field.append(img);
+    item.append(field);
   }
 
-  item.append(badges);
+  const body = document.createElement('div');
+  body.className = 'search-result__body';
 
   const title = document.createElement('h3');
   title.className = 'search-result__title';
-
-  const link = document.createElement('a');
-  const href = pathFromUrl(attributes.url ?? '#');
-  link.href = href;
-  if (/^https?:\/\//.test(href)) {
-    link.rel = 'noopener';
-  }
-  appendHighlightedText(link, attributes.highlight?.title?.[0] ?? attributes.title ?? '');
+  const link = createLink(href);
+  appendHighlightedText(link, cleanTitle(attributes.highlight?.title?.[0] ?? attributes.title ?? ''));
   title.append(link);
-  item.append(title);
+  body.append(title);
+
+  // One slate line: what the result is, and for a book who wrote it and how to have it.
+  const meta = document.createElement('p');
+  meta.className = 'search-result__meta';
+  const parts: Array<string | HTMLElement> = [];
+  if (book) {
+    if (book.a) parts.push(`di ${book.a}`);
+    if (book.y) parts.push(book.y);
+    if (book.f) parts.push(book.f);
+    if (book.p) {
+      const price = document.createElement('span');
+      price.className = 'search-result__price';
+      price.textContent = book.p;
+      parts.push(price);
+    }
+    for (const edition of editions) {
+      const other = bookOf(edition);
+      const otherLink = createLink(pathFromUrl(edition.attributes.url ?? '#'), 'search-result__edition');
+      otherLink.textContent = `Anche ${other?.f ? `in ${other.f.toLowerCase()}` : 'in cartaceo'}${other?.p ? ` · ${other.p}` : ''}`;
+      parts.push(otherLink);
+    }
+  } else {
+    parts.push(KIND_LABEL[kind]);
+  }
+  parts.forEach((part, index) => {
+    if (index > 0) {
+      const dot = document.createElement('span');
+      dot.className = 'search-result__dot';
+      dot.setAttribute('aria-hidden', 'true');
+      dot.textContent = '·';
+      meta.append(dot);
+    }
+    meta.append(part);
+  });
+  body.append(meta);
 
   const excerptSource = attributes.highlight?.body?.[0] ?? attributes.body_excerpt ?? '';
   if (excerptSource) {
     const excerpt = document.createElement('p');
     excerpt.className = 'search-result__excerpt';
     appendHighlightedText(excerpt, excerptSource);
-    item.append(excerpt);
+    body.append(excerpt);
   }
 
-  const url = document.createElement('p');
-  url.className = 'search-result__url';
-  const urlLink = document.createElement('a');
-  urlLink.href = href;
-  urlLink.textContent = 'Vai alla pagina';
-  if (/^https?:\/\//.test(href)) {
-    urlLink.rel = 'noopener';
-  }
-  urlLink.className = 'search-result__url-link';
-  url.append(urlLink);
-  item.append(url);
-
+  item.append(body);
   return item;
 };
 
-const buildRequestUrl = (query: string, config: SearchConfig, exactMatch: boolean): string => {
+const buildRequestUrl = (query: string, config: SearchConfig, exactMatch: boolean, offset: number): string => {
   const target = new URL(config.endpoint);
   target.searchParams.set('filter[query]', exactMatch ? `"${query}"` : query);
   if (!exactMatch && config.fuzzy) {
     target.searchParams.set('filter[fuzzy]', 'true');
   }
   target.searchParams.set('page[limit]', String(config.limit));
+  if (offset > 0) target.searchParams.set('page[offset]', String(offset));
   return target.toString();
 };
 
@@ -285,15 +343,10 @@ const updateUrl = (query: string, exact: boolean) => {
   window.history.replaceState({}, '', url);
 };
 
-const readQueryFromLocation = (): string => {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('q')?.trim() ?? '';
-};
+const readQueryFromLocation = (): string => new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+const readExactFromLocation = (): boolean => new URLSearchParams(window.location.search).get('exact') === '1';
 
-const readExactFromLocation = (): boolean => {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('exact') === '1';
-};
+const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
 const mountSearchPage = (): CleanupFn | undefined => {
   const root = document.querySelector<HTMLElement>('[data-search-root]');
@@ -306,8 +359,12 @@ const mountSearchPage = (): CleanupFn | undefined => {
   const statusEl = root.querySelector<HTMLElement>('[data-search-status]');
   const resultsWrapper = root.querySelector<HTMLElement>('[data-search-results]');
   const listEl = root.querySelector<HTMLElement>('[data-search-list]');
+  const moreEl = root.querySelector<HTMLElement>('[data-search-more]');
+  const moreButton = root.querySelector<HTMLButtonElement>('[data-search-more-button]');
+  const waysEl = root.querySelector<HTMLElement>('[data-search-ways]');
   const filterInputs = Array.from(root.querySelectorAll<HTMLInputElement>('[data-search-filter]'));
   const exactInput = root.querySelector<HTMLInputElement>('[data-search-exact]');
+  const baseTitle = document.title;
 
   if (!form || !input || !statusEl || !resultsWrapper || !listEl) {
     console.warn('[search] Markup incompleto per la pagina di ricerca.');
@@ -330,10 +387,19 @@ const mountSearchPage = (): CleanupFn | undefined => {
   let exactMatch = false;
   let cachedResults: SearchResult[] = [];
   let cachedTotal = 0;
+  let fetchedCount = 0;
   let cachedQuery = '';
 
   const setStatus = (message: string) => {
     statusEl.textContent = message;
+  };
+
+  const showWays = (visible: boolean) => {
+    if (waysEl) waysEl.hidden = !visible;
+  };
+
+  const showMore = (visible: boolean) => {
+    if (moreEl) moreEl.hidden = !visible;
   };
 
   const clearResults = () => {
@@ -341,92 +407,84 @@ const mountSearchPage = (): CleanupFn | undefined => {
     resultsWrapper.hidden = true;
     cachedResults = [];
     cachedTotal = 0;
+    fetchedCount = 0;
     cachedQuery = '';
+    showMore(false);
+  };
+
+  const promptStatus = () => {
+    setStatus(`Scrivi almeno ${config.minLength} caratteri: un titolo, un nome, un argomento.`);
+    showWays(true);
+    document.title = baseTitle;
   };
 
   const getActiveFilters = (): FilterKey[] =>
     filterInputs.filter((inputEl) => inputEl.checked).map((inputEl) => inputEl.value as FilterKey);
 
-  const updateFilterStyles = () => {
-    filterInputs.forEach((inputEl) => {
-      const label = inputEl.closest('.search-filters__item');
-      if (label) {
-        label.classList.toggle('is-active', inputEl.checked);
-      }
-    });
-
-    if (exactInput) {
-      const label = exactInput.closest('.search-filters__item');
-      if (label) {
-        label.classList.toggle('is-active', exactInput.checked);
-      }
-    }
-  };
-
-  const matchesFilters = (entry: SearchResult, filters: FilterKey[]): boolean => {
-    if (!filters.length) {
-      return true;
-    }
-    const key = classifyEntry(entry.attributes.url ?? '');
-    return filters.includes(key);
-  };
-
-  const renderResults = (items: SearchResult[], total: number, query: string) => {
+  const renderResults = () => {
+    const query = cachedQuery;
     listEl.innerHTML = '';
     resultsWrapper.hidden = true;
+    resultsWrapper.removeAttribute('aria-busy');
 
     if (!query) {
-      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+      promptStatus();
       return;
     }
 
+    document.title = `Cerca: ${query} | Multimage`;
     const activeFilters = getActiveFilters();
+    const catalogue = cachedResults.filter((entry) => !isArchivedBook(entry));
+    const visible = activeFilters.length
+      ? catalogue.filter((entry) => activeFilters.includes(filterOf(kindOf(entry.attributes.url ?? ''))))
+      : catalogue;
+    const rows = buildRows(visible);
+    const hasMore = fetchedCount < cachedTotal;
+    showMore(hasMore);
 
-    const catalogItems = items.filter(
-      (entry) => !isArchivedBook(entry, classifyEntry(entry.attributes.url ?? '')),
-    );
-
-    const visibleItems = activeFilters.length
-      ? catalogItems.filter((entry) => matchesFilters(entry, activeFilters))
-      : catalogItems;
-
-    if (!items.length) {
-      setStatus(
-        `Nessun risultato per “${query}”. Prova con parole diverse, controlla l'ortografia o rimuovi i filtri attivi.`,
-      );
+    if (!catalogue.length && !hasMore) {
+      const filtersHint = activeFilters.length ? ' o togli i filtri' : '';
+      setStatus(`Nessun risultato per “${query}”. Prova con un'altra parola${filtersHint}, oppure scegli da dove partire qui sotto.`);
+      showWays(true);
       return;
     }
 
-    if (!catalogItems.length) {
-      setStatus(
-        `Nessun risultato nel catalogo attivo per “${query}”. I libri fuori catalogo sono esclusi dalla ricerca.`,
-      );
+    if (!rows.length && !activeFilters.length) {
+      setStatus(`Nessun risultato in catalogo tra i primi per “${query}”.`);
+      showWays(!hasMore);
       return;
     }
 
-    if (!visibleItems.length) {
-      const filtersDescription = activeFilters
-        .map((key) => FILTERS[key].label.toLowerCase())
-        .join(', ');
+    if (!rows.length) {
+      const filtersDescription = activeFilters.map((key) => FILTER_LABEL[key]).join(', ');
       setStatus(
-        `Nessun risultato per “${query}” con i filtri selezionati (${filtersDescription}).`,
+        hasMore
+          ? `Nessun risultato tra ${filtersDescription} nei primi ${fetchedCount} risultati per “${query}”.`
+          : `Nessun risultato per “${query}” tra ${filtersDescription}.`,
       );
+      showWays(false);
       return;
     }
 
+    showWays(false);
     const fragment = document.createDocumentFragment();
-    visibleItems.forEach((entry) => fragment.append(createResultItem(entry)));
+    rows.forEach((row) => fragment.append(createResultItem(row)));
     listEl.append(fragment);
     resultsWrapper.hidden = false;
 
-    const base = `Trovati ${visibleItems.length}${
-      activeFilters.length ? ` su ${catalogItems.length}` : ''
-    } risultati per “${query}”.`;
-    const filtersSuffix =
-      activeFilters.length > 0
-        ? ` Filtri attivi: ${activeFilters.map((key) => FILTERS[key].label).join(', ')}.`
-        : '';
-    setStatus(base + filtersSuffix);
+    const shown = plural(rows.length, 'risultato', 'risultati');
+    if (activeFilters.length) {
+      const scope = activeFilters.map((key) => FILTER_LABEL[key]).join(', ');
+      setStatus(
+        hasMore
+          ? `${shown} tra ${scope} nei primi ${fetchedCount} risultati per “${query}”.`
+          : `${shown} tra ${scope} per “${query}”.`,
+      );
+    } else if (hasMore) {
+      setStatus(`${plural(cachedTotal, 'risultato', 'risultati')} per “${query}”: eccone ${rows.length}, i più pertinenti.`);
+    } else {
+      setStatus(`${shown} per “${query}”.`);
+    }
   };
 
   const handleError = (error: unknown, query: string) => {
@@ -436,69 +494,88 @@ const mountSearchPage = (): CleanupFn | undefined => {
 
     console.error('Errore durante la ricerca su DatoCMS Site Search', error);
     clearResults();
+    resultsWrapper.removeAttribute('aria-busy');
 
     if (error instanceof Response && error.status === 401) {
       setStatus('La ricerca non è autorizzata. Verifica il token Site Search.');
       return;
     }
 
-    setStatus(`Si è verificato un errore durante la ricerca di “${query}”. Riprova più tardi.`);
+    setStatus(`Non siamo riusciti a cercare “${query}”. Riprova tra poco.`);
+    showWays(true);
   };
 
-  const applyFilters = () => {
-    if (!cachedQuery) {
-      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
-      return;
+  const fetchPage = async (query: string, offset: number, controller: AbortController) => {
+    const response = await fetch(buildRequestUrl(query, config, exactMatch, offset), {
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        Accept: 'application/json',
+        'X-Api-Version': '3',
+      },
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      throw response;
     }
-    updateFilterStyles();
-    renderResults(cachedResults, cachedTotal, cachedQuery);
+    const payload = (await response.json()) as SearchResponse;
+    const raw = payload.data ?? [];
+    const visible = raw.filter((entry) => !isHiddenUrl(entry.attributes.url ?? ''));
+    const results = exactMatch ? visible.filter((entry) => entryContainsPhrase(entry, query)) : visible;
+    // Book details are needed before the rows are built (archived filter, editions, covers).
+    if (results.some((entry) => kindOf(entry.attributes.url ?? '') === 'book')) {
+      await loadBooksIndex();
+    }
+    return { results, rawCount: raw.length, total: payload.meta?.total_count ?? raw.length };
   };
 
   const performSearch = async (query: string) => {
-    if (activeController) {
-      activeController.abort();
-    }
-
+    activeController?.abort();
     const controller = new AbortController();
     activeController = controller;
     latestQuery = query;
+    // Visual cue only: the status speaks once, when the results are in.
+    resultsWrapper.setAttribute('aria-busy', 'true');
 
     try {
-      const response = await fetch(buildRequestUrl(query, config, exactMatch), {
-        headers: {
-          Authorization: `Bearer ${config.token}`,
-          Accept: 'application/json',
-          'X-Api-Version': '3',
-        },
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        throw response;
-      }
-
-      const payload = (await response.json()) as SearchResponse;
-      const rawResults = payload.data ?? [];
-      const visibleResults = rawResults.filter((entry) => !isHiddenUrl(entry.attributes.url ?? ''));
-      const filteredResults = exactMatch
-        ? visibleResults.filter((entry) => entryContainsPhrase(entry, query))
-        : visibleResults;
-
-      cachedResults = filteredResults;
-      cachedTotal = filteredResults.length;
-      cachedQuery = query;
-
+      const page = await fetchPage(query, 0, controller);
       if (latestQuery !== query) {
         return;
       }
-
-      renderResults(cachedResults, cachedTotal, query);
+      cachedResults = page.results;
+      cachedTotal = page.total;
+      fetchedCount = page.rawCount;
+      cachedQuery = query;
+      renderResults();
     } catch (error) {
       handleError(error, query);
     } finally {
       if (activeController === controller) {
         activeController = null;
       }
+    }
+  };
+
+  const loadMore = async () => {
+    if (!cachedQuery || !moreButton) return;
+    const query = cachedQuery;
+    const controller = new AbortController();
+    activeController = controller;
+    moreButton.disabled = true;
+    const firstNewIndex = listEl.children.length;
+    try {
+      const page = await fetchPage(query, fetchedCount, controller);
+      if (cachedQuery !== query) return;
+      cachedResults = [...cachedResults, ...page.results];
+      fetchedCount += page.rawCount;
+      if (page.rawCount === 0) fetchedCount = cachedTotal;
+      renderResults();
+      const first = listEl.children[firstNewIndex]?.querySelector<HTMLAnchorElement>('.search-result__title a');
+      first?.focus();
+    } catch (error) {
+      handleError(error, query);
+    } finally {
+      moreButton.disabled = false;
+      if (activeController === controller) activeController = null;
     }
   };
 
@@ -511,22 +588,22 @@ const mountSearchPage = (): CleanupFn | undefined => {
 
     if (!query) {
       clearResults();
-      setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+      promptStatus();
       return;
     }
 
     if (query.length < config.minLength) {
       clearResults();
-      setStatus(`La ricerca richiede almeno ${config.minLength} caratteri.`);
+      setStatus(`Scrivi almeno ${config.minLength} caratteri.`);
       return;
     }
 
-    setStatus('Caricamento…');
     void performSearch(query);
   };
 
   const handleSubmit = (event: Event) => {
     event.preventDefault();
+    if (debounceId !== undefined) window.clearTimeout(debounceId);
     triggerSearch(input.value, { updateHistory: true });
   };
 
@@ -547,44 +624,43 @@ const mountSearchPage = (): CleanupFn | undefined => {
     if (exactInput) {
       exactInput.checked = exactMatch;
     }
-    updateFilterStyles();
     triggerSearch(current, { updateHistory: false });
   };
 
   const handleFilterChange = () => {
-    updateFilterStyles();
-    applyFilters();
+    if (!cachedQuery) {
+      promptStatus();
+      return;
+    }
+    renderResults();
   };
 
   const handleExactChange = () => {
     exactMatch = Boolean(exactInput?.checked);
-    updateFilterStyles();
     triggerSearch(input.value, { updateHistory: true });
   };
 
-  void fetchArchivedSlugs().then(() => {
-    if (cachedResults.length && cachedQuery) {
-      renderResults(cachedResults, cachedTotal, cachedQuery);
-    }
-  });
+  const handleMore = () => {
+    void loadMore();
+  };
 
   form.addEventListener('submit', handleSubmit);
   input.addEventListener('input', handleInput);
   window.addEventListener('popstate', handlePopState);
   filterInputs.forEach((inputEl) => inputEl.addEventListener('change', handleFilterChange));
   exactInput?.addEventListener('change', handleExactChange);
+  moreButton?.addEventListener('click', handleMore);
 
   const initialQuery = readQueryFromLocation();
   exactMatch = readExactFromLocation();
   if (exactInput) {
     exactInput.checked = exactMatch;
   }
-  updateFilterStyles();
   if (initialQuery) {
     input.value = initialQuery;
     triggerSearch(initialQuery, { updateHistory: false });
   } else {
-    setStatus(`Inserisci almeno ${config.minLength} caratteri per iniziare.`);
+    promptStatus();
   }
 
   return () => {
@@ -593,6 +669,7 @@ const mountSearchPage = (): CleanupFn | undefined => {
     window.removeEventListener('popstate', handlePopState);
     filterInputs.forEach((inputEl) => inputEl.removeEventListener('change', handleFilterChange));
     exactInput?.removeEventListener('change', handleExactChange);
+    moreButton?.removeEventListener('click', handleMore);
     if (debounceId !== undefined) {
       window.clearTimeout(debounceId);
     }

@@ -1,45 +1,88 @@
 @reference '../../styles/global.css';
 
+/* Flat, on a hairline: no shadow, no lift (only covers float). */
 .card {
-  @apply flex flex-col gap-6 rounded-[2rem] border border-white/70 bg-white/95 px-6 py-8 shadow-soft transition duration-150 ease-out hover:-translate-y-1 hover:shadow-xl md:px-10 md:py-10;
+  @apply flex items-start gap-4 border-t border-brand-navy/10 pt-5;
 }
 
-.body {
-  @apply flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10;
-}
-
-.descriptionBlock {
-  @apply flex-1 space-y-5;
-}
-
-.location {
-  @apply text-xs font-semibold uppercase tracking-[0.4em] text-brand-sky;
+.text {
+  @apply min-w-0 flex-1 space-y-2;
 }
 
 .name {
-  @apply text-3xl font-serif uppercase tracking-[0.08em] text-brand-navy;
+  @apply font-serif text-xl leading-snug text-balance text-brand-navy md:text-2xl;
+}
+
+.place {
+  @apply text-base text-brand-charcoal;
+}
+
+.description,
+.short {
+  @apply text-sm leading-relaxed text-brand-charcoal;
 }
 
 .description {
-  @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_strong]:text-brand-charcoal;
+  @apply max-w-[62ch] space-y-2;
 }
 
-.addressRow {
-  @apply flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-brand-charcoal/75;
+.description :global(p),
+.description :global(li) {
+  font-size: inherit;
+  line-height: inherit;
 }
 
-.contactsRow {
-  @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-charcoal/70;
+.description :global(a) {
+  @apply text-brand-navy underline underline-offset-2;
 }
 
-.logoOuter {
-  @apply flex shrink-0 items-start justify-end;
+.more summary {
+  @apply max-w-[62ch] cursor-pointer list-none;
 }
 
-.logoFrame {
-  @apply rounded-3xl bg-white/80 px-4 py-3 shadow-inner;
+.more summary::-webkit-details-marker {
+  display: none;
 }
 
+.toggle {
+  @apply ml-1 text-sm font-semibold text-brand-navy underline underline-offset-2;
+}
+
+.more[open] summary {
+  display: none;
+}
+
+/* One row of actions, each a 44px target on touch. */
+.actions {
+  @apply flex flex-wrap items-center gap-x-5 text-sm;
+}
+
+.actions li {
+  @apply inline-flex items-baseline gap-1.5;
+}
+
+.actions a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+}
+
+.who {
+  @apply text-brand-slate;
+}
+
+.plain {
+  @apply inline-flex min-h-11 items-center text-brand-charcoal md:min-h-8;
+}
+
+/* A small, decorative logo on mist, so white logos still read. */
+.logo {
+  @apply flex h-16 w-20 shrink-0 items-center justify-center bg-brand-mist p-2 md:h-20 md:w-24;
+}
+
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
 .logoImage {
-  @apply h-24 w-36 max-w-[220px] object-contain;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
 }

@@ -1,52 +1,89 @@
 ---
+// An author in the /autori index: flat, with a small portrait (or the initial), the name as the
+// only link to the profile, the legal name under an alias, the size, two lines of bio, and a strip
+// of their latest covers on a light field tinted from the newest one, with the way to their books.
 import { Image } from '@datocms/astro/Image';
 import type { AssetImage } from '~/lib/datocms/types';
+import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
 import styles from './style.module.css';
+
+type Cover = { url: string; width: number | null; height: number | null; colors?: Array<{ hex: string }> | null };
 
 type Props = {
   name: string;
   slug: string;
-  alias?: string | null;
-  country?: string | null;
+  legalName?: string | null;
   summary?: string | null;
-  booksCount: number;
+  inCatalogue: number;
+  archived: number;
   picture?: AssetImage | null;
+  covers: Cover[];
 };
 
-const { name, slug, alias, country, summary, booksCount, picture }: Props = Astro.props;
-const aliasLabel = alias?.trim() ?? null;
-const countryLabel = country?.trim() ?? null;
-const metaLabel = [aliasLabel, countryLabel].filter(Boolean).join(' · ');
-const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
-const summaryText = summary?.trim() ?? 'Biografia in aggiornamento.';
-const pictureResponsiveImage = picture?.responsiveImage
-  ? { ...picture.responsiveImage, alt: picture.responsiveImage.alt ?? name }
-  : null;
+const { name, slug, legalName = null, summary = null, inCatalogue, archived, picture = null, covers }: Props =
+  Astro.props;
+
+const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
+const sizeLine =
+  inCatalogue > 0
+    ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null].filter(Boolean).join(' · ')
+    : `${plural(archived)} fuori catalogo`;
+const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 ? '&archivio=1' : ''}`;
+// Some bios are only a link to a website: links never stand in for the text.
+const bio = (summary ?? '').replace(/(https?:\/\/|www\.)\S+/g, '').replace(/\s+/g, ' ').trim();
+const initial = name.trim().charAt(0).toUpperCase() || '·';
+const portrait = picture?.responsiveImage ? { ...picture.responsiveImage, alt: '' } : null;
+
+// A grid of hundreds: the hue stays, light (as on catalogue cards), so the covers stay the loudest.
+const base = pickBaseColor(covers[0]?.colors);
+const fieldColor = lightenColor(base, 0.55);
+const shadowColor = hexToRgba(darkenColor(base, 0.55), 0.35);
+const COVER_HEIGHT = 96;
+const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&auto=format`;
 ---
 
-<a href={`/autori/${slug}`} class:list={[styles.root, 'group']}>
-  {pictureResponsiveImage ? (
-    <div class={styles.imageWrapper}>
-      <Image
-        data={pictureResponsiveImage}
-        sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
-        srcSetCandidates={[1, 2]}
-        imgClass={styles.image}
-      />
+<article class={styles.root}>
+  <div class={styles.head}>
+    {portrait ? (
+      <div class={styles.portrait}>
+        <Image data={portrait} sizes="56px" pictureClass="block h-full w-full" imgClass={styles.portraitImage} />
+      </div>
+    ) : (
+      <div class={styles.initial} aria-hidden="true">{initial}</div>
+    )}
+    <div class="min-w-0">
+      <h3 class={styles.name}>
+        <a href={`/autori/${slug}`}>{name}</a>
+      </h3>
+      {legalName ? <p class={styles.legal}>{legalName}</p> : null}
+      <p class={styles.size}>{sizeLine}</p>
     </div>
-  ) : (
-    <div class={styles.fallback}>Ritratto in arrivo</div>
-  )}
+  </div>
 
-  <article class={styles.body}>
-    <div class="space-y-2">
-      <h3 class={styles.title}>{name}</h3>
-      {metaLabel ? <p class={styles.meta}>{metaLabel}</p> : null}
-      <p class={styles.books}>{booksLabel}</p>
-    </div>
+  {bio.length > 0 ? <p class={styles.summary}>{bio}</p> : null}
 
-    <p class={styles.summary}>{summaryText}</p>
+  {covers.length > 0 ? (
+    <a href={booksHref} class={styles.covers} style={`background: ${fieldColor};`} tabindex="-1" aria-hidden="true">
+      {covers.map((cover, index) => {
+        const ratio = cover.width && cover.height ? cover.width / cover.height : 0.7;
+        return (
+          <img
+            src={coverSrc(cover.url, COVER_HEIGHT)}
+            srcset={`${coverSrc(cover.url, COVER_HEIGHT * 2)} 2x`}
+            width={Math.round(COVER_HEIGHT * ratio)}
+            height={COVER_HEIGHT}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class:list={[styles.cover, index >= 2 ? styles.third : null]}
+            style={`filter: drop-shadow(6px 10px 12px ${shadowColor});`}
+          />
+        );
+      })}
+    </a>
+  ) : null}
 
-    <p class={styles.cta}>Scopri il profilo →</p>
-  </article>
-</a>
+  <p class={styles.ways}>
+    <a href={booksHref}>Vedi i libri</a>
+  </p>
+</article>

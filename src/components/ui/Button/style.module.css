@@ -1,22 +1,24 @@
 @reference '../../../styles/global.css';
 
+/* text-decoration: a Button rendered inside a paragraph must not pick up the prose underline. */
 .root {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition focus:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2;
+  text-decoration: none;
+  @apply inline-flex items-center justify-center gap-2 min-h-11 px-5 py-2 text-sm font-semibold uppercase transition;
 }
 
 .primary {
-  @apply bg-brand-orange text-white shadow-soft focus-visible:ring-brand-orange hover:bg-brand-crimson;
+  @apply bg-brand-orange-deep text-white shadow-soft hover:bg-brand-crimson;
 }
 .primary:hover {
   color: white;
 }
 
 .secondary {
-  @apply bg-brand-mist text-brand-navy shadow-soft transition hover:bg-brand-mist/80 focus-visible:ring-brand-navy/30;
+  @apply bg-brand-mist text-brand-navy shadow-soft transition hover:bg-brand-mist/80;
 }
 
 .ghost {
-  @apply bg-transparent text-brand-navy hover:bg-brand-mist/70 focus-visible:ring-brand-navy/40;
+  @apply bg-transparent text-brand-navy hover:bg-brand-mist/70;
 }
 
 .fullWidth {

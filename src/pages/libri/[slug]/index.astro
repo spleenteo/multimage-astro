@@ -1,5 +1,4 @@
 ---
-import { Image } from '@datocms/astro/Image';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AlternateFormatsList from '~/components/AlternateFormatsList';
@@ -18,9 +17,15 @@ import {
   formatBookPrice,
   buildEditionDetails,
   buildGraphicsDetails,
+  buildOrderMailto,
+  ebookStoreName,
+  extractYear,
   mapBooksToCards,
   normalizeText,
 } from '~/lib/books';
+import { coverFieldPalette } from '~/lib/colors';
+import Book3D from '~/components/Book3D';
+import { bookPose, bookSpineColors } from '~/lib/bookPose';
 import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
@@ -55,7 +60,7 @@ const detailData = await executeQuery<BookDetailQueryResult>(BOOK_DETAIL_QUERY, 
 const book = detailData.book;
 
 if (!book) {
-  throw new Error(`Book not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const authors = book.authors ?? [];
@@ -102,7 +107,6 @@ const alternateFormatsData = await executeQuery<BookAlternateFormatsResult>(
 );
 
 const authorSegments = buildAuthorSegments(authors);
-const authorPrefix = book.editedBy ? 'A cura di ' : 'Di ';
 
 const formattedPrice = formatBookPrice(book.price);
 const descriptionHtml = book.description;
@@ -115,36 +119,62 @@ const promoText = toPlainText(book.promo);
 const formatValue = normalizeText(book.format);
 const isArchived = book.archive === true;
 const isEbookFormat = formatValue?.toLowerCase() === 'ebook';
+const printYearLabel = extractYear(book.printYear);
+const authorNames = authors.map((author) => getAuthorDisplayName(author)).filter(Boolean);
 
-const primaryCtaLabel = [isEbookFormat ? 'Ordina' : 'Ordina'].filter(Boolean).join(' · ');
-const primaryCtaHref = isEbookFormat && book.epubUrl ? book.epubUrl : '/info/ordinare';
-const primaryCtaTarget = isEbookFormat && book.epubUrl ? '_blank' : undefined;
-const primaryCtaRel = isEbookFormat && book.epubUrl ? 'noopener noreferrer' : undefined;
-const showPrimaryCta =
-  (isEbookFormat && Boolean(book.epubUrl)) || (!isEbookFormat && (formattedPrice || formatValue));
-
-const alternateFormatsRaw = (alternateFormatsData.allBooks ?? []).filter(
-  (alt) => alt.slug !== book.slug,
-);
-
-const alternateFormats = alternateFormatsRaw
+// Other editions with the same title: the ebook, a newer or older print edition.
+const otherEditions = (alternateFormatsData.allBooks ?? [])
+  .filter((alt) => alt.slug !== book.slug)
   .map((alt) => {
-    const altFormat = normalizeText(alt.format) ?? 'Altro formato';
-    const altIsEbook = altFormat.toLowerCase() === 'ebook';
-    const altPrice = formatBookPrice(alt.price);
-    const href = altIsEbook && alt.epubUrl ? alt.epubUrl : `/libri/${alt.slug}`;
-
+    const format = normalizeText(alt.format) ?? 'Altra edizione';
     return {
       id: alt.id,
-      format: altFormat,
-      price: altPrice,
-      href,
-      isExternal: altIsEbook && Boolean(alt.epubUrl),
+      slug: alt.slug,
+      format,
+      isEbook: format.toLowerCase() === 'ebook',
+      price: formatBookPrice(alt.price),
+      year: extractYear(alt.printYear),
+      archived: alt.archive === true,
+      epubUrl: alt.epubUrl,
     };
-  })
-  .filter((alt) => alt.format.toLowerCase() !== (formatValue?.toLowerCase() ?? ''));
+  });
 
-const limitedAlternateFormats = alternateFormats.slice(0, 3);
+// One ebook control: the book's own store link (a print book can carry it) or the ebook edition's.
+const ebookEdition = isEbookFormat
+  ? null
+  : (otherEditions.find((edition) => edition.isEbook && edition.epubUrl && !edition.archived) ?? null);
+const ebookUrl = isEbookFormat ? book.epubUrl : (book.epubUrl ?? ebookEdition?.epubUrl ?? null);
+const ebookStore = ebookStoreName(ebookUrl);
+const ebookLabel = ['Ebook', ebookEdition?.price ?? null, ebookStore ? `su ${ebookStore}` : null]
+  .filter(Boolean)
+  .join(' ');
+const buyEbookLabel = ebookStore ? `Acquista l'ebook su ${ebookStore}` : "Acquista l'ebook";
+
+// Print editions still in the catalogue, newest first. On an out-of-catalogue page the newest one
+// becomes the primary action, so an old link still leads to a book that can be ordered.
+const printEditions = otherEditions
+  .filter((edition) => !edition.isEbook && !edition.archived)
+  .sort((a, b) => Number(b.year ?? 0) - Number(a.year ?? 0));
+const currentEdition = isArchived ? (printEditions[0] ?? null) : null;
+const furtherEditions = (currentEdition ? printEditions.slice(1) : printEditions)
+  .slice(0, 3)
+  .map((edition) => ({
+    id: edition.id,
+    format: [edition.format, edition.year].filter(Boolean).join(' '),
+    price: edition.price,
+    href: `/libri/${edition.slug}`,
+  }));
+
+// There is no cart: the order is an email to ordini@, prefilled with this book.
+const canOrderPrint = !isArchived && !isEbookFormat;
+const orderHref = buildOrderMailto({
+  title: book.title,
+  authors: authorNames,
+  isbn: book.isbn,
+  price: formattedPrice,
+});
+
+const coverPalette = coverFieldPalette(book.coverImage?.colors);
 
 let collectionCarouselTitle: string | null = null;
 let collectionCarouselDescription: string | null = null;
@@ -189,10 +219,7 @@ if (book.collection?.id) {
 const authorsCards = authors.map((author) => {
   const name = getAuthorDisplayName(author);
   const biographyPlain = structuredTextToPlainText(author.biography);
-  const biographyExcerpt =
-    biographyPlain.length > 0
-      ? truncateToLength(biographyPlain, 220)
-      : 'Biografia in aggiornamento.';
+  const biographyExcerpt = biographyPlain.length > 0 ? truncateToLength(biographyPlain, 220) : '';
   const booksCount = authorsBookCounts.get(author.id) ?? (authorIds.includes(author.id) ? 1 : 0);
   const booksLabel =
     booksCount === 1 ? '1 libro con Multimage' : `${booksCount} libri con Multimage`;
@@ -207,7 +234,9 @@ const authorsCards = authors.map((author) => {
   };
 });
 
-const authorsSectionTitle = authorsCards.length > 1 ? 'Autori del libro' : 'Autore del libro';
+// Paired forms, feminine first (the site's convention): the CMS does not record gender.
+const authorsSectionTitle =
+  authorsCards.length > 1 ? 'Autrici/Autori del libro' : 'Autrice/Autore del libro';
 
 const reviewDateFormatter = new Intl.DateTimeFormat('it-IT', {
   day: '2-digit',
@@ -217,6 +246,11 @@ const reviewDateFormatter = new Intl.DateTimeFormat('it-IT', {
 
 type BookReviewLink = NonNullable<BookDetailRecord['reviews']>[number];
 const MIN_ABSTRACT_LENGTH = 40;
+const stripUrls = (value: string) =>
+  value
+    .replace(/https?:\/\/\S+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const dateToTimestamp = (value: string | null | undefined) => {
   if (!value) {
@@ -235,19 +269,17 @@ const reviewPreviews = (book.reviews ?? [])
     return dateToTimestamp(dateB) - dateToTimestamp(dateA);
   })
   .map((review) => {
-    const abstract = review.abstract?.trim() ?? '';
-    const plainBody = structuredTextToPlainText(review.body);
-    const needsBodyFallback = abstract.length === 0 || abstract.length < MIN_ABSTRACT_LENGTH;
-    const excerptSource = needsBodyFallback ? plainBody : abstract;
+    // Editors sometimes paste a source URL as the abstract: links never stand in for text.
+    const abstract = stripUrls(review.abstract ?? '');
+    const plainBody = stripUrls(structuredTextToPlainText(review.body));
+    const excerptSource = abstract.length >= MIN_ABSTRACT_LENGTH ? abstract : plainBody;
     const excerpt =
-      excerptSource && excerptSource.length > 0
-        ? truncateToLength(excerptSource, 300)
-        : 'Anteprima in arrivo.';
+      excerptSource.length >= MIN_ABSTRACT_LENGTH ? truncateToLength(excerptSource, 300) : null;
     const dateIso = review._firstPublishedAt ?? review.createdAt ?? null;
     const dateLabel =
       dateIso && !Number.isNaN(new Date(dateIso).getTime())
         ? reviewDateFormatter.format(new Date(dateIso))
-        : 'Data in aggiornamento';
+        : null;
 
     return {
       id: review.id,
@@ -270,7 +302,7 @@ const reviewStructuredData =
             '@type': 'Review',
             datePublished: review.dateIso,
             name: review.title,
-            reviewBody: review.excerpt,
+            ...(review.excerpt ? { reviewBody: review.excerpt } : {}),
             url: `/magazine/${review.slug}`,
             ...(review.authorName
               ? { author: { '@type': 'Person', name: review.authorName } }
@@ -289,12 +321,24 @@ const reviewStructuredData =
       }
     : null;
 
-const editionDetails = buildEditionDetails(book);
+// Price and format already sit in the hero; the staff sheet (/libri/schede) keeps the full list.
+const HERO_DETAIL_LABELS = new Set(['Formato', 'Prezzo di copertina']);
+const editionDetails = buildEditionDetails(book).filter((item) => !HERO_DETAIL_LABELS.has(item.label));
 const graphicsDetails = buildGraphicsDetails(book);
+const collectionHref = book.collection?.slug ? `/collane/${book.collection.slug}` : null;
 
-const coverResponsiveImage = book.coverImage?.responsiveImage
-  ? { ...book.coverImage.responsiveImage, alt: book.coverImage.responsiveImage.alt ?? book.title }
-  : null;
+// The hero cover is the same 3D book as in the cards (same pose, same spine), at hero size: 26rem
+// tall at most, 340px wide at most; phones zoom it down in CSS.
+const heroCoverUrl = book.coverImage?.url ?? null;
+const heroCoverAspect =
+  book.coverImage?.width && book.coverImage?.height
+    ? book.coverImage.height / book.coverImage.width
+    : 1.45;
+const heroCoverHeight = Math.round(Math.min(416, 340 * heroCoverAspect));
+const heroCoverSrc = (h: number) => `${heroCoverUrl}?h=${h}&fit=max&auto=format`;
+// Same pose as the cards, but downward: rising, the book would slip under the sticky menu.
+const cardPose = bookPose(book.slug);
+const heroPose = { ...cardPose, offsetY: Math.abs(cardPose.offsetY) };
 
 const fallbackDescription = toPlainText(book.promo ?? book.description);
 const escapeAttr = (value: string) =>
@@ -351,195 +395,225 @@ const seo = sanitizeMetaTags(
   {reviewStructuredData ? (
     <script type="application/ld+json" is:inline set:html={JSON.stringify(reviewStructuredData)} />
   ) : null}
-  <article class="v3-space-y-12">
-    <div class={styles.heroGrid}>
-      <div class={styles.coverPanel}>
-        <div class={styles.coverFrame}>
-          {coverResponsiveImage ? (
-            <Image
-              data={coverResponsiveImage}
-              sizes="(min-width: 1024px) 320px, 60vw"
-              imgClass="h-auto w-full object-contain"
-            />
-          ) : (
-            <div
-              class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate"
-            >
-              Copertina in arrivo
+  <article class={styles.article}>
+    <section class={styles.hero} aria-labelledby="book-title">
+      <div class={styles.heroGrid}>
+        <div class={styles.coverField} style={`background: ${coverPalette.field};`}>
+          {heroCoverUrl ? (
+            <div class={styles.coverTilt}>
+              <Book3D
+                cover={heroCoverSrc(heroCoverHeight)}
+                srcset={`${heroCoverSrc(heroCoverHeight * 2)} 2x`}
+                alt={book.coverImage?.alt ?? book.title}
+                title={book.title}
+                pages={book.pages ?? undefined}
+                height={heroCoverHeight}
+                aspect={heroCoverAspect}
+                {...bookSpineColors(book.coverImage?.colors)}
+                restShadow={`drop-shadow(24px 36px 48px ${coverPalette.shadow})`}
+                loading="eager"
+                class={styles.cover3d}
+                {...heroPose}
+              />
             </div>
+          ) : (
+            <div class={styles.coverFallback}>Copertina in arrivo</div>
           )}
         </div>
-      </div>
 
-      <div class={styles.detailCard}>
-        <div class="flex flex-col gap-4">
-          <div class="space-y-2">
-            <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
-              {book.collection?.name ? `Collana ${book.collection.name}` : 'Catalogo Multimage'}
-            </p>
-            <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{book.title}</h1>
-            {book.subtitle ? (
-              <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
+        <div class={styles.copyField} style={`background: ${coverPalette.copy};`}>
+          <div class={styles.copy}>
+            <h1 id="book-title" class={styles.title}>{book.title}</h1>
+            {book.subtitle ? <p class={styles.subtitle}>{book.subtitle}</p> : null}
+
+            {authorSegments.length > 0 ? (
+              <p class={styles.byline}>
+                <span>{book.editedBy ? 'a cura di ' : 'di '}</span>
+                {authorSegments.map((segment) =>
+                  segment.type === 'text' ? (
+                    <span>{segment.value}</span>
+                  ) : segment.href ? (
+                    <a href={segment.href}>{segment.label}</a>
+                  ) : (
+                    <span class="font-semibold">{segment.label}</span>
+                  ),
+                )}
+              </p>
             ) : null}
-            <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-              <span>{authorPrefix}</span>
-              {authorSegments.map((segment) =>
-                segment.type === 'text' ? (
-                  <span>{segment.value}</span>
-                ) : segment.href ? (
-                  <a href={segment.href} class="text-brand-sky hover:text-brand-navy">
-                    {segment.label}
-                  </a>
-                ) : (
-                  <span>{segment.label}</span>
-                ),
-              )}
+
+            <p class={styles.meta}>
+              {book.collection?.name ? (
+                <span>
+                  Collana{' '}
+                  {collectionHref ? (
+                    <a href={collectionHref}>{book.collection.name}</a>
+                  ) : (
+                    book.collection.name
+                  )}
+                </span>
+              ) : null}
+              {[printYearLabel, formatValue, isArchived ? 'Fuori catalogo' : null]
+                .filter(Boolean)
+                .map((part, index) => (
+                  <span>
+                    {index > 0 || book.collection?.name ? ' · ' : ''}
+                    {part}
+                  </span>
+                ))}
             </p>
-          </div>
 
-          {promoText ? <p class="text-base italic text-brand-charcoal/80">{promoText}</p> : null}
+            {promoText ? <p class={styles.promo}>{promoText}</p> : null}
 
-          {descriptionHtml ? (
-            <div
-              class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
-              set:html={descriptionHtml}
-            />
-          ) : null}
-
-          <div class="space-y-4 pt-2">
             {isArchived ? (
-              <div class="space-y-3">
-                <p
-                  class="bg-brand-mist/50 p-4 text-sm font-semibold uppercase tracking-wide text-brand-slate"
-                >
-                  Titolo fuori catalogo.
-                </p>
-                <AlternateFormatsList formats={limitedAlternateFormats} />
-              </div>
-            ) : (
-              <>
-                {formattedPrice || formatValue ? (
-                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
-                    {[formattedPrice, formatValue ? `Formato ${formatValue}` : null]
-                      .filter(Boolean)
-                      .join(' · ')}
+              <div class={styles.buy}>
+                <p class={styles.status}>Questa edizione è fuori catalogo.</p>
+                {currentEdition ? (
+                  <p class={styles.statusNote}>
+                    {currentEdition.year
+                      ? `C'è un'edizione del ${currentEdition.year} che puoi ordinare.`
+                      : "C'è un'altra edizione che puoi ordinare."}
                   </p>
                 ) : null}
-
-                <div class="flex flex-wrap gap-3">
-                  {showPrimaryCta && primaryCtaLabel.length > 0 ? (
-                    <Button
-                      href={primaryCtaHref}
-                      target={primaryCtaTarget ?? undefined}
-                      rel={primaryCtaRel ?? undefined}
-                      primary
-                    >
-                      {primaryCtaLabel}
+                <div class={styles.actions}>
+                  {currentEdition ? (
+                    <Button href={`/libri/${currentEdition.slug}`} primary icon="iconoir:arrow-right">
+                      Vai alla nuova edizione
                     </Button>
                   ) : null}
-
-                  {!isEbookFormat && book.epubUrl ? (
+                  {ebookUrl ? (
                     <Button
-                      href={book.epubUrl}
+                      href={ebookUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      primary={!currentEdition ? true : false}
+                      icon="iconoir:open-new-window"
+                    >
+                      {ebookLabel}
+                      <span class="sr-only"> (si apre in una nuova scheda)</span>
+                    </Button>
+                  ) : null}
+                </div>
+                {!currentEdition && !ebookUrl ? (
+                  <p class={styles.ways}>
+                    <a href="/libri">Sfoglia il catalogo</a>
+                  </p>
+                ) : null}
+              </div>
+            ) : (
+              <div class={styles.buy}>
+                {formattedPrice ? <p class={styles.price}>{formattedPrice}</p> : null}
+                <div class={styles.actions}>
+                  {canOrderPrint ? (
+                    <Button href={orderHref} primary icon="iconoir:mail" iconPosition="left">
+                      Ordina via email
+                    </Button>
+                  ) : null}
+                  {isEbookFormat && ebookUrl ? (
+                    <Button
+                      href={ebookUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      primary
+                      icon="iconoir:open-new-window"
+                    >
+                      {buyEbookLabel}
+                      <span class="sr-only"> (si apre in una nuova scheda)</span>
+                    </Button>
+                  ) : null}
+                  {!isEbookFormat && ebookUrl ? (
+                    <Button
+                      href={ebookUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       primary={false}
+                      icon="iconoir:open-new-window"
                     >
-                      Scarica eBook
+                      {ebookLabel}
+                      <span class="sr-only"> (si apre in una nuova scheda)</span>
                     </Button>
                   ) : null}
                 </div>
-
-                <AlternateFormatsList formats={limitedAlternateFormats} />
-              </>
+                {canOrderPrint ? (
+                  <>
+                    <p class={styles.terms}>
+                      Spedizione gratuita con piego di libri ·{' '}
+                      <span class="whitespace-nowrap"><a href="/info/adesioni">Soci</a>: 30% di sconto</span>
+                    </p>
+                    <p class={styles.ways}>
+                      <a href="/distributori">Trovalo in libreria</a>
+                      <a href="/info/ordinare">Come funziona l'ordine</a>
+                    </p>
+                  </>
+                ) : null}
+              </div>
             )}
+
+            <AlternateFormatsList label="Altre edizioni" formats={furtherEditions} />
           </div>
         </div>
       </div>
-    </div>
-
-    {showReview && reviewContent ? (
-      <section class={styles.reviewSection}>
-        <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
-        <div
-          class="v3-space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
-        >
-          <StructuredText
-            data={reviewContent as any}
-            blockComponents={defaultBlockComponents as any}
-            linkToRecordComponents={defaultLinkToRecordComponents as any}
-          />
-        </div>
-      </section>
-    ) : null}
-
-    <AuthorsSection title={authorsSectionTitle} authors={authorsCards} />
-
-    <section class={styles.detailsSection}>
-      <div class="bg-brand-mist/60 px-6 py-6 text-center sm:px-12">
-        <h2 class="text-3xl font-serif text-brand-navy">Dettagli</h2>
-      </div>
-      <div class={styles.detailsGrid}>
-        <DetailList title="Dettagli edizione" items={editionDetails} />
-        <DetailList title="Dettagli grafica" items={graphicsDetails} />
-      </div>
-      {draftModeEnabled ? (
-        <div class="px-6 pb-6 text-right text-sm text-brand-slate sm:px-12 print:hidden">
-          <a
-            href={`/libri/schede/${book.slug}`}
-            class="underline decoration-brand-slate/50 underline-offset-2 hover:text-brand-navy"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Scheda libro (PDF) — staff
-          </a>
-        </div>
-      ) : null}
     </section>
 
-    {reviewPreviews.length > 0 ? (
-      <section class={styles.reviewsSection}>
-        <div class="flex items-baseline justify-between gap-3">
-          <h2 class="text-3xl font-serif text-brand-navy">Recensioni</h2>
-        </div>
-        <ul class="space-y-5">
-          {reviewPreviews.map((review) => <li data-review-id={review.id}>
-            <a
-              href={`/magazine/${review.slug}`}
-              class="group block rounded-lg border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
-            >
-              <div class="flex gap-3">
-                <div class="mt-0.5 text-brand-sky">
-                  <iconify-icon icon="iconoir:design-pencil" class="text-xl sm:text-2xl" />
-                </div>
-                <div class="space-y-2">
-                  {review.dateLabel ? (
-                    <p class="text-xs font-semibold uppercase tracking-wide text-brand-slate">
+    <div class={styles.body}>
+      {descriptionHtml ? <div class:list={[styles.prose, styles.lede]} set:html={descriptionHtml} /> : null}
+
+      {showReview && reviewContent ? (
+        <section class={styles.section} aria-labelledby="book-back-cover">
+          <h2 id="book-back-cover" class={styles.sectionTitle}>Quarta di copertina</h2>
+          <div class={styles.prose}>
+            <StructuredText
+              data={reviewContent as any}
+              blockComponents={defaultBlockComponents as any}
+              linkToRecordComponents={defaultLinkToRecordComponents as any}
+            />
+          </div>
+        </section>
+      ) : null}
+
+      <AuthorsSection title={authorsSectionTitle} authors={authorsCards} />
+
+      {editionDetails.length > 0 || graphicsDetails.length > 0 ? (
+        <section class={styles.section} aria-labelledby="book-details">
+          <h2 id="book-details" class={styles.sectionTitle}>Dettagli</h2>
+          <div class={styles.detailsGrid}>
+            {editionDetails.length > 0 ? <DetailList title="Edizione" items={editionDetails} /> : null}
+            {graphicsDetails.length > 0 ? <DetailList title="Grafica" items={graphicsDetails} /> : null}
+          </div>
+          {draftModeEnabled ? (
+            <p class={styles.staffLink}>
+              <a href={`/libri/schede/${book.slug}`} target="_blank" rel="noopener noreferrer">
+                Scheda libro (PDF) — staff
+              </a>
+            </p>
+          ) : null}
+        </section>
+      ) : null}
+
+      {reviewPreviews.length > 0 ? (
+        <section class={styles.section} aria-labelledby="book-reviews">
+          <h2 id="book-reviews" class={styles.sectionTitle}>Recensioni</h2>
+          <ul class={styles.reviews}>
+            {reviewPreviews.map((review) => (
+              <li data-review-id={review.id} class={styles.review}>
+                {review.dateLabel || review.authorName ? (
+                  <p class={styles.reviewMeta}>
+                    {review.dateLabel ? (
                       <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
-                      {review.authorName ? <span class="mx-2">•</span> : null}
-                      {review.authorName ? <span>A cura di {review.authorName}</span> : null}
-                    </p>
-                  ) : null}
-                  <p
-                    class="text-xl font-serif text-brand-navy transition group-hover:text-brand-sky"
-                  >
-                    {review.title}
+                    ) : null}
+                    {review.dateLabel && review.authorName ? ' · ' : null}
+                    {review.authorName ? <span>a cura di {review.authorName}</span> : null}
                   </p>
-                  <p class="text-sm leading-relaxed text-brand-charcoal/90">
-                    {review.excerpt}{' '}
-                    <span
-                      class="inline-flex items-center gap-1 font-semibold text-brand-sky group-hover:text-brand-navy"
-                    >
-                      Leggi recensione completa
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </a>
-          </li>)}
-        </ul>
-      </section>
-    ) : null}
+                ) : null}
+                <h3 class={styles.reviewTitle}>
+                  <a href={`/magazine/${review.slug}`}>{review.title}</a>
+                </h3>
+                {review.excerpt ? <p class={styles.reviewExcerpt}>{review.excerpt}</p> : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </div>
 
     {collectionCarouselTitle && collectionCarouselId && collectionCarouselBooks.length > 0 ? (
       <BookCarouselSection

@@ -1,20 +1,31 @@
 ---
+// A magazine article: a slim title row (h1, then category · date · byline, then the lede), the
+// featured image whole, the text in a 68ch reading column, and at the end the way on: more
+// articles of the same category and back to the magazine. Books appear where editors place them.
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import { Image } from '@datocms/astro/Image';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import { shiftHeadings } from '~/lib/datocms/structuredTextHeadings';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
-import { MAGAZINE_POST_QUERY, type MagazinePostQueryResult } from './_graphql';
+import {
+  MAGAZINE_POST_QUERY,
+  MAGAZINE_RELATED_QUERY,
+  type MagazinePostQueryResult,
+  type MagazineRelatedResult,
+} from './_graphql';
 import {
   defaultBlockComponents,
-  defaultInlineBlockComponents,
+  defaultInlineRecordComponents,
   defaultLinkToRecordComponents,
+  defaultNodeOverrides,
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
-import { toPlainText } from '~/lib/text';
+import { toPlainText, withoutUrls } from '~/lib/text';
+import { categoryHref, categoryLabel, formatPostDate, postDate } from '~/lib/magazine';
 
 const { slug } = Astro.params;
 
@@ -32,80 +43,109 @@ const data = await executeQuery<MagazinePostQueryResult>(MAGAZINE_POST_QUERY, {
 const post = data.blogPost;
 
 if (!post) {
-  throw new Error(`Magazine post not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
-const heroTitle = post.title ?? 'Articolo';
-// L'abstract è gestito da un WYSIWYG: rimuoviamo i tag HTML per usarlo come
-// testo semplice nel sottotitolo e nella meta description.
-const heroSubtitle = toPlainText(post.abstract);
-const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-const label = post.category?.name ?? 'Magazine';
-const publishedAt = post.createdAt ?? null;
-const formattedDate = publishedAt
-  ? new Intl.DateTimeFormat('it-IT', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-    }).format(new Date(publishedAt))
-  : null;
-const authorName = post.author?.name?.trim()?.length ? post.author.name.trim() : null;
+const title = post.title?.trim() || 'Articolo';
+const plainAbstract = toPlainText(post.abstract);
+// The lede drops pasted source links, and disappears when it only repeats the title.
+const lede = withoutUrls(plainAbstract);
+const showLede = lede.length > 0 && lede.toLowerCase().replace(/\W/g, '') !== title.toLowerCase().replace(/\W/g, '');
+const publishedAt = postDate(post);
+const formattedDate = formatPostDate(publishedAt);
+const category = post.category ?? null;
+const categoryName = categoryLabel(category, 'singular');
+const categoryLink = categoryHref(category);
+const authorName = post.author?.name?.trim() || null;
 const heroImage = post.featuredImage?.responsiveImage ?? null;
-const hasBodyContent = hasStructuredTextContent(post.body);
+const body = shiftHeadings(post.body);
+const hasBodyContent = hasStructuredTextContent(body);
+
+const related = category?.id
+  ? ((
+      await executeQuery<MagazineRelatedResult>(MAGAZINE_RELATED_QUERY, {
+        variables: { id: post.id, category: category.id },
+        includeDrafts: draftModeEnabled,
+      })
+    ).allBlogPosts ?? []).filter((item) => item.slug && item.title)
+  : [];
+const relatedHeading = categoryLabel(category, 'others') ?? 'Altri articoli';
+const allInCategory = categoryLabel(category, 'all');
 
 const seo = withFallbackSeo(post._seoMetaTags, {
-  title: `${heroTitle} | Multimage`,
-  description: heroDescription,
+  title: `${title} | Multimage`,
+  description: plainAbstract ? withoutUrls(plainAbstract) : undefined,
 });
 ---
 
 <BaseLayout seo={seo}>
-  <article class={styles.layout}>
-    <section class={styles.heroSection}>
-      <div class={styles.heroContent}>
-        <p class={styles.label}>{label}</p>
-        <h1 class={styles.title}>{heroTitle}</h1>
-        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
-        {formattedDate || authorName ? (
-          <div class={styles.meta}>
-            {formattedDate ? (
-              <time datetime={publishedAt ?? undefined} class={styles.metaItem}>
-                {formattedDate}
-              </time>
-            ) : null}
-            {authorName ? <span class={styles.metaItem}>Di {authorName}</span> : null}
-          </div>
-        ) : null}
-      </div>
-    </section>
+  <article class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>{title}</h1>
+      {categoryName || formattedDate || authorName ? (
+        <p class={styles.meta}>
+          {categoryName ? (
+            categoryLink ? <a href={categoryLink}>{categoryName}</a> : <span>{categoryName}</span>
+          ) : null}
+          {formattedDate ? <time datetime={publishedAt ?? undefined}>{formattedDate}</time> : null}
+          {authorName ? <span>di {authorName}</span> : null}
+        </p>
+      ) : null}
+      {showLede ? <p class={styles.lede}>{lede}</p> : null}
+    </header>
 
     {heroImage ? (
-      <div class={styles.featuredImage}>
+      <figure class={styles.figure}>
         <Image
           data={heroImage}
-          sizes="(min-width: 1280px) 60vw, 95vw"
+          priority
+          sizes="(min-width: 1024px) 56rem, 100vw"
           pictureClass="block"
-          imgClass="h-full w-full object-cover"
+          imgClass={styles.figureImage}
         />
-      </div>
+      </figure>
     ) : null}
 
-    <section class={styles.bodySection}>
-      {hasBodyContent && post.body ? (
-        <div class={styles.bodyContent}>
+    <div class={styles.body}>
+      {hasBodyContent && body ? (
+        <div class={styles.prose}>
           <StructuredText
-            data={post.body as any}
+            data={body as any}
             blockComponents={defaultBlockComponents as any}
-            inlineBlockComponents={defaultInlineBlockComponents as any}
+            inlineRecordComponents={defaultInlineRecordComponents as any}
             linkToRecordComponents={defaultLinkToRecordComponents as any}
+            nodeOverrides={defaultNodeOverrides as any}
           />
         </div>
       ) : (
-        <p class="text-sm text-brand-slate">
-          I contenuti di questo articolo saranno disponibili a breve.
-        </p>
+        <p class={styles.note}>Il testo di questo articolo sarà disponibile a breve.</p>
       )}
-    </section>
+    </div>
+
+    <footer class={styles.next}>
+      {related.length > 0 ? (
+        <section aria-labelledby="altri-articoli">
+          <h2 id="altri-articoli" class={styles.nextTitle}>
+            {relatedHeading}
+          </h2>
+          <ul class={styles.nextList}>
+            {related.map((item) => {
+              const date = formatPostDate(postDate(item));
+              return (
+                <li>
+                  <a href={`/magazine/${item.slug}`}>{item.title}</a>
+                  {date ? <span class={styles.nextDate}>{date}</span> : null}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : null}
+      <p class={styles.ways}>
+        {categoryLink && allInCategory ? <a href={categoryLink}>{allInCategory}</a> : null}
+        <a href="/magazine">Torna al magazine</a>
+      </p>
+    </footer>
   </article>
   <DraftModeQueryListener query={MAGAZINE_POST_QUERY} variables={{ slug }} />
 </BaseLayout>

@@ -1,15 +1,27 @@
 ---
+// /collane: the catalogue as the editors think it. A slim title row (as on /libri), then one shelf
+// per collection, largest first, "Fuori Collana" last: each with its latest covers on a field
+// tinted from the newest one, and a way into the catalogue filtered by that collection.
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import IndexHeroSection from '~/components/IndexHeroSection';
-import CollectionCard from '~/components/CollectionCard';
+import CollectionShelf from '~/components/CollectionShelf';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { toPlainText, truncateToLength } from '~/lib/text';
+import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import type { CollectionSummaryRecord } from '~/lib/datocms/types';
+import { extractYear } from '~/lib/books';
 import styles from './index/_style.module.css';
-import { COLLECTIONS_PAGE_QUERY, type CollectionsQueryResult } from './index/_graphql';
+import {
+  COLLECTIONS_PAGE_QUERY,
+  buildCollectionShelvesQuery,
+  type CollectionShelvesResult,
+  type CollectionsQueryResult,
+  type ShelfBookRecord,
+} from './index/_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
+
+const COVERS_PER_SHELF = 4;
+// Books without a collection: shown, but after every curated collection.
+const UNCURATED_SLUG = 'fuori-collana';
 
 const draftModeEnabled = resolveDraftMode(Astro);
 
@@ -17,63 +29,75 @@ const data = await executeQuery<CollectionsQueryResult>(COLLECTIONS_PAGE_QUERY, 
   includeDrafts: draftModeEnabled,
 });
 
-const collectionsIndexContent = data.collectionsIndexPage?.[0] ?? null;
-const heroSection = {
-  title: collectionsIndexContent?.title?.trim() || 'Collane',
-  subtitleHtml: collectionsIndexContent?.subtitle?.trim() || null,
-};
-const seo = withFallbackSeo(collectionsIndexContent?._seoMetaTags, {
-  title: heroSection.title,
-  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
+const indexContent = data.collectionsIndexPage?.[0] ?? null;
+const title = indexContent?.title?.trim() || 'Collane';
+const introHtml = indexContent?.subtitle?.trim() || null;
+const seo = withFallbackSeo(indexContent?._seoMetaTags, {
+  title,
+  description: introHtml ? toPlainText(introHtml) : undefined,
 });
 
-const bookCounts = new Map<string, number>();
-for (const book of data.allBooks ?? []) {
-  const collectionId = book.collection?.id;
-  if (!collectionId) continue;
-  bookCounts.set(collectionId, (bookCounts.get(collectionId) ?? 0) + 1);
-}
+const records = (data.allCollections ?? []).filter((collection) => collection.slug);
+const shelvesQuery = records.length > 0 ? buildCollectionShelvesQuery(records.map((c) => c.id)) : null;
+const shelvesData = shelvesQuery
+  ? await executeQuery<CollectionShelvesResult>(shelvesQuery, { includeDrafts: draftModeEnabled })
+  : {};
 
-const collections: Array<{
-  name: string;
-  slug: string;
-  description: string | null;
-  logo: CollectionSummaryRecord['logo'];
-  booksCount: number;
-}> = [];
+const count = (key: string) => (shelvesData[key] as { count: number } | undefined)?.count ?? 0;
 
-for (const collection of data.allCollections ?? []) {
-  const name = collection.name ?? 'Collana senza titolo';
-  const slug = collection.slug ?? '';
-  if (!slug) {
-    continue;
-  }
-
-  collections.push({
-    name,
-    slug,
-    description: truncateToLength(toPlainText(collection.description ?? ''), 160) || null,
-    logo: collection.logo,
-    booksCount: bookCounts.get(collection.id) ?? 0,
+const shelves = records
+  .map((collection, index) => {
+    const books = ((shelvesData[`books${index}`] as ShelfBookRecord[] | undefined) ?? []).filter(
+      (book) => book.archive !== true,
+    );
+    const total = count(`total${index}`);
+    const archived = count(`archived${index}`);
+    const newest = books[0] ?? null;
+    return {
+      name: collection.name?.trim() || 'Collana senza titolo',
+      slug: collection.slug as string,
+      description: toPlainText(collection.description ?? '') || null,
+      inCatalogue: Math.max(total - archived, 0),
+      archived,
+      latest: newest ? { title: newest.title.trim(), year: extractYear(newest.printYear) } : null,
+      covers: books
+        .filter((book) => book.coverImage?.responsiveImage)
+        .slice(0, COVERS_PER_SHELF)
+        .map((book) => ({ id: book.id, title: book.title, image: book.coverImage! })),
+    };
+  })
+  .filter((shelf) => shelf.inCatalogue + shelf.archived > 0)
+  .sort((a, b) => {
+    const aLast = a.slug === UNCURATED_SLUG ? 1 : 0;
+    const bLast = b.slug === UNCURATED_SLUG ? 1 : 0;
+    return aLast - bLast || b.inCatalogue - a.inCatalogue || a.name.localeCompare(b.name, 'it');
   });
-}
+
+const booksInCatalogue = shelves.reduce((sum, shelf) => sum + shelf.inCatalogue, 0);
+const sizeLine = `${shelves.length} collane · ${booksInCatalogue} libri in catalogo`;
 ---
 
 <BaseLayout seo={seo}>
-  <section class={styles.section}>
-    <div class={styles.intro}>
-      <IndexHeroSection title={heroSection.title} subtitleHtml={heroSection.subtitleHtml} />
-    </div>
+  <div class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>{title}</h1>
+      {shelves.length > 0 ? <p class={styles.size}>{sizeLine}</p> : null}
+      {introHtml ? <div class={styles.lede} set:html={introHtml} /> : null}
+    </header>
 
-    {collections.length === 0 ? (
-      <p class={styles.empty}>Nessuna collana pubblicata trovata.</p>
+    {shelves.length === 0 ? (
+      <div class={styles.empty}>
+        <p>Non ci sono collane da mostrare. Tutti i libri sono nel catalogo.</p>
+        <a href="/libri">Sfoglia il catalogo</a>
+      </div>
     ) : (
-      <div class={styles.collectionsGrid}>
-        {collections.map((collection) => (
-          <CollectionCard {...collection} />
+      <div class={styles.shelves}>
+        {shelves.map((shelf) => (
+          <CollectionShelf {...shelf} />
         ))}
       </div>
     )}
-  </section>
+  </div>
   <DraftModeQueryListener query={COLLECTIONS_PAGE_QUERY} />
+  {shelvesQuery ? <DraftModeQueryListener query={shelvesQuery} /> : null}
 </BaseLayout>

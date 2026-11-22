@@ -1,0 +1,191 @@
+---
+// Home first viewport: the book of the moment. Text on white, cover on a field tinted from the
+// cover's own colour (same treatment as FeaturedBookHighlight). The page H1 sits in a slim row
+// above it, so the book title is the section heading and no label is stacked over it.
+import { Image } from '@datocms/astro/Image';
+import type { ResponsiveImageType } from '@datocms/astro/Image';
+import type { AssetColor } from '~/lib/datocms/types';
+import Button from '~/components/ui/Button';
+import { coverFieldPalette } from '~/lib/colors';
+import { buildOrderMailto } from '~/lib/books';
+import styles from './style.module.css';
+
+type Props = {
+  pageTitle: string;
+  book: {
+    title: string;
+    subtitle?: string | null;
+    summary?: string | null;
+    priceLabel?: string | null;
+    link: string;
+    epubUrl?: string | null;
+  };
+  authors: Array<{ name: string; link: string | null }>;
+  coverImage?: ResponsiveImageType | null;
+  coverColors?: AssetColor[] | null;
+  collectionLabel?: string | null;
+  collectionHref?: string | null;
+};
+
+const {
+  pageTitle,
+  book,
+  authors,
+  coverImage = null,
+  coverColors = null,
+  collectionLabel = null,
+  collectionHref = null,
+}: Props = Astro.props;
+
+// Field behind the cover, a pale tint of the same hue for the text half (so the band reads as one
+// full-width field), the cover's coloured shadow, and a caption colour that reads on a dark field.
+const { field: fieldColor, copy: copyColor, shadow: shadowColor, caption: captionColor } =
+  coverFieldPalette(coverColors);
+
+const orderHref = buildOrderMailto({ title: book.title, authors: authors.map((author) => author.name) });
+const titleId = 'home-hero-book-title';
+---
+
+<section class={styles.hero} aria-labelledby={titleId}>
+  <div class="border-b border-brand-mist bg-white">
+    <div
+      class="container flex flex-col gap-2 py-3 md:flex-row md:py-5 md:items-center md:justify-between md:gap-8"
+    >
+      <h1 class="text-xl md:text-3xl">{pageTitle}</h1>
+      <div class="flex items-center">
+        <a
+          href="/libri"
+          class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold uppercase text-brand-navy hover:text-brand-navy hover:underline focus:text-brand-navy"
+        >
+          Sfoglia il catalogo
+          <iconify-icon
+            icon="iconoir:arrow-right"
+            width="18"
+            height="18"
+            aria-hidden="true"
+          ></iconify-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2">
+    <div
+      class:list={[
+        'flex items-center justify-center px-6 py-6 md:order-2 md:py-16',
+        styles.coverField,
+      ]}
+      style={`background: ${fieldColor};`}
+    >
+      <figure class="flex flex-col items-center gap-5">
+        {coverImage ? (
+          <a href={book.link} tabindex="-1" aria-hidden="true">
+            <Image
+              data={coverImage}
+              sizes="(min-width: 768px) 340px, 60vw"
+              pictureClass="block"
+              imgClass={styles.cover}
+              imgStyle={{ filter: `drop-shadow(24px 36px 48px ${shadowColor})` }}
+              priority
+            />
+          </a>
+        ) : (
+          <div
+            class="flex h-64 w-44 items-center justify-center bg-white/70 px-4 text-center text-sm font-semibold uppercase text-brand-slate md:h-96 md:w-64"
+          >
+            Copertina in arrivo
+          </div>
+        )}
+        <figcaption class="text-center text-sm font-semibold" style={`color: ${captionColor};`}>
+          Il libro del momento
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="flex items-center md:order-1" style={`background: ${copyColor};`}>
+      <div class={styles.copy}>
+        <h2 id={titleId} class="text-4xl text-balance md:text-5xl">{book.title}</h2>
+        {book.subtitle ? (
+          <p class="mt-3 text-lg font-medium text-brand-charcoal">{book.subtitle}</p>
+        ) : null}
+
+        {authors.length > 0 ? (
+          <p class="mt-4 text-base text-brand-charcoal">
+            di{' '}
+            {authors.map((author, index) => (
+              <>
+                {index > 0 ? (index === authors.length - 1 ? ' e ' : ', ') : null}
+                {author.link ? (
+                  <a
+                    href={author.link}
+                    class="font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
+                  >
+                    {author.name}
+                  </a>
+                ) : (
+                  <span class="font-semibold">{author.name}</span>
+                )}
+              </>
+            ))}
+          </p>
+        ) : null}
+
+        {book.summary ? (
+          <p class:list={['mt-5 text-brand-charcoal', styles.summary]}>{book.summary}</p>
+        ) : null}
+
+        {book.priceLabel ? (
+          <p class="mt-6 text-base text-brand-charcoal">
+            <span class="font-serif text-2xl font-semibold text-brand-navy">{book.priceLabel}</span>
+            <span class="ml-2">spedizione con piego di libri gratuita</span>
+          </p>
+        ) : null}
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Button href={book.link} primary class="min-h-11">Scopri il libro</Button>
+          <Button href={orderHref} primary={false} icon="iconoir:mail" class="min-h-11">
+            Ordinalo via email
+          </Button>
+        </div>
+
+        <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Altri modi per averlo">
+          <li>
+            <a
+              href="/distributori"
+              class="inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0"
+              >Cercalo in libreria</a
+            >
+          </li>
+          {book.epubUrl ? (
+            <li>
+              <a
+                href={book.epubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0"
+              >
+                Leggilo in ebook
+              </a>
+            </li>
+          ) : null}
+          <li>
+            <a
+              href="/info/ordinare"
+              class="inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0"
+              >Come ordinare</a
+            >
+          </li>
+          {collectionHref && collectionLabel ? (
+            <li>
+              <a
+                href={collectionHref}
+                class="inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0"
+                >{collectionLabel}</a
+              >
+            </li>
+          ) : null}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

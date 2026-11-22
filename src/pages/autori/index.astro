@@ -1,204 +1,221 @@
 ---
+// /autori: every author with books, A–Z. A slim title row (as on /libri and /collane), a search
+// that also knows legal names and aliases, a flat letter index, then per letter a grid of flat
+// author cards with their latest covers and the way to their books in the catalogue.
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import IndexHeroSection from '~/components/IndexHeroSection';
 import AuthorCard from '~/components/AuthorCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './index/_style.module.css';
-import { AUTHORS_PAGE_QUERY, type AuthorsPageQueryResult } from './index/_graphql';
+import {
+  AUTHORS_BOOKS_PAGE_SIZE,
+  AUTHORS_BOOKS_QUERY,
+  AUTHORS_PAGE_QUERY,
+  type AuthorBookRecord,
+  type AuthorsBooksResult,
+  type AuthorsPageQueryResult,
+} from './index/_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
+const COVERS_PER_AUTHOR = 3;
 const draftModeEnabled = resolveDraftMode(Astro);
+const firstPage = { first: AUTHORS_BOOKS_PAGE_SIZE, skip: 0 };
 
 const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
+  variables: firstPage,
 });
 
-const authorsIndexContent = data.authorsIndexPage?.[0] ?? null;
-const heroSection = {
-  title: authorsIndexContent?.title?.trim() || 'Autori',
-  subtitleHtml: authorsIndexContent?.subtitle?.trim() || null,
-};
-const seo = withFallbackSeo(authorsIndexContent?._seoMetaTags, {
-  title: heroSection.title,
-  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
+// The CDA returns at most 500 records per query: read the rest of the books, if any.
+const books: AuthorBookRecord[] = [...(data.allBooks ?? [])];
+const totalBooks = data._allBooksMeta?.count ?? books.length;
+while (books.length < totalBooks) {
+  const next = await executeQuery<AuthorsBooksResult>(AUTHORS_BOOKS_QUERY, {
+    includeDrafts: draftModeEnabled,
+    variables: { first: AUTHORS_BOOKS_PAGE_SIZE, skip: books.length },
+  });
+  if (!next.allBooks?.length) break;
+  books.push(...next.allBooks);
+}
+
+const indexContent = data.authorsIndexPage?.[0] ?? null;
+const title = indexContent?.title?.trim() || 'Autrici e autori';
+const introHtml = indexContent?.subtitle?.trim() || null;
+const seo = withFallbackSeo(indexContent?._seoMetaTags, {
+  title,
+  description: introHtml ? toPlainText(introHtml) : undefined,
 });
 
-const bookCounts = new Map<string, number>();
-for (const book of data.allBooks ?? []) {
+// Per author: books in and out of the catalogue, and the newest covers (in-catalogue ones first).
+type AuthorBooks = { inCatalogue: number; archived: number; covers: AuthorBookRecord[]; archivedCovers: AuthorBookRecord[] };
+const booksByAuthor = new Map<string, AuthorBooks>();
+for (const book of books) {
+  const isArchived = book.archive === true;
   for (const author of book.authors ?? []) {
     if (!author?.id) continue;
-    bookCounts.set(author.id, (bookCounts.get(author.id) ?? 0) + 1);
+    const entry = booksByAuthor.get(author.id) ?? { inCatalogue: 0, archived: 0, covers: [], archivedCovers: [] };
+    if (isArchived) entry.archived += 1;
+    else entry.inCatalogue += 1;
+    if (book.coverImage?.url) (isArchived ? entry.archivedCovers : entry.covers).push(book);
+    booksByAuthor.set(author.id, entry);
   }
 }
 
-const sortedAuthors = sortAuthorsForIndex(data.allAuthors ?? []);
-const authorCards = mapAuthorsToCards(sortedAuthors, { bookCounts }).filter(
-  (author) => author.slug.length > 0,
-);
+const records = sortAuthorsForIndex(data.allAuthors ?? []);
+const fullNames = new Map(records.map((record) => [record.id, record.fullName?.trim() || null]));
 
-type AuthorCardItem = (typeof authorCards)[number];
+// Profiles without a single book stay out of the index.
+const authors = mapAuthorsToCards(records)
+  .filter((author) => author.slug.length > 0 && booksByAuthor.has(author.id))
+  .map((author) => {
+    const own = booksByAuthor.get(author.id)!;
+    const fullName = fullNames.get(author.id) ?? null;
+    return {
+      ...author,
+      // Under an alias ("Silo"), the legal name ("Mario Luis Rodríguez Cobos").
+      legalName: author.alias && fullName && fullName !== author.name ? fullName : null,
+      inCatalogue: own.inCatalogue,
+      archived: own.archived,
+      covers: [...own.covers, ...own.archivedCovers]
+        .slice(0, COVERS_PER_AUTHOR)
+        .map((book) => book.coverImage!),
+      search: [author.name, author.alias, fullName].filter(Boolean).join(' '),
+    };
+  });
+
+type AuthorItem = (typeof authors)[number];
 
 function buildAnchorSegment(letter: string) {
-  const normalized = letter.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normalized = letter.normalize('NFD').replace(/[̀-ͯ]/g, '');
   const cleaned = normalized.replace(/[^A-Za-z0-9]/g, '');
   return cleaned.length > 0 ? cleaned.toLowerCase() : 'other';
 }
 
-const authorGroupsMap = new Map<
-  string,
-  {
-    letter: string;
-    anchorId: string;
-    authors: AuthorCardItem[];
-  }
->();
-
-for (const author of authorCards) {
+const groupsMap = new Map<string, { letter: string; anchorId: string; authors: AuthorItem[] }>();
+for (const author of authors) {
   const letter = author.sortLetter || '#';
-  const anchorId = `group-${buildAnchorSegment(letter)}`;
-  if (!authorGroupsMap.has(letter)) {
-    authorGroupsMap.set(letter, { letter, anchorId, authors: [] as AuthorCardItem[] });
-  }
-  authorGroupsMap.get(letter)?.authors.push(author);
+  const anchorId = `lettera-${buildAnchorSegment(letter)}`;
+  if (!groupsMap.has(letter)) groupsMap.set(letter, { letter, anchorId, authors: [] });
+  groupsMap.get(letter)!.authors.push(author);
 }
+const groups = [...groupsMap.values()];
 
-const authorGroups = Array.from(authorGroupsMap.values());
-const navigationAnchors = authorGroups.map(({ letter, anchorId }) => ({ letter, anchorId }));
+const booksInCatalogue = books.filter((book) => book.archive !== true).length;
+const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libri in catalogo`;
 ---
 
 <BaseLayout seo={seo}>
-  <section class={styles.layout}>
-    <IndexHeroSection title={heroSection.title} subtitleHtml={heroSection.subtitleHtml} />
+  <div class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>{title}</h1>
+      {authors.length > 0 ? <p class={styles.size}>{sizeLine}</p> : null}
+      {introHtml ? <div class={styles.lede} set:html={introHtml} /> : null}
+    </header>
 
-    {authorCards.length === 0 ? (
-      <p class={styles.empty}>Gli autori saranno disponibili a breve.</p>
+    {authors.length === 0 ? (
+      <div class={styles.empty}>
+        <p>Non ci sono ancora autrici e autori da mostrare. Tutti i libri sono nel catalogo.</p>
+        <a href="/libri">Sfoglia il catalogo</a>
+      </div>
     ) : (
-      <div class={styles.container}>
-        <div id="char-menu" class="sr-only" aria-hidden="true" />
-
-        <div class={styles.searchBar}>
-          <div class={styles.searchPill}>
-            <svg
-              class={styles.searchIcon}
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-            <input
-              id="author-search"
-              type="search"
-              placeholder="Cerca per nome o alias…"
-              class={styles.searchInput}
-              autocomplete="off"
-              aria-label="Cerca autori per nome o alias"
-            />
-          </div>
+      <>
+        <div class={styles.tools}>
+          <label class={styles.search}>
+            <iconify-icon icon="iconoir:search" width="18" height="18" aria-hidden="true"></iconify-icon>
+            <span class="sr-only">Cerca autrici e autori per nome o alias</span>
+            <input id="author-search" type="search" placeholder="Cerca per nome o alias" autocomplete="off" />
+          </label>
+          <p id="author-results" class={styles.results} role="status" aria-live="polite"></p>
         </div>
 
-        <nav class={styles.nav} aria-label="Indice alfabetico autori">
-          {navigationAnchors.map(({ letter, anchorId }) => <a
-            href={`#${anchorId}`}
-            class={styles.navLink}
-            data-nav-anchor={anchorId}
-          >
-            {letter}
-          </a>)}
+        <nav id="indice-autori" class={styles.letters} aria-label="Indice alfabetico di autrici e autori">
+          {groups.map(({ letter, anchorId }) => (
+            <a href={`#${anchorId}`} data-nav-anchor={anchorId}>{letter}</a>
+          ))}
         </nav>
 
-        <p class={styles.noResults} id="author-no-results">Nessun autore trovato.</p>
-
-        <div class={styles.groupList}>
-          {authorGroups.map(({ letter, anchorId, authors }) => <section
-            id={anchorId}
-            class="space-y-8"
-            data-author-group
-          >
-            <div class={styles.groupHeader}>
-              <h2 class={styles.groupTitle}>{letter}</h2>
-              <a href="#char-menu" class={styles.backLink}> Torna al menu </a>
-            </div>
-
-            <div class={styles.authorsGrid}>
-              {authors.map((author) => <div
-                data-author-card
-                data-search={[author.name, author.alias].filter(Boolean).join(' ')}
-              >
-                <AuthorCard
-                  name={author.name}
-                  slug={author.slug}
-                  alias={author.alias}
-                  country={author.country}
-                  summary={author.summary}
-                  booksCount={author.booksCount}
-                  picture={author.picture}
-                />
-              </div>)}
-            </div>
-          </section>)}
+        <div id="author-no-results" class={styles.noResults} hidden>
+          <p class={styles.noResultsTitle}>Nessuna autrice o autore con questo nome</p>
+          <p>
+            Prova con il cognome o con un alias, oppure{' '}
+            <a id="author-search-site" href="/cerca">cerca in tutto il sito</a>.
+          </p>
         </div>
-      </div>
+
+        <div class={styles.groups}>
+          {groups.map(({ letter, anchorId, authors: groupAuthors }) => (
+            <section id={anchorId} class={styles.group} data-author-group aria-labelledby={`${anchorId}-title`}>
+              <h2 id={`${anchorId}-title`} class={styles.groupTitle}>{letter}</h2>
+              <div class={styles.grid}>
+                {groupAuthors.map((author) => (
+                  <div data-author-card data-search={author.search}>
+                    <AuthorCard
+                      name={author.name}
+                      slug={author.slug}
+                      legalName={author.legalName}
+                      summary={author.summary}
+                      inCatalogue={author.inCatalogue}
+                      archived={author.archived}
+                      picture={author.picture}
+                      covers={author.covers}
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </>
     )}
-  </section>
-  <DraftModeQueryListener query={AUTHORS_PAGE_QUERY} />
+
+    <p class={styles.publish}>
+      Vuoi pubblicare con Multimage?{' '}
+      <a href="/info/chi-siamo">Scopri come proporre la tua opera alla redazione</a>.
+    </p>
+  </div>
+  <DraftModeQueryListener query={AUTHORS_PAGE_QUERY} variables={firstPage} />
 </BaseLayout>
 
 <script is:inline>
   (function () {
     var input = document.getElementById('author-search');
     var noResults = document.getElementById('author-no-results');
+    var status = document.getElementById('author-results');
+    var siteSearch = document.getElementById('author-search-site');
     if (!input) return;
 
     function normalize(s) {
-      return s
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase();
+      return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
     }
 
     function filter() {
-      var query = normalize(input.value.trim());
-      var groups = document.querySelectorAll('[data-author-group]');
-      var totalVisible = 0;
+      var raw = input.value.trim();
+      var query = normalize(raw);
+      var terms = query.split(/\s+/).filter(Boolean);
+      var total = 0;
 
-      groups.forEach(function (group) {
-        var cards = group.querySelectorAll('[data-author-card]');
-        var groupVisible = 0;
-
-        cards.forEach(function (card) {
+      document.querySelectorAll('[data-author-group]').forEach(function (group) {
+        var visibleInGroup = 0;
+        group.querySelectorAll('[data-author-card]').forEach(function (card) {
           var text = normalize(card.dataset.search || '');
-          var visible = query === '' || text.includes(query);
-          card.style.display = visible ? '' : 'none';
-          if (visible) groupVisible++;
+          var visible = terms.every(function (term) { return text.indexOf(term) !== -1; });
+          card.hidden = !visible;
+          if (visible) visibleInGroup++;
         });
-
-        var hide = groupVisible === 0 && query !== '';
-        group.style.display = hide ? 'none' : '';
-        if (!hide) totalVisible += groupVisible;
-
+        group.hidden = visibleInGroup === 0;
+        total += visibleInGroup;
         var anchor = document.querySelector('[data-nav-anchor="' + group.id + '"]');
-        if (anchor) anchor.style.display = hide ? 'none' : '';
+        if (anchor) anchor.hidden = visibleInGroup === 0;
       });
 
-      if (noResults) {
-        if (query !== '' && totalVisible === 0) {
-          noResults.setAttribute('data-visible', '');
-        } else {
-          noResults.removeAttribute('data-visible');
-        }
+      if (noResults) noResults.hidden = !(terms.length > 0 && total === 0);
+      if (siteSearch) siteSearch.href = raw ? '/cerca?q=' + encodeURIComponent(raw) : '/cerca';
+      if (status) {
+        status.textContent =
+          terms.length === 0 ? '' : total === 1 ? '1 risultato' : total + ' risultati';
       }
     }
 

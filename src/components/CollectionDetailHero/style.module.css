@@ -1,33 +1,46 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply relative overflow-hidden border border-white/70 bg-white/95 px-6 py-12 text-center shadow-soft backdrop-blur-xs sm:px-12 sm:py-16;
+  @apply flex flex-col-reverse gap-6 md:flex-row md:items-start md:justify-between md:gap-12;
 }
 
-.background {
-  @apply pointer-events-none absolute inset-0 -z-10 bg-linear-to-br/srgb from-brand-mist/70 via-white/60 to-brand-sand/70;
-}
-
-.content {
-  @apply relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-8;
-}
-
-.label {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-slate;
+.text {
+  @apply max-w-3xl space-y-3;
 }
 
 .title {
-  @apply text-4xl font-serif text-brand-navy md:text-5xl;
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
 }
 
-.logoWrapper {
-  @apply flex h-36 w-36 items-center justify-center bg-brand-mist/40 p-4 shadow-inner;
-}
-
-.logoImage {
-  @apply h-full w-full object-contain;
+.size {
+  @apply font-serif text-xl text-brand-slate lining-nums;
 }
 
 .description {
-  @apply text-base leading-relaxed text-brand-charcoal/80 md:text-lg md:leading-7;
+  @apply max-w-[68ch] text-base leading-relaxed text-brand-charcoal md:text-lg;
+}
+
+.ways {
+  @apply flex flex-wrap gap-x-6 text-sm font-semibold;
+}
+
+.ways a {
+  @apply inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+}
+
+/* The mark is contained in a fixed box whatever its proportions (some logos are square, some wide). */
+.logo {
+  @apply flex h-20 w-40 shrink-0 items-center justify-start md:h-28 md:w-44 md:justify-end;
+}
+
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
+.logoImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+  object-position: left center;
+
+  @media (width >= 48rem) {
+    object-position: right center;
+  }
 }

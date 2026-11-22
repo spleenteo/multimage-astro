@@ -210,7 +210,9 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
         siteId: '47684062',
         lang: 'it',
         banner: {
-          position: 'float-top-center',
+          // Full-width bar at the bottom: at the top it covered most of the first screen on phones,
+          // and the floating box covered the home hero's main action.
+          position: 'bottom',
           acceptButtonDisplay: true,
           customizeButtonDisplay: true,
         },
@@ -240,8 +242,15 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     ></script>
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
+    <a
+      href="#contenuto"
+      data-datocms-noindex
+      class="sr-only bg-white px-4 py-3 text-sm font-semibold text-brand-navy focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+    >
+      Vai al contenuto
+    </a>
     <Header currentPath={currentPath} infoPages={infoPages} />
-    <main class="flex-1 bg-white">
+    <main id="contenuto" class="flex-1 bg-white">
       <div class="container py-12 md:py-16">
         <slot />
       </div>

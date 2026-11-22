@@ -32,7 +32,7 @@ const detailData = await executeQuery<CollectionDetailResult>(COLLECTION_DETAIL_
 const collection = detailData.collection;
 
 if (!collection) {
-  throw new Error(`Collection not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const relatedData = await executeQuery<CollectionRelatedBooksResult>(
@@ -47,7 +47,12 @@ const collectionName = collection.name ?? 'Collana senza titolo';
 const descriptionPlain = toPlainText(collection.description ?? null);
 const collectionDescription = descriptionPlain.length > 0 ? descriptionPlain : null;
 const booksCount = relatedData._allBooksMeta?.count ?? 0;
-const relatedBooks = mapBooksToCards(relatedData.allBooks);
+const archivedCount = relatedData.archivedMeta?.count ?? 0;
+// Newest print year first; out-of-catalogue titles after the ones that can be ordered.
+const relatedBooks = mapBooksToCards(relatedData.allBooks).sort(
+  (a, b) => Number(a.isArchived) - Number(b.isArchived),
+);
+const hiddenBooks = Math.max(booksCount - relatedBooks.length, 0);
 const seo = withFallbackSeo(collection._seoMetaTags, {
   title: `${collectionName} | Multimage`,
   description: collectionDescription ?? undefined,
@@ -58,14 +63,19 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
   <article class={styles.layout}>
     <CollectionDetailHero
       name={collectionName}
-      booksCount={booksCount}
+      slug={collection.slug ?? slug}
+      inCatalogue={Math.max(booksCount - archivedCount, 0)}
+      archived={archivedCount}
       description={collectionDescription}
       logo={collection.logo}
     />
 
-    <section class={styles.booksSection}>
+    <section class={styles.booksSection} aria-labelledby="collection-books">
+      <h2 id="collection-books" class={styles.booksTitle}>I libri della collana</h2>
       {relatedBooks.length === 0 ? (
-        <p class="text-sm text-brand-slate">Nessun libro presente in questa collana.</p>
+        <p class={styles.more}>
+          Questa collana non ha ancora libri. <a href="/libri">Sfoglia il catalogo</a>
+        </p>
       ) : (
         <div class={styles.booksGrid}>
           {relatedBooks.map((book) => (
@@ -73,17 +83,26 @@ const seo = withFallbackSeo(collection._seoMetaTags, {
               title={book.title}
               slug={book.slug}
               subtitle={book.subtitle}
-              summary={book.summary}
               coverImage={book.coverImage}
+              pages={book.pages}
               authors={book.authors}
-              license={book.license}
               format={book.format}
               price={book.price}
+              printYear={book.printYear}
               isArchived={book.isArchived}
+              variant="catalogue"
             />
           ))}
         </div>
       )}
+      {hiddenBooks > 0 ? (
+        <p class={styles.more}>
+          Qui ne vedi {relatedBooks.length} su {booksCount}.{' '}
+          <a href={`/libri?collana=${encodeURIComponent(collection.slug ?? slug)}&archivio=1`}>
+            Vedi tutti i libri della collana nel catalogo
+          </a>
+        </p>
+      ) : null}
     </section>
   </article>
   <DraftModeQueryListener query={COLLECTION_DETAIL_QUERY} variables={{ slug }} />

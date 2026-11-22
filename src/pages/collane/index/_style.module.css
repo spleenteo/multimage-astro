@@ -1,17 +1,38 @@
 @reference '../../../styles/global.css';
 
-.section {
-  @apply space-y-12;
+.page {
+  @apply space-y-8 md:space-y-10;
 }
 
+/* Slim title row, as on /libri: h1, one serif size line, the CMS lede (hidden on phones). */
 .intro {
-  @apply mx-auto max-w-5xl;
+  @apply max-w-4xl space-y-3;
 }
 
-.collectionsGrid {
-  @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
+.title {
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
+}
+
+.size {
+  @apply font-serif text-xl text-brand-slate lining-nums;
+}
+
+.lede {
+  @apply max-w-3xl text-base leading-relaxed text-brand-charcoal max-sm:hidden md:text-lg;
+}
+
+.lede :global(strong) {
+  @apply font-semibold;
+}
+
+.shelves {
+  @apply space-y-8 md:space-y-10;
 }
 
 .empty {
-  @apply text-brand-slate;
+  @apply space-y-3 bg-brand-mist px-6 py-10 text-brand-charcoal md:px-10;
+}
+
+.empty a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2;
 }

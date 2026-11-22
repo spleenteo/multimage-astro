@@ -1,42 +1,46 @@
 ---
+// A collection page's title row, in the catalogue's slim form: h1, the size as a serif line, the
+// editors' description, the way into the catalogue filtered by this collection. The logo sits
+// beside it, contained, as the collection's mark.
 import { Image } from '@datocms/astro/Image';
 import type { AssetImage } from '~/lib/datocms/types';
 import styles from './style.module.css';
 
 type Props = {
   name: string;
-  booksCount: number;
+  slug: string;
+  inCatalogue: number;
+  archived: number;
   description?: string | null;
   logo?: AssetImage | null;
-  className?: string;
 };
 
-const { name, booksCount, description, logo, className = '' }: Props = Astro.props;
-const booksLabel =
-  booksCount === 1
-    ? 'Collana editoriale con 1 libro'
-    : `Collana editoriale con ${booksCount} libri`;
-const logoResponsiveImage = logo?.responsiveImage
-  ? { ...logo.responsiveImage, alt: logo.responsiveImage.alt ?? name }
-  : null;
+const { name, slug, inCatalogue, archived, description = null, logo = null }: Props = Astro.props;
+const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
+const sizeLine = [
+  inCatalogue > 0 ? `${plural(inCatalogue)} in catalogo` : null,
+  archived > 0 ? `${archived} fuori catalogo` : null,
+]
+  .filter(Boolean)
+  .join(' · ');
+const logoImage = logo?.responsiveImage ? { ...logo.responsiveImage, alt: '' } : null;
 ---
 
-<div class:list={[styles.root, className]}>
-  <div class={styles.background}></div>
-  <div class={styles.content}>
-    <p class={styles.label}>{booksLabel}</p>
+<header class={styles.root}>
+  <div class={styles.text}>
     <h1 class={styles.title}>{name}</h1>
-
-    {logoResponsiveImage ? (
-      <div class={styles.logoWrapper}>
-        <Image
-          data={logoResponsiveImage}
-          sizes="(min-width: 1024px) 220px, 40vw"
-          imgClass={styles.logoImage}
-        />
-      </div>
-    ) : null}
-
+    {sizeLine ? <p class={styles.size}>{sizeLine}</p> : null}
     {description ? <p class={styles.description}>{description}</p> : null}
+    <p class={styles.ways}>
+      {inCatalogue > 0 ? (
+        <a href={`/libri?collana=${encodeURIComponent(slug)}`}>Sfoglia nel catalogo, con i filtri</a>
+      ) : null}
+      <a href="/collane">Tutte le collane</a>
+    </p>
   </div>
-</div>
+  {logoImage ? (
+    <div class={styles.logo}>
+      <Image data={logoImage} sizes="160px" pictureClass="block h-full w-full" imgClass={styles.logoImage} />
+    </div>
+  ) : null}
+</header>

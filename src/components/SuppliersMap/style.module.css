@@ -1,0 +1,49 @@
+@reference '../../styles/global.css';
+
+.root {
+  @apply space-y-2;
+}
+
+/* Square corners, a hairline frame; shorter on phones so the list stays close. */
+.map {
+  @apply relative h-[22rem] w-full overflow-hidden border border-brand-navy/10 bg-brand-mist md:h-[30rem];
+}
+
+.loading {
+  @apply flex h-full items-center justify-center text-sm text-brand-slate;
+}
+
+.caption {
+  @apply text-sm text-brand-slate;
+}
+
+.caption a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+/* The popup is MapLibre's own DOM: styled globally, scoped under the map. */
+.map :global(.maplibregl-popup-content) {
+  @apply rounded-none px-4 py-3 font-sans text-sm text-brand-charcoal shadow-none;
+  border: 1px solid color-mix(in srgb, var(--color-brand-navy) 15%, transparent);
+}
+
+.map :global(.suppliers-map-name) {
+  @apply font-serif text-base text-brand-navy;
+}
+
+.map :global(.suppliers-map-links) {
+  @apply mt-2 flex flex-wrap gap-x-4;
+}
+
+.map :global(.suppliers-map-links a) {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 md:min-h-8;
+}
+
+.map :global(.maplibregl-ctrl-group) {
+  @apply rounded-none;
+}
+
+/* The popup's close button, large enough for a thumb. */
+.map :global(.maplibregl-popup-close-button) {
+  @apply h-9 w-9 text-xl text-brand-navy;
+}

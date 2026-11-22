@@ -1,55 +1,40 @@
-.search-page {
-  padding: 4rem 0 6rem;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 244, 240, 0.9));
-}
+@reference '../../styles/global.css';
 
-.search-page__container {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+/* /cerca: the Bookshop Window on a white page. A slim title row, a flat search field, one line of
+   toggles, the status, then flat result rows on hairlines (as on /magazine and /autori). */
+
+.search-page {
+  @apply space-y-6 md:space-y-8;
 }
 
 .search-page__intro {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  @apply max-w-4xl space-y-2;
 }
 
 .search-page__title {
-  font-size: clamp(1.8rem, 2vw + 1rem, 2.6rem);
-  font-weight: 700;
-  color: var(--brand-navy, #16213e);
+  @apply font-serif text-3xl text-brand-navy md:text-4xl;
 }
 
-.search-page__subtitle {
-  max-width: 48rem;
-  color: rgba(9, 21, 40, 0.7);
-  line-height: 1.6;
+.search-page__lede {
+  @apply text-base text-brand-charcoal md:text-lg;
 }
 
+/* The catalogue's text field: hairline frame, square, the outline on the whole field. */
 .search-page__form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(15, 32, 60, 0.1);
-  border-radius: 9999px;
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 12px 40px rgba(13, 30, 54, 0.08);
+  @apply flex max-w-3xl items-stretch border border-brand-navy/25 bg-white;
+}
+
+.search-page__form:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
 }
 
 .search-page__label {
-  flex: 1 1 240px;
+  @apply flex min-w-0 flex-1 items-center gap-2 pl-3 text-brand-slate;
 }
 
 .search-page__input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-size: 1rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--brand-navy, #16213e);
+  @apply min-h-12 w-full min-w-0 bg-transparent px-1 text-lg text-brand-charcoal placeholder:text-brand-slate;
 }
 
 .search-page__input:focus {
@@ -57,242 +42,169 @@
 }
 
 .search-page__submit {
-  appearance: none;
-  border: none;
-  border-radius: 9999px;
-  background: var(--brand-orange, #f27052);
-  color: #fff;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  padding: 0.65rem 1.5rem;
-  cursor: pointer;
-  transition:
-    transform 160ms ease,
-    background 160ms ease;
+  @apply min-h-12 shrink-0 bg-brand-navy px-5 text-base font-semibold text-white hover:bg-brand-navy/90;
 }
 
-.search-page__submit:hover,
-.search-page__submit:focus-visible {
-  background: var(--brand-crimson, #c74a35);
-  outline: none;
-  transform: translateY(-1px);
-}
-
-.search-page__status {
-  font-size: 0.95rem;
-  color: rgba(9, 21, 40, 0.75);
-  min-height: 1.5rem;
-}
-
-.search-results__list {
-  display: grid;
-  gap: 1.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Type toggles and the exact-phrase switch on one line, between hairlines. */
+.search-page__tools {
+  @apply flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-y border-brand-navy/10 py-1;
 }
 
 .search-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  color: rgba(9, 21, 40, 0.8);
-  font-size: 0.9rem;
+  @apply flex flex-wrap items-center gap-x-1;
 }
 
 .search-filters__label {
-  font-weight: 600;
-  color: var(--brand-navy, #16213e);
+  @apply float-left mr-2 text-sm text-brand-slate;
 }
 
-.search-filters__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  position: relative;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 9999px;
-  border: 1px solid rgba(15, 32, 60, 0.12);
-  padding: 0.4rem 0.85rem;
-  cursor: pointer;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
+.search-filters__item,
+.search-exact {
+  @apply relative inline-flex min-h-11 cursor-pointer items-center gap-2 px-3 text-base text-brand-navy hover:bg-brand-mist;
 }
 
-.search-filters__item:hover,
-.search-filters__item:focus-within {
-  border-color: rgba(15, 32, 60, 0.25);
-  background: #ffffff;
-}
-
+/* The checkbox stays in the accessibility tree; the label shows its state. */
 .search-filters__item input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  accent-color: var(--brand-orange, #f27052);
+  @apply absolute inset-0 cursor-pointer opacity-0;
 }
 
-.search-filters__item iconify-icon {
-  color: var(--brand-orange, #f27052);
-}
-
-.search-filters__item.is-active,
 .search-filters__item:has(input:checked) {
-  background: var(--brand-orange, #f27052);
-  border-color: var(--brand-orange, #f27052);
-  color: #fff;
+  @apply bg-brand-navy text-white hover:bg-brand-navy;
 }
 
-.search-filters__item.is-active iconify-icon,
-.search-filters__item.is-active span,
-.search-filters__item:has(input:checked) iconify-icon,
-.search-filters__item:has(input:checked) span {
-  color: #fff;
+.search-filters__item:has(:focus-visible),
+.search-exact:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+.search-exact {
+  @apply px-2 text-sm text-brand-charcoal;
+}
+
+.search-exact input {
+  @apply h-4 w-4 accent-brand-navy;
+}
+
+.search-exact input:focus-visible {
+  outline: none;
+}
+
+.search-page__status {
+  @apply max-w-3xl text-base text-brand-charcoal;
+}
+
+/* Flat rows on hairlines. */
+.search-results[aria-busy='true'] {
+  opacity: 0.55;
+}
+
+.search-results__list {
+  @apply max-w-4xl divide-y divide-brand-navy/10 border-y border-brand-navy/10;
 }
 
 .search-result {
-  display: grid;
-  gap: 0.75rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 12px 32px rgba(13, 30, 54, 0.08);
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease;
+  @apply relative flex gap-4 py-5 md:gap-6;
 }
 
-.search-result:hover,
-.search-result:focus-within {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 48px rgba(13, 30, 54, 0.14);
+/* A small cover on a pale field tinted from it. */
+.search-result__cover {
+  @apply flex w-20 shrink-0 items-center justify-center self-start px-2 py-2 md:w-24;
 }
 
-.search-result__badges {
-  display: inline-flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 0.35rem;
+.search-result__cover img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 4.5rem;
+  object-fit: contain;
+  filter: drop-shadow(2px 4px 5px rgb(9 21 40 / 0.2));
+
+  @media (width >= 48rem) {
+    height: 6rem;
+  }
 }
 
-.search-result__badge {
-  align-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 0.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  background: rgba(8, 138, 242, 0.14);
-  color: var(--brand-navy, #16213e);
-  padding: 0.4rem 1.05rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(8, 138, 242, 0.35);
-  margin-bottom: 0.35rem;
-}
-
-.search-result__badge iconify-icon {
-  color: var(--brand-sky, #088af2);
-  font-size: 1.25rem;
-}
-
-.search-result__badge--archived {
-  background: rgba(174, 14, 14, 0.18);
-  color: var(--brand-navy, #16213e);
-  border-color: rgba(174, 14, 14, 0.5);
-  letter-spacing: 0.15em;
+.search-result__body {
+  @apply min-w-0 flex-1 space-y-1;
 }
 
 .search-result__title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--brand-navy, #16213e);
-  line-height: 1.4;
+  @apply font-serif text-xl leading-snug text-pretty text-brand-navy md:text-2xl;
 }
 
 .search-result__title a {
-  color: inherit;
-  text-decoration: none;
+  @apply text-brand-navy no-underline hover:underline focus:text-brand-navy;
 }
 
-.search-result__title a:hover,
-.search-result__title a:focus {
-  text-decoration: underline;
+/* The title link covers the row, so the cover and excerpt are clickable too. */
+.search-result__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.search-result:hover .search-result__title a {
+  @apply underline underline-offset-2;
+}
+
+.search-result__meta {
+  @apply flex flex-wrap items-baseline gap-x-2 text-sm text-brand-slate;
+}
+
+.search-result__price {
+  @apply font-serif text-base text-brand-navy lining-nums;
+}
+
+/* Sits above the stretched title link. */
+.search-result__edition {
+  @apply relative z-10 inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0;
 }
 
 .search-result__excerpt {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: rgba(9, 21, 40, 0.8);
+  @apply max-w-[68ch] text-base leading-relaxed text-pretty text-brand-charcoal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
 }
 
-.search-result__url {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: rgba(9, 21, 40, 0.55);
+.search-result mark,
+.search-page mark.highlight {
+  @apply bg-brand-sky/20 font-semibold text-brand-navy;
 }
 
-.search-result__url-link {
-  color: inherit;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+.search-results__more {
+  @apply pt-6;
 }
 
-.search-result__url-link:hover,
-.search-result__url-link:focus-visible {
-  color: var(--brand-orange, #f27052);
-  text-decoration: underline;
+.search-results__more[hidden] {
+  display: none;
 }
 
-.highlight {
-  background: rgba(242, 112, 82, 0.25);
-  color: inherit;
-  padding: 0 0.2em;
-  border-radius: 0.25em;
+.search-results__more-button {
+  @apply inline-flex min-h-11 items-center border border-brand-navy px-5 text-base font-semibold text-brand-navy hover:bg-brand-navy hover:text-white disabled:opacity-60;
 }
 
-@media (max-width: 768px) {
-  .search-page {
-    padding: 2.5rem 0 4rem;
-  }
+/* Ways on, when there is nothing to show yet or nothing was found. */
+.search-ways {
+  @apply max-w-3xl space-y-2 border-t border-brand-navy/10 pt-6;
+}
 
-  .search-page__form {
-    border-radius: 1.5rem;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
+.search-ways[hidden] {
+  display: none;
+}
 
-  .search-page__submit {
-    display: none;
-  }
+.search-ways__title {
+  @apply font-serif text-xl text-brand-navy;
+}
 
-  .search-page__label {
-    flex: 1 1 auto;
-  }
+.search-ways ul {
+  @apply flex flex-wrap gap-x-6;
+}
 
-  .search-filters {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    justify-items: stretch;
-  }
-
-  .search-filters__label {
-    display: block;
-    grid-column: 1 / -1;
-  }
-
-  .search-filters__item {
-    justify-content: center;
-  }
+.search-ways a {
+  @apply inline-flex min-h-11 items-center text-base font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
 }

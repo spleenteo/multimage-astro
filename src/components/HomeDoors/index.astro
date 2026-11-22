@@ -1,0 +1,29 @@
+---
+// The three ways into the catalogue, right under the home hero. Fixed in code (see doors.ts).
+import { HOME_DOORS as DOORS } from './doors';
+---
+
+<nav aria-label="Esplora i libri" class="-mx-6 border-b border-brand-mist bg-white sm:mx-0">
+  <ul class="grid divide-y divide-brand-mist md:grid-cols-3 md:divide-x md:divide-y-0">
+    {DOORS.map((door) => <li>
+      <a
+        href={door.href}
+        class="group flex min-h-11 items-center justify-between gap-4 px-6 py-6 text-brand-charcoal hover:bg-brand-mist hover:text-brand-charcoal focus:text-brand-charcoal focus-visible:-outline-offset-4 md:px-8 md:py-8"
+      >
+        <span class="flex flex-col gap-1">
+          <span class="font-serif text-2xl font-semibold text-brand-navy group-hover:underline">
+            {door.title}
+          </span>
+          <span class="text-sm">{door.text}</span>
+        </span>
+        <iconify-icon
+          icon="iconoir:arrow-right"
+          width="24"
+          height="24"
+          class="shrink-0 text-brand-navy transition-transform group-hover:translate-x-1"
+          aria-hidden="true"
+        ></iconify-icon>
+      </a>
+    </li>)}
+  </ul>
+</nav>

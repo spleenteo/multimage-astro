@@ -21,8 +21,6 @@ function buildUrl(basePath: string, slug: MaybeSlug) {
 // `allIndexPages(filter: { slug: { eq } })` query of each index route).
 export const INDEX_PAGE_PATHS: Readonly<Record<string, string>> = {
   libri: '/libri',
-  ebooks: '/libri/ebooks',
-  highlights: '/libri/highlights',
   archivio: '/libri/archivio',
   collane: '/collane',
   autori: '/autori',

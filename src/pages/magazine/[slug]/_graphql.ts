@@ -1,3 +1,4 @@
+import { SINGLE_AUTHOR_BLOCK_FIELDS, SINGLE_BOOK_BLOCK_FIELDS } from '~/components/datocms/structuredText/_graphql';
 import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { BlogPostRecord, SeoMetaTag } from '~/lib/datocms/types';
@@ -13,6 +14,7 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
       abstract
       sticky
       createdAt
+      _firstPublishedAt
       body {
         value
         blocks {
@@ -27,38 +29,8 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
               providerUid
             }
           }
-          ... on SingleBookRecord {
-            id
-            book {
-              id
-              title
-              subtitle
-              slug
-              coverImage {
-                responsiveImage(
-                  imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }
-                ) {
-                  ...ResponsiveImageFragment
-                }
-              }
-            }
-          }
-          ... on SingleAuthorRecord {
-            id
-            author {
-              id
-              fullName
-              alias
-              slug
-              picture {
-                responsiveImage(
-                  imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }
-                ) {
-                  ...ResponsiveImageFragment
-                }
-              }
-            }
-          }
+          ${SINGLE_BOOK_BLOCK_FIELDS}
+          ${SINGLE_AUTHOR_BLOCK_FIELDS}
           ... on BannerRecord {
             id
             title
@@ -131,9 +103,7 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
         }
       }
       featuredImage {
-        responsiveImage(
-          imgixParams: { fit: crop, crop: focalpoint, w: 1280, h: 720, auto: format }
-        ) {
+        responsiveImage(imgixParams: { fit: max, w: 1360, h: 1360, auto: format }) {
           ...ResponsiveImageFragment
         }
       }
@@ -164,6 +134,33 @@ export const MAGAZINE_POST_QUERY = /* GraphQL */ `
   }
 `;
 
+/** Up to three more articles of the same category, newest first, for the end of the article. */
+export const MAGAZINE_RELATED_QUERY = /* GraphQL */ `
+  query MagazineRelated($id: ItemId, $category: ItemId) {
+    allBlogPosts(
+      filter: { id: { neq: $id }, category: { eq: $category } }
+      orderBy: _firstPublishedAt_DESC
+      first: 3
+    ) {
+      id
+      title
+      slug
+      createdAt
+      _firstPublishedAt
+    }
+  }
+`;
+
+export type MagazineRelatedResult = {
+  allBlogPosts: Array<{
+    id: string;
+    title: string | null;
+    slug: string | null;
+    createdAt: string | null;
+    _firstPublishedAt: string | null;
+  }>;
+};
+
 export const MAGAZINE_POST_SLUGS_QUERY = /* GraphQL */ `
   query MagazinePostSlugs {
     allBlogPosts(first: 500) {
@@ -176,6 +173,7 @@ export type MagazinePostQueryResult = {
   blogPost:
     | (BlogPostRecord & {
         _seoMetaTags: SeoMetaTag[] | null;
+        _firstPublishedAt?: string | null;
       })
     | null;
 };

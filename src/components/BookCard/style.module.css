@@ -1,43 +1,32 @@
 @reference '../../styles/global.css';
 
+/* The card itself stays put; only the cover lifts on hover (DESIGN.md, "Only the Book Floats").
+   No overflow clipping: the 3D book may step out of its coloured field, over the card's edges, and
+   the card under the pointer rises above its neighbours so the book is never covered. */
 .root {
-  @apply flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  @apply relative flex h-full flex-col bg-white shadow-soft focus-visible:-outline-offset-4;
+}
+
+.root:hover,
+.root:focus-visible {
+  z-index: 10;
 }
 
 .heroPanel {
-  @apply relative flex w-full justify-center p-16 transition duration-300 ease-out group-hover:-translate-y-1 group-hover:shadow-soft;
-}
-
-.formatRibbon {
-  @apply pointer-events-none absolute left-6 top-6 z-10 inline-flex -rotate-12;
-}
-
-.archiveRibbon {
-  @apply pointer-events-none absolute right-6 top-6 z-10 inline-flex rotate-12;
-}
-
-.badge {
-  @apply bg-brand-sky/95 px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft;
-}
-
-.archiveBadge {
-  @apply bg-brand-slate px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft;
+  @apply relative flex w-full justify-center p-16;
 }
 
 .coverWrapper {
-  @apply relative flex items-center justify-center;
+  @apply relative z-10 flex items-center justify-center;
 }
 
-.coverImage {
-  @apply relative z-10 mx-auto h-56 w-auto max-w-[240px] object-contain;
+/* The 3D book (Book3D): the spine title in Playfair, like every book title on the site. */
+.book {
+  --b3d-font: var(--font-serif);
 }
 
 .coverFallback {
-  @apply flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate;
-}
-
-.dropShadow {
-  @apply pointer-events-none absolute left-1/2 top-full z-0 h-12 w-64 -translate-x-1/2 -translate-y-6 blur-[30px] transition duration-300 ease-out group-hover:opacity-10;
+  @apply flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase text-brand-slate;
 }
 
 .body {
@@ -45,21 +34,56 @@
 }
 
 .title {
-  @apply text-2xl font-serif text-brand-navy;
+  @apply text-2xl font-serif text-brand-navy text-balance group-hover:underline;
 }
 
 .subtitle {
-  @apply text-sm font-medium uppercase tracking-wide text-brand-slate;
+  @apply text-sm font-medium text-brand-slate;
 }
 
 .authors {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80;
+  @apply text-sm font-semibold normal-case text-brand-charcoal;
 }
 
 .summary {
-  @apply text-sm leading-relaxed text-brand-charcoal/70;
+  @apply text-sm leading-relaxed text-brand-charcoal;
 }
 
+.meta {
+  @apply text-sm text-brand-slate;
+}
+
+/* Serif figure, like every price on the site; mt-auto keeps prices on one line across a row. */
 .price {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-navy;
+  @apply mt-auto pt-1 font-serif text-xl font-semibold text-brand-navy lining-nums;
+}
+
+/* Catalogue variant: smaller panel; on phones a compact two-up card (cover, title, author). */
+.catalogue .heroPanel {
+  @apply px-6 py-10 max-sm:px-3 max-sm:py-6;
+}
+
+/* Covers line up by height (Book3D takes 208px); phones zoom the book down to 160px. */
+@media (width < 40rem) {
+  .catalogue .book {
+    zoom: 0.77;
+  }
+}
+
+.catalogue .body {
+  @apply gap-2 px-5 pb-5 pt-5 max-sm:gap-1 max-sm:px-3 max-sm:pb-4 max-sm:pt-3;
+}
+
+.catalogue .title {
+  @apply text-xl max-sm:text-base;
+}
+
+.catalogue .subtitle,
+.catalogue .meta,
+.catalogue .price {
+  @apply max-sm:hidden;
+}
+
+.catalogue .authors {
+  @apply max-sm:text-xs max-sm:font-medium;
 }

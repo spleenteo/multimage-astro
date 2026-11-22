@@ -1,9 +1,15 @@
 ---
-import { Image } from '@datocms/astro/Image';
+// Book card: cover on a field tinted from its own colour, then title, authors, one meta line and
+// the price. Only the cover moves on hover ("Only the Book Floats"): it turns into a 3D book
+// (Book3D) with its spine, in a pose of its own derived from the slug. The `catalogue` variant is the
+// quieter one used in the /libri grid: lighter field, no summary, compact on phones.
+import Book3D from '~/components/Book3D';
+import { bookPose, bookSpineColors } from '~/lib/bookPose';
 import type { AssetImage } from '~/lib/datocms/types';
 import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
+import { formatEuro } from '~/lib/currency';
+import { extractYear } from '~/lib/books';
 import AuthorNames from '~/components/ui/AuthorNames';
-import PriceTag from '~/components/ui/PriceTag';
 import styles from './style.module.css';
 
 type Props = {
@@ -14,17 +20,26 @@ type Props = {
   summary?: string | null;
   format?: string | null;
   coverImage?: AssetImage | null;
+  /** Page count: the thickness of the 3D book on hover. */
+  pages?: number | null;
   authors?: Array<{
     id: string;
     fullName?: string | null;
+    alias?: string | null;
   }>;
   license?: {
     name?: string | null;
     code?: string | null;
   } | null;
   price?: number | null;
+  printYear?: string | null;
+  collectionName?: string | null;
   className?: string;
   isArchived?: boolean | null;
+  variant?: 'default' | 'catalogue';
+  headingLevel?: 'h2' | 'h3';
+  /** Words before the names, e.g. "con" when the page already names the author. */
+  authorsPrefix?: string | null;
 };
 
 const {
@@ -35,74 +50,98 @@ const {
   summary,
   format,
   coverImage,
+  pages = null,
   authors = [],
   price,
+  printYear = null,
+  collectionName = null,
   className = '',
-  isArchived: archivedFlag = false,
+  isArchived = false,
+  variant = 'default',
+  headingLevel = 'h3',
+  authorsPrefix = null,
 }: Props = Astro.props;
 
+const isCatalogue = variant === 'catalogue';
 const destination = href ?? `/libri/${slug}`;
 
 const normalizedFormat = format?.trim() ?? null;
-const showFormatRibbon = normalizedFormat ? normalizedFormat.toLowerCase() !== 'cartaceo' : false;
-const formatLabel = normalizedFormat ? normalizedFormat.toUpperCase() : null;
+const isEbook = normalizedFormat ? normalizedFormat.toLowerCase() !== 'cartaceo' : false;
+const year = extractYear(printYear);
+const meta = [
+  collectionName?.trim() || null,
+  year,
+  isEbook ? normalizedFormat : null,
+  isArchived ? 'Fuori catalogo' : null,
+].filter((value): value is string => Boolean(value));
+
+const priceLabel = typeof price === 'number' ? formatEuro(price) : null;
 
 const baseColor = pickBaseColor(coverImage?.colors);
-const backgroundColor = lightenColor(baseColor, 0.18);
-const shadowColorHex = darkenColor(baseColor, 0.55);
-const shadowColor = hexToRgba(shadowColorHex, 0.42);
-const coverResponsiveImage = coverImage?.responsiveImage ?? null;
-const isArchived = archivedFlag === true;
+// In a grid of dozens the full-strength field turns into wallpaper: the catalogue keeps the hue,
+// lighter, so the cover stays the loudest thing in each card.
+const backgroundColor = lightenColor(baseColor, isCatalogue ? 0.55 : 0.18);
+const shadowColor = hexToRgba(darkenColor(baseColor, 0.55), isCatalogue ? 0.32 : 0.42);
+// The 3D book: covers line up by height (13rem in the catalogue, 14rem elsewhere; phones zoom it down
+// in CSS); the spine takes the cover's hue, pale, with bands at full strength and dark ink.
+const coverUrl = coverImage?.url ?? null;
+const coverAspect =
+  coverImage?.width && coverImage?.height ? coverImage.height / coverImage.width : 1.45;
+// Portrait covers take the full height; landscape and square ones are capped by width, so they fit
+// the field too (on phones the catalogue zooms the book to 77%: 180px wide becomes 139px).
+const maxCoverHeight = isCatalogue ? 208 : 224;
+const maxCoverWidth = isCatalogue ? 180 : 210;
+const coverHeight = Math.round(Math.min(maxCoverHeight, maxCoverWidth * coverAspect));
+const coverSrc = (h: number) => `${coverUrl}?h=${h}&fit=max&auto=format`;
+const pose = bookPose(slug);
+const spine = bookSpineColors(coverImage?.colors);
+const restShadow = `drop-shadow(18px 26px 32px ${shadowColor})`;
+const Heading = headingLevel;
 ---
 
-<a href={destination} class:list={[styles.root, 'group', className]}>
+<a
+  href={destination}
+  class:list={[styles.root, isCatalogue ? styles.catalogue : null, 'group', className]}
+>
   <article class="flex h-full flex-col">
-    <div class="relative w-full">
-      <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
-        {showFormatRibbon && formatLabel ? (
-          <div class={styles.formatRibbon}>
-            <span class={styles.badge}>{formatLabel}</span>
-          </div>
-        ) : null}
-
-        {isArchived ? (
-          <div class={styles.archiveRibbon}>
-            <span class={styles.archiveBadge}>Fuori catalogo</span>
-          </div>
-        ) : null}
-
-        {coverResponsiveImage ? (
-          <div class={styles.coverWrapper}>
-            <div
-              class={styles.dropShadow}
-              style={`background: ${shadowColor};`}
-              aria-hidden="true"
-            />
-            <Image
-              data={coverResponsiveImage}
-              sizes="(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw"
-              srcSetCandidates={[1, 2]}
-              imgClass={styles.coverImage}
-              imgStyle={{ filter: `drop-shadow(26px 36px 48px ${shadowColor})` }}
-            />
-          </div>
-        ) : (
-          <div class={styles.coverFallback}>Copertina in arrivo</div>
-        )}
-      </div>
+    <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
+      {coverUrl ? (
+        <div class={styles.coverWrapper}>
+          <Book3D
+            cover={coverSrc(coverHeight)}
+            srcset={`${coverSrc(coverHeight * 2)} 2x`}
+            alt=""
+            title={title}
+            pages={pages ?? undefined}
+            height={coverHeight}
+            aspect={coverAspect}
+            {...spine}
+            restShadow={restShadow}
+            hoverGroup
+            class={styles.book}
+            {...pose}
+          />
+        </div>
+      ) : (
+        <div class={styles.coverFallback}>Copertina in arrivo</div>
+      )}
     </div>
 
     <div class={styles.body}>
       <div class="space-y-1">
-        <h3 class={styles.title}>{title}</h3>
+        <Heading class={styles.title}>{title}</Heading>
         {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
       </div>
 
-      <AuthorNames authors={authors} class={styles.authors} />
+      {authors.length > 0 ? (
+        <AuthorNames authors={authors} prefix={authorsPrefix} class={styles.authors} />
+      ) : null}
 
-      {summary ? <p class={styles.summary}>{summary}</p> : null}
+      {!isCatalogue && summary ? <p class={styles.summary}>{summary}</p> : null}
 
-      <PriceTag value={price ?? null} class={styles.price} />
+      {meta.length > 0 ? <p class={styles.meta}>{meta.join(' · ')}</p> : null}
+
+      {priceLabel ? <p class={styles.price}>{priceLabel}</p> : null}
     </div>
   </article>
 </a>

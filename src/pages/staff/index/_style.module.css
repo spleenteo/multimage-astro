@@ -33,7 +33,7 @@
 }
 
 .toolMeta {
-  @apply text-sm uppercase tracking-[0.2em] text-brand-sky;
+  @apply text-sm uppercase text-brand-navy;
 }
 
 .toolSummary {
@@ -41,5 +41,5 @@
 }
 
 .toolLink {
-  @apply inline-flex items-center gap-2 text-sm font-semibold text-brand-sky transition hover:text-brand-navy;
+  @apply inline-flex items-center gap-2 text-sm font-semibold text-brand-navy transition hover:text-brand-navy;
 }

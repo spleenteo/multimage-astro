@@ -11,6 +11,8 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 - Styling uses `tailwindcss` 4 through `@tailwindcss/vite` in `astro.config.mjs`; there is no PostCSS config, no autoprefixer and no `@astrojs/tailwind` integration. The theme (brand tokens, fonts, Tailwind 3 line heights) sits in `@theme static` in `src/styles/global.css`, imported with `theme(static)` so tokens used only through `@apply` in CSS modules are still defined. Tailwind CSS modules start with `@reference` to `global.css` and use no `@layer`. Site browser baseline: Safari 16.4+, Chrome/Edge 111+, Firefox 128+ (Tailwind 4; Swiper 14 alone needs 110+). See `docs/decisions-log/2026-11-07-tailwind-4.md`.
 - `swiper` 14 (exact pin) provides the carousel web component; `BookCarouselSection` imports `swiper/element/bundle` so no asset-copy step is required. Swiper 14 raises the browser baseline to Chrome/Edge 110+, Safari 16.4+, Firefox 110+.
 
+- `maplibre-gl` 6.17.0 (exact pin) draws the `/distributori` map (`SuppliersMap`) with OpenFreeMap vector tiles (`tiles.openfreemap.org`, no key, no cookies). It is loaded on demand when the map nears the viewport: about 295 KB gzip, plus a 148 KB worker and 10 KB CSS, on that page only. The worker URL is set explicitly via `maplibre-gl/dist/maplibre-gl-worker.mjs?url` + `setWorkerUrl`, because Vite's dependency pre-bundling moves the module away from its worker.
+
 ## CMS & Data
 
 - `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is a runtime dependency: `/api/revalidate` (Site Search reindex), `/api/post-deploy` and `/api/seo-analysis` call `buildClient`.
@@ -29,5 +31,6 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 ## Risk Notes
 
+- `maplibre-gl` is pinned at exactly 6.17.0; check the worker loading (dev and build) on upgrade. Tiles come from a third-party server that sees the visitor's IP: keep OpenFreeMap named in the privacy policy.
 - `swiper` is pinned at exactly 14.4.0 in `package.json`; keep it pinned to avoid sudden bundle regressions introduced by caret releases.
 - Track `datocms` CLI updates, especially when schema generation APIs change.

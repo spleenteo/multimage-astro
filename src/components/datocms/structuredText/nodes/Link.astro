@@ -1,0 +1,19 @@
+---
+// A plain link in Structured Text. Links typed to the site's own domain become relative; links
+// that open a new tab get `noopener` and say so to screen readers.
+import type { Link } from 'datocms-structured-text-utils';
+import { toSitePath } from '~/lib/recordUrls';
+
+interface Props {
+  node: Link;
+}
+
+const { node } = Astro.props;
+const meta = (id: string) => node.meta?.find((entry) => entry.id === id)?.value || undefined;
+const href = toSitePath(node.url);
+const isInternal = href.startsWith('/');
+const target = isInternal ? undefined : meta('target');
+const rel = target === '_blank' ? (meta('rel') ?? 'noopener noreferrer') : meta('rel');
+---
+
+<a href={href} {target} {rel}><slot />{target === '_blank' ? <span class="sr-only"> (si apre in una nuova scheda)</span> : null}</a>

@@ -1,95 +1,159 @@
 ---
+// /magazine: a slim title row (h1, the CMS lede), a flat strip of categories
+// (?categoria= filters on the server), then flat entries on hairlines, newest first. The first 12
+// show; "Mostra altri" reveals 12 more at a time (without JavaScript every entry stays visible).
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import IndexHeroSection from '~/components/IndexHeroSection';
 import MagazinePostCard from '~/components/MagazinePostCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
-import type { ResponsiveImage } from '~/lib/datocms/types';
+import { categoryLabel, postDate } from '~/lib/magazine';
 import styles from './index/_style.module.css';
-import { MAGAZINE_INDEX_QUERY, type MagazineIndexQueryResult } from './index/_graphql';
+import {
+  MAGAZINE_INDEX_QUERY,
+  MAGAZINE_PAGE_SIZE,
+  MAGAZINE_POSTS_QUERY,
+  type MagazineIndexQueryResult,
+  type MagazinePostRecord,
+  type MagazinePostsResult,
+} from './index/_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
+const BATCH = 12;
 const draftModeEnabled = resolveDraftMode(Astro);
+const firstPage = { first: MAGAZINE_PAGE_SIZE, skip: 0 };
 
 const data = await executeQuery<MagazineIndexQueryResult>(MAGAZINE_INDEX_QUERY, {
   includeDrafts: draftModeEnabled,
+  variables: firstPage,
 });
 
-const magazineIndexContent = data.magazineIndexPage?.[0] ?? null;
-const heroSection = {
-  title: magazineIndexContent?.title?.trim() || 'Magazine',
-  subtitleHtml: magazineIndexContent?.subtitle?.trim() || null,
-};
+const records: MagazinePostRecord[] = [...(data.allBlogPosts ?? [])];
+const total = data._allBlogPostsMeta?.count ?? records.length;
+while (records.length < total) {
+  const next = await executeQuery<MagazinePostsResult>(MAGAZINE_POSTS_QUERY, {
+    includeDrafts: draftModeEnabled,
+    variables: { first: MAGAZINE_PAGE_SIZE, skip: records.length },
+  });
+  if (!next.allBlogPosts?.length) break;
+  records.push(...next.allBlogPosts);
+}
 
-const seo = withFallbackSeo(magazineIndexContent?._seoMetaTags, {
-  title: `${heroSection.title} | Multimage`,
-  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
+const indexContent = data.magazineIndexPage?.[0] ?? null;
+const title = indexContent?.title?.trim() || 'Magazine';
+const introHtml = indexContent?.subtitle?.trim() || null;
+const seo = withFallbackSeo(indexContent?._seoMetaTags, {
+  title: `${title} | Multimage`,
+  description: introHtml ? toPlainText(introHtml) : undefined,
 });
 
-type PostCard = {
-  id: string;
-  slug: string;
-  title: string;
-  abstract?: string | null;
-  sticky?: boolean | null;
-  publishedAt?: string | null;
-  category?: {
-    name?: string | null;
-    slug?: string | null;
-  } | null;
-  authorName?: string | null;
-  image?: ResponsiveImage | null;
-};
-
-const posts: PostCard[] = (data.allBlogPosts ?? [])
-  .filter((post) => Boolean(post?.slug) && Boolean(post?.title))
-  .map((post) => ({
-    id: post.id,
-    slug: post.slug ?? '',
-    title: post.title ?? 'Articolo',
-    abstract: post.abstract,
-    sticky: post.sticky,
-    publishedAt: post.createdAt,
-    category: post.category,
-    authorName: post.author?.name ?? null,
-    image: post.featuredImage?.responsiveImage ?? null,
-  }))
+// Pinned articles first, then newest first.
+const allPosts = records
+  .filter((post) => post.slug && post.title)
   .sort((a, b) => Number(b.sticky === true) - Number(a.sticky === true));
+
+// Categories by number of articles, labels normalised whatever their case in the CMS.
+const categoryCounts = new Map<string, { slug: string; label: string; count: number }>();
+for (const post of allPosts) {
+  const slug = post.category?.slug?.trim();
+  const label = categoryLabel(post.category);
+  if (!slug || !label) continue;
+  const entry = categoryCounts.get(slug) ?? { slug, label, count: 0 };
+  entry.count += 1;
+  categoryCounts.set(slug, entry);
+}
+const categories = [...categoryCounts.values()].sort((a, b) => b.count - a.count);
+
+const requested = Astro.url.searchParams.get('categoria')?.trim().toLowerCase() ?? '';
+const active = categoryCounts.get(requested) ?? null;
+const posts = active ? allPosts.filter((post) => post.category?.slug?.trim() === active.slug) : allPosts;
 ---
 
 <BaseLayout seo={seo}>
-  <div class={styles.layout}>
-    <section class={styles.heroSection}>
-      <p class={styles.label}>Magazine</p>
-      <IndexHeroSection
-        title={heroSection.title}
-        subtitleHtml={heroSection.subtitleHtml}
-        align="center"
-      />
-    </section>
+  <div class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>{title}</h1>
+      {introHtml ? <div class={styles.lede} set:html={introHtml} /> : null}
+    </header>
 
-    {posts.length === 0 ? (
-      <p class={styles.empty}>Gli articoli del magazine saranno disponibili a breve.</p>
+    {allPosts.length === 0 ? (
+      <div class={styles.empty}>
+        <p>Gli articoli del magazine saranno disponibili a breve. Intanto, i nostri libri sono nel catalogo.</p>
+        <a href="/libri">Sfoglia il catalogo</a>
+      </div>
     ) : (
-      <section>
-        <div class={styles.cardsGrid}>
-          {posts.map((post) => (
-            <MagazinePostCard
-              title={post.title}
-              slug={post.slug}
-              abstract={post.abstract}
-              publishedAt={post.publishedAt}
-              category={post.category}
-              authorName={post.authorName}
-              image={post.image}
-              sticky={post.sticky}
-            />
+      <>
+        {categories.length > 1 ? (
+          <nav class={styles.categories} aria-label="Categorie del magazine">
+            <a href="/magazine" aria-current={active ? undefined : 'page'}>Tutti</a>
+            {categories.map((category) => (
+              <a
+                href={`/magazine?categoria=${encodeURIComponent(category.slug)}`}
+                aria-current={active?.slug === category.slug ? 'page' : undefined}
+              >
+                {category.label}
+              </a>
+            ))}
+          </nav>
+        ) : null}
+
+        <ul id="magazine-list" class={styles.grid}>
+          {posts.map((post, index) => (
+            <li data-post>
+              <MagazinePostCard
+                title={post.title ?? ''}
+                slug={post.slug ?? ''}
+                abstract={post.abstract}
+                publishedAt={postDate(post)}
+                category={post.category}
+                image={post.featuredImage?.responsiveImage ?? null}
+                sticky={post.sticky}
+                priority={index < 3}
+              />
+            </li>
           ))}
-        </div>
-      </section>
+        </ul>
+
+        {posts.length > BATCH ? (
+          <div class={styles.more} data-more hidden>
+            <button type="button" class={styles.moreButton} data-more-button>Mostra altri articoli</button>
+            <p class={styles.moreStatus} role="status" aria-live="polite" data-more-status></p>
+          </div>
+        ) : null}
+      </>
     )}
   </div>
-  <DraftModeQueryListener query={MAGAZINE_INDEX_QUERY} />
+  <DraftModeQueryListener query={MAGAZINE_INDEX_QUERY} variables={firstPage} />
 </BaseLayout>
+
+<script is:inline define:vars={{ BATCH }}>
+  (function () {
+    var items = Array.prototype.slice.call(document.querySelectorAll('#magazine-list [data-post]'));
+    var more = document.querySelector('[data-more]');
+    var button = document.querySelector('[data-more-button]');
+    var status = document.querySelector('[data-more-status]');
+    if (!more || !button || items.length <= BATCH) return;
+
+    var shown = BATCH;
+    items.forEach(function (item, i) { item.hidden = i >= shown; });
+    more.hidden = false;
+
+    function update() {
+      var left = items.length - shown;
+      button.textContent = 'Mostra altri articoli (' + Math.min(left, BATCH) + ' di ' + left + ')';
+      if (left <= 0) more.hidden = true;
+    }
+    update();
+
+    button.addEventListener('click', function () {
+      var from = shown;
+      shown = Math.min(items.length, shown + BATCH);
+      for (var i = from; i < shown; i++) items[i].hidden = false;
+      if (status) status.textContent = (shown - from) + ' articoli in più, ' + shown + ' di ' + items.length;
+      var link = items[from] && items[from].querySelector('a');
+      if (link) link.focus();
+      update();
+    });
+  })();
+</script>

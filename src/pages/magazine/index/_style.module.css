@@ -1,21 +1,68 @@
 @reference '../../../styles/global.css';
 
-.layout {
-  @apply space-y-12;
+.page {
+  @apply space-y-8 md:space-y-10;
 }
 
-.heroSection {
-  @apply mx-auto max-w-5xl space-y-3 px-4 text-center;
+/* Slim title row: h1 and the CMS lede (not on phones). No counts: they say nothing to a reader. */
+.intro {
+  @apply max-w-4xl space-y-3;
 }
 
-.label {
-  @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+.title {
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
 }
 
-.cardsGrid {
-  @apply mx-auto grid w-full max-w-6xl gap-8 px-4 sm:grid-cols-2 xl:grid-cols-3;
+.lede {
+  @apply max-w-3xl text-base leading-relaxed text-brand-charcoal max-sm:hidden md:text-lg;
+}
+
+.lede :global(strong) {
+  @apply font-semibold;
+}
+
+/* Flat strip of categories, like the /autori letters. */
+.categories {
+  @apply flex flex-wrap gap-x-1 border-y border-brand-navy/10;
+}
+
+.categories a {
+  @apply inline-flex min-h-11 items-center gap-1.5 px-3 text-base text-brand-navy no-underline hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy;
+}
+
+.categories a[aria-current='page'] {
+  @apply bg-brand-navy text-white hover:bg-brand-navy hover:text-white focus:text-white;
+}
+
+/* Flat entries: one column on phones, two from 640px, three from 1024px. */
+.grid {
+  @apply grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.grid li[hidden] {
+  display: none;
+}
+
+.more {
+  @apply flex flex-col items-start gap-2 border-t border-brand-navy/10 pt-6;
+}
+
+.more[hidden] {
+  display: none;
+}
+
+.moreButton {
+  @apply inline-flex min-h-11 items-center border border-brand-navy px-5 text-base font-semibold text-brand-navy hover:bg-brand-navy hover:text-white;
+}
+
+.moreStatus {
+  @apply text-sm text-brand-slate;
 }
 
 .empty {
-  @apply mx-auto max-w-3xl rounded-2xl border border-dashed border-brand-mist/80 bg-white/80 px-6 py-10 text-center text-sm text-brand-charcoal/70;
+  @apply max-w-3xl space-y-3 border-t border-brand-navy/10 pt-6 text-base text-brand-charcoal;
+}
+
+.empty a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
 }

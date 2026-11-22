@@ -96,7 +96,6 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
       <swiper-container
         class={styles.swiper}
         id={carouselId}
-        aria-live="polite"
         aria-roledescription="carousel"
         aria-label={`Scorri libri: ${title}`}
         {...(descriptionId ? { 'aria-describedby': descriptionId } : {})}
@@ -107,7 +106,7 @@ const descriptionId = hasDescription ? `${carouselId}-description` : undefined;
         navigation-prev-el={`#${carouselId}-prev`}
         navigation-next-el={`#${carouselId}-next`}
         pagination-el={`#${carouselId}-pagination`}
-        pagination-clickable="true"
+        pagination-clickable="false"
         a11y="true"
         a11y-prev-slide-message="Slide precedente"
         a11y-next-slide-message="Slide successiva"

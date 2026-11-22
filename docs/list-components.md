@@ -21,26 +21,12 @@ scope: A list to describe all components used in the project
   - Used in: `BaseLayout`.
   - Owner: @codex.
   - Notes: automatically balances link groups; site is permanently Italian-only so no locale switching is required.
-- `BooksSectionNav` — **BooksSectionNav** (`src/components/BooksSectionNav.astro`)
-  - Purpose: sticky sub-navigation for `/libri` and `/collane` pages.
-  - Key props: `currentPath`.
-  - Used in: `Header` (only on book/collection routes).
-  - Owner: @codex.
-  - Notes: pure markup, keeps focus logic next to link definitions.
-
-## Sections, heroes & cards
-- `BooksCatalogSection` — **BooksCatalogSection** (`src/components/BooksCatalogSection/index.astro`)
-  - Purpose: shared catalogue view (hero + `BookCard` grid + `Pagination`) used by both `/libri` (page 1) and `/libri/pagina/[page]` so the two routes stay DRY.
-  - Key props: `title`, `subtitleHtml?`, `books` (`mapBooksToCards` output), `currentPage`, `totalPages`.
-  - Used in: `/libri`, `/libri/pagina/[page]`.
+- `BooksCatalogue` — **BooksCatalogue** (`src/components/BooksCatalogue/index.astro` + `catalogue.client.ts`)
+  - Purpose: faceted catalogue for `/libri`. Renders every published book server-side (catalogue variant of `BookCard`), then the browser script filters (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, in-page search), sorts (novità / titolo) and reveals cards 40 at a time. Filters live in the URL (`collana`, `formato`, `autore`, `periodo`, `evidenza`, `tradotti`, `archivio`, `ordine`, `q`).
+  - Key props: `title`, `introHtml?`, `books` (`{ card, entry }`), `collections`, `authors`, `periods`, `newest`.
+  - Used in: `/libri`.
   - Owner: @claude.
-  - Notes: introduced 2026-06-20 for catalogue pagination (FOT reduction).
-- `Pagination` — **Pagination** (`src/components/Pagination/index.astro`)
-  - Purpose: generic path-based pagination nav emitting real `<a href>` links (prev/next + windowed numbers with ellipsis) for ISR-cacheable pages.
-  - Key props: `currentPage`, `totalPages`, `firstPageHref`, `pagePathPrefix`, `siblingCount?`, `ariaLabel?`.
-  - Used in: `BooksCatalogSection` (`/libri` catalogue).
-  - Owner: @claude.
-  - Notes: page 1 → `firstPageHref`, pages 2..N → `${pagePathPrefix}${page}`. No query strings (keeps ISR cache keys clean).
+  - Notes: facets are a sticky column on desktop and a bottom sheet under 64rem. Without JS the filters are hidden and the whole in-catalogue list shows. Filter rules live in `src/lib/catalogue.ts`.
 - `NewsletterCta` — **NewsletterCta** (`src/components/NewsletterCta.astro`)
   - Purpose: site-wide newsletter call-to-action section linking to Brevo, rendered before the footer.
   - Used in: `BaseLayout` / page chrome.
@@ -54,7 +40,7 @@ scope: A list to describe all components used in the project
 - `IndexHeroSection` — **IndexHeroSection** (`src/components/IndexHeroSection/index.astro`)
   - Purpose: wraps `SectionIntro` inside a standardized section for index pages with reusable spacing.
   - Key props: `title`, `subtitleHtml`, `align?`.
-  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri`, `/libri/highlights`, `/libri/archivio`, `/libri/ebooks`.
+  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri/archivio`.
   - Owner: @codex.
   - Notes: expects the parent page to handle SEO fallbacks and sanitization.
 - `InfoSection` — **InfoSection** (`src/components/InfoSection/index.astro`)
@@ -64,32 +50,35 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: replace hard-coded Italian copy once CMS data is available.
 - `CollectionDetailHero` — **CollectionDetailHero** (`src/components/CollectionDetailHero/index.astro`)
-  - Purpose: hero for collection detail pages showing title, book count, logo, and description.
-  - Key props: `name`, `booksCount`, `description?`, `logo?`.
+  - Purpose: slim title row of a collection page: h1, serif size line ("44 libri in catalogo · 2 fuori catalogo"), description, links "Sfoglia nel catalogo, con i filtri" (`/libri?collana=<slug>`) and "Tutte le collane"; the logo contained in a fixed box beside it.
+  - Key props: `name`, `slug`, `inCatalogue`, `archived`, `description?`, `logo?`.
   - Used in: `collane/[slug]`.
   - Owner: @codex.
-  - Notes: pass counts from `mapBooksToCards`.
+  - Notes: counts come from `_allBooksMeta` (total and `archive: true`) in the page query.
 - `AuthorsSection` — **AuthorsSection** (`src/components/AuthorsSection/index.astro`)
-  - Purpose: highlights book authors with imagery and bios.
-  - Key props: `title`, `authors[]` view-model.
+  - Purpose: the book page's authors as flat rows under a hairline: 128px portrait (decorative, `alt=""`), name as the only link to the profile, book count, short bio at 68ch.
+  - Key props: `title` (paired forms, "Autrice/Autore del libro"), `authors[]` view-model.
   - Used in: `libri/[slug]`.
   - Owner: @codex.
-  - Notes: expects precomputed `authorsCards` (picture alt defaults to author name).
+  - Notes: an empty `biography` hides the bio line; no portrait → no placeholder box.
 - `AlternateFormatsList` — **AlternateFormatsList** (`src/components/AlternateFormatsList/index.astro`)
-  - Purpose: lists sibling formats (ebook/print) with prices and links.
-  - Key props: `formats[]` (format, price, href, `isExternal`).
-  - Used in: `libri/[slug]`.
+  - Purpose: one line of navy links to other editions of the same title ("Altre edizioni: Cartaceo 2017 (15,00 €)").
+  - Key props: `label` (default "Disponibile anche in"), `formats[]` (format, price, href, `isExternal`).
+  - Used in: `libri/[slug]` hero.
   - Owner: @codex.
-  - Notes: automatically toggles `_blank` for external ebook URLs.
+  - Notes: external links get `_blank` and a visually hidden "(si apre in una nuova scheda)".
 - `DetailList` — **DetailList** (`src/components/DetailList/index.astro`)
-  - Purpose: definition list for metadata (ISBN, pages, translators, etc.).
-  - Key props: `title`, `items[]` (label/value/href).
-  - Used in: book detail pages, staff exports.
+  - Purpose: definition list for metadata (ISBN, pages, translators, etc.), two label/value columns also on phones.
+  - Key props: `title`, `items[]` (label/value/href); renders nothing when `items` is empty.
+  - Used in: `libri/[slug]` ("Edizione", "Grafica").
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
+- `Book3D` — **Book3D** (`src/components/Book3D/index.astro`)
+  - Purpose: CSS-only 3D book. Flat cover at rest; on hover it turns into the pose given by `rotY/rotX/rotZ/offsetX/offsetY/scale`, showing spine (title), page edges and thickness (from `pages`). Used by `BookCard` and the `/libri/[slug]` hero.
+  - Key props: `cover`, `srcset?`, `title`, `pages?`, `height?` or `width`, `aspect`, `spineColor/accentColor/inkColor`, `restShadow?` (flat shadow at rest), `hoverGroup?` (pose on hover of the `.group` ancestor), `loading?` (`eager` for the LCP cover). Reduced motion: stays flat.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
-  - Purpose: reusable book summary with cover art, summary, price, and ribbons.
-  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.).
+  - Purpose: reusable book summary: cover on a field tinted from its own colour, title, authors, summary, one meta line (collana · anno · Ebook · Fuori catalogo) and the price as a serif figure. Only the cover moves on hover.
+  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.), `printYear?`, `collectionName?`, `variant?: 'default' | 'catalogue'` (catalogue: lighter field, no summary, compact two-up card on phones), `authorsPrefix?` (e.g. "con" on an author's profile, where only co-authors are passed). With no authors, the names line is omitted.
   - Used in: listings, carousels, Structured Text blocks, related feeds.
   - Owner: @codex.
   - Notes: relies on `mapBooksToCards` and `BookCardFragment`.
@@ -99,6 +88,20 @@ scope: A list to describe all components used in the project
   - Used in: home banners, Structured Text.
   - Owner: @codex.
   - Notes: derives colors from `AssetColor`; uses `AuthorChip` internally.
+- `HomeHero` — **HomeHero** (`src/components/HomeHero/index.astro` + `style.module.css`)
+  - Purpose: first viewport of the home: page H1 row (mobile search, catalogue link) and the book of the moment with price and ways to get it.
+  - Key props: `pageTitle`, `book` (title, subtitle, summary, priceLabel, link, epubUrl), `authors[]`, `coverImage`, `coverColors`, `collectionLabel`/`collectionHref`.
+  - Used in: home only.
+  - Owner: @claude.
+  - Notes: data from `toHighlightData` in `index.astro` (shared with the SingleBook block); book fields in `HIGHLIGHT_BOOK_FIELDS_FRAGMENT`.
+- `HomeDoors` — **HomeDoors** (`src/components/HomeDoors/index.astro`)
+  - Purpose: the three entry points Catalogo / Autrici e autori / Collane, fixed in code.
+  - Used in: home, under the hero.
+  - Owner: @claude.
+- `HomeAbout` — **HomeAbout** (`src/components/HomeAbout/index.astro`)
+  - Purpose: one-line "who publishes" with links to history, participation, manuscript proposals.
+  - Used in: home, before the newsletter.
+  - Owner: @claude.
 - `BannerSection` — **BannerSection** (`src/components/BannerSection/index.astro` + `_graphql.ts`)
   - Purpose: two-column hero with CTA and responsive image.
   - Key props: `title`, `content`, `link`, `imagePosition`, `featuredImage`.
@@ -117,30 +120,53 @@ scope: A list to describe all components used in the project
   - Used in: home page, book detail related lists, Structured Text block.
   - Owner: @codex.
   - Notes: requires `public/generated/swiper-element.js`; run `npm run prebuild` (see docs/TODO.md Project Structure task **PS1**).
-- `CollectionCard` — **CollectionCard** (`src/components/CollectionCard/index.astro` + `_graphql.ts`)
-  - Purpose: renders collection tiles with logo, stats, and description.
-  - Key props: `name`, `slug`, `description`, `booksCount`, `logo`.
-  - Used in: `/collane` listing.
+- `CollectionShelf` — **CollectionShelf** (`src/components/CollectionShelf/index.astro`)
+  - Purpose: one collection on the `/collane` shelf: name (h2, link), serif size line, description clamped to 2/3 lines, "Ultima uscita", "Sfoglia nel catalogo"; beside it a field tinted from the newest cover (`coverFieldPalette`) with up to four latest covers (three on phones) standing on its floor.
+  - Key props: `name`, `slug`, `description?`, `inCatalogue`, `archived`, `latest?`, `covers[]`.
+  - Used in: `/collane`.
   - Owner: @codex.
-  - Notes: includes fallbacks when logos are missing.
+  - Notes: the cover field is a mouse-only link (`tabindex=-1`, `aria-hidden`); the name carries the keyboard link. No placeholder copy when the description is missing.
+- `SuppliersMap` — **SuppliersMap** (`src/components/SuppliersMap/index.astro` + `map.client.ts`)
+  - Purpose: an interactive map of the bookshops and friendly places (MapLibre + OpenFreeMap "positron", labels in Italian).
+    - Points cluster in navy circles with counts; a click on a cluster zooms in.
+    - A point opens a square popup: name, place, "Vedi nell'elenco" (`#luogo-<id>`) and "Indicazioni".
+    - Cooperative gestures, with Italian help text, so the page still scrolls.
+  - Key props: `points[]` (`id`, `name`, `place`, `latitude`, `longitude`, `directionsUrl`).
+  - Used in: `/distributori`, above the region strip.
+  - Owner: @codex.
+  - Notes: MapLibre is imported when the map is within 300px of the viewport. If it fails (no WebGL, network), the box says so and points to the list, which stays the accessible way in.
 - `SupplierCard` — **SupplierCard** (`src/components/SupplierCard/index.astro`)
-  - Purpose: distributor contact card showing region, contacts, and map links.
+  - Purpose: a flat entry in the `/distributori` list.
+    - Name (Playfair), then "city · address".
+    - The description: past 180 characters, a short version with "Continua" (`<details>`); pasted CMS headings become paragraphs.
+    - One row of 44px actions: "Indicazioni" (Maps), phones as `tel:` links (fax shown, not dialled), email, website labelled "Facebook"/"Instagram" or the bare host. New tabs are announced to screen readers.
+    - A small decorative logo on mist (`alt=""`).
   - Key props: `SupplierCardViewModel` fields.
   - Used in: `/distributori`.
   - Owner: @codex.
   - Notes: `descriptionHtml` is injected via `set:html`; sanitize upstream (Security task **S2**).
 - `MagazinePostCard` — **MagazinePostCard** (`src/components/MagazinePostCard/index.astro`)
-  - Purpose: magazine teaser card with badges, excerpt, and CTA.
-  - Key props: `title`, `slug`, `abstract`, `category`, `authorName`, `image`, `sticky`.
-  - Used in: `/magazine` listing.
+  - Purpose: a flat magazine entry.
+    - An 8/5 image on mist.
+    - The h2 title as the only link, stretched over the entry.
+    - A slate line: "In evidenza", the category (singular), the date.
+    - The abstract clamped to 3 lines, without URLs; dropped when it repeats the title.
+  - Key props: `title`, `slug`, `abstract?`, `publishedAt?`, `category?`, `image?`, `sticky?`, `priority?` (eager image for the first row).
+  - Used in: `/magazine`.
   - Owner: @codex.
-  - Notes: uses `truncateToLength` for summary; dates formatted with `Intl.DateTimeFormat`.
+  - Notes: labels and dates come from `src/lib/magazine.ts`.
 - `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
-  - Purpose: author summaries for the `/autori` grid.
-  - Key props: `slug`, `name`, `summary`, `picture`, `booksCount`.
+  - Purpose: a flat card in the `/autori` grid.
+    - A 48–56px portrait, or the initial on mist.
+    - The name (Playfair) as the only link to the profile, with the legal name under an alias.
+    - A serif size line ("3 libri · 1 fuori catalogo").
+    - The bio clamped to 2 lines, with URLs stripped.
+    - Up to 3 latest covers (2 on phones) on a light field tinted from the newest one (base lightened 55%).
+    - "Vedi i libri" → `/libri?autore=<slug>`.
+  - Key props: `name`, `slug`, `legalName?`, `summary?`, `inCatalogue`, `archived`, `picture?`, `covers[]` (`url`, `width`, `height`, `colors`).
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
-  - Notes: consumes `mapAuthorsToCards` output.
+  - Notes: covers are plain imgix `<img>` (h=96, 2x), not `<Image>`, to keep the render of ~230 cards light. The cover strip is a mouse-only link (`tabindex=-1`, `aria-hidden`).
 - `AuthorChip` — **AuthorChip** (`src/components/AuthorChip/index.astro`)
   - Purpose: inline author pill with avatar or initials.
   - Key props: `name`, `label`, `booksLabel?`, `link?`, `image?`.
@@ -161,25 +187,34 @@ scope: A list to describe all components used in the project
   - Notes: enforces label/url validation and sanitization checklist from docs/guidelines/assets.md.
 - `ImageBlock` — **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
   - Purpose: responsive image with optional caption.
-  - Notes: injects fallback `alt` text when Dato omits it.
+  - Notes: an image without alt in the CMS gets `alt=""` (no generic "Immagine").
 - `SectionBlock` — **SectionBlock** (`src/components/datocms/structuredText/blocks/SectionBlock.astro`)
   - Purpose: basic text section derived from multiline strings.
   - Notes: splits on blank lines to build paragraphs.
 - `SingleBookBlock` — **SingleBookBlock** (`src/components/datocms/structuredText/blocks/SingleBookBlock.astro`)
-  - Purpose: inline book callout with link and subtitle.
-  - Notes: wraps card in `<a>` when a slug exists.
+  - Purpose: a book placed in the text by the editors.
+    - The whole cover on its `coverFieldPalette` field, tilted, also on phones.
+    - The pale copy half: title, subtitle, "di …", a Playfair price, the format if not paper, "Fuori catalogo".
+    - "Vai al libro e ordinalo" (or "Vai alla scheda del libro" when archived).
+  - Notes: fields come from `SINGLE_BOOK_BLOCK_FIELDS` (`structuredText/_graphql.ts`), shared by the magazine and info queries. The cover is a plain imgix `<img>` (h=176, 2x).
 - `SingleAuthorBlock` — **SingleAuthorBlock** (`src/components/datocms/structuredText/blocks/SingleAuthorBlock.astro`)
-  - Purpose: inline author highlight referencing Dato records.
-  - Notes: uses `getAuthorDisplayName` and optional portrait image.
+  - Purpose: an author placed in the text.
+    - Between hairlines: a 72px square portrait (faces crop) or the initial on mist.
+    - The name; the legal name under an alias.
+    - "Vedi il profilo e i suoi libri".
+  - Notes: fields from `SINGLE_AUTHOR_BLOCK_FIELDS`.
 - `VideoBlock` — **VideoBlock** (`src/components/datocms/structuredText/blocks/VideoBlock.astro`)
   - Purpose: embeds YouTube/Vimeo or native video assets, falling back to `<video>`.
   - Notes: constructs provider-specific embed URLs and poster images.
 - `InlineRecordBlock` — **InlineRecordBlock** (`src/components/datocms/structuredText/InlineRecordBlock.astro`)
-  - Purpose: pill-styled inline references for authors, collections, pages, books, and blog posts.
-  - Notes: defaults to “Contenuto correlato” when data is incomplete.
+  - Purpose: a record placed inline in the text (`inlineItem`): a navy link with its name, in the flow of the text.
+  - Notes: pass the map as `inlineRecordComponents` (not `inlineBlockComponents`). Paths come from `recordPath`.
 - `LinkToRecord` — **LinkToRecord** (`src/components/datocms/structuredText/LinkToRecord.astro`)
-  - Purpose: custom link renderer for Structured Text record nodes.
-  - Notes: currently routes blog posts to `/blog/...`; fix via docs/TODO.md Project Structure task **PS2**.
+  - Purpose: custom link renderer for Structured Text record links (`itemLink`).
+  - Notes: paths come from `recordPath` (`src/lib/recordUrls.ts`); articles go to `/magazine/<slug>`.
+- `Link` node override — **Link** (`src/components/datocms/structuredText/nodes/Link.astro`)
+  - Purpose: plain links in Structured Text. URLs typed to multimage.org become relative; new tabs get `noopener` and an sr-only "(si apre in una nuova scheda)".
+  - Used in: `/magazine/[slug]` via `defaultNodeOverrides`.
 
 ## UI primitives
 - `Button` — **Button** (`src/components/ui/Button/index.astro`)
@@ -190,10 +225,6 @@ scope: A list to describe all components used in the project
   - Purpose: formats author lists with Italian separators (commas + “e”).
   - Key props: `authors[]`, `fallback?`, `prefix?`, `suffix?`.
   - Notes: delegates to `formatAuthorNames` from `src/lib/authors.ts`.
-- `PriceTag` — **PriceTag** (`src/components/ui/PriceTag/index.astro`)
-  - Purpose: renders a badge-style label for prices or promotions.
-  - Key props: `value`, `label?`, `muted?`.
-  - Notes: uses `formatEuro`; returns `null` when price is not provided.
 
 ## Draft Mode utilities
 - `DraftModeQueryListener` — **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)

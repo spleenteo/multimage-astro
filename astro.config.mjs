@@ -79,6 +79,12 @@ export default defineConfig({
         access: 'public',
         optional: true,
       }),
+      // DatoCMS environment to read from (e.g. a sandbox). Unset = the primary environment.
+      DATOCMS_ENVIRONMENT: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+      }),
       SITE_SEARCH_BUILD_TRIGGER_ID: envField.string({
         context: 'server',
         access: 'secret',

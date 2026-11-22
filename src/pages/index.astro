@@ -4,18 +4,19 @@ import BannerSection from '~/components/BannerSection';
 import FeaturedBookHighlight from '~/components/FeaturedBookHighlight';
 import BookCarouselSection from '~/components/BookCarouselSection';
 import PillsBlock from '~/components/blocks/PillsBlock';
-import { Image } from '@datocms/astro/Image';
+import HomeHero from '~/components/HomeHero';
+import HomeDoors, { onlyRepeatsDoors } from '~/components/HomeDoors';
+import HomeAbout from '~/components/HomeAbout';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
-import { toBookCard, formatBookPrice, mapBooksToCards } from '~/lib/books';
+import { toBookCard, formatBookPrice, mapBooksToCards, extractYear } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { BookCardViewModel } from '~/lib/books';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
 import CtaButtonWithImageBlock from '~/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
-import styles from './index/_style.module.css';
 import {
   HOME_PAGE_QUERY,
   type HomeBannerBannerBlockRecord,
@@ -25,6 +26,11 @@ import {
   type HomeBannerBlockRecord,
   type HomePageQueryResult,
   type HomePillsBlockRecord,
+  type HighlightBookRecord,
+  HOME_FEATURED_BOOK_QUERY,
+  type HomeFeaturedBookQueryResult,
+  LATEST_BOOK_QUERY,
+  type LatestBookQueryResult,
 } from './index/_graphql';
 
 const draftModeEnabled = resolveDraftMode(Astro);
@@ -48,9 +54,11 @@ type HomeSingleBookHighlightData = {
     format?: string | null;
     printYear?: string | null;
     isArchived?: boolean;
-    link?: string | null;
+    link: string;
     authorsLabel?: string | null;
+    epubUrl?: string | null;
   };
+  authors: Array<{ name: string; link: string | null }>;
   coverImage: (ResponsiveImage & { title?: string | null }) | null;
   coverColors: AssetColor[] | null;
   collectionLabel: string | null;
@@ -102,27 +110,72 @@ type HomeBannerEntry =
   | { kind: 'cta'; id: string; block: HomeCtaButtonBlockRecord }
   | { kind: 'pills'; id: string; data: HomePillsBlockData };
 
+function toHighlightData(
+  record: HighlightBookRecord,
+  label: string,
+): HomeSingleBookHighlightData | null {
+  const card = toBookCard(record);
+  if (!card) {
+    return null;
+  }
+
+  const collectionName = record.collection?.name?.trim() ?? null;
+  const collectionSlug = record.collection?.slug?.trim() ?? null;
+  const responsiveImage = record.coverImage?.responsiveImage ?? null;
+  const fallbackAlt = record.coverImage?.alt?.trim() ?? card.title;
+  const fallbackTitle = record.coverImage?.title?.trim() ?? fallbackAlt;
+  const primaryAuthor = record.authors?.[0] ?? null;
+  const primaryAuthorName = primaryAuthor ? getAuthorDisplayName(primaryAuthor) : null;
+
+  return {
+    book: {
+      title: card.title,
+      subtitle: card.subtitle ?? null,
+      summary: card.summary ?? undefined,
+      priceLabel: formatBookPrice(card.price ?? null) ?? undefined,
+      format: card.format?.trim() ?? undefined,
+      printYear: extractYear(card.printYear) ?? undefined,
+      isArchived: card.isArchived,
+      link: `/libri/${card.slug}`,
+      authorsLabel: formatAuthorNames(card.authors ?? []),
+      epubUrl: record.epubUrl?.trim() || null,
+    },
+    authors: (record.authors ?? []).flatMap((author) => {
+      const name = getAuthorDisplayName(author);
+      return name ? [{ name, link: author.slug ? `/autori/${author.slug}` : null }] : [];
+    }),
+    coverImage: responsiveImage
+      ? {
+          ...responsiveImage,
+          alt: responsiveImage.alt ?? fallbackAlt,
+          title: responsiveImage.title ?? fallbackTitle,
+        }
+      : null,
+    coverColors: record.coverImage?.colors ?? null,
+    collectionLabel: collectionName ? `Collana ${collectionName}` : null,
+    collectionHref: collectionSlug ? `/collane/${collectionSlug}` : null,
+    label,
+    author:
+      primaryAuthor && primaryAuthorName
+        ? {
+            name: primaryAuthorName,
+            slug: primaryAuthor.slug ?? null,
+            link: primaryAuthor.slug ? `/autori/${primaryAuthor.slug}` : null,
+            booksCount: null,
+            picture: primaryAuthor.picture?.responsiveImage ?? null,
+            pictureAlt: primaryAuthor.picture?.alt ?? primaryAuthor.fullName ?? primaryAuthorName,
+          }
+        : null,
+  };
+}
+
 const { home } = await executeQuery<HomePageQueryResult>(HOME_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
 });
 
 const defaultTitle = 'La casa editrice dei diritti umani';
-const defaultClaimHtml = `<p>Multimage promuove libri, autori e iniziative che raccontano i diritti umani, la nonviolenza e le storie spesso dimenticate. Questa nuova applicazione Astro riprende colori e tipografia dell'esperienza originale per offrire una base moderna e accessibile.</p>`;
-
 const heroTitle = home?.title?.trim() || defaultTitle;
-const heroClaimHtml = toRichTextHtml(home?.claim) ?? defaultClaimHtml;
-const heroClaimText = toPlainText(heroClaimHtml);
-
-const heroResponsiveImage = home?.heroImage?.responsiveImage ?? null;
-const heroImageAlt = home?.heroImage?.alt?.trim() ?? `${heroTitle} | Multimage`;
-
-const heroImageData = heroResponsiveImage
-  ? {
-      ...heroResponsiveImage,
-      alt: heroResponsiveImage.alt ?? heroImageAlt,
-      title: heroResponsiveImage.title ?? heroTitle,
-    }
-  : null;
+const heroClaimText = toPlainText(toRichTextHtml(home?.claim) ?? '');
 
 const bannerBlocks: HomeBannerBlockRecord[] = home?.banners ?? [];
 const homeBannerEntries = bannerBlocks
@@ -162,74 +215,14 @@ const homeBannerEntries = bannerBlocks
 
     if (block?.__typename === 'SingleBookRecord') {
       const singleBookBlock = block as HomeSingleBookBlockRecord;
-      const singleBook = singleBookBlock.book ? toBookCard(singleBookBlock.book) : null;
-      if (!singleBook) {
+      const data = singleBookBlock.book
+        ? toHighlightData(singleBookBlock.book, 'Libro consigliato')
+        : null;
+      if (!data) {
         return null;
       }
 
-      const collection = singleBookBlock.book?.collection ?? null;
-      const collectionName = collection?.name?.trim() ?? null;
-      const collectionSlug = collection?.slug?.trim() ?? null;
-      const collectionHref = collectionSlug ? `/collane/${collectionSlug}` : null;
-      const collectionLabel = collectionName ? `Collana ${collectionName}` : null;
-      const priceLabel = formatBookPrice(singleBook.price ?? null);
-      const authorsLabel = formatAuthorNames(singleBook.authors ?? []);
-      const bookLink = `/libri/${singleBook.slug}`;
-      const responsiveImage = singleBookBlock.book?.coverImage?.responsiveImage ?? null;
-      const fallbackAlt = singleBookBlock.book?.coverImage?.alt?.trim() ?? singleBook.title;
-      const fallbackTitle = singleBookBlock.book?.coverImage?.title?.trim() ?? fallbackAlt;
-      const coverImage = responsiveImage
-        ? {
-            ...responsiveImage,
-            alt: responsiveImage.alt ?? fallbackAlt,
-            title: responsiveImage.title ?? fallbackTitle,
-          }
-        : null;
-      const primaryAuthorSource = singleBookBlock.book?.authors?.[0] ?? null;
-      const authorName = primaryAuthorSource ? getAuthorDisplayName(primaryAuthorSource) : null;
-      const authorPicture = primaryAuthorSource?.picture?.responsiveImage ?? null;
-      const authorPictureAlt =
-        primaryAuthorSource?.picture?.alt ??
-        primaryAuthorSource?.fullName ??
-        authorName ??
-        'Ritratto autore';
-      const author =
-        authorName && primaryAuthorSource
-          ? {
-              name: authorName,
-              slug: primaryAuthorSource.slug ?? null,
-              link: primaryAuthorSource.slug ? `/autori/${primaryAuthorSource.slug}` : null,
-              booksCount: null,
-              picture: authorPicture,
-              pictureAlt: authorPictureAlt,
-            }
-          : null;
-      const formatValue = singleBook.format?.trim() ?? null;
-      const printYear = singleBook.printYear ?? null;
-
-      return {
-        kind: 'singleBook',
-        id: singleBookBlock.id,
-        data: {
-          book: {
-            title: singleBook.title,
-            subtitle: singleBook.subtitle ?? null,
-            summary: singleBook.summary ?? undefined,
-            priceLabel: priceLabel ?? undefined,
-            format: formatValue ?? undefined,
-            printYear: printYear ?? undefined,
-            isArchived: singleBook.isArchived,
-            link: bookLink,
-            authorsLabel,
-          },
-          coverImage,
-          coverColors: singleBookBlock.book?.coverImage?.colors ?? null,
-          collectionLabel,
-          collectionHref,
-          label: 'Libro consigliato',
-          author,
-        },
-      } satisfies HomeBannerEntry;
+      return { kind: 'singleBook', id: singleBookBlock.id, data } satisfies HomeBannerEntry;
     }
 
     if (block?.__typename === 'BookCarouselRecord') {
@@ -311,6 +304,49 @@ const homeBannerEntries = bannerBlocks
   })
   .filter((entry): entry is HomeBannerEntry => entry !== null);
 
+// Hero book: the CMS field "Libro del momento", else the first "libro in evidenza" block (which
+// then leaves the list), else the latest book. The field query fails until the migration runs on
+// the environment; that is expected and only means "no field yet".
+let featuredRecord: HighlightBookRecord | null = null;
+try {
+  const featured = await executeQuery<HomeFeaturedBookQueryResult>(HOME_FEATURED_BOOK_QUERY, {
+    includeDrafts: draftModeEnabled,
+  });
+  featuredRecord = featured.home?.featuredBook ?? null;
+} catch {
+  featuredRecord = null;
+}
+
+let heroBook: HomeSingleBookHighlightData | null = featuredRecord
+  ? toHighlightData(featuredRecord, 'Libro del momento')
+  : null;
+let heroBlockId: string | null = null;
+
+if (!heroBook) {
+  const firstSingleBook = homeBannerEntries.find((entry) => entry.kind === 'singleBook');
+  if (firstSingleBook?.kind === 'singleBook') {
+    heroBook = firstSingleBook.data;
+    heroBlockId = firstSingleBook.id;
+  }
+}
+
+if (!heroBook) {
+  const latest = await executeQuery<LatestBookQueryResult>(LATEST_BOOK_QUERY, {
+    includeDrafts: draftModeEnabled,
+  });
+  const latestRecord = latest.allBooks?.[0] ?? null;
+  heroBook = latestRecord ? toHighlightData(latestRecord, 'Libro del momento') : null;
+}
+
+// Fixed top: the first carousel follows the doors; the rest keeps the editors' order.
+const firstCarousel = homeBannerEntries.find((entry) => entry.kind === 'bookCarousel') ?? null;
+// A pills block whose buttons only lead to catalogue, authors and collections repeats HomeDoors.
+const repeatsDoors = (entry: HomeBannerEntry) =>
+  entry.kind === 'pills' && onlyRepeatsDoors(entry.data.pills.map((pill) => pill.button?.url));
+const freeEntries = homeBannerEntries.filter(
+  (entry) => entry !== firstCarousel && entry.id !== heroBlockId && !repeatsDoors(entry),
+);
+
 const seo = withFallbackSeo(home?._seoMetaTags, {
   title: heroTitle.includes('Multimage') ? heroTitle : `${heroTitle} | Multimage`,
   description: heroClaimText,
@@ -319,47 +355,34 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
 
 <BaseLayout seo={seo}>
   <div class="space-y-12">
-    <section
-      class:list={[
-        styles.heroSection,
-        'relative overflow-hidden bg-brand-charcoal text-white shadow-soft min-h-[45vh]',
-      ]}
-    >
-      {heroImageData ? (
-        <Image
-          data={heroImageData}
-          sizes="(min-width: 1280px) 1200px, 100vw"
-          pictureClass="absolute inset-0 block h-full w-full"
-          imgClass="h-full w-full object-cover"
-          imgStyle={{ objectFit: 'cover', width: '100%', height: '100%', maxWidth: 'none' }}
-          priority
-        />
-      ) : (
-        <div class="absolute inset-0 bg-brand-navy" aria-hidden="true" />
-      )}
-      <div class="absolute inset-0 bg-black/45" aria-hidden="true"></div>
-      <div
-        class:list={[
-          'relative z-10 mx-auto flex min-h-[360px] w-full max-w-5xl flex-col items-center justify-center gap-6 px-6 py-24 text-center md:min-h-[45vh] md:px-12',
-          styles.heroContent,
-        ]}
-      >
-        <h1 class="text-4xl font-serif tracking-tight text-white md:text-5xl lg:text-6xl">
-          {heroTitle}
-        </h1>
-        <div class="h-px w-20 bg-white/70"></div>
-        {heroClaimHtml ? (
-          <div
-            class="max-w-3xl text-lg leading-relaxed text-white/90 md:text-xl md:leading-7 [&_a]:text-white [&_a:hover]:text-white/80 [&_p:not(:last-child)]:mb-4"
-            set:html={heroClaimHtml}
-          />
-        ) : null}
-      </div>
-    </section>
+    {heroBook ? (
+      <HomeHero
+        pageTitle={heroTitle}
+        book={heroBook.book}
+        authors={heroBook.authors}
+        coverImage={heroBook.coverImage}
+        coverColors={heroBook.coverColors}
+        collectionLabel={heroBook.collectionLabel}
+        collectionHref={heroBook.collectionHref}
+      />
+    ) : (
+      <h1 class="text-3xl md:text-4xl">{heroTitle}</h1>
+    )}
 
-    {homeBannerEntries.length > 0 ? (
+    <HomeDoors />
+
+    {firstCarousel?.kind === 'bookCarousel' ? (
+      <BookCarouselSection
+        id={firstCarousel.data.id}
+        title={firstCarousel.data.title}
+        description={firstCarousel.data.description}
+        books={firstCarousel.data.books}
+      />
+    ) : null}
+
+    {freeEntries.length > 0 ? (
       <div class="v3-space-y-10">
-        {homeBannerEntries.map((entry) => {
+        {freeEntries.map((entry) => {
           if (entry.kind === 'banner') {
             return <BannerSection {...entry.data} />;
           }
@@ -371,7 +394,6 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
                 coverImage={entry.data.coverImage}
                 collectionLabel={entry.data.collectionLabel ?? undefined}
                 collectionHref={entry.data.collectionHref ?? undefined}
-                label={entry.data.label ?? undefined}
                 author={entry.data.author ?? undefined}
                 coverColors={entry.data.coverColors}
               />
@@ -415,6 +437,8 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
         })}
       </div>
     ) : null}
+
+    <HomeAbout />
   </div>
   <DraftModeQueryListener query={HOME_PAGE_QUERY} />
 </BaseLayout>

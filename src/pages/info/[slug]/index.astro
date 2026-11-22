@@ -35,7 +35,7 @@ const data = await executeQuery<InfoPageQueryResult>(INFO_PAGE_QUERY, {
 const page = data.page;
 
 if (!page) {
-  throw new Error(`Info page not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const heroTitle = page.title ?? 'Info';

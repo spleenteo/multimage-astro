@@ -1,4 +1,5 @@
 ---
+// Other editions of the same title, as a line of navy links ("Altre edizioni: Cartaceo 2017 (15,00 €)").
 import styles from './style.module.css';
 
 type AlternateFormat = {
@@ -10,27 +11,31 @@ type AlternateFormat = {
 };
 
 type Props = {
+  label?: string;
   formats: AlternateFormat[];
 };
 
-const { formats }: Props = Astro.props;
+const { label = 'Disponibile anche in', formats }: Props = Astro.props;
 ---
 
 {formats.length === 0 ? null : (
   <div class={styles.root}>
-    <span class={styles.label}>Disponibile anche in</span>
+    <span class={styles.label}>{label}:</span>
     <ul class={styles.list}>
-      {formats.map((format) => <li>
-        <a
-          href={format.href}
-          target={format.isExternal ? '_blank' : undefined}
-          rel={format.isExternal ? 'noopener noreferrer' : undefined}
-          class={styles.link}
-        >
-          {format.format}
-          {format.price ? ` (${format.price})` : null}
-        </a>
-      </li>)}
+      {formats.map((format) => (
+        <li>
+          <a
+            href={format.href}
+            target={format.isExternal ? '_blank' : undefined}
+            rel={format.isExternal ? 'noopener noreferrer' : undefined}
+            class={styles.link}
+          >
+            {format.format}
+            {format.price ? ` (${format.price})` : null}
+            {format.isExternal ? <span class="sr-only"> (si apre in una nuova scheda)</span> : null}
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 )}

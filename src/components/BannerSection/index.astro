@@ -1,6 +1,6 @@
 ---
 import { Image } from '@datocms/astro/Image';
-import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
+import { pickBaseColor, lightenColor, hexToRgba } from '~/lib/colors';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
 import styles from './style.module.css';
 
@@ -21,21 +21,20 @@ const { id, title, contentHtml, link, imagePosition, image, colors }: Props = As
 const resolvedTitle = title ?? 'Multimage';
 const hasContent = typeof contentHtml === 'string' && contentHtml.length > 0;
 const baseColor = pickBaseColor(colors);
-const lightColor = lightenColor(baseColor, 0.24);
-const gradientStart = hexToRgba(baseColor, 0.16);
-const gradientEnd = hexToRgba(lightColor, 0.42);
+// Same pairing as the home hero, quieter: a mid tint behind the image, a near-white tint of the
+// same hue behind the text (charcoal stays above 10:1 whatever the image), one navy action for every
+// banner instead of a per-image colour (orange stays for the page's primary action).
+const mediaColor = lightenColor(baseColor, 0.6);
+const copyColor = lightenColor(baseColor, 0.92);
 const borderColor = hexToRgba(baseColor, 0.35);
-const chipBackground = hexToRgba(baseColor, 0.22);
-const chipText = darkenColor(baseColor, 0.4);
-const buttonBackground = darkenColor(baseColor, 0.3);
 const layoutDirectionClass = imagePosition === 'left' ? 'md:flex-row' : 'md:flex-row-reverse';
 ---
 
 <section
   id={`banner-${id}`}
-  class:list={[styles.section, 'relative border shadow-soft']}
+  class:list={[styles.section, 'relative border']}
   style={{
-    background: `linear-gradient(140deg, ${gradientStart}, ${gradientEnd})`,
+    background: copyColor,
     borderColor,
   }}
 >
@@ -47,7 +46,7 @@ const layoutDirectionClass = imagePosition === 'left' ? 'md:flex-row' : 'md:flex
           styles.mediaPanel,
         ]}
         style={{
-          backgroundColor: hexToRgba(baseColor, 0.12),
+          backgroundColor: mediaColor,
         }}
       >
         <Image
@@ -60,25 +59,17 @@ const layoutDirectionClass = imagePosition === 'left' ? 'md:flex-row' : 'md:flex
       </div>
     ) : null}
     <div class="flex w-full flex-col justify-center gap-6 px-6 py-10 md:w-1/2 md:px-12 md:py-16">
-      <span
-        class:list={[
-          'inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-semibold uppercase',
-          styles.tag,
-        ]}
-        style={{
-          backgroundColor: chipBackground,
-          color: chipText,
-        }}
-      >
-        In evidenza
-      </span>
       <div class="space-y-4">
-        <h2 class="text-3xl font-serif tracking-tight text-brand-charcoal md:text-4xl">
+        <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">
           {resolvedTitle}
         </h2>
         {hasContent ? (
           <div
-            class="v3-space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-navy [&_a:hover]:text-brand-sky [&_p]:m-0"
+            class:list={[
+              'v3-space-y-4 text-base leading-relaxed text-brand-charcoal break-words [&_a]:text-brand-navy [&_a]:underline [&_a]:underline-offset-2 [&_p]:m-0',
+              // With a "Scopri di più" link the full text lives behind it: keep three lines here.
+              link ? 'line-clamp-3' : null,
+            ]}
             set:html={contentHtml}
           />
         ) : null}
@@ -87,10 +78,7 @@ const layoutDirectionClass = imagePosition === 'left' ? 'md:flex-row' : 'md:flex
         <div>
           <a
             href={link}
-            class="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-wider text-white transition hover:brightness-105 focus:outline-hidden focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent"
-            style={{
-              backgroundColor: buttonBackground,
-            }}
+            class="inline-flex min-h-11 items-center gap-2 bg-brand-navy px-6 py-3 text-sm font-semibold uppercase text-white transition hover:bg-brand-navy-light hover:text-white focus:text-white"
           >
             <span>Scopri di più</span>
             <iconify-icon

@@ -22,7 +22,7 @@ if (!image) {
   return null;
 }
 
-const alt = image.alt ?? 'Immagine';
+const alt = image.alt?.trim() ?? '';
 const imageData = { ...image, alt } as ResponsiveImageType;
 const caption = typeof block.caption === 'string' ? block.caption.trim() : '';
 const showCaption = caption.length > 0;
@@ -33,7 +33,7 @@ const showCaption = caption.length > 0;
     data={imageData}
     sizes="(min-width: 1024px) 70vw, 100vw"
     pictureClass="block"
-    imgClass="h-auto w-full rounded-xl"
+    imgClass="h-auto w-full"
   />
   {showCaption ? (
     <figcaption class="text-sm italic text-brand-charcoal/70">{caption}</figcaption>
