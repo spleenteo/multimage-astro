@@ -30,6 +30,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - `/collane` (dal 2026-11-22) è uno scaffale. Per ogni collana mostra le ultime copertine su un campo tinto dalla più recente, il conteggio, l'ultima uscita e il link al catalogo filtrato (`/libri?collana=<slug>`). L'ordine è per numero di libri in catalogo, con "Fuori Collana" in fondo. I dati arrivano da due query: le collane (`first: 100`), poi una query generata dagli id con alias per collana (6 libri recenti, totale, fuori catalogo). La pagina di una collana mostra fino a 100 libri, ordinati per anno di stampa; oltre quel numero compare il link al catalogo.
 - `/distributori` (dal 2026-11-22) risponde a "come lo trovo".
   - Riga di titolo con il conteggio, poi tre strade: qualsiasi libreria con l'ISBN tramite Libri Diffusi/Fastbook e Terminal, i luoghi amici, l'ordine via email con l'unico pulsante arancio.
+  - Sopra l'elenco c'è una mappa interattiva (MapLibre + tessere OpenFreeMap), caricata solo quando si avvicina allo schermo. I punti sono raggruppati e ogni punto apre una scheda con "Vedi nell'elenco" e "Indicazioni". Le coordinate vengono dal campo `map` del modello `supplier`: il 2026-11-22 sono state ricavate dagli indirizzi (Nominatim) per le 24 voci che non le avevano, verificate e pubblicate.
   - L'elenco per regione ha una striscia piatta, fissa solo da 768px, e voci piatte.
   - I telefoni sono normalizzati e chiamabili; le descrizioni lunghe sono dietro "Continua".
   - In fondo, la sezione "Sei una libreria?".

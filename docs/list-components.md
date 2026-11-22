@@ -123,6 +123,15 @@ scope: A list to describe all components used in the project
   - Used in: `/collane`.
   - Owner: @codex.
   - Notes: the cover field is a mouse-only link (`tabindex=-1`, `aria-hidden`); the name carries the keyboard link. No placeholder copy when the description is missing.
+- `SuppliersMap` — **SuppliersMap** (`src/components/SuppliersMap/index.astro` + `map.client.ts`)
+  - Purpose: an interactive map of the bookshops and friendly places (MapLibre + OpenFreeMap "positron", labels in Italian).
+    - Points cluster in navy circles with counts; a click on a cluster zooms in.
+    - A point opens a square popup: name, place, "Vedi nell'elenco" (`#luogo-<id>`) and "Indicazioni".
+    - Cooperative gestures, with Italian help text, so the page still scrolls.
+  - Key props: `points[]` (`id`, `name`, `place`, `latitude`, `longitude`, `directionsUrl`).
+  - Used in: `/distributori`, above the region strip.
+  - Owner: @codex.
+  - Notes: MapLibre is imported when the map is within 300px of the viewport. If it fails (no WebGL, network), the box says so and points to the list, which stays the accessible way in.
 - `SupplierCard` — **SupplierCard** (`src/components/SupplierCard/index.astro`)
   - Purpose: a flat entry in the `/distributori` list.
     - Name (Playfair), then "city · address".

@@ -4,6 +4,7 @@
 // by region with a flat region strip, and a closing word for booksellers.
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import SupplierCard from '~/components/SupplierCard';
+import SuppliersMap, { type SuppliersMapPoint } from '~/components/SuppliersMap';
 import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
@@ -35,6 +36,21 @@ const groups = groupSuppliersByRegion(suppliers).map((group) => ({
   ...group,
   anchorId: `regione-${group.region.normalize('NFD').replace(/[^\p{L}0-9]+/gu, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'altre'}`,
 }));
+
+const mapPoints: SuppliersMapPoint[] = suppliers.flatMap((supplier) =>
+  supplier.latitude !== null && supplier.longitude !== null
+    ? [
+        {
+          id: supplier.id,
+          name: supplier.name,
+          place: [supplier.city, supplier.address].filter(Boolean).join(' · '),
+          latitude: supplier.latitude,
+          longitude: supplier.longitude,
+          directionsUrl: supplier.googleMapsUrl,
+        },
+      ]
+    : [],
+);
 
 const sizeLine =
   suppliers.length > 0
@@ -89,6 +105,7 @@ const sizeLine =
     ) : (
       <section id="elenco" class={styles.list} aria-labelledby="elenco-title">
         <h2 id="elenco-title" class="sr-only">Librerie e luoghi amici per regione</h2>
+        <SuppliersMap points={mapPoints} />
         {groups.length > 1 ? (
           <nav class={styles.regions} aria-label="Regioni">
             {groups.map(({ region, anchorId }) => <a href={`#${anchorId}`}>{region}</a>)}

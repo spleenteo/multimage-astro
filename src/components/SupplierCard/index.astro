@@ -12,7 +12,7 @@ type Props = SupplierCardViewModel & {
   className?: string;
 };
 
-const { name, city, address, googleMapsUrl, telephone, email, website, descriptionHtml, logo, className = '' }: Props =
+const { id, name, city, address, googleMapsUrl, telephone, email, website, descriptionHtml, logo, className = '' }: Props =
   Astro.props;
 
 /** Descriptions longer than this show a short version first. */
@@ -33,7 +33,7 @@ const logoImage = logo?.responsiveImage ? { ...logo.responsiveImage, alt: '' } :
 const NEW_TAB = ' (si apre in una nuova scheda)';
 ---
 
-<article class:list={[styles.card, className]}>
+<article id={`luogo-${id}`} class:list={[styles.card, className]}>
   <div class={styles.text}>
     <h3 class={styles.name}>{name}</h3>
     {place ? <p class={styles.place}>{place}</p> : null}

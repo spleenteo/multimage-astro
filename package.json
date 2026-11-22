@@ -36,6 +36,7 @@
     "astro": "^7.4.7",
     "jsonwebtoken": "^9.0.3",
     "linkedom": "^0.18.15",
+    "maplibre-gl": "6.17.0",
     "serialize-error": "^13.1.0",
     "swiper": "14.4.0",
     "tailwindcss": "^4.3.5",

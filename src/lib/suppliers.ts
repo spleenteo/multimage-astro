@@ -65,6 +65,9 @@ export type SupplierCardViewModel = {
   website: string | null;
   descriptionHtml: string | null;
   logo: AssetImage | null;
+  /** From the CMS `map` field; both null when the record has no point. */
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {
@@ -91,6 +94,8 @@ export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {
     website,
     descriptionHtml,
     logo: record.logo ?? null,
+    latitude: typeof record.map?.latitude === 'number' ? record.map.latitude : null,
+    longitude: typeof record.map?.longitude === 'number' ? record.map.longitude : null,
   };
 }
 

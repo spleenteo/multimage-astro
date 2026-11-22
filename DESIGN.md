@@ -324,6 +324,10 @@ White card: the cover centred on a cover-tinted field, then Playfair navy title 
   - "In qualsiasi libreria": title or ISBN, plus the distributors.
   - "Nelle librerie e nei luoghi amici": jumps to the list.
   - "Ordinalo a noi": email order, free piego di libri, soci 30%. Its "Scegli il libro" (→ `/libri`) is the page's only orange-deep action.
+- **Map:** a map of all places (`SuppliersMap`) opens the list.
+  - A hairline frame and square corners; 22rem tall, 30rem from 768px.
+  - Navy clusters and points (no orange: it stays for the page's single action).
+  - A square popup with navy links. A caption credits OpenFreeMap and OpenStreetMap.
 - **Region strip:** a flat strip like the /autori letters, sticky only from 768px.
 - **List:** regions as Playfair h2s, with flat SupplierCards in two columns from 768px.
 - **Closing:** "Sei una libreria?" closes the page, with the orders email.
