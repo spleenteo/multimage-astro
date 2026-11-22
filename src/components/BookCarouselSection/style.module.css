@@ -21,7 +21,7 @@
 }
 
 .description {
-  @apply text-base leading-relaxed [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy;
+  @apply text-base leading-relaxed [&_a]:text-brand-navy [&_a]:underline [&_a]:decoration-brand-navy [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_a:hover]:decoration-brand-navy;
 }
 
 .controls {

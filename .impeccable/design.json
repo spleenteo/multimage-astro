@@ -96,7 +96,7 @@
       },
       "brand-sky": {
         "role": "tertiary",
-        "displayName": "Link Sky (open contrast decision)",
+        "displayName": "Sky (decorative only, never text)",
         "canonical": "#088af2",
         "tonalRamp": [
           "#00092a",
@@ -454,7 +454,7 @@
     ],
     "donts": [
       "Don't put white text on brand-orange (#fa7810); it is 2.7:1.",
-      "Don't treat brand-sky body links as AA-compliant; their colour is an open decision.",
+      "Don't use brand-sky for text or behind white text; it is decorative only. Links are navy, underlined inside running text.",
       "Don't stack a kicker, eyebrow or tag label above a heading.",
       "Don't add literal border radii (`rounded-[2rem]`, `border-radius: 9999px`); they bypass the square theme.",
       "Don't add `focus:outline-hidden` with a private ring; the global `:focus-visible` outline is the one indicator.",

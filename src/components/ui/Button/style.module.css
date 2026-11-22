@@ -1,6 +1,8 @@
 @reference '../../../styles/global.css';
 
+/* text-decoration: a Button rendered inside a paragraph must not pick up the prose underline. */
 .root {
+  text-decoration: none;
   @apply inline-flex items-center justify-center gap-2 min-h-11 px-5 py-2 text-sm font-semibold uppercase transition;
 }
 

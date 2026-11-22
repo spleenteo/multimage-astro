@@ -152,7 +152,8 @@ A restrained navy-and-white publisher's palette with one burnt-orange action col
 
 ### Tertiary
 - **Cover Tint** (derived, no fixed value): computed per image by `pickBaseColor` (first of the image's top three DatoCMS colours, fallback cover-field-fallback) then `lightenColor` / `darkenColor`. Cover field = base lightened 16%; the hero's text half = base lightened 88%; the cover's drop shadow = base darkened 45% at 45% alpha; a banner's own button = base darkened 30%. Used by HomeHero, FeaturedBookHighlight, BookCard and BannerSection.
-- **Link Sky** (brand-sky): the global default colour of a bare `<a>`, carousel active bullet and arrow-button hover fill. **Open decision:** 3.54:1 on white, below WCAG 2.1 AA 4.5:1 for body text, and 2.64:1 on navy. The reference surface avoids it by setting links to navy explicitly. Do not present it as compliant and do not extend its use until the decision is made.
+- **Sky** (brand-sky): decorative only: carousel active bullet, arrow-button hover fill, blockquote rule and tints (`/10`–`/30`), `mark` and selection backgrounds. Never text and never a fill behind text (3.54:1 on white). Decided 2026-11-22: links are navy (see Navy Links).
+- **Navy Links:** a bare `<a>` is `brand-navy`. Links inside running text (`p`, `blockquote`, `dd`, `td`, `figcaption`) are also underlined, because navy sits only 1.6:1 from charcoal body text (WCAG 1.4.1); component links keep their own styling. Hover feedback is an underline, not a colour shift.
 - **Signal Orange** (brand-orange): decoration only, never under text (white on it is 2.7:1).
 
 ### Neutral
@@ -256,7 +257,7 @@ Navy, underlined with 2px offset, semibold where they name a person. On light an
 
 ### Don't:
 - **Don't** put white text on brand-orange (#fa7810); it is 2.7:1.
-- **Don't** treat brand-sky body links as AA-compliant; their colour is an open decision.
+- **Don't** use brand-sky for text or behind white text; it is decorative only.
 - **Don't** stack a kicker, eyebrow or tag label above a heading.
 - **Don't** add literal border radii (`rounded-[2rem]`, `border-radius: 9999px`); they bypass the square theme.
 - **Don't** add `focus:outline-hidden` with a private ring; the global `:focus-visible` outline is the one indicator.

@@ -157,8 +157,15 @@
     }
   }
 
+  /* Links are navy (sky #088af2 was 3.54:1 on white). Navy is close to the charcoal body text, so
+     links inside running text also carry an underline (WCAG 1.4.1); component links (nav, cards,
+     buttons) keep their own styling, and any utility such as no-underline still wins. */
   a {
-    @apply text-brand-sky transition-colors duration-150;
+    @apply text-brand-navy transition-colors duration-150;
+  }
+
+  :where(p, blockquote, dd, td, figcaption) a {
+    @apply underline decoration-1 underline-offset-2;
   }
 
   strong {

@@ -21,7 +21,7 @@
 }
 
 .count {
-  @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand-sky;
+  @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand-navy;
 }
 
 .actions {
@@ -29,7 +29,7 @@
 }
 
 .csvButton {
-  @apply inline-flex items-center gap-2 border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-sky transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
+  @apply inline-flex items-center gap-2 border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-navy transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
 }
 
 .description {
@@ -77,5 +77,5 @@
 }
 
 .link {
-  @apply text-brand-sky transition hover:text-brand-navy focus:text-brand-navy;
+  @apply text-brand-navy transition hover:text-brand-navy focus:text-brand-navy;
 }

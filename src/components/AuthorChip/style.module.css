@@ -17,7 +17,7 @@
 }
 
 .name {
-  @apply text-base font-serif text-brand-navy transition group-hover:text-brand-sky md:text-lg;
+  @apply text-base font-serif text-brand-navy transition group-hover:underline md:text-lg;
 }
 
 .booksLabel {

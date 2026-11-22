@@ -25,7 +25,7 @@
 }
 
 .stickyTag {
-  @apply bg-brand-sky px-3 py-1 text-[10px] tracking-[0.35em] text-white;
+  @apply bg-brand-navy px-3 py-1 text-xs text-white;
 }
 
 .date {
@@ -33,7 +33,7 @@
 }
 
 .title {
-  @apply text-2xl font-serif text-brand-navy transition-colors duration-200 group-hover:text-brand-sky;
+  @apply text-2xl font-serif text-brand-navy transition-colors duration-200 group-hover:underline;
 }
 
 .abstract {
