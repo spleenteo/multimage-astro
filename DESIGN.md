@@ -206,7 +206,7 @@ A restrained navy-and-white publisher's palette with one burnt-orange action col
 - **Charcoal Ink** (brand-charcoal): body text, subtitles, door descriptions. 12.45:1 on white.
 - **Quiet Slate** (brand-slate): placeholders and secondary meta: the book card's meta line, facet counts, the catalogue's size line, notes under a link, and facet options with no matching books. 4.69:1 on white, the lightest grey allowed for text.
 - **Page White** (page-white): the `<main>` reading surface and the doors strip.
-- **Mist** (brand-mist): hover fill of doors, secondary button fill, hairline dividers between home sections, inactive section tabs, filter chips and the catalogue's empty-state panel.
+- **Mist** (brand-mist): hover fill of doors, secondary button fill, hairline dividers between home sections, filter chips and the catalogue's empty-state panel.
 - **Shelf Grey** (brand-navy-lighter): the full-width band behind book carousels.
 - **Sand** (brand-sand): the `<body>` colour, visible only outside `<main>`.
 - **Hairline** (hairline): the default border colour. Dividers inside white reading surfaces (facet groups, the catalogue toolbar, the not-found list) are navy at 10%; field borders are navy at 25%.
@@ -231,7 +231,7 @@ A restrained navy-and-white publisher's palette with one burnt-orange action col
 - **Headline** (600, 1.875rem, 2.25rem): default h2 and section titles (carousel title goes to 2.25rem from 768px). The page h1 in the home's slim intro row is 1.25rem mobile / 1.875rem desktop, deliberately quieter than the book title. The catalogue's title row h1 is 1.875rem / 2.25rem from 768px; the not-found h1 is 2.25rem / 3rem.
 - **Title** (600, 1.5rem, 2rem): door titles, book card titles (1.25rem in the catalogue card, 1rem on phones), the closing about heading, the catalogue's result count and empty-state title (h2/h3, 1.5rem), and the price shown as a serif figure (1.25rem on cards). Figures in Playfair use lining numerals (`lining-nums`); counts that update also use tabular figures.
 - **Body** (400, 1rem / 1.625 mobile; 1.125rem / 1.75rem from 768px): every `<p>`. Summaries cap at 60ch and clamp to two lines in the hero.
-- **Label** (600, 0.875rem, uppercase, tracking 0): buttons and the "Sfoglia il catalogo" link. The theme sets `tracking-wide` / `tracking-wider` to 0em, so labels are not letter-spaced. Section tabs, facet legends and text-link actions ("Azzera", "Tutte le collane (n)") are sentence case, semibold, not uppercase.
+- **Label** (600, 0.875rem, uppercase, tracking 0): buttons and the "Sfoglia il catalogo" link. The theme sets `tracking-wide` / `tracking-wider` to 0em, so labels are not letter-spaced. Facet legends and text-link actions ("Azzera", "Tutte le collane (n)") are sentence case, semibold, not uppercase.
 - **Caption** (400, 0.875rem, 1.25rem): door descriptions, secondary links, footer links (footer legal line at 0.75rem), the book card's meta line, facet option labels and field text. Facet counts are 0.75rem slate tabular figures.
 
 ### Named Rules
@@ -310,7 +310,7 @@ Below 1024px the column is a bottom sheet (max 85dvh): it slides up over 320ms o
 ### Navigation
 - **Header:** three navy bands: a top bar of channel links (social colours, white text, uppercase 0.75rem), the logo and search band in deep window navy, the main tabs on navy (uppercase Inter semibold, 1px translucent white border, square). Dropdowns are navy panels with divided rows. Focus ring is white throughout. Below 768px a full-screen navy menu replaces the tabs.
 - **Header search:** on the deep window navy band, the "Cerca" submit is a solid navy block with a white uppercase label (hover navy at 80%).
-- **Book section tabs:** on the translucent white band under the header for `/libri` and `/collane`: Catalogo (first), Collane, In evidenza, Ebook. Square, 44px, sentence case semibold; inactive mist with charcoal text (hover navy at 10%, navy text), active solid navy with white text and `aria-current="page"`. A four-column grid on phones (6px gaps), a centred row from 640px.
+- **Primary navigation (books):** "Catalogo" (`/libri`) and "Collane" are two first-level items of the header menu, with no dropdown and no sub-navigation band. Ebook and In evidenza are catalogue filters, not pages.
 - **Footer:** navy, mist text, white on hover and focus, white focus ring, mist-at-10% squares behind social icons (44px).
 - **Ways on (not-found page):** a list between navy-at-10% rules, each row a Playfair navy link (1.25rem, underlines on hover) over a slate note, at least 64px high.
 

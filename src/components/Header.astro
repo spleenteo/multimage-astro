@@ -1,5 +1,4 @@
 ---
-import BooksSectionNav from './BooksSectionNav.astro';
 import { NEWSLETTER_FORM_URL } from '~/lib/newsletter';
 
 type NavLink = {
@@ -60,15 +59,8 @@ function buildPrimaryLinks(infoPages: Array<{ label: string; href: string }>): N
   const infoChildren = infoPages.length > 0 ? infoPages : [];
 
   return [
-    {
-      label: 'Libri',
-      children: [
-        { label: 'Collane', href: '/collane' },
-        { label: 'In evidenza', href: '/libri/highlights' },
-        { label: 'Catalogo', href: '/libri' },
-        { label: 'Ebooks', href: '/libri/ebooks' },
-      ],
-    },
+    { label: 'Catalogo', href: '/libri' },
+    { label: 'Collane', href: '/collane' },
     { label: 'Autrici/Autori', href: '/autori' },
     { label: 'Distributori', href: '/distributori' },
     { label: 'Magazine', href: '/magazine' },
@@ -121,12 +113,6 @@ function buildTabIds(label: string) {
 
 function linkIsActive(link: NavLink, pathname: string) {
   if (link.children && link.children.length > 0) {
-    if (link.label === 'Libri') {
-      return (
-        pathname.startsWith('/libri') || pathname.startsWith('/collane') || pathname === '/collane'
-      );
-    }
-
     if (link.label === 'Magazine') {
       return pathname.startsWith('/magazine');
     }
@@ -149,7 +135,6 @@ function linkIsActive(link: NavLink, pathname: string) {
   return pathname === link.href || pathname.startsWith(`${link.href}/`);
 }
 
-const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.startsWith('/collane');
 ---
 
 <header class="relative z-40 shadow-soft [--focus-ring:var(--color-white)]" data-header>
@@ -491,13 +476,6 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
     </div>
   </div>
 
-  {showBooksNav ? (
-    <div class="border-t border-white/60 bg-white/80 py-4">
-      <div class="container">
-        <BooksSectionNav currentPath={normalizedPath} />
-      </div>
-    </div>
-  ) : null}
 </header>
 
 <script type="module" is:inline>

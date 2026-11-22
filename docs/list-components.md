@@ -21,14 +21,6 @@ scope: A list to describe all components used in the project
   - Used in: `BaseLayout`.
   - Owner: @codex.
   - Notes: automatically balances link groups; site is permanently Italian-only so no locale switching is required.
-- `BooksSectionNav` — **BooksSectionNav** (`src/components/BooksSectionNav.astro`)
-  - Purpose: sticky sub-navigation for `/libri` and `/collane` pages.
-  - Key props: `currentPath`.
-  - Used in: `Header` (only on book/collection routes).
-  - Owner: @codex.
-  - Notes: pure markup, keeps focus logic next to link definitions.
-
-## Sections, heroes & cards
 - `BooksCatalogue` — **BooksCatalogue** (`src/components/BooksCatalogue/index.astro` + `catalogue.client.ts`)
   - Purpose: faceted catalogue for `/libri`. Renders every published book server-side (catalogue variant of `BookCard`), then the browser script filters (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, in-page search), sorts (novità / titolo) and reveals cards 40 at a time. Filters live in the URL (`collana`, `formato`, `autore`, `periodo`, `evidenza`, `tradotti`, `archivio`, `ordine`, `q`).
   - Key props: `title`, `introHtml?`, `books` (`{ card, entry }`), `collections`, `authors`, `periods`, `newest`.
@@ -48,7 +40,7 @@ scope: A list to describe all components used in the project
 - `IndexHeroSection` — **IndexHeroSection** (`src/components/IndexHeroSection/index.astro`)
   - Purpose: wraps `SectionIntro` inside a standardized section for index pages with reusable spacing.
   - Key props: `title`, `subtitleHtml`, `align?`.
-  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri`, `/libri/highlights`, `/libri/archivio`, `/libri/ebooks`.
+  - Used in: `/autori`, `/collane`, `/distributori`, `/magazine`, `/libri/archivio`.
   - Owner: @codex.
   - Notes: expects the parent page to handle SEO fallbacks and sanitization.
 - `InfoSection` — **InfoSection** (`src/components/InfoSection/index.astro`)

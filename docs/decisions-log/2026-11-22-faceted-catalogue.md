@@ -14,7 +14,7 @@ The Impeccable critique of `/libri` (19/40) found that the only way into ~350 bo
 - `/libri/pagina/<n>` answers 301 to `/libri`. `buildBooksCataloguePaths()` returns `['/libri']`, so sitemap and revalidation callers stay unchanged.
 - "Solo titoli in evidenza" (books flagged `highlight`) is the first facet, above the collections (`evidenza=1`). A highlights shelf above the grid was tried and dropped: it took too much room before the catalogue.
 - Themes (`keywords`, filled on 114 of 363 books, with 514 distinct values) are not a facet. They are a second phase: an editorial set of 8–12 themes first.
-- Ebook, In evidenza and Collane stay separate pages. The section tabs put Catalogo first.
+- Follow-up the same day: `/libri/ebooks` → 301 `/libri?formato=ebook` and `/libri/highlights` → 301 `/libri?evidenza=1`. The header menu has "Catalogo" and "Collane" as first-level items (the "Libri" dropdown and the `BooksSectionNav` sub-navigation are gone). Their `index_page` records (slugs `ebooks`, `highlights`) are no longer rendered; they can be deleted in the CMS.
 
 ## Consequences
 

@@ -6,8 +6,6 @@ import { SITEMAP_QUERY, type SitemapQueryResult } from './sitemap.xml/_graphql';
 const STATIC_PATHS = [
   '/',
   '/libri',
-  '/libri/ebooks',
-  '/libri/highlights',
   '/libri/archivio',
   '/autori',
   '/collane',
