@@ -6,7 +6,8 @@ import { Image } from '@datocms/astro/Image';
 import type { ResponsiveImageType } from '@datocms/astro/Image';
 import type { AssetColor } from '~/lib/datocms/types';
 import Button from '~/components/ui/Button';
-import { pickBaseColor, lightenColor, darkenColor, hexToRgba, readableTextOn } from '~/lib/colors';
+import { coverFieldPalette } from '~/lib/colors';
+import { buildOrderMailto } from '~/lib/books';
 import styles from './style.module.css';
 
 type Props = {
@@ -36,16 +37,12 @@ const {
   collectionHref = null,
 }: Props = Astro.props;
 
-const baseColor = pickBaseColor(coverColors);
-const fieldColor = lightenColor(baseColor, 0.16);
-// The text half carries a pale tint of the same hue, so the band reads as one full-width field.
-const copyColor = lightenColor(baseColor, 0.88);
-// A dark cover gives a dark field: the caption switches to white when charcoal would not read.
-const captionColor = readableTextOn(fieldColor);
-const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
+// Field behind the cover, a pale tint of the same hue for the text half (so the band reads as one
+// full-width field), the cover's coloured shadow, and a caption colour that reads on a dark field.
+const { field: fieldColor, copy: copyColor, shadow: shadowColor, caption: captionColor } =
+  coverFieldPalette(coverColors);
 
-const orderSubject = `Ordine: ${book.title}`;
-const orderHref = `mailto:ordini@multimage.org?subject=${encodeURIComponent(orderSubject)}`;
+const orderHref = buildOrderMailto({ title: book.title, authors: authors.map((author) => author.name) });
 const titleId = 'home-hero-book-title';
 ---
 

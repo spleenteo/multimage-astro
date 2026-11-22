@@ -288,7 +288,23 @@ Plain, upright and loud only once per block.
 - **Checkbox / radio rows:** native controls tinted navy (`accent-color`), 18px, in rows 44px high on touch and 32px from 1024px; the label underlines navy on hover and turns semibold navy when checked; the count sits right-aligned.
 
 ### Book Cover Field (signature)
-The hero and featured-book blocks: a full-width field in the cover's own tint (lightened 16%), the cover tilted and casting its coloured drop shadow; in the hero the text half carries a much paler tint (lightened 88%) of the same hue so the band reads as one field. Text on the pale half is navy title, charcoal body, serif price, then actions.
+The hero and featured-book blocks: a full-width field in the cover's own tint (lightened 16%), the cover tilted and casting its coloured drop shadow; in the hero the text half carries a much paler tint (lightened 88%) of the same hue so the band reads as one field. Text on the pale half is navy title, charcoal body, serif price, then actions. The palette comes from `coverFieldPalette` in `src/lib/colors.ts`.
+
+### Book Page (`/libri/[slug]`)
+The book's own page opens with the Book Cover Field, full-bleed and flush under the header: text half left (7fr), cover field right (5fr); on phones the cover comes first, capped at `min(15rem, 36svh)`, so title, price and the order reach the first screen. The text half carries, in order:
+- the h1 title and subtitle;
+- the byline ("di" / "a cura di", names as navy links);
+- the meta line (Collana *link* · anno · formato · Fuori catalogo);
+- the promo line in italic;
+- the price as a Playfair figure;
+- the actions.
+
+There is no cart, so the primary action is "Ordina via email": a `mailto:` prefilled with the book (`buildOrderMailto`). The ebook is one white secondary button, "Ebook 2,99 € su Bookrepublic", with an external icon. Under the actions sits one charcoal line, "Spedizione gratuita con piego di libri · Soci: 30% di sconto", followed by two navy links, "Trovalo in libreria" and "Come funziona l'ordine". An out-of-catalogue edition says so in a sentence. When a newer print edition exists, the primary action becomes "Vai alla nuova edizione". Below the hero sits one flat reading column (max 4xl, prose at 68ch), with sections divided by hairlines and left-aligned serif h2s and no cards or shadows:
+- description;
+- Quarta di copertina;
+- Autrice/Autore del libro;
+- Dettagli, holding "Edizione" and "Grafica" in two-column lists;
+- Recensioni (date · author, a linked title, an excerpt with URLs stripped).
 
 ### Doors (wayfinding strip)
 Three equal white cells under the hero, separated by mist hairlines. Each: Playfair navy title over a short charcoal description, a navy Iconoir arrow on the right that nudges 4px on hover; the cell fills mist and the title underlines on hover. Focus outline is drawn 4px inside the cell.

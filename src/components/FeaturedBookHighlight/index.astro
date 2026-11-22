@@ -4,7 +4,7 @@ import type { ResponsiveImageType } from '@datocms/astro/Image';
 import type { AssetColor } from '~/lib/datocms/types';
 import AuthorChip from '~/components/AuthorChip';
 import Button from '~/components/ui/Button';
-import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
+import { coverFieldPalette } from '~/lib/colors';
 import styles from './style.module.css';
 
 type HighlightBook = {
@@ -46,9 +46,7 @@ const {
   coverColors = null,
 }: Props = Astro.props;
 
-const baseColor = pickBaseColor(coverColors);
-const backdropColor = lightenColor(baseColor, 0.16);
-const shadowColor = hexToRgba(darkenColor(baseColor, 0.45), 0.45);
+const { field: backdropColor, shadow: shadowColor } = coverFieldPalette(coverColors);
 
 const coverImageData = coverImage;
 const authorImageData = author?.picture

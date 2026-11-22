@@ -56,21 +56,21 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: pass counts from `mapBooksToCards`.
 - `AuthorsSection` — **AuthorsSection** (`src/components/AuthorsSection/index.astro`)
-  - Purpose: highlights book authors with imagery and bios.
-  - Key props: `title`, `authors[]` view-model.
+  - Purpose: the book page's authors as flat rows under a hairline: 128px portrait (decorative, `alt=""`), name as the only link to the profile, book count, short bio at 68ch.
+  - Key props: `title` (paired forms, "Autrice/Autore del libro"), `authors[]` view-model.
   - Used in: `libri/[slug]`.
   - Owner: @codex.
-  - Notes: expects precomputed `authorsCards` (picture alt defaults to author name).
+  - Notes: an empty `biography` hides the bio line; no portrait → no placeholder box.
 - `AlternateFormatsList` — **AlternateFormatsList** (`src/components/AlternateFormatsList/index.astro`)
-  - Purpose: lists sibling formats (ebook/print) with prices and links.
-  - Key props: `formats[]` (format, price, href, `isExternal`).
-  - Used in: `libri/[slug]`.
+  - Purpose: one line of navy links to other editions of the same title ("Altre edizioni: Cartaceo 2017 (15,00 €)").
+  - Key props: `label` (default "Disponibile anche in"), `formats[]` (format, price, href, `isExternal`).
+  - Used in: `libri/[slug]` hero.
   - Owner: @codex.
-  - Notes: automatically toggles `_blank` for external ebook URLs.
+  - Notes: external links get `_blank` and a visually hidden "(si apre in una nuova scheda)".
 - `DetailList` — **DetailList** (`src/components/DetailList/index.astro`)
-  - Purpose: definition list for metadata (ISBN, pages, translators, etc.).
-  - Key props: `title`, `items[]` (label/value/href).
-  - Used in: book detail pages, staff exports.
+  - Purpose: definition list for metadata (ISBN, pages, translators, etc.), two label/value columns also on phones.
+  - Key props: `title`, `items[]` (label/value/href); renders nothing when `items` is empty.
+  - Used in: `libri/[slug]` ("Edizione", "Grafica").
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)

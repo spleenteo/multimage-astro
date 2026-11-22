@@ -1,33 +1,226 @@
 @reference '../../../styles/global.css';
 
+.article {
+  @apply space-y-12 md:space-y-16;
+}
+
+/* The Book Cover Field (DESIGN.md): full-bleed, flush under the header. The cover sits on a field
+   tinted from its own colours; the text half carries a pale tint of the same hue. */
+.hero {
+  margin-inline: calc(50% - 50vw);
+  margin-top: -3rem;
+
+  @media (width >= 48rem) {
+    margin-top: -4rem;
+  }
+}
+
 .heroGrid {
-  @apply mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:items-start;
+  display: grid;
+
+  @media (width >= 48rem) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
 }
 
-.coverPanel {
-  @apply overflow-hidden bg-white/95 shadow-soft;
+.coverField {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.5rem;
+  overflow: clip;
+
+  @media (width >= 48rem) {
+    order: 2;
+    min-height: 34rem;
+    padding: 4rem 3rem;
+  }
 }
 
-.coverFrame {
-  @apply bg-brand-mist;
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. On phones the
+   cover stays short, so title, price and the order reach the first screens. */
+.cover {
+  display: block;
+  width: auto !important;
+  max-width: min(55vw, 200px) !important;
+  height: min(15rem, 36svh) !important;
+  object-fit: contain;
+  transform: rotate(4deg);
+
+  @media (width >= 48rem) {
+    max-width: 340px !important;
+    height: 26rem !important;
+  }
 }
 
-.detailCard {
-  @apply border border-white/70 bg-white/95 p-8 shadow-soft backdrop-blur-xs sm:p-12;
+.coverFallback {
+  @apply flex h-60 w-40 items-center justify-center bg-white/70 px-4 text-center text-sm font-semibold text-brand-slate md:h-96 md:w-64;
 }
 
-.reviewSection {
-  @apply mx-auto max-w-4xl space-y-6 bg-white/95 p-8 shadow-soft;
+.copyField {
+  display: flex;
+  align-items: center;
+
+  @media (width >= 48rem) {
+    order: 1;
+  }
 }
 
-.detailsSection {
-  @apply mx-auto max-w-6xl overflow-hidden border border-white/70 bg-white/95 shadow-soft;
+/* Text column aligned with the container's left edge on wide screens. */
+.copy {
+  width: 100%;
+  padding: 2rem 1.5rem 2.5rem;
+
+  @media (width >= 48rem) {
+    padding: 4rem 3rem 4rem max(1.5rem, calc((100vw - 1200px) / 2 + 1.5rem));
+  }
+}
+
+.copy > * {
+  max-width: 40rem;
+}
+
+.title {
+  @apply font-serif text-4xl text-balance text-brand-navy md:text-5xl;
+}
+
+.subtitle {
+  @apply mt-3 text-lg font-medium text-pretty text-brand-charcoal md:text-xl;
+}
+
+.byline {
+  @apply mt-4 text-base text-brand-charcoal;
+}
+
+.byline a,
+.meta a,
+.terms a,
+.ways a {
+  @apply text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
+}
+
+.byline a {
+  @apply font-semibold;
+}
+
+.meta {
+  @apply mt-1 text-sm text-brand-charcoal;
+}
+
+.promo {
+  @apply mt-5 text-base text-pretty italic text-brand-charcoal;
+}
+
+.buy {
+  @apply mt-6;
+}
+
+.price {
+  @apply font-serif text-3xl text-brand-navy lining-nums tabular-nums;
+}
+
+.actions {
+  @apply mt-4 flex flex-wrap gap-3;
+}
+
+.actions:empty {
+  display: none;
+}
+
+.terms {
+  @apply mt-4 text-sm text-brand-charcoal;
+}
+
+.ways {
+  @apply mt-2 flex flex-wrap gap-x-6 text-sm font-semibold;
+}
+
+.ways a {
+  @apply inline-flex min-h-11 items-center md:min-h-8;
+}
+
+.status {
+  @apply text-lg font-semibold text-brand-charcoal;
+}
+
+.statusNote {
+  @apply mt-1 text-base text-brand-charcoal;
+}
+
+/* Below the hero: one reading column, flat sections divided by hairlines. */
+.body {
+  @apply mx-auto max-w-4xl space-y-12;
+}
+
+.section {
+  @apply space-y-6 border-t border-brand-navy/10 pt-10;
+}
+
+.sectionTitle {
+  @apply font-serif text-3xl text-brand-navy;
+}
+
+/* CMS prose (description, back cover): a 68ch measure, navy links, hairline quotes. */
+.prose {
+  @apply max-w-[68ch] space-y-4 text-base leading-relaxed text-brand-charcoal;
+}
+
+.lede {
+  @apply md:text-lg;
+}
+
+.prose :global(a) {
+  @apply text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
+}
+
+.prose :global(strong) {
+  @apply font-semibold;
+}
+
+.prose :global(mark) {
+  @apply bg-brand-mist text-brand-charcoal;
+}
+
+.prose :global(blockquote) {
+  @apply border-l border-brand-navy/30 pl-5 font-serif italic text-brand-navy;
+}
+
+.prose :global(blockquote footer) {
+  @apply mt-3 font-sans text-sm font-medium not-italic text-brand-charcoal;
 }
 
 .detailsGrid {
-  @apply grid gap-8 px-6 py-10 sm:px-12 md:grid-cols-2;
+  @apply grid gap-10 md:grid-cols-2;
 }
 
-.reviewsSection {
-  @apply mx-auto max-w-6xl space-y-4 border border-white/70 bg-white/95 p-8 shadow-soft;
+.staffLink {
+  @apply text-sm text-brand-slate print:hidden;
+}
+
+.staffLink a {
+  @apply underline underline-offset-2 hover:text-brand-navy;
+}
+
+.reviews {
+  @apply divide-y divide-brand-navy/10;
+}
+
+.review {
+  @apply py-5 first:pt-0;
+}
+
+.reviewMeta {
+  @apply text-sm text-brand-slate;
+}
+
+.reviewTitle {
+  @apply mt-1 font-serif text-xl text-brand-navy;
+}
+
+.reviewTitle a {
+  @apply text-brand-navy hover:underline focus:text-brand-navy;
+}
+
+.reviewExcerpt {
+  @apply mt-2 max-w-[68ch] text-base leading-relaxed text-brand-charcoal;
 }

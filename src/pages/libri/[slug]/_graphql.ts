@@ -49,6 +49,9 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       coverImage {
         url
         alt
+        colors {
+          hex
+        }
         responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
           ...ResponsiveImageFragment
         }
@@ -132,6 +135,8 @@ export const BOOK_ALTERNATE_FORMATS_QUERY = /* GraphQL */ `
       format
       price
       epubUrl
+      archive
+      printYear
     }
   }
 `;
@@ -235,6 +240,8 @@ export type BookAlternateFormatsResult = {
     format: string | null;
     price: number | null;
     epubUrl: string | null;
+    archive: boolean | null;
+    printYear: string | null;
   }>;
 };
 

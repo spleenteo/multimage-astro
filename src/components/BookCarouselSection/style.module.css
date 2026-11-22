@@ -2,6 +2,8 @@
 
 .section {
   @apply w-full bg-brand-navy-lighter py-8;
+  /* The slides peek past the edge on purpose; the page itself must not scroll sideways. */
+  overflow-x: clip;
 }
 
 .inner {

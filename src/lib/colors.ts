@@ -89,3 +89,19 @@ export function readableTextOn(background: string, dark = '#343434', light = '#f
   const onLight = contrastRatio(background, light) ?? 0;
   return onDark >= onLight ? dark : light;
 }
+
+/**
+ * The Book Cover Field palette (DESIGN.md, "Book Cover Field"): the field behind a tilted cover, the
+ * paler tint of the same hue for the text half, the cover's coloured drop shadow, and a caption
+ * colour that reads on the field. Used by HomeHero, FeaturedBookHighlight and the book detail page.
+ */
+export function coverFieldPalette(colors: AssetColor[] | null | undefined) {
+  const base = pickBaseColor(colors);
+  const field = lightenColor(base, 0.16);
+  return {
+    field,
+    copy: lightenColor(base, 0.88),
+    shadow: hexToRgba(darkenColor(base, 0.45), 0.45),
+    caption: readableTextOn(field),
+  };
+}

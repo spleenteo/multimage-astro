@@ -67,7 +67,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
+  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book: subject, title, authors, ISBN, price, copies, address), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
   - Used in: listings, carousels, detail pages, staff exports, printable schede; `/libri` route, sitemap, `publicUrls.ts`, `revalidationUrls.ts`.
   - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props. Keep `BOOKS_PER_PAGE` here so route/sitemap/revalidation agree on page count.
 - **`authors` helper** (`src/lib/authors.ts`)
@@ -79,8 +79,8 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `/distributori`.
   - Notes: generates Google Maps URLs and rich-text HTML strings that must be sanitized (Security task **S2**).
 - **`colors` helper** (`src/lib/colors.ts`)
-  - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background).
-  - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, color-aware UI.
+  - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background); `coverFieldPalette(colors)` returns the Book Cover Field set (field 16%, copy half 88%, cover shadow, caption colour).
+  - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, `libri/[slug]`, color-aware UI.
 - **`catalogue` helper** (`src/lib/catalogue.ts`)
   - Purpose: rules of the faceted `/libri` catalogue shared by server and browser: `CatalogueEntry` (compact per-book facet record), `matchesCatalogue` (with an `ignore` facet for option counts), `parseCatalogueState`/`serializeCatalogueState` (URL), `buildPeriodOptions`, `isTranslated`, `normalizeForSearch`, `CATALOGUE_CHUNK` (40).
   - Used in: `/libri`, `BooksCatalogue`.

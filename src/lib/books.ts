@@ -304,3 +304,47 @@ export function buildGraphicsDetails(source: BookDetailSource): BookDetailItem[]
 
   return details;
 }
+
+const ORDER_EMAIL = 'ordini@multimage.org';
+
+type OrderMailtoInput = {
+  title: string;
+  authors?: string[];
+  isbn?: string | null;
+  price?: string | null;
+};
+
+/**
+ * A `mailto:` that starts the order of one book: there is no cart, the email to ordini@ is the
+ * order (see /info/ordinare: titles, copies, shipping address). Subject and body are prefilled so
+ * the reader only adds name and address.
+ */
+export function buildOrderMailto({ title, authors = [], isbn = null, price = null }: OrderMailtoInput) {
+  const byline = authors.length > 0 ? ` di ${authors.join(', ')}` : '';
+  const details = [isbn ? `ISBN ${isbn}` : null, price].filter(Boolean).join(' · ');
+  const body = [
+    'Buongiorno,',
+    'vorrei ordinare:',
+    '',
+    `${title}${byline}`,
+    ...(details ? [details] : []),
+    'Copie: 1',
+    '',
+    'Nome e cognome:',
+    'Indirizzo di spedizione:',
+  ].join('\r\n');
+  return `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(`Ordine: ${title}`)}&body=${encodeURIComponent(body)}`;
+}
+
+/** The store an ebook link points to, for its label ("su Bookrepublic"); null when unknown. */
+export function ebookStoreName(url: string | null | undefined): string | null {
+  if (!url) {
+    return null;
+  }
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, '');
+    return host.endsWith('bookrepublic.it') ? 'Bookrepublic' : null;
+  } catch {
+    return null;
+  }
+}
