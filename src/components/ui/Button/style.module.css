@@ -1,7 +1,7 @@
 @reference '../../../styles/global.css';
 
 .root {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition;
+  @apply inline-flex items-center justify-center gap-2 min-h-11 rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wider transition;
 }
 
 .primary {

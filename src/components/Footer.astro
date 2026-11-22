@@ -123,10 +123,10 @@ const LEGAL_LINKS: LegalLink[] = [
           {title ? (
             <p class="text-xs font-semibold uppercase tracking-wider text-white/70">{title}</p>
           ) : null}
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col md:gap-2">
             {links.map(({ label, href }) => <a
               href={href}
-              class="text-sm text-brand-mist transition hover:text-white focus:text-white"
+              class="inline-flex min-h-11 items-center text-sm text-brand-mist transition hover:text-white focus:text-white md:min-h-0"
             >
               {label}
             </a>)}
@@ -147,7 +147,7 @@ const LEGAL_LINKS: LegalLink[] = [
             rel="noreferrer"
             class="inline-flex items-center gap-2 text-sm text-brand-mist transition hover:text-white focus:text-white"
           >
-            <span class="flex h-9 w-9 items-center justify-center bg-white/10">
+            <span class="flex h-11 w-11 items-center justify-center bg-white/10">
               <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
             </span>
             <span>{label}</span>
@@ -169,12 +169,12 @@ const LEGAL_LINKS: LegalLink[] = [
       >
       &mdash; P.I. 06987750012
     </address>
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+    <div class="flex flex-wrap items-center gap-x-4 md:gap-y-2">
       {LEGAL_LINKS.map(({ label, href, external }) => <a
         href={href}
         target={external ? '_blank' : undefined}
         rel={external ? 'noreferrer' : undefined}
-        class="text-xs text-brand-mist transition hover:text-white focus:text-white"
+        class="inline-flex min-h-11 items-center text-xs text-brand-mist transition hover:text-white focus:text-white md:min-h-0"
       >
         {label}
       </a>)}
