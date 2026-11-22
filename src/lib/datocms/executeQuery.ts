@@ -1,6 +1,7 @@
 import { executeQuery as libExecuteQuery, rawExecuteQuery } from '@datocms/cda-client';
 import {
   DATOCMS_BASE_EDITING_URL,
+  DATOCMS_ENVIRONMENT,
   DATOCMS_DRAFT_CONTENT_CDA_TOKEN,
   DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN,
 } from 'astro:env/server';
@@ -31,7 +32,7 @@ export async function executeQuery<
     excludeInvalid: options?.excludeInvalid ?? true,
     includeDrafts,
     token,
-    environment: options?.environment,
+    environment: options?.environment ?? (DATOCMS_ENVIRONMENT || undefined),
     contentLink: enableContentLink ? ('v1' as const) : undefined,
     baseEditingUrl: enableContentLink ? DATOCMS_BASE_EDITING_URL : undefined,
   };

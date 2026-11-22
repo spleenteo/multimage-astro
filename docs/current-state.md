@@ -28,6 +28,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Known issues: `/magazine` Structured Text links still point to `/blog/...` (**PS2**). (**S1** resolved — internal routes gated in middleware. **S4** resolved 2026-06-20 — `/llms-full.txt` removed.)
 
 ## CMS Data Loading
+- Optional `DATOCMS_ENVIRONMENT` (`astro:env`, server): when set, `executeQuery` and `DraftModeQueryListener` read from that DatoCMS environment (e.g. a sandbox); unset = primary. The CDA tokens' role must allow sandbox access (Editor role opened to all environments on 2026-11-22), otherwise every page fails with `ApiError`.
 
 - All GraphQL calls go through `src/lib/datocms/executeQuery.ts`, which swaps CDA tokens based on `includeDrafts`.
 - Pages and layouts access data via collocated `_graphql.ts` modules that export both the query string and typed helpers; there is no global query registry.
