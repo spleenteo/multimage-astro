@@ -17,7 +17,7 @@
 }
 
 .mediaFallback {
-  @apply flex h-32 w-full items-center justify-center bg-brand-mist/50 p-4 text-sm uppercase tracking-wide text-brand-slate;
+  @apply flex h-32 w-full items-center justify-center bg-brand-mist/50 p-4 text-sm uppercase text-brand-slate;
 }
 
 .content {
@@ -29,7 +29,7 @@
 }
 
 .count {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-navy;
+  @apply text-sm font-semibold uppercase text-brand-navy;
 }
 
 .description {

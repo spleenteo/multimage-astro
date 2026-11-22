@@ -1,7 +1,7 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply block h-full overflow-hidden rounded-2xl border border-white/60 bg-white/95 shadow-soft transition transform duration-200 hover:-translate-y-1 hover:shadow-xl;
+  @apply block h-full overflow-hidden border border-white/60 bg-white/95 shadow-soft transition transform duration-200 hover:-translate-y-1 hover:shadow-xl;
 }
 
 .imageWrapper {
@@ -21,11 +21,11 @@
 }
 
 .categoryTag {
-  @apply rounded-full bg-brand-mist/60 px-3 py-1 text-[10px] tracking-[0.35em] text-brand-charcoal/80;
+  @apply bg-brand-mist/60 px-3 py-1 text-[10px] tracking-[0.35em] text-brand-charcoal/80;
 }
 
 .stickyTag {
-  @apply rounded-full bg-brand-sky px-3 py-1 text-[10px] tracking-[0.35em] text-white;
+  @apply bg-brand-sky px-3 py-1 text-[10px] tracking-[0.35em] text-white;
 }
 
 .date {

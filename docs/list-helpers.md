@@ -79,8 +79,8 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `/distributori`.
   - Notes: generates Google Maps URLs and rich-text HTML strings that must be sanitized (Security task **S2**).
 - **`colors` helper** (`src/lib/colors.ts`)
-  - Purpose: derives palette colors from Imgix metadata and blends shades.
-  - Used in: `BookCard`, `FeaturedBookHighlight`, color-aware UI.
+  - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background).
+  - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, color-aware UI.
 - **`currency` helper** (`src/lib/currency.ts`)
   - Purpose: formats `EUR` values (`it-IT`).
   - Used in: `PriceTag`, `BookCard`, staff exports.

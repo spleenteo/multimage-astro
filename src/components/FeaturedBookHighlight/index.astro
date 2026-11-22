@@ -70,9 +70,7 @@ const authorBooksLabel =
         : `${authorBooksCount} libri pubblicati`;
 ---
 
-<section
-  class:list={['rounded-3xl border border-white/70 bg-white/95 shadow-soft', styles.highlight]}
->
+<section class:list={[' border border-white/70 bg-white/95 shadow-soft', styles.highlight]}>
   <div class="flex flex-col overflow-hidden md:flex-row">
     <div class:list={['md:w-[38%] md:max-w-md', styles.mediaPanel]}>
       <div
@@ -116,7 +114,7 @@ const authorBooksLabel =
           {collectionHref ? (
             <a
               href={collectionHref}
-              class="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-mist/70 px-4 py-1 text-brand-navy underline-offset-2 transition hover:bg-brand-mist hover:text-brand-navy hover:underline"
+              class="inline-flex min-h-11 items-center gap-2 bg-brand-mist/70 px-4 py-1 text-brand-navy underline-offset-2 transition hover:bg-brand-mist hover:text-brand-navy hover:underline"
             >
               <iconify-icon
                 icon="iconoir:bookmark-book"
@@ -127,16 +125,14 @@ const authorBooksLabel =
               <span>{collectionLabel}</span>
             </a>
           ) : collectionLabel ? (
-            <span
-              class="inline-flex items-center rounded-full bg-brand-mist/70 px-4 py-1 text-brand-charcoal"
-            >
+            <span class="inline-flex items-center bg-brand-mist/70 px-4 py-1 text-brand-charcoal">
               {collectionLabel}
             </span>
           ) : null}
         </div>
         {book.isArchived ? (
           <span
-            class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-xs font-semibold uppercase text-white shadow-soft"
+            class="inline-flex items-center bg-brand-slate px-3 py-1 text-xs font-semibold uppercase text-white shadow-soft"
           >
             Fuori catalogo
           </span>
@@ -150,7 +146,7 @@ const authorBooksLabel =
       {[book.priceLabel, book.format, book.printYear].filter((value): value is string =>
         Boolean(value),
       ).length > 0 ? (
-        <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/70">
+        <p class="text-sm font-semibold uppercase text-brand-charcoal/70">
           {[
             book.priceLabel ? `Prezzo ${book.priceLabel}` : null,
             book.format ? `Formato ${book.format}` : null,

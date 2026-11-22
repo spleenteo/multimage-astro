@@ -1,5 +1,5 @@
 @reference '../../../styles/global.css';
 
 .root {
-  @apply inline-flex flex-wrap gap-1 text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80;
+  @apply inline-flex flex-wrap gap-1 text-sm font-semibold uppercase text-brand-charcoal/80;
 }

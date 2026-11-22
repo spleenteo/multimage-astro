@@ -41,7 +41,7 @@
 }
 
 .imageFallback {
-  @apply flex h-52 w-full items-center justify-center bg-brand-mist/60 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate sm:h-56 sm:w-56;
+  @apply flex h-52 w-full items-center justify-center bg-brand-mist/60 text-center text-sm font-semibold uppercase text-brand-slate sm:h-56 sm:w-56;
 }
 
 .content {
@@ -53,7 +53,7 @@
 }
 
 .books {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-sky;
+  @apply text-sm font-semibold uppercase text-brand-sky;
 }
 
 .bio {

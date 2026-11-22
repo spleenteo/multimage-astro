@@ -13,7 +13,7 @@
 }
 
 .label {
-  @apply text-sm font-semibold uppercase tracking-wide text-brand-slate;
+  @apply text-sm font-semibold uppercase text-brand-slate;
 }
 
 .title {

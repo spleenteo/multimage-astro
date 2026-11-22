@@ -17,7 +17,7 @@
 }
 
 .term {
-  @apply text-xs font-semibold uppercase tracking-wider text-brand-slate;
+  @apply text-xs font-semibold uppercase text-brand-slate;
 }
 
 .definition {

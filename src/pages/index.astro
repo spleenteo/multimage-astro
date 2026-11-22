@@ -10,7 +10,7 @@ import HomeAbout from '~/components/HomeAbout';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText, toRichTextHtml } from '~/lib/text';
-import { toBookCard, formatBookPrice, mapBooksToCards } from '~/lib/books';
+import { toBookCard, formatBookPrice, mapBooksToCards, extractYear } from '~/lib/books';
 import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
 import type { BookCardViewModel } from '~/lib/books';
 import type { AssetColor, ResponsiveImage } from '~/lib/datocms/types';
@@ -134,7 +134,7 @@ function toHighlightData(
       summary: card.summary ?? undefined,
       priceLabel: formatBookPrice(card.price ?? null) ?? undefined,
       format: card.format?.trim() ?? undefined,
-      printYear: card.printYear ?? undefined,
+      printYear: extractYear(card.printYear) ?? undefined,
       isArchived: card.isArchived,
       link: `/libri/${card.slug}`,
       authorsLabel: formatAuthorNames(card.authors ?? []),

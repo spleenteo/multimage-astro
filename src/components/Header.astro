@@ -93,7 +93,7 @@ const toneClassMap: Record<string, string> = {
 };
 
 const socialBaseClass =
-  'inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition';
+  'inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase transition';
 
 const { currentPath, infoPages = [] }: Props = Astro.props;
 const PRIMARY_LINKS = buildPrimaryLinks(infoPages);
@@ -155,7 +155,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
 <header class="relative z-40 shadow-soft [--focus-ring:var(--color-white)]" data-header>
   <div class="hidden bg-brand-navy text-white md:block">
     <div
-      class="container flex flex-wrap items-center justify-end gap-2 py-2 text-xs font-semibold uppercase tracking-wider"
+      class="container flex flex-wrap items-center justify-end gap-2 py-2 text-xs font-semibold uppercase"
     >
       {TOP_LINKS.map(({ label, href, icon, external, tone }) => <a
         href={href}
@@ -287,7 +287,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                 aria-selected={isActive ? 'true' : 'false'}
                 aria-expanded="false"
                 aria-haspopup="true"
-                class={`group flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                class={`group flex items-center gap-2 border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
                   isActive
                     ? 'bg-white text-brand-navy focus:text-brand-navy'
                     : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
@@ -311,7 +311,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                 tabindex="-1"
                 aria-labelledby={tabId}
                 aria-hidden="true"
-                class="mt-2 hidden rounded-2xl border border-brand-navy/40 bg-brand-navy text-white shadow-2xl focus:outline-hidden md:absolute md:left-1/2 md:top-full md:z-30 md:mt-3 md:w-64 md:-translate-x-1/2"
+                class="mt-2 hidden border border-brand-navy/40 bg-brand-navy text-white shadow-2xl focus:outline-hidden md:absolute md:left-1/2 md:top-full md:z-30 md:mt-3 md:w-64 md:-translate-x-1/2"
                 data-tab-panel
                 data-tab-parent={tabId}
               >
@@ -347,7 +347,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
             href={link.href ?? '#'}
             role="tab"
             aria-selected={isActive ? 'true' : 'false'}
-            class={`rounded-full border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+            class={` border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
               isActive
                 ? 'bg-white text-brand-navy focus:text-brand-navy'
                 : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'

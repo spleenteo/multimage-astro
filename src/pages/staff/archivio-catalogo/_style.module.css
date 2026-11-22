@@ -29,7 +29,7 @@
 }
 
 .csvButton {
-  @apply inline-flex items-center gap-2 rounded-full border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-sky transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
+  @apply inline-flex items-center gap-2 border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-sky transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
 }
 
 .description {
@@ -69,7 +69,7 @@
 }
 
 .tag {
-  @apply mr-1 inline-flex items-center rounded bg-brand-slate/10 px-2 py-0.5 text-xs text-brand-slate;
+  @apply mr-1 inline-flex items-center bg-brand-slate/10 px-2 py-0.5 text-xs text-brand-slate;
 }
 
 .multiValue {

@@ -183,8 +183,7 @@
    layer sits below utilities, so the rule lives at the end of the utilities layer with :where(a)
    (0,1,0): it wins over (0,1,0) utilities by source order, loses to (0,1,1) ones, and hover:text-*
    (0,2,0) still wins. Unlayered CSS-module rules beat it whatever their specificity, so a module
-   restores v3 with its own hover:/focus: classes. Rules in the components layer (.btn-outline) lose
-   to it too: a .btn-outline:hover white on an <a> would turn navy (latent, no src use). */
+   restores v3 with its own hover:/focus: classes. Rules in the components layer lose to it too. */
 @layer utilities {
   :where(a):hover,
   :where(a):focus {
@@ -195,13 +194,5 @@
 @layer components {
   .chip {
     @apply inline-flex items-center bg-brand-mist px-3 py-1 text-xs font-semibold uppercase text-brand-charcoal;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-brand-orange px-5 py-2 text-sm font-semibold uppercase text-white shadow-soft transition hover:bg-brand-crimson;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 border border-brand-orange px-5 py-2 text-sm font-semibold uppercase text-brand-orange transition hover:bg-brand-orange hover:text-white;
   }
 }

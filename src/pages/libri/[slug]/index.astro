@@ -363,7 +363,7 @@ const seo = sanitizeMetaTags(
             />
           ) : (
             <div
-              class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-wide text-brand-slate"
+              class="flex h-72 items-center justify-center px-6 text-center text-sm font-semibold uppercase text-brand-slate"
             >
               Copertina in arrivo
             </div>
@@ -374,14 +374,14 @@ const seo = sanitizeMetaTags(
       <div class={styles.detailCard}>
         <div class="flex flex-col gap-4">
           <div class="space-y-2">
-            <p class="text-xs font-semibold uppercase tracking-wider text-brand-slate">
+            <p class="text-xs font-semibold uppercase text-brand-slate">
               {book.collection?.name ? `Collana ${book.collection.name}` : 'Catalogo Multimage'}
             </p>
             <h1 class="text-4xl font-serif text-brand-navy md:text-5xl">{book.title}</h1>
             {book.subtitle ? (
               <p class="text-lg font-medium text-brand-charcoal/80 md:text-xl">{book.subtitle}</p>
             ) : null}
-            <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+            <p class="text-sm font-semibold uppercase text-brand-charcoal/80">
               <span>{authorPrefix}</span>
               {authorSegments.map((segment) =>
                 segment.type === 'text' ? (
@@ -401,7 +401,7 @@ const seo = sanitizeMetaTags(
 
           {descriptionHtml ? (
             <div
-              class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
+              class="space-y-3 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]: [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
               set:html={descriptionHtml}
             />
           ) : null}
@@ -409,9 +409,7 @@ const seo = sanitizeMetaTags(
           <div class="space-y-4 pt-2">
             {isArchived ? (
               <div class="space-y-3">
-                <p
-                  class="bg-brand-mist/50 p-4 text-sm font-semibold uppercase tracking-wide text-brand-slate"
-                >
+                <p class="bg-brand-mist/50 p-4 text-sm font-semibold uppercase text-brand-slate">
                   Titolo fuori catalogo.
                 </p>
                 <AlternateFormatsList formats={limitedAlternateFormats} />
@@ -419,7 +417,7 @@ const seo = sanitizeMetaTags(
             ) : (
               <>
                 {formattedPrice || formatValue ? (
-                  <p class="text-sm font-semibold uppercase tracking-wide text-brand-charcoal/80">
+                  <p class="text-sm font-semibold uppercase text-brand-charcoal/80">
                     {[formattedPrice, formatValue ? `Formato ${formatValue}` : null]
                       .filter(Boolean)
                       .join(' · ')}
@@ -462,7 +460,7 @@ const seo = sanitizeMetaTags(
       <section class={styles.reviewSection}>
         <h2 class="text-3xl font-serif text-brand-navy">Quarta di copertina</h2>
         <div
-          class="v3-space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]:rounded-md [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
+          class="v3-space-y-4 text-base leading-relaxed text-brand-charcoal/90 [&_a]:text-brand-sky [&_a]:underline [&_a]:decoration-brand-sky [&_a]:underline-offset-2 [&_a:hover]:text-brand-navy [&_a:hover]:decoration-brand-navy [&_strong]:text-brand-charcoal [&_mark]:bg-brand-sky/15 [&_mark]:text-brand-charcoal [&_blockquote]: [&_blockquote]:border-l-4 [&_blockquote]:border-brand-sky [&_blockquote]:bg-brand-sky/10 [&_blockquote]:px-6 [&_blockquote]:py-4 [&_blockquote]:font-serif [&_blockquote]:italic [&_blockquote]:text-brand-navy [&_blockquote]:leading-relaxed [&_blockquote_footer:not(:empty)]:mt-4 [&_blockquote_footer:not(:empty)]:border-t [&_blockquote_footer:not(:empty)]:border-brand-sky/30 [&_blockquote_footer:not(:empty)]:pt-3 [&_blockquote_footer]:text-sm [&_blockquote_footer]:font-medium [&_blockquote_footer]:font-sans [&_blockquote_footer]:text-brand-charcoal [&_blockquote_footer]:not-italic"
         >
           <StructuredText
             data={reviewContent as any}
@@ -506,7 +504,7 @@ const seo = sanitizeMetaTags(
           {reviewPreviews.map((review) => <li data-review-id={review.id}>
             <a
               href={`/magazine/${review.slug}`}
-              class="group block rounded-lg border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
+              class="group block border border-brand-mist/80 bg-white/95 p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-brand-sky/70 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:border-brand-sky/70 focus-visible:shadow-md"
             >
               <div class="flex gap-3">
                 <div class="mt-0.5 text-brand-sky">
@@ -514,7 +512,7 @@ const seo = sanitizeMetaTags(
                 </div>
                 <div class="space-y-2">
                   {review.dateLabel ? (
-                    <p class="text-xs font-semibold uppercase tracking-wide text-brand-slate">
+                    <p class="text-xs font-semibold uppercase text-brand-slate">
                       <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
                       {review.authorName ? <span class="mx-2">•</span> : null}
                       {review.authorName ? <span>A cura di {review.authorName}</span> : null}

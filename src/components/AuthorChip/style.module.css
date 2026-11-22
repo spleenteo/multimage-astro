@@ -1,11 +1,11 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply flex items-center gap-4 rounded-3xl border border-brand-mist/60 bg-white/95 px-5 py-4 shadow-soft transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-2xl md:gap-6;
+  @apply flex items-center gap-4 border border-brand-mist/60 bg-white/95 px-5 py-4 shadow-soft transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-2xl md:gap-6;
 }
 
 .avatar {
-  @apply relative aspect-square w-20 flex-shrink-0 overflow-hidden rounded-full border border-white/80 shadow-soft md:w-24;
+  @apply relative aspect-square w-20 flex-shrink-0 overflow-hidden border border-white/80 shadow-soft md:w-24;
 }
 
 .placeholder {
@@ -13,7 +13,7 @@
 }
 
 .copyLabel {
-  @apply text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate;
+  @apply text-xs font-semibold uppercase text-brand-slate;
 }
 
 .name {
@@ -21,7 +21,7 @@
 }
 
 .booksLabel {
-  @apply text-xs font-medium uppercase tracking-wide text-brand-charcoal/70;
+  @apply text-xs font-medium uppercase text-brand-charcoal/70;
 }
 
 .icon {

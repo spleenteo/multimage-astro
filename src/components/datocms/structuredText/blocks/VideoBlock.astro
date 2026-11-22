@@ -45,14 +45,14 @@ if (isEmbedProvider) {
 {sourceUrl ? (
   <figure
     data-datocms-content-link-boundary
-    class="not-prose my-6 space-y-3 rounded-xl bg-brand-mist/40 p-4 text-center"
+    class="not-prose my-6 space-y-3 bg-brand-mist/40 p-4 text-center"
   >
     {isEmbedProvider ? (
       <iframe
         src={embedUrl ?? undefined}
         title={title}
         loading="lazy"
-        class="mx-auto aspect-video h-auto w-full max-w-4xl rounded-lg"
+        class="mx-auto aspect-video h-auto w-full max-w-4xl"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
       />
@@ -61,7 +61,7 @@ if (isEmbedProvider) {
         controls
         preload="metadata"
         poster={poster}
-        class="mx-auto h-auto max-h-[540px] w-full max-w-4xl rounded-lg bg-black"
+        class="mx-auto h-auto max-h-[540px] w-full max-w-4xl bg-black"
       >
         <source src={sourceUrl} />
         Il tuo browser non supporta la riproduzione di questo video.
