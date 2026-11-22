@@ -24,12 +24,18 @@
   @apply flex w-full max-w-md items-center gap-3 rounded-full border border-brand-slate/15 bg-white/90 px-5 py-3 shadow-[0_8px_32px_rgba(13,30,54,0.08)] backdrop-blur-xs transition-shadow duration-200 focus-within:shadow-[0_8px_32px_rgba(13,30,54,0.14)] focus-within:border-brand-sky/40;
 }
 
+/* The input hides its own outline; the whole pill carries the standard focus ring instead. */
+.searchPill:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
 .searchIcon {
   @apply shrink-0 text-brand-slate/40;
 }
 
 .searchInput {
-  @apply min-w-0 flex-1 border-none bg-transparent text-sm text-brand-navy placeholder:text-brand-slate/45 focus:outline-hidden;
+  @apply min-w-0 flex-1 border-none bg-transparent text-sm text-brand-navy placeholder:text-brand-slate focus:outline-hidden;
 }
 
 .searchInput::-webkit-search-cancel-button {

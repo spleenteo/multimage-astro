@@ -1,7 +1,7 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply flex items-center gap-4 rounded-3xl border border-brand-mist/60 bg-white/95 px-5 py-4 shadow-soft transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-2xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2 md:gap-6;
+  @apply flex items-center gap-4 rounded-3xl border border-brand-mist/60 bg-white/95 px-5 py-4 shadow-soft transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-2xl md:gap-6;
 }
 
 .avatar {

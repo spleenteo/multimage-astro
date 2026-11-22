@@ -33,7 +33,6 @@ type Props = {
   coverImage?: ResponsiveImageType | null;
   collectionLabel?: string | null;
   collectionHref?: string | null;
-  label?: string | null;
   author?: HighlightAuthor | null;
   coverColors?: AssetColor[] | null;
 };
@@ -43,7 +42,6 @@ const {
   coverImage = null,
   collectionLabel = null,
   collectionHref = null,
-  label = 'In evidenza',
   author = null,
   coverColors = null,
 }: Props = Astro.props;
@@ -104,18 +102,17 @@ const authorBooksLabel =
       </div>
     </div>
     <div class="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10 md:py-12">
+      <div class="space-y-2 text-left">
+        <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">{book.title}</h2>
+        {book.subtitle ? (
+          <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
+        ) : null}
+      </div>
+
       <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div
-          class:list={[
-            'flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-slate',
-            styles.label,
-          ]}
+          class:list={['flex flex-wrap items-center gap-3 text-sm font-semibold text-brand-slate']}
         >
-          <span
-            class="inline-flex items-center rounded-full bg-brand-navy px-4 py-1 text-white shadow-soft"
-          >
-            {label}
-          </span>
           {collectionHref ? (
             <a
               href={collectionHref}
@@ -139,17 +136,10 @@ const authorBooksLabel =
         </div>
         {book.isArchived ? (
           <span
-            class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white shadow-soft"
+            class="inline-flex items-center rounded-full bg-brand-slate px-3 py-1 text-xs font-semibold uppercase text-white shadow-soft"
           >
             Fuori catalogo
           </span>
-        ) : null}
-      </div>
-
-      <div class="space-y-2 text-left">
-        <h2 class="text-3xl font-serif text-brand-navy md:text-4xl">{book.title}</h2>
-        {book.subtitle ? (
-          <p class="text-lg font-medium text-brand-charcoal/80">{book.subtitle}</p>
         ) : null}
       </div>
 
@@ -182,9 +172,6 @@ const authorBooksLabel =
 
       {author ? (
         <div class="flex flex-col gap-3 border-t border-brand-mist pt-6">
-          <span class="text-xs font-semibold uppercase tracking-[0.24em] text-brand-slate">
-            Autrice/Autore in evidenza
-          </span>
           <div class="flex flex-wrap items-center gap-4">
             <AuthorChip
               name={author.name}
@@ -192,7 +179,7 @@ const authorBooksLabel =
               image={authorImageData ?? undefined}
             />
             {authorBooksLabel ? (
-              <span class="text-xs font-semibold uppercase tracking-widest text-brand-charcoal/60">
+              <span class="text-sm text-brand-charcoal">
                 {authorBooksLabel}
               </span>
             ) : null}

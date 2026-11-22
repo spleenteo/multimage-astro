@@ -1,7 +1,7 @@
 @reference '../../styles/global.css';
 
 .root {
-  @apply block focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-sky focus-visible:ring-offset-2;
+  @apply block;
 }
 
 .card {
