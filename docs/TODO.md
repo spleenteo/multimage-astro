@@ -122,4 +122,12 @@
   - **Copy:** a line for would-be authors links to `/info/chi-siamo`. The masculine-only strings now use the paired forms.
   - **Profile:** the profile page links to the filtered catalogue.
   - **Result:** the page is 27.6k px on desktop (was 59k) and ~52k px on phones (was 158k). `AuthorCard` `_graphql.ts` and its fragment were removed.
+- 2026-11-22 - [Features] **Author profile**: `/autori/[slug]` critiqued (18/40) and rebuilt as a frame around the author's books.
+  - **Title row:** small portrait or initial, legal name, in/out-of-catalogue count; the English country kicker is gone.
+  - **Latest book:** on a cover-tinted band.
+  - **Biography:** 68ch, with the rest behind "Continua a leggere". The 4px sky blockquote stripe is gone.
+  - **Books:** every book in the catalogue grid with year and collection, co-authors only, "Fuori catalogo" last; the silent `first: 60` cap is gone.
+  - **Pseudonyms:** "Pseudonimi" was read backwards and listed the author as their own pseudonym. It is now "Firma anche come …", and books are merged across names.
+  - **Lines:** a line on how to order, and the closing line for would-be authors.
+  - **Result:** Silo on phones drops from ~24,200 to ~8,300px. `BookCard` gained `authorsPrefix`.
 

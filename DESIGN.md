@@ -318,6 +318,25 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 ### Book Card
 White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
 
+### Author Profile (`/autori/[slug]`)
+- **Purpose:** the person frames their books.
+- **Title row:** a small square portrait (80px on phones, 144px from 768px), or the initial on mist, beside the h1.
+  - Under an alias, the legal name.
+  - A serif size line ("25 libri · 6 fuori catalogo").
+  - "Firma anche come …" for other names; the CMS `pseudonyms` link runs both ways and never points to the profile itself.
+- **Latest book:** a 7/5 band on a field from `coverFieldPalette`, showing the latest in-catalogue book.
+  - A meta line ("Ultima uscita · 2025 · collana").
+  - The title as h2.
+  - The subtitle, co-authors and promo (4 lines).
+  - A Playfair price and "Vai al libro e ordinalo" as a navy link. There is no orange: the order action lives on the book page.
+- **Biography:** in a 68ch column. Past three paragraphs, the first two stay open and the rest sit behind "Continua a leggere la biografia". Blockquotes sit between hairlines.
+- **Tutti i libri:**
+  - A line on how to order (email · piego di libri · Soci 30% · Come funziona l'ordine).
+  - The catalogue grid with only co-authors on cards ("con …").
+  - A "Fuori catalogo" sub-group under a hairline.
+  - Books signed under the person's other names are included.
+- **Closing:** the closing line is the same as on the index.
+
 ### Authors Index (`/autori`)
 - **Title row:** the slim title row ("232 autrici e autori · 363 libri in catalogo"), then the catalogue's text field for search (name, alias and legal name; accent-insensitive). The number of results is announced in a status line.
 - **Letter index:** a flat strip between two hairlines, with Playfair letters in 44px cells (40px from 768px), sticky from 768px.

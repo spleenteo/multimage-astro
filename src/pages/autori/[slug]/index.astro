@@ -1,11 +1,15 @@
 ---
+// An author's profile, as a frame around their books: a slim title row with a small portrait,
+// then their latest book on a field tinted from its cover, a short biography (the rest behind
+// "Continua a leggere"), and every book in the catalogue grid, out-of-catalogue titles last.
 import { Image } from '@datocms/astro/Image';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BookCard from '~/components/BookCard';
 import { executeQuery } from '~/lib/datocms/executeQuery';
-import { mapBooksToCards } from '~/lib/books';
-import { getAuthorDisplayName } from '~/lib/authors';
+import { extractYear, formatBookPrice, mapBooksToCards } from '~/lib/books';
+import { formatAuthorNames, getAuthorDisplayName } from '~/lib/authors';
+import { coverFieldPalette } from '~/lib/colors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
 import {
@@ -21,6 +25,9 @@ import {
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
+
+/** Biography paragraphs shown before "Continua a leggere"; shorter bios stay whole. */
+const BIO_OPEN_NODES = 2;
 
 const { slug } = Astro.params;
 
@@ -41,132 +48,253 @@ if (!author) {
   return Astro.rewrite('/404');
 }
 
+// The same person under other names ("pseudonyms" links both ways in the CMS): never the
+// profile itself, and their books are shown here too.
+const otherNames = (author.pseudonyms ?? [])
+  .filter((person) => person.id !== author.id)
+  .map((person) => ({ id: person.id, name: getAuthorDisplayName(person, ''), slug: person.slug ?? null }))
+  .filter((person) => person.name.length > 0);
+const authorIds = [author.id, ...otherNames.map((person) => person.id)];
+
 const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_BOOKS_QUERY, {
-  variables: { authorIds: [author.id] },
+  variables: { authorIds },
   includeDrafts: draftModeEnabled,
 });
 
-const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length ?? 0;
-const relatedBooks = mapBooksToCards(relatedData.allBooks);
-
 const authorDisplayName = getAuthorDisplayName(author);
+const fullName = author.fullName?.trim() || null;
+const legalName = author.alias?.trim() && fullName && fullName !== authorDisplayName ? fullName : null;
+
+const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length;
+const archivedCount = relatedData.archivedMeta?.count ?? 0;
+const inCatalogueCount = Math.max(booksCount - archivedCount, 0);
+const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
+const sizeLine =
+  booksCount === 0
+    ? null
+    : inCatalogueCount > 0
+      ? [plural(inCatalogueCount), archivedCount > 0 ? `${archivedCount} fuori catalogo` : null]
+          .filter(Boolean)
+          .join(' · ')
+      : `${plural(archivedCount)} fuori catalogo`;
+
+// On each card, only the other people who signed the book ("con …").
+// "Fuori collana" is not a collection worth naming in a meta line.
+const books = mapBooksToCards(relatedData.allBooks).map((book) => ({
+  ...book,
+  coAuthors: book.authors.filter((person) => person.id !== author.id),
+  collectionName: book.collection?.slug === 'fuori-collana' ? null : book.collection?.name?.trim() || null,
+}));
+const inCatalogue = books.filter((book) => !book.isArchived);
+const archived = books.filter((book) => book.isArchived);
+const hiddenBooks = Math.max(booksCount - books.length, 0);
+const catalogueHref = `/libri?autore=${encodeURIComponent(slug)}&archivio=1`;
+
+// The latest book in the catalogue (or, failing that, the latest of all) opens the page.
+const featured = inCatalogue[0] ?? archived[0] ?? null;
+const featuredPalette = featured ? coverFieldPalette(featured.coverImage?.colors) : null;
+const featuredYear = featured ? extractYear(featured.printYear) : null;
+const featuredMeta = featured
+  ? [
+      featured.isArchived ? 'Fuori catalogo' : 'Ultima uscita',
+      featuredYear,
+      featured.collectionName,
+    ].filter(Boolean).join(' · ')
+  : null;
+const featuredCoAuthors = featured ? formatAuthorNames(featured.coAuthors, { fallback: '' }) : '';
+const featuredPrice = featured && !featured.isArchived ? formatBookPrice(featured.price) : null;
+const featuredCover = featured?.coverImage?.responsiveImage
+  ? { ...featured.coverImage.responsiveImage, alt: '' }
+  : null;
+
+// The biography: the first paragraphs open, the rest behind a disclosure.
 const biographyHasContent = hasStructuredTextContent(author.biography);
+const bioDocument = author.biography?.value?.document as { type: 'root'; children?: unknown[] } | undefined;
+const bioNodes = Array.isArray(bioDocument?.children) ? bioDocument.children : [];
+const splitBio = bioNodes.length > BIO_OPEN_NODES + 1;
+const bioPart = (nodes: unknown[]) => ({
+  ...author.biography,
+  value: { schema: 'dast' as const, document: { type: 'root' as const, children: nodes } },
+});
+const bioOpen = splitBio ? bioPart(bioNodes.slice(0, BIO_OPEN_NODES)) : author.biography;
+const bioRest = splitBio ? bioPart(bioNodes.slice(BIO_OPEN_NODES)) : null;
+
 const biographyPlain = structuredTextToPlainText(author.biography ?? null);
-const summarySource = biographyPlain;
-const booksLabel = booksCount === 1 ? '1 libro in catalogo' : `${booksCount} libri in catalogo`;
-
-const pseudonyms = (author.pseudonyms ?? [])
-  .map((person) => ({
-    id: person.id,
-    name: getAuthorDisplayName(person),
-    slug: person.slug ?? null,
-  }))
-  .filter((person) => person.name.length > 0);
-
-const fallbackDescription = summarySource.length > 0 ? summarySource : undefined;
 const seo = withFallbackSeo(author._seoMetaTags, {
   title: `${authorDisplayName} | Multimage`,
-  description: fallbackDescription || undefined,
+  description: biographyPlain.length > 0 ? biographyPlain : undefined,
 });
 
-const pictureResponsiveImage = author.picture?.responsiveImage
-  ? {
-      ...author.picture.responsiveImage,
-      alt: author.picture.responsiveImage.alt ?? authorDisplayName,
-    }
-  : null;
+const portrait = author.picture?.responsiveImage ? { ...author.picture.responsiveImage, alt: '' } : null;
+const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
 ---
 
 <BaseLayout seo={seo}>
-  <article class={styles.layout}>
-    <section class={styles.heroGrid}>
-      <div class={styles.portraitPanel}>
-        <div class={styles.portraitFrame}>
-          {pictureResponsiveImage ? (
-            <Image
-              data={pictureResponsiveImage}
-              sizes="(min-width: 1024px) 320px, 60vw"
-              imgClass="h-auto w-full object-cover"
-            />
-          ) : (
-            <div class={styles.portraitFallback}>Ritratto in arrivo</div>
-          )}
+  <article class={styles.page}>
+    <header class={styles.intro}>
+      {portrait ? (
+        <div class={styles.portrait}>
+          <Image data={portrait} sizes="(min-width: 768px) 144px, 80px" pictureClass="block h-full w-full" imgClass={styles.portraitImage} priority />
         </div>
-      </div>
-
-      <div class={styles.detailCard}>
-        <div class="space-y-3">
-          {author.country ? <p class={styles.metaLabel}>{author.country}</p> : null}
-          <h1 class={styles.name}>{authorDisplayName}</h1>
-          <p class={styles.booksLabel}>{booksLabel}</p>
-        </div>
-
-        {pseudonyms.length > 0 ? (
-          <div class="space-y-2 pt-4">
-            <p class={styles.metaLabel}>Pseudonimi</p>
-            <div class={styles.pseudonyms}>
-              {pseudonyms.map((person) =>
-                person.slug ? (
-                  <a href={`/autori/${person.slug}`} class={styles.pseudonymLink}>
-                    {person.name}
-                  </a>
-                ) : (
-                  <span>{person.name}</span>
-                ),
-              )}
-            </div>
-          </div>
+      ) : (
+        <div class={styles.initial} aria-hidden="true">{initial}</div>
+      )}
+      <div class={styles.introText}>
+        <h1 class={styles.name}>{authorDisplayName}</h1>
+        {legalName ? <p class={styles.legal}>{legalName}</p> : null}
+        {sizeLine ? <p class={styles.size}>{sizeLine}</p> : null}
+        {otherNames.length > 0 ? (
+          <p class={styles.alsoAs}>
+            Firma anche come{' '}
+            {otherNames.map((person, index) => (
+              <>
+                {index > 0 ? (index === otherNames.length - 1 ? ' e ' : ', ') : null}
+                {person.slug ? <a href={`/autori/${person.slug}`}>{person.name}</a> : <span>{person.name}</span>}
+              </>
+            ))}
+          </p>
         ) : null}
       </div>
-    </section>
+    </header>
 
-    <section class={styles.contentSection}>
-      {biographyHasContent && author.biography ? (
-        <div class={styles.contentBlock}>
-          <h2 class="text-3xl font-serif text-brand-navy">Biografia</h2>
+    {featured && featuredPalette ? (
+      <section class={styles.featured} aria-labelledby="featured-title">
+        <a
+          href={`/libri/${featured.slug}`}
+          class={styles.featuredField}
+          style={`background: ${featuredPalette.field};`}
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          {featuredCover ? (
+            <Image
+              data={featuredCover}
+              sizes="(min-width: 768px) 220px, 40vw"
+              pictureClass="block"
+              imgClass={styles.featuredCover}
+              imgStyle={{ filter: `drop-shadow(18px 26px 32px ${featuredPalette.shadow})` }}
+            />
+          ) : null}
+        </a>
+        <div class={styles.featuredCopy} style={`background: ${featuredPalette.copy};`}>
+          <p class={styles.featuredMeta}>{featuredMeta}</p>
+          <h2 id="featured-title" class={styles.featuredTitle}>
+            <a href={`/libri/${featured.slug}`}>{featured.title}</a>
+          </h2>
+          {featured.subtitle ? <p class={styles.featuredSubtitle}>{featured.subtitle}</p> : null}
+          {featuredCoAuthors ? <p class={styles.featuredBy}>con {featuredCoAuthors}</p> : null}
+          {featured.summary ? <p class={styles.featuredSummary}>{featured.summary}</p> : null}
+          <p class={styles.featuredWays}>
+            {featuredPrice ? <span class={styles.featuredPrice}>{featuredPrice}</span> : null}
+            <a href={`/libri/${featured.slug}`}>{featured.isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a>
+          </p>
+        </div>
+      </section>
+    ) : null}
+
+    {biographyHasContent && bioOpen ? (
+      <section class={styles.bio} aria-labelledby="bio-title">
+        <h2 id="bio-title" class={styles.sectionTitle}>Biografia</h2>
+        <div class={styles.prose}>
           <StructuredText
-            data={author.biography as any}
+            data={bioOpen as any}
             blockComponents={defaultBlockComponents as any}
             linkToRecordComponents={defaultLinkToRecordComponents as any}
           />
         </div>
-      ) : null}
-    </section>
+        {bioRest ? (
+          <details class={styles.more}>
+            <summary>Continua a leggere la biografia</summary>
+            <div class={styles.prose}>
+              <StructuredText
+                data={bioRest as any}
+                blockComponents={defaultBlockComponents as any}
+                linkToRecordComponents={defaultLinkToRecordComponents as any}
+              />
+            </div>
+          </details>
+        ) : null}
+      </section>
+    ) : null}
 
-    <section class={styles.booksSection}>
+    <section class={styles.books} aria-labelledby="books-title">
       <div class={styles.booksHead}>
-        <h2 class={styles.booksHeader}>Libri pubblicati</h2>
-        {relatedBooks.length > 0 ? (
-          <a href={`/libri?autore=${encodeURIComponent(slug)}&archivio=1`} class={styles.catalogueLink}>
-            Sfoglia nel catalogo, con i filtri
-          </a>
+        <h2 id="books-title" class={styles.sectionTitle}>
+          {booksCount === 1 ? 'Il libro' : 'Tutti i libri'}
+        </h2>
+        {books.length > 1 ? (
+          <a href={catalogueHref} class={styles.catalogueLink}>Sfoglia nel catalogo</a>
         ) : null}
       </div>
-      {relatedBooks.length === 0 ? (
-        <p class="text-sm text-brand-slate">Nessun libro è ancora collegato a questa scheda.</p>
+
+      {books.length === 0 ? (
+        <p class={styles.note}>Nessun libro è ancora collegato a questa scheda.</p>
       ) : (
-        <div class={styles.booksGrid}>
-          {relatedBooks.map((book) => (
-            <BookCard
-              title={book.title}
-              slug={book.slug}
-              subtitle={book.subtitle}
-              summary={book.summary}
-              coverImage={book.coverImage}
-              authors={book.authors}
-              license={book.license}
-              format={book.format}
-              price={book.price}
-              isArchived={book.isArchived}
-            />
-          ))}
-        </div>
+        <>
+          <p class={styles.note}>
+            Si ordinano via email dalla pagina di ciascun libro · Spedizione gratuita con piego di libri ·{' '}
+            <a href="/info/adesioni">Soci: 30% di sconto</a> ·{' '}
+            <a href="/info/ordinare">Come funziona l'ordine</a>
+          </p>
+
+          {books.length > 1 && inCatalogue.length > 0 ? (
+            <div class={styles.grid}>
+              {inCatalogue.map((book) => (
+                <BookCard
+                  title={book.title}
+                  slug={book.slug}
+                  subtitle={book.subtitle}
+                  coverImage={book.coverImage}
+                  authors={book.coAuthors}
+                  authorsPrefix="con"
+                  format={book.format}
+                  price={book.price}
+                  printYear={book.printYear}
+                  collectionName={book.collectionName}
+                  variant="catalogue"
+                />
+              ))}
+            </div>
+          ) : null}
+
+          {books.length > 1 && archived.length > 0 ? (
+            <div class={styles.archived}>
+              <h3 class={styles.archivedTitle}>Fuori catalogo</h3>
+              <div class={styles.grid}>
+                {archived.map((book) => (
+                  <BookCard
+                    title={book.title}
+                    slug={book.slug}
+                    subtitle={book.subtitle}
+                    coverImage={book.coverImage}
+                    authors={book.coAuthors}
+                    authorsPrefix="con"
+                    format={book.format}
+                    printYear={book.printYear}
+                    collectionName={book.collectionName}
+                    isArchived
+                    variant="catalogue"
+                    headingLevel="h3"
+                  />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {hiddenBooks > 0 ? (
+            <p class={styles.note}>
+              Qui ne vedi {books.length} su {booksCount}. <a href={catalogueHref}>Vedi tutti i libri nel catalogo</a>
+            </p>
+          ) : null}
+        </>
       )}
     </section>
+
+    <p class={styles.publish}>
+      Vuoi pubblicare con Multimage?{' '}
+      <a href="/info/chi-siamo">Scopri come proporre la tua opera alla redazione</a>.
+    </p>
   </article>
   <DraftModeQueryListener query={AUTHOR_DETAIL_QUERY} variables={{ slug }} />
-  <DraftModeQueryListener
-    query={AUTHOR_RELATED_BOOKS_QUERY}
-    variables={{ authorIds: [author.id] }}
-  />
+  <DraftModeQueryListener query={AUTHOR_RELATED_BOOKS_QUERY} variables={{ authorIds }} />
 </BaseLayout>

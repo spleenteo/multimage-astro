@@ -1,6 +1,10 @@
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { BOOK_CARD_FRAGMENT } from '~/components/BookCard/_graphql';
 import type { AuthorDetailRecord, SeoMetaTag } from '~/lib/datocms/types';
 import type { BookRecordForCard } from '~/lib/books';
+
+/** Books shown on a profile; past it, the page links to the catalogue filtered by author. */
+export const AUTHOR_BOOKS_LIMIT = 100;
 
 export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
   ${RESPONSIVE_IMAGE_FRAGMENT}
@@ -17,7 +21,7 @@ export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
         url
         alt
         responsiveImage(
-          imgixParams: { fit: crop, crop: focalpoint, w: 960, h: 960, auto: format }
+          imgixParams: { fit: crop, crop: focalpoint, w: 320, h: 320, auto: format }
         ) {
           ...ResponsiveImageFragment
         }
@@ -37,42 +41,22 @@ export const AUTHOR_DETAIL_QUERY = /* GraphQL */ `
   }
 `;
 
+/** The person's books under every name they sign with, newest print year first. */
 export const AUTHOR_RELATED_BOOKS_QUERY = /* GraphQL */ `
-  ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${BOOK_CARD_FRAGMENT}
   query AuthorRelatedBooks($authorIds: [ItemId!]) {
     _allBooksMeta(filter: { authors: { anyIn: $authorIds } }) {
       count
     }
-    allBooks(filter: { authors: { anyIn: $authorIds } }, orderBy: printYear_DESC, first: 60) {
-      id
-      title
-      subtitle
-      slug
-      promo
-      description
-      coverImage {
-        url
-        alt
-        colors {
-          hex
-        }
-        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 520, auto: format }) {
-          ...ResponsiveImageFragment
-        }
-      }
-      authors {
-        id
-        fullName
-        alias
-        slug
-      }
-      license {
-        name
-        code
-      }
-      format
-      price
-      archive
+    archivedMeta: _allBooksMeta(filter: { authors: { anyIn: $authorIds }, archive: { eq: true } }) {
+      count
+    }
+    allBooks(
+      filter: { authors: { anyIn: $authorIds } }
+      orderBy: [printYear_DESC, title_ASC]
+      first: ${AUTHOR_BOOKS_LIMIT}
+    ) {
+      ...BookCardFragment
     }
   }
 `;
@@ -90,9 +74,8 @@ export type AuthorDetailResult = {
 };
 
 export type AuthorRelatedBooksResult = {
-  _allBooksMeta: {
-    count: number;
-  } | null;
+  _allBooksMeta: { count: number } | null;
+  archivedMeta: { count: number } | null;
   allBooks: BookRecordForCard[];
 };
 

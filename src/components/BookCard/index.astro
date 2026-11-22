@@ -34,6 +34,8 @@ type Props = {
   isArchived?: boolean | null;
   variant?: 'default' | 'catalogue';
   headingLevel?: 'h2' | 'h3';
+  /** Words before the names, e.g. "con" when the page already names the author. */
+  authorsPrefix?: string | null;
 };
 
 const {
@@ -52,6 +54,7 @@ const {
   isArchived = false,
   variant = 'default',
   headingLevel = 'h3',
+  authorsPrefix = null,
 }: Props = Astro.props;
 
 const isCatalogue = variant === 'catalogue';
@@ -107,7 +110,9 @@ const Heading = headingLevel;
         {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
       </div>
 
-      <AuthorNames authors={authors} class={styles.authors} />
+      {authors.length > 0 ? (
+        <AuthorNames authors={authors} prefix={authorsPrefix} class={styles.authors} />
+      ) : null}
 
       {!isCatalogue && summary ? <p class={styles.summary}>{summary}</p> : null}
 
