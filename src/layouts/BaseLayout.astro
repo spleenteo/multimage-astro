@@ -12,14 +12,11 @@ import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import { resolveDraftMode } from '~/lib/draftPreview';
-import Analytics from '@vercel/analytics/astro';
-import SpeedInsights from '@vercel/speed-insights/astro';
 import { decodeEntities, toPlainText, truncateToLength } from '~/lib/text';
 
 const { seo = [] } = Astro.props as {
   seo?: TitleMetaLinkTag[];
 };
-const enableVercelInsights = import.meta.env.PROD && import.meta.env.DEPLOY_TARGET !== 'cloudflare';
 
 const SITE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
@@ -241,27 +238,6 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
       src="https://cdn.iubenda.com/cs/stable/iubenda_cs.js"
       is:inline
     ></script>
-
-    <!-- Stub + script Vercel Web Analytics -->
-    {enableVercelInsights && <Fragment>
-      <script is:inline>
-        window.va =
-          window.va ||
-          function () {
-            (window.vaq = window.vaq || []).push(arguments);
-          };
-      </script>
-      <script defer src="/_vercel/insights/script.js" is:inline></script>
-
-      <script is:inline>
-        window.si =
-          window.si ||
-          function () {
-            (window.siq = window.siq || []).push(arguments);
-          };
-      </script>
-      <script defer src="/_vercel/speed-insights/script.js" is:inline></script>
-    </Fragment>}
   </head>
   <body class="flex min-h-screen flex-col bg-brand-sand">
     <Header currentPath={currentPath} infoPages={infoPages} />
@@ -272,8 +248,6 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     </main>
     <NewsletterCta />
     <Footer footerPages={footerMenuPages} />
-    {enableVercelInsights && <Analytics />}
-    {enableVercelInsights && <SpeedInsights />}
     {draftModeEnabled && <ContentLink />}
     {draftModeEnabled && <EditorModeBadge currentPath={currentPath} />}
   </body>

@@ -39,7 +39,7 @@ description: Describe how Multimage is built, deployed, and configured across en
 
 ## Monitoring & Logging
 
-- Client monitoring uses Google Analytics (legacy UA), `@vercel/analytics`, and `@vercel/speed-insights`. On the Cloudflare target Vercel Analytics and Speed Insights are off (`enableVercelInsights` in `src/layouts/BaseLayout.astro:22` is false when `DEPLOY_TARGET=cloudflare`).
+- Client monitoring uses Google Analytics (legacy UA) only; Vercel Analytics and Speed Insights were removed on 2026-11-22, on both targets.
 - Server side: on Vercel there is no logging or alerting beyond `vercel logs`. On Cloudflare, Workers observability is on (`observability.enabled` in `wrangler.jsonc`: logs in the dashboard, `wrangler tail` live).
 - The `/llms-full.txt` export route was removed (2026-06-20); no exporter to maintain.
 

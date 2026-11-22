@@ -21,7 +21,7 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 ## Monitoring & Analytics
 
-- `@vercel/analytics` and `@vercel/speed-insights` augment inline Google Analytics and Iubenda snippets inside `BaseLayout`.
+- Inline Google Analytics and Iubenda snippets live inside `BaseLayout` (Vercel Analytics and Speed Insights were removed on 2026-11-22).
 
 ## Tooling
 

@@ -52,7 +52,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 
 - Fonts: `src/styles/global.css` imports Inter + Playfair Display from Google Fonts; defined once in `@theme` (`--font-sans`/`--font-serif`). No local font files.
 - Icons: `iconify-icon.min.js` loaded from CDN via `BaseLayout`. No tree-shaking or local sprite.
-- Third-party scripts: BaseLayout injects Google Analytics, Iubenda, Vercel Analytics, and Speed Insights; CSP/SRI hardening is open (**S3**).
+- Third-party scripts: BaseLayout injects Google Analytics and Iubenda (Vercel Analytics and Speed Insights removed on 2026-11-22); CSP/SRI hardening is open (**S3**).
 - Images: every CMS-driven image goes through `@datocms/astro/Image`. Hero/detail images use the full `RESPONSIVE_IMAGE_FRAGMENT` (with `base64` blur-up + DatoCMS `srcSet`). Card/thumbnail grids use the lean `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`/`srcSet`; flat `bgColor` placeholder + `srcSetCandidates={[1,2]}`) to keep listing HTML small (Fast Origin Transfer). Header/footer logos are still remote PNGs without intrinsic dimensions.
 - Videos: `VideoBlock.astro` handles YouTube/Vimeo/native MP4 from Structured Text blocks.
 - Generated bundles: `npm run prebuild` emits `public/generated/search-page.client.js` and `public/generated/swiper-element.js`. Missing bundles break `/cerca` and `BookCarouselSection` (**PS1**).
@@ -86,7 +86,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Production ships pure static HTML + assets; preview runs SSR from the same codebase.
 - Images use Imgix transformations with AVIF/WebP fallbacks; hero/detail keep base64 placeholders, card grids dropped them (flat `bgColor` only) to shrink listing HTML. Hero sections still request large crops.
 - Search bundle loads only on `/cerca`; Swiper's custom element can be heavy on first interaction.
-- Vercel Analytics + Speed Insights provide Core Web Vitals monitoring; no custom RUM instrumentation.
+- No Core Web Vitals monitoring since Vercel Analytics and Speed Insights were removed (2026-11-22); no custom RUM instrumentation.
 
 ## Testing
 

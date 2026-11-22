@@ -33,8 +33,6 @@
     "@datocms/cma-client": "^6.8.0",
     "@datocms/content-link": "^0.3.23",
     "@tailwindcss/vite": "^4.3.5",
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
     "astro": "^7.4.7",
     "jsonwebtoken": "^9.0.3",
     "linkedom": "^0.18.15",

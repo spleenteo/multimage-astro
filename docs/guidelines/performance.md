@@ -11,7 +11,7 @@ description: Document performance-sensitive code paths and tactics to keep Multi
 ## Client Bundles
 
 - `BookCarouselSection` currently imports `swiper/css/bundle` and the complete `swiper/element` runtime. Consider lazy-loading the carousel or switching to the minimal modules if the carousel stays limited to a few sections.
-- Inline global scripts (legacy Google Analytics, Iubenda, Vercel analytics) in `src/layouts/BaseLayout.astro:132-210` execute immediately. Mark them `async`/`defer` and audit whether each script is still required.
+- Inline global scripts (legacy Google Analytics, Iubenda) in `src/layouts/BaseLayout.astro:132-210` execute immediately. Mark them `async`/`defer` and audit whether each script is still required.
 
 ## Data Fetching & HTML Size
 

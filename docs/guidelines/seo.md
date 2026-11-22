@@ -53,9 +53,9 @@ No JSON-LD is emitted today. Book, article, and organization pages rely solely o
 - `/api/seo-analysis` validates the same secret, fetches the target record through `@datocms/cma-client`, then uses `draftModeHeaders()` + `jsdom` to parse the Italian HTML before returning it to the plugin. Keep this endpoint fast—Dato times out after a few seconds.
 
 ## Core Web Vitals & analytics levers
-- `BaseLayout` injects Iconify, Google Analytics (legacy UA), Iubenda, Vercel Analytics, and Vercel Speed Insights. Audit these scripts when defining a CSP (docs/TODO.md Security task **S3**).
+- `BaseLayout` injects Iconify, Google Analytics (legacy UA) and Iubenda. Audit these scripts when defining a CSP (docs/TODO.md Security task **S3**).
 - `BookCarouselSection` and `/cerca` load their JS bundles from `public/generated`. Missed prebuilds surface as `<script>` 404s, so ensure CI runs `npm run prebuild` (docs/TODO.md Project Structure task **PS1**).
-- Use the existing Vercel Analytics dashboard to watch LCP/FID trends and coordinate any future perf work with `docs/guidelines/performance.md`.
+- No Core Web Vitals dashboard is wired since Vercel Analytics and Speed Insights were removed (2026-11-22); coordinate any future perf work with `docs/guidelines/performance.md`.
 
 ## Known gaps
 - `PUBLIC_SITE_URL` is not enforced during builds, so sitemap/canonical URLs silently fall back to `http://localhost:4321`. Fix this in docs/TODO.md SEO task **SEO1**.

@@ -10,7 +10,6 @@ description: How Fastro uses Icons, Fonts and digital assets in general
 ## Icons & External Snippets
 - The only icon system is Iconify’s custom element. `BaseLayout` injects `https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js` with `defer` and every component uses `<iconify-icon>` directly (Buttons, navigation pills, PillsBlock cards, etc.). Keep the icon set consistent (`iconoir:*` by default) and add new icons by referencing that CDN payload—there is no local sprite.
 - `BaseLayout` also inlines Google Analytics (legacy UA) and Iubenda scripts. Treat them as third-party assets when defining CSP/SRI policies (see docs/TODO.md Security tasks).
-- Vercel Analytics and Speed Insights run via the inline stubs in `BaseLayout.astro` (`window.va`/`window.si` plus the `/_vercel/...` script tags). Keep those snippets close to the layout to maintain the required execution order and remember to add them to the CSP allow-list in **S3**.
 
 ## Images & Responsive Media
 - All content images come from DatoCMS via `@datocms/astro/Image`. Shared fragments live in `src/lib/datocms/commonFragments.ts` (`RESPONSIVE_IMAGE_FRAGMENT` + `TAG_FRAGMENT`) and component-specific fragments (for example `BookCardFragment`, `CollectionCardFragment`, `FeaturedBookHighlightFragment`, `PillsBlockFragment`) sit next to their components.
