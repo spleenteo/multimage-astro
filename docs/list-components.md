@@ -99,6 +99,20 @@ scope: A list to describe all components used in the project
   - Used in: home banners, Structured Text.
   - Owner: @codex.
   - Notes: derives colors from `AssetColor`; uses `AuthorChip` internally.
+- `HomeHero` — **HomeHero** (`src/components/HomeHero/index.astro` + `style.module.css`)
+  - Purpose: first viewport of the home: page H1 row (mobile search, catalogue link) and the book of the moment with price and ways to get it.
+  - Key props: `pageTitle`, `book` (title, subtitle, summary, priceLabel, link, epubUrl), `authors[]`, `coverImage`, `coverColors`, `collectionLabel`/`collectionHref`.
+  - Used in: home only.
+  - Owner: @claude.
+  - Notes: data from `toHighlightData` in `index.astro` (shared with the SingleBook block); book fields in `HIGHLIGHT_BOOK_FIELDS_FRAGMENT`.
+- `HomeDoors` — **HomeDoors** (`src/components/HomeDoors/index.astro`)
+  - Purpose: the three entry points Catalogo / Autrici e autori / Collane, fixed in code.
+  - Used in: home, under the hero.
+  - Owner: @claude.
+- `HomeAbout` — **HomeAbout** (`src/components/HomeAbout/index.astro`)
+  - Purpose: one-line "who publishes" with links to history, participation, manuscript proposals.
+  - Used in: home, before the newsletter.
+  - Owner: @claude.
 - `BannerSection` — **BannerSection** (`src/components/BannerSection/index.astro` + `_graphql.ts`)
   - Purpose: two-column hero with CTA and responsive image.
   - Key props: `title`, `content`, `link`, `imagePosition`, `featuredImage`.

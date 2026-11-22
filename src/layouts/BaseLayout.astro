@@ -210,7 +210,9 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
         siteId: '47684062',
         lang: 'it',
         banner: {
-          position: 'float-top-center',
+          // Full-width bar at the bottom: at the top it covered most of the first screen on phones,
+          // and the floating box covered the home hero's main action.
+          position: 'bottom',
           acceptButtonDisplay: true,
           customizeButtonDisplay: true,
         },

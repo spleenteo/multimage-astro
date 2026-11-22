@@ -1,0 +1,31 @@
+---
+// Who publishes these books, in one line, at the end of the home page. Facts from the info pages
+// (founded 1995, volunteer non-profit, new authors accompanied); the links lead to the full story.
+const LINKS = [
+  { href: '/info/la-storia', label: 'La nostra storia' },
+  { href: '/info/partecipare', label: 'Partecipa' },
+  { href: '/info/chi-siamo', label: 'Proponi un libro' },
+] as const;
+---
+
+<section aria-labelledby="home-about-title" class="border-t border-brand-mist pt-10">
+  <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
+    <div class="max-w-2xl">
+      <h2 id="home-about-title" class="text-2xl">Multimage, dal 1995</h2>
+      <p class="mt-3 text-brand-charcoal">
+        Un'associazione editoriale no-profit fatta di volontari: pubblichiamo libri su diritti
+        umani, pace e nonviolenza, e accompagniamo chi vuole proporre il proprio.
+      </p>
+    </div>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2">
+      {LINKS.map((link) => <li>
+        <a
+          href={link.href}
+          class="inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
+        >
+          {link.label}
+        </a>
+      </li>)}
+    </ul>
+  </div>
+</section>

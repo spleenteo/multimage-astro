@@ -1,0 +1,54 @@
+@reference '../../styles/global.css';
+
+/* Full-bleed out of the layout container; BaseLayout's <main> pads the top, the hero sits flush. */
+.hero {
+  margin-inline: calc(50% - 50vw);
+  margin-top: -3rem;
+
+  @media (width >= 48rem) {
+    margin-top: -4rem;
+  }
+}
+
+.coverField {
+  min-height: 0;
+  overflow: clip;
+
+  @media (width >= 48rem) {
+    min-height: 34rem;
+  }
+}
+
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
+.cover {
+  display: block;
+  width: auto !important;
+  max-width: min(50vw, 180px) !important;
+  height: 13rem !important;
+  object-fit: contain;
+  transform: rotate(4deg);
+
+  @media (width >= 48rem) {
+    max-width: 340px !important;
+    height: 26rem !important;
+  }
+}
+
+/* Text column aligned with the container's left edge on wide screens. */
+.copy {
+  width: 100%;
+  padding: 2rem 1.5rem 1.5rem;
+
+  @media (width >= 48rem) {
+    padding: 4rem 3rem 4rem max(1.5rem, calc((100vw - 1200px) / 2 + 1.5rem));
+  }
+}
+
+.summary {
+  max-width: 60ch;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}

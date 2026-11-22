@@ -42,6 +42,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Production runs on Cloudflare Workers since 2026-11-22 (`www.multimage.org` and apex as custom domains of the Worker `multimage-astro`, account Multimage, Workers Free). Pages are cached in the Workers Cache and purged by DatoCMS cache tags (**CD3**) through the webhook "Cloudflare cache tags" → `/api/invalidate-cache`; the ISR webhook 33942 is disabled. The Vercel deployment still exists but receives no traffic until **CF-vercel-cleanup**.
 
 ## Blocks & Components
+- Home (`src/pages/index.astro`, rebuilt 2026-11-22): fixed top = `HomeHero` (book of the moment from `home.featured_book`, fallback first SingleBook block, then latest non-archived book) → `HomeDoors` → first `BookCarouselRecord`; then the other `home.banners` blocks in editor order; `HomeAbout` closes the page. `featured_book` is queried separately (`HOME_FEATURED_BOOK_QUERY`) and fails soft on environments where migration `1795348395_addFeaturedBookToHome` has not run.
 
 - CMS-driven blocks map to files under `src/components/blocks/**`. Each block pairs with a `_graphql.ts` fragment collocated with its consumer page.
 - Structured Text renders through `src/components/datocms/structuredText/*`; `LinkToRecord.astro` still needs a `/magazine/${slug}` fix (**PS2**).

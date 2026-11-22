@@ -1,5 +1,8 @@
 import { BANNER_SECTION_FRAGMENT } from '~/components/BannerSection';
-import { FEATURED_BOOK_HIGHLIGHT_FRAGMENT } from '~/components/FeaturedBookHighlight';
+import {
+  FEATURED_BOOK_HIGHLIGHT_FRAGMENT,
+  HIGHLIGHT_BOOK_FIELDS_FRAGMENT,
+} from '~/components/FeaturedBookHighlight';
 import { BOOK_CAROUSEL_SECTION_FRAGMENT } from '~/components/BookCarouselSection';
 import { PILLS_BLOCK_FRAGMENT } from '~/components/blocks/PillsBlock';
 import { TAG_FRAGMENT, RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
@@ -79,34 +82,35 @@ export type HomeBannerBannerBlockRecord = {
   } | null;
 };
 
+export type HighlightBookRecord = BookRecordForCard & {
+  epubUrl?: string | null;
+  collection?: {
+    id: string;
+    name: string | null;
+    slug: string | null;
+  } | null;
+  coverImage: {
+    alt: string | null;
+    title: string | null;
+    colors: AssetColor[] | null;
+    responsiveImage: ResponsiveImage | null;
+  } | null;
+  authors: Array<{
+    id: string;
+    fullName: string | null;
+    alias: string | null;
+    slug: string | null;
+    picture: {
+      alt: string | null;
+      responsiveImage: ResponsiveImage | null;
+    } | null;
+  }> | null;
+};
+
 export type HomeSingleBookBlockRecord = {
   __typename: 'SingleBookRecord';
   id: string;
-  book:
-    | (BookRecordForCard & {
-        collection?: {
-          id: string;
-          name: string | null;
-          slug: string | null;
-        } | null;
-        coverImage: {
-          alt: string | null;
-          title: string | null;
-          colors: AssetColor[] | null;
-          responsiveImage: ResponsiveImage | null;
-        } | null;
-        authors: Array<{
-          id: string;
-          fullName: string | null;
-          alias: string | null;
-          slug: string | null;
-          picture: {
-            alt: string | null;
-            responsiveImage: ResponsiveImage | null;
-          } | null;
-        }> | null;
-      })
-    | null;
+  book: HighlightBookRecord | null;
 };
 
 export type HomeCtaButtonBlockRecord = {
@@ -175,4 +179,39 @@ export type HomePageQueryResult = {
         banners: HomeBannerBlockRecord[] | null;
       })
     | null;
+};
+
+// The book of the moment for the home hero. Kept out of HOME_PAGE_QUERY on purpose: the
+// `featured_book` field exists only after migration 1795348395_addFeaturedBookToHome runs on the
+// environment, and a query naming a missing field fails whole. The page catches the error and
+// falls back, so the home keeps working before and after the migration.
+export const HOME_FEATURED_BOOK_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${HIGHLIGHT_BOOK_FIELDS_FRAGMENT}
+  query HomeFeaturedBook {
+    home {
+      featuredBook {
+        ...HighlightBookFields
+      }
+    }
+  }
+`;
+
+export type HomeFeaturedBookQueryResult = {
+  home: { featuredBook: HighlightBookRecord | null } | null;
+};
+
+// Last fallback for the hero: the most recently published book still in the catalogue.
+export const LATEST_BOOK_QUERY = /* GraphQL */ `
+  ${RESPONSIVE_IMAGE_FRAGMENT}
+  ${HIGHLIGHT_BOOK_FIELDS_FRAGMENT}
+  query LatestBook {
+    allBooks(first: 1, orderBy: _firstPublishedAt_DESC, filter: { archive: { eq: false } }) {
+      ...HighlightBookFields
+    }
+  }
+`;
+
+export type LatestBookQueryResult = {
+  allBooks: HighlightBookRecord[] | null;
 };
