@@ -1,9 +1,0 @@
-@reference '../../../styles/global.css';
-
-.root {
-  @apply inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold uppercase text-white shadow-soft;
-}
-
-.muted {
-  @apply bg-brand-slate;
-}

@@ -32,7 +32,7 @@ const detailData = await executeQuery<CollectionDetailResult>(COLLECTION_DETAIL_
 const collection = detailData.collection;
 
 if (!collection) {
-  throw new Error(`Collection not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const relatedData = await executeQuery<CollectionRelatedBooksResult>(

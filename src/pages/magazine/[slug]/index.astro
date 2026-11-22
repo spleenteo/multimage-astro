@@ -32,7 +32,7 @@ const data = await executeQuery<MagazinePostQueryResult>(MAGAZINE_POST_QUERY, {
 const post = data.blogPost;
 
 if (!post) {
-  throw new Error(`Magazine post not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const heroTitle = post.title ?? 'Articolo';

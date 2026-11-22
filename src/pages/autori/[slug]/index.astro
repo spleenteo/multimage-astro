@@ -38,7 +38,7 @@ const detailData = await executeQuery<AuthorDetailResult>(AUTHOR_DETAIL_QUERY, {
 const author = detailData.author;
 
 if (!author) {
-  throw new Error(`Author not found for slug: ${slug}`);
+  return Astro.rewrite('/404');
 }
 
 const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_BOOKS_QUERY, {
