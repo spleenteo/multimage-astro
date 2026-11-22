@@ -49,11 +49,10 @@ export const BOOK_DETAIL_QUERY = /* GraphQL */ `
       coverImage {
         url
         alt
+        width
+        height
         colors {
           hex
-        }
-        responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 960, auto: format }) {
-          ...ResponsiveImageFragment
         }
       }
       authors {

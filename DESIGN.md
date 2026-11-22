@@ -259,7 +259,7 @@ Mostly flat, with tonal layering doing the work: navy frame, white page, mist ho
 - **Sheet lift** (`box-shadow: 0 -18px 45px rgba(0, 72, 129, 0.16)`): the soft navy lift turned upward, only on the catalogue's filter sheet when it rises over the page; the page behind it takes a navy backdrop (`rgba(0, 39, 70, 0.45)`).
 
 ### Named Rules
-**The Only the Book Floats Rule.** The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat. On a book card only the cover moves on hover (rises 6px, 300ms ease-out, motion-safe); the card itself does not lift.
+**The Only the Book Floats Rule.** The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat. On hover the flat cover turns into a 3D book (`Book3D`, CSS only): spine with the title in Playfair, page edges, thickness from the page count. Each book has its own pose, derived from its slug (`bookPose`): turned right (spine shows) or left (page edges), 24 to 40deg, scaled 12 to 20%. On a book card it rises about 30px and steps out of its coloured field; in the book-page hero it drops instead, so it never slips under the menu. The card itself does not lift. With reduced motion the book stays flat.
 
 ## Shapes
 

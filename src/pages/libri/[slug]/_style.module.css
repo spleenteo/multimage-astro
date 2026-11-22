@@ -28,7 +28,8 @@
   align-items: center;
   justify-content: center;
   padding: 1.75rem 1.5rem;
-  overflow: clip;
+  /* Clip sideways only (no horizontal scroll); the 3D book may rise above the field on hover. */
+  overflow-x: clip;
 
   @media (width >= 48rem) {
     order: 2;
@@ -37,19 +38,20 @@
   }
 }
 
-/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. On phones the
-   cover stays short, so title, price and the order reach the first screens. */
-.cover {
-  display: block;
-  width: auto !important;
-  max-width: min(55vw, 200px) !important;
-  height: min(15rem, 36svh) !important;
-  object-fit: contain;
+/* The cover keeps its resting tilt; the 3D book (Book3D, 26rem tall at most) turns from there on
+   hover. On phones it is zoomed to 15rem, so title, price and the order reach the first screens. */
+.coverTilt {
+  position: relative;
+  z-index: 10;
   transform: rotate(4deg);
+}
+
+.cover3d {
+  --b3d-font: var(--font-serif);
+  zoom: 0.577;
 
   @media (width >= 48rem) {
-    max-width: 340px !important;
-    height: 26rem !important;
+    zoom: 1;
   }
 }
 

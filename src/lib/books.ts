@@ -27,6 +27,7 @@ export type BookRecordForCard = {
   promo?: string | null;
   description?: string | null;
   coverImage?: AssetImage | null;
+  pages?: number | null;
   authors?: BookAuthor[] | null;
   license?: BookLicense | null;
   format?: string | null;
@@ -43,6 +44,7 @@ export type BookCardViewModel = {
   subtitle?: string | null;
   summary?: string | null;
   coverImage?: AssetImage | null;
+  pages?: number | null;
   authors: BookAuthor[];
   license?: BookLicense | null;
   format?: string | null;
@@ -64,6 +66,7 @@ export function toBookCard(record: BookRecordForCard): BookCardViewModel {
     subtitle: record.subtitle ?? null,
     summary: summary.length > 0 ? summary : undefined,
     coverImage: record.coverImage ?? null,
+    pages: record.pages ?? null,
     authors: record.authors ?? [],
     license: record.license ?? null,
     format: record.format ?? null,

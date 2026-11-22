@@ -1,5 +1,4 @@
 ---
-import { Image } from '@datocms/astro/Image';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AlternateFormatsList from '~/components/AlternateFormatsList';
@@ -25,6 +24,8 @@ import {
   normalizeText,
 } from '~/lib/books';
 import { coverFieldPalette } from '~/lib/colors';
+import Book3D from '~/components/Book3D';
+import { bookPose, bookSpineColors } from '~/lib/bookPose';
 import { getAuthorDisplayName, buildAuthorSegments } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
@@ -326,9 +327,18 @@ const editionDetails = buildEditionDetails(book).filter((item) => !HERO_DETAIL_L
 const graphicsDetails = buildGraphicsDetails(book);
 const collectionHref = book.collection?.slug ? `/collane/${book.collection.slug}` : null;
 
-const coverResponsiveImage = book.coverImage?.responsiveImage
-  ? { ...book.coverImage.responsiveImage, alt: book.coverImage.responsiveImage.alt ?? book.title }
-  : null;
+// The hero cover is the same 3D book as in the cards (same pose, same spine), at hero size: 26rem
+// tall at most, 340px wide at most; phones zoom it down in CSS.
+const heroCoverUrl = book.coverImage?.url ?? null;
+const heroCoverAspect =
+  book.coverImage?.width && book.coverImage?.height
+    ? book.coverImage.height / book.coverImage.width
+    : 1.45;
+const heroCoverHeight = Math.round(Math.min(416, 340 * heroCoverAspect));
+const heroCoverSrc = (h: number) => `${heroCoverUrl}?h=${h}&fit=max&auto=format`;
+// Same pose as the cards, but downward: rising, the book would slip under the sticky menu.
+const cardPose = bookPose(book.slug);
+const heroPose = { ...cardPose, offsetY: Math.abs(cardPose.offsetY) };
 
 const fallbackDescription = toPlainText(book.promo ?? book.description);
 const escapeAttr = (value: string) =>
@@ -389,15 +399,23 @@ const seo = sanitizeMetaTags(
     <section class={styles.hero} aria-labelledby="book-title">
       <div class={styles.heroGrid}>
         <div class={styles.coverField} style={`background: ${coverPalette.field};`}>
-          {coverResponsiveImage ? (
-            <Image
-              data={coverResponsiveImage}
-              sizes="(min-width: 768px) 340px, 50vw"
-              pictureClass="block"
-              imgClass={styles.cover}
-              imgStyle={{ filter: `drop-shadow(24px 36px 48px ${coverPalette.shadow})` }}
-              priority
-            />
+          {heroCoverUrl ? (
+            <div class={styles.coverTilt}>
+              <Book3D
+                cover={heroCoverSrc(heroCoverHeight)}
+                srcset={`${heroCoverSrc(heroCoverHeight * 2)} 2x`}
+                alt={book.coverImage?.alt ?? book.title}
+                title={book.title}
+                pages={book.pages ?? undefined}
+                height={heroCoverHeight}
+                aspect={heroCoverAspect}
+                {...bookSpineColors(book.coverImage?.colors)}
+                restShadow={`drop-shadow(24px 36px 48px ${coverPalette.shadow})`}
+                loading="eager"
+                class={styles.cover3d}
+                {...heroPose}
+              />
+            </div>
           ) : (
             <div class={styles.coverFallback}>Copertina in arrivo</div>
           )}

@@ -1,8 +1,15 @@
 @reference '../../styles/global.css';
 
-/* The card itself stays put; only the cover lifts on hover (DESIGN.md, "Only the Book Floats"). */
+/* The card itself stays put; only the cover lifts on hover (DESIGN.md, "Only the Book Floats").
+   No overflow clipping: the 3D book may step out of its coloured field, over the card's edges, and
+   the card under the pointer rises above its neighbours so the book is never covered. */
 .root {
-  @apply flex h-full flex-col overflow-hidden bg-white shadow-soft focus-visible:-outline-offset-4;
+  @apply relative flex h-full flex-col bg-white shadow-soft focus-visible:-outline-offset-4;
+}
+
+.root:hover,
+.root:focus-visible {
+  z-index: 10;
 }
 
 .heroPanel {
@@ -10,11 +17,12 @@
 }
 
 .coverWrapper {
-  @apply relative flex items-center justify-center transition-transform duration-300 ease-out motion-safe:group-hover:-translate-y-1.5;
+  @apply relative z-10 flex items-center justify-center;
 }
 
-.coverImage {
-  @apply mx-auto h-56 w-auto max-w-[240px] object-contain;
+/* The 3D book (Book3D): the spine title in Playfair, like every book title on the site. */
+.book {
+  --b3d-font: var(--font-serif);
 }
 
 .coverFallback {
@@ -55,10 +63,11 @@
   @apply px-6 py-10 max-sm:px-3 max-sm:py-6;
 }
 
-/* !important: the DatoCMS <Image> sets width:100% and height:auto inline. In the catalogue covers
-   are sized by height, so a row of different formats lines up. */
-.catalogue .coverImage {
-  @apply h-52! w-auto! max-w-full! max-sm:h-40!;
+/* Covers line up by height (Book3D takes 208px); phones zoom the book down to 160px. */
+@media (width < 40rem) {
+  .catalogue .book {
+    zoom: 0.77;
+  }
 }
 
 .catalogue .body {

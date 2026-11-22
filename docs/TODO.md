@@ -182,3 +182,4 @@
   - **Status and paging:** the status gives the real total (`total_count`; it was stuck at 25), "Mostra altri risultati" pages through, and the status no longer announces "Caricamento…" on every pause.
   - **Other states:** ways on in the empty and no-result states; a `<noscript>` line; `<title>` reads "Cerca: <query>".
   - **Results:** on phones the first result moves from y=737 to y=581; "pace" drops from 9,622 to 7,623px. The detector went from 17 findings to 0.
+- [2026-11-22] - [Features] **Copertine 3D**: `Book3D` (solo CSS) al passaggio del mouse su `BookCard` e nell'hero della scheda libro; posa per libro da `bookPose(slug)`, spessore dal numero di pagine; copertine orizzontali limitate in larghezza.

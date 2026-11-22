@@ -133,3 +133,5 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: shared `withCORS`, `json`, `invalidRequestResponse`, `successfulResponse`, and `isRelativeUrl` utilities for every API route.
   - Used in: `/api/preview`, `/api/preview-links`, `/api/seo-analysis`, `/api/post-deploy`, etc.
   - Notes: keep `withCORS` in sync with Dato plugin requirements and reuse `isRelativeUrl` for any new redirect-bearing endpoints.
+
+- `bookPose(key)` / `bookSpineColors(colors)` — `src/lib/bookPose.ts`. Deterministic hover pose for `Book3D` from a book slug (side, angles, offset, scale: random-looking across a grid, stable across visits and cache), and spine/band/ink colours from the cover's palette.

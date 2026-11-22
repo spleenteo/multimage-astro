@@ -1,0 +1,342 @@
+---
+/**
+ * Book3D: libro 3D in solo CSS (nessun JavaScript lato client).
+ * Usato da BookCard: copertina piatta con la sua ombra colorata, il libro in posa al passaggio
+ * del mouse sulla card (`hoverGroup`). Aggiunte rispetto all'originale: `height` (alternativa a
+ * `width`), `srcset`, `hoverGroup`, `restShadow`; con prefers-reduced-motion il libro resta piatto.
+ *
+ * Di base mostra la copertina piatta e frontale; al passaggio del mouse il libro
+ * si anima fino alla posa data da rotY / rotX / rotZ / offsetX / offsetY, poi
+ * torna a posto quando il mouse esce.
+ *
+ * Uso:
+ *   <Book3D cover={libro.cover.url} title={libro.titolo} pages={298} />
+ *   <Book3D cover="/img/nassir.jpg" title="Il viaggio di Nassir" pages={600}
+ *           aspect={1.5} spineColor="#fbf3ea" accentColor="#e0705d" inkColor="#6b1b1f"
+ *           rotY={-35} rotX={-5} rotZ={1.5} offsetY={8} />
+ */
+interface Props {
+  /** URL della copertina (es. l'URL dell'immagine da DatoCMS) */
+  cover: string;
+  /** Testo della costola */
+  title: string;
+  /** Numero di pagine: 20 -> libro sottile, 600 -> libro spesso (scala volutamente non realistica) */
+  pages?: number;
+  /** Larghezza della copertina in px (tutto il resto si scala di conseguenza) */
+  width?: number;
+  /** Altezza / larghezza della copertina: 1.4142 = A4, 1 = quadrata */
+  aspect?: number;
+  /** Colore di dorso e retro */
+  spineColor?: string;
+  /** Colore delle due fasce in alto e in basso sul dorso */
+  accentColor?: string;
+  /** Colore del testo sul dorso */
+  inkColor?: string;
+  /** Posa in hover (o sempre, se flatUntilHover è false) */
+  rotY?: number;
+  rotX?: number;
+  rotZ?: number;
+  offsetX?: number;
+  offsetY?: number;
+  /** Ingrandimento nella posa (1 = nessuno) */
+  scale?: number;
+  /** true: copertina piatta finché non passi il mouse. false: libro sempre in posa */
+  flatUntilHover?: boolean;
+  /** Testo alternativo dell'immagine (default: "Copertina: <titolo>") */
+  alt?: string;
+  /** Altezza della copertina in px: se presente, la larghezza si ricava da `aspect` */
+  height?: number;
+  /** "eager" per la copertina principale della pagina (LCP) */
+  loading?: 'lazy' | 'eager';
+  /** srcset dell'immagine (es. la versione 2x) */
+  srcset?: string;
+  /** true: la posa scatta al passaggio sull'antenato `.group` (es. tutta la card), non solo sul libro */
+  hoverGroup?: boolean;
+  /** Ombra della copertina piatta (es. l'ombra colorata della card); sfuma quando il libro va in posa */
+  restShadow?: string;
+  class?: string;
+}
+
+const {
+  cover,
+  title,
+  pages = 290,
+  width = 300,
+  aspect = 1.4142,
+  spineColor = '#f3e3c2',
+  accentColor = '#f0b429',
+  inkColor = '#4f6f2c',
+  rotY = -43,
+  rotX = -17,
+  rotZ = 0,
+  offsetX = 0,
+  offsetY = 0,
+  scale = 1,
+  flatUntilHover = true,
+  alt,
+  height,
+  srcset,
+  loading = 'lazy',
+  hoverGroup = false,
+  restShadow,
+  class: className = '',
+} = Astro.props;
+
+const W = height ? Math.round(height / aspect) : width;
+const H = height ? Math.round(height) : Math.round(W * aspect);
+const s = W / 300; // fattore di scala rispetto al disegno originale (300 px)
+
+// Spessore: da 20 pagine (16 px) a 600 pagine (90 px) in proporzione, scalato con la larghezza
+const PAGES_MIN = 20, PAGES_MAX = 600, D_MIN = 16, D_MAX = 90;
+const t = (Math.min(PAGES_MAX, Math.max(PAGES_MIN, pages)) - PAGES_MIN) / (PAGES_MAX - PAGES_MIN);
+const D = (D_MIN + t * (D_MAX - D_MIN)) * s;
+
+const BAND = 18 * s;
+const I = 5 * s;
+const PD = D - 8 * s;
+const SW = Math.round(W * 0.8);
+
+// Il testo del dorso si rimpicciolisce se il titolo è lungo
+const avail = H - 2 * BAND - 16 * s;
+const fs = Math.max(8 * s, Math.min(22 * s, (D - 6 * s) * 0.6, avail / (Math.max(1, title.length) * 0.68)));
+
+const ox = Math.max(-60, Math.min(60, offsetX));
+const oy = Math.max(-60, Math.min(60, offsetY));
+const sc = Math.max(1, Math.min(1.3, scale));
+const pose = `translate(${ox}px, ${oy}px) scale(${sc}) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg)`;
+
+const vars = [
+  `--w:${W}px`, `--h:${H}px`, `--d:${D.toFixed(2)}px`, `--pd:${PD.toFixed(2)}px`,
+  `--i:${I.toFixed(2)}px`, `--band:${BAND.toFixed(2)}px`, `--sw:${SW}px`, `--fs:${fs.toFixed(1)}px`,
+  `--spine:${spineColor}`, `--accent:${accentColor}`, `--ink:${inkColor}`,
+  `--pose:${pose}`, `--ox:${ox}px`, `--oy:${oy}px`, `--sc:${sc}`,
+  restShadow ? `--rest-shadow:${restShadow}` : null,
+].filter(Boolean).join(';');
+---
+
+<div class:list={['b3d', flatUntilHover && 'b3d--flat', hoverGroup && 'b3d--group', className]} style={vars}>
+  <div class="shadow"></div>
+  <div class="book">
+    <div class="face back"></div>
+    <div class="face pages-right"></div>
+    <div class="face pages-top"></div>
+    <div class="face pages-bottom"></div>
+    <div class="face spine">
+      <div class="band band-top"></div>
+      <div class="band band-bottom"></div>
+      <div class="spine-text">{title}</div>
+    </div>
+    <div class="face front">
+      <img src={cover} srcset={srcset} alt={alt ?? `Copertina: ${title}`} loading={loading} fetchpriority={loading === 'eager' ? 'high' : undefined} decoding="async" />
+      <div class="gloss"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .b3d {
+    position: relative;
+    width: var(--w);
+    height: var(--h);
+    perspective: 1800px;
+  }
+
+  .book {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: var(--pose);
+  }
+
+  .shadow {
+    position: absolute;
+    left: 50%;
+    top: calc(var(--h) + 8px);
+    width: var(--sw);
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(30, 25, 15, 0.2);
+    filter: blur(16px);
+    transform: translate(calc(-50% + var(--ox)), var(--oy)) scale(var(--sc, 1));
+  }
+
+  .face {
+    position: absolute;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .front {
+    left: 0;
+    top: 0;
+    width: var(--w);
+    height: var(--h);
+    overflow: hidden;
+    border-radius: 2px 5px 5px 2px;
+    transform: translateZ(calc(var(--d) / 2));
+  }
+  .front img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gloss {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0.14) 2.2%, rgba(0, 0, 0, 0.22) 4.2%, rgba(0, 0, 0, 0) 8%),
+      linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0.1) 100%);
+  }
+
+  .back {
+    left: 0;
+    top: 0;
+    width: var(--w);
+    height: var(--h);
+    background: var(--spine);
+    border-radius: 5px 2px 2px 5px;
+    transform: rotateY(180deg) translateZ(calc(var(--d) / 2));
+  }
+
+  .spine {
+    left: calc((var(--w) - var(--d)) / 2);
+    top: 0;
+    width: var(--d);
+    height: var(--h);
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0.18) 35%, rgba(0, 0, 0, 0.05) 100%),
+      var(--spine);
+    transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
+  }
+  .band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--band);
+    background: var(--accent);
+  }
+  .band-top { top: 0; }
+  .band-bottom { bottom: 0; }
+  .spine-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--band);
+    bottom: var(--band);
+    box-sizing: border-box;
+    padding: 8px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    overflow: hidden;
+    /* Imposta --b3d-font sul sito (es. il font dei titoli) se vuoi un carattere specifico */
+    font-family: var(--b3d-font, inherit);
+    font-weight: 800;
+    font-size: var(--fs);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+
+  .pages-right {
+    left: calc((var(--w) - var(--pd)) / 2);
+    top: var(--i);
+    width: var(--pd);
+    height: calc(var(--h) - 2 * var(--i));
+    background: repeating-linear-gradient(90deg, #f6f1e6 0 2px, #e0d9c8 2px 3px);
+    box-shadow: inset 0 0 14px rgba(90, 70, 30, 0.25);
+    transform: rotateY(90deg) translateZ(calc(var(--w) / 2 - var(--i)));
+  }
+  .pages-top {
+    left: var(--i);
+    top: calc((var(--h) - var(--pd)) / 2);
+    width: calc(var(--w) - 2 * var(--i));
+    height: var(--pd);
+    background: repeating-linear-gradient(0deg, #fbf7ee 0 2px, #e6dfce 2px 3px);
+    transform: rotateX(90deg) translateZ(calc(var(--h) / 2 - var(--i)));
+  }
+  .pages-bottom {
+    left: var(--i);
+    top: calc((var(--h) - var(--pd)) / 2);
+    width: calc(var(--w) - 2 * var(--i));
+    height: var(--pd);
+    background: repeating-linear-gradient(0deg, #d9d1be 0 2px, #c8bfa8 2px 3px);
+    transform: rotateX(-90deg) translateZ(calc(var(--h) / 2 - var(--i)));
+  }
+
+  /* Modalità "piatto finché non passi il mouse" */
+  .b3d--flat .book {
+    transform: translate(0, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    transition: transform 700ms cubic-bezier(0.22, 0.8, 0.24, 1);
+  }
+  .b3d--flat .shadow {
+    opacity: 0;
+    transform: translate(-50%, 0);
+    transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 0.8, 0.24, 1);
+  }
+  .b3d--flat .gloss {
+    opacity: 0;
+    transition: opacity 700ms ease;
+  }
+
+  /* Da ferma, la copertina tiene la sua ombra (filter sul contenitore: il 3D dei figli resta). */
+  .b3d--flat {
+    filter: var(--rest-shadow, none);
+    transition: filter 500ms ease;
+  }
+  .b3d--flat:hover,
+  :global(.group:hover) .b3d--group,
+  :global(.group:focus-visible) .b3d--group {
+    filter: none;
+  }
+
+  :global(.group:hover) .b3d--group .book,
+  :global(.group:focus-visible) .b3d--group .book,
+  .b3d--flat:hover .book {
+    transform: var(--pose);
+    transition-duration: 900ms;
+  }
+  :global(.group:hover) .b3d--group .shadow,
+  :global(.group:focus-visible) .b3d--group .shadow,
+  .b3d--flat:hover .shadow {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--ox)), var(--oy)) scale(var(--sc, 1));
+    transition-duration: 900ms;
+  }
+  :global(.group:hover) .b3d--group .gloss,
+  :global(.group:focus-visible) .b3d--group .gloss,
+  .b3d--flat:hover .gloss {
+    opacity: 1;
+    transition-duration: 900ms;
+  }
+
+  /* Movimento ridotto: il libro resta piatto, con la sua ombra. */
+  @media (prefers-reduced-motion: reduce) {
+    .b3d--flat .book,
+    .b3d--flat .shadow,
+    .b3d--flat .gloss {
+      transition: none;
+    }
+    .b3d--flat:hover .book,
+    :global(.group:hover) .b3d--group .book,
+    :global(.group:focus-visible) .b3d--group .book {
+      transform: none;
+    }
+    .b3d--flat:hover .shadow,
+    .b3d--flat:hover .gloss,
+    :global(.group:hover) .b3d--group .shadow,
+    :global(.group:hover) .b3d--group .gloss {
+      opacity: 0;
+    }
+    .b3d--flat:hover,
+    :global(.group:hover) .b3d--group {
+      filter: var(--rest-shadow, none);
+    }
+  }
+</style>

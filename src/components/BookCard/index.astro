@@ -1,8 +1,10 @@
 ---
 // Book card: cover on a field tinted from its own colour, then title, authors, one meta line and
-// the price. Only the cover moves on hover ("Only the Book Floats"). The `catalogue` variant is the
+// the price. Only the cover moves on hover ("Only the Book Floats"): it turns into a 3D book
+// (Book3D) with its spine, in a pose of its own derived from the slug. The `catalogue` variant is the
 // quieter one used in the /libri grid: lighter field, no summary, compact on phones.
-import { Image } from '@datocms/astro/Image';
+import Book3D from '~/components/Book3D';
+import { bookPose, bookSpineColors } from '~/lib/bookPose';
 import type { AssetImage } from '~/lib/datocms/types';
 import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
 import { formatEuro } from '~/lib/currency';
@@ -18,6 +20,8 @@ type Props = {
   summary?: string | null;
   format?: string | null;
   coverImage?: AssetImage | null;
+  /** Page count: the thickness of the 3D book on hover. */
+  pages?: number | null;
   authors?: Array<{
     id: string;
     fullName?: string | null;
@@ -46,6 +50,7 @@ const {
   summary,
   format,
   coverImage,
+  pages = null,
   authors = [],
   price,
   printYear = null,
@@ -77,7 +82,20 @@ const baseColor = pickBaseColor(coverImage?.colors);
 // lighter, so the cover stays the loudest thing in each card.
 const backgroundColor = lightenColor(baseColor, isCatalogue ? 0.55 : 0.18);
 const shadowColor = hexToRgba(darkenColor(baseColor, 0.55), isCatalogue ? 0.32 : 0.42);
-const coverResponsiveImage = coverImage?.responsiveImage ?? null;
+// The 3D book: covers line up by height (13rem in the catalogue, 14rem elsewhere; phones zoom it down
+// in CSS); the spine takes the cover's hue, pale, with bands at full strength and dark ink.
+const coverUrl = coverImage?.url ?? null;
+const coverAspect =
+  coverImage?.width && coverImage?.height ? coverImage.height / coverImage.width : 1.45;
+// Portrait covers take the full height; landscape and square ones are capped by width, so they fit
+// the field too (on phones the catalogue zooms the book to 77%: 180px wide becomes 139px).
+const maxCoverHeight = isCatalogue ? 208 : 224;
+const maxCoverWidth = isCatalogue ? 180 : 210;
+const coverHeight = Math.round(Math.min(maxCoverHeight, maxCoverWidth * coverAspect));
+const coverSrc = (h: number) => `${coverUrl}?h=${h}&fit=max&auto=format`;
+const pose = bookPose(slug);
+const spine = bookSpineColors(coverImage?.colors);
+const restShadow = `drop-shadow(18px 26px 32px ${shadowColor})`;
 const Heading = headingLevel;
 ---
 
@@ -87,16 +105,21 @@ const Heading = headingLevel;
 >
   <article class="flex h-full flex-col">
     <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
-      {coverResponsiveImage ? (
+      {coverUrl ? (
         <div class={styles.coverWrapper}>
-          <Image
-            data={coverResponsiveImage}
-            sizes={isCatalogue
-              ? '(min-width: 1280px) 240px, (min-width: 640px) 30vw, 40vw'
-              : '(min-width: 1280px) 260px, (min-width: 1024px) 45vw, 70vw'}
-            srcSetCandidates={[1, 2]}
-            imgClass={styles.coverImage}
-            imgStyle={{ filter: `drop-shadow(18px 26px 32px ${shadowColor})` }}
+          <Book3D
+            cover={coverSrc(coverHeight)}
+            srcset={`${coverSrc(coverHeight * 2)} 2x`}
+            alt=""
+            title={title}
+            pages={pages ?? undefined}
+            height={coverHeight}
+            aspect={coverAspect}
+            {...spine}
+            restShadow={restShadow}
+            hoverGroup
+            class={styles.book}
+            {...pose}
           />
         </div>
       ) : (

@@ -73,6 +73,9 @@ scope: A list to describe all components used in the project
   - Used in: `libri/[slug]` ("Edizione", "Grafica").
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
+- `Book3D` — **Book3D** (`src/components/Book3D/index.astro`)
+  - Purpose: CSS-only 3D book. Flat cover at rest; on hover it turns into the pose given by `rotY/rotX/rotZ/offsetX/offsetY/scale`, showing spine (title), page edges and thickness (from `pages`). Used by `BookCard` and the `/libri/[slug]` hero.
+  - Key props: `cover`, `srcset?`, `title`, `pages?`, `height?` or `width`, `aspect`, `spineColor/accentColor/inkColor`, `restShadow?` (flat shadow at rest), `hoverGroup?` (pose on hover of the `.group` ancestor), `loading?` (`eager` for the LCP cover). Reduced motion: stays flat.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
   - Purpose: reusable book summary: cover on a field tinted from its own colour, title, authors, summary, one meta line (collana · anno · Ebook · Fuori catalogo) and the price as a serif figure. Only the cover moves on hover.
   - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.), `printYear?`, `collectionName?`, `variant?: 'default' | 'catalogue'` (catalogue: lighter field, no summary, compact two-up card on phones), `authorsPrefix?` (e.g. "con" on an author's profile, where only co-authors are passed). With no authors, the names line is omitted.
