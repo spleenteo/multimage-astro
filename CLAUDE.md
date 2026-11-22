@@ -27,7 +27,9 @@ Four layers:
 1. **`/docs/guidelines/`** — canonical policies (routing, assets, SEO, security, etc.). Modify carefully; document significant decisions in `docs/decisions-log/`.
 2. **`/docs/current-state.md`** — living snapshot of actual implementation status. Update when features change.
 3. **`/docs/list-*.md` · `TODO.md` · `decisions-log/`** — component/helper/model inventories, open tasks, and architectural decisions.
-4. **`/docs/shapes/`** — shaped work proposals and their slices. See below.
+4. **`/docs/work/`** — development works run with Flow (`/flow:dev`). See "Works with Flow" below.
+
+`/docs/shapes/` holds shaped proposals written before Flow was adopted (see "Legacy shapes").
 
 ## Quick Reference
 
@@ -70,14 +72,20 @@ Use the installed skills — no local documentation file exists for DatoCMS:
 3. Update `/docs/current-state.md` for affected areas
 4. Update `/docs/TODO.md` (mark done, add follow-ups)
 
-## Shapes & Slices
+## Works with Flow
 
-`/docs/shapes/` contains shaped work proposals. Each file defines a problem, appetite, solution sketch, rabbit holes, no-gos, and slices.
+Development work (features, upgrades, migrations, multi-file fixes) runs through the Flow plugin: start or resume it with `/flow:dev`.
 
-- When asked to work on a shape: read the shape file first, then execute its slices
-- When a slice is complete: update its checkbox in the shape file and add a corresponding entry to `docs/TODO.md` (completed)
-- When proposing new work: create a shape file following the format in `docs/shapes/README.md`
-- Keep `docs/shapes/README.md` index up to date with status changes
+- `.flow.yml` (repo root) — Flow's configuration: stacks `[astro, datocms]`, `merge: local`
+- `docs/development-guidelines.md` — references, test level, gate and deviations; Flow reads it whole in every plan, review, execution and close
+- `docs/work/<date>-<slug>/` — one folder per work: `STATUS.md` (phase, slice, step, Log), `slices.md`, `lessons.md`, and per slice `V<n>-plan.md`, `V<n>-packet.md`, `V<n>-ledger.md`
+- `docs/decisions-log/` — decisions are proposed at the close of a step and written only on a yes
+- Closing a work: changelog and version (`/flow:changelog`), then archive (`/flow:archive`), then merge — each step asks first
+- New work starts with `/flow:dev`, not with a new shape file
+
+## Legacy shapes
+
+`/docs/shapes/` contains shaped work proposals written before Flow. They are a backlog of ideas, not a working system: to act on one, open a Flow work from it with `/flow:dev` and pass the shape file as source material. Keep `docs/shapes/README.md` index up to date when a shape is taken over by a work or dropped.
 
 ## `docs/prompts/` folder
 

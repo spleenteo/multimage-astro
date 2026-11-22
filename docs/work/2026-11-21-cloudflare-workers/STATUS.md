@@ -1,12 +1,12 @@
 ---
-status: open
-phase: close
+status: closed
+phase: done
 slice: V3
-step: close
+step: done
 work: cloudflare-workers
 stacks: [astro, datocms]
 base: main
-updated: 2026-11-21
+updated: 2026-11-23
 tags: [work, cloudflare-workers]
 description: "Migrare Multimage da Vercel a Cloudflare Workers, con la Workers Cache invalidata dai cache tag DatoCMS al posto dell'ISR di Vercel (verifica sul Worker workers.dev, senza toccare DNS né produzione)"
 ---
@@ -35,3 +35,4 @@ Work runs on branch `chore/cloudflare` (user's choice: the branch of the trial d
 - 2026-11-21 — V2 close — DatoCMS tags in Workers Cache, /api/invalidate-cache purges by tag (book MISS, unrelated HIT, 401/400, 25×200 then 502 on rate limit); tag counts 27–515, none coarse; gate green; 7 commits; second decision candidate (purge via Backend ctx.cache) held for V3 — 25 min — n/a
 - 2026-11-21 — V3 plan + review — 6 tasks; conductor amendment: no CMA token on the trial Worker, no .env read; review: 2 high (DNS records on zone move, plugin URLs unchecked), 4 medium, 3 low; all fixes appended as binding amendments (user asleep) — 20 min — n/a
 - 2026-11-21 — V3 close — runbook docs/guidelines/cloudflare-switch.md, guidelines/state/TODO updated, editor flows verified on workers.dev; full seo-analysis check moved to switch day; gate green; 8 commits. All slices done; merge/push/tag left to the user (asked: no merge to main) — 20 min — n/a
+- 2026-11-23 — close — work closed: chore/cloudflare merged into main, www + apex switched live on Cloudflare Workers on 2026-11-22; changelog, archive and Vercel cleanup (TODO CF-vercel-cleanup) left open — n/a — n/a
