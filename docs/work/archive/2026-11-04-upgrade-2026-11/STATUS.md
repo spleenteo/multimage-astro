@@ -7,6 +7,7 @@ work: upgrade-2026-11
 stacks: [astro, datocms]
 base: main
 updated: 2026-11-08
+archived: 2026-11-23
 tags: [work, upgrade-2026-11]
 description: "Manutenzione: aggiornare librerie e framework alle ultime versioni stabili (cura devops)"
 ---

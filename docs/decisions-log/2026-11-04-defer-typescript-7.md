@@ -34,7 +34,7 @@ The project stays one TypeScript major behind. TS 6 deprecations must be cleared
 
 ## References
 
-- docs/work/2026-11-04-upgrade-2026-11/slices.md (Out of scope, V3)
+- docs/work/archive/2026-11-04-upgrade-2026-11/slices.md (Out of scope, V3)
 
 ## Status log
 

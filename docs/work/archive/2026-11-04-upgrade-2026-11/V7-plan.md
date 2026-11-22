@@ -8,7 +8,7 @@ updated: 2026-11-07
 
 # V7 plan — Tailwind 4
 
-**Mandate**: [slices.md § V7](slices.md#v7--tailwind-4) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [dependencies.md](../../guidelines/dependencies.md), [assets.md](../../guidelines/assets.md), [caching.md](../../guidelines/caching.md), [operations.md](../../guidelines/operations.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Upstream**: [Tailwind upgrade guide](https://tailwindcss.com/docs/upgrade-guide), [@reference](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
+**Mandate**: [slices.md § V7](slices.md#v7--tailwind-4) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [dependencies.md](../../../guidelines/dependencies.md), [assets.md](../../../guidelines/assets.md), [caching.md](../../../guidelines/caching.md), [operations.md](../../../guidelines/operations.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Upstream**: [Tailwind upgrade guide](https://tailwindcss.com/docs/upgrade-guide), [@reference](https://tailwindcss.com/docs/functions-and-directives#reference-directive)
 
 **Summary**
 1. Baseline on our own dev server before any change: 13 pages at 390, 1024 and 1280 px, captured twice to get a noise floor. Each capture takes screenshots in 4000 px tiles, a computed-style dump, a hover and focus pass, the loaded fonts and a `.container` probe from 768 to 1600 px. The built CSS and the carousels are recorded too. The compare script is shown to fail.

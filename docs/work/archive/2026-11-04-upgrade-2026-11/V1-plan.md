@@ -8,7 +8,7 @@ updated: 2026-11-04
 
 # V1 plan — Cache baseline
 
-**Mandate**: [slices.md § V1](slices.md#v1--cache-baseline) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](lessons.md) (none yet) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V1](slices.md#v1--cache-baseline) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](lessons.md) (none yet) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. Read DatoCMS live (read-only CLI) and the code; write `docs/guidelines/caching.md`: config, webhook 33942, route → models → revalidated table, gaps with fate.
@@ -18,7 +18,7 @@ updated: 2026-11-04
 5. Retire `docs/preview-mode.md`, fix the stale passages in the preview-mode, operations and data-loading guidelines, flag the wrong "Models:" list.
 6. Record gaps and follow-ups in `TODO.md`, `current-state.md`, `dependencies.md`.
 
-**Files**: docs/guidelines/caching.md, scripts/revalidation-map/check.ts, scripts/revalidation-map/register-stubs.mjs, scripts/revalidation-map/hooks.mjs, scripts/revalidation-map/stub-execute-query.mjs, scripts/revalidation-map/payloads/*.json (13 files, listed in T2), package.json, docs/work/2026-11-04-upgrade-2026-11/baseline/{README.md,isr-prerender-config.json,vercel-routes.json,functions.txt}, docs/preview-mode.md (deleted), docs/guidelines/preview-mode.md, docs/guidelines/operations.md, docs/guidelines/cms-data-loading.md, docs/decisions-log/2026-06-20-fot-reduction.md, CLAUDE.md, docs/TODO.md, docs/current-state.md, docs/guidelines/dependencies.md, docs/list-helpers.md
+**Files**: docs/guidelines/caching.md, scripts/revalidation-map/check.ts, scripts/revalidation-map/register-stubs.mjs, scripts/revalidation-map/hooks.mjs, scripts/revalidation-map/stub-execute-query.mjs, scripts/revalidation-map/payloads/*.json (13 files, listed in T2), package.json, docs/work/archive/2026-11-04-upgrade-2026-11/baseline/{README.md,isr-prerender-config.json,vercel-routes.json,functions.txt}, docs/preview-mode.md (deleted), docs/guidelines/preview-mode.md, docs/guidelines/operations.md, docs/guidelines/cms-data-loading.md, docs/decisions-log/2026-06-20-fot-reduction.md, CLAUDE.md, docs/TODO.md, docs/current-state.md, docs/guidelines/dependencies.md, docs/list-helpers.md
 
 ## The slice, decided here
 
@@ -50,7 +50,7 @@ updated: 2026-11-04
 
 ### T3 — ISR/routes baseline snapshot · depends on: T2
 **What**: Run `BYPASS_TOKEN="$(openssl rand -hex 16)" npx astro build`. Then write `baseline/isr-prerender-config.json` from `.vercel/output/functions/_isr.prerender-config.json` with `bypassToken` replaced by `"<redacted>"` (via `node -e`), `baseline/vercel-routes.json` (the `routes` array of `.vercel/output/config.json`), `baseline/functions.txt` (`ls .vercel/output/functions`), and `baseline/README.md` (date, astro 6.3.3 / @astrojs/vercel 10.0.7, the command, the throwaway-token note, "reference for V4's expected diff", "`.vercel/output` was deleted after the snapshot: rebuild before any `--prebuilt` deploy"). Then `/bin/rm -rf .vercel/output` (gitignored; it holds the throwaway bypass token).
-**Files**: docs/work/2026-11-04-upgrade-2026-11/baseline/{README.md,isr-prerender-config.json,vercel-routes.json,functions.txt}
+**Files**: docs/work/archive/2026-11-04-upgrade-2026-11/baseline/{README.md,isr-prerender-config.json,vercel-routes.json,functions.txt}
 **Verified**: `grep -c '"bypassToken": "<redacted>"' …/baseline/isr-prerender-config.json` → 1; `grep -c '5184000' …/baseline/isr-prerender-config.json` → 1; `grep -rnE '[0-9a-f]{32}' …/baseline/` prints nothing.
 **Done**: the four files are committed and contain no token value; `.vercel/output` is gone.
 

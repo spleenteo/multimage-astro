@@ -8,7 +8,7 @@ updated: 2026-11-05
 
 # V3 plan — Patch/minor, Node 24, TypeScript 6
 
-**Mandate**: [slices.md § V3](slices.md#v3--patchminor-node-24-typescript-6) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [dependencies.md](../../guidelines/dependencies.md), [operations.md](../../guidelines/operations.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V3](slices.md#v3--patchminor-node-24-typescript-6) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [dependencies.md](../../../guidelines/dependencies.md), [operations.md](../../../guidelines/operations.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. Node 24: `.nvmrc` → `24`, `"engines": { "node": "24.x" }` in `package.json`; `.vercelignore` with `.env*`, `dist/`, `.astro/`, `.claude/`.

@@ -8,7 +8,7 @@ updated: 2026-11-05
 
 # V2 plan — Revalidation map fixes
 
-**Mandate**: [slices.md § V2](slices.md#v2--revalidation-map-fixes) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [caching.md](../../guidelines/caching.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V2](slices.md#v2--revalidation-map-fixes) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [caching.md](../../../guidelines/caching.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. `recordInfo.ts`: map `index_page` by slug through an exported `INDEX_PAGE_PATHS`, `supplier` → `/distributori`; drop the 7 phantom api_keys (Web Previews / SEO plugins).

@@ -8,7 +8,7 @@ updated: 2026-11-05
 
 # V5 plan — DatoCMS clients and CLI
 
-**Mandate**: [slices.md § V5](slices.md#v5--datocms-clients-and-cli) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [cms-data-loading.md](../../guidelines/cms-data-loading.md), [preview-mode.md](../../guidelines/preview-mode.md), [dependencies.md](../../guidelines/dependencies.md), [security.md](../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Changelogs**: [cda-client releases](https://github.com/datocms/cda-client/releases), [js-rest-api-clients releases](https://github.com/datocms/js-rest-api-clients/releases), [cli releases](https://github.com/datocms/cli/releases)
+**Mandate**: [slices.md § V5](slices.md#v5--datocms-clients-and-cli) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [cms-data-loading.md](../../../guidelines/cms-data-loading.md), [preview-mode.md](../../../guidelines/preview-mode.md), [dependencies.md](../../../guidelines/dependencies.md), [security.md](../../../guidelines/security.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md) · **Changelogs**: [cda-client releases](https://github.com/datocms/cda-client/releases), [js-rest-api-clients releases](https://github.com/datocms/js-rest-api-clients/releases), [cli releases](https://github.com/datocms/cli/releases)
 
 **Summary**
 1. Before any install, prove the token probe works: a fake-token CDA 401 run through `handleUnexpectedError` (`src/pages/api/utils.ts`) echoes the token on cda-client 0.2.10.
