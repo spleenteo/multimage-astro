@@ -39,7 +39,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Card grids use `RESPONSIVE_IMAGE_CARD_FIELDS` (no `base64`, no `srcSet`; `<Image srcSetCandidates={[1,2]}>` rebuilds a 2-candidate srcset client-side) to keep listing HTML — and thus FOT — small. `RESPONSIVE_IMAGE_FRAGMENT` (with base64 + srcSet) stays for hero/detail images.
 - Partial pagination — `/libri` + sitemap catalogue pages now paginate via `first/skip`; `/autori`, staff exports and other `first: 500` reads remain (**CD2**).
 - Caching audit and verification procedure: `docs/guidelines/caching.md`; ISR config and route baseline snapshot (reference for the V4 diff): `docs/work/2026-11-04-upgrade-2026-11/baseline/`. On Vercel (production today) cache tags are not used and revalidation is URL-based; on the Cloudflare branch they are (V1–V3 of shape `cache-tags`). Open gaps are tracked as `Cache gap #n` in `docs/TODO.md`.
-- Cache tag propagation (**CD3**) is implemented for the Cloudflare target on branch `chore/cloudflare` and goes live with the switch (TODO **CF-switch**); until then Vercel keeps the URL map (surgical revalidation).
+- Production runs on Cloudflare Workers since 2026-11-22 (`www.multimage.org` and apex as custom domains of the Worker `multimage-astro`, account Multimage, Workers Free). Pages are cached in the Workers Cache and purged by DatoCMS cache tags (**CD3**) through the webhook "Cloudflare cache tags" → `/api/invalidate-cache`; the ISR webhook 33942 is disabled. The Vercel deployment still exists but receives no traffic until **CF-vercel-cleanup**.
 
 ## Blocks & Components
 
