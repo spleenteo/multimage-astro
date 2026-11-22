@@ -11,6 +11,12 @@
   "assets": { "binding": "ASSETS" },
   "workers_dev": true,
   "preview_urls": true,
+  // Production hostnames, attached as Worker Custom Domains (zone multimage.org, account Multimage).
+  // The apex redirects to www through a Redirect Rule (see docs/guidelines/cloudflare-switch.md).
+  "routes": [
+    { "pattern": "www.multimage.org", "custom_domain": true },
+    { "pattern": "multimage.org", "custom_domain": true },
+  ],
   // Workers Cache on for the Worker; the default entrypoint turns it off below.
   "cache": { "enabled": true },
   "exports": {
