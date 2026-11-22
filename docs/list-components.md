@@ -124,7 +124,11 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: the cover field is a mouse-only link (`tabindex=-1`, `aria-hidden`); the name carries the keyboard link. No placeholder copy when the description is missing.
 - `SupplierCard` — **SupplierCard** (`src/components/SupplierCard/index.astro`)
-  - Purpose: distributor contact card showing region, contacts, and map links.
+  - Purpose: a flat entry in the `/distributori` list.
+    - Name (Playfair), then "city · address".
+    - The description: past 180 characters, a short version with "Continua" (`<details>`); pasted CMS headings become paragraphs.
+    - One row of 44px actions: "Indicazioni" (Maps), phones as `tel:` links (fax shown, not dialled), email, website labelled "Facebook"/"Instagram" or the bare host. New tabs are announced to screen readers.
+    - A small decorative logo on mist (`alt=""`).
   - Key props: `SupplierCardViewModel` fields.
   - Used in: `/distributori`.
   - Owner: @codex.

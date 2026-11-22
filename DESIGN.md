@@ -318,6 +318,16 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 ### Book Card
 White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
 
+### Where To Find Our Books (`/distributori`)
+- **Title row:** the slim title row ("28 librerie e luoghi amici · 10 regioni"). The CMS subtitle only feeds the meta description.
+- **Three ways:** three flat columns between hairlines (stacked on phones).
+  - "In qualsiasi libreria": title or ISBN, plus the distributors.
+  - "Nelle librerie e nei luoghi amici": jumps to the list.
+  - "Ordinalo a noi": email order, free piego di libri, soci 30%. Its "Scegli il libro" (→ `/libri`) is the page's only orange-deep action.
+- **Region strip:** a flat strip like the /autori letters, sticky only from 768px.
+- **List:** regions as Playfair h2s, with flat SupplierCards in two columns from 768px.
+- **Closing:** "Sei una libreria?" closes the page, with the orders email.
+
 ### Author Profile (`/autori/[slug]`)
 - **Purpose:** the person frames their books.
 - **Title row:** a small square portrait (80px on phones, 144px from 768px), or the initial on mist, beside the h1.

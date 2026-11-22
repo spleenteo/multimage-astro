@@ -1,33 +1,90 @@
 @reference '../../styles/global.css';
 
-.layout {
-  @apply space-y-12;
+.page {
+  @apply space-y-10 md:space-y-12;
 }
 
-.menu {
-  @apply sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-sm font-semibold text-brand-slate shadow-soft backdrop-blur-xs;
+/* Slim title row, as on /libri, /collane and /autori. */
+.intro {
+  @apply space-y-2;
 }
 
-.menuLink {
-  @apply inline-flex min-h-11 items-center text-brand-navy underline-offset-2 transition duration-150 hover:text-brand-navy hover:underline focus:text-brand-navy;
+.title {
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
 }
 
-.sectionWrapper {
-  @apply mx-auto max-w-5xl v3-space-y-16;
+.size {
+  @apply font-serif text-xl text-brand-slate lining-nums;
 }
 
-.regionHeader {
-  @apply flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft;
+/* Three ways, as flat columns divided by hairlines (stacked on phones). */
+.ways {
+  @apply grid border-y border-brand-navy/10 md:grid-cols-3;
+}
+
+.way {
+  @apply flex flex-col gap-3 py-6 text-base leading-relaxed text-brand-charcoal md:px-8 md:py-8;
+}
+
+.way + .way {
+  @apply border-t border-brand-navy/10 md:border-t-0 md:border-l;
+}
+
+.way:first-child {
+  @apply md:pl-0;
+}
+
+.way:last-child {
+  @apply md:pr-0;
+}
+
+.wayTitle {
+  @apply font-serif text-2xl text-brand-navy;
+}
+
+.way p a,
+.booksellers a,
+.empty a {
+  @apply font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
+}
+
+.wayAction {
+  @apply mt-auto pt-2;
+}
+
+.empty {
+  @apply bg-brand-mist px-6 py-8 text-brand-charcoal md:px-10;
+}
+
+.list {
+  @apply space-y-10 scroll-mt-4;
+}
+
+/* The region strip: flat between hairlines, like the /autori letters; sticky only from 768px. */
+.regions {
+  @apply flex flex-wrap gap-x-1 border-y border-brand-navy/10 bg-white md:sticky md:top-0 md:z-20;
+}
+
+.regions a {
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center px-3 text-base text-brand-navy hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy md:min-h-10;
+}
+
+.region {
+  @apply scroll-mt-4 space-y-4 md:scroll-mt-16;
 }
 
 .regionTitle {
-  @apply text-2xl font-serif text-brand-navy;
+  @apply font-serif text-3xl text-brand-navy;
 }
 
-.backLink {
-  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline-offset-2 transition duration-150 hover:text-brand-navy hover:underline focus:text-brand-navy;
+.grid {
+  @apply grid gap-x-10 gap-y-6 md:grid-cols-2;
 }
 
-.regionList {
-  @apply space-y-8;
+.booksellers {
+  @apply space-y-3 border-t border-brand-navy/10 pt-8 text-base leading-relaxed text-brand-charcoal;
+}
+
+.booksellers p {
+  @apply max-w-[68ch];
 }

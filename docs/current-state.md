@@ -28,6 +28,12 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
   - "Tutti i libri" nella griglia catalogo, con i fuori catalogo in un sottogruppo, una riga sull'ordine e la chiusura per chi vuole pubblicare.
   Le identità collegate in `pseudonyms` sono unite: i libri di Gandalf il Viola compaiono anche su Olivier Turquet e viceversa. Il limite è di 100 libri, con link al catalogo oltre.
 - `/collane` (dal 2026-11-22) è uno scaffale. Per ogni collana mostra le ultime copertine su un campo tinto dalla più recente, il conteggio, l'ultima uscita e il link al catalogo filtrato (`/libri?collana=<slug>`). L'ordine è per numero di libri in catalogo, con "Fuori Collana" in fondo. I dati arrivano da due query: le collane (`first: 100`), poi una query generata dagli id con alias per collana (6 libri recenti, totale, fuori catalogo). La pagina di una collana mostra fino a 100 libri, ordinati per anno di stampa; oltre quel numero compare il link al catalogo.
+- `/distributori` (dal 2026-11-22) risponde a "come lo trovo".
+  - Riga di titolo con il conteggio, poi tre strade: qualsiasi libreria con l'ISBN tramite Libri Diffusi/Fastbook e Terminal, i luoghi amici, l'ordine via email con l'unico pulsante arancio.
+  - L'elenco per regione ha una striscia piatta, fissa solo da 768px, e voci piatte.
+  - I telefoni sono normalizzati e chiamabili; le descrizioni lunghe sono dietro "Continua".
+  - In fondo, la sezione "Sei una libreria?".
+  - Il sottotitolo CMS della pagina indice serve solo come meta description.
 - La scheda libro `/libri/[slug]` (dal 2026-11-22) si apre con il campo colorato dalla copertina (Book Cover Field). L'azione principale è "Ordina via email", un `mailto:ordini@multimage.org` già compilato con titolo, autori, ISBN e prezzo; non c'è carrello. Per l'ebook c'è un solo pulsante verso Bookrepublic. Sotto l'ordine compaiono la riga spedizione/soci e i link a `/distributori` e `/info/ordinare`. Le edizioni fuori catalogo rimandano all'edizione cartacea più recente ancora in catalogo. Sotto l'hero c'è una colonna di lettura piatta: descrizione, quarta, autrici/autori, dettagli, recensioni, carosello della collana.
 - Pagina 404 del sito (`src/pages/404.astro`): gli slug sconosciuti delle pagine di dettaglio fanno `Astro.rewrite('/404')`.
 - Route interne (`/staff/*`, `/libri/schede/*`) sono gated in `src/middleware.ts`: senza la sessione editor (cookie JWT draft mode) rispondono **404** prima del render — vedi decisions-log `2026-05-31-editor-session-gating` (**S1**).

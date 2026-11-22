@@ -78,6 +78,8 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: converts Dato supplier records into card view models and region groups.
   - Used in: `/distributori`.
   - Notes: generates Google Maps URLs and rich-text HTML strings that must be sanitized (Security task **S2**).
+    - `parseSupplierPhones(raw)` pulls every number out of the free-text phone field ("Tel … - Fax …", "Nome tel. …", "011.188…-347.…") and formats it the Italian way. It returns a `tel:+39…` href and the person's name when given. Unparseable text is kept.
+    - `supplierWebsiteLabel(url)` returns "Facebook"/"Instagram" or the bare host.
 - **`colors` helper** (`src/lib/colors.ts`)
   - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background); `coverFieldPalette(colors)` returns the Book Cover Field set (field 16%, copy half 88%, cover shadow, caption colour).
   - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, `libri/[slug]`, color-aware UI.

@@ -1,7 +1,10 @@
 ---
+// /distributori: how to get a Multimage book in person or by post. A slim title row, three ways
+// (any bookshop, the bookshops and friendly places listed here, an email order to us), the list
+// by region with a flat region strip, and a closing word for booksellers.
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import IndexHeroSection from '~/components/IndexHeroSection';
 import SupplierCard from '~/components/SupplierCard';
+import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
@@ -11,91 +14,106 @@ import { SUPPLIERS_PAGE_QUERY, type SuppliersPageQueryResult } from './_graphql'
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
+const ORDERS_EMAIL = 'ordini@multimage.org';
 const draftModeEnabled = resolveDraftMode(Astro);
 
 const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
 });
 
-const suppliersIndexContent = data.suppliersIndexPage?.[0] ?? null;
-const heroSection = {
-  title: suppliersIndexContent?.title?.trim() || 'Distributori',
-  subtitleHtml: suppliersIndexContent?.subtitle?.trim() || null,
-};
-
-const seo = withFallbackSeo(suppliersIndexContent?._seoMetaTags, {
-  title: heroSection.title,
-  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
+const indexContent = data.suppliersIndexPage?.[0] ?? null;
+const title = indexContent?.title?.trim() || 'Dove trovare i nostri libri';
+// The CMS subtitle (a long block of pasted HTML) now only feeds the meta description: the page
+// says the same things as the three ways below.
+const seo = withFallbackSeo(indexContent?._seoMetaTags, {
+  title,
+  description: indexContent?.subtitle ? toPlainText(indexContent.subtitle) : undefined,
 });
 
 const suppliers = mapSuppliersToCards(data.allSuppliers);
-const supplierGroups = groupSuppliersByRegion(suppliers);
-
-function buildAnchorId(label: string) {
-  const normalized = label.normalize('NFD').replace(/[^\p{L}0-9]+/gu, '-');
-  const trimmed = normalized.replace(/^-+|-+$/g, '');
-  return `region-${trimmed.toLowerCase() || 'altre'}`;
-}
-
-const supplierSections = supplierGroups.map((group) => ({
+const groups = groupSuppliersByRegion(suppliers).map((group) => ({
   ...group,
-  anchorId: buildAnchorId(group.region),
+  anchorId: `regione-${group.region.normalize('NFD').replace(/[^\p{L}0-9]+/gu, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'altre'}`,
 }));
 
-const regionMenu = supplierSections.map(({ region, anchorId }) => ({ region, anchorId }));
+const sizeLine =
+  suppliers.length > 0
+    ? `${suppliers.length} librerie e luoghi amici · ${groups.length === 1 ? '1 regione' : `${groups.length} regioni`}`
+    : null;
 ---
 
 <BaseLayout seo={seo}>
-  <section class={styles.layout}>
-    <div class="mx-auto max-w-5xl">
-      <IndexHeroSection
-        title={heroSection.title}
-        subtitleHtml={heroSection.subtitleHtml}
-        align="center"
-      />
-    </div>
+  <div class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>{title}</h1>
+      {sizeLine ? <p class={styles.size}>{sizeLine}</p> : null}
+    </header>
 
-    {suppliers.length === 0 ? (
-      <p class="mx-auto max-w-4xl bg-white/80 p-6 text-center text-brand-slate shadow-soft">
-        I nostri distributori saranno disponibili a breve.
-      </p>
-    ) : (
-      <div class={styles.sectionWrapper}>
-        {regionMenu.length > 1 ? (
-          <>
-            <div id="region-menu" class="sr-only" aria-hidden="true" />
-            <nav class={styles.menu} aria-label="Indice distributori per regione">
-              {regionMenu.map(({ region, anchorId }) => <a
-                href={`#${anchorId}`}
-                class={styles.menuLink}
-              >
-                {region}
-              </a>)}
-            </nav>
-          </>
-        ) : null}
+    <section class={styles.ways} aria-label="Tre modi per avere i nostri libri">
+      <div class={styles.way}>
+        <h2 class={styles.wayTitle}>In qualsiasi libreria</h2>
+        <p>
+          Chiedi il libro per titolo o ISBN: ogni libreria può ordinarlo dai nostri distributori,{' '}
+          <a href="https://www.libridiffusi.com/" target="_blank" rel="noopener noreferrer">Libri Diffusi<span class="sr-only"> (si apre in una nuova scheda)</span></a>{' '}
+          (collegata a Fastbook) e{' '}
+          <a href="http://www.terminalvideo.com/" target="_blank" rel="noopener noreferrer">Terminal Distribuzione<span class="sr-only"> (si apre in una nuova scheda)</span></a>.
+        </p>
+      </div>
 
-        <div class="space-y-16">
-          {supplierSections.map(({ region, suppliers: items, anchorId }) => <section
-            id={anchorId}
-            class="space-y-8"
-          >
-            <div class={styles.regionHeader}>
-              <h2 class={styles.regionTitle}>{region}</h2>
-              {regionMenu.length > 1 ? (
-                <a href="#region-menu" class={styles.backLink}> Torna al menu </a>
-              ) : null}
-            </div>
+      <div class={styles.way}>
+        <h2 class={styles.wayTitle}>Nelle librerie e nei luoghi amici</h2>
+        <p>
+          Librerie, associazioni e volontari che espongono e promuovono i nostri libri, tutti o solo
+          alcuni. Prima di andare, chiedi se il titolo che cerchi è disponibile.
+        </p>
+        {suppliers.length > 0 ? <p><a href="#elenco">Vai all'elenco per regione</a></p> : null}
+      </div>
 
-            <div class={styles.regionList}>
-              {items.map((supplier) => (
-                <SupplierCard {...supplier} />
-              ))}
-            </div>
-          </section>)}
+      <div class={styles.way}>
+        <h2 class={styles.wayTitle}>Ordinalo a noi</h2>
+        <p>
+          Scegli il libro nel catalogo e ordinalo via email dalla sua pagina. Spedizione gratuita con
+          piego di libri; <a href="/info/adesioni">soci: 30% di sconto</a>.
+        </p>
+        <div class={styles.wayAction}>
+          <Button href="/libri" primary icon="iconoir:book" iconPosition="left">Scegli il libro</Button>
         </div>
       </div>
+    </section>
+
+    {suppliers.length === 0 ? (
+      <p class={styles.empty}>
+        L'elenco delle librerie e dei luoghi amici è in aggiornamento. Intanto puoi chiedere i nostri
+        libri in qualsiasi libreria, o ordinarli a noi.
+      </p>
+    ) : (
+      <section id="elenco" class={styles.list} aria-labelledby="elenco-title">
+        <h2 id="elenco-title" class="sr-only">Librerie e luoghi amici per regione</h2>
+        {groups.length > 1 ? (
+          <nav class={styles.regions} aria-label="Regioni">
+            {groups.map(({ region, anchorId }) => <a href={`#${anchorId}`}>{region}</a>)}
+          </nav>
+        ) : null}
+
+        {groups.map(({ region, suppliers: items, anchorId }) => (
+          <section id={anchorId} class={styles.region} aria-labelledby={`${anchorId}-title`}>
+            <h2 id={`${anchorId}-title`} class={styles.regionTitle}>{region}</h2>
+            <div class={styles.grid}>
+              {items.map((supplier) => <SupplierCard {...supplier} />)}
+            </div>
+          </section>
+        ))}
+      </section>
     )}
-  </section>
+
+    <section class={styles.booksellers} aria-labelledby="librerie-title">
+      <h2 id="librerie-title" class={styles.wayTitle}>Sei una libreria?</h2>
+      <p>
+        Puoi ordinare tramite i distributori o direttamente a noi, senza spese di spedizione: scrivi a{' '}
+        <a href={`mailto:${ORDERS_EMAIL}`}>{ORDERS_EMAIL}</a>. Allo stesso indirizzo, se vuoi entrare
+        nella rete di librerie e associazioni amiche.
+      </p>
+    </section>
+  </div>
   <DraftModeQueryListener query={SUPPLIERS_PAGE_QUERY} />
 </BaseLayout>
