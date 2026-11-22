@@ -5,11 +5,11 @@
 }
 
 .menu {
-  @apply sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate shadow-soft backdrop-blur-xs;
+  @apply sticky top-24 z-20 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-sm font-semibold text-brand-slate shadow-soft backdrop-blur-xs;
 }
 
 .menuLink {
-  @apply transition duration-150 hover:text-brand-navy;
+  @apply inline-flex min-h-11 items-center text-brand-navy underline-offset-2 transition duration-150 hover:text-brand-navy hover:underline focus:text-brand-navy;
 }
 
 .sectionWrapper {
@@ -21,11 +21,11 @@
 }
 
 .regionTitle {
-  @apply text-2xl font-serif uppercase tracking-[0.2em] text-brand-navy;
+  @apply text-2xl font-serif text-brand-navy;
 }
 
 .backLink {
-  @apply text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-sky transition duration-150 hover:text-brand-navy focus:text-brand-navy;
+  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline-offset-2 transition duration-150 hover:text-brand-navy hover:underline focus:text-brand-navy;
 }
 
 .regionList {

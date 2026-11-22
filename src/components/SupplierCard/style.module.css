@@ -13,23 +13,23 @@
 }
 
 .location {
-  @apply text-xs font-semibold uppercase tracking-[0.4em] text-brand-sky;
+  @apply -mt-3 text-sm font-semibold text-brand-slate;
 }
 
 .name {
-  @apply text-3xl font-serif uppercase tracking-[0.08em] text-brand-navy;
+  @apply text-3xl font-serif text-brand-navy;
 }
 
 .description {
-  @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-sky [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_strong]:text-brand-charcoal;
+  @apply space-y-2 text-sm leading-relaxed text-brand-charcoal/75 [&_a]:text-brand-navy [&_a]:underline [&_a:hover]:text-brand-navy [&_a:focus]:text-brand-navy [&_strong]:text-brand-charcoal;
 }
 
 .addressRow {
-  @apply flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-brand-charcoal/75;
+  @apply flex flex-wrap items-center gap-3 text-sm font-medium text-brand-charcoal;
 }
 
 .contactsRow {
-  @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-brand-charcoal/70;
+  @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-brand-charcoal;
 }
 
 .logoOuter {

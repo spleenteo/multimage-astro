@@ -54,9 +54,9 @@ function buildWebsiteLabel(url: string | null) {
 
   try {
     const parsed = new URL(url);
-    return parsed.hostname.replace(/^www\./i, '').toUpperCase();
+    return parsed.hostname.replace(/^www\./i, '');
   } catch (error) {
-    return url.replace(/^https?:\/\//i, '').toUpperCase();
+    return url.replace(/^https?:\/\//i, '');
   }
 }
 
@@ -66,14 +66,11 @@ const logoResponsiveImage = logo?.responsiveImage
   : null;
 ---
 
----
-
 <article class:list={[styles.card, className]}>
   <div class={styles.body}>
     <div class={styles.descriptionBlock}>
-      {locationLabel ? <p class={styles.location}>{locationLabel}</p> : null}
-
       <h3 class={styles.name}>{name}</h3>
+      {locationLabel ? <p class={styles.location}>{locationLabel}</p> : null}
 
       {hasDescription ? <div class={styles.description} set:html={descriptionHtml} /> : null}
 
@@ -84,14 +81,14 @@ const logoResponsiveImage = logo?.responsiveImage
             width="18"
             height="18"
             aria-hidden="true"
-            class="text-brand-sky"
+            class="text-brand-navy"
           />
           {googleMapsUrl ? (
             <a
               href={googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 text-brand-sky transition hover:text-brand-navy"
+              class="inline-flex items-center gap-2 text-brand-navy underline underline-offset-2 transition hover:text-brand-navy"
             >
               <span>{address}</span>
               <iconify-icon
@@ -114,12 +111,15 @@ const logoResponsiveImage = logo?.responsiveImage
             width="18"
             height="18"
             aria-hidden="true"
-            class="text-brand-sky"
+            class="text-brand-navy"
           />
           {telephone ? <span>{telephone}</span> : null}
           {telephone && (email || websiteHref) ? <span class="text-brand-slate">•</span> : null}
           {email ? (
-            <a href={`mailto:${email}`} class="text-brand-sky transition hover:text-brand-navy">
+            <a
+              href={`mailto:${email}`}
+              class="text-brand-navy underline underline-offset-2 transition hover:text-brand-navy"
+            >
               {email}
             </a>
           ) : null}
@@ -129,7 +129,7 @@ const logoResponsiveImage = logo?.responsiveImage
               href={websiteHref}
               target="_blank"
               rel="noopener noreferrer"
-              class="text-brand-sky transition hover:text-brand-navy"
+              class="text-brand-navy underline underline-offset-2 transition hover:text-brand-navy"
             >
               {websiteLabel ?? 'SITO WEB'}
             </a>
