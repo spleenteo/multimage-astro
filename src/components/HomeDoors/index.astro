@@ -1,11 +1,6 @@
 ---
-// The three ways into the catalogue, right under the home hero. Fixed in code: these routes do
-// not change, so editors do not have to maintain them as a CMS block.
-const DOORS = [
-  { href: '/libri', title: 'Catalogo', text: 'Tutti i libri disponibili' },
-  { href: '/autori', title: 'Autrici e autori', text: 'Chi scrive per Multimage' },
-  { href: '/collane', title: 'Collane', text: 'I libri raccolti per tema' },
-] as const;
+// The three ways into the catalogue, right under the home hero. Fixed in code (see doors.ts).
+import { HOME_DOORS as DOORS } from './doors';
 ---
 
 <nav aria-label="Esplora i libri" class="-mx-6 border-b border-brand-mist bg-white sm:mx-0">

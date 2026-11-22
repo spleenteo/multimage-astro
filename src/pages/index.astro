@@ -5,7 +5,7 @@ import FeaturedBookHighlight from '~/components/FeaturedBookHighlight';
 import BookCarouselSection from '~/components/BookCarouselSection';
 import PillsBlock from '~/components/blocks/PillsBlock';
 import HomeHero from '~/components/HomeHero';
-import HomeDoors from '~/components/HomeDoors';
+import HomeDoors, { onlyRepeatsDoors } from '~/components/HomeDoors';
 import HomeAbout from '~/components/HomeAbout';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { withFallbackSeo } from '~/lib/seo';
@@ -340,8 +340,11 @@ if (!heroBook) {
 
 // Fixed top: the first carousel follows the doors; the rest keeps the editors' order.
 const firstCarousel = homeBannerEntries.find((entry) => entry.kind === 'bookCarousel') ?? null;
+// A pills block whose buttons only lead to catalogue, authors and collections repeats HomeDoors.
+const repeatsDoors = (entry: HomeBannerEntry) =>
+  entry.kind === 'pills' && onlyRepeatsDoors(entry.data.pills.map((pill) => pill.button?.url));
 const freeEntries = homeBannerEntries.filter(
-  (entry) => entry !== firstCarousel && entry.id !== heroBlockId,
+  (entry) => entry !== firstCarousel && entry.id !== heroBlockId && !repeatsDoors(entry),
 );
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
