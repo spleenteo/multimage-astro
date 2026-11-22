@@ -29,18 +29,12 @@ scope: A list to describe all components used in the project
   - Notes: pure markup, keeps focus logic next to link definitions.
 
 ## Sections, heroes & cards
-- `BooksCatalogSection` — **BooksCatalogSection** (`src/components/BooksCatalogSection/index.astro`)
-  - Purpose: shared catalogue view (hero + `BookCard` grid + `Pagination`) used by both `/libri` (page 1) and `/libri/pagina/[page]` so the two routes stay DRY.
-  - Key props: `title`, `subtitleHtml?`, `books` (`mapBooksToCards` output), `currentPage`, `totalPages`.
-  - Used in: `/libri`, `/libri/pagina/[page]`.
+- `BooksCatalogue` — **BooksCatalogue** (`src/components/BooksCatalogue/index.astro` + `catalogue.client.ts`)
+  - Purpose: faceted catalogue for `/libri`. Renders every published book server-side (catalogue variant of `BookCard`), then the browser script filters (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, in-page search), sorts (novità / titolo) and reveals cards 40 at a time. Filters live in the URL (`collana`, `formato`, `autore`, `periodo`, `evidenza`, `tradotti`, `archivio`, `ordine`, `q`).
+  - Key props: `title`, `introHtml?`, `books` (`{ card, entry }`), `collections`, `authors`, `periods`, `newest`.
+  - Used in: `/libri`.
   - Owner: @claude.
-  - Notes: introduced 2026-06-20 for catalogue pagination (FOT reduction).
-- `Pagination` — **Pagination** (`src/components/Pagination/index.astro`)
-  - Purpose: generic path-based pagination nav emitting real `<a href>` links (prev/next + windowed numbers with ellipsis) for ISR-cacheable pages.
-  - Key props: `currentPage`, `totalPages`, `firstPageHref`, `pagePathPrefix`, `siblingCount?`, `ariaLabel?`.
-  - Used in: `BooksCatalogSection` (`/libri` catalogue).
-  - Owner: @claude.
-  - Notes: page 1 → `firstPageHref`, pages 2..N → `${pagePathPrefix}${page}`. No query strings (keeps ISR cache keys clean).
+  - Notes: facets are a sticky column on desktop and a bottom sheet under 64rem. Without JS the filters are hidden and the whole in-catalogue list shows. Filter rules live in `src/lib/catalogue.ts`.
 - `NewsletterCta` — **NewsletterCta** (`src/components/NewsletterCta.astro`)
   - Purpose: site-wide newsletter call-to-action section linking to Brevo, rendered before the footer.
   - Used in: `BaseLayout` / page chrome.
@@ -88,8 +82,8 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
-  - Purpose: reusable book summary with cover art, summary, price, and ribbons.
-  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.).
+  - Purpose: reusable book summary: cover on a field tinted from its own colour, title, authors, summary, one meta line (collana · anno · Ebook · Fuori catalogo) and the price as a serif figure. Only the cover moves on hover.
+  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.), `printYear?`, `collectionName?`, `variant?: 'default' | 'catalogue'` (catalogue: lighter field, no summary, compact two-up card on phones).
   - Used in: listings, carousels, Structured Text blocks, related feeds.
   - Owner: @codex.
   - Notes: relies on `mapBooksToCards` and `BookCardFragment`.
@@ -204,10 +198,6 @@ scope: A list to describe all components used in the project
   - Purpose: formats author lists with Italian separators (commas + “e”).
   - Key props: `authors[]`, `fallback?`, `prefix?`, `suffix?`.
   - Notes: delegates to `formatAuthorNames` from `src/lib/authors.ts`.
-- `PriceTag` — **PriceTag** (`src/components/ui/PriceTag/index.astro`)
-  - Purpose: renders a badge-style label for prices or promotions.
-  - Key props: `value`, `label?`, `muted?`.
-  - Notes: uses `formatEuro`; returns `null` when price is not provided.
 
 ## Draft Mode utilities
 - `DraftModeQueryListener` — **DraftModeQueryListener** (`src/components/DraftModeQueryListener/index.astro`)

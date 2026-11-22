@@ -81,9 +81,12 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **`colors` helper** (`src/lib/colors.ts`)
   - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background).
   - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, color-aware UI.
+- **`catalogue` helper** (`src/lib/catalogue.ts`)
+  - Purpose: rules of the faceted `/libri` catalogue shared by server and browser: `CatalogueEntry` (compact per-book facet record), `matchesCatalogue` (with an `ignore` facet for option counts), `parseCatalogueState`/`serializeCatalogueState` (URL), `buildPeriodOptions`, `isTranslated`, `normalizeForSearch`, `CATALOGUE_CHUNK` (40).
+  - Used in: `/libri`, `BooksCatalogue`.
 - **`currency` helper** (`src/lib/currency.ts`)
   - Purpose: formats `EUR` values (`it-IT`).
-  - Used in: `PriceTag`, `BookCard`, staff exports.
+  - Used in: `BookCard`, staff exports.
 - **`seo` helper** (`src/lib/seo.ts`)
   - Purpose: attaches fallback `<title>`/`<meta name="description">` tags when `_seoMetaTags` omit them.
   - Used in: every page via `withFallbackSeo`.

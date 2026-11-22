@@ -85,6 +85,26 @@ components:
     rounded: "{rounded.none}"
     padding: "8px 20px"
     height: "{spacing.tap-target}"
+  button-secondary-outline:
+    backgroundColor: "{colors.page-white}"
+    textColor: "{colors.brand-navy}"
+    typography: "{typography.label}"
+    rounded: "{rounded.none}"
+    padding: "0 20px"
+    height: "{spacing.tap-target}"
+  button-secondary-outline-hover:
+    backgroundColor: "{colors.brand-navy}"
+    textColor: "{colors.page-white}"
+  button-navy:
+    backgroundColor: "{colors.brand-navy}"
+    textColor: "{colors.page-white}"
+    typography: "{typography.label}"
+    rounded: "{rounded.none}"
+    padding: "0 16px"
+    height: "{spacing.tap-target}"
+  button-navy-hover:
+    backgroundColor: "{colors.brand-navy-light}"
+    textColor: "{colors.page-white}"
   button-ghost:
     backgroundColor: "transparent"
     textColor: "{colors.brand-navy}"
@@ -107,6 +127,32 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.none}"
     padding: "8px 16px"
+  section-tab:
+    backgroundColor: "{colors.brand-mist}"
+    textColor: "{colors.brand-charcoal}"
+    typography: "{typography.label}"
+    rounded: "{rounded.none}"
+    padding: "0 24px"
+    height: "{spacing.tap-target}"
+  section-tab-active:
+    backgroundColor: "{colors.brand-navy}"
+    textColor: "{colors.page-white}"
+  filter-chip:
+    backgroundColor: "{colors.brand-mist}"
+    textColor: "{colors.brand-navy}"
+    typography: "{typography.caption}"
+    rounded: "{rounded.none}"
+    padding: "0 12px"
+  filter-chip-hover:
+    backgroundColor: "{colors.brand-navy}"
+    textColor: "{colors.page-white}"
+  text-field:
+    backgroundColor: "{colors.page-white}"
+    textColor: "{colors.brand-charcoal}"
+    typography: "{typography.caption}"
+    rounded: "{rounded.none}"
+    padding: "0 12px"
+    height: "{spacing.tap-target}"
   footer:
     backgroundColor: "{colors.brand-navy}"
     textColor: "{colors.brand-mist}"
@@ -151,19 +197,19 @@ A restrained navy-and-white publisher's palette with one burnt-orange action col
 - **Pressed Crimson** (brand-crimson): hover state of the orange action only. Not a decorative or error colour in the current build.
 
 ### Tertiary
-- **Cover Tint** (derived, no fixed value): computed per image by `pickBaseColor` (first of the image's top three DatoCMS colours, fallback cover-field-fallback) then `lightenColor` / `darkenColor`. Cover field = base lightened 16%; the hero's text half = base lightened 88%; the cover's drop shadow = base darkened 45% at 45% alpha; a banner's own button = base darkened 30%. Used by HomeHero, FeaturedBookHighlight, BookCard and BannerSection.
+- **Cover Tint** (derived, no fixed value): computed per image by `pickBaseColor` (first of the image's top three DatoCMS colours, fallback cover-field-fallback) then `lightenColor` / `darkenColor`. Cover field = base lightened 16%; the hero's text half = base lightened 88%; the cover's drop shadow = base darkened 45% at 45% alpha; a banner's own button = base darkened 30%. Used by HomeHero, FeaturedBookHighlight, BookCard and BannerSection. BookCard has its own steps: field = base lightened 18% (default) or 55% (`catalogue` variant, so a grid of dozens keeps the hue without turning into wallpaper); cover shadow = base darkened 55% at 42% alpha (32% in the catalogue).
 - **Sky** (brand-sky): decorative only: carousel active bullet, arrow-button hover fill, blockquote rule and tints (`/10`–`/30`), `mark` and selection backgrounds. Never text and never a fill behind text (3.54:1 on white). Decided 2026-11-22: links are navy (see Navy Links).
 - **Navy Links:** a bare `<a>` is `brand-navy`. Links inside running text (`p`, `blockquote`, `dd`, `td`, `figcaption`) are also underlined, because navy sits only 1.6:1 from charcoal body text (WCAG 1.4.1); component links keep their own styling. Hover feedback is an underline, not a colour shift.
 - **Signal Orange** (brand-orange): decoration only, never under text (white on it is 2.7:1).
 
 ### Neutral
 - **Charcoal Ink** (brand-charcoal): body text, subtitles, door descriptions. 12.45:1 on white.
-- **Quiet Slate** (brand-slate): placeholders and secondary meta. 4.69:1 on white, the lightest grey allowed for text.
+- **Quiet Slate** (brand-slate): placeholders and secondary meta: the book card's meta line, facet counts, the catalogue's size line, notes under a link, and facet options with no matching books. 4.69:1 on white, the lightest grey allowed for text.
 - **Page White** (page-white): the `<main>` reading surface and the doors strip.
-- **Mist** (brand-mist): hover fill of doors, secondary button fill, hairline dividers between home sections.
+- **Mist** (brand-mist): hover fill of doors, secondary button fill, hairline dividers between home sections, inactive section tabs, filter chips and the catalogue's empty-state panel.
 - **Shelf Grey** (brand-navy-lighter): the full-width band behind book carousels.
 - **Sand** (brand-sand): the `<body>` colour, visible only outside `<main>`.
-- **Hairline** (hairline): the default border colour.
+- **Hairline** (hairline): the default border colour. Dividers inside white reading surfaces (facet groups, the catalogue toolbar, the not-found list) are navy at 10%; field borders are navy at 25%.
 - **Social colours** (social-instagram, social-facebook, social-newsletter): only on the header's top-bar links to those channels, each with white text (all above 5:1).
 
 ### Named Rules
@@ -182,16 +228,16 @@ A restrained navy-and-white publisher's palette with one burnt-orange action col
 
 ### Hierarchy
 - **Display** (600, 2.25rem mobile / 3rem from 768px, line-height 1 at 3rem): the hero book title. `text-balance`.
-- **Headline** (600, 1.875rem, 2.25rem): default h2 and section titles (carousel title goes to 2.25rem from 768px). The page h1 in the home's slim intro row is 1.25rem mobile / 1.875rem desktop, deliberately quieter than the book title.
-- **Title** (600, 1.5rem, 2rem): door titles, book card titles, the closing about heading, and the price shown as a serif figure.
+- **Headline** (600, 1.875rem, 2.25rem): default h2 and section titles (carousel title goes to 2.25rem from 768px). The page h1 in the home's slim intro row is 1.25rem mobile / 1.875rem desktop, deliberately quieter than the book title. The catalogue's title row h1 is 1.875rem / 2.25rem from 768px; the not-found h1 is 2.25rem / 3rem.
+- **Title** (600, 1.5rem, 2rem): door titles, book card titles (1.25rem in the catalogue card, 1rem on phones), the closing about heading, the catalogue's result count and empty-state title (h2/h3, 1.5rem), and the price shown as a serif figure (1.25rem on cards). Figures in Playfair use lining numerals (`lining-nums`); counts that update also use tabular figures.
 - **Body** (400, 1rem / 1.625 mobile; 1.125rem / 1.75rem from 768px): every `<p>`. Summaries cap at 60ch and clamp to two lines in the hero.
-- **Label** (600, 0.875rem, uppercase, tracking 0): buttons and the "Sfoglia il catalogo" link. The theme sets `tracking-wide` / `tracking-wider` to 0em, so labels are not letter-spaced.
-- **Caption** (400, 0.875rem, 1.25rem): door descriptions, secondary links, footer links (footer legal line at 0.75rem).
+- **Label** (600, 0.875rem, uppercase, tracking 0): buttons and the "Sfoglia il catalogo" link. The theme sets `tracking-wide` / `tracking-wider` to 0em, so labels are not letter-spaced. Section tabs, facet legends and text-link actions ("Azzera", "Tutte le collane (n)") are sentence case, semibold, not uppercase.
+- **Caption** (400, 0.875rem, 1.25rem): door descriptions, secondary links, footer links (footer legal line at 0.75rem), the book card's meta line, facet option labels and field text. Facet counts are 0.75rem slate tabular figures.
 
 ### Named Rules
 **The Title Is the Heading Rule.** Nothing sits stacked above a heading: no kicker, eyebrow or tag line. Context goes below the title (subtitle, author) or into a caption ("Il libro del momento" is a figcaption under the cover).
 
-**The Serif Is for Published Things Rule.** Playfair carries titles and prices; actions, meta and navigation stay in Inter.
+**The Serif Is for Published Things Rule.** Playfair carries titles, prices and the size of the catalogue (the slate size line under the h1, the result count); actions, meta and navigation stay in Inter.
 
 ## Layout
 
@@ -201,20 +247,23 @@ Signature surfaces break the container full-bleed (negative margins to the viewp
 
 Wayfinding strips are equal columns divided by mist hairlines (three doors at 768px+, stacked with horizontal dividers on mobile). Breakpoint used by the reference surface: 768px; header switches to the mobile menu below it. Every interactive element reaches 44px in height on mobile; inline secondary links may drop to text height from 768px.
 
+The faceted catalogue (`/libri`) uses a third breakpoint, 64rem (1024px): from there a 15rem facet column sits beside the results with a 48px gap and flows with the page (no inner scroll); below it the column becomes a bottom sheet. The book grid is two columns on phones (12px column gap, 20px row gap), three from 768px, two beside the facet column at 1024px, three from 1280px (24px gaps from 640px). A surface's title row stays slim: h1, one serif size line, the CMS lede (hidden under 640px so the first covers reach the first viewport).
+
 ## Elevation & Depth
 
 Mostly flat, with tonal layering doing the work: navy frame, white page, mist hover, grey shelf band, cover-tinted fields. Two shadows exist and both are soft.
 
 ### Shadow Vocabulary
 - **Soft navy lift** (`box-shadow: 0 18px 45px rgba(0, 72, 129, 0.08)`): header, filled buttons, book cards at rest. Ambient, never structural.
-- **Cover drop shadow** (`filter: drop-shadow(24px 36px 48px <cover base darkened 45% at 45% alpha>)`): only on a book cover sitting on its tinted field. It follows the cover's silhouette and hue.
+- **Cover drop shadow** (`filter: drop-shadow(24px 36px 48px <cover base darkened 45% at 45% alpha>)`): only on a book cover sitting on its tinted field. It follows the cover's silhouette and hue. Book cards use a smaller one (`drop-shadow(18px 26px 32px ...)`, see Cover Tint).
+- **Sheet lift** (`box-shadow: 0 -18px 45px rgba(0, 72, 129, 0.16)`): the soft navy lift turned upward, only on the catalogue's filter sheet when it rises over the page; the page behind it takes a navy backdrop (`rgba(0, 39, 70, 0.45)`).
 
 ### Named Rules
-**The Only the Book Floats Rule.** The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat.
+**The Only the Book Floats Rule.** The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat. On a book card only the cover moves on hover (rises 6px, 300ms ease-out, motion-safe); the card itself does not lift.
 
 ## Shapes
 
-Square. The theme resets every Tailwind radius step, `--radius-full` included, to 0px, so any `rounded-*` utility renders a square corner; the header tabs, carousel arrows and bullets that still carry `rounded-full` in markup render square. Forms are rectangles: buttons, doors, fields, bands. The only non-rectangular silhouette is a tilted book cover. Borders are 1px hairlines in mist or translucent white on navy, used as dividers rather than as card outlines.
+Square. The theme resets every Tailwind radius step, `--radius-full` included, to 0px, so any `rounded-*` utility renders a square corner; the header tabs, carousel arrows and bullets that still carry `rounded-full` in markup render square. Forms are rectangles: buttons, doors, fields, bands. The only non-rectangular silhouette is a tilted book cover. Borders are 1px hairlines in mist, navy at 10%, or translucent white on navy, used as dividers rather than as card outlines; form fields are the one bordered rectangle (1px navy at 25%).
 
 ## Components
 
@@ -224,7 +273,19 @@ Plain, upright and loud only once per block.
 - **Primary:** burnt action orange fill, white uppercase label, 8px 20px padding, soft navy lift.
 - **Hover / Focus:** primary turns crimson. Focus uses the global 3px outline offset 2px (navy on light surfaces, white inside header and footer).
 - **Secondary:** mist fill, navy label, same shape; hover lightens the mist. Optional 16px Iconoir icon after the label.
+- **Outlined secondary:** white fill, navy uppercase label, 1px navy-at-15% ring, soft navy lift; hover fills navy with white text. Used for "Mostra altri n" under the catalogue grid and, without the lift, on the mist empty-state panel.
+- **Navy:** solid navy, white uppercase label, hover deep window navy. For utility controls that are not the surface's primary: the catalogue's mobile "Filtri" button (with active count) and the header's "Cerca" submit on the deep navy search band.
 - **Ghost:** no fill, navy label, mist on hover.
+
+### Chips
+- **Style:** active filter chips on mist, navy text (0.875rem), square, label then a 14px stroked close mark; the whole chip removes its filter and is labelled "Togli il filtro ...".
+- **State:** hover fills navy with white text. An "Azzera filtri" navy underlined text link follows the row.
+
+### Inputs / Fields
+- **Style:** white rectangle, 1px navy-at-25% border, charcoal text, slate placeholder, 44px high (40px from 1024px). Selects share it; "Ordina per" is a slate label beside the select.
+- **Focus:** the global outline. When the input sits inside a composed field (the catalogue search with its leading icon), the outline is drawn on the wrapping label (`:has(:focus-visible)`), not on the bare input.
+- **Notes:** status text under a field is slate 0.875rem with an inline navy underlined action.
+- **Checkbox / radio rows:** native controls tinted navy (`accent-color`), 18px, in rows 44px high on touch and 32px from 1024px; the label underlines navy on hover and turns semibold navy when checked; the count sits right-aligned.
 
 ### Book Cover Field (signature)
 The hero and featured-book blocks: a full-width field in the cover's own tint (lightened 16%), the cover tilted and casting its coloured drop shadow; in the hero the text half carries a much paler tint (lightened 88%) of the same hue so the band reads as one field. Text on the pale half is navy title, charcoal body, serif price, then actions.
@@ -236,11 +297,22 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 - **Corner Style:** square (0px).
 - **Background:** white, or the cover tint on the cover panel.
 - **Shadow Strategy:** soft navy lift at rest (see Elevation).
-- **Border:** none; a 1px navy-at-5% ring on book cards.
+- **Border:** none, no outline ring.
+
+### Book Card
+White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
+
+### Faceted Catalogue (signature)
+The `/libri` surface. Toolbar: the Playfair result count as h2 on the left; search field, "Ordina per" select and (below 1024px) the navy "Filtri" button on the right, over a navy-at-10% rule. Active filters appear as a chip row under it. Facets are fieldsets (Collana, Formato, Periodo, Altro) plus an author field with suggestions ("Autrice o autore"); legends are semibold navy 0.875rem, groups divided by navy-at-10% rules. Collections show the largest eight, then a "Tutte le collane (n)" text toggle. Options with no matching books turn slate but stay selectable.
+
+Below 1024px the column is a bottom sheet (max 85dvh): it slides up over 320ms on an exponential ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`, no transition under reduced motion), focus is contained inside it, and its foot holds an "Azzera" text link and the surface's one orange-deep action, "Mostra n libri". No results: a mist panel with a Playfair title, a short charcoal sentence, outlined secondary buttons ("Togli ...", "Azzera filtri") and a "Cerca nel sito" text link. Without JavaScript the facet column is not rendered and every in-catalogue card shows.
 
 ### Navigation
 - **Header:** three navy bands: a top bar of channel links (social colours, white text, uppercase 0.75rem), the logo and search band in deep window navy, the main tabs on navy (uppercase Inter semibold, 1px translucent white border, square). Dropdowns are navy panels with divided rows. Focus ring is white throughout. Below 768px a full-screen navy menu replaces the tabs.
+- **Header search:** on the deep window navy band, the "Cerca" submit is a solid navy block with a white uppercase label (hover navy at 80%).
+- **Book section tabs:** on the translucent white band under the header for `/libri` and `/collane`: Catalogo (first), Collane, In evidenza, Ebook. Square, 44px, sentence case semibold; inactive mist with charcoal text (hover navy at 10%, navy text), active solid navy with white text and `aria-current="page"`. A four-column grid on phones (6px gaps), a centred row from 640px.
 - **Footer:** navy, mist text, white on hover and focus, white focus ring, mist-at-10% squares behind social icons (44px).
+- **Ways on (not-found page):** a list between navy-at-10% rules, each row a Playfair navy link (1.25rem, underlines on hover) over a slate note, at least 64px high.
 
 ### Inline links on the reference surface
 Navy, underlined with 2px offset, semibold where they name a person. On light and tinted surfaces they set hover and focus to navy explicitly; on dark or coloured surfaces they must set `hover:text-white` and `focus:text-white`, because a compatibility rule turns any hovered or focused link navy.
@@ -254,6 +326,8 @@ Navy, underlined with 2px offset, semibold where they name a person. On light an
 - **Do** give every interactive element at least 44px of height on touch screens.
 - **Do** set `[--focus-ring:var(--color-white)]` on dark surfaces and `hover:text-white focus:text-white` on links inside them.
 - **Do** put context under a title (subtitle, author, caption), never above it.
+- **Do** put a book's status (anno, Ebook, Fuori catalogo) in its slate meta line.
+- **Do** keep a surface's orange-deep to its one primary action; utility toggles are navy, secondary steps white-outlined or mist.
 
 ### Don't:
 - **Don't** put white text on brand-orange (#fa7810); it is 2.7:1.
@@ -262,3 +336,5 @@ Navy, underlined with 2px offset, semibold where they name a person. On light an
 - **Don't** add literal border radii (`rounded-[2rem]`, `border-radius: 9999px`); they bypass the square theme.
 - **Don't** add `focus:outline-hidden` with a private ring; the global `:focus-visible` outline is the one indicator.
 - **Don't** tilt or shadow anything but a book cover.
+- **Don't** lift or outline a book card on hover; only its cover rises.
+- **Don't** set a ribbon, badge or price chip on a book card.

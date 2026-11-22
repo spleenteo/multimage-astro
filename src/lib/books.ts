@@ -8,6 +8,12 @@ type BookAuthor = {
   slug?: string | null;
 };
 
+type BookCollection = {
+  id: string;
+  name?: string | null;
+  slug?: string | null;
+};
+
 type BookLicense = {
   name?: string | null;
   code?: string | null;
@@ -27,6 +33,7 @@ export type BookRecordForCard = {
   price?: number | null;
   printYear?: string | null;
   archive?: boolean | null;
+  collection?: BookCollection | null;
 };
 
 export type BookCardViewModel = {
@@ -41,6 +48,7 @@ export type BookCardViewModel = {
   format?: string | null;
   price?: number | null;
   printYear?: string | null;
+  collection?: BookCollection | null;
   isArchived: boolean;
 };
 
@@ -61,6 +69,7 @@ export function toBookCard(record: BookRecordForCard): BookCardViewModel {
     format: record.format ?? null,
     price: record.price ?? null,
     printYear: record.printYear ?? null,
+    collection: record.collection ?? null,
     isArchived: record.archive === true,
   };
 }
@@ -70,28 +79,12 @@ export function mapBooksToCards(books: Array<BookRecordForCard> | null | undefin
 }
 
 /**
- * Books per page in the paginated /libri catalogue. Single source of truth used
- * by the route, the sitemap, the full-revalidation URL list and the surgical
- * revalidation map so they always agree on how many catalogue pages exist.
+ * Every catalogue page path. The catalogue is a single faceted page since 2026-11-22 (filters run
+ * in the browser; `/libri/pagina/<n>` redirects to `/libri`), so this is always `['/libri']`. The
+ * book count argument is kept so the sitemap and revalidation callers stay unchanged.
  */
-export const BOOKS_PER_PAGE = 40;
-
-/** Total number of catalogue pages for a given count of listable books. */
-export function booksCataloguePageCount(totalBooks: number): number {
-  return Math.max(1, Math.ceil(Math.max(0, totalBooks) / BOOKS_PER_PAGE));
-}
-
-/**
- * Every catalogue page path for a given book count: `/libri` for page 1, then
- * `/libri/pagina/<n>` for pages 2..N.
- */
-export function buildBooksCataloguePaths(totalBooks: number): string[] {
-  const pages = booksCataloguePageCount(totalBooks);
-  const paths = ['/libri'];
-  for (let page = 2; page <= pages; page += 1) {
-    paths.push(`/libri/pagina/${page}`);
-  }
-  return paths;
+export function buildBooksCataloguePaths(_totalBooks?: number): string[] {
+  return ['/libri'];
 }
 
 const euroFormatter = new Intl.NumberFormat('it-IT', {

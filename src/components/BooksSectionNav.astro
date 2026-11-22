@@ -11,16 +11,6 @@ type Props = {
 
 const navItems: NavItem[] = [
   {
-    label: 'Collane',
-    href: '/collane',
-    isActive: (pathname) => pathname.startsWith('/collane'),
-  },
-  {
-    label: 'In evidenza',
-    href: '/libri/highlights',
-    isActive: (pathname) => pathname.startsWith('/libri/highlights'),
-  },
-  {
     label: 'Catalogo',
     href: '/libri',
     isActive: (pathname) =>
@@ -31,7 +21,17 @@ const navItems: NavItem[] = [
         !pathname.startsWith('/libri/highlights')),
   },
   {
-    label: 'Ebooks',
+    label: 'Collane',
+    href: '/collane',
+    isActive: (pathname) => pathname.startsWith('/collane'),
+  },
+  {
+    label: 'In evidenza',
+    href: '/libri/highlights',
+    isActive: (pathname) => pathname.startsWith('/libri/highlights'),
+  },
+  {
+    label: 'Ebook',
     href: '/libri/ebooks',
     isActive: (pathname) => pathname.startsWith('/libri/ebooks'),
   },
@@ -40,17 +40,18 @@ const navItems: NavItem[] = [
 const { currentPath }: Props = Astro.props;
 ---
 
-<nav class="">
-  <ul class="flex flex-wrap items-center justify-center gap-2 px-4 sm:gap-4 sm:px-6">
+<nav aria-label="Sezioni dei libri">
+  <ul class="grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-3 sm:px-6">
     {navItems.map((item) => {
       const active = item.isActive(currentPath);
       return <li>
         <a
           href={item.href}
-          class={`inline-flex items-center justify-center px-4 py-2 text-sm font-semibold uppercase transition sm:px-6 sm:py-3 sm:text-base ${
+          aria-current={active ? 'page' : undefined}
+          class={`flex min-h-11 items-center justify-center px-2 text-center text-sm font-semibold leading-tight transition sm:inline-flex sm:px-6 sm:text-base ${
             active
-              ? 'bg-brand-navy text-white shadow-soft hover:text-white focus:text-white'
-              : 'bg-brand-mist/60 text-brand-charcoal hover:bg-brand-mist hover:text-brand-navy'
+              ? 'bg-brand-navy text-white hover:text-white focus:text-white'
+              : 'bg-brand-mist text-brand-charcoal hover:bg-brand-navy/10 hover:text-brand-navy'
           }`}
         >
           {item.label}

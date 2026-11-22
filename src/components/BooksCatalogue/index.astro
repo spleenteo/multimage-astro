@@ -1,0 +1,311 @@
+---
+// Faceted catalogue for /libri. Every published book is rendered server-side as a card, so readers
+// without JavaScript and crawlers get the whole catalogue; the browser script (catalogue.client.ts)
+// filters, sorts and reveals the cards 40 at a time, and keeps the filters in the URL.
+import BookCard from '~/components/BookCard';
+import type { BookCardViewModel } from '~/lib/books';
+import {
+  CATALOGUE_CHUNK,
+  EMPTY_CATALOGUE_STATE,
+  matchesCatalogue,
+  type CatalogueEntry,
+  type CatalogueOption,
+} from '~/lib/catalogue';
+import styles from './style.module.css';
+
+type Props = {
+  title: string;
+  introHtml?: string | null;
+  books: Array<{ card: BookCardViewModel; entry: CatalogueEntry }>;
+  collections: CatalogueOption[];
+  authors: CatalogueOption[];
+  periods: CatalogueOption[];
+  newest: number;
+};
+
+const { title, introHtml = null, books, collections, authors, periods, newest }: Props = Astro.props;
+
+const entries = books.map((book) => book.entry);
+const state = EMPTY_CATALOGUE_STATE;
+const inCatalogue = entries.filter((entry) => matchesCatalogue(entry, state, newest));
+const total = inCatalogue.length;
+const archivedCount = entries.filter((entry) => entry.x === 1).length;
+const countBy = (predicate: (entry: CatalogueEntry) => boolean) => inCatalogue.filter(predicate).length;
+const ebookCount = countBy((entry) => entry.e === 1);
+
+const collectionCounts = new Map(collections.map((option) => [option.value, countBy((entry) => entry.c === option.value)]));
+// Largest collections first (the publisher's main lines), empty ones dropped; the first
+// COLLECTIONS_SHOWN are always visible, the rest open with "Tutte le collane".
+const COLLECTIONS_SHOWN = 8;
+const visibleCollections = collections
+  .map((option) => ({ ...option, size: collectionCounts.get(option.value) ?? 0 }))
+  .filter((option) => entries.some((entry) => entry.c === option.value))
+  .sort((a, b) => b.size - a.size || a.label.localeCompare(b.label, 'it'));
+const periodCount = (value: string) =>
+  inCatalogue.filter((entry) => matchesCatalogue(entry, { ...state, periodo: value }, newest)).length;
+
+const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
+
+// `</script>` inside a string would close the JSON island early.
+const payload = JSON.stringify({
+  entries,
+  newest,
+  labels: {
+    collane: Object.fromEntries(collections.map((option) => [option.value, option.label])),
+    autori: Object.fromEntries(authors.map((option) => [option.value, option.label])),
+    periodi: Object.fromEntries(periods.map((option) => [option.value, option.label])),
+  },
+}).replace(/</g, '\\u003c');
+
+const formatOptions = [
+  { value: '', label: 'Tutti i formati', count: total },
+  { value: 'cartaceo', label: 'Cartaceo', count: total - ebookCount },
+  { value: 'ebook', label: 'Ebook', count: ebookCount },
+];
+---
+
+<div class={styles.root} data-catalogue>
+  <script is:inline>document.documentElement.classList.add('catalogue-js');</script>
+
+  <header class={styles.intro}>
+    <h1 class={styles.title}>{title}</h1>
+    <p class={styles.size}>{plural(total)} in {visibleCollections.length} collane</p>
+    {introHtml ? <div class={styles.lede} set:html={introHtml} /> : null}
+  </header>
+
+  <div class={styles.layout}>
+    <div class={styles.backdrop} data-filters-backdrop hidden></div>
+
+    <aside
+      id="filtri-catalogo"
+      class={styles.filters}
+      data-filters
+      aria-labelledby="filtri-catalogo-titolo"
+    >
+      <div class={styles.sheetHead}>
+        <h2 id="filtri-catalogo-titolo" class={styles.filtersTitle}>Filtri</h2>
+        <button type="button" class={styles.closeButton} data-filters-close aria-label="Chiudi i filtri">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class={styles.sheetBody}>
+        <div class={styles.group}>
+          <label class={styles.option} data-option>
+            <input type="checkbox" name="evidenza" value="1" data-facet="evidenza" />
+            <span class={styles.optionLabel}>Solo titoli in evidenza</span>
+            <span class={styles.count} data-count="evidenza" data-value="1">{countBy((entry) => entry.h === 1)}</span>
+          </label>
+        </div>
+
+        <fieldset class={styles.group}>
+          <legend class={styles.legend}>Collana</legend>
+          <ul class={styles.options} id="catalogo-collane">
+            {visibleCollections.map((option, index) => (
+              <li data-extra={index >= COLLECTIONS_SHOWN ? '' : undefined}>
+                <label class={styles.option} data-option>
+                  <input type="checkbox" name="collana" value={option.value} data-facet="collane" />
+                  <span class={styles.optionLabel}>{option.label}</span>
+                  <span class={styles.count} data-count="collane" data-value={option.value}>
+                    {collectionCounts.get(option.value) ?? 0}
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          {visibleCollections.length > COLLECTIONS_SHOWN ? (
+            <button
+              type="button"
+              class={styles.moreOptions}
+              aria-controls="catalogo-collane"
+              aria-expanded="false"
+              data-collections-toggle
+              data-label-closed={`Tutte le collane (${visibleCollections.length})`}
+              data-label-open="Meno collane"
+            >
+              Tutte le collane ({visibleCollections.length})
+            </button>
+          ) : null}
+        </fieldset>
+
+        <fieldset class={styles.group}>
+          <legend class={styles.legend}>Formato</legend>
+          <ul class={styles.options}>
+            {formatOptions.map((option) => (
+              <li>
+                <label class={styles.option} data-option>
+                  <input type="radio" name="formato" value={option.value} checked={option.value === ''} data-facet="formato" />
+                  <span class={styles.optionLabel}>{option.label}</span>
+                  <span class={styles.count} data-count="formato" data-value={option.value}>{option.count}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+
+        <div class={styles.group}>
+          <label for="catalogo-autore" class={styles.legend}>Autrice o autore</label>
+          <input
+            id="catalogo-autore"
+            type="text"
+            class={styles.field}
+            list="catalogo-autori"
+            placeholder="Scrivi un nome…"
+            autocomplete="off"
+            data-author-input
+            aria-describedby="catalogo-autore-stato"
+          />
+          <datalist id="catalogo-autori">
+            {authors.map((option) => <option value={option.label} />)}
+          </datalist>
+          <p id="catalogo-autore-stato" class={styles.fieldNote} data-author-status aria-live="polite"></p>
+        </div>
+
+        <fieldset class={styles.group}>
+          <legend class={styles.legend}>Periodo</legend>
+          <ul class={styles.options}>
+            <li>
+              <label class={styles.option} data-option>
+                <input type="radio" name="periodo" value="" checked data-facet="periodo" />
+                <span class={styles.optionLabel}>Tutti gli anni</span>
+                <span class={styles.count} data-count="periodo" data-value="">{total}</span>
+              </label>
+            </li>
+            {periods.map((option) => (
+              <li>
+                <label class={styles.option} data-option>
+                  <input type="radio" name="periodo" value={option.value} data-facet="periodo" />
+                  <span class={styles.optionLabel}>{option.label}</span>
+                  <span class={styles.count} data-count="periodo" data-value={option.value}>{periodCount(option.value)}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+
+        <fieldset class={styles.group}>
+          <legend class={styles.legend}>Altro</legend>
+          <ul class={styles.options}>
+            <li>
+              <label class={styles.option} data-option>
+                <input type="checkbox" name="tradotti" value="1" data-facet="tradotti" />
+                <span class={styles.optionLabel}>Solo libri tradotti</span>
+                <span class={styles.count} data-count="tradotti" data-value="1">{countBy((entry) => entry.t === 1)}</span>
+              </label>
+            </li>
+            {archivedCount > 0 ? (
+              <li>
+                <label class={styles.option} data-option>
+                  <input type="checkbox" name="archivio" value="1" data-facet="archivio" />
+                  <span class={styles.optionLabel}>Includi i fuori catalogo</span>
+                  <span class={styles.count} data-count="archivio" data-value="1">{archivedCount}</span>
+                </label>
+              </li>
+            ) : null}
+          </ul>
+        </fieldset>
+      </div>
+
+      <div class={styles.sheetFoot}>
+        <button type="button" class={styles.reset} data-reset>Azzera</button>
+        <button type="button" class={styles.showResults} data-filters-close>
+          <span>Mostra <span data-result-count>{plural(total)}</span></span>
+        </button>
+      </div>
+    </aside>
+
+    <section class={styles.results} aria-labelledby="catalogo-risultati">
+      <div class={styles.toolbar}>
+        <h2 id="catalogo-risultati" class={styles.resultsTitle} data-result-heading>{plural(total)}</h2>
+
+        <div class={styles.controls} data-controls hidden>
+          <label class={styles.search}>
+            <span class="sr-only">Cerca nel catalogo per titolo o nome</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="M16 16l4.5 4.5" />
+            </svg>
+            <input type="search" name="q" placeholder="Titolo, autrice, autore…" autocomplete="off" data-search />
+          </label>
+
+          <button
+            type="button"
+            class={styles.filtersButton}
+            aria-controls="filtri-catalogo"
+            aria-expanded="false"
+            data-filters-open
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M7 12h10M10 17h4" />
+            </svg>
+            Filtri<span data-active-count></span>
+          </button>
+
+          <label class={styles.sort}>
+            <span>Ordina per</span>
+            <select name="ordine" data-sort>
+              <option value="novita">Novità</option>
+              <option value="titolo">Titolo (A–Z)</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class={styles.active} data-active hidden>
+        <ul class={styles.chips} data-chips aria-label="Filtri attivi"></ul>
+        <button type="button" class={styles.clearAll} data-reset>Azzera filtri</button>
+      </div>
+
+      <ul class={styles.grid} data-grid>
+        {books.map(({ card, entry }, index) => (
+          <li
+            data-index={index}
+            data-archived={entry.x === 1 ? '' : undefined}
+            data-initial-overflow={index >= CATALOGUE_CHUNK ? '' : undefined}
+          >
+            <BookCard
+              variant="catalogue"
+              title={card.title}
+              slug={card.slug}
+              subtitle={card.subtitle}
+              coverImage={card.coverImage}
+              authors={card.authors}
+              format={card.format}
+              price={card.price}
+              printYear={card.printYear}
+              collectionName={card.collection?.name ?? null}
+              isArchived={card.isArchived}
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div class={styles.empty} data-empty hidden>
+        <h3 class={styles.emptyTitle}>Nessun libro con questi filtri</h3>
+        <p>Prova a togliere un filtro, o a cercare in tutto il sito: troverai anche autrici, autori e articoli.</p>
+        <div class={styles.emptyActions}>
+          <button type="button" class={styles.secondaryButton} data-undo hidden></button>
+          <button type="button" class={styles.secondaryButton} data-reset>Azzera filtri</button>
+          <a class={styles.textLink} href="/cerca" data-site-search>Cerca nel sito</a>
+        </div>
+      </div>
+
+      <div class={styles.more} data-more-wrap hidden>
+        <p class={styles.moreStatus} data-more-status></p>
+        <button type="button" class={styles.secondaryButton} data-more>Mostra altri</button>
+      </div>
+
+      <p class="sr-only" aria-live="polite" data-live></p>
+    </section>
+  </div>
+
+  <script type="application/json" data-catalogue-data set:html={payload} />
+</div>
+
+<script>
+  import { initCatalogue } from './catalogue.client';
+
+  document.querySelectorAll<HTMLElement>('[data-catalogue]').forEach(initCatalogue);
+</script>

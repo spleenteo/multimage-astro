@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-22T12:32:57+00:00",
+  "generatedAt": "2026-11-22T18:00:00+00:00",
   "title": "Design System: Multimage",
   "extensions": {
     "colorMeta": {
@@ -271,7 +271,7 @@
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Door titles, book card titles, serif prices."
+        "purpose": "Door titles, book card titles, serif prices, the catalogue result count; Playfair figures use lining numerals."
       },
       "body": {
         "displayName": "Body",
@@ -287,7 +287,7 @@
       },
       "caption": {
         "displayName": "Caption",
-        "purpose": "Door descriptions, secondary links, footer links."
+        "purpose": "Door descriptions, secondary links, footer links, book card meta line, facet options and field text."
       }
     },
     "shadows": [
@@ -300,6 +300,11 @@
         "name": "cover-drop",
         "value": "filter: drop-shadow(24px 36px 48px rgba(<cover base darkened 45%>, 0.45))",
         "purpose": "Only under a book cover on its tinted field."
+      },
+      {
+        "name": "sheet-lift",
+        "value": "0 -18px 45px rgba(0, 72, 129, 0.16)",
+        "purpose": "Only the catalogue filter sheet rising over the page (below 1024px); backdrop rgba(0, 39, 70, 0.45)."
       }
     ],
     "focus": [
@@ -319,6 +324,16 @@
         "name": "door-nudge",
         "value": "translateX(4px) on hover",
         "purpose": "Door arrow nudges toward its destination."
+      },
+      {
+        "name": "cover-rise",
+        "value": "translateY(-6px), 300ms ease-out, motion-safe only",
+        "purpose": "A book card's cover rises on hover; the card itself stays put."
+      },
+      {
+        "name": "sheet-slide",
+        "value": "transform 320ms cubic-bezier(0.16, 1, 0.3, 1); none under prefers-reduced-motion",
+        "purpose": "Catalogue filter sheet sliding up from the bottom."
       }
     ],
     "coverTint": {
@@ -327,7 +342,9 @@
       "field": "lightenColor(base, 0.16)",
       "heroCopy": "lightenColor(base, 0.88)",
       "shadow": "hexToRgba(darkenColor(base, 0.45), 0.45)",
-      "bannerButton": "darkenColor(base, 0.3)"
+      "bannerButton": "darkenColor(base, 0.3)",
+      "bookCardField": "lightenColor(base, 0.18); catalogue variant lightenColor(base, 0.55)",
+      "bookCardShadow": "drop-shadow(18px 26px 32px hexToRgba(darkenColor(base, 0.55), 0.42)); catalogue variant alpha 0.32"
     },
     "breakpoints": [
       {
@@ -337,6 +354,14 @@
       {
         "name": "md",
         "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px (64rem): facet column beside the grid; below it the bottom sheet"
+      },
+      {
+        "name": "xl",
+        "value": "1280px: three-up catalogue grid beside the facet column"
       },
       {
         "name": "container-max",
@@ -397,9 +422,57 @@
       "name": "Search Field",
       "kind": "input",
       "refersTo": "",
-      "description": "Header search on the deep navy band: translucent white field, square.",
+      "description": "Header search on the deep navy band: translucent white field, square, solid navy submit.",
       "html": "<form class=\"ds-search\" role=\"search\"><input class=\"ds-search-input\" type=\"search\" placeholder=\"Cerca libri, autori...\" aria-label=\"Cerca\"><button class=\"ds-search-btn\" type=\"submit\">Cerca</button></form>",
-      "css": ".ds-search{display:flex;align-items:center;background:rgba(255,255,255,.1);padding:4px 4px 4px 16px;--focus-ring:#fff}.ds-search{background-color:#005192}.ds-search-input{background:transparent;border:0;color:#fff;font:400 .875rem Inter,system-ui,sans-serif;padding:8px}.ds-search-input::placeholder{color:rgba(255,255,255,.8)}.ds-search-input:focus-visible{outline:3px solid #fff;outline-offset:0}.ds-search-btn{background:rgba(255,255,255,.2);border:0;border-radius:0;color:#fff;font:600 .75rem Inter,system-ui,sans-serif;text-transform:uppercase;padding:8px 16px;cursor:pointer}.ds-search-btn:hover{background:rgba(255,255,255,.3)}.ds-search-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}"
+      "css": ".ds-search{display:flex;align-items:center;background:rgba(255,255,255,.1);padding:4px 4px 4px 16px;--focus-ring:#fff}.ds-search{background-color:#005192}.ds-search-input{background:transparent;border:0;color:#fff;font:400 .875rem Inter,system-ui,sans-serif;padding:8px}.ds-search-input::placeholder{color:rgba(255,255,255,.8)}.ds-search-input:focus-visible{outline:3px solid #fff;outline-offset:0}.ds-search-btn{background:#004881;min-height:36px;border:0;border-radius:0;color:#fff;font:600 .75rem Inter,system-ui,sans-serif;text-transform:uppercase;padding:8px 16px;cursor:pointer}.ds-search-btn:hover{background:rgba(0,72,129,.8)}.ds-search-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}"
+    },
+    {
+      "name": "Outlined Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary-outline",
+      "description": "White secondary with a faint navy ring; \"Mostra altri n\" and empty-state actions (no lift on mist).",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\">Mostra altri 40</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border:0;border-radius:0;background:#fff;color:var(--color-brand-navy,#004881);box-shadow:0 0 0 1px rgba(0,72,129,.15),0 18px 45px rgba(0,72,129,.08);font:600 .875rem/1.25rem Inter,system-ui,sans-serif;text-transform:uppercase;cursor:pointer;transition:background-color .15s,color .15s}.ds-btn-outline:hover{background:#004881;color:#fff}.ds-btn-outline:focus-visible{outline:3px solid var(--focus-ring,#004881);outline-offset:2px}"
+    },
+    {
+      "name": "Navy Utility Button",
+      "kind": "button",
+      "refersTo": "button-navy",
+      "description": "Solid navy control that is not the primary action, e.g. the catalogue's mobile \"Filtri\" toggle.",
+      "html": "<button class=\"ds-btn-navy\" type=\"button\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M4 7h16M7 12h10M10 17h4\"/></svg>Filtri (2)</button>",
+      "css": ".ds-btn-navy{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border:0;border-radius:0;background:#004881;color:#fff;font:600 .875rem/1.25rem Inter,system-ui,sans-serif;text-transform:uppercase;cursor:pointer;transition:background-color .15s}.ds-btn-navy:hover{background:#005192}.ds-btn-navy:focus-visible{outline:3px solid var(--focus-ring,#004881);outline-offset:2px}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Active catalogue filter; the whole chip removes it.",
+      "html": "<button class=\"ds-chip\" type=\"button\" aria-label=\"Togli il filtro Ebook\"><span>Ebook</span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg></button>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 12px;border:0;border-radius:0;background:#f2f4f6;color:#004881;font:400 .875rem Inter,system-ui,sans-serif;cursor:pointer;transition:background-color .15s,color .15s}.ds-chip:hover{background:#004881;color:#fff}.ds-chip:focus-visible{outline:3px solid var(--focus-ring,#004881);outline-offset:2px}"
+    },
+    {
+      "name": "Facet Group",
+      "kind": "input",
+      "refersTo": "text-field",
+      "description": "A facet fieldset: navy legend, navy-tinted native checkboxes, slate tabular counts; zero-count options grey out.",
+      "html": "<fieldset class=\"ds-facet\"><legend>Formato</legend><label class=\"ds-opt\"><input type=\"radio\" name=\"f\" checked><span>Tutti i formati</span><span class=\"ds-count\">312</span></label><label class=\"ds-opt\"><input type=\"radio\" name=\"f\"><span>Cartaceo</span><span class=\"ds-count\">287</span></label><label class=\"ds-opt\" data-zero><input type=\"radio\" name=\"f\"><span>Audiolibro</span><span class=\"ds-count\">0</span></label></fieldset>",
+      "css": ".ds-facet{border:0;border-top:1px solid rgba(0,72,129,.1);margin:0;padding:16px 0;font-family:Inter,system-ui,sans-serif;width:240px}.ds-facet legend{float:left;width:100%;margin-bottom:8px;font-size:.875rem;font-weight:600;color:#004881}.ds-facet legend+*{clear:both}.ds-opt{display:flex;align-items:center;gap:12px;min-height:44px;font-size:.875rem;color:#343434;cursor:pointer}.ds-opt input{width:18px;height:18px;margin:0;accent-color:#004881}.ds-opt span:first-of-type{flex:1}.ds-opt:hover span:first-of-type{color:#004881;text-decoration:underline;text-underline-offset:2px}.ds-opt:has(input:checked) span:first-of-type{font-weight:600;color:#004881}.ds-opt[data-zero]:not(:has(input:checked)) span:first-of-type{color:#6c757d}.ds-count{font-size:.75rem;color:#6c757d;font-variant-numeric:tabular-nums}.ds-opt input:focus-visible{outline:3px solid #004881;outline-offset:2px}"
+    },
+    {
+      "name": "Book Section Tabs",
+      "kind": "nav",
+      "refersTo": "section-tab",
+      "description": "Catalogo, Collane, In evidenza, Ebook under the header; mist inactive, navy active with aria-current.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Sezioni dei libri\"><a href=\"#\" aria-current=\"page\">Catalogo</a><a href=\"#\">Collane</a><a href=\"#\">In evidenza</a><a href=\"#\">Ebook</a></nav>",
+      "css": ".ds-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:16px 24px;background:rgba(255,255,255,.8)}.ds-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 24px;background:#f2f4f6;color:#343434;font:600 1rem/1.25 Inter,system-ui,sans-serif;text-decoration:none;transition:background-color .15s,color .15s}.ds-tabs a:hover{background:rgba(0,72,129,.1);color:#004881}.ds-tabs a[aria-current=page]{background:#004881;color:#fff}.ds-tabs a:focus-visible{outline:3px solid var(--focus-ring,#004881);outline-offset:2px}"
+    },
+    {
+      "name": "Book Card (catalogue)",
+      "kind": "card",
+      "refersTo": "",
+      "description": "Catalogue variant: pale cover-tinted field, cover sized by height, title, author, one slate meta line, serif price. Only the cover rises on hover.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-field\"><div class=\"ds-card-cover\"></div></div><div class=\"ds-card-body\"><h3 class=\"ds-card-title\">Combattenti per la pace</h3><p class=\"ds-card-by\">Daniela Bezzi</p><p class=\"ds-card-meta\">Semi di pace · 2024 · Ebook</p><p class=\"ds-card-price\">12,00 €</p></div></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;width:240px;background:#fff;box-shadow:0 18px 45px rgba(0,72,129,.08);color:#343434;text-decoration:none;font-family:Inter,system-ui,sans-serif}.ds-card-field{display:flex;justify-content:center;padding:40px 24px;background:#fcdcb3}.ds-card-cover{height:208px;width:140px;background:#3b2414;filter:drop-shadow(18px 26px 32px rgba(110,56,0,.32));transition:transform .3s ease-out}.ds-card:hover .ds-card-cover{transform:translateY(-6px)}.ds-card-body{display:flex;flex-direction:column;gap:8px;padding:20px}.ds-card-title{margin:0;font:600 1.25rem/1.4 'Playfair Display',serif;color:#004881}.ds-card:hover .ds-card-title{text-decoration:underline}.ds-card-by{margin:0;font-size:.875rem;font-weight:600}.ds-card-meta{margin:0;font-size:.875rem;color:#6c757d}.ds-card-price{margin:0;font:600 1.25rem 'Playfair Display',serif;color:#004881;font-variant-numeric:lining-nums}.ds-card:focus-visible{outline:3px solid #004881;outline-offset:-4px}@media (prefers-reduced-motion:reduce){.ds-card:hover .ds-card-cover{transform:none}}"
     }
   ],
   "narrative": {
@@ -435,12 +508,12 @@
       },
       {
         "name": "The Serif Is for Published Things Rule",
-        "body": "Playfair carries titles and prices; actions, meta and navigation stay in Inter.",
+        "body": "Playfair carries titles, prices and the size of the catalogue (the slate size line under the h1, the result count); actions, meta and navigation stay in Inter.",
         "section": "typography"
       },
       {
         "name": "The Only the Book Floats Rule",
-        "body": "The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat.",
+        "body": "The cover is the one object allowed to cast a strong, coloured shadow and to tilt (4deg hero, 5deg featured block). Containers stay flat. On a book card only the cover moves on hover (rises 6px, 300ms ease-out, motion-safe); the card itself does not lift.",
         "section": "elevation"
       }
     ],
@@ -450,7 +523,9 @@
       "Do use brand-orange-deep for the one primary action and navy underlined links for further ways.",
       "Do give every interactive element at least 44px of height on touch screens.",
       "Do set `[--focus-ring:var(--color-white)]` on dark surfaces and `hover:text-white focus:text-white` on links inside them.",
-      "Do put context under a title (subtitle, author, caption), never above it."
+      "Do put context under a title (subtitle, author, caption), never above it.",
+      "Do put a book's status (anno, Ebook, Fuori catalogo) in its slate meta line.",
+      "Do keep a surface's orange-deep to its one primary action; utility toggles are navy, secondary steps white-outlined or mist."
     ],
     "donts": [
       "Don't put white text on brand-orange (#fa7810); it is 2.7:1.",
@@ -458,7 +533,9 @@
       "Don't stack a kicker, eyebrow or tag label above a heading.",
       "Don't add literal border radii (`rounded-[2rem]`, `border-radius: 9999px`); they bypass the square theme.",
       "Don't add `focus:outline-hidden` with a private ring; the global `:focus-visible` outline is the one indicator.",
-      "Don't tilt or shadow anything but a book cover."
+      "Don't tilt or shadow anything but a book cover.",
+      "Don't lift or outline a book card on hover; only its cover rises.",
+      "Don't set a ribbon, badge or price chip on a book card."
     ]
   }
 }

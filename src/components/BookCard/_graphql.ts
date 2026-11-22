@@ -32,5 +32,10 @@ export const BOOK_CARD_FRAGMENT = /* GraphQL */ `
     }
     format
     archive
+    collection {
+      id
+      name
+      slug
+    }
   }
 `;

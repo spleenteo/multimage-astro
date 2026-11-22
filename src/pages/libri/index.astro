@@ -1,43 +1,107 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import BooksCatalogSection from '~/components/BooksCatalogSection';
+import BooksCatalogue from '~/components/BooksCatalogue';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import { mapBooksToCards } from '~/lib/books';
-import { BOOKS_PAGE_QUERY, BOOKS_PER_PAGE, type BooksPageQueryResult } from './index/_graphql';
+import { extractYear, toBookCard } from '~/lib/books';
+import { getAuthorDisplayName } from '~/lib/authors';
+import {
+  buildPeriodOptions,
+  isTranslated,
+  latestYear,
+  normalizeForSearch,
+  type CatalogueEntry,
+  type CatalogueOption,
+} from '~/lib/catalogue';
+import {
+  BOOKS_CATALOGUE_QUERY,
+  CATALOGUE_PAGE_SIZE,
+  type BooksCatalogueQueryResult,
+  type CatalogueBookRecord,
+} from './index/_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
 const draftModeEnabled = resolveDraftMode(Astro);
+const firstPage = { first: CATALOGUE_PAGE_SIZE, skip: 0 };
 
-const data = await executeQuery<BooksPageQueryResult>(BOOKS_PAGE_QUERY, {
+const data = await executeQuery<BooksCatalogueQueryResult>(BOOKS_CATALOGUE_QUERY, {
   includeDrafts: draftModeEnabled,
-  variables: { first: BOOKS_PER_PAGE, skip: 0 },
+  variables: firstPage,
 });
+
+// The CDA returns at most 500 records per query: read the rest of the catalogue, if any.
+const records: CatalogueBookRecord[] = [...(data.allBooks ?? [])];
+const total = data._allBooksMeta?.count ?? records.length;
+while (records.length < total) {
+  const next = await executeQuery<BooksCatalogueQueryResult>(BOOKS_CATALOGUE_QUERY, {
+    includeDrafts: draftModeEnabled,
+    variables: { first: CATALOGUE_PAGE_SIZE, skip: records.length },
+  });
+  if (!next.allBooks?.length) break;
+  records.push(...next.allBooks);
+}
+
+const books = records.map((record) => {
+  const card = toBookCard(record);
+  const year = Number.parseInt(extractYear(record.printYear) ?? '', 10);
+  const authorNames = (record.authors ?? []).map((author) => getAuthorDisplayName(author, ''));
+  const entry: CatalogueEntry = {
+    c: record.collection?.slug ?? '',
+    e: (record.format ?? '').trim().toLowerCase() === 'cartaceo' || !record.format ? 0 : 1,
+    y: Number.isFinite(year) ? year : 0,
+    a: (record.authors ?? []).map((author) => author.slug ?? '').filter(Boolean),
+    t: isTranslated(record.translator, record.originalLang) ? 1 : 0,
+    x: record.archive === true ? 1 : 0,
+    h: record.highlight === true ? 1 : 0,
+    s: normalizeForSearch(
+      [record.title, record.subtitle, ...authorNames, record.collection?.name].filter(Boolean).join(' '),
+    ),
+    n: normalizeForSearch(record.title),
+  };
+  return { card, entry };
+});
+
+const collections: CatalogueOption[] = (data.allCollections ?? []).map((collection) => ({
+  value: collection.slug,
+  label: collection.name,
+}));
+
+const authorMap = new Map<string, string>();
+records.forEach((record) =>
+  (record.authors ?? []).forEach((author) => {
+    const name = getAuthorDisplayName(author, '');
+    if (author.slug && name) authorMap.set(author.slug, name);
+  }),
+);
+const collator = new Intl.Collator('it', { sensitivity: 'base' });
+const authors: CatalogueOption[] = [...authorMap]
+  .map(([value, label]) => ({ value, label }))
+  .sort((a, b) => collator.compare(a.label, b.label));
+
+const entries = books.map((book) => book.entry);
+const newest = latestYear(entries);
+const periods = buildPeriodOptions(entries.map((entry) => entry.y));
 
 const booksIndexContent = data.booksIndexPage?.[0] ?? null;
-const heroSection = {
-  title: booksIndexContent?.title?.trim() || 'Libri',
-  subtitleHtml: booksIndexContent?.subtitle?.trim() || null,
-};
+const title = booksIndexContent?.title?.trim() || 'Libri';
+const introHtml = booksIndexContent?.subtitle?.trim() || null;
 const seo = withFallbackSeo(booksIndexContent?._seoMetaTags, {
-  title: heroSection.title,
-  description: heroSection.subtitleHtml ? toPlainText(heroSection.subtitleHtml) : undefined,
+  title,
+  description: introHtml ? toPlainText(introHtml) : undefined,
 });
-
-const total = data._allBooksMeta?.count ?? 0;
-const totalPages = Math.max(1, Math.ceil(total / BOOKS_PER_PAGE));
-const books = mapBooksToCards(data.allBooks ?? []);
 ---
 
 <BaseLayout seo={seo}>
-  <BooksCatalogSection
-    title={heroSection.title}
-    subtitleHtml={heroSection.subtitleHtml}
+  <BooksCatalogue
+    title={title}
+    introHtml={introHtml}
     books={books}
-    currentPage={1}
-    totalPages={totalPages}
+    collections={collections}
+    authors={authors}
+    periods={periods}
+    newest={newest}
   />
-  <DraftModeQueryListener query={BOOKS_PAGE_QUERY} variables={{ first: BOOKS_PER_PAGE, skip: 0 }} />
+  <DraftModeQueryListener query={BOOKS_CATALOGUE_QUERY} variables={firstPage} />
 </BaseLayout>
