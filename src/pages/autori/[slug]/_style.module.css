@@ -60,6 +60,14 @@
   @apply space-y-8;
 }
 
+.booksHead {
+  @apply flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2;
+}
+
+.catalogueLink {
+  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+}
+
 .booksHeader {
   @apply text-3xl font-serif text-brand-navy;
 }

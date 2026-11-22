@@ -1,83 +1,114 @@
 @reference '../../../styles/global.css';
 
-.layout {
-  @apply space-y-12;
+.page {
+  @apply space-y-8 md:space-y-10;
 }
 
+/* Slim title row, as on /libri and /collane: h1, one serif size line, the CMS lede (not on phones). */
 .intro {
-  @apply mx-auto max-w-5xl;
+  @apply max-w-4xl space-y-3;
 }
 
-.empty {
-  @apply bg-white/80 p-6 text-center text-brand-slate shadow-soft;
+.title {
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
 }
 
-.container {
-  @apply mx-auto w-full max-w-6xl px-6;
+.size {
+  @apply font-serif text-xl text-brand-slate lining-nums;
 }
 
-.searchBar {
-  @apply flex justify-center px-4 pb-2;
+.lede {
+  @apply max-w-3xl text-base leading-relaxed text-brand-charcoal max-sm:hidden md:text-lg;
 }
 
-.searchPill {
-  @apply flex w-full max-w-md items-center gap-3 border border-brand-slate/15 bg-white/90 px-5 py-3 shadow-[0_8px_32px_rgba(13,30,54,0.08)] backdrop-blur-xs transition-shadow duration-200 focus-within:shadow-[0_8px_32px_rgba(13,30,54,0.14)] focus-within:border-brand-sky/40;
+.lede :global(strong) {
+  @apply font-semibold;
 }
 
-/* The input hides its own outline; the whole pill carries the standard focus ring instead. */
-.searchPill:has(:focus-visible) {
+.tools {
+  @apply flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4;
+}
+
+/* The catalogue's text field: a 1px navy-at-25% border, no shadow. The whole box is the label. */
+.search {
+  @apply flex min-h-11 w-full cursor-text items-center gap-2 border border-brand-navy/25 bg-white px-3 text-brand-slate sm:w-80;
+}
+
+.search:has(:focus-visible) {
   outline: 3px solid var(--focus-ring, var(--color-brand-navy));
   outline-offset: 2px;
 }
 
-.searchIcon {
-  @apply shrink-0 text-brand-slate/40;
+.search input {
+  @apply min-w-0 flex-1 bg-transparent text-sm text-brand-charcoal placeholder:text-brand-slate;
+  outline: none;
 }
 
-.searchInput {
-  @apply min-w-0 flex-1 border-none bg-transparent text-sm text-brand-navy placeholder:text-brand-slate focus:outline-hidden;
+.results {
+  @apply text-sm text-brand-slate tabular-nums empty:hidden;
 }
 
-.searchInput::-webkit-search-cancel-button {
+/* The letter index: a flat strip on a hairline; 44px targets on touch, sticky from 768px. */
+.letters {
+  @apply flex flex-wrap border-y border-brand-navy/10 bg-white md:sticky md:top-0 md:z-20;
+}
+
+.letters a {
+  @apply inline-flex h-11 w-11 items-center justify-center font-serif text-lg text-brand-navy hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy md:h-10 md:w-10;
+}
+
+.letters a[hidden] {
   display: none;
 }
 
-.searchClear {
-  @apply shrink-0 cursor-pointer text-brand-slate/30 transition-colors duration-150 hover:text-brand-slate;
-}
-
 .noResults {
-  @apply hidden py-16 text-center text-brand-slate;
+  @apply space-y-2 bg-brand-mist px-6 py-8 text-brand-charcoal md:px-10;
 }
 
-.noResults[data-visible] {
-  @apply block;
+.noResults[hidden] {
+  display: none;
 }
 
-.nav {
-  @apply sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase text-brand-slate shadow-soft backdrop-blur-xs;
+.noResultsTitle {
+  @apply font-serif text-2xl text-brand-navy;
 }
 
-.navLink {
-  @apply transition duration-150 hover:text-brand-navy;
+.noResults a {
+  @apply font-semibold text-brand-navy underline underline-offset-2;
 }
 
-.groupList {
-  @apply space-y-16;
+.groups {
+  @apply space-y-10 md:space-y-12;
 }
 
-.groupHeader {
-  @apply flex flex-wrap items-center justify-between gap-3 border border-white/70 bg-white/95 px-6 py-4 shadow-soft;
+/* Clear of the sticky letter strip when a letter link scrolls here. */
+.group {
+  @apply scroll-mt-4 space-y-4 md:scroll-mt-16;
+}
+
+.group[hidden],
+.grid > [hidden] {
+  display: none;
 }
 
 .groupTitle {
-  @apply text-3xl font-serif text-brand-navy;
+  @apply font-serif text-3xl text-brand-navy;
 }
 
-.backLink {
-  @apply text-xs font-semibold uppercase text-brand-navy transition duration-150 hover:text-brand-navy focus:text-brand-navy;
+/* Two columns on phones, three from 768px, four from 1280px. */
+.grid {
+  @apply grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-8 md:gap-y-8 xl:grid-cols-4;
 }
 
-.authorsGrid {
-  @apply grid gap-8 md:grid-cols-2 xl:grid-cols-3;
+.empty {
+  @apply space-y-3 bg-brand-mist px-6 py-10 text-brand-charcoal md:px-10;
+}
+
+.empty a,
+.publish a {
+  @apply font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
+}
+
+.publish {
+  @apply border-t border-brand-navy/10 pt-8 text-base text-brand-charcoal;
 }

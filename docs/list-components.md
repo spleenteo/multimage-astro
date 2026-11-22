@@ -136,11 +136,17 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: uses `truncateToLength` for summary; dates formatted with `Intl.DateTimeFormat`.
 - `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
-  - Purpose: author summaries for the `/autori` grid.
-  - Key props: `slug`, `name`, `summary`, `picture`, `booksCount`.
+  - Purpose: a flat card in the `/autori` grid.
+    - A 48–56px portrait, or the initial on mist.
+    - The name (Playfair) as the only link to the profile, with the legal name under an alias.
+    - A serif size line ("3 libri · 1 fuori catalogo").
+    - The bio clamped to 2 lines, with URLs stripped.
+    - Up to 3 latest covers (2 on phones) on a light field tinted from the newest one (base lightened 55%).
+    - "Vedi i libri" → `/libri?autore=<slug>`.
+  - Key props: `name`, `slug`, `legalName?`, `summary?`, `inCatalogue`, `archived`, `picture?`, `covers[]` (`url`, `width`, `height`, `colors`).
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
-  - Notes: consumes `mapAuthorsToCards` output.
+  - Notes: covers are plain imgix `<img>` (h=96, 2x), not `<Image>`, to keep the render of ~230 cards light. The cover strip is a mouse-only link (`tabindex=-1`, `aria-hidden`).
 - `AuthorChip` — **AuthorChip** (`src/components/AuthorChip/index.astro`)
   - Purpose: inline author pill with avatar or initials.
   - Key props: `name`, `label`, `booksLabel?`, `link?`, `image?`.

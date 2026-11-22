@@ -2,10 +2,38 @@ import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHer
 import { RESPONSIVE_IMAGE_CARD_FIELDS, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorRecordForCard } from '~/lib/authors';
 
+/** The CDA caps `first` at 500: the books are read in pages of this size until the count is reached. */
+export const AUTHORS_BOOKS_PAGE_SIZE = 500;
+
+/**
+ * Every book's authors, archive flag and cover (newest print year first), so each author gets an
+ * exact in-catalogue count and their latest covers from a single read.
+ */
+const AUTHOR_BOOKS_FIELDS = /* GraphQL */ `
+  _allBooksMeta {
+    count
+  }
+  allBooks(orderBy: [printYear_DESC, title_ASC], first: $first, skip: $skip) {
+    id
+    archive
+    authors {
+      id
+    }
+    coverImage {
+      url
+      width
+      height
+      colors {
+        hex
+      }
+    }
+  }
+`;
+
 export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
   ${INDEX_HERO_FRAGMENT}
-  query AuthorsPage {
+  query AuthorsPage($first: IntType!, $skip: IntType!) {
     authorsIndexPage: allIndexPages(filter: { slug: { eq: "autori" } }, first: 1) {
       ...IndexHeroFields
     }
@@ -23,28 +51,40 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
         url
         alt
         responsiveImage(
-          imgixParams: { fit: crop, crop: focalpoint, w: 600, h: 600, auto: format }
+          imgixParams: { fit: crop, crop: focalpoint, w: 128, h: 128, auto: format }
         ) {
           ${RESPONSIVE_IMAGE_CARD_FIELDS}
         }
       }
     }
-    allBooks(first: 500) {
-      id
-      authors {
-        id
-      }
-    }
+    ${AUTHOR_BOOKS_FIELDS}
   }
 `;
 
-export type AuthorsPageQueryResult = {
+export const AUTHORS_BOOKS_QUERY = /* GraphQL */ `
+  query AuthorsBooks($first: IntType!, $skip: IntType!) {
+    ${AUTHOR_BOOKS_FIELDS}
+  }
+`;
+
+export type AuthorBookRecord = {
+  id: string;
+  archive: boolean | null;
+  authors: Array<{ id: string }>;
+  coverImage: {
+    url: string;
+    width: number | null;
+    height: number | null;
+    colors: Array<{ hex: string }> | null;
+  } | null;
+};
+
+export type AuthorsBooksResult = {
+  _allBooksMeta: { count: number };
+  allBooks: AuthorBookRecord[];
+};
+
+export type AuthorsPageQueryResult = AuthorsBooksResult & {
   authorsIndexPage: IndexHeroFields[] | null;
   allAuthors: AuthorRecordForCard[];
-  allBooks: Array<{
-    id: string;
-    authors: Array<{
-      id: string;
-    }>;
-  }>;
 };

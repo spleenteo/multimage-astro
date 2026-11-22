@@ -318,6 +318,13 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 ### Book Card
 White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
 
+### Authors Index (`/autori`)
+- **Title row:** the slim title row ("232 autrici e autori · 363 libri in catalogo"), then the catalogue's text field for search (name, alias and legal name; accent-insensitive). The number of results is announced in a status line.
+- **Letter index:** a flat strip between two hairlines, with Playfair letters in 44px cells (40px from 768px), sticky from 768px.
+- **Groups:** each letter is a group with a Playfair h2, followed by a grid of flat AuthorCards: 2 columns on phones, 3 from 768px, 4 from 1280px. Each card opens with a hairline.
+- **Who is listed:** authors with no books at all stay out.
+- **Closing line:** "Vuoi pubblicare con Multimage?" with a navy link to `/info/chi-siamo`. There is no orange action on the page.
+
 ### Collections Shelf (`/collane`)
 The catalogue as the editors think it.
 - **Title row:** the catalogue's slim row: h1, the serif size line "18 collane · 363 libri in catalogo", and the CMS lede.

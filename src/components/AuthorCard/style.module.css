@@ -1,41 +1,94 @@
 @reference '../../styles/global.css';
 
+/* Flat: no shadow, no lift. Hundreds of these share a grid divided by hairlines. */
 .root {
-  @apply flex h-full flex-col overflow-hidden bg-white/95 shadow-soft ring-1 ring-brand-navy/5 transition duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl;
+  @apply flex h-full flex-col gap-3 border-t border-brand-navy/10 pt-4;
 }
 
-.imageWrapper {
-  @apply relative h-72 w-full overflow-hidden bg-brand-mist/60;
+.head {
+  @apply flex flex-col items-start gap-2 md:flex-row md:gap-3;
 }
 
-.image {
-  @apply h-full w-full object-cover transition duration-200 ease-out group-hover:scale-[1.03];
+.portrait,
+.initial {
+  @apply h-12 w-12 shrink-0 overflow-hidden md:h-14 md:w-14;
 }
 
-.fallback {
-  @apply flex h-72 w-full items-center justify-center bg-brand-mist/70 px-6 text-center text-xs font-semibold uppercase text-brand-slate;
+/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
+.portraitImage {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
 }
 
-.body {
-  @apply flex flex-1 flex-col gap-4 px-6 pb-8 pt-6 text-left;
+.initial {
+  @apply flex items-center justify-center bg-brand-mist font-serif text-xl text-brand-navy md:text-2xl;
 }
 
-.title {
-  @apply text-2xl font-serif text-brand-navy;
+.name {
+  @apply font-serif text-lg leading-snug text-balance text-brand-navy [overflow-wrap:anywhere] md:text-xl md:[overflow-wrap:normal];
 }
 
-.meta {
-  @apply text-xs font-semibold uppercase text-brand-slate;
+.name a {
+  @apply text-brand-navy underline-offset-4 hover:underline focus:text-brand-navy;
 }
 
-.books {
-  @apply text-sm font-semibold uppercase text-brand-navy;
+.legal {
+  @apply text-sm text-brand-charcoal;
+}
+
+.size {
+  @apply font-serif text-base text-brand-slate lining-nums;
 }
 
 .summary {
-  @apply text-sm leading-relaxed text-brand-charcoal/80;
+  @apply text-sm leading-relaxed text-brand-charcoal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
-.cta {
-  @apply text-sm font-medium text-brand-navy;
+/* The latest covers stand on the floor of a light field tinted from the newest one. */
+.covers {
+  @apply mt-auto flex items-end justify-center gap-3 overflow-clip px-3 pt-4 pb-4 md:gap-4;
+}
+
+.cover {
+  display: block;
+  width: auto;
+  max-width: 4.5rem;
+  height: 4.5rem;
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (width >= 48rem) {
+    max-width: 5.5rem;
+    height: 6rem;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .covers:hover .cover {
+    transform: translateY(-4px);
+  }
+}
+
+/* Two covers fit a phone column; the third joins from 768px. */
+.third {
+  display: none;
+
+  @media (width >= 48rem) {
+    display: block;
+  }
+}
+
+.ways {
+  @apply text-sm font-semibold;
+}
+
+.ways a {
+  @apply inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
 }

@@ -134,9 +134,16 @@ const pictureResponsiveImage = author.picture?.responsiveImage
     </section>
 
     <section class={styles.booksSection}>
-      <h2 class={styles.booksHeader}>Libri pubblicati</h2>
+      <div class={styles.booksHead}>
+        <h2 class={styles.booksHeader}>Libri pubblicati</h2>
+        {relatedBooks.length > 0 ? (
+          <a href={`/libri?autore=${encodeURIComponent(slug)}&archivio=1`} class={styles.catalogueLink}>
+            Sfoglia nel catalogo, con i filtri
+          </a>
+        ) : null}
+      </div>
       {relatedBooks.length === 0 ? (
-        <p class="text-sm text-brand-slate">Nessun libro ancora associato a questo autore.</p>
+        <p class="text-sm text-brand-slate">Nessun libro è ancora collegato a questa scheda.</p>
       ) : (
         <div class={styles.booksGrid}>
           {relatedBooks.map((book) => (
