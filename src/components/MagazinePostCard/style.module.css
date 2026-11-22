@@ -17,11 +17,11 @@
 }
 
 .meta {
-  @apply flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-slate/80;
+  @apply flex flex-wrap items-center gap-3 text-xs font-semibold uppercase text-brand-slate;
 }
 
 .categoryTag {
-  @apply bg-brand-mist/60 px-3 py-1 text-[10px] tracking-[0.35em] text-brand-charcoal/80;
+  @apply bg-brand-mist/60 px-3 py-1 text-xs text-brand-charcoal/80;
 }
 
 .stickyTag {
@@ -29,7 +29,7 @@
 }
 
 .date {
-  @apply text-[10px] uppercase tracking-[0.35em] text-brand-slate/60;
+  @apply text-xs uppercase text-brand-slate;
 }
 
 .title {

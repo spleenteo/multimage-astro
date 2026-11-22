@@ -287,7 +287,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                 aria-selected={isActive ? 'true' : 'false'}
                 aria-expanded="false"
                 aria-haspopup="true"
-                class={`group flex items-center gap-2 border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+                class={`group flex items-center gap-2 border border-white/10 px-4 py-2 text-sm font-semibold uppercase transition ${
                   isActive
                     ? 'bg-white text-brand-navy focus:text-brand-navy'
                     : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 focus:text-white'
@@ -347,7 +347,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
             href={link.href ?? '#'}
             role="tab"
             aria-selected={isActive ? 'true' : 'false'}
-            class={` border border-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] transition ${
+            class={`border border-white/10 px-4 py-2 text-sm font-semibold uppercase transition ${
               isActive
                 ? 'bg-white text-brand-navy focus:text-brand-navy'
                 : 'bg-brand-navy/95 text-white hover:bg-brand-navy-light/90 hover:text-white focus:text-white'
@@ -372,7 +372,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
       <div class="flex h-full flex-col justify-between px-6 py-6 text-white">
         <div class="space-y-6 overflow-auto">
           <div class="flex items-center justify-between">
-            <span class="text-sm font-semibold uppercase tracking-[0.3em]">Menu</span>
+            <span class="text-sm font-semibold uppercase">Menu</span>
             <button
               type="button"
               class="flex items-center gap-2 border border-white/40 px-3 py-2 text-xs uppercase tracking-widest text-white"
@@ -389,7 +389,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           </div>
 
           <nav class="space-y-4" aria-label="Navigazione mobile">
-            <ul class="space-y-4 text-sm font-semibold uppercase tracking-[0.12em]">
+            <ul class="space-y-4 text-sm font-semibold uppercase">
               {PRIMARY_LINKS.map((link) => {
                 const hasChildren = Boolean(link.children && link.children.length > 0);
                 const isActive = linkIsActive(link, normalizedPath);
@@ -413,10 +413,7 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
                           aria-hidden="true"
                         />
                       </button>
-                      <div
-                        class="hidden space-y-2 pl-4 text-xs tracking-[0.2em]"
-                        data-accordion-panel
-                      >
+                      <div class="hidden space-y-2 pl-4 text-xs" data-accordion-panel>
                         {link.children?.map((child) => <a
                           href={child.href}
                           class="block px-2 py-2 text-white/80 transition hover:text-white focus:text-white"
@@ -473,13 +470,13 @@ const showBooksNav = normalizedPath.startsWith('/libri') || normalizedPath.start
           </form>
 
           <div class="space-y-3">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">Seguici</p>
+            <p class="text-xs font-semibold uppercase text-white/70">Seguici</p>
             <div class="flex flex-col gap-3">
               {TOP_LINKS.map(({ label, href, icon, external, tone }) => <a
                 href={href}
                 target={external ? '_blank' : undefined}
                 rel={external ? 'noreferrer' : undefined}
-                class={`flex items-center gap-3 px-4 py-3 text-xs uppercase tracking-[0.25em] ${
+                class={`flex items-center gap-3 px-4 py-3 text-xs uppercase ${
                   tone ? toneClassMap[tone] : 'bg-white/10'
                 }`}
                 data-mobile-nav-target

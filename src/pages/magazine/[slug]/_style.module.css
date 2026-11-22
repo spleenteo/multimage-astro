@@ -13,7 +13,7 @@
 }
 
 .label {
-  @apply text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate;
+  @apply text-xs font-semibold uppercase text-brand-slate;
 }
 
 .title {
@@ -25,7 +25,7 @@
 }
 
 .meta {
-  @apply flex flex-wrap justify-center gap-4 text-xs font-semibold uppercase tracking-[0.35em] text-brand-slate/70;
+  @apply flex flex-wrap justify-center gap-4 text-xs font-semibold uppercase text-brand-slate;
 }
 
 .metaItem {

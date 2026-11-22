@@ -21,7 +21,7 @@
 }
 
 .count {
-  @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand-navy;
+  @apply text-xs font-semibold uppercase text-brand-navy;
 }
 
 .actions {
@@ -29,7 +29,7 @@
 }
 
 .csvButton {
-  @apply inline-flex items-center gap-2 border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-navy transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
+  @apply inline-flex items-center gap-2 border border-brand-sky/40 bg-brand-sky/10 px-4 py-2 text-sm font-semibold uppercase text-brand-navy transition hover:border-brand-sky/70 hover:bg-brand-sky/20 hover:text-brand-navy;
 }
 
 .description {
@@ -41,7 +41,7 @@
 }
 
 .menuLink {
-  @apply inline-flex items-center justify-center bg-brand-mist/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-brand-charcoal transition duration-150 hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy sm:px-6 sm:py-3 sm:text-sm;
+  @apply inline-flex items-center justify-center bg-brand-mist/60 px-4 py-2 text-xs font-semibold uppercase text-brand-charcoal transition duration-150 hover:bg-brand-mist hover:text-brand-navy focus:text-brand-navy sm:px-6 sm:py-3 sm:text-sm;
 }
 
 .menuLinkActive {
@@ -57,7 +57,7 @@
 }
 
 .theadCell {
-  @apply border-b border-white/80 bg-brand-slate/5 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.15em] text-brand-navy align-middle;
+  @apply border-b border-white/80 bg-brand-slate/5 px-4 py-3 text-left text-xs font-semibold uppercase text-brand-navy align-middle;
 }
 
 .cell {

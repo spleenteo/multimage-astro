@@ -21,7 +21,7 @@
 }
 
 .archiveBadge {
-  @apply bg-brand-slate px-4 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.25em] text-white shadow-soft;
+  @apply bg-brand-slate px-4 py-1 text-xs font-semibold uppercase text-white shadow-soft;
 }
 
 .coverWrapper {
@@ -33,7 +33,7 @@
 }
 
 .coverFallback {
-  @apply flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-brand-slate;
+  @apply flex h-56 items-center justify-center bg-white/80 px-6 text-center text-xs font-semibold uppercase text-brand-slate;
 }
 
 .dropShadow {

@@ -43,7 +43,7 @@
 }
 
 .searchClear {
-  @apply shrink-0 cursor-pointer text-brand-slate/30 transition-colors duration-150 hover:text-brand-slate/70;
+  @apply shrink-0 cursor-pointer text-brand-slate/30 transition-colors duration-150 hover:text-brand-slate;
 }
 
 .noResults {
@@ -55,7 +55,7 @@
 }
 
 .nav {
-  @apply sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase tracking-[0.4em] text-brand-slate shadow-soft backdrop-blur-xs;
+  @apply sticky top-24 z-20 mb-12 flex flex-wrap justify-center gap-3 border border-white/70 bg-white/95 px-6 py-4 text-xs font-semibold uppercase text-brand-slate shadow-soft backdrop-blur-xs;
 }
 
 .navLink {
@@ -75,7 +75,7 @@
 }
 
 .backLink {
-  @apply text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-brand-navy transition duration-150 hover:text-brand-navy focus:text-brand-navy;
+  @apply text-xs font-semibold uppercase text-brand-navy transition duration-150 hover:text-brand-navy focus:text-brand-navy;
 }
 
 .authorsGrid {

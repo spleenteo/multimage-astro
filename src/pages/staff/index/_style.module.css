@@ -33,7 +33,7 @@
 }
 
 .toolMeta {
-  @apply text-sm uppercase tracking-[0.2em] text-brand-navy;
+  @apply text-sm uppercase text-brand-navy;
 }
 
 .toolSummary {
