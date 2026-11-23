@@ -2,11 +2,11 @@
 
 /* Flat: no shadow, no lift. Hundreds of these share a grid divided by hairlines. */
 .root {
-  @apply flex h-full flex-col gap-3 border-t border-brand-navy/10 pt-4;
+  @apply flex h-full flex-col gap-3 border-t border-brand-navy/10 pt-5;
 }
 
 .head {
-  @apply flex flex-col items-start gap-2 md:flex-row md:gap-3;
+  @apply flex items-start gap-3;
 }
 
 .portrait,
@@ -25,7 +25,7 @@
 }
 
 .name {
-  @apply font-serif text-lg leading-snug text-balance text-brand-navy [overflow-wrap:anywhere] md:text-xl md:[overflow-wrap:normal];
+  @apply font-serif text-xl leading-snug text-balance text-brand-navy;
 }
 
 .name a {
@@ -41,10 +41,11 @@
 }
 
 .summary {
-  @apply text-sm leading-relaxed text-brand-charcoal;
+  @apply max-w-[40ch] text-sm leading-relaxed text-brand-charcoal;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  /* The one-line bio is 100 characters at most: four lines in the narrowest column. */
+  /* The one-line bio is 100 characters at most: two or three lines at this measure; the clamp is
+     a safety net for a narrow column. */
   -webkit-line-clamp: 4;
   line-clamp: 4;
   overflow: hidden;
@@ -52,7 +53,7 @@
 
 /* The foot: the latest covers, small and plain, joined to the way to the books. */
 .foot {
-  @apply mt-auto flex flex-wrap items-end gap-x-3.5 gap-y-1 pt-1;
+  @apply mt-auto flex flex-wrap items-end gap-x-4 gap-y-1 pt-2;
 }
 
 /* No field behind them: a hairline for white covers and a soft offset shadow. */

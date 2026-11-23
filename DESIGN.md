@@ -354,7 +354,8 @@ White card: the cover centred on a cover-tinted field, then Playfair navy title 
 ### Authors Index (`/autori`)
 - **Title row:** the slim title row ("232 autrici e autori · 363 libri in catalogo"), then the catalogue's text field for search (name, alias and legal name; accent-insensitive). The number of results is announced in a status line.
 - **Letter index:** a flat strip between two hairlines, with Playfair letters in 44px cells (40px from 768px), sticky from 768px.
-- **Groups:** each letter is a group with a Playfair h2, followed by a grid of flat AuthorCards: 2 columns on phones, 3 from 768px, 4 from 1280px. Each card opens with a hairline.
+- **Groups:** each letter is a group with a Playfair h2, followed by a grid of flat AuthorCards: 1 column on phones, 2 from 640px, 3 from 1024px, with 40–48px between rows and 40–64px between columns, so the space between cards is clearly larger than any gap inside one. Each card opens with a hairline.
+- **Card:** portrait (or initial) beside the Playfair name, the slate serif line with country and count, the one-line bio in a 40ch measure, then at the foot up to four small plain covers (hairline and soft offset shadow, no tinted field) beside "Vedi i libri".
 - **Who is listed:** authors with no books at all stay out.
 - **Closing line:** "Vuoi pubblicare con Multimage?" with a navy link to `/info/chi-siamo`. There is no orange action on the page.
 
