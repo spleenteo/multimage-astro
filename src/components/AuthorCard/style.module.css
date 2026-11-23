@@ -103,7 +103,7 @@
 }
 
 .size {
-  /* Slate fails 4.5:1 on the mist sheet (4.2:1): charcoal at 75% keeps the quiet tone at 5.9:1. */
+  /* Slate fails 4.5:1 on the mist sheet (4.2:1): charcoal at 75% keeps the quiet tone at 5.4:1. */
   @apply font-serif text-base text-brand-charcoal/75 lining-nums;
 }
 
