@@ -6,7 +6,12 @@ import type { AssetImage } from '~/lib/datocms/types';
 import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
 import styles from './style.module.css';
 
-type Cover = { url: string; width: number | null; height: number | null; colors?: Array<{ hex: string }> | null };
+type Cover = {
+  url: string;
+  width: number | null;
+  height: number | null;
+  colors?: Array<{ hex: string }> | null;
+};
 
 type Props = {
   name: string;
@@ -19,17 +24,30 @@ type Props = {
   covers: Cover[];
 };
 
-const { name, slug, legalName = null, summary = null, inCatalogue, archived, picture = null, covers }: Props =
-  Astro.props;
+const {
+  name,
+  slug,
+  legalName = null,
+  summary = null,
+  inCatalogue,
+  archived,
+  picture = null,
+  covers,
+}: Props = Astro.props;
 
 const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
 const sizeLine =
   inCatalogue > 0
-    ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null].filter(Boolean).join(' · ')
+    ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null]
+        .filter(Boolean)
+        .join(' · ')
     : `${plural(archived)} fuori catalogo`;
 const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 ? '&archivio=1' : ''}`;
 // Some bios are only a link to a website: links never stand in for the text.
-const bio = (summary ?? '').replace(/(https?:\/\/|www\.)\S+/g, '').replace(/\s+/g, ' ').trim();
+const bio = (summary ?? '')
+  .replace(/(https?:\/\/|www\.)\S+/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
 const initial = name.trim().charAt(0).toUpperCase() || '·';
 // One 128px square serves the 56px portrait at 1x and 2x: a plain <img>, not the responsive
 // <picture> (seven candidates per portrait were half of the page's HTML).
@@ -47,7 +65,15 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
   <div class={styles.head}>
     {portrait ? (
       <div class={styles.portrait}>
-        <img src={portrait} width="56" height="56" alt="" loading="lazy" decoding="async" class={styles.portraitImage} />
+        <img
+          src={portrait}
+          width="56"
+          height="56"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class={styles.portraitImage}
+        />
       </div>
     ) : (
       <div class={styles.initial} aria-hidden="true">{initial}</div>
@@ -64,7 +90,13 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
   {bio.length > 0 ? <p class={styles.summary}>{bio}</p> : null}
 
   {covers.length > 0 ? (
-    <a href={booksHref} class={styles.covers} style={`background: ${fieldColor};`} tabindex="-1" aria-hidden="true">
+    <a
+      href={booksHref}
+      class={styles.covers}
+      style={`background: ${fieldColor};`}
+      tabindex="-1"
+      aria-hidden="true"
+    >
       {covers.map((cover, index) => {
         const ratio = cover.width && cover.height ? cover.width / cover.height : 0.7;
         return (
