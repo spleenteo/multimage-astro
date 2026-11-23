@@ -18,11 +18,12 @@ Pages are server-rendered on Cloudflare Workers (Free plan, 10 ms CPU target) an
 | R1 | The bag shows each title with its quantity (editable), the total copies and the total amount at cover price; single items can be removed and the whole bag emptied | Must-have |
 | R2 | The bag survives navigation, reload and a later visit on the same device | Must-have |
 | R3 | The order is sent from a form (name, email, shipping address, notes) to ordini@multimage.org, and the visitor receives a copy | Must-have |
-| R4 | The wording is not e-commerce: a "borsa", no checkout, no payment step; the visitor is told what happens next (Olivier ships, how and when to pay by bank transfer, expected times) and that the amount excludes shipping | Must-have |
+| R4 | 🟡 The wording is not e-commerce: a "borsa", no checkout, no payment step; the visitor is told what happens next (Olivier confirms and ships, times by shipping kind, how to pay by bank transfer or PayPal with IBAN, and to send the receipt), on the page and in their copy | Must-have |
 | R5 | Fits the Workers Free plan: cached pages stay shared and cacheable (no per-visitor server state on them), no added CPU on page renders | Must-have |
 | R6 | The sending endpoint can't be abused: bots are stopped, and the visitor copy can't be turned into a way to mail arbitrary text to arbitrary addresses | Must-have |
 | R7 | Only orderable books go in the bag (print, not archived, not ebook), from the book page and the home hero | Must-have |
 | R8 | Accessible (keyboard, screen reader, WAVE baseline: 0 errors), usable on mobile; without JavaScript the current `mailto:` still works | Must-have |
+| R9 | 🟡 The order carries what `/info/ordinare` asks for: shipping kind (free "piego di libri", about a week; or fast and tracked, +5 € added to the total) and who orders (private, school, association, bookshop: special conditions) | Must-have |
 
 ---
 
@@ -60,7 +61,8 @@ No server code; the visitor's copy is the sent message in their own mailbox.
 | B3.1 | Header bag icon with copy count badge (rendered empty on the server, filled by B1 on the client) | |
 | B3.2 | Side panel (`<dialog>`, focus trap, Esc closes): titles, quantity steppers, remove, "Svuota la borsa" with confirm, totals (copies, amount at cover price, "spese di spedizione escluse"), CTA to the order page | |
 | **B4** | **Order page `/borsa`** | |
-| B4.1 | Static, cacheable page: recap of the bag (read from B1 on the client), form (name, email, shipping address, notes, consent), "cosa succede dopo" block | |
+| B4.1 | 🟡 Static, cacheable page: recap of the bag (read from B1 on the client), form (name, email, shipping address, shipping kind, who orders, notes, privacy consent), "cosa succede dopo" block with IBAN, BIC, PayPal and receipt instructions | |
+| B4.4 | 🟡 Order facts in one code module (`src/lib/order.ts`): ordini@ address, IBAN, BIC, intermediary SWIFT, PayPal address, shipping kinds and fee, quantity cap 20 per title; used by the page and by the email template (no CMS change, user's call 2026-11-24) | |
 | B4.2 | Turnstile widget on the form | |
 | B4.3 | After a successful send: confirmation state, bag emptied | |
 | **B5** | **Endpoint `POST /api/ordine`** | |
@@ -88,20 +90,25 @@ No Worker code; free tiers are small and the autoresponse copy is often a paid f
 | R1 | The bag shows each title with its quantity (editable), the total copies and the total amount at cover price; single items can be removed and the whole bag emptied | Must-have | ✅ | ✅ | ✅ |
 | R2 | The bag survives navigation, reload and a later visit on the same device | Must-have | ✅ | ✅ | ✅ |
 | R3 | The order is sent from a form (name, email, shipping address, notes) to ordini@multimage.org, and the visitor receives a copy | Must-have | ❌ | ✅ | ❌ |
-| R4 | The wording is not e-commerce: a "borsa", no checkout, no payment step; the visitor is told what happens next (Olivier ships, how and when to pay by bank transfer, expected times) and that the amount excludes shipping | Must-have | ❌ | ✅ | ✅ |
+| R4 | 🟡 The wording is not e-commerce: a "borsa", no checkout, no payment step; the visitor is told what happens next (Olivier confirms and ships, times by shipping kind, how to pay by bank transfer or PayPal with IBAN, and to send the receipt), on the page and in their copy | Must-have | ❌ | ✅ | ✅ |
 | R5 | Fits the Workers Free plan: cached pages stay shared and cacheable (no per-visitor server state on them), no added CPU on page renders | Must-have | ✅ | ✅ | ✅ |
 | R6 | The sending endpoint can't be abused: bots are stopped, and the visitor copy can't be turned into a way to mail arbitrary text to arbitrary addresses | Must-have | ✅ | ✅ | ❌ |
 | R7 | Only orderable books go in the bag (print, not archived, not ebook), from the book page and the home hero | Must-have | ✅ | ✅ | ✅ |
 | R8 | Accessible (keyboard, screen reader, WAVE baseline: 0 errors), usable on mobile; without JavaScript the current `mailto:` still works | Must-have | ✅ | ✅ | ✅ |
+| R9 | 🟡 The order carries what `/info/ordinare` asks for: shipping kind (free "piego di libri", about a week; or fast and tracked, +5 € added to the total) and who orders (private, school, association, bookshop: special conditions) | Must-have | ❌ | ✅ | ✅ |
 
 **Notes:**
 - A fails R3: no form; the order depends on the visitor's mail client, which many phones and webmail users don't have set up for `mailto:`.
+- A fails R9: a `mailto:` body can't ask for the shipping kind and who orders in a structured way.
 - A fails R4: there is no page where "what happens next" is said at the moment of ordering, only the drawer.
 - 🟡 B passes R3 and R6 after the spike (`spike-email.md`): Cloudflare Email Routing reaches only verified addresses and Email Service needs Workers Paid, so B5.3 uses Resend; B5.4 uses the Free plan's WAF rule. Separate, not in this work: SPF/DKIM/DMARC for multimage.org (none today) to agree with whoever runs Google Workspace.
 - C fails R3 and R6: whether a free tier sends the visitor copy, and what it does against abuse, is unknown.
 
-## Open questions for the user
+## Decisions (2026-11-24)
 
-1. **"Cosa succede dopo" text** (R4): written in the code, or a DatoCMS field editable by the editors (e.g. on the `/info/ordinare` page or a global record)? Leaning DatoCMS: times and bank details change, and Olivier can change them without a deploy.
-2. **Bank details in the copy**: should the visitor's copy include the IBAN, or say "you'll receive the details with the books"?
-3. **Quantity cap** per title (e.g. 1–20), to keep promotional orders promotional and the email sane?
+- 🟡 **Selected shape: B.**
+- 🟡 "What happens next" lives in code (`src/lib/order.ts`), no CMS change.
+- 🟡 The visitor's copy and the page carry IBAN and payment instructions, taken from `/info/ordinare`: Banca Etica IBAN IT50T0501802800000011361524, BIC ETICIT22XXX, intermediary POSOIT22XXX, PayPal to info@multimage.org, causale "Ordine libri", receipt to ordini@.
+- 🟡 Quantity per title: 1–20 (conductor's default).
+- 🟡 Design: Impeccable. A right-side panel for the bag; an order page with the form and the explanation.
+- 🟡 The user's own setup, outside the code: Resend account and sending subdomain, the Worker secret, the WAF rate limiting rule. Until the secret exists the endpoint answers a clear error and logs nothing personal.
