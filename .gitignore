@@ -36,3 +36,6 @@ pnpm-debug.log*
 datocms.config.json
 .env*
 .dev.vars*
+
+# Impeccable live mode runtime state (sessions, locks, absolute paths)
+.impeccable/live/
