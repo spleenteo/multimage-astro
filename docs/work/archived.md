@@ -11,3 +11,4 @@ description: "Index of the works archived in docs/work/archive/, a folder Claude
 |---|---|---|---|
 | `cloudflare-workers` | 2026-11-23 | Moved the site from Vercel to Cloudflare Workers, with the Workers Cache purged by DatoCMS cache tags in place of ISR | CHANGELOG v1.0.1 · 1 decision |
 | `upgrade-2026-11` | 2026-11-08 | Upgraded libraries and frameworks (Node 24, TypeScript 6, Astro 7, DatoCMS clients and CLI 4.2, Tailwind 4 and other majors) with no visible change for visitors | no changelog entry (predates docs/CHANGELOG.md) · 3 decisions |
+| `workers-cpu` | 2026-11-23 | Cut the Worker CPU of `/libri` and `/autori` (first cards on the server, the rest from a cached JSON), lighter `Book3D`, new author card with `one_line_bio` | CHANGELOG v1.1.0 · 1 decision |

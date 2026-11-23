@@ -7,6 +7,7 @@ work: workers-cpu
 stacks: [astro, datocms]
 base: main
 updated: 2026-11-23
+archived: 2026-11-23
 tags: [work, workers-cpu]
 description: "Reduce the CPU of Worker-rendered pages and stay on the Workers Free plan (10 ms per request) with margin. Optimisation first; a static site is the last resort."
 ---

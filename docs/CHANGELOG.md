@@ -4,11 +4,12 @@ All notable changes to the Multimage site, newest first.
 
 ## v1.1.0 — 2026-11-23 — Lighter /libri and /autori pages, with richer author cards
 
-The two heaviest pages now do much less work on the server, so they stay within the Workers Free plan limits. Readers get the same catalogues, and author cards now show a short bio.
+The two heaviest pages now do much less work on the server: an uncached render of `/autori` costs about a quarter of the CPU it did, `/libri` about half. Neither is reliably under the 10 ms of the Workers Free plan yet. Readers get the same catalogues, and author cards have a new look.
 
 - **Books catalogue**: `/libri` renders the first 40 cards on the server and builds the rest in the browser from a JSON file, keeping search and filters.
 - **Authors index**: `/autori` renders the first letters on the server and loads the others from a JSON file.
-- **Author cards**: each card shows the author's one-line bio.
+- **Author cards**: each card shows the author's country, a one-line bio and up to four small covers.
+- **CMS**: authors have a `one_line_bio` field, and `country` is a list of Italian country names to pick from.
 - **Book covers**: the 3D book cover uses far fewer elements, which lightens every page that shows books.
 - **Cache refresh**: the two JSON files are purged on publish like the pages.
 - **Work**: `workers-cpu`

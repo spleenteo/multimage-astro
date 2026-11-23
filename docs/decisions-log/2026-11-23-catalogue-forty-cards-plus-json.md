@@ -38,7 +38,7 @@ Production cpuTime of /libri or /catalogue-books.json after deploy stays high en
 
 ## References
 
-- [spike-cpu-profile](../work/2026-11-23-workers-cpu/spike-cpu-profile.md)
+- [spike-cpu-profile](../work/archive/2026-11-23-workers-cpu/spike-cpu-profile.md)
 - [2026-11-22-faceted-catalogue](2026-11-22-faceted-catalogue.md)
 
 ## Status log
