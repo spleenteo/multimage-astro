@@ -1,6 +1,6 @@
 ---
 status: open
-phase: design
+phase: impact
 slice: null
 step: null
 work: borsa
@@ -24,7 +24,9 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Slices
 
-- [ ] (defined during slicing)
+- [ ] V1 — The bag: add, see, change, empty
+- [ ] V2 — The order page and the sending endpoint
+- [ ] V3 — Hardening, docs and handover
 
 ## Pending proposals
 
@@ -32,5 +34,6 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — design + slicing — Impeccable mock docs/design/borsa/borsa-mock.html (artifact HCDpvQfMtVnqefTtB1NNeq); 3 slices; fidelity checks skipped: no frame — 30 min — n/a
 - 2026-11-24 — shaping — shape B selected (Resend via spike-email.md), fidelity check skipped: no frame; user asked to run every slice without stops unless something is grave — 40 min — n/a
 - 2026-11-24 — opening — work opened, frame skipped (problem clear), next: shaping — 10 min — n/a
