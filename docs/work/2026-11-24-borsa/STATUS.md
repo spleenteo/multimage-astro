@@ -1,0 +1,35 @@
+---
+status: open
+phase: shaping
+slice: null
+step: null
+work: borsa
+stacks: [astro, datocms]
+base: main
+updated: 2026-11-24
+tags: [work, borsa]
+description: "A 'bag' (not an e-commerce cart) where visitors put books: titles, editable quantities, total copies and total amount at cover price, emptiable. It ends in a form (name, email, shipping address, notes) that sends the order to ordini@multimage.org (read by Olivier) and a copy to the visitor. Payment stays a bank transfer after shipping. Multimage is an association with promotional-only sales: no transactions, no accounts."
+---
+
+# Status — Borsa
+
+> Update at the **end of every session**: done, remaining, blockers.
+
+**Entry**: product, decided on 2026-11-24 because the change is what visitors see and do; the problem is clear, so the frame is skipped and the work starts from shaping.
+
+## Notes
+
+- Design phase runs with Impeccable (user's choice, 2026-11-24): artifacts for the bag sidebar, the order form page, and the "what happens next" guidance (how and when the books arrive, how to pay).
+- Technical unknown, spike before the plan: how a Worker on the Free plan sends the order email to ordini@ and a copy to an arbitrary visitor address (Email Routing `send_email` only reaches verified addresses; Cloudflare Email Service; an external provider), plus Turnstile.
+
+## Slices
+
+- [ ] (defined during slicing)
+
+## Pending proposals
+
+<!-- date — kind:name — link, when an adapter returns proposed -->
+
+## Log
+
+- 2026-11-24 — opening — work opened, frame skipped (problem clear), next: shaping — 10 min — n/a
