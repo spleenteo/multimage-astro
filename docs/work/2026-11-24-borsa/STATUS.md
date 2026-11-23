@@ -1,6 +1,6 @@
 ---
 status: open
-phase: shaping
+phase: design
 slice: null
 step: null
 work: borsa
@@ -32,4 +32,5 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — shaping — shape B selected (Resend via spike-email.md), fidelity check skipped: no frame; user asked to run every slice without stops unless something is grave — 40 min — n/a
 - 2026-11-24 — opening — work opened, frame skipped (problem clear), next: shaping — 10 min — n/a
