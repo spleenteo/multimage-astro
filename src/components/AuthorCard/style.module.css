@@ -50,7 +50,7 @@
   overflow: hidden;
 }
 
-/* The latest covers stand on the floor of a light field tinted from the newest one. */
+/* The latest cover stands on the floor of a light field tinted from it. */
 .covers {
   @apply mt-auto flex items-end justify-center gap-3 overflow-clip px-3 pt-4 pb-4 md:gap-4;
 }
@@ -76,13 +76,9 @@
   }
 }
 
-/* Two covers fit a phone column; the third joins from 768px. */
-.third {
-  display: none;
-
-  @media (width >= 48rem) {
-    display: block;
-  }
+/* The other books, as a number beside the latest cover. */
+.more {
+  @apply self-center font-serif text-xl text-brand-navy md:text-2xl;
 }
 
 .ways {

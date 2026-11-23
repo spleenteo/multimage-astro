@@ -99,3 +99,7 @@ The owner added `one_line_bio` (string, 100 characters at most) to the author mo
 Against the build before the `/autori` work, two runs of 6 interleaved rounds: 40.1 → 24.2 ms on a quiet machine, 31.7 → 26.7 ms on a loaded one (load average 5). Page 700 → 404 KB.
 
 The line is clamped at four rows: 100 characters fit in the four-column desktop grid, and are cut on phones (two columns, about 22 characters per row) for about half of the authors.
+
+## Addendum — `/autori` with one cover and "+n" (2026-11-23)
+
+The card shows the latest cover only, with "+n" for the author's other books (owner's request). Against the previous build, 6 interleaved rounds: 24.1 → 20.7 ms, page 404 → 360 KB. The query is unchanged: counts and the latest cover per author still come from the read of every book.

@@ -20,7 +20,8 @@ import {
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
-const COVERS_PER_AUTHOR = 3;
+// The card shows the latest cover only (in-catalogue first), with "+n" for the others.
+const COVERS_PER_AUTHOR = 1;
 const draftModeEnabled = resolveDraftMode(Astro);
 const firstPage = { first: AUTHORS_BOOKS_PAGE_SIZE, skip: 0 };
 

@@ -1,7 +1,7 @@
 ---
 // An author in the /autori index: flat, with a small portrait (or the initial), the name as the
-// only link to the profile, the legal name under an alias, country and size, the one-line bio, and a strip
-// of their latest covers on a light field tinted from the newest one, with the way to their books.
+// only link to the profile, the legal name under an alias, country and size, the one-line bio, and
+// their latest cover on a light field tinted from it, with "+n" for the other books and the way to them.
 import type { AssetImage } from '~/lib/datocms/types';
 import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
 import styles from './style.module.css';
@@ -54,7 +54,11 @@ const initial = name.trim().charAt(0).toUpperCase() || '·';
 const portrait = picture?.responsiveImage?.src ?? null;
 
 // A grid of hundreds: the hue stays, light (as on catalogue cards), so the covers stay the loudest.
-const base = pickBaseColor(covers[0]?.colors);
+// One cover, the latest: the other books are a number ("+4"), the size line says the total.
+const latest = covers[0] ?? null;
+const latestRatio = latest?.width && latest?.height ? latest.width / latest.height : 0.7;
+const otherBooks = inCatalogue + archived - 1;
+const base = pickBaseColor(latest?.colors);
 const fieldColor = lightenColor(base, 0.55);
 const shadowColor = hexToRgba(darkenColor(base, 0.55), 0.35);
 const COVER_HEIGHT = 96;
@@ -89,7 +93,7 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
 
   {bio ? <p class={styles.summary}>{bio}</p> : null}
 
-  {covers.length > 0 ? (
+  {latest ? (
     <a
       href={booksHref}
       class={styles.covers}
@@ -97,22 +101,18 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
       tabindex="-1"
       aria-hidden="true"
     >
-      {covers.map((cover, index) => {
-        const ratio = cover.width && cover.height ? cover.width / cover.height : 0.7;
-        return (
-          <img
-            src={coverSrc(cover.url, COVER_HEIGHT)}
-            srcset={`${coverSrc(cover.url, COVER_HEIGHT * 2)} 2x`}
-            width={Math.round(COVER_HEIGHT * ratio)}
-            height={COVER_HEIGHT}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            class:list={[styles.cover, index >= 2 ? styles.third : null]}
-            style={`filter: drop-shadow(6px 10px 12px ${shadowColor});`}
-          />
-        );
-      })}
+      <img
+        src={coverSrc(latest.url, COVER_HEIGHT)}
+        srcset={`${coverSrc(latest.url, COVER_HEIGHT * 2)} 2x`}
+        width={Math.round(COVER_HEIGHT * latestRatio)}
+        height={COVER_HEIGHT}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class={styles.cover}
+        style={`filter: drop-shadow(6px 10px 12px ${shadowColor});`}
+      />
+      {otherBooks > 0 ? <span class={styles.more}>+{otherBooks}</span> : null}
     </a>
   ) : null}
 
