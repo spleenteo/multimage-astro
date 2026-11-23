@@ -2,6 +2,20 @@
 
 All notable changes to the Multimage site, newest first.
 
+## v1.1.0 — 2026-11-23 — Lighter /libri and /autori pages, with richer author cards
+
+The two heaviest pages now do much less work on the server, so they stay within the Workers Free plan limits. Readers get the same catalogues, and author cards now show a short bio.
+
+- **Books catalogue**: `/libri` renders the first 40 cards on the server and builds the rest in the browser from a JSON file, keeping search and filters.
+- **Authors index**: `/autori` renders the first letters on the server and loads the others from a JSON file.
+- **Author cards**: each card shows the author's one-line bio.
+- **Book covers**: the 3D book cover uses far fewer elements, which lightens every page that shows books.
+- **Cache refresh**: the two JSON files are purged on publish like the pages.
+- **Work**: `workers-cpu`
+- **Decision**: [catalogue-forty-cards-plus-json](decisions-log/2026-11-23-catalogue-forty-cards-plus-json.md)
+
+---
+
 ## v1.0.1 — 2026-11-23 — The site now runs on Cloudflare Workers with instant cache refresh
 
 The public site moved from Vercel to Cloudflare Workers, and pages are now cached and refreshed by DatoCMS content changes instead of Vercel's ISR. Visitors see the same site; editors see their changes within seconds.
