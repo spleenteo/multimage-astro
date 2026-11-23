@@ -156,7 +156,7 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: labels and dates come from `src/lib/magazine.ts`.
 - `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
-  - Purpose: a flat card in the `/autori` grid (1 column on phones, 2 from 640px, 3 from 1024px).
+  - Purpose: a card in the `/autori` grid (1 column on phones, 2 from 640px, 3 from 1024px): a mist sheet that turns white with a navy ring and a soft lift on hover or focus.
     - A 48–56px portrait (a plain `<img>`, one 128px square), or the initial on mist.
     - The name (Playfair) as the only link to the profile, followed by a navy arrow; on hover a rule draws under the name and the arrow steps 4px forward. The legal name sits under an alias.
     - A serif size line with the country first ("Italia · 3 libri · 1 fuori catalogo").
