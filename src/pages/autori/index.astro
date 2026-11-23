@@ -50,13 +50,23 @@ const seo = withFallbackSeo(indexContent?._seoMetaTags, {
 });
 
 // Per author: books in and out of the catalogue, and the newest covers (in-catalogue ones first).
-type AuthorBooks = { inCatalogue: number; archived: number; covers: AuthorBookRecord[]; archivedCovers: AuthorBookRecord[] };
+type AuthorBooks = {
+  inCatalogue: number;
+  archived: number;
+  covers: AuthorBookRecord[];
+  archivedCovers: AuthorBookRecord[];
+};
 const booksByAuthor = new Map<string, AuthorBooks>();
 for (const book of books) {
   const isArchived = book.archive === true;
   for (const author of book.authors ?? []) {
     if (!author?.id) continue;
-    const entry = booksByAuthor.get(author.id) ?? { inCatalogue: 0, archived: 0, covers: [], archivedCovers: [] };
+    const entry = booksByAuthor.get(author.id) ?? {
+      inCatalogue: 0,
+      archived: 0,
+      covers: [],
+      archivedCovers: [],
+    };
     if (isArchived) entry.archived += 1;
     else entry.inCatalogue += 1;
     if (book.coverImage?.url) (isArchived ? entry.archivedCovers : entry.covers).push(book);
@@ -66,6 +76,7 @@ for (const book of books) {
 
 const records = sortAuthorsForIndex(data.allAuthors ?? []);
 const fullNames = new Map(records.map((record) => [record.id, record.fullName?.trim() || null]));
+const oneLiners = new Map(records.map((record) => [record.id, record.oneLineBio?.trim() || null]));
 
 // Profiles without a single book stay out of the index.
 const authors = mapAuthorsToCards(records)
@@ -77,6 +88,8 @@ const authors = mapAuthorsToCards(records)
       ...author,
       // Under an alias ("Silo"), the legal name ("Mario Luis Rodríguez Cobos").
       legalName: author.alias && fullName && fullName !== author.name ? fullName : null,
+      // The editors' one-line bio: the full biography stays on the author's page.
+      bio: oneLiners.get(author.id) ?? null,
       inCatalogue: own.inCatalogue,
       archived: own.archived,
       covers: [...own.covers, ...own.archivedCovers]
@@ -124,17 +137,31 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
       <>
         <div class={styles.tools}>
           <label class={styles.search}>
-            <iconify-icon icon="iconoir:search" width="18" height="18" aria-hidden="true"></iconify-icon>
+            <iconify-icon
+              icon="iconoir:search"
+              width="18"
+              height="18"
+              aria-hidden="true"
+            ></iconify-icon>
             <span class="sr-only">Cerca autrici e autori per nome o alias</span>
-            <input id="author-search" type="search" placeholder="Cerca per nome o alias" autocomplete="off" />
+            <input
+              id="author-search"
+              type="search"
+              placeholder="Cerca per nome o alias"
+              autocomplete="off"
+            />
           </label>
           <p id="author-results" class={styles.results} role="status" aria-live="polite"></p>
         </div>
 
-        <nav id="indice-autori" class={styles.letters} aria-label="Indice alfabetico di autrici e autori">
-          {groups.map(({ letter, anchorId }) => (
-            <a href={`#${anchorId}`} data-nav-anchor={anchorId}>{letter}</a>
-          ))}
+        <nav
+          id="indice-autori"
+          class={styles.letters}
+          aria-label="Indice alfabetico di autrici e autori"
+        >
+          {groups.map(({ letter, anchorId }) => <a href={`#${anchorId}`} data-nav-anchor={anchorId}
+            >{letter}</a
+          >)}
         </nav>
 
         <div id="author-no-results" class={styles.noResults} hidden>
@@ -146,27 +173,29 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
         </div>
 
         <div class={styles.groups}>
-          {groups.map(({ letter, anchorId, authors: groupAuthors }) => (
-            <section id={anchorId} class={styles.group} data-author-group aria-labelledby={`${anchorId}-title`}>
-              <h2 id={`${anchorId}-title`} class={styles.groupTitle}>{letter}</h2>
-              <div class={styles.grid}>
-                {groupAuthors.map((author) => (
-                  <div data-author-card data-search={author.search}>
-                    <AuthorCard
-                      name={author.name}
-                      slug={author.slug}
-                      legalName={author.legalName}
-                      summary={author.summary}
-                      inCatalogue={author.inCatalogue}
-                      archived={author.archived}
-                      picture={author.picture}
-                      covers={author.covers}
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
+          {groups.map(({ letter, anchorId, authors: groupAuthors }) => <section
+            id={anchorId}
+            class={styles.group}
+            data-author-group
+            aria-labelledby={`${anchorId}-title`}
+          >
+            <h2 id={`${anchorId}-title`} class={styles.groupTitle}>{letter}</h2>
+            <div class={styles.grid}>
+              {groupAuthors.map((author) => <div data-author-card data-search={author.search}>
+                <AuthorCard
+                  name={author.name}
+                  slug={author.slug}
+                  legalName={author.legalName}
+                  country={author.country}
+                  bio={author.bio}
+                  inCatalogue={author.inCatalogue}
+                  archived={author.archived}
+                  picture={author.picture}
+                  covers={author.covers}
+                />
+              </div>)}
+            </div>
+          </section>)}
         </div>
       </>
     )}
@@ -201,7 +230,9 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
         var visibleInGroup = 0;
         group.querySelectorAll('[data-author-card]').forEach(function (card) {
           var text = normalize(card.dataset.search || '');
-          var visible = terms.every(function (term) { return text.indexOf(term) !== -1; });
+          var visible = terms.every(function (term) {
+            return text.indexOf(term) !== -1;
+          });
           card.hidden = !visible;
           if (visible) visibleInGroup++;
         });

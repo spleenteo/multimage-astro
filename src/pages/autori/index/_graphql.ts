@@ -42,9 +42,8 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
       fullName
       slug
       alias
-      biography {
-        value
-      }
+      country
+      oneLineBio
       sortBy
       picture {
         responsiveImage(

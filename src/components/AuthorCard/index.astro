@@ -1,6 +1,6 @@
 ---
 // An author in the /autori index: flat, with a small portrait (or the initial), the name as the
-// only link to the profile, the legal name under an alias, the size, two lines of bio, and a strip
+// only link to the profile, the legal name under an alias, country and size, the one-line bio, and a strip
 // of their latest covers on a light field tinted from the newest one, with the way to their books.
 import type { AssetImage } from '~/lib/datocms/types';
 import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
@@ -17,7 +17,9 @@ type Props = {
   name: string;
   slug: string;
   legalName?: string | null;
-  summary?: string | null;
+  country?: string | null;
+  /** The editors' one-line bio (`one_line_bio`). */
+  bio?: string | null;
   inCatalogue: number;
   archived: number;
   picture?: AssetImage | null;
@@ -28,7 +30,8 @@ const {
   name,
   slug,
   legalName = null,
-  summary = null,
+  country = null,
+  bio = null,
   inCatalogue,
   archived,
   picture = null,
@@ -36,18 +39,15 @@ const {
 }: Props = Astro.props;
 
 const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
-const sizeLine =
+const books =
   inCatalogue > 0
     ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null]
         .filter(Boolean)
         .join(' · ')
     : `${plural(archived)} fuori catalogo`;
 const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 ? '&archivio=1' : ''}`;
-// Some bios are only a link to a website: links never stand in for the text.
-const bio = (summary ?? '')
-  .replace(/(https?:\/\/|www\.)\S+/g, '')
-  .replace(/\s+/g, ' ')
-  .trim();
+// Country first, when the editors filled it: "Italia · 3 libri".
+const sizeLine = [country?.trim() || null, books].filter(Boolean).join(' · ');
 const initial = name.trim().charAt(0).toUpperCase() || '·';
 // One 128px square serves the 56px portrait at 1x and 2x: a plain <img>, not the responsive
 // <picture> (seven candidates per portrait were half of the page's HTML).
@@ -87,7 +87,7 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
     </div>
   </div>
 
-  {bio.length > 0 ? <p class={styles.summary}>{bio}</p> : null}
+  {bio ? <p class={styles.summary}>{bio}</p> : null}
 
   {covers.length > 0 ? (
     <a

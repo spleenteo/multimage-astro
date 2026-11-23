@@ -91,3 +91,11 @@ Two builds side by side, 6 interleaved rounds of 25 requests.
 - Portrait as a plain `<img>` (kept): the 208 portraits were DatoCMS `<picture>` elements with seven `srcset` candidates for a 56px image, 328 KB of the page. One 128px square now serves 1x and 2x. With the query trimmed to `responsiveImage { src }`: 40.4 → 29.7 ms (−26%), page 706 → 429 KB. Screenshot of the first letter group at 2x: no pixel differs.
 
 Still in the page: the biographies (about 11 ms) and the read of every book for counts and covers.
+
+## Addendum — `/autori` with `one_line_bio` (2026-11-23)
+
+The owner added `one_line_bio` (string, 100 characters at most) to the author model. 224 lines were written from the biographies and published (15 authors have none: no biography, or one that says nothing); `country` became a select of 190 Italian country names and 91 values were normalised. `/autori` reads `oneLineBio` and `country` instead of the full `biography`, and the card shows "Italia · 3 libri" and the line.
+
+Against the build before the `/autori` work, two runs of 6 interleaved rounds: 40.1 → 24.2 ms on a quiet machine, 31.7 → 26.7 ms on a loaded one (load average 5). Page 700 → 404 KB.
+
+The line is clamped at four rows: 100 characters fit in the four-column desktop grid, and are cut on phones (two columns, about 22 characters per row) for about half of the authors.

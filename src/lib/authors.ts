@@ -9,6 +9,8 @@ export type AuthorRecordForCard = {
   slug?: string | null;
   alias?: string | null;
   country?: string | null;
+  /** One line for index cards, written by the editors (`one_line_bio`). */
+  oneLineBio?: string | null;
   biography?: StructuredTextField;
   sortBy?: string | null;
   picture?: AssetImage | null;

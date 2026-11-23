@@ -76,6 +76,9 @@ export type Author = ItemTypeDefinition<
     country: {
       type: 'string';
     };
+    one_line_bio: {
+      type: 'string';
+    };
     biography: {
       type: 'structured_text';
     };
@@ -564,6 +567,9 @@ export type Home = ItemTypeDefinition<
     hero_image: {
       type: 'file';
     };
+    featured_book: {
+      type: 'link';
+    };
     seo: {
       type: 'seo';
     };
@@ -845,6 +851,20 @@ export const Reprint = {
   REF: { type: 'item_type', id: '181484' },
 } as const;
 
+export type SchemaMigration = ItemTypeDefinition<
+  EnvironmentSettings,
+  'EjRfQRvWTDauECjdZHaFQQ',
+  {
+    name: {
+      type: 'string';
+    };
+  }
+>;
+export const SchemaMigration = {
+  ID: 'EjRfQRvWTDauECjdZHaFQQ',
+  REF: { type: 'item_type', id: 'EjRfQRvWTDauECjdZHaFQQ' },
+} as const;
+
 export type SingleAuthor = ItemTypeDefinition<
   EnvironmentSettings,
   'VdpvBBQAR0ykrmM4yRYhlQ',
@@ -1009,5 +1029,6 @@ export type AnyModel =
   | License
   | Page
   | ProjectComment
+  | SchemaMigration
   | Supplier;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

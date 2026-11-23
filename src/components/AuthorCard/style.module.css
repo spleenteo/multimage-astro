@@ -44,8 +44,9 @@
   @apply text-sm leading-relaxed text-brand-charcoal;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  /* The one-line bio is 100 characters at most: four lines in the narrowest column. */
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   overflow: hidden;
 }
 
