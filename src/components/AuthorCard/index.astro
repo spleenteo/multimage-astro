@@ -2,7 +2,6 @@
 // An author in the /autori index: flat, with a small portrait (or the initial), the name as the
 // only link to the profile, the legal name under an alias, the size, two lines of bio, and a strip
 // of their latest covers on a light field tinted from the newest one, with the way to their books.
-import { Image } from '@datocms/astro/Image';
 import type { AssetImage } from '~/lib/datocms/types';
 import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
 import styles from './style.module.css';
@@ -32,7 +31,9 @@ const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 
 // Some bios are only a link to a website: links never stand in for the text.
 const bio = (summary ?? '').replace(/(https?:\/\/|www\.)\S+/g, '').replace(/\s+/g, ' ').trim();
 const initial = name.trim().charAt(0).toUpperCase() || '·';
-const portrait = picture?.responsiveImage ? { ...picture.responsiveImage, alt: '' } : null;
+// One 128px square serves the 56px portrait at 1x and 2x: a plain <img>, not the responsive
+// <picture> (seven candidates per portrait were half of the page's HTML).
+const portrait = picture?.responsiveImage?.src ?? null;
 
 // A grid of hundreds: the hue stays, light (as on catalogue cards), so the covers stay the loudest.
 const base = pickBaseColor(covers[0]?.colors);
@@ -46,7 +47,7 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
   <div class={styles.head}>
     {portrait ? (
       <div class={styles.portrait}>
-        <Image data={portrait} sizes="56px" pictureClass="block h-full w-full" imgClass={styles.portraitImage} />
+        <img src={portrait} width="56" height="56" alt="" loading="lazy" decoding="async" class={styles.portraitImage} />
       </div>
     ) : (
       <div class={styles.initial} aria-hidden="true">{initial}</div>

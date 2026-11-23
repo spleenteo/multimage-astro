@@ -1,5 +1,5 @@
 import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
-import { RESPONSIVE_IMAGE_CARD_FIELDS, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorRecordForCard } from '~/lib/authors';
 
 /** The CDA caps `first` at 500: the books are read in pages of this size until the count is reached. */
@@ -42,18 +42,15 @@ export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
       fullName
       slug
       alias
-      country
       biography {
         value
       }
       sortBy
       picture {
-        url
-        alt
         responsiveImage(
           imgixParams: { fit: crop, crop: focalpoint, w: 128, h: 128, auto: format }
         ) {
-          ${RESPONSIVE_IMAGE_CARD_FIELDS}
+          src
         }
       }
     }

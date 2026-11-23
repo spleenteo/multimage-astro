@@ -82,3 +82,12 @@ Same instance, 5 interleaved rounds of 25 requests: `/libri` 21.2–24.0 ms, mea
 Checked in headless Chromium: 40 cards on load; sort, facet, search, "Mostra altri" and a deep link with filters all fill from the JSON; with the JSON held back, placeholders hold the grid and are replaced on arrival. All 374 cards (40 from the server, 334 built in the browser) have the same markup as the full server render of the previous build.
 
 Not checked: phones, keyboard and screen reader on built cards, the JSON failing twice, draft mode, cache tags and purge of the new endpoint on Cloudflare.
+
+## Addendum — `/autori` (2026-11-23)
+
+Two builds side by side, 6 interleaved rounds of 25 requests.
+
+- Without `biography` in the query (experiment, not kept): 38.2 → 27.2 ms (−29%), page 706 → 657 KB. The full Structured Text of 240 biographies costs about 11 ms to keep 200 characters each.
+- Portrait as a plain `<img>` (kept): the 208 portraits were DatoCMS `<picture>` elements with seven `srcset` candidates for a 56px image, 328 KB of the page. One 128px square now serves 1x and 2x. With the query trimmed to `responsiveImage { src }`: 40.4 → 29.7 ms (−26%), page 706 → 429 KB. Screenshot of the first letter group at 2x: no pixel differs.
+
+Still in the page: the biographies (about 11 ms) and the read of every book for counts and covers.
