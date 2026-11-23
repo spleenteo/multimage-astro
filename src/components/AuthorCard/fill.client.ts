@@ -1,7 +1,7 @@
 // Browser side of AuthorCard: writes an author's values into a clone of the card the server
 // rendered as a mould. It follows the structure of `index.astro`; change the two together.
 //
-//   article > div (head) > div (portrait > img | initial) + div > h3 > a, p (legal), p (size)
+//   article > div (head) > div (portrait > img | initial) + div > h3 > a (name + arrow), p (legal), p (size)
 //           > p (bio)
 //           > div (foot) > a (covers) > img… + a (way to the books)
 import type { AuthorIndexItem } from '~/lib/authorIndex';
@@ -20,7 +20,8 @@ export function fillAuthorCard(card: HTMLElement, author: AuthorIndexItem): void
   const link = info.querySelector<HTMLAnchorElement>('h3 > a');
   if (link) {
     link.setAttribute('href', `/autori/${author.k}`);
-    link.textContent = author.n;
+    // The name is the link's first node; the arrow after it stays.
+    if (link.firstChild) link.firstChild.nodeValue = author.n;
   }
   const [legal, size] = Array.from(info.querySelectorAll(':scope > p'));
   if (author.ln) legal.textContent = author.ln;

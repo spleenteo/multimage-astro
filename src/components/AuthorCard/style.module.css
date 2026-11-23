@@ -28,8 +28,48 @@
   @apply font-serif text-xl leading-snug text-balance text-brand-navy;
 }
 
+/* The name is the way in: on hover a rule draws under it and the arrow steps forward, like the
+   doors on the home page. */
 .name a {
-  @apply text-brand-navy underline-offset-4 hover:underline focus:text-brand-navy;
+  @apply text-brand-navy no-underline hover:no-underline focus:text-brand-navy;
+  padding-bottom: 2px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.head:hover .name a,
+.name a:focus-visible {
+  background-size: 100% 1px;
+}
+
+.arrow {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.35em;
+  vertical-align: -0.06em;
+  opacity: 0.35;
+  transition:
+    transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 350ms ease;
+}
+
+.head:hover .arrow,
+.name a:focus-visible .arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name a,
+  .arrow {
+    transition: none;
+  }
+
+  .head:hover .arrow,
+  .name a:focus-visible .arrow {
+    transform: none;
+  }
 }
 
 .legal {

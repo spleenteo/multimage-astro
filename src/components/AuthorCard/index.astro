@@ -33,7 +33,20 @@ const { author } = Astro.props;
     )}
     <div class="min-w-0">
       <h3 class={styles.name}>
-        <a href={`/autori/${author.k}`}>{author.n}</a>
+        <a href={`/autori/${author.k}`}
+          >{author.n}<svg
+            class={styles.arrow}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 12h18m0 0l-8.5-8.5M21 12l-8.5 8.5"></path>
+          </svg></a
+        >
       </h3>
       {author.ln ? <p class={styles.legal}>{author.ln}</p> : null}
       <p class={styles.size}>{author.sz}</p>
