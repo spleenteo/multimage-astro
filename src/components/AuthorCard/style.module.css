@@ -50,30 +50,33 @@
   overflow: hidden;
 }
 
-/* The foot: the latest cover, small and plain, joined to the way to the books. */
+/* The foot: the latest covers, small and plain, joined to the way to the books. */
 .foot {
-  @apply mt-auto flex items-end gap-3.5 pt-1;
+  @apply mt-auto flex flex-wrap items-end gap-x-3.5 gap-y-1 pt-1;
 }
 
-/* No field behind it: a hairline for white covers and a soft offset shadow. */
-.cover {
-  @apply block w-11 shrink-0 leading-none md:w-13;
+/* No field behind them: a hairline for white covers and a soft offset shadow. */
+.covers {
+  @apply flex shrink-0 items-end gap-1.5 leading-none;
 }
 
-.cover img {
+.covers img {
   display: block;
   width: auto;
-  max-width: 100%;
-  height: auto;
+  height: 3rem;
   outline: 1px solid color-mix(in srgb, var(--color-brand-navy) 12%, transparent);
   box-shadow:
     0 1px 2px rgb(20 30 45 / 0.14),
-    5px 9px 16px rgb(20 30 45 / 0.16);
+    3px 6px 10px rgb(20 30 45 / 0.14);
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (width >= 48rem) {
+    height: 3.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .cover:hover img {
+  .covers:hover img {
     transform: translateY(-3px);
   }
 }

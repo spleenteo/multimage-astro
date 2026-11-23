@@ -1,71 +1,25 @@
 ---
 // An author in the /autori index: flat, with a small portrait (or the initial), the name as the
 // only link to the profile, the legal name under an alias, country and size, the one-line bio, and
-// at the foot the latest cover, small and plain, beside the way to their books.
-import type { AssetImage } from '~/lib/datocms/types';
+// at the foot up to four small plain covers beside the way to their books.
+// `fill.client.ts` writes the same values into a clone of this markup for the cards the browser
+// builds: when the structure changes here, change it there.
+import type { AuthorIndexItem } from '~/lib/authorIndex';
 import styles from './style.module.css';
 
-type Cover = {
-  url: string;
-  width: number | null;
-  height: number | null;
-  colors?: Array<{ hex: string }> | null;
-};
-
 type Props = {
-  name: string;
-  slug: string;
-  legalName?: string | null;
-  country?: string | null;
-  /** The editors' one-line bio (`one_line_bio`). */
-  bio?: string | null;
-  inCatalogue: number;
-  archived: number;
-  picture?: AssetImage | null;
-  covers: Cover[];
+  author: AuthorIndexItem;
 };
 
-const {
-  name,
-  slug,
-  legalName = null,
-  country = null,
-  bio = null,
-  inCatalogue,
-  archived,
-  picture = null,
-  covers,
-}: Props = Astro.props;
-
-const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
-const books =
-  inCatalogue > 0
-    ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null]
-        .filter(Boolean)
-        .join(' · ')
-    : `${plural(archived)} fuori catalogo`;
-const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 ? '&archivio=1' : ''}`;
-// Country first, when the editors filled it: "Italia · 3 libri".
-const sizeLine = [country?.trim() || null, books].filter(Boolean).join(' · ');
-const initial = name.trim().charAt(0).toUpperCase() || '·';
-// One 128px square serves the 56px portrait at 1x and 2x: a plain <img>, not the responsive
-// <picture> (seven candidates per portrait were half of the page's HTML).
-const portrait = picture?.responsiveImage?.src ?? null;
-
-// The latest book, as a small plain cover beside the way to the books (no tinted field: in a grid
-// of hundreds the person leads, and the size line already says how many books there are).
-const latest = covers[0] ?? null;
-const latestRatio = latest?.width && latest?.height ? latest.width / latest.height : 0.7;
-const COVER_HEIGHT = 76;
-const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&auto=format`;
+const { author } = Astro.props;
 ---
 
 <article class={styles.root}>
   <div class={styles.head}>
-    {portrait ? (
+    {author.p ? (
       <div class={styles.portrait}>
         <img
-          src={portrait}
+          src={author.p}
           width="56"
           height="56"
           alt=""
@@ -75,33 +29,34 @@ const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&au
         />
       </div>
     ) : (
-      <div class={styles.initial} aria-hidden="true">{initial}</div>
+      <div class={styles.initial} aria-hidden="true">{author.i}</div>
     )}
     <div class="min-w-0">
       <h3 class={styles.name}>
-        <a href={`/autori/${slug}`}>{name}</a>
+        <a href={`/autori/${author.k}`}>{author.n}</a>
       </h3>
-      {legalName ? <p class={styles.legal}>{legalName}</p> : null}
-      <p class={styles.size}>{sizeLine}</p>
+      {author.ln ? <p class={styles.legal}>{author.ln}</p> : null}
+      <p class={styles.size}>{author.sz}</p>
     </div>
   </div>
 
-  {bio ? <p class={styles.summary}>{bio}</p> : null}
+  {author.b ? <p class={styles.summary}>{author.b}</p> : null}
 
   <div class={styles.foot}>
-    {latest ? (
-      <a href={booksHref} class={styles.cover} tabindex="-1" aria-hidden="true">
-        <img
-          src={coverSrc(latest.url, COVER_HEIGHT)}
-          srcset={`${coverSrc(latest.url, COVER_HEIGHT * 2)} 2x`}
-          width={Math.round(COVER_HEIGHT * latestRatio)}
-          height={COVER_HEIGHT}
-          alt=""
-          loading="lazy"
-          decoding="async"
-        />
+    {author.cv.length > 0 ? (
+      <a href={author.h} class={styles.covers} tabindex="-1" aria-hidden="true">
+        {author.cv.map((cover) => (
+          <img
+            src={cover.src}
+            width={cover.width}
+            height={cover.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
       </a>
     ) : null}
-    <a href={booksHref} class={styles.ways}>Vedi i libri</a>
+    <a href={author.h} class={styles.ways}>Vedi i libri</a>
   </div>
 </article>

@@ -1,48 +1,31 @@
 ---
 // /autori: every author with books, A–Z. A slim title row (as on /libri and /collane), a search
 // that also knows legal names and aliases, a flat letter index, then per letter a grid of flat
-// author cards with their latest covers and the way to their books in the catalogue.
+// author cards. The server renders the first letters (AUTHORS_SERVER_LETTERS); the browser adds
+// the others from `/authors-index.json` once the page is idle (`index/_index.client.ts`), so
+// readers without JavaScript and crawlers get those letters, and the sitemap lists everyone.
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import AuthorCard from '~/components/AuthorCard';
-import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
-import { mapAuthorsToCards, sortAuthorsForIndex } from '~/lib/authors';
 import { withFallbackSeo } from '~/lib/seo';
-import styles from './index/_style.module.css';
 import {
-  AUTHORS_BOOKS_PAGE_SIZE,
-  AUTHORS_BOOKS_QUERY,
-  AUTHORS_PAGE_QUERY,
-  type AuthorBookRecord,
-  type AuthorsBooksResult,
-  type AuthorsPageQueryResult,
-} from './index/_graphql';
+  AUTHORS_INDEX_URL,
+  AUTHORS_SERVER_LETTERS,
+  AUTHORS_SERVER_READ,
+  type AuthorIndexItem,
+} from '~/lib/authorIndex';
+import styles from './index/_style.module.css';
+import { AUTHORS_PAGE_QUERY } from './index/_graphql';
+import { authorsPageVariables, readAuthorsIndex } from './index/_data';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
-// The card shows the latest cover only (in-catalogue first), with "+n" for the others.
-const COVERS_PER_AUTHOR = 1;
 const draftModeEnabled = resolveDraftMode(Astro);
-const firstPage = { first: AUTHORS_BOOKS_PAGE_SIZE, skip: 0 };
+const { indexContent, items, authorsWithBooks, booksInCatalogue } = await readAuthorsIndex(
+  draftModeEnabled,
+  AUTHORS_SERVER_READ,
+);
 
-const data = await executeQuery<AuthorsPageQueryResult>(AUTHORS_PAGE_QUERY, {
-  includeDrafts: draftModeEnabled,
-  variables: firstPage,
-});
-
-// The CDA returns at most 500 records per query: read the rest of the books, if any.
-const books: AuthorBookRecord[] = [...(data.allBooks ?? [])];
-const totalBooks = data._allBooksMeta?.count ?? books.length;
-while (books.length < totalBooks) {
-  const next = await executeQuery<AuthorsBooksResult>(AUTHORS_BOOKS_QUERY, {
-    includeDrafts: draftModeEnabled,
-    variables: { first: AUTHORS_BOOKS_PAGE_SIZE, skip: books.length },
-  });
-  if (!next.allBooks?.length) break;
-  books.push(...next.allBooks);
-}
-
-const indexContent = data.authorsIndexPage?.[0] ?? null;
 const title = indexContent?.title?.trim() || 'Autrici e autori';
 const introHtml = indexContent?.subtitle?.trim() || null;
 const seo = withFallbackSeo(indexContent?._seoMetaTags, {
@@ -50,79 +33,38 @@ const seo = withFallbackSeo(indexContent?._seoMetaTags, {
   description: introHtml ? toPlainText(introHtml) : undefined,
 });
 
-// Per author: books in and out of the catalogue, and the newest covers (in-catalogue ones first).
-type AuthorBooks = {
-  inCatalogue: number;
-  archived: number;
-  covers: AuthorBookRecord[];
-  archivedCovers: AuthorBookRecord[];
-};
-const booksByAuthor = new Map<string, AuthorBooks>();
-for (const book of books) {
-  const isArchived = book.archive === true;
-  for (const author of book.authors ?? []) {
-    if (!author?.id) continue;
-    const entry = booksByAuthor.get(author.id) ?? {
-      inCatalogue: 0,
-      archived: 0,
-      covers: [],
-      archivedCovers: [],
-    };
-    if (isArchived) entry.archived += 1;
-    else entry.inCatalogue += 1;
-    if (book.coverImage?.url) (isArchived ? entry.archivedCovers : entry.covers).push(book);
-    booksByAuthor.set(author.id, entry);
-  }
-}
-
-const records = sortAuthorsForIndex(data.allAuthors ?? []);
-const fullNames = new Map(records.map((record) => [record.id, record.fullName?.trim() || null]));
-const oneLiners = new Map(records.map((record) => [record.id, record.oneLineBio?.trim() || null]));
-
-// Profiles without a single book stay out of the index.
-const authors = mapAuthorsToCards(records)
-  .filter((author) => author.slug.length > 0 && booksByAuthor.has(author.id))
-  .map((author) => {
-    const own = booksByAuthor.get(author.id)!;
-    const fullName = fullNames.get(author.id) ?? null;
-    return {
-      ...author,
-      // Under an alias ("Silo"), the legal name ("Mario Luis Rodríguez Cobos").
-      legalName: author.alias && fullName && fullName !== author.name ? fullName : null,
-      // The editors' one-line bio: the full biography stays on the author's page.
-      bio: oneLiners.get(author.id) ?? null,
-      inCatalogue: own.inCatalogue,
-      archived: own.archived,
-      covers: [...own.covers, ...own.archivedCovers]
-        .slice(0, COVERS_PER_AUTHOR)
-        .map((book) => book.coverImage!),
-      search: [author.name, author.alias, fullName].filter(Boolean).join(' '),
-    };
-  });
-
-type AuthorItem = (typeof authors)[number];
-
-function buildAnchorSegment(letter: string) {
-  const normalized = letter.normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const cleaned = normalized.replace(/[^A-Za-z0-9]/g, '');
-  return cleaned.length > 0 ? cleaned.toLowerCase() : 'other';
-}
-
-const groupsMap = new Map<string, { letter: string; anchorId: string; authors: AuthorItem[] }>();
+// The letters rendered here; the rest of the alphabet arrives with the JSON.
+const authors = items.filter((author) => AUTHORS_SERVER_LETTERS.includes(author.l));
+type Group = { letter: string; anchorId: string; authors: AuthorIndexItem[] };
+const groupsMap = new Map<string, Group>();
 for (const author of authors) {
-  const letter = author.sortLetter || '#';
-  const anchorId = `lettera-${buildAnchorSegment(letter)}`;
-  if (!groupsMap.has(letter)) groupsMap.set(letter, { letter, anchorId, authors: [] });
-  groupsMap.get(letter)!.authors.push(author);
+  if (!groupsMap.has(author.l)) {
+    groupsMap.set(author.l, { letter: author.l, anchorId: author.a, authors: [] });
+  }
+  groupsMap.get(author.l)!.authors.push(author);
 }
 const groups = [...groupsMap.values()];
 
-const booksInCatalogue = books.filter((book) => book.archive !== true).length;
-const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libri in catalogo`;
+const sizeLine = `${authorsWithBooks} autrici e autori · ${booksInCatalogue} libri in catalogo`;
+// A card with every optional part, as a mould for the cards the browser builds.
+const mould = (portrait: boolean): AuthorIndexItem => ({
+  k: '-',
+  l: '-',
+  a: '-',
+  n: '-',
+  ln: '-',
+  sz: '-',
+  b: '-',
+  i: '-',
+  h: '/libri',
+  cv: [{ src: 'data:,', width: 39, height: 56 }],
+  s: '',
+  ...(portrait ? { p: 'data:,' } : {}),
+});
 ---
 
 <BaseLayout seo={seo}>
-  <div class={styles.page}>
+  <div class={styles.page} data-authors-index data-index-url={AUTHORS_INDEX_URL}>
     <header class={styles.intro}>
       <h1 class={styles.title}>{title}</h1>
       {authors.length > 0 ? <p class={styles.size}>{sizeLine}</p> : null}
@@ -159,6 +101,7 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
           id="indice-autori"
           class={styles.letters}
           aria-label="Indice alfabetico di autrici e autori"
+          data-author-nav
         >
           {groups.map(({ letter, anchorId }) => <a href={`#${anchorId}`} data-nav-anchor={anchorId}
             >{letter}</a
@@ -173,7 +116,7 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
           </p>
         </div>
 
-        <div class={styles.groups}>
+        <div class={styles.groups} data-author-groups>
           {groups.map(({ letter, anchorId, authors: groupAuthors }) => <section
             id={anchorId}
             class={styles.group}
@@ -182,22 +125,30 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
           >
             <h2 id={`${anchorId}-title`} class={styles.groupTitle}>{letter}</h2>
             <div class={styles.grid}>
-              {groupAuthors.map((author) => <div data-author-card data-search={author.search}>
-                <AuthorCard
-                  name={author.name}
-                  slug={author.slug}
-                  legalName={author.legalName}
-                  country={author.country}
-                  bio={author.bio}
-                  inCatalogue={author.inCatalogue}
-                  archived={author.archived}
-                  picture={author.picture}
-                  covers={author.covers}
-                />
+              {groupAuthors.map((author) => <div
+                data-author-card
+                data-key={author.k}
+                data-search={author.s}
+              >
+                <AuthorCard author={author} />
               </div>)}
             </div>
           </section>)}
         </div>
+
+        {/* Moulds for the letters and cards the browser builds from the JSON. */}
+        <template data-group-template>
+          <section class={styles.group} data-author-group>
+            <h2 class={styles.groupTitle}></h2>
+            <div class={styles.grid}></div>
+          </section>
+        </template>
+        <template data-card-template>
+          <div data-author-card><AuthorCard author={mould(true)} /></div>
+        </template>
+        <template data-card-template-initial>
+          <div data-author-card><AuthorCard author={mould(false)} /></div>
+        </template>
       </>
     )}
 
@@ -206,7 +157,10 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
       <a href="/info/chi-siamo">Scopri come proporre la tua opera alla redazione</a>.
     </p>
   </div>
-  <DraftModeQueryListener query={AUTHORS_PAGE_QUERY} variables={firstPage} />
+  <DraftModeQueryListener
+    query={AUTHORS_PAGE_QUERY}
+    variables={authorsPageVariables(AUTHORS_SERVER_READ)}
+  />
 </BaseLayout>
 
 <script is:inline>
@@ -252,5 +206,13 @@ const sizeLine = `${authors.length} autrici e autori · ${booksInCatalogue} libr
     }
 
     input.addEventListener('input', filter);
+    // The other letters arrive from the JSON after load: apply the current search to them too.
+    document.addEventListener('authors:loaded', filter);
   })();
+</script>
+
+<script>
+  import { initAuthorsIndex } from './index/_index.client';
+
+  document.querySelectorAll<HTMLElement>('[data-authors-index]').forEach(initAuthorsIndex);
 </script>

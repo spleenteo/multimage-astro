@@ -55,6 +55,7 @@ const CACHED_NON_HTML_PATHS = new Set([
   '/archived-books.json',
   '/search-books.json',
   '/catalogue-books.json',
+  '/authors-index.json',
 ]);
 
 function isApiPath(pathname: string) {

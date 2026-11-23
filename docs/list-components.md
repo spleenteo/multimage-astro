@@ -161,8 +161,9 @@ scope: A list to describe all components used in the project
     - The name (Playfair) as the only link to the profile, with the legal name under an alias.
     - A serif size line with the country first ("Italia · 3 libri · 1 fuori catalogo").
     - The editors' one-line bio (`one_line_bio`, 100 characters at most), clamped to 4 lines.
-    - At the foot, the latest cover, small and plain (no tinted field), beside "Vedi i libri" → `/libri?autore=<slug>`.
-  - Key props: `name`, `slug`, `legalName?`, `country?`, `bio?`, `inCatalogue`, `archived`, `picture?`, `covers[]` (`url`, `width`, `height`, `colors`).
+    - At the foot, up to 4 latest covers, small and plain (no tinted field), beside "Vedi i libri" → `/libri?autore=<slug>`.
+    - `fill.client.ts` writes the same values into a clone of the card for the letters the browser builds.
+  - Key props: `author` (`AuthorIndexItem` from `src/lib/authorIndex.ts`).
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
   - Notes: covers are plain imgix `<img>` (h=96, 2x), not `<Image>`, to keep the render of ~230 cards light. The cover strip is a mouse-only link (`tabindex=-1`, `aria-hidden`).

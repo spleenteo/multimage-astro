@@ -103,3 +103,13 @@ The line is clamped at four rows: 100 characters fit in the four-column desktop 
 ## Addendum — `/autori` with one cover and "+n" (2026-11-23)
 
 The card shows the latest cover only, with "+n" for the author's other books (owner's request). Against the previous build, 6 interleaved rounds: 24.1 → 20.7 ms, page 404 → 360 KB. The query is unchanged: counts and the latest cover per author still come from the read of every book.
+
+## Addendum — `/autori` with letters A–E on the server and `/authors-index.json` (2026-11-23)
+
+Card layout chosen by the owner in an Impeccable live session (plain covers at the foot, no tinted field), then up to four small covers per author (one image at twice the displayed height, no `srcset`). The server renders letters A–E (91 of 230 authors; three more of those letters sort past the first 130 profiles the page reads and arrive with the JSON); the browser adds the other letters from `/authors-index.json` when the page is idle.
+
+Against the previous build, 6 interleaved rounds: 21.9 → 16.8 ms, page 360 → 165 KB. Same instance, 5 rounds: page 16.3 ms, `/authors-index.json` 9.2 ms (144 KB, 29 KB gzipped), 404 page 5.9 ms.
+
+Checked in headless Chromium: 91 cards and letters A–E on load; after the JSON 230 cards in 22 letter groups, in the JSON's order; search finds an author from a later letter; `/autori#lettera-p` scrolls to the letter once it exists. Not checked: phones, keyboard, the JSON failing, draft mode, cache tags of the endpoint on Cloudflare.
+
+`/autori` since the start of this work: about 40 ms → 16 ms, 706 KB → 165 KB.
