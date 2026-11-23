@@ -44,6 +44,18 @@ Cross-cutting rules for every slice:
 - `<dialog>` + `showModal()` gives focus trap and inert background; style `::backdrop` with the navy backdrop of DESIGN.md (sheet lift turned sideways).
 - Price strings come formatted from the server (`16,00 €`); store cents parsed from the raw number, not from the label.
 
+**Impact corrections (2026-11-24)**
+
+- Orderable rule once: `isOrderablePrint({ archive, format, price })` in `src/lib/order.ts` (not archived, format not "ebook" trimmed case-insensitive, price is a number); used by the book page (replaces the inline `canOrderPrint` at `src/pages/libri/[slug]/index.astro:170`), the home hero and, in V2, the endpoint. A print book with no price gets no "Metti in borsa" (it keeps the mailto).
+- Order email address once: move `ORDER_EMAIL` (`src/lib/books.ts:311`) and `ORDERS_EMAIL` (`src/pages/distributori/index.astro:18`) to `src/lib/order.ts` and import it.
+- `Button` (`src/components/ui/Button/index.astro`) drops extra attributes: put the bag `data-*` on a wrapper element (or the enhanced `<a>`), do not change `Button`'s API.
+- Home hero: extend `toHighlightData` (`src/pages/index.astro:126-160`) and `HomeHero` props with `id`, `slug`, raw `price`, `isArchived`, `format`, cover thumb and `tint`; the hero uses `isOrderablePrint` (today it shows the mailto even for an ebook) and the same no-JS mailto fallback as the book page.
+- Tint: `coverFieldPalette(colors).field` (`src/lib/colors.ts:98`), the same value as the catalogue's `bg`.
+- No ClientRouter in the repo: the bag script initialises when the module runs (as `Header.astro:868-870` calls `enhanceHeader()` directly), not only on `astro:page-load`.
+- Header bag button: rendered `hidden` in the server HTML and revealed by the script, so it is never a dead control without JS.
+- Update the stale code comments at `src/lib/books.ts:321` and `src/pages/libri/[slug]/index.astro:169` ("there is no cart").
+- Done, added: 9. A print book with no price has no "Metti in borsa".
+
 ## V2 — The order page and the sending endpoint
 
 **In**
@@ -73,6 +85,18 @@ Cross-cutting rules for every slice:
 - The endpoint must not be cached by the Gateway or the Workers Cache: check `src/worker.ts` for how `/api/*` routes are treated.
 - CPU: the endpoint runs once per order; the fetches (siteverify, CDA, two Resend calls) are I/O, not CPU.
 
+**Impact corrections (2026-11-24)**
+
+- `/borsa` is server-rendered and cached like every page (no `prerender` export, layout cache tags as usual); no per-request data. `noindex` through the `seo` prop as `src/pages/404.astro:10` does; no robots.txt line; not added to `src/pages/sitemap.xml.ts`.
+- Missing keys fail closed outside dev. Test keys (Turnstile site `1x00000000000000000000AA`, secret `1x0000000000000000000000000000000AA`) and console logging of the email only when `import.meta.env.DEV`. In a production build with no `PUBLIC_TURNSTILE_SITE_KEY`, `/borsa` shows the bag and the `mailto:` fallback (built from all bag lines) instead of the form. The endpoint answers 503 with an error code when `RESEND_API_KEY` or `TURNSTILE_SECRET_KEY` is unset, and the page then offers the `mailto:`. Nothing personal is logged in production, ever.
+- siteverify checks `success`, `hostname` and `action` (`ordine`).
+- Refetch: `allBooks(first: 30, filter: { id: { in: [...] } })`, each id checked against `^[A-Za-z0-9_-]{1,40}$` first, selecting `id title slug price format archive authors { name }`; through `executeQuery` with `includeDrafts: false` (environment from `DATOCMS_ENVIRONMENT`). Lines whose book is missing or fails `isOrderablePrint` are dropped.
+- The endpoint answers `{ ok, copySent, lines, copies, shipping, total, dropped }`; the success state renders the server's values and names dropped or repriced lines.
+- The endpoint lives at `src/pages/api/ordine/index.ts` (folder style, like the other API routes); exports `POST` and `ALL` returning 405; does not use `src/pages/api/utils.ts` helpers (no CORS `*`, no error echo); error bodies carry codes only; must not import `cloudflare:workers` (the Vercel build in the gate).
+- Caching is already handled: `src/worker.ts:48-56` gives `/api` no cache key, `src/middleware.ts:120-139` sets `cache.set(false)` and `private, no-store` on `/api` and non-GET. Replace the caching gotcha with a Done check.
+- Privacy: the consent links the iubenda privacy page used in `src/components/Footer.astro:80`.
+- Done, added: 8. Production build (no keys, `astro preview` or a local Cloudflare build): `/borsa` shows the mailto fallback; a direct POST answers 503 with a code; nothing personal in the log. 9. A stale price in `localStorage` shows the server's price on the success state. 10. The POST response carries `cache-control: private, no-store`.
+
 ## V3 — Hardening, docs and handover
 
 **In**
@@ -90,3 +114,9 @@ Cross-cutting rules for every slice:
 2. Docs updated; `npm run docs:inventory` passes.
 3. Setup note present and complete.
 4. Gate green.
+
+**Impact corrections (2026-11-24)**
+
+- `PUBLIC_TURNSTILE_SITE_KEY` is inlined at build: the setup note says to add it to `.env.cloudflare` before `deploy:cf`; `wrangler secret put` only for `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY`. Update the env matrix in `docs/guidelines/security.md` and the Worker secrets list in `docs/guidelines/operations.md`.
+- `docs/current-state.md:38` ("non c'è carrello") and `docs/list-helpers.md:83` (`buildOrderMailto`) become false: update them.
+- TODO follow-up: keep the IBAN and PayPal details of `/info/ordinare` (CMS) in step with `src/lib/order.ts`.

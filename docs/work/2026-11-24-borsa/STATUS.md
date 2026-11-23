@@ -1,8 +1,9 @@
 ---
 status: open
-phase: impact
-slice: null
-step: null
+phase: slice
+slice: V1
+step: plan
+
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -34,6 +35,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — impact — 2 agents: 3 high (fail-closed keys, Turnstile test key in prod), 11 medium, 7 low; all fixes applied to slices.md (user asked for no stops) — 15 min — n/a
 - 2026-11-24 — design + slicing — Impeccable mock docs/design/borsa/borsa-mock.html (artifact HCDpvQfMtVnqefTtB1NNeq); 3 slices; fidelity checks skipped: no frame — 30 min — n/a
 - 2026-11-24 — shaping — shape B selected (Resend via spike-email.md), fidelity check skipped: no frame; user asked to run every slice without stops unless something is grave — 40 min — n/a
 - 2026-11-24 — opening — work opened, frame skipped (problem clear), next: shaping — 10 min — n/a
