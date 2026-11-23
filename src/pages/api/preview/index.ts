@@ -33,7 +33,8 @@ function validateSecret(secret: string | null | undefined) {
   const normalized = normalizeSecret(secret);
 
   if (!normalized || normalized !== SECRET_API_TOKEN) {
-    console.warn('[preview] Secret mismatch', { normalized, expected: SECRET_API_TOKEN });
+    // Never log the secret, sent or expected: Workers logs are kept (observability).
+    console.warn('[preview] Secret mismatch');
     return invalidRequestResponse('Invalid or missing preview secret.', 401);
   }
 
