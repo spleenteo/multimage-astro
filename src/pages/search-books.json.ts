@@ -16,7 +16,12 @@ const SEARCH_BOOKS_QUERY = /* GraphQL */ `
     _allBooksMeta(filter: { _status: { eq: published } }) {
       count
     }
-    allBooks(filter: { _status: { eq: published } }, first: $first, skip: $skip, orderBy: title_ASC) {
+    allBooks(
+      filter: { _status: { eq: published } }
+      first: $first
+      skip: $skip
+      orderBy: title_ASC
+    ) {
       slug
       title
       printYear
@@ -98,7 +103,8 @@ export const GET: APIRoute = async () => {
     if (book.archive) entry.x = 1;
     if (cover?.url) {
       entry.c = cover.url;
-      if (cover.width && cover.height) entry.r = Math.round((cover.width / cover.height) * 100) / 100;
+      if (cover.width && cover.height)
+        entry.r = Math.round((cover.width / cover.height) * 100) / 100;
       entry.k = coverFieldPalette(cover.colors).copy;
     }
     entries[slug] = entry;

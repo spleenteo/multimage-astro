@@ -30,7 +30,11 @@ const href = recordPath(fields.__typename, fields.slug);
 
 {label ? (
   href ? (
-    <a href={href} class="font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy">{label}</a>
+    <a
+      href={href}
+      class="font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy"
+      >{label}</a
+    >
   ) : (
     <span>{label}</span>
   )

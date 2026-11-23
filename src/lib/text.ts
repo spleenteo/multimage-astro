@@ -112,5 +112,9 @@ export function toRichTextHtml(value: string | null | undefined): string | null 
 
 /** Drops bare URLs (and "www." addresses) from plain text, e.g. a lede pasted with its source link. */
 export function withoutUrls(text: string): string {
-  return text.replace(/(https?:\/\/|www\.)\S+/gi, '').replace(/\s+([,.;:])/g, '$1').replace(/\s+/g, ' ').trim();
+  return text
+    .replace(/(https?:\/\/|www\.)\S+/gi, '')
+    .replace(/\s+([,.;:])/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
 }

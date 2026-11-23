@@ -10,7 +10,11 @@ export function postDate(post: DatedPost): string | null {
   return post._firstPublishedAt ?? post.createdAt ?? null;
 }
 
-const dateFormatter = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+const dateFormatter = new Intl.DateTimeFormat('it-IT', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
 
 export function formatPostDate(iso: string | null | undefined): string | null {
   if (!iso) return null;
@@ -22,19 +26,47 @@ export function formatPostDate(iso: string | null | undefined): string | null {
 type CategoryLabels = { plural: string; singular: string; others: string; all: string };
 
 const CATEGORY_LABELS: Record<string, CategoryLabels> = {
-  recensioni: { plural: 'Recensioni', singular: 'Recensione', others: 'Altre recensioni', all: 'Tutte le recensioni' },
+  recensioni: {
+    plural: 'Recensioni',
+    singular: 'Recensione',
+    others: 'Altre recensioni',
+    all: 'Tutte le recensioni',
+  },
   eventi: { plural: 'Eventi', singular: 'Evento', others: 'Altri eventi', all: 'Tutti gli eventi' },
-  interviste: { plural: 'Interviste', singular: 'Intervista', others: 'Altre interviste', all: 'Tutte le interviste' },
-  news: { plural: 'Notizie', singular: 'Notizia', others: 'Altre notizie', all: 'Tutte le notizie' },
-  libri: { plural: 'Libri', singular: 'Libri', others: 'Altri articoli sui libri', all: 'Tutti gli articoli sui libri' },
-  premiazioni: { plural: 'Premiazioni', singular: 'Premiazione', others: 'Altre premiazioni', all: 'Tutte le premiazioni' },
+  interviste: {
+    plural: 'Interviste',
+    singular: 'Intervista',
+    others: 'Altre interviste',
+    all: 'Tutte le interviste',
+  },
+  news: {
+    plural: 'Notizie',
+    singular: 'Notizia',
+    others: 'Altre notizie',
+    all: 'Tutte le notizie',
+  },
+  libri: {
+    plural: 'Libri',
+    singular: 'Libri',
+    others: 'Altri articoli sui libri',
+    all: 'Tutti gli articoli sui libri',
+  },
+  premiazioni: {
+    plural: 'Premiazioni',
+    singular: 'Premiazione',
+    others: 'Altre premiazioni',
+    all: 'Tutte le premiazioni',
+  },
 };
 
 const capitalize = (value: string) => value.charAt(0).toLocaleUpperCase('it-IT') + value.slice(1);
 
 export type PostCategory = { name?: string | null; slug?: string | null } | null | undefined;
 
-export function categoryLabel(category: PostCategory, form: keyof CategoryLabels = 'plural'): string | null {
+export function categoryLabel(
+  category: PostCategory,
+  form: keyof CategoryLabels = 'plural',
+): string | null {
   const slug = category?.slug?.trim().toLowerCase();
   const known = slug ? CATEGORY_LABELS[slug] : undefined;
   if (known) return known[form];

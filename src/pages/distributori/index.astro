@@ -34,7 +34,13 @@ const seo = withFallbackSeo(indexContent?._seoMetaTags, {
 const suppliers = mapSuppliersToCards(data.allSuppliers);
 const groups = groupSuppliersByRegion(suppliers).map((group) => ({
   ...group,
-  anchorId: `regione-${group.region.normalize('NFD').replace(/[^\p{L}0-9]+/gu, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'altre'}`,
+  anchorId: `regione-${
+    group.region
+      .normalize('NFD')
+      .replace(/[^\p{L}0-9]+/gu, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'altre'
+  }`,
 }));
 
 const mapPoints: SuppliersMapPoint[] = suppliers.flatMap((supplier) =>
@@ -69,10 +75,14 @@ const sizeLine =
       <div class={styles.way}>
         <h2 class={styles.wayTitle}>In qualsiasi libreria</h2>
         <p>
-          Chiedi il libro per titolo o ISBN: ogni libreria può ordinarlo dai nostri distributori,{' '}
-          <a href="https://www.libridiffusi.com/" target="_blank" rel="noopener noreferrer">Libri Diffusi<span class="sr-only"> (si apre in una nuova scheda)</span></a>{' '}
-          (collegata a Fastbook) e{' '}
-          <a href="http://www.terminalvideo.com/" target="_blank" rel="noopener noreferrer">Terminal Distribuzione<span class="sr-only"> (si apre in una nuova scheda)</span></a>.
+          Chiedi il libro per titolo o ISBN: ogni libreria può ordinarlo dai nostri
+          distributori,{' '}
+          <a href="https://www.libridiffusi.com/" target="_blank" rel="noopener noreferrer"
+            >Libri Diffusi<span class="sr-only"> (si apre in una nuova scheda)</span></a
+          >{' '} (collegata a Fastbook) e{' '}
+          <a href="http://www.terminalvideo.com/" target="_blank" rel="noopener noreferrer"
+            >Terminal Distribuzione<span class="sr-only"> (si apre in una nuova scheda)</span></a
+          >.
         </p>
       </div>
 
@@ -88,19 +98,21 @@ const sizeLine =
       <div class={styles.way}>
         <h2 class={styles.wayTitle}>Ordinalo a noi</h2>
         <p>
-          Scegli il libro nel catalogo e ordinalo via email dalla sua pagina. Spedizione gratuita con
-          piego di libri; <a href="/info/adesioni">soci: 30% di sconto</a>.
+          Scegli il libro nel catalogo e ordinalo via email dalla sua pagina. Spedizione gratuita
+          con piego di libri; <a href="/info/adesioni">soci: 30% di sconto</a>.
         </p>
         <div class={styles.wayAction}>
-          <Button href="/libri" primary icon="iconoir:book" iconPosition="left">Scegli il libro</Button>
+          <Button href="/libri" primary icon="iconoir:book" iconPosition="left"
+            >Scegli il libro</Button
+          >
         </div>
       </div>
     </section>
 
     {suppliers.length === 0 ? (
       <p class={styles.empty}>
-        L'elenco delle librerie e dei luoghi amici è in aggiornamento. Intanto puoi chiedere i nostri
-        libri in qualsiasi libreria, o ordinarli a noi.
+        L'elenco delle librerie e dei luoghi amici è in aggiornamento. Intanto puoi chiedere i
+        nostri libri in qualsiasi libreria, o ordinarli a noi.
       </p>
     ) : (
       <section id="elenco" class={styles.list} aria-labelledby="elenco-title">
@@ -112,23 +124,27 @@ const sizeLine =
           </nav>
         ) : null}
 
-        {groups.map(({ region, suppliers: items, anchorId }) => (
-          <section id={anchorId} class={styles.region} aria-labelledby={`${anchorId}-title`}>
-            <h2 id={`${anchorId}-title`} class={styles.regionTitle}>{region}</h2>
-            <div class={styles.grid}>
-              {items.map((supplier) => <SupplierCard {...supplier} />)}
-            </div>
-          </section>
-        ))}
+        {groups.map(({ region, suppliers: items, anchorId }) => <section
+          id={anchorId}
+          class={styles.region}
+          aria-labelledby={`${anchorId}-title`}
+        >
+          <h2 id={`${anchorId}-title`} class={styles.regionTitle}>{region}</h2>
+          <div class={styles.grid}>
+            {items.map((supplier) => (
+              <SupplierCard {...supplier} />
+            ))}
+          </div>
+        </section>)}
       </section>
     )}
 
     <section class={styles.booksellers} aria-labelledby="librerie-title">
       <h2 id="librerie-title" class={styles.wayTitle}>Sei una libreria?</h2>
       <p>
-        Puoi ordinare tramite i distributori o direttamente a noi, senza spese di spedizione: scrivi a{' '}
-        <a href={`mailto:${ORDERS_EMAIL}`}>{ORDERS_EMAIL}</a>. Allo stesso indirizzo, se vuoi entrare
-        nella rete di librerie e associazioni amiche.
+        Puoi ordinare tramite i distributori o direttamente a noi, senza spese di spedizione: scrivi
+        a{' '} <a href={`mailto:${ORDERS_EMAIL}`}>{ORDERS_EMAIL}</a>. Allo stesso indirizzo, se vuoi
+        entrare nella rete di librerie e associazioni amiche.
       </p>
     </section>
   </div>

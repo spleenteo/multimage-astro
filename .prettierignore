@@ -9,3 +9,5 @@ dist/
 public/generated/
 AGENTS.md
 datocms.config.json
+.claude/
+.impeccable/

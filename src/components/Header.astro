@@ -134,10 +134,13 @@ function linkIsActive(link: NavLink, pathname: string) {
 
   return pathname === link.href || pathname.startsWith(`${link.href}/`);
 }
-
 ---
 
-<header class="relative z-40 shadow-soft [--focus-ring:var(--color-white)]" data-header data-datocms-noindex>
+<header
+  class="relative z-40 shadow-soft [--focus-ring:var(--color-white)]"
+  data-header
+  data-datocms-noindex
+>
   <div class="hidden bg-brand-navy text-white md:block">
     <div
       class="container flex flex-wrap items-center justify-end gap-2 py-2 text-xs font-semibold uppercase"
@@ -475,7 +478,6 @@ function linkIsActive(link: NavLink, pathname: string) {
       </div>
     </div>
   </div>
-
 </header>
 
 <script type="module" is:inline>

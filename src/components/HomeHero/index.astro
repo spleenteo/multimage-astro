@@ -39,10 +39,17 @@ const {
 
 // Field behind the cover, a pale tint of the same hue for the text half (so the band reads as one
 // full-width field), the cover's coloured shadow, and a caption colour that reads on a dark field.
-const { field: fieldColor, copy: copyColor, shadow: shadowColor, caption: captionColor } =
-  coverFieldPalette(coverColors);
+const {
+  field: fieldColor,
+  copy: copyColor,
+  shadow: shadowColor,
+  caption: captionColor,
+} = coverFieldPalette(coverColors);
 
-const orderHref = buildOrderMailto({ title: book.title, authors: authors.map((author) => author.name) });
+const orderHref = buildOrderMailto({
+  title: book.title,
+  authors: authors.map((author) => author.name),
+});
 const titleId = 'home-hero-book-title';
 ---
 

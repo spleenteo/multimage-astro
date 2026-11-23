@@ -17,8 +17,15 @@ type Props = {
   covers: Array<{ id: string; title: string; image: AssetImage }>;
 };
 
-const { name, slug, description = null, inCatalogue, archived, latest = null, covers }: Props =
-  Astro.props;
+const {
+  name,
+  slug,
+  description = null,
+  inCatalogue,
+  archived,
+  latest = null,
+  covers,
+}: Props = Astro.props;
 
 const href = `/collane/${slug}`;
 const headingId = `collana-${slug}`;
@@ -26,7 +33,9 @@ const palette = coverFieldPalette(covers[0]?.image.colors);
 const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
 const sizeLine =
   inCatalogue > 0
-    ? [plural(inCatalogue), archived > 0 ? `${archived} fuori catalogo` : null].filter(Boolean).join(' · ')
+    ? [plural(inCatalogue), archived > 0 ? `${archived} fuori catalogo` : null]
+        .filter(Boolean)
+        .join(' · ')
     : `${plural(archived)} fuori catalogo`;
 ---
 
@@ -39,7 +48,8 @@ const sizeLine =
     {description ? <p class={styles.description}>{description}</p> : null}
     {latest ? (
       <p class={styles.latest}>
-        Ultima uscita: <span class={styles.latestTitle}>{latest.title}</span>{latest.year ? `, ${latest.year}` : null}
+        Ultima uscita: <span class={styles.latestTitle}>{latest.title}</span
+        >{latest.year ? `, ${latest.year}` : null}
       </p>
     ) : null}
     {inCatalogue > 0 ? (

@@ -101,8 +101,34 @@ export function toSupplierCard(record: SupplierRecord): SupplierCardViewModel {
 
 // Italian area codes with three digits; the others have four (mobiles: 3xx).
 const THREE_DIGIT_PREFIXES = new Set([
-  '010', '011', '015', '019', '030', '031', '035', '039', '040', '041', '045', '049', '050', '051',
-  '055', '059', '070', '071', '075', '079', '080', '081', '085', '089', '090', '091', '095', '099',
+  '010',
+  '011',
+  '015',
+  '019',
+  '030',
+  '031',
+  '035',
+  '039',
+  '040',
+  '041',
+  '045',
+  '049',
+  '050',
+  '051',
+  '055',
+  '059',
+  '070',
+  '071',
+  '075',
+  '079',
+  '080',
+  '081',
+  '085',
+  '089',
+  '090',
+  '091',
+  '095',
+  '099',
 ]);
 
 function formatItalianNumber(digits: string): string {
@@ -110,7 +136,11 @@ function formatItalianNumber(digits: string): string {
     return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
   }
   if (digits.startsWith('0')) {
-    const prefixLength = /^0[26]/.test(digits) ? 2 : THREE_DIGIT_PREFIXES.has(digits.slice(0, 3)) ? 3 : 4;
+    const prefixLength = /^0[26]/.test(digits)
+      ? 2
+      : THREE_DIGIT_PREFIXES.has(digits.slice(0, 3))
+        ? 3
+        : 4;
     return `${digits.slice(0, prefixLength)} ${digits.slice(prefixLength)}`;
   }
   return digits;
@@ -137,7 +167,10 @@ export function parseSupplierPhones(raw: string | null): SupplierPhone[] {
   for (const match of raw.matchAll(pattern)) {
     const digits = match[2].replace(/\D/g, '');
     if (digits.length < 6) continue;
-    const before = raw.slice(cursor, match.index).replace(/[-–,;/]/g, ' ').trim();
+    const before = raw
+      .slice(cursor, match.index)
+      .replace(/[-–,;/]/g, ' ')
+      .trim();
     cursor = (match.index ?? 0) + match[0].length;
     const isFax = /fax/i.test(before);
     const label = before.replace(/\b(tel|telefono|fax|cell)\.?/gi, '').trim() || null;

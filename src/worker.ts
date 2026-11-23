@@ -34,8 +34,11 @@ function hasCookie(header: string | null, name: string) {
 }
 
 function cacheKeyFor(url: URL) {
-  const category = url.pathname === '/magazine' ? url.searchParams.get('categoria')?.trim().toLowerCase() : '';
-  return category && /^[a-z0-9-]{1,60}$/.test(category) ? `${url.pathname}?categoria=${category}` : url.pathname;
+  const category =
+    url.pathname === '/magazine' ? url.searchParams.get('categoria')?.trim().toLowerCase() : '';
+  return category && /^[a-z0-9-]{1,60}$/.test(category)
+    ? `${url.pathname}?categoria=${category}`
+    : url.pathname;
 }
 
 export default {

@@ -16,4 +16,8 @@ const target = isInternal ? undefined : meta('target');
 const rel = target === '_blank' ? (meta('rel') ?? 'noopener noreferrer') : meta('rel');
 ---
 
-<a href={href} {target} {rel}><slot />{target === '_blank' ? <span class="sr-only"> (si apre in una nuova scheda)</span> : null}</a>
+<a href={href} {target} {rel}
+  ><slot />{target === '_blank' ? (
+    <span class="sr-only"> (si apre in una nuova scheda)</span>
+  ) : null}</a
+>

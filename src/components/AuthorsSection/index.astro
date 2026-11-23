@@ -28,27 +28,25 @@ const { title, authors }: Props = Astro.props;
     <ul class={styles.list}>
       {authors.map((author) => {
         const picture = author.picture?.responsiveImage ?? null;
-        return (
-          <li class:list={[styles.author, picture ? styles.withPortrait : null]}>
-            {picture ? (
-              <div class={styles.portrait}>
-                <Image
-                  data={{ ...picture, alt: '' }}
-                  sizes="128px"
-                  pictureClass="block h-full"
-                  imgClass={styles.image}
-                />
-              </div>
-            ) : null}
-            <div>
-              <h3 class={styles.name}>
-                {author.slug ? <a href={`/autori/${author.slug}`}>{author.name}</a> : author.name}
-              </h3>
-              <p class={styles.books}>{author.booksLabel}</p>
-              {author.biography ? <p class={styles.bio}>{author.biography}</p> : null}
+        return <li class:list={[styles.author, picture ? styles.withPortrait : null]}>
+          {picture ? (
+            <div class={styles.portrait}>
+              <Image
+                data={{ ...picture, alt: '' }}
+                sizes="128px"
+                pictureClass="block h-full"
+                imgClass={styles.image}
+              />
             </div>
-          </li>
-        );
+          ) : null}
+          <div>
+            <h3 class={styles.name}>
+              {author.slug ? <a href={`/autori/${author.slug}`}>{author.name}</a> : author.name}
+            </h3>
+            <p class={styles.books}>{author.booksLabel}</p>
+            {author.biography ? <p class={styles.bio}>{author.biography}</p> : null}
+          </div>
+        </li>;
       })}
     </ul>
   </section>

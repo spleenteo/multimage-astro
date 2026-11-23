@@ -322,7 +322,12 @@ type OrderMailtoInput = {
  * order (see /info/ordinare: titles, copies, shipping address). Subject and body are prefilled so
  * the reader only adds name and address.
  */
-export function buildOrderMailto({ title, authors = [], isbn = null, price = null }: OrderMailtoInput) {
+export function buildOrderMailto({
+  title,
+  authors = [],
+  isbn = null,
+  price = null,
+}: OrderMailtoInput) {
   const byline = authors.length > 0 ? ` di ${authors.join(', ')}` : '';
   const details = [isbn ? `ISBN ${isbn}` : null, price].filter(Boolean).join(' · ');
   const body = [

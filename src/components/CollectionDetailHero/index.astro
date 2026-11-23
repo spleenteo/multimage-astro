@@ -33,14 +33,21 @@ const logoImage = logo?.responsiveImage ? { ...logo.responsiveImage, alt: '' } :
     {description ? <p class={styles.description}>{description}</p> : null}
     <p class={styles.ways}>
       {inCatalogue > 0 ? (
-        <a href={`/libri?collana=${encodeURIComponent(slug)}`}>Sfoglia nel catalogo, con i filtri</a>
+        <a href={`/libri?collana=${encodeURIComponent(slug)}`}
+          >Sfoglia nel catalogo, con i filtri</a
+        >
       ) : null}
       <a href="/collane">Tutte le collane</a>
     </p>
   </div>
   {logoImage ? (
     <div class={styles.logo}>
-      <Image data={logoImage} sizes="160px" pictureClass="block h-full w-full" imgClass={styles.logoImage} />
+      <Image
+        data={logoImage}
+        sizes="160px"
+        pictureClass="block h-full w-full"
+        imgClass={styles.logoImage}
+      />
     </div>
   ) : null}
 </header>

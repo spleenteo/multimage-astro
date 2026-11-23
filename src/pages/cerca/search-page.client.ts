@@ -87,7 +87,13 @@ const kindOf = (url: string): Kind => {
 };
 
 const filterOf = (kind: Kind): FilterKey =>
-  kind === 'book' ? 'books' : kind === 'author' ? 'authors' : kind === 'article' ? 'magazine' : 'other';
+  kind === 'book'
+    ? 'books'
+    : kind === 'author'
+      ? 'authors'
+      : kind === 'article'
+        ? 'magazine'
+        : 'other';
 
 const getRootConfig = (root: HTMLElement): SearchConfig => {
   const { endpoint, token, minLength = '3', limit = '25', fuzzy = 'true' } = root.dataset;
@@ -165,7 +171,9 @@ const entryContainsPhrase = (entry: SearchResult, phrase: string): boolean => {
     ...(entry.attributes.highlight?.body ?? []),
   ];
 
-  return sources.some((source) => Boolean(source) && normalizeText(source!).includes(normalizedPhrase));
+  return sources.some(
+    (source) => Boolean(source) && normalizeText(source!).includes(normalizedPhrase),
+  );
 };
 
 const bookSlugOf = (url: string | null | undefined): string | null => {
@@ -181,7 +189,9 @@ let booksIndexPromise: Promise<Record<string, BookEntry> | null> | null = null;
 const loadBooksIndex = (): Promise<Record<string, BookEntry> | null> => {
   if (booksIndex) return Promise.resolve(booksIndex);
   booksIndexPromise ??= fetch('/search-books.json')
-    .then((response) => (response.ok ? (response.json() as Promise<Record<string, BookEntry>>) : null))
+    .then((response) =>
+      response.ok ? (response.json() as Promise<Record<string, BookEntry>>) : null,
+    )
     .catch(() => null)
     .then((payload) => {
       booksIndex = payload;
@@ -207,7 +217,9 @@ const buildRows = (entries: SearchResult[]): Row[] => {
     const kind = kindOf(entry.attributes.url ?? '');
     if (kind === 'book') {
       const book = bookOf(entry);
-      const key = normalizeText(`${book?.t ?? cleanTitle(entry.attributes.title ?? '')}|${book?.a ?? ''}`);
+      const key = normalizeText(
+        `${book?.t ?? cleanTitle(entry.attributes.title ?? '')}|${book?.a ?? ''}`,
+      );
       const existing = byBook.get(key);
       if (existing) {
         existing.editions.push(entry);
@@ -266,7 +278,10 @@ const createResultItem = (row: Row): HTMLLIElement => {
   const title = document.createElement('h3');
   title.className = 'search-result__title';
   const link = createLink(href);
-  appendHighlightedText(link, cleanTitle(attributes.highlight?.title?.[0] ?? attributes.title ?? ''));
+  appendHighlightedText(
+    link,
+    cleanTitle(attributes.highlight?.title?.[0] ?? attributes.title ?? ''),
+  );
   title.append(link);
   body.append(title);
 
@@ -286,7 +301,10 @@ const createResultItem = (row: Row): HTMLLIElement => {
     }
     for (const edition of editions) {
       const other = bookOf(edition);
-      const otherLink = createLink(pathFromUrl(edition.attributes.url ?? '#'), 'search-result__edition');
+      const otherLink = createLink(
+        pathFromUrl(edition.attributes.url ?? '#'),
+        'search-result__edition',
+      );
       otherLink.textContent = `Anche ${other?.f ? `in ${other.f.toLowerCase()}` : 'in cartaceo'}${other?.p ? ` · ${other.p}` : ''}`;
       parts.push(otherLink);
     }
@@ -317,7 +335,12 @@ const createResultItem = (row: Row): HTMLLIElement => {
   return item;
 };
 
-const buildRequestUrl = (query: string, config: SearchConfig, exactMatch: boolean, offset: number): string => {
+const buildRequestUrl = (
+  query: string,
+  config: SearchConfig,
+  exactMatch: boolean,
+  offset: number,
+): string => {
   const target = new URL(config.endpoint);
   target.searchParams.set('filter[query]', exactMatch ? `"${query}"` : query);
   if (!exactMatch && config.fuzzy) {
@@ -343,8 +366,10 @@ const updateUrl = (query: string, exact: boolean) => {
   window.history.replaceState({}, '', url);
 };
 
-const readQueryFromLocation = (): string => new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
-const readExactFromLocation = (): boolean => new URLSearchParams(window.location.search).get('exact') === '1';
+const readQueryFromLocation = (): string =>
+  new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+const readExactFromLocation = (): boolean =>
+  new URLSearchParams(window.location.search).get('exact') === '1';
 
 const plural = (count: number, one: string, many: string) => `${count} ${count === 1 ? one : many}`;
 
@@ -436,7 +461,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
     const activeFilters = getActiveFilters();
     const catalogue = cachedResults.filter((entry) => !isArchivedBook(entry));
     const visible = activeFilters.length
-      ? catalogue.filter((entry) => activeFilters.includes(filterOf(kindOf(entry.attributes.url ?? ''))))
+      ? catalogue.filter((entry) =>
+          activeFilters.includes(filterOf(kindOf(entry.attributes.url ?? ''))),
+        )
       : catalogue;
     const rows = buildRows(visible);
     const hasMore = fetchedCount < cachedTotal;
@@ -444,7 +471,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
 
     if (!catalogue.length && !hasMore) {
       const filtersHint = activeFilters.length ? ' o togli i filtri' : '';
-      setStatus(`Nessun risultato per “${query}”. Prova con un'altra parola${filtersHint}, oppure scegli da dove partire qui sotto.`);
+      setStatus(
+        `Nessun risultato per “${query}”. Prova con un'altra parola${filtersHint}, oppure scegli da dove partire qui sotto.`,
+      );
       showWays(true);
       return;
     }
@@ -481,7 +510,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
           : `${shown} tra ${scope} per “${query}”.`,
       );
     } else if (hasMore) {
-      setStatus(`${plural(cachedTotal, 'risultato', 'risultati')} per “${query}”: eccone ${rows.length}, i più pertinenti.`);
+      setStatus(
+        `${plural(cachedTotal, 'risultato', 'risultati')} per “${query}”: eccone ${rows.length}, i più pertinenti.`,
+      );
     } else {
       setStatus(`${shown} per “${query}”.`);
     }
@@ -520,7 +551,9 @@ const mountSearchPage = (): CleanupFn | undefined => {
     const payload = (await response.json()) as SearchResponse;
     const raw = payload.data ?? [];
     const visible = raw.filter((entry) => !isHiddenUrl(entry.attributes.url ?? ''));
-    const results = exactMatch ? visible.filter((entry) => entryContainsPhrase(entry, query)) : visible;
+    const results = exactMatch
+      ? visible.filter((entry) => entryContainsPhrase(entry, query))
+      : visible;
     // Book details are needed before the rows are built (archived filter, editions, covers).
     if (results.some((entry) => kindOf(entry.attributes.url ?? '') === 'book')) {
       await loadBooksIndex();
@@ -569,7 +602,8 @@ const mountSearchPage = (): CleanupFn | undefined => {
       fetchedCount += page.rawCount;
       if (page.rawCount === 0) fetchedCount = cachedTotal;
       renderResults();
-      const first = listEl.children[firstNewIndex]?.querySelector<HTMLAnchorElement>('.search-result__title a');
+      const first =
+        listEl.children[firstNewIndex]?.querySelector<HTMLAnchorElement>('.search-result__title a');
       first?.focus();
     } catch (error) {
       handleError(error, query);

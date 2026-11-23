@@ -50,7 +50,9 @@ const title = post.title?.trim() || 'Articolo';
 const plainAbstract = toPlainText(post.abstract);
 // The lede drops pasted source links, and disappears when it only repeats the title.
 const lede = withoutUrls(plainAbstract);
-const showLede = lede.length > 0 && lede.toLowerCase().replace(/\W/g, '') !== title.toLowerCase().replace(/\W/g, '');
+const showLede =
+  lede.length > 0 &&
+  lede.toLowerCase().replace(/\W/g, '') !== title.toLowerCase().replace(/\W/g, '');
 const publishedAt = postDate(post);
 const formattedDate = formatPostDate(publishedAt);
 const category = post.category ?? null;
@@ -62,12 +64,14 @@ const body = shiftHeadings(post.body);
 const hasBodyContent = hasStructuredTextContent(body);
 
 const related = category?.id
-  ? ((
-      await executeQuery<MagazineRelatedResult>(MAGAZINE_RELATED_QUERY, {
-        variables: { id: post.id, category: category.id },
-        includeDrafts: draftModeEnabled,
-      })
-    ).allBlogPosts ?? []).filter((item) => item.slug && item.title)
+  ? (
+      (
+        await executeQuery<MagazineRelatedResult>(MAGAZINE_RELATED_QUERY, {
+          variables: { id: post.id, category: category.id },
+          includeDrafts: draftModeEnabled,
+        })
+      ).allBlogPosts ?? []
+    ).filter((item) => item.slug && item.title)
   : [];
 const relatedHeading = categoryLabel(category, 'others') ?? 'Altri articoli';
 const allInCategory = categoryLabel(category, 'all');
@@ -85,7 +89,11 @@ const seo = withFallbackSeo(post._seoMetaTags, {
       {categoryName || formattedDate || authorName ? (
         <p class={styles.meta}>
           {categoryName ? (
-            categoryLink ? <a href={categoryLink}>{categoryName}</a> : <span>{categoryName}</span>
+            categoryLink ? (
+              <a href={categoryLink}>{categoryName}</a>
+            ) : (
+              <span>{categoryName}</span>
+            )
           ) : null}
           {formattedDate ? <time datetime={publishedAt ?? undefined}>{formattedDate}</time> : null}
           {authorName ? <span>di {authorName}</span> : null}
@@ -131,12 +139,10 @@ const seo = withFallbackSeo(post._seoMetaTags, {
           <ul class={styles.nextList}>
             {related.map((item) => {
               const date = formatPostDate(postDate(item));
-              return (
-                <li>
-                  <a href={`/magazine/${item.slug}`}>{item.title}</a>
-                  {date ? <span class={styles.nextDate}>{date}</span> : null}
-                </li>
-              );
+              return <li>
+                <a href={`/magazine/${item.slug}`}>{item.title}</a>
+                {date ? <span class={styles.nextDate}>{date}</span> : null}
+              </li>;
             })}
           </ul>
         </section>

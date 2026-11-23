@@ -38,7 +38,8 @@ const seo = withFallbackSeo(indexContent?._seoMetaTags, {
 });
 
 const records = (data.allCollections ?? []).filter((collection) => collection.slug);
-const shelvesQuery = records.length > 0 ? buildCollectionShelvesQuery(records.map((c) => c.id)) : null;
+const shelvesQuery =
+  records.length > 0 ? buildCollectionShelvesQuery(records.map((c) => c.id)) : null;
 const shelvesData = shelvesQuery
   ? await executeQuery<CollectionShelvesResult>(shelvesQuery, { includeDrafts: draftModeEnabled })
   : {};

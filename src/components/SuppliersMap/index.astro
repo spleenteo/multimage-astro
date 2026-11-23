@@ -30,9 +30,11 @@ const { points }: Props = Astro.props;
     <figcaption class={styles.caption}>
       {points.length} punti sulla mappa. Tocca un punto per l'indirizzo; gli stessi luoghi sono
       nell'elenco qui sotto. Mappa ©{' '}
-      <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a>{' '}
-      e{' '}
-      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+      <a href="https://openfreemap.org" target="_blank" rel="noopener noreferrer">OpenFreeMap</a
+      >{' '} e{' '}
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer"
+        >OpenStreetMap</a
+      >.
     </figcaption>
     <script type="application/json" data-suppliers-points set:html={JSON.stringify(points)} />
   </figure>

@@ -18,12 +18,22 @@ type Props = {
   priority?: boolean;
 };
 
-const { title, slug, abstract = null, publishedAt = null, category = null, image = null, sticky = false, priority = false }: Props = Astro.props;
+const {
+  title,
+  slug,
+  abstract = null,
+  publishedAt = null,
+  category = null,
+  image = null,
+  sticky = false,
+  priority = false,
+}: Props = Astro.props;
 
 const href = `/magazine/${slug}`;
 const plain = withoutUrls(toPlainText(abstract));
 // An abstract that only repeats the title adds nothing.
-const summary = plain && plain.toLowerCase() !== title.trim().toLowerCase() ? truncateToLength(plain, 220) : null;
+const summary =
+  plain && plain.toLowerCase() !== title.trim().toLowerCase() ? truncateToLength(plain, 220) : null;
 const date = formatPostDate(publishedAt);
 const label = categoryLabel(category, 'singular');
 ---

@@ -21,14 +21,30 @@ if (!author) {
 
 const name = getAuthorDisplayName(author);
 const href = author.slug ? `/autori/${author.slug}` : null;
-const legal = author.alias?.trim() && author.fullName?.trim() && author.fullName.trim() !== name ? author.fullName.trim() : null;
+const legal =
+  author.alias?.trim() && author.fullName?.trim() && author.fullName.trim() !== name
+    ? author.fullName.trim()
+    : null;
 const photo = author.picture?.url ?? null;
 const src = (size: number) => `${photo}?w=${size}&h=${size}&fit=crop&crop=faces&auto=format`;
 ---
 
-<aside data-datocms-content-link-boundary class={styles.root} aria-label={`Autrice o autore: ${name}`}>
+<aside
+  data-datocms-content-link-boundary
+  class={styles.root}
+  aria-label={`Autrice o autore: ${name}`}
+>
   {photo ? (
-    <img src={src(72)} srcset={`${src(144)} 2x`} width="72" height="72" alt="" loading="lazy" decoding="async" class={styles.portrait} />
+    <img
+      src={src(72)}
+      srcset={`${src(144)} 2x`}
+      width="72"
+      height="72"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      class={styles.portrait}
+    />
   ) : (
     <span class={styles.initial} aria-hidden="true">{name.charAt(0).toUpperCase()}</span>
   )}

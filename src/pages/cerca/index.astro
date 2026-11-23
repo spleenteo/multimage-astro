@@ -53,7 +53,12 @@ const seo = withFallbackSeo([], {
     <form class="search-page__form" role="search" method="get" action="/cerca" data-search-form>
       <label class="search-page__label" for="search-query">
         <span class="sr-only">Cerca in tutto il sito</span>
-        <iconify-icon icon="iconoir:search" width="20" height="20" aria-hidden="true"></iconify-icon>
+        <iconify-icon
+          icon="iconoir:search"
+          width="20"
+          height="20"
+          aria-hidden="true"
+        ></iconify-icon>
         <input
           id="search-query"
           name="q"
@@ -95,7 +100,13 @@ const seo = withFallbackSeo([], {
       </label>
     </div>
 
-    <p class="search-page__status" id="search-status" role="status" aria-live="polite" data-search-status>
+    <p
+      class="search-page__status"
+      id="search-status"
+      role="status"
+      aria-live="polite"
+      data-search-status
+    >
       Scrivi almeno {MIN_QUERY_LENGTH} caratteri: un titolo, un nome, un argomento.
     </p>
 
@@ -106,7 +117,12 @@ const seo = withFallbackSeo([], {
       </p>
     </noscript>
 
-    <section class="search-results" aria-labelledby="search-results-title" data-search-results hidden>
+    <section
+      class="search-results"
+      aria-labelledby="search-results-title"
+      data-search-results
+      hidden
+    >
       <h2 id="search-results-title" class="sr-only">Risultati</h2>
       <ul class="search-results__list" data-search-list></ul>
       <div class="search-results__more" data-search-more hidden>

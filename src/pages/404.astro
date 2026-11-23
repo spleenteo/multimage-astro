@@ -11,7 +11,11 @@ const seo = [
 ];
 
 const ways = [
-  { href: '/libri', label: 'Il catalogo', note: 'tutti i libri, con i filtri per collana, formato e periodo' },
+  {
+    href: '/libri',
+    label: 'Il catalogo',
+    note: 'tutti i libri, con i filtri per collana, formato e periodo',
+  },
   { href: '/collane', label: 'Le collane', note: 'il catalogo come lo pensa la redazione' },
   { href: '/autori', label: 'Autrici e autori', note: 'chi scrive per Multimage' },
   { href: '/cerca', label: 'Cerca nel sito', note: 'libri, persone e articoli' },
@@ -28,14 +32,12 @@ const ways = [
     </div>
 
     <ul class="divide-y divide-brand-navy/10 border-y border-brand-navy/10">
-      {ways.map((way) => (
-        <li>
-          <a href={way.href} class="group flex min-h-16 flex-col justify-center gap-0.5 py-4">
-            <span class="font-serif text-xl text-brand-navy group-hover:underline">{way.label}</span>
-            <span class="text-sm text-brand-slate">{way.note}</span>
-          </a>
-        </li>
-      ))}
+      {ways.map((way) => <li>
+        <a href={way.href} class="group flex min-h-16 flex-col justify-center gap-0.5 py-4">
+          <span class="font-serif text-xl text-brand-navy group-hover:underline">{way.label}</span>
+          <span class="text-sm text-brand-slate">{way.note}</span>
+        </a>
+      </li>)}
     </ul>
   </section>
 </BaseLayout>

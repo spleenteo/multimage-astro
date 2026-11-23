@@ -12,8 +12,19 @@ type Props = SupplierCardViewModel & {
   className?: string;
 };
 
-const { id, name, city, address, googleMapsUrl, telephone, email, website, descriptionHtml, logo, className = '' }: Props =
-  Astro.props;
+const {
+  id,
+  name,
+  city,
+  address,
+  googleMapsUrl,
+  telephone,
+  email,
+  website,
+  descriptionHtml,
+  logo,
+  className = '',
+}: Props = Astro.props;
 
 /** Descriptions longer than this show a short version first. */
 const SHORT_DESCRIPTION = 180;
@@ -24,9 +35,15 @@ const description = descriptionHtml
   : null;
 const descriptionPlain = description ? toPlainText(description) : '';
 const descriptionShort =
-  descriptionPlain.length > SHORT_DESCRIPTION ? truncateToLength(descriptionPlain, SHORT_DESCRIPTION) : null;
+  descriptionPlain.length > SHORT_DESCRIPTION
+    ? truncateToLength(descriptionPlain, SHORT_DESCRIPTION)
+    : null;
 
-const websiteHref = website ? (/^https?:\/\//i.test(website) ? website : `https://${website}`) : null;
+const websiteHref = website
+  ? /^https?:\/\//i.test(website)
+    ? website
+    : `https://${website}`
+  : null;
 const phones = parseSupplierPhones(telephone);
 const place = [city, address].filter(Boolean).join(' · ');
 const logoImage = logo?.responsiveImage ? { ...logo.responsiveImage, alt: '' } : null;
@@ -60,12 +77,14 @@ const NEW_TAB = ' (si apre in una nuova scheda)';
           </a>
         </li>
       ) : null}
-      {phones.map((phone) => (
-        <li>
-          {phone.label ? <span class={styles.who}>{phone.label}</span> : null}
-          {phone.href ? <a href={phone.href}>{phone.display}</a> : <span class={styles.plain}>{phone.display}</span>}
-        </li>
-      ))}
+      {phones.map((phone) => <li>
+        {phone.label ? <span class={styles.who}>{phone.label}</span> : null}
+        {phone.href ? (
+          <a href={phone.href}>{phone.display}</a>
+        ) : (
+          <span class={styles.plain}>{phone.display}</span>
+        )}
+      </li>)}
       {email ? (
         <li>
           <a href={`mailto:${email}`}>{email}</a>

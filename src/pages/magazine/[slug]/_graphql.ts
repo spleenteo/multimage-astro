@@ -1,4 +1,7 @@
-import { SINGLE_AUTHOR_BLOCK_FIELDS, SINGLE_BOOK_BLOCK_FIELDS } from '~/components/datocms/structuredText/_graphql';
+import {
+  SINGLE_AUTHOR_BLOCK_FIELDS,
+  SINGLE_BOOK_BLOCK_FIELDS,
+} from '~/components/datocms/structuredText/_graphql';
 import { BOOK_CARD_FRAGMENT } from '~/components/BookCard';
 import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { BlogPostRecord, SeoMetaTag } from '~/lib/datocms/types';

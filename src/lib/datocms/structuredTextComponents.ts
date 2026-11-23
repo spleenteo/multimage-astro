@@ -30,7 +30,6 @@ export const defaultInlineRecordComponents: StructuredTextComponentMap = {
   BlogPostRecord: InlineRecordBlock,
 };
 
-
 export const defaultLinkToRecordComponents: StructuredTextComponentMap = {
   AuthorRecord: LinkToRecord,
   CollectionRecord: LinkToRecord,

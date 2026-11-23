@@ -39,13 +39,22 @@ const isEbook = (book.format ?? '').trim().toLowerCase() !== 'cartaceo' && Boole
 const palette = coverFieldPalette(book.coverImage?.colors);
 const COVER_HEIGHT = 176;
 const cover = book.coverImage?.url ?? null;
-const ratio = book.coverImage?.width && book.coverImage?.height ? book.coverImage.width / book.coverImage.height : 0.68;
+const ratio =
+  book.coverImage?.width && book.coverImage?.height
+    ? book.coverImage.width / book.coverImage.height
+    : 0.68;
 const src = (h: number) => `${cover}?h=${h}&fit=max&auto=format`;
 ---
 
 <aside data-datocms-content-link-boundary class={styles.root} aria-label={`Il libro: ${title}`}>
   {cover ? (
-    <a href={href} class={styles.field} style={`background: ${palette.field};`} tabindex="-1" aria-hidden="true">
+    <a
+      href={href}
+      class={styles.field}
+      style={`background: ${palette.field};`}
+      tabindex="-1"
+      aria-hidden="true"
+    >
       <img
         src={src(COVER_HEIGHT)}
         srcset={`${src(COVER_HEIGHT * 2)} 2x`}
@@ -69,7 +78,9 @@ const src = (h: number) => `${cover}?h=${h}&fit=max&auto=format`;
       {price ? <span class={styles.price}>{price}</span> : null}
       {isEbook ? <span class={styles.note}>{book.format?.trim()}</span> : null}
       {isArchived ? <span class={styles.note}>Fuori catalogo</span> : null}
-      {href ? <a href={href}>{isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a> : null}
+      {href ? (
+        <a href={href}>{isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a>
+      ) : null}
     </p>
   </div>
 </aside>

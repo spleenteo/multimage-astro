@@ -142,7 +142,8 @@ const otherEditions = (alternateFormatsData.allBooks ?? [])
 // One ebook control: the book's own store link (a print book can carry it) or the ebook edition's.
 const ebookEdition = isEbookFormat
   ? null
-  : (otherEditions.find((edition) => edition.isEbook && edition.epubUrl && !edition.archived) ?? null);
+  : (otherEditions.find((edition) => edition.isEbook && edition.epubUrl && !edition.archived) ??
+    null);
 const ebookUrl = isEbookFormat ? book.epubUrl : (book.epubUrl ?? ebookEdition?.epubUrl ?? null);
 const ebookStore = ebookStoreName(ebookUrl);
 const ebookLabel = ['Ebook', ebookEdition?.price ?? null, ebookStore ? `su ${ebookStore}` : null]
@@ -323,7 +324,9 @@ const reviewStructuredData =
 
 // Price and format already sit in the hero; the staff sheet (/libri/schede) keeps the full list.
 const HERO_DETAIL_LABELS = new Set(['Formato', 'Prezzo di copertina']);
-const editionDetails = buildEditionDetails(book).filter((item) => !HERO_DETAIL_LABELS.has(item.label));
+const editionDetails = buildEditionDetails(book).filter(
+  (item) => !HERO_DETAIL_LABELS.has(item.label),
+);
 const graphicsDetails = buildGraphicsDetails(book);
 const collectionHref = book.collection?.slug ? `/collane/${book.collection.slug}` : null;
 
@@ -454,12 +457,10 @@ const seo = sanitizeMetaTags(
               ) : null}
               {[printYearLabel, formatValue, isArchived ? 'Fuori catalogo' : null]
                 .filter(Boolean)
-                .map((part, index) => (
-                  <span>
-                    {index > 0 || book.collection?.name ? ' · ' : ''}
-                    {part}
-                  </span>
-                ))}
+                .map((part, index) => <span>
+                  {index > 0 || book.collection?.name ? ' · ' : ''}
+                  {part}
+                </span>)}
             </p>
 
             {promoText ? <p class={styles.promo}>{promoText}</p> : null}
@@ -476,7 +477,11 @@ const seo = sanitizeMetaTags(
                 ) : null}
                 <div class={styles.actions}>
                   {currentEdition ? (
-                    <Button href={`/libri/${currentEdition.slug}`} primary icon="iconoir:arrow-right">
+                    <Button
+                      href={`/libri/${currentEdition.slug}`}
+                      primary
+                      icon="iconoir:arrow-right"
+                    >
                       Vai alla nuova edizione
                     </Button>
                   ) : null}
@@ -537,7 +542,9 @@ const seo = sanitizeMetaTags(
                   <>
                     <p class={styles.terms}>
                       Spedizione gratuita con piego di libri ·{' '}
-                      <span class="whitespace-nowrap"><a href="/info/adesioni">Soci</a>: 30% di sconto</span>
+                      <span class="whitespace-nowrap"
+                        ><a href="/info/adesioni">Soci</a>: 30% di sconto</span
+                      >
                     </p>
                     <p class={styles.ways}>
                       <a href="/distributori">Trovalo in libreria</a>
@@ -555,7 +562,9 @@ const seo = sanitizeMetaTags(
     </section>
 
     <div class={styles.body}>
-      {descriptionHtml ? <div class:list={[styles.prose, styles.lede]} set:html={descriptionHtml} /> : null}
+      {descriptionHtml ? (
+        <div class:list={[styles.prose, styles.lede]} set:html={descriptionHtml} />
+      ) : null}
 
       {showReview && reviewContent ? (
         <section class={styles.section} aria-labelledby="book-back-cover">
@@ -576,8 +585,12 @@ const seo = sanitizeMetaTags(
         <section class={styles.section} aria-labelledby="book-details">
           <h2 id="book-details" class={styles.sectionTitle}>Dettagli</h2>
           <div class={styles.detailsGrid}>
-            {editionDetails.length > 0 ? <DetailList title="Edizione" items={editionDetails} /> : null}
-            {graphicsDetails.length > 0 ? <DetailList title="Grafica" items={graphicsDetails} /> : null}
+            {editionDetails.length > 0 ? (
+              <DetailList title="Edizione" items={editionDetails} />
+            ) : null}
+            {graphicsDetails.length > 0 ? (
+              <DetailList title="Grafica" items={graphicsDetails} />
+            ) : null}
           </div>
           {draftModeEnabled ? (
             <p class={styles.staffLink}>
@@ -593,23 +606,21 @@ const seo = sanitizeMetaTags(
         <section class={styles.section} aria-labelledby="book-reviews">
           <h2 id="book-reviews" class={styles.sectionTitle}>Recensioni</h2>
           <ul class={styles.reviews}>
-            {reviewPreviews.map((review) => (
-              <li data-review-id={review.id} class={styles.review}>
-                {review.dateLabel || review.authorName ? (
-                  <p class={styles.reviewMeta}>
-                    {review.dateLabel ? (
-                      <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
-                    ) : null}
-                    {review.dateLabel && review.authorName ? ' · ' : null}
-                    {review.authorName ? <span>a cura di {review.authorName}</span> : null}
-                  </p>
-                ) : null}
-                <h3 class={styles.reviewTitle}>
-                  <a href={`/magazine/${review.slug}`}>{review.title}</a>
-                </h3>
-                {review.excerpt ? <p class={styles.reviewExcerpt}>{review.excerpt}</p> : null}
-              </li>
-            ))}
+            {reviewPreviews.map((review) => <li data-review-id={review.id} class={styles.review}>
+              {review.dateLabel || review.authorName ? (
+                <p class={styles.reviewMeta}>
+                  {review.dateLabel ? (
+                    <time datetime={review.dateIso ?? undefined}>{review.dateLabel}</time>
+                  ) : null}
+                  {review.dateLabel && review.authorName ? ' · ' : null}
+                  {review.authorName ? <span>a cura di {review.authorName}</span> : null}
+                </p>
+              ) : null}
+              <h3 class={styles.reviewTitle}>
+                <a href={`/magazine/${review.slug}`}>{review.title}</a>
+              </h3>
+              {review.excerpt ? <p class={styles.reviewExcerpt}>{review.excerpt}</p> : null}
+            </li>)}
           </ul>
         </section>
       ) : null}
