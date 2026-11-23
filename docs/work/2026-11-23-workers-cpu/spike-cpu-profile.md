@@ -123,3 +123,14 @@ An independent review of the `/autori` code found no cache or draft problem and 
 Same instance, 5 rounds of 25 requests: `/autori` 17.2–20.0 ms (mean 19.0), `/authors-index.json` 9.2–12.4 ms (mean 11.0), 404 page 4.8–5.6 ms. Page 189 KB. The page costs about 2–3 ms more than before the design and review changes (larger books read, the arrow in every card).
 
 Checked in headless Chromium at 390px on the dev server: 22 letters in the strip from first paint (same height before and after the JSON); search with the JSON held back, after it arrives, and after it fails twice; click on a pending letter; back navigation to a position under a later letter; card order equal to the JSON.
+
+## Production after the deploy (2026-11-23, version `f3038564`)
+
+`wrangler tail`, requests with an invalid `__draftMode` cookie (uncached), 1–4 samples per path, every outcome `ok`; before in brackets (2026-11-22):
+
+- `/autori` 22, 25, 41, 65 ms (182–248)
+- `/libri` 28, 31, 54 ms (65–88)
+- `/catalogue-books.json` 7, 15, 19, 23 ms; `/authors-index.json` 7, 16, 20 ms
+- home 12, 14, 19, 31 ms (17–47); book page 9, 38 ms (21–49); `/collane` 14, 14, 23, 31 ms (22); `/magazine` 15 ms (19)
+
+Without the cookie, every page and both JSON endpoints answer `cf-cache-status: MISS` then `HIT`. `/autori` serves 91 cards, `/libri` 40. Not checked: the purge of the two endpoints on a DatoCMS publish.
