@@ -5,6 +5,8 @@
 
 /** Compact per-book facet record, serialised into the page as JSON (one entry per rendered card). */
 export type CatalogueEntry = {
+  /** Book slug: the key of its card in `/catalogue-books.json`. */
+  k: string;
   /** Collection slug, or '' when the book has none. */
   c: string;
   /** 1 when the book is an ebook. */
@@ -24,6 +26,31 @@ export type CatalogueEntry = {
   /** Normalised title for the A–Z sort. */
   n: string;
 };
+
+/**
+ * A catalogue card as `/catalogue-books.json` serves it, keyed by slug: the values the browser
+ * writes into the card template (see `BookCard/fill.client.ts`). Server-rendered cards and these
+ * come from the same functions (`bookCardView`, `book3dView`).
+ */
+export type CatalogueCard = {
+  /** Title. */
+  t: string;
+  /** Subtitle. */
+  st?: string;
+  /** Authors, already formatted. */
+  au?: string;
+  /** Meta line (collection · year · format). */
+  me?: string;
+  /** Price label. */
+  pr?: string;
+  /** Background of the field behind the cover. */
+  bg: string;
+  /** Cover: image URL, 2x srcset, Book3D inline style, 1 when the pose shows the spine. */
+  c?: { src: string; set: string; style: string; sp: 0 | 1 };
+};
+
+/** Where the browser reads the cards the server did not render. */
+export const CATALOGUE_CARDS_URL = '/catalogue-books.json';
 
 export type CatalogueOption = { value: string; label: string };
 
@@ -85,7 +112,9 @@ export function buildPeriodOptions(years: number[]): CatalogueOption[] {
     return [];
   }
   const latest = Math.max(...known);
-  const decades = [...new Set(known.map((year) => Math.floor(year / 10) * 10))].sort((a, b) => b - a);
+  const decades = [...new Set(known.map((year) => Math.floor(year / 10) * 10))].sort(
+    (a, b) => b - a,
+  );
   return [
     { value: 'recenti', label: `Ultime uscite (${latest - 1}–${latest})` },
     ...decades.map((decade) => ({
@@ -99,7 +128,8 @@ export function latestYear(entries: CatalogueEntry[]): number {
   return entries.reduce((max, entry) => Math.max(max, entry.y), 0);
 }
 
-type Facet = 'q' | 'collane' | 'formato' | 'autore' | 'periodo' | 'tradotti' | 'evidenza' | 'archivio';
+type Facet =
+  'q' | 'collane' | 'formato' | 'autore' | 'periodo' | 'tradotti' | 'evidenza' | 'archivio';
 
 /** Whether an entry passes every active filter, optionally ignoring one facet (for facet counts). */
 export function matchesCatalogue(
@@ -109,7 +139,8 @@ export function matchesCatalogue(
   ignore?: Facet,
 ): boolean {
   if (ignore !== 'archivio' && !state.archivio && entry.x === 1) return false;
-  if (ignore !== 'collane' && state.collane.length > 0 && !state.collane.includes(entry.c)) return false;
+  if (ignore !== 'collane' && state.collane.length > 0 && !state.collane.includes(entry.c))
+    return false;
   if (ignore !== 'formato' && state.formato === 'ebook' && entry.e !== 1) return false;
   if (ignore !== 'formato' && state.formato === 'cartaceo' && entry.e !== 0) return false;
   if (ignore !== 'autore' && state.autore && !entry.a.includes(state.autore)) return false;

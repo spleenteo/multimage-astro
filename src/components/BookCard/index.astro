@@ -4,11 +4,7 @@
 // (Book3D) with its spine, in a pose of its own derived from the slug. The `catalogue` variant is the
 // quieter one used in the /libri grid: lighter field, no summary, compact on phones.
 import Book3D from '~/components/Book3D';
-import { bookPose, bookSpineColors } from '~/lib/bookPose';
-import type { AssetImage } from '~/lib/datocms/types';
-import { pickBaseColor, lightenColor, darkenColor, hexToRgba } from '~/lib/colors';
-import { formatEuro } from '~/lib/currency';
-import { extractYear } from '~/lib/books';
+import { bookCardView, type BookCardInput } from '~/lib/bookCardView';
 import AuthorNames from '~/components/ui/AuthorNames';
 import styles from './style.module.css';
 
@@ -19,11 +15,11 @@ type Props = {
   subtitle?: string | null;
   summary?: string | null;
   format?: string | null;
-  coverImage?: AssetImage | null;
+  coverImage?: BookCardInput['coverImage'];
   /** Page count: the thickness of the 3D book on hover. */
   pages?: number | null;
   authors?: Array<{
-    id: string;
+    id?: string;
     fullName?: string | null;
     alias?: string | null;
   }>;
@@ -63,63 +59,40 @@ const {
 }: Props = Astro.props;
 
 const isCatalogue = variant === 'catalogue';
-const destination = href ?? `/libri/${slug}`;
-
-const normalizedFormat = format?.trim() ?? null;
-const isEbook = normalizedFormat ? normalizedFormat.toLowerCase() !== 'cartaceo' : false;
-const year = extractYear(printYear);
-const meta = [
-  collectionName?.trim() || null,
-  year,
-  isEbook ? normalizedFormat : null,
-  isArchived ? 'Fuori catalogo' : null,
-].filter((value): value is string => Boolean(value));
-
-const priceLabel = typeof price === 'number' ? formatEuro(price) : null;
-
-const baseColor = pickBaseColor(coverImage?.colors);
-// In a grid of dozens the full-strength field turns into wallpaper: the catalogue keeps the hue,
-// lighter, so the cover stays the loudest thing in each card.
-const backgroundColor = lightenColor(baseColor, isCatalogue ? 0.55 : 0.18);
-const shadowColor = hexToRgba(darkenColor(baseColor, 0.55), isCatalogue ? 0.32 : 0.42);
-// The 3D book: covers line up by height (13rem in the catalogue, 14rem elsewhere; phones zoom it down
-// in CSS); the spine takes the cover's hue, pale, with bands at full strength and dark ink.
-const coverUrl = coverImage?.url ?? null;
-const coverAspect =
-  coverImage?.width && coverImage?.height ? coverImage.height / coverImage.width : 1.45;
-// Portrait covers take the full height; landscape and square ones are capped by width, so they fit
-// the field too (on phones the catalogue zooms the book to 77%: 180px wide becomes 139px).
-const maxCoverHeight = isCatalogue ? 208 : 224;
-const maxCoverWidth = isCatalogue ? 180 : 210;
-const coverHeight = Math.round(Math.min(maxCoverHeight, maxCoverWidth * coverAspect));
-const coverSrc = (h: number) => `${coverUrl}?h=${h}&fit=max&auto=format`;
-const pose = bookPose(slug);
-const spine = bookSpineColors(coverImage?.colors);
-const restShadow = `drop-shadow(18px 26px 32px ${shadowColor})`;
+// Link, meta line, price, tinted field and the 3D book: `~/lib/bookCardView` (shared with the cards
+// the catalogue builds in the browser; `fill.client.ts` mirrors this template's structure).
+const view = bookCardView({
+  title,
+  slug,
+  href,
+  format,
+  coverImage,
+  pages,
+  price,
+  printYear,
+  collectionName,
+  isArchived,
+  variant,
+});
+const { meta, priceLabel } = view;
 const Heading = headingLevel;
 ---
 
 <a
-  href={destination}
+  href={view.href}
   class:list={[styles.root, isCatalogue ? styles.catalogue : null, 'group', className]}
 >
   <article class="flex h-full flex-col">
-    <div class={styles.heroPanel} style={`background: ${backgroundColor};`}>
-      {coverUrl ? (
+    <div class={styles.heroPanel} style={`background: ${view.backgroundColor};`}>
+      {view.cover ? (
         <div class={styles.coverWrapper}>
           <Book3D
-            cover={coverSrc(coverHeight)}
-            srcset={`${coverSrc(coverHeight * 2)} 2x`}
+            cover={view.cover.src}
+            srcset={view.cover.srcset}
             alt=""
-            title={title}
-            pages={pages ?? undefined}
-            height={coverHeight}
-            aspect={coverAspect}
-            {...spine}
-            restShadow={restShadow}
+            {...view.cover.book}
             hoverGroup
             class={styles.book}
-            {...pose}
           />
         </div>
       ) : (

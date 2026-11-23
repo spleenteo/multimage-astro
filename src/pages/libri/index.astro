@@ -4,9 +4,10 @@ import BooksCatalogue from '~/components/BooksCatalogue';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import { extractYear, toBookCard } from '~/lib/books';
+import { extractYear } from '~/lib/books';
 import { getAuthorDisplayName } from '~/lib/authors';
 import {
+  CATALOGUE_CHUNK,
   buildPeriodOptions,
   isTranslated,
   latestYear,
@@ -15,16 +16,19 @@ import {
   type CatalogueOption,
 } from '~/lib/catalogue';
 import {
+  BOOKS_CATALOGUE_FACETS_QUERY,
   BOOKS_CATALOGUE_QUERY,
   CATALOGUE_PAGE_SIZE,
+  type BooksCatalogueFacetsResult,
   type BooksCatalogueQueryResult,
-  type CatalogueBookRecord,
+  type CatalogueFacetRecord,
 } from './index/_graphql';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
 const draftModeEnabled = resolveDraftMode(Astro);
-const firstPage = { first: CATALOGUE_PAGE_SIZE, skip: 0 };
+// Out-of-catalogue books are skipped among the first cards: read some more than one chunk.
+const firstPage = { first: CATALOGUE_PAGE_SIZE, skip: 0, cards: CATALOGUE_CHUNK + 20 };
 
 const data = await executeQuery<BooksCatalogueQueryResult>(BOOKS_CATALOGUE_QUERY, {
   includeDrafts: draftModeEnabled,
@@ -32,10 +36,10 @@ const data = await executeQuery<BooksCatalogueQueryResult>(BOOKS_CATALOGUE_QUERY
 });
 
 // The CDA returns at most 500 records per query: read the rest of the catalogue, if any.
-const records: CatalogueBookRecord[] = [...(data.allBooks ?? [])];
+const records: CatalogueFacetRecord[] = [...(data.allBooks ?? [])];
 const total = data._allBooksMeta?.count ?? records.length;
 while (records.length < total) {
-  const next = await executeQuery<BooksCatalogueQueryResult>(BOOKS_CATALOGUE_QUERY, {
+  const next = await executeQuery<BooksCatalogueFacetsResult>(BOOKS_CATALOGUE_FACETS_QUERY, {
     includeDrafts: draftModeEnabled,
     variables: { first: CATALOGUE_PAGE_SIZE, skip: records.length },
   });
@@ -43,11 +47,11 @@ while (records.length < total) {
   records.push(...next.allBooks);
 }
 
-const books = records.map((record) => {
-  const card = toBookCard(record);
+const entries: CatalogueEntry[] = records.map((record) => {
   const year = Number.parseInt(extractYear(record.printYear) ?? '', 10);
   const authorNames = (record.authors ?? []).map((author) => getAuthorDisplayName(author, ''));
-  const entry: CatalogueEntry = {
+  return {
+    k: record.slug,
     c: record.collection?.slug ?? '',
     e: (record.format ?? '').trim().toLowerCase() === 'cartaceo' || !record.format ? 0 : 1,
     y: Number.isFinite(year) ? year : 0,
@@ -56,12 +60,18 @@ const books = records.map((record) => {
     x: record.archive === true ? 1 : 0,
     h: record.highlight === true ? 1 : 0,
     s: normalizeForSearch(
-      [record.title, record.subtitle, ...authorNames, record.collection?.name].filter(Boolean).join(' '),
+      [record.title, record.subtitle, ...authorNames, record.collection?.name]
+        .filter(Boolean)
+        .join(' '),
     ),
     n: normalizeForSearch(record.title),
   };
-  return { card, entry };
 });
+
+// The cards the server renders: the first chunk of the default view (newest first, in catalogue).
+const firstCards = (data.firstBooks ?? [])
+  .filter((record) => record.archive !== true)
+  .slice(0, CATALOGUE_CHUNK);
 
 const collections: CatalogueOption[] = (data.allCollections ?? []).map((collection) => ({
   value: collection.slug,
@@ -80,7 +90,6 @@ const authors: CatalogueOption[] = [...authorMap]
   .map(([value, label]) => ({ value, label }))
   .sort((a, b) => collator.compare(a.label, b.label));
 
-const entries = books.map((book) => book.entry);
 const newest = latestYear(entries);
 const periods = buildPeriodOptions(entries.map((entry) => entry.y));
 
@@ -97,7 +106,8 @@ const seo = withFallbackSeo(booksIndexContent?._seoMetaTags, {
   <BooksCatalogue
     title={title}
     introHtml={introHtml}
-    books={books}
+    entries={entries}
+    firstCards={firstCards}
     collections={collections}
     authors={authors}
     periods={periods}

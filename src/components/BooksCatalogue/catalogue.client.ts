@@ -1,6 +1,9 @@
-// Browser side of the /libri faceted catalogue: reads the JSON island the server rendered, filters
-// and sorts the server-rendered cards in place, reveals them 40 at a time, and mirrors the state in
-// the URL (replaceState, so a filtered catalogue can be shared and survives a trip to a book page).
+// Browser side of the /libri faceted catalogue: reads the JSON island the server rendered (facet
+// data of every book), filters and sorts, shows the matching cards 40 at a time, and mirrors the
+// state in the URL (replaceState, so a filtered catalogue can be shared and survives a trip to a
+// book page). The server renders only the first cards: the others are built here from
+// `/catalogue-books.json`, fetched in the background once the page has loaded (at once when the
+// view needs a card that is not there yet; a quiet placeholder holds its place meanwhile).
 import {
   CATALOGUE_CHUNK,
   EMPTY_CATALOGUE_STATE,
@@ -8,9 +11,11 @@ import {
   normalizeForSearch,
   parseCatalogueState,
   serializeCatalogueState,
+  type CatalogueCard,
   type CatalogueEntry,
   type CatalogueState,
 } from '~/lib/catalogue';
+import { fillBookCard } from '~/components/BookCard/fill.client';
 
 type Payload = {
   entries: CatalogueEntry[];
@@ -34,11 +39,58 @@ export function initCatalogue(root: HTMLElement) {
   if (!dataNode?.textContent || !grid || !filters) return;
 
   const { entries, newest, labels } = JSON.parse(dataNode.textContent) as Payload;
-  const items = Array.from(grid.querySelectorAll<HTMLLIElement>(':scope > li[data-index]'));
-  if (items.length !== entries.length) return;
+
+  // Cards by book slug: the ones the server rendered, then the ones built here.
+  const items = new Map<string, HTMLLIElement>();
+  grid.querySelectorAll<HTMLLIElement>(':scope > li[data-key]').forEach((item) => {
+    if (item.dataset.key) items.set(item.dataset.key, item);
+  });
+  const template = root.querySelector<HTMLTemplateElement>('[data-card-template]');
+  const bareTemplate = root.querySelector<HTMLTemplateElement>('[data-card-template-bare]');
+  const pendingTemplate = root.querySelector<HTMLTemplateElement>('[data-pending-template]');
+  const cardsUrl = root.dataset.cardsUrl;
+  let cards: Record<string, CatalogueCard> | null = null;
+  let cardsRequest: Promise<void> | null = null;
+  let cardsAttempts = 0;
+
+  const itemFor = (index: number): HTMLLIElement | null => {
+    const key = entries[index].k;
+    const existing = items.get(key);
+    if (existing) return existing;
+    const card = cards?.[key];
+    const mould = card?.c ? template : bareTemplate;
+    const built = card ? mould?.content.firstElementChild?.cloneNode(true) : null;
+    if (!card || !(built instanceof HTMLLIElement)) return null;
+    built.dataset.key = key;
+    fillBookCard(built, key, card);
+    items.set(key, built);
+    return built;
+  };
+  const pendingItem = () =>
+    pendingTemplate?.content.firstElementChild?.cloneNode(true) as HTMLLIElement | undefined;
+
+  const loadCards = () => {
+    if (cards || cardsRequest || !cardsUrl || cardsAttempts >= 2) return;
+    cardsAttempts += 1;
+    cardsRequest = fetch(cardsUrl)
+      .then((response) =>
+        response.ok ? response.json() : Promise.reject(new Error(String(response.status))),
+      )
+      .then((data: Record<string, CatalogueCard>) => {
+        cards = data;
+        render(false);
+      })
+      .catch(() => {
+        // One more try; after that the placeholders go and the view keeps the cards it has.
+        cardsRequest = null;
+        if (cardsAttempts < 2) window.setTimeout(loadCards, 2000);
+        else render(false);
+      });
+  };
 
   const q = <T extends Element>(selector: string) => root.querySelector<T>(selector);
-  const qa = <T extends Element>(selector: string) => Array.from(root.querySelectorAll<T>(selector));
+  const qa = <T extends Element>(selector: string) =>
+    Array.from(root.querySelectorAll<T>(selector));
 
   const searchInput = q<HTMLInputElement>('[data-search]');
   const sortSelect = q<HTMLSelectElement>('[data-sort]');
@@ -63,11 +115,13 @@ export function initCatalogue(root: HTMLElement) {
     Object.entries(labels.autori).map(([slug, name]) => [normalizeForSearch(name), slug]),
   );
 
-  // Sort orders over the full list; the server already renders "novità" order.
+  // Sort orders over the full list; the entries come in "novità" order.
   const collator = new Intl.Collator('it', { sensitivity: 'base', numeric: true });
   const orders: Record<CatalogueState['ordine'], number[]> = {
     novita: entries.map((_, index) => index),
-    titolo: entries.map((_, index) => index).sort((a, b) => collator.compare(entries[a].n, entries[b].n)),
+    titolo: entries
+      .map((_, index) => index)
+      .sort((a, b) => collator.compare(entries[a].n, entries[b].n)),
   };
 
   const sanitize = (input: CatalogueState): CatalogueState => ({
@@ -79,7 +133,6 @@ export function initCatalogue(root: HTMLElement) {
 
   let state = sanitize(parseCatalogueState(window.location.search));
   let shown = CATALOGUE_CHUNK;
-  let renderedOrder: CatalogueState['ordine'] = 'novita';
   let liveTimer: number | undefined;
 
   const activeFilters = (current: CatalogueState): ActiveFilter[] => {
@@ -91,17 +144,29 @@ export function initCatalogue(root: HTMLElement) {
       }),
     );
     if (current.formato) {
-      list.push({ label: current.formato === 'ebook' ? 'Ebook' : 'Cartaceo', remove: (s) => ({ ...s, formato: '' }) });
+      list.push({
+        label: current.formato === 'ebook' ? 'Ebook' : 'Cartaceo',
+        remove: (s) => ({ ...s, formato: '' }),
+      });
     }
     if (current.autore) {
-      list.push({ label: labels.autori[current.autore] ?? current.autore, remove: (s) => ({ ...s, autore: '' }) });
+      list.push({
+        label: labels.autori[current.autore] ?? current.autore,
+        remove: (s) => ({ ...s, autore: '' }),
+      });
     }
     if (current.periodo) {
-      list.push({ label: labels.periodi[current.periodo] ?? current.periodo, remove: (s) => ({ ...s, periodo: '' }) });
+      list.push({
+        label: labels.periodi[current.periodo] ?? current.periodo,
+        remove: (s) => ({ ...s, periodo: '' }),
+      });
     }
-    if (current.tradotti) list.push({ label: 'Tradotti', remove: (s) => ({ ...s, tradotti: false }) });
-    if (current.evidenza) list.push({ label: 'In evidenza', remove: (s) => ({ ...s, evidenza: false }) });
-    if (current.archivio) list.push({ label: 'Con i fuori catalogo', remove: (s) => ({ ...s, archivio: false }) });
+    if (current.tradotti)
+      list.push({ label: 'Tradotti', remove: (s) => ({ ...s, tradotti: false }) });
+    if (current.evidenza)
+      list.push({ label: 'In evidenza', remove: (s) => ({ ...s, evidenza: false }) });
+    if (current.archivio)
+      list.push({ label: 'Con i fuori catalogo', remove: (s) => ({ ...s, archivio: false }) });
     if (current.q) list.push({ label: `«${current.q}»`, remove: (s) => ({ ...s, q: '' }) });
     return list;
   };
@@ -132,8 +197,15 @@ export function initCatalogue(root: HTMLElement) {
   };
 
   const updateCounts = () => {
-    const count = (facet: Parameters<typeof matchesCatalogue>[3], test: (entry: CatalogueEntry) => boolean) =>
-      entries.reduce((total, entry) => (test(entry) && matchesCatalogue(entry, state, newest, facet) ? total + 1 : total), 0);
+    const count = (
+      facet: Parameters<typeof matchesCatalogue>[3],
+      test: (entry: CatalogueEntry) => boolean,
+    ) =>
+      entries.reduce(
+        (total, entry) =>
+          test(entry) && matchesCatalogue(entry, state, newest, facet) ? total + 1 : total,
+        0,
+      );
 
     qa<HTMLElement>('[data-count]').forEach((node) => {
       const facet = node.dataset.count;
@@ -141,10 +213,18 @@ export function initCatalogue(root: HTMLElement) {
       let optionCount = 0;
       if (facet === 'collane') optionCount = count('collane', (entry) => entry.c === value);
       else if (facet === 'formato')
-        optionCount = count('formato', (entry) => (value === '' ? true : value === 'ebook' ? entry.e === 1 : entry.e === 0));
+        optionCount = count('formato', (entry) =>
+          value === '' ? true : value === 'ebook' ? entry.e === 1 : entry.e === 0,
+        );
       else if (facet === 'periodo')
         optionCount = count('periodo', (entry) =>
-          value === '' ? true : matchesCatalogue(entry, { ...EMPTY_CATALOGUE_STATE, archivio: true, periodo: value }, newest),
+          value === ''
+            ? true
+            : matchesCatalogue(
+                entry,
+                { ...EMPTY_CATALOGUE_STATE, archivio: true, periodo: value },
+                newest,
+              ),
         );
       else if (facet === 'tradotti') optionCount = count('tradotti', (entry) => entry.t === 1);
       else if (facet === 'evidenza') optionCount = count('evidenza', (entry) => entry.h === 1);
@@ -155,21 +235,25 @@ export function initCatalogue(root: HTMLElement) {
   };
 
   const render = (announce: boolean) => {
-    if (renderedOrder !== state.ordine) {
-      const fragment = document.createDocumentFragment();
-      orders[state.ordine].forEach((index) => fragment.append(items[index]));
-      grid.append(fragment);
-      renderedOrder = state.ordine;
-    }
-
+    // The cards of this view, in order; a placeholder where the card's data has not arrived yet.
     let total = 0;
+    let missing = false;
+    const nodes: HTMLLIElement[] = [];
     orders[state.ordine].forEach((index) => {
-      const item = items[index];
-      const match = matchesCatalogue(entries[index], state, newest);
-      item.hidden = !(match && total < shown);
-      if (match) total += 1;
-      item.removeAttribute('data-initial-overflow');
+      if (!matchesCatalogue(entries[index], state, newest)) return;
+      if (total < shown) {
+        const item =
+          itemFor(index) ?? (cardsAttempts < 2 || cardsRequest ? pendingItem() : undefined);
+        if (item?.hasAttribute('data-pending')) missing = true;
+        if (item) nodes.push(item);
+      }
+      total += 1;
     });
+    const current = grid.children;
+    if (nodes.length !== current.length || nodes.some((node, index) => node !== current[index])) {
+      grid.replaceChildren(...nodes);
+    }
+    if (missing) loadCards();
 
     const visible = Math.min(total, shown);
     if (heading) heading.textContent = plural(total);
@@ -203,7 +287,8 @@ export function initCatalogue(root: HTMLElement) {
       undo.hidden = !last || active.length < 2;
       if (last) undo.textContent = `Togli ${last.label}`;
     }
-    if (siteSearch) siteSearch.href = state.q ? `/cerca?q=${encodeURIComponent(state.q)}` : '/cerca';
+    if (siteSearch)
+      siteSearch.href = state.q ? `/cerca?q=${encodeURIComponent(state.q)}` : '/cerca';
 
     if (moreWrap && moreStatus && moreButton) {
       moreWrap.hidden = total <= visible;
@@ -222,7 +307,11 @@ export function initCatalogue(root: HTMLElement) {
       window.clearTimeout(liveTimer);
       liveTimer = window.setTimeout(() => {
         live.textContent =
-          total === 0 ? 'Nessun libro con questi filtri' : total === 1 ? '1 libro trovato' : `${total} libri trovati`;
+          total === 0
+            ? 'Nessun libro con questi filtri'
+            : total === 1
+              ? '1 libro trovato'
+              : `${total} libri trovati`;
       }, 500);
     }
   };
@@ -244,7 +333,8 @@ export function initCatalogue(root: HTMLElement) {
         ? [...state.collane, input.value]
         : state.collane.filter((slug) => slug !== input.value);
       update({ ...state, collane });
-    } else if (facet === 'formato') update({ ...state, formato: input.value as CatalogueState['formato'] });
+    } else if (facet === 'formato')
+      update({ ...state, formato: input.value as CatalogueState['formato'] });
     else if (facet === 'periodo') update({ ...state, periodo: input.value });
     else if (facet === 'tradotti') update({ ...state, tradotti: input.checked });
     else if (facet === 'evidenza') update({ ...state, evidenza: input.checked });
@@ -261,7 +351,8 @@ export function initCatalogue(root: HTMLElement) {
       authorInput.value = '';
       update({ ...state, autore: slug });
     } else if (authorStatus) {
-      authorStatus.textContent = 'Nessuna autrice o autore con questo nome nel catalogo. Scegli un nome dai suggerimenti.';
+      authorStatus.textContent =
+        'Nessuna autrice o autore con questo nome nel catalogo. Scegli un nome dai suggerimenti.';
     }
   };
   authorInput?.addEventListener('change', applyAuthor);
@@ -283,7 +374,9 @@ export function initCatalogue(root: HTMLElement) {
   });
 
   qa<HTMLButtonElement>('[data-reset]').forEach((button) =>
-    button.addEventListener('click', () => update({ ...EMPTY_CATALOGUE_STATE, ordine: state.ordine })),
+    button.addEventListener('click', () =>
+      update({ ...EMPTY_CATALOGUE_STATE, ordine: state.ordine }),
+    ),
   );
 
   undo?.addEventListener('click', () => {
@@ -296,9 +389,7 @@ export function initCatalogue(root: HTMLElement) {
     const firstNew = shown;
     shown += CATALOGUE_CHUNK;
     render(false);
-    const visibleItems = items.filter((item) => !item.hidden);
-    const ordered = orders[state.ordine].map((index) => items[index]).filter((item) => visibleItems.includes(item));
-    ordered[firstNew]?.querySelector<HTMLAnchorElement>('a')?.focus();
+    grid.children[firstNew]?.querySelector<HTMLAnchorElement>('a')?.focus();
   });
 
   // Mobile sheet.
@@ -378,4 +469,8 @@ export function initCatalogue(root: HTMLElement) {
   q<HTMLElement>('[data-controls]')?.removeAttribute('hidden');
   syncControls();
   render(false);
+
+  // Fetch the other cards once the page is quiet, so the first filter finds them ready.
+  if ('requestIdleCallback' in window) window.requestIdleCallback(loadCards, { timeout: 4000 });
+  else globalThis.setTimeout(loadCards, 1500);
 }
