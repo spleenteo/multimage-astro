@@ -1,6 +1,7 @@
 import { INDEX_HERO_FRAGMENT, type IndexHeroFields } from '~/components/IndexHeroSection/_graphql';
-import { RESPONSIVE_IMAGE_CARD_FIELDS, TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
+import { TAG_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { AuthorRecordForCard } from '~/lib/authors';
+import type { AuthorIndexBook } from '~/lib/authorIndex';
 
 /** The CDA caps `first` at 500: the books are read in pages of this size until the count is reached. */
 export const AUTHORS_BOOKS_PAGE_SIZE = 500;
@@ -14,48 +15,50 @@ const AUTHOR_BOOKS_FIELDS = /* GraphQL */ `
     count
   }
   allBooks(orderBy: [printYear_DESC, title_ASC], first: $first, skip: $skip) {
-    id
     archive
     authors {
       id
+      slug
+      sortBy
+      fullName
     }
     coverImage {
       url
       width
       height
-      colors {
-        hex
-      }
     }
   }
 `;
 
+/** What an index card shows. The full biography is not read: `oneLineBio` stands in for it. */
+const AUTHOR_FIELDS = /* GraphQL */ `
+  id
+  fullName
+  slug
+  alias
+  country
+  oneLineBio
+  sortBy
+  picture {
+    responsiveImage(imgixParams: { fit: crop, crop: focalpoint, w: 128, h: 128, auto: format }) {
+      src
+    }
+  }
+`;
+
+/**
+ * The page: the first `$authors` profiles in A–Z order (the server renders the first letters) and
+ * every book. `/authors-index.json` runs the same query with `$authors: 500` for all of them.
+ */
 export const AUTHORS_PAGE_QUERY = /* GraphQL */ `
   ${TAG_FRAGMENT}
   ${INDEX_HERO_FRAGMENT}
-  query AuthorsPage($first: IntType!, $skip: IntType!) {
+  query AuthorsPage($first: IntType!, $skip: IntType!, $authors: IntType!) {
     authorsIndexPage: allIndexPages(filter: { slug: { eq: "autori" } }, first: 1) {
       ...IndexHeroFields
     }
-    allAuthors(orderBy: sortBy_ASC, first: 500) {
-      id
-      fullName
-      slug
-      alias
-      country
-      biography {
-        value
-      }
-      sortBy
-      picture {
-        url
-        alt
-        responsiveImage(
-          imgixParams: { fit: crop, crop: focalpoint, w: 128, h: 128, auto: format }
-        ) {
-          ${RESPONSIVE_IMAGE_CARD_FIELDS}
-        }
-      }
+    allAuthors(orderBy: sortBy_ASC, first: $authors) {
+      ${AUTHOR_FIELDS}
     }
     ${AUTHOR_BOOKS_FIELDS}
   }
@@ -67,21 +70,9 @@ export const AUTHORS_BOOKS_QUERY = /* GraphQL */ `
   }
 `;
 
-export type AuthorBookRecord = {
-  id: string;
-  archive: boolean | null;
-  authors: Array<{ id: string }>;
-  coverImage: {
-    url: string;
-    width: number | null;
-    height: number | null;
-    colors: Array<{ hex: string }> | null;
-  } | null;
-};
-
 export type AuthorsBooksResult = {
   _allBooksMeta: { count: number };
-  allBooks: AuthorBookRecord[];
+  allBooks: AuthorIndexBook[];
 };
 
 export type AuthorsPageQueryResult = AuthorsBooksResult & {

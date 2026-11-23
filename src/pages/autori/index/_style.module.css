@@ -61,6 +61,11 @@
   display: none;
 }
 
+/* Without JavaScript the letters that arrive with the JSON have nothing to point at. */
+:global(html:not(.authors-js)) .letters a[data-nav-pending] {
+  display: none;
+}
+
 .noResults {
   @apply space-y-2 bg-brand-mist px-6 py-8 text-brand-charcoal md:px-10;
 }
@@ -95,9 +100,10 @@
   @apply font-serif text-3xl text-brand-navy;
 }
 
-/* Two columns on phones, three from 768px, four from 1280px. */
+/* One column on phones, two from 640px, three from 1024px. Each card is a mist sheet, so a 20px
+   gutter is enough to tell them apart. */
 .grid {
-  @apply grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-8 md:gap-y-8 xl:grid-cols-4;
+  @apply grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3;
 }
 
 .empty {

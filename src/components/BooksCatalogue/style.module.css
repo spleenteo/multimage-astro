@@ -253,16 +253,6 @@
   @apply grid grid-cols-2 gap-x-3 gap-y-5 sm:gap-6 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3;
 }
 
-/* With JavaScript the first 40 show at once; the script takes over from here. */
-:global(.catalogue-js) .grid > [data-initial-overflow] {
-  display: none;
-}
-
-/* Without JavaScript, out-of-catalogue books live on /libri/archivio only. */
-:global(html:not(.catalogue-js)) .grid > [data-archived] {
-  display: none;
-}
-
 .empty {
   @apply space-y-3 bg-brand-mist px-6 py-10 text-brand-charcoal md:px-10;
 }
@@ -293,4 +283,11 @@
 
 .moreStatus {
   @apply text-sm text-brand-slate tabular-nums;
+}
+
+/* A card whose data is still on its way from /catalogue-books.json: the card's footprint, quiet. */
+.pending {
+  height: 100%;
+  min-height: 24rem;
+  background: color-mix(in srgb, var(--color-brand-navy) 5%, transparent);
 }

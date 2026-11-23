@@ -1,89 +1,75 @@
 ---
 // An author in the /autori index: flat, with a small portrait (or the initial), the name as the
-// only link to the profile, the legal name under an alias, the size, two lines of bio, and a strip
-// of their latest covers on a light field tinted from the newest one, with the way to their books.
-import { Image } from '@datocms/astro/Image';
-import type { AssetImage } from '~/lib/datocms/types';
-import { darkenColor, hexToRgba, lightenColor, pickBaseColor } from '~/lib/colors';
+// only link to the profile, the legal name under an alias, country and size, the one-line bio, and
+// at the foot up to four small plain covers beside the way to their books.
+// `fill.client.ts` writes the same values into a clone of this markup for the cards the browser
+// builds: when the structure changes here, change it there.
+import type { AuthorIndexItem } from '~/lib/authorIndex';
 import styles from './style.module.css';
 
-type Cover = { url: string; width: number | null; height: number | null; colors?: Array<{ hex: string }> | null };
-
 type Props = {
-  name: string;
-  slug: string;
-  legalName?: string | null;
-  summary?: string | null;
-  inCatalogue: number;
-  archived: number;
-  picture?: AssetImage | null;
-  covers: Cover[];
+  author: AuthorIndexItem;
 };
 
-const { name, slug, legalName = null, summary = null, inCatalogue, archived, picture = null, covers }: Props =
-  Astro.props;
-
-const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);
-const sizeLine =
-  inCatalogue > 0
-    ? [plural(inCatalogue), archived > 0 ? `${archived}\u00a0fuori\u00a0catalogo` : null].filter(Boolean).join(' · ')
-    : `${plural(archived)} fuori catalogo`;
-const booksHref = `/libri?autore=${encodeURIComponent(slug)}${inCatalogue === 0 ? '&archivio=1' : ''}`;
-// Some bios are only a link to a website: links never stand in for the text.
-const bio = (summary ?? '').replace(/(https?:\/\/|www\.)\S+/g, '').replace(/\s+/g, ' ').trim();
-const initial = name.trim().charAt(0).toUpperCase() || '·';
-const portrait = picture?.responsiveImage ? { ...picture.responsiveImage, alt: '' } : null;
-
-// A grid of hundreds: the hue stays, light (as on catalogue cards), so the covers stay the loudest.
-const base = pickBaseColor(covers[0]?.colors);
-const fieldColor = lightenColor(base, 0.55);
-const shadowColor = hexToRgba(darkenColor(base, 0.55), 0.35);
-const COVER_HEIGHT = 96;
-const coverSrc = (url: string, height: number) => `${url}?h=${height}&fit=max&auto=format`;
+const { author } = Astro.props;
 ---
 
 <article class={styles.root}>
   <div class={styles.head}>
-    {portrait ? (
+    {author.p ? (
       <div class={styles.portrait}>
-        <Image data={portrait} sizes="56px" pictureClass="block h-full w-full" imgClass={styles.portraitImage} />
+        <img
+          src={author.p}
+          width="56"
+          height="56"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class={styles.portraitImage}
+        />
       </div>
     ) : (
-      <div class={styles.initial} aria-hidden="true">{initial}</div>
+      <div class={styles.initial} aria-hidden="true">{author.i}</div>
     )}
     <div class="min-w-0">
       <h3 class={styles.name}>
-        <a href={`/autori/${slug}`}>{name}</a>
+        <a href={`/autori/${author.k}`}
+          >{author.n}<svg
+            class={styles.arrow}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 12h18m0 0l-8.5-8.5M21 12l-8.5 8.5"></path>
+          </svg></a
+        >
       </h3>
-      {legalName ? <p class={styles.legal}>{legalName}</p> : null}
-      <p class={styles.size}>{sizeLine}</p>
+      {author.ln ? <p class={styles.legal}>{author.ln}</p> : null}
+      <p class={styles.size}>{author.sz}</p>
     </div>
   </div>
 
-  {bio.length > 0 ? <p class={styles.summary}>{bio}</p> : null}
+  {author.b ? <p class={styles.summary}>{author.b}</p> : null}
 
-  {covers.length > 0 ? (
-    <a href={booksHref} class={styles.covers} style={`background: ${fieldColor};`} tabindex="-1" aria-hidden="true">
-      {covers.map((cover, index) => {
-        const ratio = cover.width && cover.height ? cover.width / cover.height : 0.7;
-        return (
+  <div class={styles.foot}>
+    {author.cv.length > 0 ? (
+      <a href={author.h} class={styles.covers} tabindex="-1" aria-hidden="true">
+        {author.cv.map((cover) => (
           <img
-            src={coverSrc(cover.url, COVER_HEIGHT)}
-            srcset={`${coverSrc(cover.url, COVER_HEIGHT * 2)} 2x`}
-            width={Math.round(COVER_HEIGHT * ratio)}
-            height={COVER_HEIGHT}
+            src={cover.src}
+            width={cover.width}
+            height={cover.height}
             alt=""
             loading="lazy"
             decoding="async"
-            class:list={[styles.cover, index >= 2 ? styles.third : null]}
-            style={`filter: drop-shadow(6px 10px 12px ${shadowColor});`}
           />
-        );
-      })}
-    </a>
-  ) : null}
-
-  <p class={styles.ways}>
-    <a href={booksHref}>Vedi i libri</a>
-  </p>
+        ))}
+      </a>
+    ) : null}
+    <a href={author.h} class={styles.ways}>Vedi i libri</a>
+  </div>
 </article>

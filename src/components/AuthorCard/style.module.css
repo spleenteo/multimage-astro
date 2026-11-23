@@ -1,12 +1,38 @@
 @reference '../../styles/global.css';
 
-/* Flat: no shadow, no lift. Hundreds of these share a grid divided by hairlines. */
+/* A sheet per author: mist at rest, so each one is told apart at a glance; under the pointer (or
+   with focus inside) the sheet turns white, takes a navy ring and lifts. */
 .root {
-  @apply flex h-full flex-col gap-3 border-t border-brand-navy/10 pt-4;
+  @apply flex h-full flex-col gap-3 bg-brand-mist p-6;
+  transition:
+    background-color 250ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.root:hover,
+.root:focus-within {
+  @apply bg-white;
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgb(0 72 129 / 0.18),
+    0 2px 4px rgb(0 40 80 / 0.06),
+    0 14px 28px rgb(0 40 80 / 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+
+  .root:hover,
+  .root:focus-within {
+    transform: none;
+  }
 }
 
 .head {
-  @apply flex flex-col items-start gap-2 md:flex-row md:gap-3;
+  @apply flex items-start gap-3;
 }
 
 .portrait,
@@ -14,10 +40,9 @@
   @apply h-12 w-12 shrink-0 overflow-hidden md:h-14 md:w-14;
 }
 
-/* !important: the DatoCMS <Image> writes its own inline width/height on the <img>. */
 .portraitImage {
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -26,11 +51,51 @@
 }
 
 .name {
-  @apply font-serif text-lg leading-snug text-balance text-brand-navy [overflow-wrap:anywhere] md:text-xl md:[overflow-wrap:normal];
+  @apply font-serif text-xl leading-snug text-balance text-brand-navy;
 }
 
+/* The name is the way in: on hover a rule draws under it and the arrow steps forward, like the
+   doors on the home page. */
 .name a {
-  @apply text-brand-navy underline-offset-4 hover:underline focus:text-brand-navy;
+  @apply text-brand-navy no-underline hover:no-underline focus:text-brand-navy;
+  padding-bottom: 2px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.head:hover .name a,
+.name a:focus-visible {
+  background-size: 100% 1px;
+}
+
+.arrow {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-left: 0.35em;
+  vertical-align: -0.06em;
+  opacity: 0.35;
+  transition:
+    transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 350ms ease;
+}
+
+.head:hover .arrow,
+.name a:focus-visible .arrow {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name a,
+  .arrow {
+    transition: none;
+  }
+
+  .head:hover .arrow,
+  .name a:focus-visible .arrow {
+    transform: none;
+  }
 }
 
 .legal {
@@ -38,57 +103,52 @@
 }
 
 .size {
-  @apply font-serif text-base text-brand-slate lining-nums;
+  /* Slate fails 4.5:1 on the mist sheet (4.2:1): charcoal at 75% keeps the quiet tone at 5.4:1. */
+  @apply font-serif text-base text-brand-charcoal/75 lining-nums;
 }
 
 .summary {
-  @apply text-sm leading-relaxed text-brand-charcoal;
+  @apply max-w-[40ch] text-sm leading-relaxed text-brand-charcoal;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  /* The one-line bio is 100 characters at most: two or three lines at this measure; the clamp is
+     a safety net for a narrow column. */
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   overflow: hidden;
 }
 
-/* The latest covers stand on the floor of a light field tinted from the newest one. */
-.covers {
-  @apply mt-auto flex items-end justify-center gap-3 overflow-clip px-3 pt-4 pb-4 md:gap-4;
+/* The foot: the latest covers, small and plain, joined to the way to the books. */
+.foot {
+  @apply mt-auto flex flex-wrap items-end gap-x-4 gap-y-1 pt-2;
 }
 
-.cover {
+/* No field behind them: a hairline for white covers and a soft offset shadow. */
+.covers {
+  @apply flex shrink-0 items-end gap-1.5 leading-none;
+}
+
+.covers img {
   display: block;
   width: auto;
-  max-width: 4.5rem;
-  height: 4.5rem;
-  object-fit: contain;
-  object-position: center bottom;
+  height: 3rem;
+  outline: 1px solid color-mix(in srgb, var(--color-brand-navy) 12%, transparent);
+  box-shadow:
+    0 1px 2px rgb(20 30 45 / 0.14),
+    3px 6px 10px rgb(20 30 45 / 0.14);
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
   @media (width >= 48rem) {
-    max-width: 5.5rem;
-    height: 6rem;
+    height: 3.5rem;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .covers:hover .cover {
-    transform: translateY(-4px);
-  }
-}
-
-/* Two covers fit a phone column; the third joins from 768px. */
-.third {
-  display: none;
-
-  @media (width >= 48rem) {
-    display: block;
+  .covers:hover img {
+    transform: translateY(-3px);
   }
 }
 
 .ways {
-  @apply text-sm font-semibold;
-}
-
-.ways a {
-  @apply inline-flex min-h-11 items-center text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
+  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-8;
 }

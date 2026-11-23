@@ -1,6 +1,10 @@
 ---
 /**
  * Book3D: libro 3D in solo CSS (nessun JavaScript lato client).
+ * Markup minimo (4 elementi), perché nel catalogo ce n'è uno per card: contenitore, libro,
+ * copertina e la sola faccia laterale che la posa mostra (dorso se rotY > 0, taglio delle pagine
+ * altrimenti). Ombra, riflesso e taglio superiore/inferiore sono pseudo-elementi; le misure
+ * derivate dalla larghezza stanno nel CSS. Il retro non esiste: con |rotY| < 90 non si vede mai.
  * Usato da BookCard: copertina piatta con la sua ombra colorata, il libro in posa al passaggio
  * del mouse sulla card (`hoverGroup`). Aggiunte rispetto all'originale: `height` (alternativa a
  * `width`), `srcset`, `hoverGroup`, `restShadow`; con prefers-reduced-motion il libro resta piatto.
@@ -15,6 +19,8 @@
  *           aspect={1.5} spineColor="#fbf3ea" accentColor="#e0705d" inkColor="#6b1b1f"
  *           rotY={-35} rotX={-5} rotZ={1.5} offsetY={8} />
  */
+import { book3dView } from '~/lib/book3d';
+
 interface Props {
   /** URL della copertina (es. l'URL dell'immagine da DatoCMS) */
   cover: string;
@@ -60,81 +66,47 @@ interface Props {
 const {
   cover,
   title,
-  pages = 290,
-  width = 300,
-  aspect = 1.4142,
-  spineColor = '#f3e3c2',
-  accentColor = '#f0b429',
-  inkColor = '#4f6f2c',
-  rotY = -43,
-  rotX = -17,
-  rotZ = 0,
-  offsetX = 0,
-  offsetY = 0,
-  scale = 1,
   flatUntilHover = true,
   alt,
-  height,
   srcset,
   loading = 'lazy',
   hoverGroup = false,
-  restShadow,
   class: className = '',
+  ...geometry
 } = Astro.props;
 
-const W = height ? Math.round(height / aspect) : width;
-const H = height ? Math.round(height) : Math.round(W * aspect);
-const s = W / 300; // fattore di scala rispetto al disegno originale (300 px)
-
-// Spessore: da 20 pagine (16 px) a 600 pagine (90 px) in proporzione, scalato con la larghezza
-const PAGES_MIN = 20, PAGES_MAX = 600, D_MIN = 16, D_MAX = 90;
-const t = (Math.min(PAGES_MAX, Math.max(PAGES_MIN, pages)) - PAGES_MIN) / (PAGES_MAX - PAGES_MIN);
-const D = (D_MIN + t * (D_MAX - D_MIN)) * s;
-
-const BAND = 18 * s;
-const I = 5 * s;
-const PD = D - 8 * s;
-const SW = Math.round(W * 0.8);
-
-// Il testo del dorso si rimpicciolisce se il titolo è lungo
-const avail = H - 2 * BAND - 16 * s;
-const fs = Math.max(8 * s, Math.min(22 * s, (D - 6 * s) * 0.6, avail / (Math.max(1, title.length) * 0.68)));
-
-const ox = Math.max(-60, Math.min(60, offsetX));
-const oy = Math.max(-60, Math.min(60, offsetY));
-const sc = Math.max(1, Math.min(1.3, scale));
-const pose = `translate(${ox}px, ${oy}px) scale(${sc}) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg)`;
-
-const vars = [
-  `--w:${W}px`, `--h:${H}px`, `--d:${D.toFixed(2)}px`, `--pd:${PD.toFixed(2)}px`,
-  `--i:${I.toFixed(2)}px`, `--band:${BAND.toFixed(2)}px`, `--sw:${SW}px`, `--fs:${fs.toFixed(1)}px`,
-  `--spine:${spineColor}`, `--accent:${accentColor}`, `--ink:${inkColor}`,
-  `--pose:${pose}`, `--ox:${ox}px`, `--oy:${oy}px`, `--sc:${sc}`,
-  restShadow ? `--rest-shadow:${restShadow}` : null,
-].filter(Boolean).join(';');
+// Misure, posa e faccia visibile: `~/lib/book3d` (condiviso con le card costruite nel browser).
+const { style: vars, showSpine, edgeClass: edge } = book3dView({ title, ...geometry });
 ---
 
-<div class:list={['b3d', flatUntilHover && 'b3d--flat', hoverGroup && 'b3d--group', className]} style={vars}>
-  <div class="shadow"></div>
+<div
+  class:list={['b3d', edge, flatUntilHover && 'b3d--flat', hoverGroup && 'b3d--group', className]}
+  style={vars}
+>
   <div class="book">
-    <div class="face back"></div>
-    <div class="face pages-right"></div>
-    <div class="face pages-top"></div>
-    <div class="face pages-bottom"></div>
-    <div class="face spine">
-      <div class="band band-top"></div>
-      <div class="band band-bottom"></div>
-      <div class="spine-text">{title}</div>
-    </div>
-    <div class="face front">
-      <img src={cover} srcset={srcset} alt={alt ?? `Copertina: ${title}`} loading={loading} fetchpriority={loading === 'eager' ? 'high' : undefined} decoding="async" />
-      <div class="gloss"></div>
-    </div>
+    {showSpine ? (
+      <span class="spine" aria-hidden="true">{title}</span>
+    ) : (
+      <span class="pages"></span>
+    )}
+    <img
+      src={cover}
+      srcset={srcset}
+      alt={alt ?? `Copertina: ${title}`}
+      loading={loading}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
+      decoding="async"
+    />
   </div>
 </div>
 
 <style>
   .b3d {
+    /* Misure derivate dal disegno originale (copertina larga 300 px). */
+    --i: calc(var(--w) / 60);
+    --band: calc(var(--w) * 0.06);
+    --pd: calc(var(--d) - var(--w) * 8 / 300);
+    --pose: translate(var(--ox), var(--oy)) scale(var(--sc)) var(--rot);
     position: relative;
     width: var(--w);
     height: var(--h);
@@ -148,11 +120,13 @@ const vars = [
     transform: var(--pose);
   }
 
-  .shadow {
+  /* Ombra a terra */
+  .b3d::after {
+    content: '';
     position: absolute;
     left: 50%;
     top: calc(var(--h) + 8px);
-    width: var(--sw);
+    width: calc(var(--w) * 0.8);
     height: 40px;
     border-radius: 50%;
     background: rgba(30, 25, 15, 0.2);
@@ -160,75 +134,56 @@ const vars = [
     transform: translate(calc(-50% + var(--ox)), var(--oy)) scale(var(--sc, 1));
   }
 
-  .face {
+  .book > *,
+  .book::before,
+  .book::after {
     position: absolute;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
 
-  .front {
+  /* Copertina */
+  img {
     left: 0;
     top: 0;
     width: var(--w);
     height: var(--h);
-    overflow: hidden;
+    object-fit: cover;
+    display: block;
     border-radius: 2px 5px 5px 2px;
     transform: translateZ(calc(var(--d) / 2));
   }
-  .front img {
-    position: absolute;
+  /* Riflesso sulla copertina */
+  .book::after {
+    content: '';
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .gloss {
-    position: absolute;
-    inset: 0;
+    border-radius: 2px 5px 5px 2px;
     pointer-events: none;
     background:
-      linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(255, 255, 255, 0.14) 2.2%, rgba(0, 0, 0, 0.22) 4.2%, rgba(0, 0, 0, 0) 8%),
-      linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0.1) 100%);
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(255, 255, 255, 0.14) 2.2%,
+        rgba(0, 0, 0, 0.22) 4.2%,
+        rgba(0, 0, 0, 0) 8%
+      ),
+      linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0) 38%,
+        rgba(0, 0, 0, 0.1) 100%
+      );
+    transform: translateZ(calc(var(--d) / 2 + 0.1px));
   }
 
-  .back {
-    left: 0;
-    top: 0;
-    width: var(--w);
-    height: var(--h);
-    background: var(--spine);
-    border-radius: 5px 2px 2px 5px;
-    transform: rotateY(180deg) translateZ(calc(var(--d) / 2));
-  }
-
+  /* Dorso: due fasce (gradiente), il titolo in verticale */
   .spine {
     left: calc((var(--w) - var(--d)) / 2);
     top: 0;
     width: var(--d);
     height: var(--h);
-    background:
-      linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(255, 255, 255, 0.18) 35%, rgba(0, 0, 0, 0.05) 100%),
-      var(--spine);
-    transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
-  }
-  .band {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: var(--band);
-    background: var(--accent);
-  }
-  .band-top { top: 0; }
-  .band-bottom { bottom: 0; }
-  .spine-text {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: var(--band);
-    bottom: var(--band);
     box-sizing: border-box;
-    padding: 8px 2px;
+    padding: calc(var(--band) + 8px) 2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -242,9 +197,24 @@ const vars = [
     text-transform: uppercase;
     white-space: nowrap;
     color: var(--ink);
+    background:
+      linear-gradient(
+        var(--accent) 0 var(--band),
+        transparent 0 calc(100% - var(--band)),
+        var(--accent) 0
+      ),
+      linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.12) 0%,
+        rgba(255, 255, 255, 0.18) 35%,
+        rgba(0, 0, 0, 0.05) 100%
+      ),
+      var(--spine);
+    transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
   }
 
-  .pages-right {
+  /* Taglio delle pagine sul lato opposto al dorso */
+  .pages {
     left: calc((var(--w) - var(--pd)) / 2);
     top: var(--i);
     width: var(--pd);
@@ -253,19 +223,19 @@ const vars = [
     box-shadow: inset 0 0 14px rgba(90, 70, 30, 0.25);
     transform: rotateY(90deg) translateZ(calc(var(--w) / 2 - var(--i)));
   }
-  .pages-top {
+  /* Taglio superiore o inferiore, secondo la posa */
+  .book::before {
+    content: '';
     left: var(--i);
     top: calc((var(--h) - var(--pd)) / 2);
     width: calc(var(--w) - 2 * var(--i));
     height: var(--pd);
+  }
+  .b3d--top .book::before {
     background: repeating-linear-gradient(0deg, #fbf7ee 0 2px, #e6dfce 2px 3px);
     transform: rotateX(90deg) translateZ(calc(var(--h) / 2 - var(--i)));
   }
-  .pages-bottom {
-    left: var(--i);
-    top: calc((var(--h) - var(--pd)) / 2);
-    width: calc(var(--w) - 2 * var(--i));
-    height: var(--pd);
+  .b3d--bottom .book::before {
     background: repeating-linear-gradient(0deg, #d9d1be 0 2px, #c8bfa8 2px 3px);
     transform: rotateX(-90deg) translateZ(calc(var(--h) / 2 - var(--i)));
   }
@@ -275,12 +245,14 @@ const vars = [
     transform: translate(0, 0) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     transition: transform 700ms cubic-bezier(0.22, 0.8, 0.24, 1);
   }
-  .b3d--flat .shadow {
+  .b3d--flat::after {
     opacity: 0;
     transform: translate(-50%, 0);
-    transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 0.8, 0.24, 1);
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(0.22, 0.8, 0.24, 1);
   }
-  .b3d--flat .gloss {
+  .b3d--flat .book::after {
     opacity: 0;
     transition: opacity 700ms ease;
   }
@@ -302,16 +274,16 @@ const vars = [
     transform: var(--pose);
     transition-duration: 900ms;
   }
-  :global(.group:hover) .b3d--group .shadow,
-  :global(.group:focus-visible) .b3d--group .shadow,
-  .b3d--flat:hover .shadow {
+  :global(.group:hover) .b3d--group::after,
+  :global(.group:focus-visible) .b3d--group::after,
+  .b3d--flat:hover::after {
     opacity: 1;
     transform: translate(calc(-50% + var(--ox)), var(--oy)) scale(var(--sc, 1));
     transition-duration: 900ms;
   }
-  :global(.group:hover) .b3d--group .gloss,
-  :global(.group:focus-visible) .b3d--group .gloss,
-  .b3d--flat:hover .gloss {
+  :global(.group:hover) .b3d--group .book::after,
+  :global(.group:focus-visible) .b3d--group .book::after,
+  .b3d--flat:hover .book::after {
     opacity: 1;
     transition-duration: 900ms;
   }
@@ -319,8 +291,8 @@ const vars = [
   /* Movimento ridotto: il libro resta piatto, con la sua ombra. */
   @media (prefers-reduced-motion: reduce) {
     .b3d--flat .book,
-    .b3d--flat .shadow,
-    .b3d--flat .gloss {
+    .b3d--flat::after,
+    .b3d--flat .book::after {
       transition: none;
     }
     .b3d--flat:hover .book,
@@ -328,10 +300,10 @@ const vars = [
     :global(.group:focus-visible) .b3d--group .book {
       transform: none;
     }
-    .b3d--flat:hover .shadow,
-    .b3d--flat:hover .gloss,
-    :global(.group:hover) .b3d--group .shadow,
-    :global(.group:hover) .b3d--group .gloss {
+    .b3d--flat:hover::after,
+    .b3d--flat:hover .book::after,
+    :global(.group:hover) .b3d--group::after,
+    :global(.group:hover) .b3d--group .book::after {
       opacity: 0;
     }
     .b3d--flat:hover,

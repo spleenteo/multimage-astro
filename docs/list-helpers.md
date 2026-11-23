@@ -97,7 +97,15 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: derives palette colors from Imgix metadata and blends shades (`pickBaseColor`, `lightenColor`, `darkenColor`, `hexToRgba`); `contrastRatio` (WCAG ratio) and `readableTextOn` (charcoal or white, whichever reads better on a tinted background); `coverFieldPalette(colors)` returns the Book Cover Field set (field 16%, copy half 88%, cover shadow, caption colour).
   - Used in: `BookCard`, `FeaturedBookHighlight`, `BannerSection`, `HomeHero`, `libri/[slug]`, color-aware UI.
 - **`catalogue` helper** (`src/lib/catalogue.ts`)
-  - Purpose: rules of the faceted `/libri` catalogue shared by server and browser: `CatalogueEntry` (compact per-book facet record), `matchesCatalogue` (with an `ignore` facet for option counts), `parseCatalogueState`/`serializeCatalogueState` (URL), `buildPeriodOptions`, `isTranslated`, `normalizeForSearch`, `CATALOGUE_CHUNK` (40).
+  - Purpose: rules of the faceted `/libri` catalogue shared by server and browser: `CatalogueEntry` (compact per-book facet record), `matchesCatalogue` (with an `ignore` facet for option counts), `parseCatalogueState`/`serializeCatalogueState` (URL), `buildPeriodOptions`, `isTranslated`, `normalizeForSearch`, `CATALOGUE_CHUNK` (40), `CatalogueCard` (a card as `/catalogue-books.json` serves it) and `CATALOGUE_CARDS_URL`.
+- **`bookCardView` helper** (`src/lib/bookCardView.ts`)
+  - Purpose: `bookCardView(input)` works out what a book card shows (link, meta line, price label, tinted field, cover URLs and the `Book3D` input). Used by `BookCard` and by `toCatalogueCard`.
+- **`book3d` helper** (`src/lib/book3d.ts`)
+  - Purpose: `book3dView(input)` turns cover size, page count, colours and pose into the inline variables of `Book3D`, and says which side face and page edge the pose shows.
+- **`authorIndex` helper** (`src/lib/authorIndex.ts`)
+  - Purpose: `buildAuthorIndex(records, books)` builds the `/autori` items (`AuthorIndexItem`: name, size line, one-line bio, portrait, up to 4 small covers, letter group, search text) for authors with at least one book. Used by the page (letters `AUTHORS_SERVER_LETTERS`) and by `/authors-index.json` (everyone).
+- **`catalogueCard` helper** (`src/lib/catalogueCard.ts`)
+  - Purpose: `toCatalogueCard(record)` builds a `CatalogueCard` for `/catalogue-books.json` from `bookCardView` and `book3dView`, so cards built in the browser match the server-rendered ones.
   - Used in: `/libri`, `BooksCatalogue`.
 - **`currency` helper** (`src/lib/currency.ts`)
   - Purpose: formats `EUR` values (`it-IT`).

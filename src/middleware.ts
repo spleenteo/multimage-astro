@@ -50,7 +50,13 @@ function isInternalPath(pathname: string) {
 const SIXTY_DAYS = 60 * 60 * 24 * 60;
 
 /** Non-HTML routes that run CDA queries, so a purge keeps them fresh. */
-const CACHED_NON_HTML_PATHS = new Set(['/sitemap.xml', '/archived-books.json', '/search-books.json']);
+const CACHED_NON_HTML_PATHS = new Set([
+  '/sitemap.xml',
+  '/archived-books.json',
+  '/search-books.json',
+  '/catalogue-books.json',
+  '/authors-index.json',
+]);
 
 function isApiPath(pathname: string) {
   return pathname === '/api' || pathname.startsWith('/api/');
