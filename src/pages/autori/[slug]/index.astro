@@ -52,7 +52,11 @@ if (!author) {
 // profile itself, and their books are shown here too.
 const otherNames = (author.pseudonyms ?? [])
   .filter((person) => person.id !== author.id)
-  .map((person) => ({ id: person.id, name: getAuthorDisplayName(person, ''), slug: person.slug ?? null }))
+  .map((person) => ({
+    id: person.id,
+    name: getAuthorDisplayName(person, ''),
+    slug: person.slug ?? null,
+  }))
   .filter((person) => person.name.length > 0);
 const authorIds = [author.id, ...otherNames.map((person) => person.id)];
 
@@ -63,7 +67,8 @@ const relatedData = await executeQuery<AuthorRelatedBooksResult>(AUTHOR_RELATED_
 
 const authorDisplayName = getAuthorDisplayName(author);
 const fullName = author.fullName?.trim() || null;
-const legalName = author.alias?.trim() && fullName && fullName !== authorDisplayName ? fullName : null;
+const legalName =
+  author.alias?.trim() && fullName && fullName !== authorDisplayName ? fullName : null;
 
 const booksCount = relatedData._allBooksMeta?.count ?? relatedData.allBooks.length;
 const archivedCount = relatedData.archivedMeta?.count ?? 0;
@@ -83,7 +88,8 @@ const sizeLine =
 const books = mapBooksToCards(relatedData.allBooks).map((book) => ({
   ...book,
   coAuthors: book.authors.filter((person) => person.id !== author.id),
-  collectionName: book.collection?.slug === 'fuori-collana' ? null : book.collection?.name?.trim() || null,
+  collectionName:
+    book.collection?.slug === 'fuori-collana' ? null : book.collection?.name?.trim() || null,
 }));
 const inCatalogue = books.filter((book) => !book.isArchived);
 const archived = books.filter((book) => book.isArchived);
@@ -99,7 +105,9 @@ const featuredMeta = featured
       featured.isArchived ? 'Fuori catalogo' : 'Ultima uscita',
       featuredYear,
       featured.collectionName,
-    ].filter(Boolean).join(' · ')
+    ]
+      .filter(Boolean)
+      .join(' · ')
   : null;
 const featuredCoAuthors = featured ? formatAuthorNames(featured.coAuthors, { fallback: '' }) : '';
 const featuredPrice = featured && !featured.isArchived ? formatBookPrice(featured.price) : null;
@@ -109,7 +117,8 @@ const featuredCover = featured?.coverImage?.responsiveImage
 
 // The biography: the first paragraphs open, the rest behind a disclosure.
 const biographyHasContent = hasStructuredTextContent(author.biography);
-const bioDocument = author.biography?.value?.document as { type: 'root'; children?: unknown[] } | undefined;
+const bioDocument = author.biography?.value?.document as
+  { type: 'root'; children?: unknown[] } | undefined;
 const bioNodes = Array.isArray(bioDocument?.children) ? bioDocument.children : [];
 const splitBio = bioNodes.length > BIO_OPEN_NODES + 1;
 const bioPart = (nodes: unknown[]) => ({
@@ -125,7 +134,9 @@ const seo = withFallbackSeo(author._seoMetaTags, {
   description: biographyPlain.length > 0 ? biographyPlain : undefined,
 });
 
-const portrait = author.picture?.responsiveImage ? { ...author.picture.responsiveImage, alt: '' } : null;
+const portrait = author.picture?.responsiveImage
+  ? { ...author.picture.responsiveImage, alt: '' }
+  : null;
 const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
 ---
 
@@ -134,7 +145,13 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
     <header class={styles.intro}>
       {portrait ? (
         <div class={styles.portrait}>
-          <Image data={portrait} sizes="(min-width: 768px) 144px, 80px" pictureClass="block h-full w-full" imgClass={styles.portraitImage} priority />
+          <Image
+            data={portrait}
+            sizes="(min-width: 768px) 144px, 80px"
+            pictureClass="block h-full w-full"
+            imgClass={styles.portraitImage}
+            priority
+          />
         </div>
       ) : (
         <div class={styles.initial} aria-hidden="true">{initial}</div>
@@ -149,7 +166,11 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
             {otherNames.map((person, index) => (
               <>
                 {index > 0 ? (index === otherNames.length - 1 ? ' e ' : ', ') : null}
-                {person.slug ? <a href={`/autori/${person.slug}`}>{person.name}</a> : <span>{person.name}</span>}
+                {person.slug ? (
+                  <a href={`/autori/${person.slug}`}>{person.name}</a>
+                ) : (
+                  <span>{person.name}</span>
+                )}
               </>
             ))}
           </p>
@@ -186,7 +207,9 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
           {featured.summary ? <p class={styles.featuredSummary}>{featured.summary}</p> : null}
           <p class={styles.featuredWays}>
             {featuredPrice ? <span class={styles.featuredPrice}>{featuredPrice}</span> : null}
-            <a href={`/libri/${featured.slug}`}>{featured.isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a>
+            <a href={`/libri/${featured.slug}`}
+              >{featured.isArchived ? 'Vai alla scheda del libro' : 'Vai al libro e ordinalo'}</a
+            >
           </p>
         </div>
       </section>
@@ -232,8 +255,8 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
       ) : (
         <>
           <p class={styles.note}>
-            Si ordinano via email dalla pagina di ciascun libro · Spedizione gratuita con piego di libri ·{' '}
-            <a href="/info/adesioni">Soci: 30% di sconto</a> ·{' '}
+            Si ordinano via email dalla pagina di ciascun libro · Spedizione gratuita con piego di
+            libri ·{' '} <a href="/info/adesioni">Soci: 30% di sconto</a> ·{' '}
             <a href="/info/ordinare">Come funziona l'ordine</a>
           </p>
 
@@ -245,7 +268,7 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
                   slug={book.slug}
                   subtitle={book.subtitle}
                   coverImage={book.coverImage}
-              pages={book.pages}
+                  pages={book.pages}
                   authors={book.coAuthors}
                   authorsPrefix="con"
                   format={book.format}
@@ -268,7 +291,7 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
                     slug={book.slug}
                     subtitle={book.subtitle}
                     coverImage={book.coverImage}
-              pages={book.pages}
+                    pages={book.pages}
                     authors={book.coAuthors}
                     authorsPrefix="con"
                     format={book.format}
@@ -285,7 +308,8 @@ const initial = authorDisplayName.trim().charAt(0).toUpperCase() || '·';
 
           {hiddenBooks > 0 ? (
             <p class={styles.note}>
-              Qui ne vedi {books.length} su {booksCount}. <a href={catalogueHref}>Vedi tutti i libri nel catalogo</a>
+              Qui ne vedi {books.length} su {booksCount}.
+              <a href={catalogueHref}>Vedi tutti i libri nel catalogo</a>
             </p>
           ) : null}
         </>
