@@ -22,11 +22,11 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: automatically balances link groups; site is permanently Italian-only so no locale switching is required.
 - `BooksCatalogue` — **BooksCatalogue** (`src/components/BooksCatalogue/index.astro` + `catalogue.client.ts`)
-  - Purpose: faceted catalogue for `/libri`. Renders every published book server-side (catalogue variant of `BookCard`), then the browser script filters (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, in-page search), sorts (novità / titolo) and reveals cards 40 at a time. Filters live in the URL (`collana`, `formato`, `autore`, `periodo`, `evidenza`, `tradotti`, `archivio`, `ordine`, `q`).
+  - Purpose: faceted catalogue for `/libri`. Renders the first 40 cards server-side (catalogue variant of `BookCard`) plus the facet data of every book and two `<template>` card moulds; the browser script builds the other cards from `/catalogue-books.json` (`BookCard/fill.client.ts`), filters (in evidenza, collana, formato, autrice/autore, periodo, tradotti, fuori catalogo, in-page search), sorts (novità / titolo) and reveals cards 40 at a time. Filters live in the URL (`collana`, `formato`, `autore`, `periodo`, `evidenza`, `tradotti`, `archivio`, `ordine`, `q`).
   - Key props: `title`, `introHtml?`, `books` (`{ card, entry }`), `collections`, `authors`, `periods`, `newest`.
   - Used in: `/libri`.
   - Owner: @claude.
-  - Notes: facets are a sticky column on desktop and a bottom sheet under 64rem. Without JS the filters are hidden and the whole in-catalogue list shows. Filter rules live in `src/lib/catalogue.ts`.
+  - Notes: facets are a sticky column on desktop and a bottom sheet under 64rem. Without JS the filters are hidden and the first 40 in-catalogue books show. Filter rules live in `src/lib/catalogue.ts`.
 - `NewsletterCta` — **NewsletterCta** (`src/components/NewsletterCta.astro`)
   - Purpose: site-wide newsletter call-to-action section linking to Brevo, rendered before the footer.
   - Used in: `BaseLayout` / page chrome.
@@ -74,7 +74,7 @@ scope: A list to describe all components used in the project
   - Owner: @codex.
   - Notes: ensure values are sanitized before passing to the component.
 - `Book3D` — **Book3D** (`src/components/Book3D/index.astro`)
-  - Purpose: CSS-only 3D book. Flat cover at rest; on hover it turns into the pose given by `rotY/rotX/rotZ/offsetX/offsetY/scale`, showing spine (title), page edges and thickness (from `pages`). Used by `BookCard` and the `/libri/[slug]` hero.
+  - Purpose: CSS-only 3D book. Flat cover at rest; on hover it turns into the pose given by `rotY/rotX/rotZ/offsetX/offsetY/scale`, showing spine (title), page edges and thickness (from `pages`). Used by `BookCard` and the `/libri/[slug]` hero. Four elements per book: only the side face (spine when `rotY > 0`, page edges otherwise) and the page edge the pose shows are rendered, and there is no back, so poses must keep `|rotY| < 90`. Geometry in `src/lib/book3d.ts`.
   - Key props: `cover`, `srcset?`, `title`, `pages?`, `height?` or `width`, `aspect`, `spineColor/accentColor/inkColor`, `restShadow?` (flat shadow at rest), `hoverGroup?` (pose on hover of the `.group` ancestor), `loading?` (`eager` for the LCP cover). Reduced motion: stays flat.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
   - Purpose: reusable book summary: cover on a field tinted from its own colour, title, authors, summary, one meta line (collana · anno · Ebook · Fuori catalogo) and the price as a serif figure. Only the cover moves on hover.
