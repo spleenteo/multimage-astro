@@ -113,3 +113,13 @@ Against the previous build, 6 interleaved rounds: 21.9 → 16.8 ms, page 360 →
 Checked in headless Chromium: 91 cards and letters A–E on load; after the JSON 230 cards in 22 letter groups, in the JSON's order; search finds an author from a later letter; `/autori#lettera-p` scrolls to the letter once it exists. Not checked: phones, keyboard, the JSON failing, draft mode, cache tags of the endpoint on Cloudflare.
 
 `/autori` since the start of this work: about 40 ms → 16 ms, 706 KB → 165 KB.
+
+## Addendum — `/autori` after the live design session and the review (2026-11-23)
+
+Design chosen by the owner in Impeccable live sessions: each author on a mist sheet that turns white and lifts on hover, an arrow after the name, grid of one, two and three columns.
+
+An independent review of the `/autori` code found no cache or draft problem and nine defects in the browser script and the page; fixed: the full letter strip is rendered by the server (letters and counts come from the books read, which now carries each author's `slug`, `sortBy` and `fullName`), so the strip no longer grows after load; letters arriving with the JSON are inserted in order; a search before the JSON says it is still looking and no longer shows "no results"; a letter clicked before its authors exist, and a return to a scroll position further down, are honoured once they arrive; groups are keyed by anchor, focus survives a re-insert, the empty state looks at the whole index. Not fixed: profiles past 500 (239 today).
+
+Same instance, 5 rounds of 25 requests: `/autori` 17.2–20.0 ms (mean 19.0), `/authors-index.json` 9.2–12.4 ms (mean 11.0), 404 page 4.8–5.6 ms. Page 189 KB. The page costs about 2–3 ms more than before the design and review changes (larger books read, the arrow in every card).
+
+Checked in headless Chromium at 390px on the dev server: 22 letters in the strip from first paint (same height before and after the JSON); search with the JSON held back, after it arrives, and after it fails twice; click on a pending letter; back navigation to a position under a later letter; card order equal to the JSON.

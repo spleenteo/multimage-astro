@@ -21,7 +21,7 @@ import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
 const draftModeEnabled = resolveDraftMode(Astro);
-const { indexContent, items, authorsWithBooks, booksInCatalogue } = await readAuthorsIndex(
+const { indexContent, items, letters, booksInCatalogue } = await readAuthorsIndex(
   draftModeEnabled,
   AUTHORS_SERVER_READ,
 );
@@ -45,6 +45,7 @@ for (const author of authors) {
 }
 const groups = [...groupsMap.values()];
 
+const authorsWithBooks = letters.reduce((total, entry) => total + entry.count, 0);
 const sizeLine = `${authorsWithBooks} autrici e autori · ${booksInCatalogue} libri in catalogo`;
 // A card with every optional part, as a mould for the cards the browser builds.
 const mould = (portrait: boolean): AuthorIndexItem => ({
@@ -65,13 +66,16 @@ const mould = (portrait: boolean): AuthorIndexItem => ({
 
 <BaseLayout seo={seo}>
   <div class={styles.page} data-authors-index data-index-url={AUTHORS_INDEX_URL}>
+    <script is:inline>
+      document.documentElement.classList.add('authors-js');
+    </script>
     <header class={styles.intro}>
       <h1 class={styles.title}>{title}</h1>
-      {authors.length > 0 ? <p class={styles.size}>{sizeLine}</p> : null}
+      {authorsWithBooks > 0 ? <p class={styles.size}>{sizeLine}</p> : null}
       {introHtml ? <div class={styles.lede} set:html={introHtml} /> : null}
     </header>
 
-    {authors.length === 0 ? (
+    {authorsWithBooks === 0 ? (
       <div class={styles.empty}>
         <p>Non ci sono ancora autrici e autori da mostrare. Tutti i libri sono nel catalogo.</p>
         <a href="/libri">Sfoglia il catalogo</a>
@@ -103,7 +107,11 @@ const mould = (portrait: boolean): AuthorIndexItem => ({
           aria-label="Indice alfabetico di autrici e autori"
           data-author-nav
         >
-          {groups.map(({ letter, anchorId }) => <a href={`#${anchorId}`} data-nav-anchor={anchorId}
+          {/* Every letter of the index; the ones whose authors arrive with the JSON are marked. */}
+          {letters.map(({ letter, anchorId }) => <a
+            href={`#${anchorId}`}
+            data-nav-anchor={anchorId}
+            data-nav-pending={groupsMap.has(letter) ? undefined : ''}
             >{letter}</a
           >)}
         </nav>
@@ -197,11 +205,21 @@ const mould = (portrait: boolean): AuthorIndexItem => ({
         if (anchor) anchor.hidden = visibleInGroup === 0;
       });
 
-      if (noResults) noResults.hidden = !(terms.length > 0 && total === 0);
+      // Until the other letters arrive, an empty result only means "not here yet".
+      var root = document.querySelector('[data-authors-index]');
+      var pending =
+        root && root.dataset.indexState !== 'loaded' && root.dataset.indexState !== 'failed';
+      if (noResults) noResults.hidden = !(terms.length > 0 && total === 0 && !pending);
       if (siteSearch) siteSearch.href = raw ? '/cerca?q=' + encodeURIComponent(raw) : '/cerca';
       if (status) {
         status.textContent =
-          terms.length === 0 ? '' : total === 1 ? '1 risultato' : total + ' risultati';
+          terms.length === 0
+            ? ''
+            : pending
+              ? 'Cerco tra tutte le autrici e gli autori…'
+              : total === 1
+                ? '1 risultato'
+                : total + ' risultati';
       }
     }
 

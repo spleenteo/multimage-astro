@@ -3,7 +3,12 @@
  * letters), by `/authors-index.json` (every author, for the cards the browser builds) and by
  * `AuthorCard`. Server-rendered and browser-built cards come from the same values.
  */
-import { mapAuthorsToCards, sortAuthorsForIndex, type AuthorRecordForCard } from '~/lib/authors';
+import {
+  extractSortLetter,
+  mapAuthorsToCards,
+  sortAuthorsForIndex,
+  type AuthorRecordForCard,
+} from '~/lib/authors';
 
 /** Letters the server renders; the browser adds the others from the JSON. */
 export const AUTHORS_SERVER_LETTERS = ['A', 'B', 'C', 'D', 'E'];
@@ -17,7 +22,13 @@ const COVER_HEIGHT = 56;
 
 export type AuthorIndexBook = {
   archive: boolean | null;
-  authors: Array<{ id: string }>;
+  /** `slug`, `sortBy` and `fullName` place every author with books in a letter (`authorIndexLetters`). */
+  authors: Array<{
+    id: string;
+    slug?: string | null;
+    sortBy?: string | null;
+    fullName?: string | null;
+  }>;
   coverImage: { url: string; width: number | null; height: number | null } | null;
 };
 
@@ -54,6 +65,30 @@ function letterAnchor(letter: string): string {
     .replace(/[̀-ͯ]/g, '')
     .replace(/[^A-Za-z0-9]/g, '');
   return `lettera-${cleaned.length > 0 ? cleaned.toLowerCase() : 'other'}`;
+}
+
+export type AuthorIndexLetter = { letter: string; anchorId: string; count: number };
+
+/**
+ * The letters of the whole index, in order, with how many authors each holds: known from the books
+ * alone, so the page can render the full letter strip and the total without reading every profile.
+ */
+export function authorIndexLetters(books: AuthorIndexBook[]): AuthorIndexLetter[] {
+  const authors = new Map<string, AuthorRecordForCard>();
+  for (const book of books) {
+    for (const author of book.authors ?? []) {
+      if (author?.id && author.slug) authors.set(author.id, author);
+    }
+  }
+  const letters = new Map<string, AuthorIndexLetter>();
+  for (const author of sortAuthorsForIndex([...authors.values()])) {
+    const letter = extractSortLetter(author) || '#';
+    const anchorId = letterAnchor(letter);
+    const entry = letters.get(anchorId) ?? { letter, anchorId, count: 0 };
+    entry.count += 1;
+    letters.set(anchorId, entry);
+  }
+  return [...letters.values()];
 }
 
 const plural = (count: number) => (count === 1 ? '1 libro' : `${count} libri`);

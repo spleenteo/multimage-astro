@@ -61,6 +61,11 @@
   display: none;
 }
 
+/* Without JavaScript the letters that arrive with the JSON have nothing to point at. */
+:global(html:not(.authors-js)) .letters a[data-nav-pending] {
+  display: none;
+}
+
 .noResults {
   @apply space-y-2 bg-brand-mist px-6 py-8 text-brand-charcoal md:px-10;
 }

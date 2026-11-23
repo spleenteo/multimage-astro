@@ -18,6 +18,9 @@ const AUTHOR_BOOKS_FIELDS = /* GraphQL */ `
     archive
     authors {
       id
+      slug
+      sortBy
+      fullName
     }
     coverImage {
       url

@@ -44,7 +44,7 @@ function extractSortKey(author: AuthorRecordForCard): string {
   return extractSortValue(author).toLocaleLowerCase('it');
 }
 
-function extractSortLetter(author: AuthorRecordForCard): string {
+export function extractSortLetter(author: AuthorRecordForCard): string {
   const sortValue = extractSortValue(author);
   if (!sortValue) {
     return '#';
