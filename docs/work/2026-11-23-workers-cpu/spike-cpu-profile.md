@@ -133,4 +133,4 @@ Checked in headless Chromium at 390px on the dev server: 22 letters in the strip
 - `/catalogue-books.json` 7, 15, 19, 23 ms; `/authors-index.json` 7, 16, 20 ms
 - home 12, 14, 19, 31 ms (17–47); book page 9, 38 ms (21–49); `/collane` 14, 14, 23, 31 ms (22); `/magazine` 15 ms (19)
 
-Without the cookie, every page and both JSON endpoints answer `cf-cache-status: MISS` then `HIT`. `/autori` serves 91 cards, `/libri` 40. Not checked: the purge of the two endpoints on a DatoCMS publish.
+Without the cookie, every page and both JSON endpoints answer `cf-cache-status: MISS` then `HIT`. `/autori` serves 91 cards, `/libri` 40. Purge checked after the deploy: a one-line bio was changed and published, and within 15 s `/authors-index.json`, `/autori`, `/catalogue-books.json` and `/libri` answered MISS and the JSON carried the new text; the bio was then restored and published. A publish with no change sends no invalidation.
