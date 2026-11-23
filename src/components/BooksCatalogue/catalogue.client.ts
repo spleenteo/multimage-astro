@@ -52,6 +52,10 @@ export function initCatalogue(root: HTMLElement) {
   let cards: Record<string, CatalogueCard> | null = null;
   let cardsRequest: Promise<void> | null = null;
   let cardsAttempts = 0;
+  // Where to put the focus once the cards arrive ("Mostra altri" pressed while they were loading).
+  let focusWhenLoaded: number | null = null;
+  // Still worth holding a place: the cards are not here yet and a fetch is running or allowed.
+  const awaitingCards = () => !cards && (cardsRequest !== null || cardsAttempts < 2);
 
   const itemFor = (index: number): HTMLLIElement | null => {
     const key = entries[index].k;
@@ -242,8 +246,8 @@ export function initCatalogue(root: HTMLElement) {
     orders[state.ordine].forEach((index) => {
       if (!matchesCatalogue(entries[index], state, newest)) return;
       if (total < shown) {
-        const item =
-          itemFor(index) ?? (cardsAttempts < 2 || cardsRequest ? pendingItem() : undefined);
+        // A book the JSON does not know (page and JSON cached at different moments) is skipped.
+        const item = itemFor(index) ?? (awaitingCards() ? pendingItem() : undefined);
         if (item?.hasAttribute('data-pending')) missing = true;
         if (item) nodes.push(item);
       }
@@ -251,11 +255,20 @@ export function initCatalogue(root: HTMLElement) {
     });
     const current = grid.children;
     if (nodes.length !== current.length || nodes.some((node, index) => node !== current[index])) {
+      // Re-inserting a node blurs it: give the focus back to the card that had it.
+      const active = document.activeElement;
+      const focused = active instanceof HTMLElement && grid.contains(active) ? active : null;
       grid.replaceChildren(...nodes);
+      if (focused?.isConnected) focused.focus({ preventScroll: true });
     }
     if (missing) loadCards();
+    else if (focusWhenLoaded !== null) {
+      grid.children[focusWhenLoaded]?.querySelector<HTMLAnchorElement>('a')?.focus();
+      focusWhenLoaded = null;
+    }
 
-    const visible = Math.min(total, shown);
+    // What is on screen: after a failed fetch some matching books have no card.
+    const visible = nodes.length;
     if (heading) heading.textContent = plural(total);
     qa<HTMLElement>('[data-result-count]').forEach((node) => (node.textContent = plural(total)));
 
@@ -291,9 +304,9 @@ export function initCatalogue(root: HTMLElement) {
       siteSearch.href = state.q ? `/cerca?q=${encodeURIComponent(state.q)}` : '/cerca';
 
     if (moreWrap && moreStatus && moreButton) {
-      moreWrap.hidden = total <= visible;
+      moreWrap.hidden = total <= shown;
       moreStatus.textContent = `${visible} di ${total}`;
-      moreButton.textContent = `Mostra altri ${Math.min(CATALOGUE_CHUNK, total - visible)}`;
+      moreButton.textContent = `Mostra altri ${Math.min(CATALOGUE_CHUNK, total - Math.min(total, shown))}`;
     }
 
     updateCounts();
@@ -316,7 +329,13 @@ export function initCatalogue(root: HTMLElement) {
     }
   };
 
+  // After a failed fetch, the next action tries again.
+  const retryCards = () => {
+    if (!cards && !cardsRequest) cardsAttempts = 0;
+  };
+
   const update = (next: CatalogueState) => {
+    retryCards();
     state = sanitize(next);
     shown = CATALOGUE_CHUNK;
     syncControls();
@@ -388,8 +407,11 @@ export function initCatalogue(root: HTMLElement) {
   moreButton?.addEventListener('click', () => {
     const firstNew = shown;
     shown += CATALOGUE_CHUNK;
+    retryCards();
     render(false);
-    grid.children[firstNew]?.querySelector<HTMLAnchorElement>('a')?.focus();
+    const link = grid.children[firstNew]?.querySelector<HTMLAnchorElement>('a');
+    if (link) link.focus();
+    else if (awaitingCards()) focusWhenLoaded = firstNew;
   });
 
   // Mobile sheet.
