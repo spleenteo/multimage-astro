@@ -157,13 +157,12 @@ scope: A list to describe all components used in the project
   - Notes: labels and dates come from `src/lib/magazine.ts`.
 - `AuthorCard` — **AuthorCard** (`src/components/AuthorCard/index.astro`)
   - Purpose: a flat card in the `/autori` grid.
-    - A 48–56px portrait, or the initial on mist.
+    - A 48–56px portrait (a plain `<img>`, one 128px square), or the initial on mist.
     - The name (Playfair) as the only link to the profile, with the legal name under an alias.
-    - A serif size line ("3 libri · 1 fuori catalogo").
-    - The bio clamped to 2 lines, with URLs stripped.
-    - Up to 3 latest covers (2 on phones) on a light field tinted from the newest one (base lightened 55%).
-    - "Vedi i libri" → `/libri?autore=<slug>`.
-  - Key props: `name`, `slug`, `legalName?`, `summary?`, `inCatalogue`, `archived`, `picture?`, `covers[]` (`url`, `width`, `height`, `colors`).
+    - A serif size line with the country first ("Italia · 3 libri · 1 fuori catalogo").
+    - The editors' one-line bio (`one_line_bio`, 100 characters at most), clamped to 4 lines.
+    - At the foot, the latest cover, small and plain (no tinted field), beside "Vedi i libri" → `/libri?autore=<slug>`.
+  - Key props: `name`, `slug`, `legalName?`, `country?`, `bio?`, `inCatalogue`, `archived`, `picture?`, `covers[]` (`url`, `width`, `height`, `colors`).
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
   - Notes: covers are plain imgix `<img>` (h=96, 2x), not `<Image>`, to keep the render of ~230 cards light. The cover strip is a mouse-only link (`tabindex=-1`, `aria-hidden`).
