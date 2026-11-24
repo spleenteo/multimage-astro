@@ -65,7 +65,6 @@
 - [ ] [Accessibility] [Impact: M] [Effort: M] [Owner: @codex] [Status: todo] — **A11Y1** run a WCAG 2.1 AA keyboard + screen reader audit on BookCarouselSection, `/cerca`, and staff tables, then document findings once `docs/guidelines/accessibility.md` is editable (Due: 2025-12-02; Acceptance: issues logged with repro steps, aria attributes adjusted as needed, docs/TODO cross-linked when docs open up).
 
 ## Features
-- [ ] [Features] [Impact: H] [Effort: L] [Owner: @spleenteo] [Status: todo] — **BORSA-setup** put the bag order live, Cloudflare only: apex SPF, Email Routing on a subdomain, D1 database and migrations, Turnstile, WAF, deploy; follow `docs/work/archive/2026-11-24-borsa/setup-borsa.md`; the note moves to `docs/work/archive/` when the work is archived.
 - [ ] [Features] [Impact: H] [Effort: M] [Owner: @spleenteo] [Status: todo] — **BORSA-staff-app** build the staff app (another Worker reading the `multimage-orders` D1 table by the contract in `d1/README.md`): read orders, mark them fulfilled, anonymise or delete them, list the unsent notices. Until it exists, anonymise a shipped order by hand: `npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE orders SET name=NULL, email=NULL, phone=NULL, address=NULL, notes=NULL WHERE code='<code>'"`.
 
 ## SEO
@@ -194,3 +193,4 @@
 - [2026-11-22] - [Features] **Copertine 3D**: `Book3D` (solo CSS) al passaggio del mouse su `BookCard` e nell'hero della scheda libro; posa per libro da `bookPose(slug)`, spessore dal numero di pagine; copertine orizzontali limitate in larghezza.
 - [2026-11-22] - [Security] **S9 + S6 secret rotation**: production `SECRET_API_TOKEN` was a guessable placeholder that let anyone open an editor session through `/api/draft-mode/enable` (a scanner did, seen in `wrangler tail`). The user rotated `SECRET_API_TOKEN` and `SIGNED_COOKIE_JWT_SECRET` (Worker secrets + `.env.cloudflare`), which also invalidates every cookie already issued; the old token now gets 401. Left to the user: the new token in the DatoCMS plugin settings that carry it.
 - [2026-11-24] - [Security] **BORSA-waf**: rate limiting rule on `/api/ordine` (per IP, 2 requests / 10 s, block 10 s) set in the dashboard and checked: the third bare POST gets 429.
+- [2026-11-24] - [Features] **BORSA-setup**: bag order live on Cloudflare: D1 migrations applied remotely, Analytics Engine dataset, WAF rule, Turnstile keys, deploy; test order MM-261124-U5A7 saved, mail received at ordini@, row anonymised.
