@@ -3,13 +3,53 @@
 /* The card itself stays put; only the cover lifts on hover (DESIGN.md, "Only the Book Floats").
    No overflow clipping: the 3D book may step out of its coloured field, over the card's edges, and
    the card under the pointer rises above its neighbours so the book is never covered. */
+/* The card: the link, plus the bag control beside it (a button cannot sit inside a link). */
+.card {
+  @apply relative h-full;
+}
+
+.card:hover,
+.card:focus-within {
+  z-index: 10;
+}
+
 .root {
   @apply relative flex h-full flex-col bg-white shadow-soft focus-visible:-outline-offset-4;
 }
 
-.root:hover,
-.root:focus-visible {
-  z-index: 10;
+/* Bag control: a white square in the field's top right corner, above the lifting book. The
+   tooltip under it names the action on hover and focus, and says "Aggiunto alla borsa" after a
+   click. In the bag, the square turns solid navy. */
+.bag {
+  @apply absolute right-3 top-3 z-20 max-sm:right-2 max-sm:top-2;
+}
+
+.bag[hidden] {
+  display: none;
+}
+
+.bagButton {
+  @apply flex size-11 cursor-pointer items-center justify-center border border-brand-navy/25 bg-white text-brand-navy shadow-soft transition-colors hover:border-brand-navy hover:bg-brand-navy hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
+}
+
+.bag[data-in-bag] .bagButton {
+  @apply border-brand-navy bg-brand-navy text-white;
+}
+
+.bagTip {
+  @apply pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap bg-brand-charcoal px-2.5 py-1.5 text-xs font-semibold text-white opacity-0 shadow-soft transition-opacity;
+}
+
+.bag:hover .bagTip,
+.bag:has(:focus-visible) .bagTip,
+.bag[data-flash] .bagTip {
+  @apply opacity-100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bagTip {
+    transition: none;
+  }
 }
 
 .heroPanel {

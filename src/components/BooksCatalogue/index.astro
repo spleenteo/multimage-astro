@@ -339,6 +339,8 @@ const formatOptions = [
         {firstCards.map((record) => <li data-key={record.slug}>
           <BookCard
             variant="catalogue"
+            id={record.id}
+            isArchived={record.archive}
             title={record.title}
             slug={record.slug}
             subtitle={record.subtitle}
@@ -359,6 +361,7 @@ const formatOptions = [
         <li>
           <BookCard
             variant="catalogue"
+            id="-"
             title="-"
             slug="-"
             subtitle="-"
@@ -374,6 +377,7 @@ const formatOptions = [
         <li>
           <BookCard
             variant="catalogue"
+            id="-"
             title="-"
             slug="-"
             subtitle="-"

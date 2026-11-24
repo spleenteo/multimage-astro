@@ -365,6 +365,8 @@ Three equal white cells under the hero, separated by mist hairlines. Each: Playf
 
 White card: the cover centred on a cover-tinted field, then Playfair navy title (underlines on hover), optional slate subtitle, author names in normal case (semibold charcoal), an optional charcoal summary, one slate meta line (collana · anno · Ebook · Fuori catalogo, only the parts that apply), and the price as a serif navy figure pinned to the bottom so prices align across a row. Status lives in the meta line, never in a ribbon or badge on the cover. The `catalogue` variant drops the summary, uses the lighter field, sizes covers by height (13rem, 10rem on phones) so mixed formats line up, and on phones shrinks to cover, title and author in a two-up grid.
 
+An orderable print book (in the catalogue, with a price) carries a bag control in the field's top right corner (12px in, 8px on phones), outside the card's link: a 44px white square with a navy-at-25% frame, the soft lift and the inline bag line icon in navy; solid navy with a white icon on hover and once the book is in the bag. A charcoal tooltip under it (white semibold 0.75rem, right-aligned) shows on hover and keyboard focus: "Metti in borsa", "Aggiunto alla borsa" for 1.8s after a click, then "Nella borsa · N copie". A click adds one copy without opening the drawer; the header count updates and a polite live region announces it. Hidden without JavaScript. It is the one control allowed on a card; it is not a badge.
+
 ### Where To Find Our Books (`/distributori`)
 
 - **Title row:** the slim title row ("28 librerie e luoghi amici · 10 regioni"). The CMS subtitle only feeds the meta description.

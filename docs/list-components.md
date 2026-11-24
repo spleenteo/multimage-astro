@@ -83,10 +83,10 @@ scope: A list to describe all components used in the project
   - Key props: `cover`, `srcset?`, `title`, `pages?`, `height?` or `width`, `aspect`, `spineColor/accentColor/inkColor`, `restShadow?` (flat shadow at rest), `hoverGroup?` (pose on hover of the `.group` ancestor), `loading?` (`eager` for the LCP cover). Reduced motion: stays flat.
 - `BookCard` — **BookCard** (`src/components/BookCard/index.astro` + `_graphql.ts`)
   - Purpose: reusable book summary: cover on a field tinted from its own colour, title, authors, summary, one meta line (collana · anno · Ebook · Fuori catalogo) and the price as a serif figure. Only the cover moves on hover.
-  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.), `printYear?`, `collectionName?`, `variant?: 'default' | 'catalogue'` (catalogue: lighter field, no summary, compact two-up card on phones), `authorsPrefix?` (e.g. "con" on an author's profile, where only co-authors are passed). With no authors, the names line is omitted.
+  - Key props: `BookCardViewModel` fields (title, slug, summary, `coverImage`, `authors`, etc.), `printYear?`, `collectionName?`, `variant?: 'default' | 'catalogue'` (catalogue: lighter field, no summary, compact two-up card on phones), `authorsPrefix?` (e.g. "con" on an author's profile, where only co-authors are passed), `id?` (with it an orderable print book gets the bag button: `bagBookFor`, then `bag.client.ts` adds one copy on click, with a tooltip). With no authors, the names line is omitted. The root is a `div` holding the link and, beside it, the bag control (a button cannot sit inside a link); `className` goes on that `div`.
   - Used in: listings, carousels, Structured Text blocks, related feeds.
   - Owner: @codex.
-  - Notes: relies on `mapBooksToCards` and `BookCardFragment`.
+  - Notes: relies on `mapBooksToCards` and `BookCardFragment`. Cards the catalogue builds in the browser get the bag data from `/catalogue-books.json` (`CatalogueCard.b`) through `fill.client.ts`.
 - `FeaturedBookHighlight` — **FeaturedBookHighlight** (`src/components/FeaturedBookHighlight/index.astro` + `_graphql.ts`)
   - Purpose: hero highlight for a single release, including author chip and CTAs.
   - Key props: `book`, `coverImage`, `author`, `collectionLabel`/`collectionHref`.

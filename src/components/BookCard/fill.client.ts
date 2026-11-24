@@ -7,7 +7,10 @@
 //                                  > span (authors) > span
 //                                  > p (meta)
 //                                  > p (price)
+//   [data-card-bag] (sibling of the link): the bag control, kept only when the card has `b`.
 import type { CatalogueCard } from '~/lib/catalogue';
+import type { BagBook } from '~/lib/order';
+import { showCardBag } from './bag.client';
 
 export function fillBookCard(item: HTMLElement, slug: string, card: CatalogueCard): void {
   const link = item.querySelector<HTMLAnchorElement>('a');
@@ -51,4 +54,23 @@ export function fillBookCard(item: HTMLElement, slug: string, card: CatalogueCar
   const [meta, price] = Array.from(body.querySelectorAll(':scope > p'));
   write(meta, card.me);
   write(price, card.pr);
+
+  const bag = item.querySelector<HTMLElement>('[data-card-bag]');
+  if (bag) {
+    if (card.b) {
+      const book: BagBook = {
+        id: card.b.i,
+        slug,
+        title: card.t,
+        authors: card.au ?? '',
+        priceCents: card.b.p,
+        cover: card.c ? `${card.c.src.split('?')[0]}?w=120&fit=max&auto=format` : null,
+        tint: card.b.tn,
+      };
+      bag.dataset.bagItem = JSON.stringify(book);
+      showCardBag(bag);
+    } else {
+      bag.remove();
+    }
+  }
 }
