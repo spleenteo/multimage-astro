@@ -1,0 +1,117 @@
+---
+import Button from '~/components/ui/Button/index.astro';
+import styles from './style.module.css';
+---
+
+<dialog id="bag-drawer" class={styles.dialog} aria-labelledby="bag-drawer-title" data-bag-drawer>
+  <div class={styles.panel}>
+    <div class={styles.head}>
+      <div>
+        <h2 id="bag-drawer-title" tabindex="-1" class={styles.title}>La tua borsa</h2>
+        <p class={styles.size} data-bag-size>Nessun libro</p>
+      </div>
+      <button type="button" class={styles.iconButton} aria-label="Chiudi la borsa" data-bag-close>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6 6 18"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class={styles.filled} data-bag-filled hidden>
+      <ul class={styles.list} data-bag-list></ul>
+      <div class={styles.foot}>
+        <dl class={styles.totals}>
+          <dt>Copie</dt>
+          <dd data-bag-copies>0</dd>
+          <dt>Totale a prezzo di copertina</dt>
+          <dd class={styles.total} data-bag-total>0,00 €</dd>
+        </dl>
+        <p class={styles.fine}>
+          Con il piego di libri la spedizione è gratuita. Non paghi adesso: ti spieghiamo come al
+          passo dopo.
+        </p>
+        <div class={styles.cta}>
+          <Button href="/borsa" primary fullWidth>Completa l'ordine</Button>
+        </div>
+        <button type="button" class={styles.textButton} data-bag-empty-ask>Svuota la borsa</button>
+        <div class={styles.confirm} data-bag-confirm hidden>
+          <p>Togliere tutti i libri dalla borsa?</p>
+          <div class={styles.confirmActions}>
+            <span data-bag-empty-yes><Button variant="secondary">Sì, svuota</Button></span>
+            <button type="button" class={styles.textButton} data-bag-empty-no>No, tienili</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class={styles.empty} data-bag-empty hidden>
+      <h3>La borsa è vuota</h3>
+      <p>
+        Metti in borsa i libri che vuoi ordinare: alla fine ci lasci i tuoi dati e Olivier te li
+        spedisce.
+      </p>
+      <Button href="/libri" variant="secondary">Sfoglia il catalogo</Button>
+    </div>
+  </div>
+
+  <template data-bag-line>
+    <li class={styles.item}>
+      <div class={styles.cover} data-line-cover>
+        <img src="" alt="" width="48" height="72" loading="lazy" data-line-img />
+      </div>
+      <div class={styles.body}>
+        <h3 class={styles.itemTitle}><a href="/libri" data-line-title></a></h3>
+        <p class={styles.authors} data-line-authors></p>
+        <div class={styles.row}>
+          <div class={styles.stepper} role="group" data-line-stepper>
+            <button type="button" aria-label="Una copia in meno" data-line-control="minus">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M6 12h12"></path>
+              </svg>
+            </button>
+            <output data-line-qty>1</output>
+            <button type="button" aria-label="Una copia in più" data-line-control="plus">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M6 12h12M12 6v12"></path>
+              </svg>
+            </button>
+          </div>
+          <span class={styles.amount} data-line-amount></span>
+        </div>
+        <button type="button" class={styles.textButton} data-line-control="remove">
+          Togli dalla borsa
+        </button>
+      </div>
+    </li>
+  </template>
+</dialog>
+
+<script src="./drawer.client.ts"></script>
