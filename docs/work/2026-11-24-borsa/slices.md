@@ -215,6 +215,13 @@ V4 moved the order record to Cloudflare: d1/migrations/0001_orders.sql creates `
 2. No text on the site promises an email to the visitor.
 3. Setup note complete; `docs:inventory`, lint and build green.
 
+**Deviations found while planning V5**
+
+- The print button shows at every width (Android Chrome saves PDF from print too).
+- The PDF also carries notes, buyer kind, a "notice to Olivier did not go out" line when it failed, and the retention line.
+- The workerd "Can't read from request stream" log becomes TODO BORSA-stream-log (lives in `src/worker.ts`, outside the slice).
+- PDF download on mobile Safari is left to the user on a phone.
+
 **Impact corrections (2026-11-24)**
 
 - The visitor-email promises to rewrite are in `src/pages/borsa/index.astro` (~50 lede, ~304 "Ti arriva una copia dell'ordine"), `src/lib/order.ts` (`EMAIL_EMPTY_MESSAGE` ~276) and `src/pages/borsa/_order-page.client.ts` (success lede ~323-334); the drawer fine line promises nothing. The print button (~348, today shown only after a failed copy) becomes the desktop fallback beside "Scarica il PDF".

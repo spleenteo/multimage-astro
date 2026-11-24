@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V5
-step: plan
+step: execute
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -36,6 +36,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — V5 plan + review — 6 tasks; review 1 high (T1 step 7 reshape), 3 medium (contrast, WAF order, manual anonymising until the staff app), 6 low; all applied — 20 min — n/a
 - 2026-11-24 — V4 closed — 6 commits, gate green incl. build:cf; Done 1–3, 5 verified (Cloudflare dev with local D1, production-mode); Done 6 pending (real D1 id) — 16 min run — n/a
 - 2026-11-24 — V4 plan + review — 6 tasks; review 0 high, 2 medium (nullable PII for anonymising; two wranglers in Done 1), 4 low; all applied — 20 min — n/a
 - 2026-11-24 — impact V4–V5 — 1 agent (small scope): 2 high (D1 placeholder id breaks deploy, Done 1 unrunnable as written), 6 medium, 5 low; all applied — 10 min — n/a
