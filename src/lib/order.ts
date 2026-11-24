@@ -24,7 +24,7 @@ type PrintFacts = {
   format?: string | null;
 };
 
-const euroFormatter = new Intl.NumberFormat('it-IT', {
+export const euroFormatter = new Intl.NumberFormat('it-IT', {
   style: 'currency',
   currency: 'EUR',
   minimumFractionDigits: 2,

@@ -1,5 +1,5 @@
 import type { AssetImage } from './datocms/types';
-import { ORDER_EMAIL } from './order';
+import { ORDER_EMAIL, euroFormatter } from './order';
 import { toPlainText, truncateToLength } from './text';
 
 type BookAuthor = {
@@ -90,12 +90,6 @@ export function mapBooksToCards(books: Array<BookRecordForCard> | null | undefin
 export function buildBooksCataloguePaths(_totalBooks?: number): string[] {
   return ['/libri'];
 }
-
-const euroFormatter = new Intl.NumberFormat('it-IT', {
-  style: 'currency',
-  currency: 'EUR',
-  minimumFractionDigits: 2,
-});
 
 const circulationFormatter = new Intl.NumberFormat('it-IT');
 
@@ -317,7 +311,7 @@ type OrderMailtoInput = {
 };
 
 /**
- * A `mailto:` that starts the order of one book: the order email: the bag's no-JS fallback and its
+ * A `mailto:` that starts the order of one book: the order email, the bag's no-JS fallback and its
  * email alternative (see /info/ordinare: titles, copies, shipping address). Subject and body are prefilled so
  * the reader only adds name and address.
  */
