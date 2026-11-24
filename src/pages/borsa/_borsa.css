@@ -172,10 +172,14 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Label and value side by side where the box is wide enough. */
+/* Label and value side by side where the box is wide enough, in one grid so values align. */
 @media (min-width: 640px) {
+  .order-bank dl {
+    @apply grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 space-y-0;
+  }
+
   .order-bank dl div {
-    @apply grid grid-cols-[auto_minmax(0,1fr)] gap-x-3;
+    display: contents;
   }
 }
 
@@ -224,7 +228,7 @@
 /* CAP, città, provincia: one column on phones, one row from 640px. */
 @media (min-width: 640px) {
   .order-pair--city {
-    grid-template-columns: 6.5rem minmax(0, 1fr) 6.5rem;
+    grid-template-columns: 9rem minmax(0, 1fr) 9rem;
   }
 }
 
@@ -411,6 +415,12 @@
 
 .order-done__total {
   @apply flex flex-wrap justify-between gap-x-4 font-serif text-xl font-semibold text-brand-navy;
+}
+
+/* An order code never breaks at its hyphens. */
+[data-order-done-causale],
+.order-done__lede b {
+  white-space: nowrap;
 }
 
 .order-iban {
