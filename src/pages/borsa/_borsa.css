@@ -247,15 +247,29 @@
 }
 
 .order-bank__paypal {
-  @apply mt-3 border-t border-brand-navy/12 pt-3;
+  @apply mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-brand-navy/12 pt-3;
 }
 
 .order-bank__paypal b {
   @apply font-semibold;
 }
 
-.order-bank__paypal-link a {
-  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:no-underline md:min-h-8;
+/* The PayPal button: the copy button's shape, outlined so the IBAN stays the lead. */
+.order-bank__paypal-btn {
+  @apply inline-flex min-h-11 flex-none items-center gap-2 border border-brand-navy bg-white px-4 text-xs font-semibold uppercase text-brand-navy no-underline transition-colors hover:bg-brand-navy hover:text-white;
+}
+
+.order-bank__paypal-btn[hidden] {
+  display: none;
+}
+
+/* Beats the underline of the links in the steps list. */
+.order-bank .order-bank__paypal-btn {
+  text-decoration: none;
+}
+
+.order-bank__paypal p {
+  @apply text-sm;
 }
 
 .order-bank dl {

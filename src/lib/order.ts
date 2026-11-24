@@ -473,8 +473,8 @@ export function orderCausale(code: string): string {
   return `${ORDER_CAUSALE} ${code}`;
 }
 
-/** The PayPal link's text: the payment still waits for the staff's confirmation. */
-export const ORDER_PAYPAL_LINK_LABEL = 'Paga con PayPal dopo la conferma dello staff';
+/** The PayPal button's text (the success screen adds the amount: "Paga 35,00 € con PayPal"). */
+export const ORDER_PAYPAL_LINK_LABEL = 'Paga con PayPal';
 
 /**
  * A PayPal payment link prefilled with recipient, amount and causale (PayPal's classic

@@ -517,13 +517,34 @@ const initialBuyer = defaultBuyer(buyers);
                   <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
                 </div>
               </dl>
-              <p class="order-bank__paypal">Oppure con PayPal a <b>{ORDER_PAYPAL}</b></p>
-              <p class="order-bank__paypal-link" data-order-paypal hidden>
-                <a target="_blank" rel="noopener noreferrer" data-order-paypal-link>
-                  {ORDER_PAYPAL_LINK_LABEL}<span class="sr-only">
-                    (si apre in una nuova scheda)</span>
+              <div class="order-bank__paypal">
+                <p>Oppure con PayPal a <b>{ORDER_PAYPAL}</b></p>
+                <a
+                  class="order-bank__paypal-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-order-paypal-link
+                  hidden
+                >
+                  <span data-order-paypal-label>{ORDER_PAYPAL_LINK_LABEL}</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 4h6v6"></path>
+                    <path d="M20 4 10 14"></path>
+                    <path d="M18 14v6H4V6h6"></path>
+                  </svg>
+                  <span class="sr-only"> (si apre in una nuova scheda)</span>
                 </a>
-              </p>
+              </div>
               <p class="sr-only" aria-live="polite" data-order-announce-done></p>
             </div>
           </li>

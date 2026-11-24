@@ -433,12 +433,13 @@ export function initOrderPage(): void {
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
     if (printBtn) printBtn.hidden = false;
 
-    // A PayPal link prefilled with the total and the causale.
-    const paypal = done.querySelector<HTMLElement>('[data-order-paypal]');
+    // A PayPal button prefilled with the total and the causale; the label names the amount.
     const paypalLink = done.querySelector<HTMLAnchorElement>('[data-order-paypal-link]');
-    if (paypal && paypalLink) {
+    if (paypalLink) {
       paypalLink.href = orderPaypalUrl(res.code, res.total);
-      paypal.hidden = false;
+      const label = paypalLink.querySelector('[data-order-paypal-label]');
+      if (label) label.textContent = `Paga ${formatCents(res.total)} con PayPal`;
+      paypalLink.hidden = false;
     }
 
     const causale = done.querySelector('[data-order-done-causale]');
