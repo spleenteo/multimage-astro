@@ -383,12 +383,16 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
         </section>
       )}
       {showForm ? (
-        <section class="order-done" data-socio-done hidden>
-          <h2 class="order-page__title" tabindex="-1" data-socio-done-heading>
+        <section class="max-w-2xl space-y-4" data-socio-done hidden>
+          <h2
+            class="font-serif text-3xl text-brand-navy focus:outline-none md:text-4xl"
+            tabindex="-1"
+            data-socio-done-heading
+          >
             Richiesta inviata, grazie
           </h2>
           {successLines.map((line) => <p>{line}</p>)}
-          <p class="order-done__lede" data-socio-done-lede></p>
+          <p class="text-base text-brand-charcoal md:text-lg" data-socio-done-lede></p>
           <p data-socio-done-fee></p>
           <div data-socio-methods>
             <div class="order-bank" data-socio-method="bonifico">
