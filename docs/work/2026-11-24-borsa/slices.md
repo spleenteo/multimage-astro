@@ -178,6 +178,19 @@ Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice ch
 3. No Resend left: `grep -ri resend src astro.config.mjs` → nothing.
 4. Gate green (Vercel build included).
 
+**Impact corrections (2026-11-24)**
+
+- D1 `database_id`: a placeholder only on the branch; the conductor creates the database (`wrangler d1 create multimage-orders --jurisdiction eu`, with the user's ok) and commits the real id **before the merge**. Never leave `database_id` empty (wrangler auto-provisions outside the EU). Merge blocked while a placeholder remains.
+- D1 migrations in `d1/migrations/` with `"migrations_dir": "d1/migrations"` on the binding (DatoCMS owns `migrations/`); D1 commands address the database by `database_name`.
+- Bindings are top-level in `wrangler.jsonc` (Worker-wide; the adapter's handler imports `env` from `cloudflare:workers`); no change to `src/worker.ts` (`/api` is already off the cache key).
+- Wrapper: the Vite alias for `cloudflare:workers` applies only when not building for Cloudflare, pointing at an absolute stub path; the module declaration sits in a `.d.ts`; only the endpoint imports the wrapper (`order.ts` stays import-free, it is bundled into the browser).
+- Sender: one subdomain, `ordini.multimage.org`; `ORDER_FROM = 'Multimage <sito@ordini.multimage.org>'`.
+- `OrderResponse` loses `copySent` and gains `code` and the notify outcome; V4 updates the client's success branch (`src/pages/borsa/_order-page.client.ts` ~323-338) and the error-code switch (~409) so `astro check` stays green; new codes (e.g. `save_failed`) join `OrderErrorCode`. V5 rewrites the wording. The `orderEmail` 'visitor' branch is removed.
+- The order code goes into the causale only on the success screen, the PDF and the email (none exists before submit).
+- Done 1 runs `DEPLOY_TARGET=cloudflare npx astro dev` (DEV on, bindings from `wrangler.jsonc`), with local migrations applied using the same `--persist-to` state dev reads; if Cloudflare dev doesn't start, STOP and ask.
+- Done 2 becomes: Vercel production build with no bindings → 503 `not_configured` and the mailto; plain `npm run dev` → console output and 200 with a dev code (so the success screen and V5's PDF can be exercised).
+- Done, added: 5. `cloudflare:workers` is absent from the Vercel output and from client chunks. 6. No placeholder `database_id` at merge time (checked at the work's close).
+
 ## V5 — The PDF of the request, copy and docs
 
 **In**
@@ -192,3 +205,10 @@ Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice ch
 2. No text on the site promises an email to the visitor.
 3. Setup note complete; `docs:inventory`, lint and build green.
 
+**Impact corrections (2026-11-24)**
+
+- The visitor-email promises to rewrite are in `src/pages/borsa/index.astro` (~50 lede, ~304 "Ti arriva una copia dell'ordine"), `src/lib/order.ts` (`EMAIL_EMPTY_MESSAGE` ~276) and `src/pages/borsa/_order-page.client.ts` (success lede ~323-334); the drawer fine line promises nothing. The print button (~348, today shown only after a failed copy) becomes the desktop fallback beside "Scarica il PDF".
+- Docs also false after the work: `docs/guidelines/project-structure.md:93`, `DESIGN.md:347`, `docs/guidelines/security.md:31-38,79`, `docs/guidelines/operations.md:26,46`, `docs/current-state.md:113,145`, `docs/TODO.md:3` (BORSA-waf) and `:67` (BORSA-setup) reworded; MAIL-auth (`TODO.md:34`) updated (apex SPF is now a prerequisite) with higher impact; jsPDF added to `docs/guidelines/dependencies.md`.
+- Setup note order: apex SPF → Email Routing on `ordini.multimage.org` (API) → verify ordini@ → D1 create and migrate → first deploy carrying the bindings; first check: one real order with `notify_status = sent`.
+- User items (outside the repo): `/info/ordinare` (CMS) and the iubenda privacy policy should name Cloudflare as processor and the retention ("solo per il tempo necessario alla spedizione").
+- jsPDF: pinned version; `/borsa`'s entry script contains no jsPDF (lazy chunk only); the build passes with its optional dynamic imports (html2canvas, dompurify, canvg) as installed.
