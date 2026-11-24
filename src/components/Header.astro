@@ -286,7 +286,7 @@ function linkIsActive(link: NavLink, pathname: string) {
         </button>
         <button
           type="button"
-          class="flex min-h-11 items-center gap-2 border border-white/40 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition hover:bg-white/10"
+          class="flex min-h-11 min-w-11 items-center justify-center gap-2 border border-white/40 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-white transition hover:bg-white/10 sm:px-4"
           aria-expanded="false"
           aria-controls="mobile-menu"
           data-menu-button
@@ -306,7 +306,9 @@ function linkIsActive(link: NavLink, pathname: string) {
             data-menu-icon="open"
             hidden
           ></iconify-icon>
-          <span class="text-xs font-semibold uppercase tracking-widest">Menu</span>
+          <span class="sr-only text-xs font-semibold uppercase tracking-widest sm:not-sr-only"
+            >Menu</span
+          >
         </button>
       </div>
     </div>
