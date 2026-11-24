@@ -1,7 +1,7 @@
 // /diventa-socio page script: validates the membership form, shows the field errors and the
 // summary, shows the "Altro" field, runs Turnstile, sends the request to /api/socio and swaps the
 // form for the confirmation (payment method first). The DOM is touched with textContent and
-// setAttribute only (never innerHTML).
+// setAttribute only.
 // The markup contract (data-socio-* attributes, ids `socio-<key>`) is defined in index.astro.
 import { createFieldErrors, loadTurnstile } from '~/lib/form.client';
 import {
