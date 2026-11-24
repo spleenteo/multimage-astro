@@ -42,7 +42,7 @@ export function renderOrderPdf(pdf: OrderPdf): jsPDF {
       case 'heading': {
         font('bold', 12);
         y += 5;
-        room(lineH(12) + 2);
+        room(lineH(12) + 2 + lineH(10));
         y += lineH(12) * 0.8;
         doc.text(b.text, MARGIN, y);
         y += lineH(12) * 0.4;
