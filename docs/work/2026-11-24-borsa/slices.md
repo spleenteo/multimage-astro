@@ -107,6 +107,16 @@ V1 shipped the bag end to end on the client: `src/lib/order.ts` (no imports) hol
 - Privacy: the consent links the iubenda privacy page used in `src/components/Footer.astro:80`.
 - Done, added: 8. Production build (no keys, `astro preview` or a local Cloudflare build): `/borsa` shows the mailto fallback; a direct POST answers 503 with a code; nothing personal in the log. 9. A stale price in `localStorage` shows the server's price on the success state. 10. The POST response carries `cache-control: private, no-store`.
 
+**Deviations found while planning V2**
+
+- The CDA query selects `authors { fullName alias }` (the author model has no `name`), display name through `getAuthorDisplayName`.
+- With Cloudflare's test secret in dev, siteverify checks `success` only (test keys answer dummy hostname and action); real keys get all three checks.
+- The recap column is not sticky: with steps and bank box it is taller than a laptop screen.
+- The bank box and the email also carry the intermediary SWIFT.
+- A failed visitor copy adds a "Stampa questa pagina" button.
+- The visitor copy omits the notes (anti-abuse, plan review); the WAF rule is a prerequisite before setting `RESEND_API_KEY`.
+- Docs (current-state, list-*, env tables in security.md and operations.md) are left to V3; `.env.example` is not touched (no `.env*` edits): the key names go in the closing report.
+
 ## V3 — Hardening, docs and handover
 
 **In**
