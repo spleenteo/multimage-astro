@@ -35,49 +35,6 @@ const siteKey =
 const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
 const mailtoHref = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}`;
 
-const textFields = [
-  { key: 'name', label: 'Nome e cognome', type: 'text', autocomplete: 'name', maxlength: 100 },
-  {
-    key: 'email',
-    label: 'Email',
-    type: 'email',
-    autocomplete: 'email',
-    maxlength: 254,
-  },
-  {
-    key: 'phone',
-    label: 'Telefono',
-    hint: '(facoltativo)',
-    type: 'tel',
-    autocomplete: 'tel',
-    maxlength: 30,
-  },
-  {
-    key: 'address',
-    label: 'Indirizzo',
-    type: 'text',
-    autocomplete: 'street-address',
-    placeholder: 'Via e numero civico',
-    maxlength: 200,
-  },
-  {
-    key: 'city',
-    label: 'CAP e città',
-    type: 'text',
-    autocomplete: 'postal-code',
-    placeholder: '50123 Firenze',
-    maxlength: 100,
-  },
-  {
-    key: 'province',
-    label: 'Provincia',
-    type: 'text',
-    autocomplete: 'address-level1',
-    placeholder: 'FI',
-    maxlength: 40,
-  },
-];
-const field = (key: string) => textFields.find((f) => f.key === key)!;
 const shippingEntries = Object.entries(SHIPPING_KINDS);
 const buyerEntries = Object.entries(BUYER_KINDS);
 ---
@@ -176,80 +133,80 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             <fieldset class="order-fieldset">
               <legend>A chi spediamo</legend>
               <div class="order-field">
-                <label for="order-name">{field('name').label}</label>
+                <label for="order-name">Nome e cognome</label>
                 <input
                   class="order-input"
                   id="order-name"
                   type="text"
                   autocomplete="name"
-                  maxlength={field('name').maxlength}
+                  maxlength="100"
                   required
                 />
                 <p class="order-error" id="order-name-error" data-error-for="name" hidden></p>
               </div>
               <div class="order-pair">
                 <div class="order-field">
-                  <label for="order-email">{field('email').label}</label>
+                  <label for="order-email">Email</label>
                   <input
                     class="order-input"
                     id="order-email"
                     type="email"
                     autocomplete="email"
-                    maxlength={field('email').maxlength}
+                    maxlength="254"
                     required
                   />
                   <p class="order-error" id="order-email-error" data-error-for="email" hidden></p>
                 </div>
                 <div class="order-field">
                   <label for="order-phone">
-                    {field('phone').label} <span class="order-hint">{field('phone').hint}</span>
+                    Telefono <span class="order-hint">(facoltativo)</span>
                   </label>
                   <input
                     class="order-input"
                     id="order-phone"
                     type="tel"
                     autocomplete="tel"
-                    maxlength={field('phone').maxlength}
+                    maxlength="30"
                   />
                   <p class="order-error" id="order-phone-error" data-error-for="phone" hidden></p>
                 </div>
               </div>
               <div class="order-field">
-                <label for="order-address">{field('address').label}</label>
+                <label for="order-address">Indirizzo</label>
                 <input
                   class="order-input"
                   id="order-address"
                   type="text"
                   autocomplete="street-address"
-                  placeholder={field('address').placeholder}
-                  maxlength={field('address').maxlength}
+                  placeholder="Via e numero civico"
+                  maxlength="200"
                   required
                 />
                 <p class="order-error" id="order-address-error" data-error-for="address" hidden></p>
               </div>
               <div class="order-pair order-pair--city">
                 <div class="order-field">
-                  <label for="order-city">{field('city').label}</label>
+                  <label for="order-city">CAP e città</label>
                   <input
                     class="order-input"
                     id="order-city"
                     type="text"
                     autocomplete="postal-code"
-                    placeholder={field('city').placeholder}
-                    maxlength={field('city').maxlength}
+                    placeholder="50123 Firenze"
+                    maxlength="100"
                     required
                   />
                   <p class="order-error" id="order-city-error" data-error-for="city" hidden></p>
                 </div>
                 <div class="order-field">
-                  <label for="order-province">{field('province').label}</label>
+                  <label for="order-province">Provincia</label>
                   <input
                     class="order-input"
                     id="order-province"
                     type="text"
                     autocomplete="address-level1"
-                    placeholder={field('province').placeholder}
-                    maxlength={field('province').maxlength}
+                    placeholder="FI"
+                    maxlength="40"
                     required
                   />
                   <p
