@@ -47,6 +47,11 @@ export type CatalogueCard = {
   bg: string;
   /** Cover: image URL, 2x srcset, Book3D inline style, 1 when the pose shows the spine. */
   c?: { src: string; set: string; style: string; sp: 0 | 1 };
+  /**
+   * Bag data, only for an orderable print book: record id, price in cents, the field tint. The
+   * browser rebuilds the bag item from these, the slug, the title, the authors and the cover.
+   */
+  b?: { i: string; p: number; tn: string | null };
 };
 
 /** Where the browser reads the cards the server did not render. */

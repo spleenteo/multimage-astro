@@ -1,0 +1,607 @@
+@reference '../../styles/global.css';
+
+/* No one-word last lines in the page's running text. */
+.order-page p,
+.order-page li,
+.order-page dt {
+  text-wrap: pretty;
+}
+
+/* /borsa: a slim title row, then the form (7fr) and the recap aside on mist (5fr). One column on
+   phones with the recap first. Small text inside the mist aside is charcoal (slate on mist is under
+   4.5:1); slate stays on white. The 44px goes on the controls, never on a bordered group. */
+
+.order-page {
+  @apply space-y-8 py-8 md:py-12;
+}
+
+.order-page__head {
+  @apply max-w-3xl space-y-2;
+}
+
+.order-page__title {
+  @apply font-serif text-3xl text-brand-navy md:text-4xl;
+}
+
+.order-page__title:focus {
+  outline: none;
+}
+
+.order-page__size {
+  @apply font-serif text-base font-semibold text-brand-slate;
+}
+
+.order-page__lede {
+  @apply pt-2 text-base text-brand-charcoal md:text-lg;
+}
+
+.order-h2 {
+  @apply font-serif text-2xl text-brand-navy;
+}
+
+.order-h3 {
+  @apply font-serif text-xl text-brand-navy;
+}
+
+/* Empty bag: the page h1, one line, one way to the catalogue. */
+.order-empty {
+  @apply max-w-xl space-y-4;
+}
+
+.order-empty p {
+  @apply text-base text-brand-charcoal;
+}
+
+/* Two columns from 768px: the recap comes first in the DOM and sits in column 2 from there. */
+.order-grid {
+  @apply grid grid-cols-1 items-start gap-8;
+}
+
+@media (min-width: 768px) {
+  .order-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 3rem;
+  }
+
+  .order-recap {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .order-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+.order-main {
+  @apply min-w-0;
+}
+
+/* Recap aside */
+.order-recap {
+  @apply min-w-0 bg-brand-mist p-5 text-brand-charcoal md:p-6;
+}
+
+/* Navy band across the top of the recap: bag icon, title, edit control. */
+.order-recap__head {
+  @apply -mx-5 -mt-5 mb-5 flex items-center gap-3 bg-brand-navy px-5 py-4 text-white md:-mx-6 md:-mt-6 md:mb-6 md:px-6 md:py-[1.125rem];
+}
+
+.order-recap__icon {
+  @apply flex-none opacity-90;
+}
+
+.order-recap__head .order-h2 {
+  @apply flex-1 leading-tight text-white;
+}
+
+.order-recap__edit {
+  @apply min-h-11 flex-none cursor-pointer border border-white/50 px-3.5 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white;
+}
+
+.order-lines {
+  @apply mb-4 mt-3 border-t border-brand-navy/15;
+}
+
+.order-lines li {
+  @apply grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-brand-navy/15 py-2.5 text-sm;
+}
+
+.order-lines li b {
+  @apply min-w-0 font-semibold text-brand-charcoal;
+}
+
+.order-lines li span {
+  @apply font-serif text-base font-semibold text-brand-navy;
+}
+
+.order-totals {
+  @apply space-y-1;
+}
+
+.order-totals div {
+  @apply flex items-baseline justify-between gap-3 text-sm;
+}
+
+.order-totals dd {
+  @apply font-serif text-lg font-semibold text-brand-navy;
+}
+
+.order-totals__big dt {
+  @apply font-semibold;
+}
+
+.order-totals__big dd {
+  @apply text-2xl;
+}
+
+/* Navy underlined text buttons: "Copia l'IBAN", "Stampa questa pagina". */
+.order-textbtn {
+  @apply inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+.order-next {
+  @apply mt-4 border-t border-brand-navy/15 pt-6;
+}
+
+.order-next ol {
+  @apply mt-3 list-decimal space-y-2.5 pl-5 text-sm;
+}
+
+.order-next ol li::marker {
+  @apply font-serif font-semibold text-brand-navy;
+}
+
+.order-next a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+/* "Cosa succede dopo" in the recap: a white card with a navy top rule, one row per step
+   (mist icon tile, "Passo n di 3", bold title, the shared step sentence). */
+.order-next--steps {
+  @apply mt-6 border-t-4 border-brand-navy bg-white p-5;
+}
+
+.order-steps__lead {
+  @apply mb-4 mt-1.5 text-[0.9375rem] font-semibold;
+}
+
+.order-next ol.order-steps {
+  @apply m-0 list-none space-y-0 p-0 text-base;
+}
+
+.order-steps > li {
+  @apply grid grid-cols-[2.5rem_1fr] items-start gap-3 border-t border-brand-navy/12 py-3.5;
+}
+
+.order-steps__icon {
+  @apply grid size-10 place-items-center bg-brand-mist text-brand-navy;
+}
+
+.order-steps__count {
+  @apply block text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#4a5560];
+}
+
+.order-steps__title {
+  @apply block font-bold text-brand-navy;
+}
+
+.order-steps__body {
+  @apply block text-sm leading-normal;
+}
+
+.order-steps__body > * + *,
+.order-page__lede > * + * {
+  @apply mt-2;
+}
+
+.order-steps__body a,
+.order-page__lede a {
+  @apply text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+.order-steps__body ul,
+.order-page__lede ul {
+  @apply list-disc pl-5;
+}
+
+.order-steps__body ol,
+.order-page__lede ol {
+  @apply list-decimal pl-5;
+}
+
+.order-next__more {
+  @apply mt-3 text-sm;
+}
+
+.order-next__more a {
+  @apply inline-flex min-h-11 items-center font-semibold md:min-h-0;
+}
+
+.order-next--done {
+  @apply border-t-0 pt-2;
+}
+
+/* The payment details, shown only after sending, inside the "Adesso" step on the white page:
+   a mist box, so labels are charcoal (slate on mist is under 4.5:1). */
+.order-bank {
+  @apply mt-3 bg-brand-mist p-4 text-sm text-brand-charcoal md:p-5;
+}
+
+/* The IBAN leads: a white slab with the number large in navy and a navy copy button. */
+.order-bank__iban {
+  @apply mb-4 flex flex-wrap items-center gap-x-4 gap-y-3 border border-brand-navy/15 bg-white p-4;
+}
+
+.order-bank__label {
+  @apply w-full text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#4a5560];
+}
+
+.order-bank__iban-value {
+  @apply min-w-0 flex-1 basis-56 text-lg font-semibold tracking-[0.04em] text-brand-navy md:text-xl;
+}
+
+.order-bank__copy {
+  @apply inline-flex min-h-11 flex-none cursor-pointer items-center gap-2 bg-brand-navy px-4 text-xs font-semibold uppercase text-white transition-colors hover:bg-brand-navy-light;
+}
+
+.order-bank__paypal {
+  @apply mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-brand-navy/12 pt-3;
+}
+
+.order-bank__paypal b {
+  @apply font-semibold;
+}
+
+/* The PayPal button: the copy button's shape, outlined so the IBAN stays the lead. */
+.order-bank__paypal-btn {
+  @apply inline-flex min-h-11 flex-none items-center gap-2 border border-brand-navy bg-white px-4 text-xs font-semibold uppercase text-brand-navy no-underline transition-colors hover:bg-brand-navy hover:text-white;
+}
+
+.order-bank__paypal-btn[hidden] {
+  display: none;
+}
+
+/* Beats the underline of the links in the steps list. */
+.order-bank .order-bank__paypal-btn {
+  text-decoration: none;
+}
+
+.order-bank__paypal p {
+  @apply text-sm;
+}
+
+.order-bank dl {
+  @apply space-y-2;
+}
+
+.order-bank dt {
+  @apply text-brand-charcoal;
+}
+
+.order-bank dd {
+  @apply font-semibold [overflow-wrap:anywhere];
+
+  font-variant-numeric: tabular-nums;
+}
+
+/* Label and value side by side where the box is wide enough, in one grid so values align. */
+@media (min-width: 640px) {
+  .order-bank dl {
+    @apply grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 space-y-0;
+  }
+
+  .order-bank dl div {
+    display: contents;
+  }
+}
+
+/* Form */
+.order-fieldset {
+  @apply mb-8 min-w-0 border-0 p-0;
+}
+
+.order-fieldset legend {
+  @apply mb-4 p-0 font-serif text-2xl font-semibold text-brand-navy;
+}
+
+.order-field {
+  @apply mb-4 min-w-0 space-y-1.5;
+}
+
+.order-field > label {
+  @apply block text-sm font-semibold text-brand-charcoal;
+}
+
+.order-hint {
+  @apply font-normal text-brand-slate;
+}
+
+.order-hint-line {
+  @apply mt-2 text-sm text-brand-slate;
+}
+
+.order-input {
+  @apply block h-11 w-full min-w-0 border border-brand-navy/25 bg-white px-3 text-base text-brand-charcoal placeholder:text-brand-slate lg:h-10;
+}
+
+.order-input--area {
+  @apply h-auto min-h-24 resize-y py-2.5 lg:h-auto;
+}
+
+.order-input[aria-invalid='true'],
+.order-fieldset[aria-invalid='true'] .order-who {
+  border-color: var(--color-brand-crimson);
+}
+
+.order-pair {
+  @apply grid grid-cols-1 gap-x-4 sm:grid-cols-2;
+}
+
+/* CAP, città, provincia: one column on phones, one row from 640px. */
+@media (min-width: 640px) {
+  .order-pair--city {
+    grid-template-columns: 9rem minmax(0, 1fr) 9rem;
+  }
+}
+
+.order-error {
+  @apply mt-1.5 text-sm font-semibold text-brand-crimson;
+}
+
+/* Shipping: radio rows, the label is the 44px control. */
+.order-choices {
+  @apply border-t border-brand-navy/15;
+}
+
+.order-choice {
+  @apply grid min-h-11 cursor-pointer grid-cols-[1.125rem_minmax(0,1fr)_auto] items-start gap-3 border-b border-brand-navy/15 py-3.5;
+}
+
+.order-choice input {
+  @apply mt-1 h-[1.125rem] w-[1.125rem] accent-brand-navy;
+}
+
+.order-choice__text {
+  @apply flex min-w-0 flex-col;
+}
+
+.order-choice__text b {
+  @apply font-semibold text-brand-charcoal;
+}
+
+.order-choice__text span {
+  @apply text-sm text-brand-slate;
+}
+
+.order-choice:has(input:checked) b {
+  @apply text-brand-navy;
+}
+
+.order-choice:hover b {
+  @apply underline;
+}
+
+.order-choice__fee {
+  @apply font-serif text-base font-semibold text-brand-navy;
+}
+
+.order-choice:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* "Chi ordina": flat segmented cells for any number of buyer kinds from the CMS. Two columns on
+   phones (a last odd cell takes the whole row), one row from 640px. The 1px gaps on a navy-tinted
+   ground draw the dividers, so no per-count border rules. */
+.order-who {
+  @apply grid grid-cols-2 gap-px border border-brand-navy/25 bg-brand-navy/25;
+}
+
+.order-who__cell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 640px) {
+  .order-who {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+  }
+
+  .order-who__cell:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+
+.order-who__cell {
+  @apply relative flex min-h-11 cursor-pointer items-center justify-center bg-white px-3 text-center text-sm text-brand-navy hover:bg-brand-mist;
+}
+
+.order-who__cell input {
+  @apply absolute inset-0 h-full w-full cursor-pointer opacity-0;
+}
+
+.order-who__cell:has(input:checked) {
+  @apply bg-brand-navy font-semibold text-white hover:bg-brand-navy;
+}
+
+.order-who__cell:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* The consent checkbox row: the hint sits inside the label, right under its text, so the
+   whole block is the hit area (at least 44px) and nothing floats detached below it. The input is
+   named by the text span alone (aria-labelledby) and described by the hint. */
+.order-consent {
+  @apply mb-8;
+}
+
+.order-check {
+  @apply flex min-h-11 cursor-pointer items-start gap-3 text-sm text-brand-charcoal;
+}
+
+.order-check input {
+  @apply mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-brand-navy;
+}
+
+.order-check__text {
+  @apply flex min-w-0 flex-col;
+}
+
+.order-check__hint {
+  @apply mt-1 text-sm text-brand-slate;
+}
+
+.order-check__hint a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-check a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-turnstile {
+  @apply mb-5;
+}
+
+#order-turnstile:focus-visible {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* The error summary: crimson text on mist; in a list, each field is a navy link to it. */
+/* Error summary at the top of the form: an alert band (a hairline crimson frame on a pale crimson wash),
+   the count as its heading line, the invalid fields as navy links. Focus lands on it. */
+.order-form-error {
+  @apply mb-8 border border-brand-crimson/35 bg-[#fbeeee] px-4 py-3.5 text-sm text-brand-charcoal md:px-5 md:py-4;
+}
+
+.order-form-error:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand-crimson;
+}
+
+.order-form-error__head {
+  @apply flex items-start gap-2.5 text-[0.9375rem] font-semibold text-brand-crimson;
+}
+
+.order-form-error__icon {
+  @apply mt-px flex-none;
+}
+
+.order-form-error ul {
+  @apply mt-2 grid gap-x-6 pl-[1.875rem] sm:grid-cols-2;
+}
+
+.order-form-error li a {
+  @apply inline-flex min-h-11 items-center font-semibold md:min-h-8;
+}
+
+.order-form-error a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-send {
+  @apply flex flex-wrap items-center gap-x-4 gap-y-3;
+}
+
+.order-send p {
+  @apply max-w-[36ch] text-sm text-brand-slate;
+}
+
+.order-status {
+  @apply mt-3 text-sm text-brand-slate;
+}
+
+.order-mailto-box {
+  @apply max-w-xl space-y-4 bg-brand-mist p-5 text-brand-charcoal;
+}
+
+/* Success */
+.order-done {
+  @apply max-w-2xl space-y-4;
+}
+
+.order-done__lede {
+  @apply text-base text-brand-charcoal md:text-lg;
+}
+
+.order-done__lines {
+  @apply border-t border-brand-navy/15;
+}
+
+.order-done__lines li {
+  @apply border-b border-brand-navy/15 py-2.5 text-base text-brand-charcoal;
+}
+
+.order-done__notes {
+  @apply bg-brand-mist p-3 text-sm text-brand-charcoal;
+}
+
+.order-done__total {
+  @apply flex flex-wrap justify-between gap-x-4 font-serif text-xl font-semibold text-brand-navy;
+}
+
+/* An order code never breaks at its hyphens. */
+[data-order-done-causale],
+.order-done__lede b {
+  white-space: nowrap;
+}
+
+.order-iban {
+  @apply [overflow-wrap:anywhere];
+
+  font-variant-numeric: tabular-nums;
+}
+
+.order-done__pdf {
+  @apply space-y-3 bg-brand-mist p-5 text-brand-charcoal;
+}
+
+.order-done__pdf-row {
+  @apply flex flex-wrap items-center gap-x-4 gap-y-2;
+}
+
+.order-done__pdf .order-hint-line {
+  @apply text-brand-charcoal;
+}
+
+.order-done__actions {
+  @apply flex flex-wrap items-center gap-x-4 gap-y-2 pt-4;
+}
+
+/* Print only the success screen: visibility plus absolute positioning keeps the rest of the page
+   from taking space or adding blank pages; scoped so printing the bag or the form is not blank. */
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  body:has(.order-done:not([hidden])) > header,
+  body:has(.order-done:not([hidden])) > footer {
+    display: none;
+  }
+
+  body:has(.order-done:not([hidden])) * {
+    visibility: hidden;
+  }
+
+  body:has(.order-done:not([hidden])) .order-done,
+  body:has(.order-done:not([hidden])) .order-done * {
+    visibility: visible;
+  }
+
+  body:has(.order-done:not([hidden])) .order-done {
+    position: absolute;
+    inset: 0 auto auto 0;
+    max-width: none;
+  }
+
+  body:has(.order-done:not([hidden])) .order-done__pdf,
+  body:has(.order-done:not([hidden])) .order-done__actions,
+  body:has(.order-done:not([hidden])) [data-order-copy-iban] {
+    display: none;
+  }
+}

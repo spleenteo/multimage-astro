@@ -76,11 +76,37 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
     - `categoryHref` (`/magazine?categoria=<slug>`).
   - Used in: `/magazine`, `/magazine/[slug]`, `MagazinePostCard`.
 - **`text` utilities** (`src/lib/text.ts`)
-  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`.
-  - Used in: book hero copy, supplier bios, staff notices.
-  - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
+  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`, `sanitizeCmsHtml` (allowlist sanitizer for short WYSIWYG fragments: p, br, strong/b, em/i, u, links with a safe href, lists; everything else dropped).
+  - Used in: book hero copy, supplier bios, staff notices; `sanitizeCmsHtml` on `/borsa` (Shop description and step descriptions).
+  - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**, for which `sanitizeCmsHtml` is the candidate shared sanitizer.
+- **`order` facts** (`src/lib/order.ts`)
+  - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), the buyer kinds and their discount (`Buyer`, `toBuyers` from the CMS records with `FALLBACK_BUYERS`, `defaultBuyer`, `buyerDiscount`, `discountLabel` "Sconto Socio −30%", `formatDiscount`), the totals scheme (`ORDER_SUBTOTAL_LABEL`, `ORDER_TOTAL_LABEL`: books at cover price, discount, shipping, "Totale da pagare"), `bagSizeLabel` ("4 copie di 2 libri"), `BUYER_LABEL` ("Chi ordina"), `ORDER_NAME_LABEL` ("Nome e cognome o ragione sociale"), `orderPlace` (CAP and city as one string), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping kinds, `orderPaypalUrl`), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, the readable order code (`orderCode`, `MM-YYMMDD-XXXX`), the D1 row (`ORDER_COLUMNS`, `orderRow`), the clash retry (`isCodeClash`, `saveWithCodeRetry`: one more insert with a new code on a UNIQUE clash on `orders.code`), `orderEmail` text, `checkSiteverify` and `bagMailto`.
+  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `order-pdf.ts`, `books.ts`, `HomeHero`, `/libri/[slug]`, `/distributori`.
+  - Notes: IBAN, BIC and PayPal must stay in step with the CMS page `/info/ordinare` (TODO **BORSA-info-sync**). The table contract is in `d1/README.md`.
+- **`order-pdf`** (`src/lib/order-pdf.ts`)
+  - Purpose: pure model of the PDF of an order request: `orderPdf(input)` returns `{ filename, title, blocks }` (header, date, code, contact, lines, copies, shipping, total, next steps, payment details with the code as causale); `pdfText` keeps every string inside WinAnsi, the only set jsPDF's built-in Helvetica draws. No jsPDF import, so it is testable with `npx tsx`.
+  - Used in: `_order-pdf.client.ts`.
+- **Order PDF renderer** (`src/pages/borsa/_order-pdf.client.ts`)
+  - Purpose: `renderOrderPdf` draws the model with jsPDF (A4, text only), `saveOrderPdf` saves `ordine-<code>.pdf`. Loaded only by a dynamic `import()` on the tap of "Scarica il PDF", so jsPDF is a lazy chunk.
+  - Used in: `_order-page.client.ts`.
+- **Cloudflare bindings** (`src/lib/cloudflare-bindings.ts`)
+  - Purpose: the one wrapper over `cloudflare:workers`: `getOrderDb()` (D1 `ORDERS`) and `getOrderMail()` (`send_email` `ORDER_MAIL`), each returning `null` when the binding is missing. Outside the Cloudflare build the module is aliased to `cloudflare-workers-stub.ts` in `astro.config.mjs`.
+  - Used in: `/api/ordine`.
+- **`cloudflare:workers` stub** (`src/lib/cloudflare-workers-stub.ts`)
+  - Purpose: an empty `env`, so the Vercel build and plain `npm run dev` compile and both getters above return `null`.
+  - Used in: the Vite alias for `cloudflare:workers` (non-Cloudflare builds).
+- **bag store** (`src/lib/bag.client.ts`)
+  - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
+  - Used in: `BagDrawer`, `BagAdd`, header buttons (through `drawer.client.ts`), `/borsa`, the `BookCard` bag button.
+  - Notes: `addBook(book, place)` and `emptyBag({ byVisitor })` send the bag counters (`trackBag`).
+- **bag counters** (`src/lib/bag-events.ts`, `src/lib/bag-events.client.ts`)
+  - Purpose: aggregate bag events for Workers Analytics Engine (dataset `multimage_bag_events`, binding `BAG_EVENTS`): `add` and `start` (slug and place: `card`, `book`, `hero`), `emptied`, and `order` (server only). `parseBagEvent` validates a browser body, `bagDataPoint` builds the data point (blob1 event, blob2 slug, blob3 place, double1 count, double2 copies, index1 event), `trackBag` sends with `sendBeacon`. No visitor identifier, no cookie, nothing stored in the browser.
+  - Used in: `bag.client.ts`, `/api/evento`, `/api/ordine`, `scripts/bag-stats.mjs`.
+- **Order page script** (`src/pages/borsa/_order-page.client.ts`)
+  - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget, the POST to `/api/ordine` and, on success, the "Scarica il PDF" button (lazy import of `_order-pdf.client.ts`) and the print fallback.
+  - Used in: `src/pages/borsa/index.astro`.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book: subject, title, authors, ISBN, price, copies, address), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
+  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book, the mailto fallback of `BagAdd` on the book page and the home hero: subject, title, authors, ISBN, price, copies, address; `ORDER_EMAIL` and `euroFormatter` come from `order.ts`), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
   - Used in: listings, carousels, detail pages, staff exports, printable schede; `/libri` route, sitemap, `publicUrls.ts`, `revalidationUrls.ts`.
   - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props. Keep `BOOKS_PER_PAGE` here so route/sitemap/revalidation agree on page count.
 - **`authors` helper** (`src/lib/authors.ts`)
@@ -128,6 +154,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **Search/Swiper bundler** (`scripts/build-search-client.mjs`)
   - Purpose: builds `public/generated/search-page.client.js` and `swiper-element.js` via esbuild.
   - Notes: deletes stale artefacts and honors `NODE_ENV` for sourcemaps.
+- **Bag stats** (`scripts/bag-stats.mjs`, `npm run stats:bag`)
+  - Purpose: reads the bag counters from the Analytics Engine SQL API: bags started, ordered, emptied and left (started − ordered − emptied), adds per place, the 20 books added most. Optional argument: days (default 30, max 90).
+  - Notes: run with `npx dotenv -e .env.cloudflare -- npm run stats:bag`; needs `CLOUDFLARE_ACCOUNT_ID` and a `CLOUDFLARE_API_TOKEN` with Account Analytics: Read.
 - **`docs:inventory` checker** (`scripts/check-docs-inventory.mjs`)
   - Purpose: scans `src/components/**` + helper directories and verifies `docs/list-*` includes every component/helper path.
   - Notes: fails `npm run docs:inventory` when entries drift; keep bullets aligned with the script’s parsed format.

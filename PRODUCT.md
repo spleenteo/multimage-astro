@@ -39,7 +39,7 @@ The website is the publisher's catalogue and front door. **Success means books o
 - Catalogue: books with collections (collane), authors, prices, covers; paginated catalogue, author pages, collection pages, magazine, site search (`/cerca`).
 - Stack and hosting are set by the codebase (Astro, Tailwind 4, DatoCMS, Cloudflare Workers); see `CLAUDE.md` and `docs/current-state.md`.
 - Anything shown on the site must be editable by non-technical volunteers in DatoCMS; layouts must survive real CMS content (long texts, missing covers, images of any colour).
-- Undecided: whether online ordering (cart or payment) will ever exist. Until then, every path to a book ends at the email order, a bookshop, or an ebook.
+- Undecided: whether online payment will ever exist (the bag and the order form do). Until then, every path to a book ends at the email order, a bookshop, or an ebook.
 
 ## Brand Commitments
 
@@ -63,7 +63,7 @@ Absent, and not to be invented: reader reviews or testimonials, sales figures be
 
 1. **Books first.** Every surface should bring a visitor closer to a book they want to read and to the way to get it; campaigns and membership support this, they do not replace it.
 2. **Clear to an outsider.** A first-time visitor understands who Multimage is and what it publishes without knowing the movement's vocabulary.
-3. **Say how to get the book.** With no cart, the ordering path (email, bookshops, ebook) must be obvious wherever a book is.
+3. **Say how to get the book.** The bag collects books and the order is sent from a form (still no payment online): the ordering path (bag, email, bookshops, ebook) must be obvious wherever a book is.
 4. **Editable by volunteers.** Designs work with whatever editors put in the CMS and do not depend on developer intervention for routine changes.
 5. **Practise what it publishes.** A human-rights publisher's site is readable and usable by everyone.
 

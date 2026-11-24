@@ -19,6 +19,12 @@ scope: A list to describe all models in pages
   - Feeds `/distributori` hero copy + SEO.
 - **`MagazineIndexRecord`**
   - Feeds `/magazine` hero copy + SEO.
+- **`ShopRecord`** (`src/pages/borsa/_graphql.ts`, singleton `shop`)
+  - Fields: `title`, `description` (the `/borsa` head and lede), modular `steps` (max 3 `OrderStepRecord`).
+  - The built-in texts in `order.ts` are the fallback when the record is empty.
+- **`BuyerRecord`** (collection `buyer`, sortable; read by `src/pages/borsa/_graphql.ts` and `src/pages/api/ordine/_graphql.ts`, `orderBy: position_ASC`)
+  - Fields: `name` (the "Chi ordina" cell), `discount` (integer percentage off the books, never shipping).
+  - Records (2026-11-24): Socio 30, Privato 0, Scuola 20, Associazione 50, Libreria 35. With none, `FALLBACK_BUYERS` (Privato, 0).
 
 ## Core records
 - **`BookRecord`** (`BookCardFragment`, `BOOK_DETAIL_QUERY`, staff queries)
@@ -50,6 +56,8 @@ scope: A list to describe all models in pages
   - Supplies formatted dimension strings for book detail + staff exports.
 
 ## Modular blocks
+- **`OrderStepRecord`** (`Shop.steps`)
+  - `icon` (SVG upload, rendered as a decorative `<img>`), `title`, `description`; the order email in the text becomes a mailto link. Feeds the "Cosa succede dopo" card on `/borsa`.
 - **`BannerRecord`** (`BANNER_SECTION_FRAGMENT`, Structured Text `blocks`)
   - Feeds `BannerSection` and `BannerBlock` (title/content/link/imagePosition/featuredImage).
 - **`SingleBookRecord`** (`FEATURED_BOOK_HIGHLIGHT_FRAGMENT`, Structured Text)

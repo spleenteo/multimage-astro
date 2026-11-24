@@ -7,12 +7,20 @@ import type { ResponsiveImageType } from '@datocms/astro/Image';
 import type { AssetColor } from '~/lib/datocms/types';
 import Button from '~/components/ui/Button';
 import { coverFieldPalette } from '~/lib/colors';
+import BagAdd from '~/components/BagAdd';
 import { buildOrderMailto } from '~/lib/books';
+import { bagBookFor, isPrintInCatalogue } from '~/lib/order';
 import styles from './style.module.css';
 
 type Props = {
   pageTitle: string;
   book: {
+    id: string;
+    slug: string;
+    price?: number | null;
+    coverUrl?: string | null;
+    format?: string | null;
+    isArchived?: boolean;
     title: string;
     subtitle?: string | null;
     summary?: string | null;
@@ -50,6 +58,18 @@ const orderHref = buildOrderMailto({
   title: book.title,
   authors: authors.map((author) => author.name),
 });
+const bagBook = bagBookFor({
+  id: book.id,
+  slug: book.slug,
+  title: book.title,
+  authors: authors.map((author) => author.name),
+  archive: book.isArchived,
+  format: book.format,
+  price: book.price,
+  coverUrl: book.coverUrl ?? null,
+  tint: fieldColor,
+});
+const canOrderPrint = isPrintInCatalogue({ archive: book.isArchived, format: book.format });
 const titleId = 'home-hero-book-title';
 ---
 
@@ -150,9 +170,15 @@ const titleId = 'home-hero-book-title';
 
         <div class="mt-6 flex flex-wrap gap-3">
           <Button href={book.link} primary class="min-h-11">Scopri il libro</Button>
-          <Button href={orderHref} primary={false} icon="iconoir:mail" class="min-h-11">
-            Ordinalo via email
-          </Button>
+          {canOrderPrint ? (
+            <BagAdd
+              book={bagBook}
+              mailto={orderHref}
+              label="Ordinalo via email"
+              primary={false}
+              place="hero"
+            />
+          ) : null}
         </div>
 
         <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm" aria-label="Altri modi per averlo">

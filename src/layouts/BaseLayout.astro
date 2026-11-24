@@ -2,6 +2,7 @@
 import Header from '~/components/Header.astro';
 import NewsletterCta from '~/components/NewsletterCta.astro';
 import Footer from '~/components/Footer.astro';
+import BagDrawer from '~/components/BagDrawer/index.astro';
 import ContentLink from '~/components/ContentLink.astro';
 import EditorModeBadge from '~/components/EditorModeBadge.astro';
 import '../styles/global.css';
@@ -257,6 +258,7 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     </main>
     <NewsletterCta />
     <Footer footerPages={footerMenuPages} />
+    <BagDrawer />
     {draftModeEnabled && <ContentLink />}
     {draftModeEnabled && <EditorModeBadge currentPath={currentPath} />}
   </body>

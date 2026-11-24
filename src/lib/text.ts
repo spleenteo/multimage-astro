@@ -118,3 +118,36 @@ export function withoutUrls(text: string): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
+
+const SAFE_TAGS = new Set(['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'a', 'ul', 'ol', 'li']);
+const SAFE_HREF = /^(https?:|mailto:|tel:|\/|#)/i;
+
+/**
+ * Allowlist sanitizer for short CMS WYSIWYG fragments rendered with `set:html`: keeps the inline
+ * and list tags in SAFE_TAGS (attributes dropped, except a safe `href` on links), removes every
+ * other tag (its text stays) and the content of script, style and similar elements. Plain text
+ * without tags is escaped and wrapped in paragraphs, as `toRichTextHtml` does.
+ */
+export function sanitizeCmsHtml(value: string | null | undefined): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+  if (!/<\s*\/?\s*\w+[^>]*>/.test(trimmed)) return toRichTextHtml(trimmed);
+
+  const html = trimmed
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style|iframe|object|embed|template|noscript)\b[\s\S]*?<\/\1\s*>/gi, '')
+    .replace(/<\/?([a-zA-Z][\w-]*)\b([^>]*)>/g, (tag, rawName: string, attrs: string) => {
+      const name = rawName.toLowerCase();
+      if (!SAFE_TAGS.has(name)) return '';
+      if (tag.startsWith('</')) return name === 'br' ? '' : `</${name}>`;
+      if (name !== 'a') return `<${name}>`;
+      const href = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(attrs);
+      const url = (href?.[1] ?? href?.[2] ?? href?.[3] ?? '').trim();
+      if (!SAFE_HREF.test(url)) return '<a>';
+      const external = /^https?:/i.test(url);
+      return `<a href="${escapeHtml(url)}"${external ? ' rel="noopener noreferrer"' : ''}>`;
+    })
+    // A stray "<" left after the pass (not a tag) must not open one.
+    .replace(/<(?![/a-z])/gi, '&lt;');
+  return html.trim() || null;
+}

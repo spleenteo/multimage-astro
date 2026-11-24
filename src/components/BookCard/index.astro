@@ -3,12 +3,19 @@
 // the price. Only the cover moves on hover ("Only the Book Floats"): it turns into a 3D book
 // (Book3D) with its spine, in a pose of its own derived from the slug. The `catalogue` variant is the
 // quieter one used in the /libri grid: lighter field, no summary, compact on phones.
+// An orderable print book (an `id`, in the catalogue, with a price) gets a bag button in the top
+// right corner of the card, level with the price, outside the link: `bag.client.ts` shows it and adds the book.
 import Book3D from '~/components/Book3D';
 import { bookCardView, type BookCardInput } from '~/lib/bookCardView';
 import AuthorNames from '~/components/ui/AuthorNames';
+import { getAuthorDisplayName } from '~/lib/authors';
+import { coverFieldPalette } from '~/lib/colors';
+import { bagBookFor } from '~/lib/order';
 import styles from './style.module.css';
 
 type Props = {
+  /** The record id: with it an orderable print book gets the bag button. */
+  id?: string | null;
   title: string;
   slug: string;
   href?: string;
@@ -39,6 +46,7 @@ type Props = {
 };
 
 const {
+  id = null,
   title,
   slug,
   href,
@@ -76,45 +84,96 @@ const view = bookCardView({
 });
 const { meta, priceLabel } = view;
 const Heading = headingLevel;
+
+const bag = id
+  ? bagBookFor({
+      id,
+      slug,
+      title,
+      authors: authors.map((a) => getAuthorDisplayName(a, '')).filter(Boolean),
+      archive: isArchived,
+      format,
+      price,
+      coverUrl: coverImage?.url ?? null,
+      tint: coverFieldPalette(coverImage?.colors).field,
+    })
+  : null;
 ---
 
-<a
-  href={view.href}
-  class:list={[styles.root, isCatalogue ? styles.catalogue : null, 'group', className]}
->
-  <article class="flex h-full flex-col">
-    <div class={styles.heroPanel} style={`background: ${view.backgroundColor};`}>
-      {view.cover ? (
-        <div class={styles.coverWrapper}>
-          <Book3D
-            cover={view.cover.src}
-            srcset={view.cover.srcset}
-            alt=""
-            {...view.cover.book}
-            hoverGroup
-            class={styles.book}
-          />
-        </div>
-      ) : (
-        <div class={styles.coverFallback}>Copertina in arrivo</div>
-      )}
-    </div>
-
-    <div class={styles.body}>
-      <div class="space-y-1">
-        <Heading class={styles.title}>{title}</Heading>
-        {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
+<div class:list={[styles.card, className]}>
+  <a href={view.href} class:list={[styles.root, isCatalogue ? styles.catalogue : null, 'group']}>
+    <article class="flex h-full flex-col">
+      <div class={styles.heroPanel} style={`background: ${view.backgroundColor};`}>
+        {view.cover ? (
+          <div class={styles.coverWrapper}>
+            <Book3D
+              cover={view.cover.src}
+              srcset={view.cover.srcset}
+              alt=""
+              {...view.cover.book}
+              hoverGroup
+              class={styles.book}
+            />
+          </div>
+        ) : (
+          <div class={styles.coverFallback}>Copertina in arrivo</div>
+        )}
       </div>
 
-      {authors.length > 0 ? (
-        <AuthorNames authors={authors} prefix={authorsPrefix} class={styles.authors} />
-      ) : null}
+      <div class={styles.body}>
+        <div class="space-y-1">
+          <Heading class={styles.title}>{title}</Heading>
+          {subtitle ? <p class={styles.subtitle}>{subtitle}</p> : null}
+        </div>
 
-      {!isCatalogue && summary ? <p class={styles.summary}>{summary}</p> : null}
+        {authors.length > 0 ? (
+          <AuthorNames authors={authors} prefix={authorsPrefix} class={styles.authors} />
+        ) : null}
 
-      {meta.length > 0 ? <p class={styles.meta}>{meta.join(' · ')}</p> : null}
+        {!isCatalogue && summary ? <p class={styles.summary}>{summary}</p> : null}
 
-      {priceLabel ? <p class={styles.price}>{priceLabel}</p> : null}
-    </div>
-  </article>
-</a>
+        {meta.length > 0 ? <p class={styles.meta}>{meta.join(' · ')}</p> : null}
+
+        {priceLabel ? <p class={styles.price}>{priceLabel}</p> : null}
+      </div>
+    </article>
+  </a>
+
+  {bag ? (
+    <span
+      class:list={[styles.bag, isCatalogue ? styles.bagCatalogue : null]}
+      data-card-bag
+      data-bag-item={JSON.stringify(bag)}
+      hidden
+    >
+      <button
+        type="button"
+        class={styles.bagButton}
+        aria-label={`Metti in borsa: ${title}`}
+        data-card-bag-button
+      >
+        {/* Inline: the bag control must not wait for the Iconify CDN. */}
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 8h14l-1 13H6L5 8Z"></path>
+          <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+      </button>
+      <span class={styles.bagTip} aria-hidden="true" data-card-bag-tip>Metti in borsa</span>
+    </span>
+  ) : null}
+</div>
+
+<script>
+  import { initCardBags } from './bag.client';
+  initCardBags();
+</script>

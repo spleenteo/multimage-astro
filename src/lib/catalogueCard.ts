@@ -3,6 +3,8 @@ import { formatAuthorNames } from '~/lib/authors';
 import { book3dView } from '~/lib/book3d';
 import { bookCardView } from '~/lib/bookCardView';
 import type { CatalogueCard } from '~/lib/catalogue';
+import { coverFieldPalette } from '~/lib/colors';
+import { isOrderablePrint, toCents } from '~/lib/order';
 import type { CatalogueCardRecord } from '~/pages/libri/index/_graphql';
 
 export function toCatalogueCard(record: CatalogueCardRecord): CatalogueCard {
@@ -31,6 +33,13 @@ export function toCatalogueCard(record: CatalogueCardRecord): CatalogueCard {
       set: view.cover.srcset,
       style: book.style,
       sp: book.showSpine ? 1 : 0,
+    };
+  }
+  if (isOrderablePrint(record)) {
+    card.b = {
+      i: record.id,
+      p: toCents(record.price as number),
+      tn: coverFieldPalette(record.coverImage?.colors).field,
     };
   }
   return card;

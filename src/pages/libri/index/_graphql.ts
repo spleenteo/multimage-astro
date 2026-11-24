@@ -37,6 +37,7 @@ const CATALOGUE_FACET_FIELDS = /* GraphQL */ `
 
 /** What a catalogue card shows (the server renders the first ones, the rest come as JSON). */
 export const CATALOGUE_CARD_FIELDS = /* GraphQL */ `
+  id
   slug
   title
   subtitle
@@ -130,6 +131,7 @@ export type CatalogueFacetRecord = {
 };
 
 export type CatalogueCardRecord = {
+  id: string;
   slug: string;
   title: string;
   subtitle?: string | null;

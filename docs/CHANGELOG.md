@@ -2,6 +2,20 @@
 
 All notable changes to the Multimage site, newest first.
 
+## v1.2.0 — 2026-11-24 — Order your books through a bag and an order form
+
+Visitors can now put books in a bag, review quantities and totals, and send an order request to the association from a new order page. Payment stays a bank transfer after shipping: there is no checkout and no account.
+
+- **Bag**: an "add to bag" button on book pages and the home hero, and a drawer in the header, where visitors change quantities, see total copies and the total at cover price, and empty the bag.
+- **Order page**: `/borsa` collects name, email, shipping address and notes, protected by Turnstile, with guidance on how and when the books arrive and how to pay. If the form cannot send, an email way out is shown instead.
+- **Orders**: each order gets a code, is saved in a Cloudflare D1 database and notified to the association's order mailbox; no third-party email service is used.
+- **PDF**: after sending, the confirmation screen offers a PDF of the request to download or print, since the visitor receives no email copy.
+- **Member discount**: members get 30% off the cover price, computed on the server; the order form, confirmation and PDF show it, and a forged discount is ignored.
+- **Documentation**: a setup note, the order endpoint contract and the design docs describe the bag, the form and the D1 data.
+- **Work**: `borsa`
+
+---
+
 ## v1.1.0 — 2026-11-23 — Lighter /libri and /autori pages, with richer author cards
 
 The two heaviest pages now do much less work on the server: an uncached render of `/autori` costs about a quarter of the CPU it did, `/libri` about half. Neither is reliably under the 10 ms of the Workers Free plan yet. Readers get the same catalogues, and author cards have a new look.

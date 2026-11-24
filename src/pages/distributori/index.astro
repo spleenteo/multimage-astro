@@ -7,6 +7,7 @@ import SupplierCard from '~/components/SupplierCard';
 import SuppliersMap, { type SuppliersMapPoint } from '~/components/SuppliersMap';
 import Button from '~/components/ui/Button';
 import { executeQuery } from '~/lib/datocms/executeQuery';
+import { ORDER_EMAIL } from '~/lib/order';
 import { withFallbackSeo } from '~/lib/seo';
 import { toPlainText } from '~/lib/text';
 import { groupSuppliersByRegion, mapSuppliersToCards } from '~/lib/suppliers';
@@ -15,7 +16,6 @@ import { SUPPLIERS_PAGE_QUERY, type SuppliersPageQueryResult } from './_graphql'
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
 
-const ORDERS_EMAIL = 'ordini@multimage.org';
 const draftModeEnabled = resolveDraftMode(Astro);
 
 const data = await executeQuery<SuppliersPageQueryResult>(SUPPLIERS_PAGE_QUERY, {
@@ -143,7 +143,7 @@ const sizeLine =
       <h2 id="librerie-title" class={styles.wayTitle}>Sei una libreria?</h2>
       <p>
         Puoi ordinare tramite i distributori o direttamente a noi, senza spese di spedizione: scrivi
-        a{' '} <a href={`mailto:${ORDERS_EMAIL}`}>{ORDERS_EMAIL}</a>. Allo stesso indirizzo, se vuoi
+        a{' '} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>. Allo stesso indirizzo, se vuoi
         entrare nella rete di librerie e associazioni amiche.
       </p>
     </section>

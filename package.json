@@ -22,7 +22,8 @@
     "test": "npm run format && npm run lint && npm run build",
     "lint": "prettier --check --ignore-path .prettierignore .",
     "build:cf": "npm run bundle-search-client && DEPLOY_TARGET=cloudflare astro build",
-    "deploy:cf": "npm run build:cf && wrangler deploy"
+    "deploy:cf": "npm run build:cf && wrangler deploy",
+    "stats:bag": "node scripts/bag-stats.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",
@@ -35,6 +36,7 @@
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.7",
     "jsonwebtoken": "^9.0.3",
+    "jspdf": "4.2.1",
     "linkedom": "^0.18.15",
     "maplibre-gl": "6.17.0",
     "serialize-error": "^13.1.0",

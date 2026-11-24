@@ -1,0 +1,565 @@
+---
+// /borsa: the order page. Server-rendered and cached like every page, identical for every visitor:
+// no cookie. The head and the "Cosa succede dopo" steps come from the Shop singleton in DatoCMS,
+// with the built-in texts as fallback. The bag lives in the browser; _order-page.client.ts fills the recap, runs the
+// form and shows the success state. The markup contract (data-order-* attributes and the ids
+// `order-<key>`) is read by that script.
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Button from '~/components/ui/Button';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+import {
+  BUYER_LABEL,
+  ORDER_NAME_LABEL,
+  defaultBuyer,
+  discountLabel,
+  toBuyers,
+  ORDER_ACCOUNT_HOLDER,
+  ORDER_BANK,
+  ORDER_BIC,
+  ORDER_CAUSALE,
+  ORDER_EMAIL,
+  ORDER_IBAN,
+  ORDER_NOTES_MAX,
+  ORDER_PAYPAL,
+  ORDER_PAYPAL_LINK_LABEL,
+  ORDER_STEP_CONFIRM,
+  ORDER_STEP_PAY,
+  ORDER_STEP_PAY_LATER,
+  ORDER_STEP_RECEIPT_LEAD,
+  ORDER_SUBTOTAL_LABEL,
+  ORDER_SWIFT_INTERMEDIARY,
+  ORDER_TOTAL_LABEL,
+  SHIPPING_KINDS,
+  formatCents,
+  formatIban,
+} from '~/lib/order';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { sanitizeCmsHtml } from '~/lib/text';
+import { resolveDraftMode } from '~/lib/draftPreview';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { SHOP_PAGE_QUERY, type ShopPageQueryResult } from './_graphql';
+import './_borsa.css';
+
+const seo = [
+  { tag: 'title', content: 'La tua borsa · Multimage' },
+  { tag: 'meta', attributes: { name: 'robots', content: 'noindex' } },
+];
+
+// The env value, else Cloudflare's always-pass test key in dev, else none (email fallback).
+const siteKey =
+  PUBLIC_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
+
+const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
+const mailtoHref = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}`;
+
+const draftModeEnabled = resolveDraftMode(Astro);
+const { shop, allBuyers } = await executeQuery<ShopPageQueryResult>(SHOP_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
+
+const pageTitle = shop?.title?.trim() || 'La tua borsa';
+const pageLedeHtml =
+  sanitizeCmsHtml(shop?.description) ??
+  "<p>Lasciaci i tuoi dati: l'ordine arriva allo staff, che lo conferma e spedisce i libri. Alla fine scarichi il PDF della tua richiesta, con le istruzioni per il pagamento.</p>";
+
+// Steps from the CMS (WYSIWYG descriptions, sanitized); the built-in ones when the record has
+// none. The order email in a step without links of its own becomes a mailto link.
+type Step = { key: string; title: string; html: string; icon: { url: string; alt: string } | null };
+const linkEmail = (html: string) =>
+  html.includes('<a')
+    ? html
+    : html.split(ORDER_EMAIL).join(`<a href="mailto:${ORDER_EMAIL}">${ORDER_EMAIL}</a>`);
+const stepHtml = (text: string | null | undefined) => linkEmail(sanitizeCmsHtml(text) ?? '');
+const cmsSteps: Step[] = (shop?.steps ?? [])
+  .filter((b) => b.title?.trim())
+  .map((b) => ({
+    key: b.id,
+    title: b.title!.trim(),
+    html: stepHtml(b.description),
+    icon: b.icon?.url ? { url: b.icon.url, alt: '' } : null,
+  }));
+const steps: Step[] = cmsSteps.length
+  ? cmsSteps
+  : [
+      {
+        key: 'confirm',
+        title: 'Lo staff conferma',
+        html: stepHtml(ORDER_STEP_CONFIRM),
+        icon: null,
+      },
+      { key: 'pay', title: 'Paghi', html: stepHtml(ORDER_STEP_PAY_LATER), icon: null },
+      {
+        key: 'receipt',
+        title: 'Mandi la ricevuta',
+        html: stepHtml(`${ORDER_STEP_RECEIPT_LEAD} ${ORDER_EMAIL}.`),
+        icon: null,
+      },
+    ];
+
+const shippingEntries = Object.entries(SHIPPING_KINDS);
+const buyers = toBuyers(allBuyers);
+const initialBuyer = defaultBuyer(buyers);
+---
+
+<BaseLayout seo={seo}>
+  <div class="order-page" data-order-page>
+    <div class="order-page__head" data-order-head>
+      <h1 class="order-page__title">{pageTitle}</h1>
+      <p class="order-page__size" data-order-size></p>
+      {siteKey ? <div class="order-page__lede" data-order-lede set:html={pageLedeHtml} /> : null}
+      <noscript>
+        <p class="order-page__lede">
+          Per ordinare dal sito serve JavaScript. Puoi scriverci a {ORDER_EMAIL}.
+        </p>
+      </noscript>
+    </div>
+
+    <section class="order-empty" data-order-empty hidden>
+      <p>
+        È ancora vuota. Scegli un libro dal catalogo e mettilo in borsa: qui trovi il riepilogo
+        dell'ordine.
+      </p>
+      <Button href="/libri" variant="secondary">Guarda le novità</Button>
+    </section>
+
+    <div class="order-grid" data-order-filled hidden>
+      <aside class="order-recap" aria-labelledby="order-recap-title">
+        <div class="order-recap__head">
+          <svg
+            class="order-recap__icon"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 8h14l-1 13H6L5 8Z"></path>
+            <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+          </svg>
+          <h2 class="order-h2" id="order-recap-title">Nella borsa</h2>
+          <button type="button" class="order-recap__edit" data-order-edit>
+            Modifica<span class="sr-only"> la borsa</span>
+          </button>
+        </div>
+        <ul class="order-lines" data-order-lines></ul>
+        <template data-order-line>
+          <li><b data-line-title></b><span data-line-amount></span></li>
+        </template>
+        <dl class="order-totals">
+          <div>
+            <dt>{ORDER_SUBTOTAL_LABEL}</dt>
+            <dd data-order-subtotal></dd>
+          </div>
+          <div data-order-discount-row hidden>
+            <dt data-order-discount-label>{discountLabel(initialBuyer)}</dt>
+            <dd data-order-discount></dd>
+          </div>
+          <div>
+            <dt>Spedizione</dt>
+            <dd data-order-shipping></dd>
+          </div>
+          <div class="order-totals__big">
+            <dt>{ORDER_TOTAL_LABEL}</dt>
+            <dd data-order-total></dd>
+          </div>
+        </dl>
+
+        <div class="order-next order-next--steps">
+          <h2 class="order-h3">Cosa succede dopo</h2>
+          <p class="order-steps__lead">Non paghi adesso. Succede così:</p>
+          <ol class="order-steps">
+            {steps.map((step, i) => <li>
+              <span class="order-steps__icon">
+                {step.icon ? <img src={step.icon.url} alt="" width="20" height="20" /> : null}
+              </span>
+              <div>
+                <span class="order-steps__count"> Passo {i + 1} di {steps.length} </span>
+                <span class="order-steps__title">{step.title}</span>
+                <div class="order-steps__body" set:html={step.html} />
+              </div>
+            </li>)}
+          </ol>
+          <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>
+          <p class="sr-only" aria-live="polite" data-order-announce></p>
+        </div>
+      </aside>
+
+      <div class="order-main">
+        {siteKey ? (
+          <form data-order-form data-sitekey={siteKey} novalidate>
+            <div class="order-form-error" role="alert" tabindex="-1" data-order-form-error hidden>
+              <p class="order-form-error__head">
+                <svg
+                  class="order-form-error__icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M12 7.5v5.5"></path>
+                  <path d="M12 16.5h.01"></path>
+                </svg>
+                <span data-order-form-error-text></span>
+                <span data-order-mailto hidden>
+                  <a href={mailtoHref}>mandacelo via email</a>
+                </span>
+              </p>
+              <ul data-order-form-error-list hidden></ul>
+            </div>
+
+            <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
+              <legend>{BUYER_LABEL}</legend>
+              <div class="order-who" data-count={buyers.length}>
+                {buyers.map((b) => <label class="order-who__cell">
+                  <input
+                    type="radio"
+                    name="buyer"
+                    value={b.id}
+                    data-name={b.name}
+                    data-discount={b.discount}
+                    checked={b.id === initialBuyer.id}
+                  />
+                  <span>{b.name}</span>
+                </label>)}
+              </div>
+              <p
+                class="order-hint-line"
+                id="order-buyer-hint"
+                aria-live="polite"
+                hidden={initialBuyer.discount === 0}
+              >
+                {initialBuyer.discount > 0
+                  ? `Sconto del ${initialBuyer.discount}% sul prezzo di copertina dei libri: lo staff verifica che ti spetti.`
+                  : ''}
+              </p>
+              <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
+            </fieldset>
+
+            <fieldset class="order-fieldset">
+              <legend>A chi spediamo</legend>
+              <div class="order-field">
+                <label for="order-name">{ORDER_NAME_LABEL}</label>
+                <input
+                  class="order-input"
+                  id="order-name"
+                  type="text"
+                  autocomplete="name"
+                  maxlength="100"
+                  required
+                />
+                <p class="order-error" id="order-name-error" data-error-for="name" hidden></p>
+              </div>
+              <div class="order-pair">
+                <div class="order-field">
+                  <label for="order-email">Email</label>
+                  <input
+                    class="order-input"
+                    id="order-email"
+                    type="email"
+                    autocomplete="email"
+                    maxlength="254"
+                    required
+                  />
+                  <p class="order-error" id="order-email-error" data-error-for="email" hidden></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-phone">
+                    Telefono <span class="order-hint">(facoltativo)</span>
+                  </label>
+                  <input
+                    class="order-input"
+                    id="order-phone"
+                    type="tel"
+                    autocomplete="tel"
+                    maxlength="30"
+                    aria-describedby="order-phone-hint"
+                  />
+                  <p class="order-hint-line" id="order-phone-hint">
+                    Lo usa il corriere se ha problemi con la consegna: ti consigliamo di lasciarlo.
+                  </p>
+                  <p class="order-error" id="order-phone-error" data-error-for="phone" hidden></p>
+                </div>
+              </div>
+              <div class="order-field">
+                <label for="order-address">Indirizzo</label>
+                <input
+                  class="order-input"
+                  id="order-address"
+                  type="text"
+                  autocomplete="street-address"
+                  placeholder="Via e numero civico"
+                  maxlength="200"
+                  required
+                />
+                <p class="order-error" id="order-address-error" data-error-for="address" hidden></p>
+              </div>
+              <div class="order-pair order-pair--city">
+                <div class="order-field">
+                  <label for="order-postcode">CAP</label>
+                  <input
+                    class="order-input"
+                    id="order-postcode"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="postal-code"
+                    pattern="[0-9]{5}"
+                    placeholder="50123"
+                    maxlength="5"
+                    required
+                  />
+                  <p
+                    class="order-error"
+                    id="order-postcode-error"
+                    data-error-for="postcode"
+                    hidden
+                  ></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-city">Città</label>
+                  <input
+                    class="order-input"
+                    id="order-city"
+                    type="text"
+                    autocomplete="address-level2"
+                    placeholder="Firenze"
+                    maxlength="100"
+                    required
+                  />
+                  <p class="order-error" id="order-city-error" data-error-for="city" hidden></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-province">Provincia</label>
+                  <input
+                    class="order-input"
+                    id="order-province"
+                    type="text"
+                    autocomplete="address-level1"
+                    placeholder="FI"
+                    maxlength="40"
+                    required
+                  />
+                  <p
+                    class="order-error"
+                    id="order-province-error"
+                    data-error-for="province"
+                    hidden
+                  ></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="order-fieldset">
+              <legend>Spedizione</legend>
+              <div class="order-choices">
+                {shippingEntries.map(([key, kind]) => <label class="order-choice">
+                  <input type="radio" name="shipping" value={key} checked={key === 'piego'} />
+                  <span class="order-choice__text">
+                    <b>{kind.label}</b>
+                    <span>{kind.note}</span>
+                  </span>
+                  <span class="order-choice__fee">
+                    {kind.cents === 0 ? formatCents(0) : `+${formatCents(kind.cents)}`}
+                  </span>
+                </label>)}
+              </div>
+              <p class="order-error" id="order-shipping-error" data-error-for="shipping" hidden></p>
+            </fieldset>
+
+            <div class="order-field">
+              <label for="order-notes">Note <span class="order-hint">(facoltative)</span></label>
+              <textarea
+                class="order-input order-input--area"
+                id="order-notes"
+                maxlength={ORDER_NOTES_MAX}
+                aria-describedby="order-notes-hint"
+                placeholder="Una dedica, un orario di consegna, il nome della scuola…"
+              ></textarea>
+              <p class="order-hint-line" id="order-notes-hint">
+                Facoltative, al massimo {ORDER_NOTES_MAX} caratteri.
+              </p>
+              <p class="order-error" id="order-notes-error" data-error-for="notes" hidden></p>
+            </div>
+
+            <div class="order-consent">
+              <label class="order-check">
+                <input
+                  type="checkbox"
+                  id="order-consent"
+                  aria-labelledby="order-consent-label"
+                  aria-describedby="order-consent-hint"
+                  required
+                />
+                <span class="order-check__text">
+                  <span id="order-consent-label">
+                    Acconsento all'uso dei miei dati solo per gestire questo ordine.
+                  </span>
+                  <span class="order-check__hint" id="order-consent-hint">
+                    I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.
+                    <a href={PRIVACY_URL} target="_blank" rel="noopener"
+                      >Informativa
+                      privacy<span class="sr-only">, si apre in una nuova scheda</span></a
+                    >
+                  </span>
+                </span>
+              </label>
+              <p class="order-error" id="order-consent-error" data-error-for="consent" hidden></p>
+            </div>
+
+            <div class="order-turnstile">
+              <div id="order-turnstile" tabindex="-1" data-order-turnstile></div>
+              <p
+                class="order-error"
+                id="order-turnstile-error"
+                data-error-for="turnstile"
+                hidden
+              ></p>
+            </div>
+
+            <div class="order-send">
+              <Button type="submit" primary>Invia l'ordine</Button>
+              <p>Non paghi adesso. Dopo l'invio scarichi il PDF con le istruzioni.</p>
+            </div>
+            <p class="order-status" aria-live="polite" data-order-status></p>
+          </form>
+        ) : null}
+
+        <section class="order-mailto-box" data-order-mailto-box hidden={Boolean(siteKey)}>
+          <h2 class="order-h2" tabindex="-1" data-order-mailto-heading>
+            Mandaci l'ordine via email
+          </h2>
+          <p>
+            Il modulo d'ordine non è attivo in questo momento: scrivici, prepariamo noi l'ordine con
+            i libri della tua borsa.
+          </p>
+          <span data-order-mailto>
+            <Button primary href={mailtoHref}>Scrivi a {ORDER_EMAIL}</Button>
+          </span>
+        </section>
+      </div>
+    </div>
+
+    <section class="order-done" data-order-done hidden>
+      <h1 class="order-page__title" tabindex="-1" data-order-done-heading>
+        Ordine inviato, grazie
+      </h1>
+      <p class="order-done__lede" data-order-done-lede></p>
+      <div class="order-done__pdf">
+        <p>Scarica il PDF della tua richiesta e conservalo: non ti mandiamo una copia via email.</p>
+        <div class="order-done__pdf-row">
+          <span data-order-pdf><Button primary>Scarica il PDF</Button></span>
+          <button type="button" class="order-textbtn" data-order-print hidden>
+            Stampa questa pagina
+          </button>
+        </div>
+        <p class="order-hint-line" aria-live="polite" data-order-pdf-status></p>
+      </div>
+      <ul class="order-done__lines" data-order-done-lines></ul>
+      <p class="order-done__notes" data-order-done-notes hidden></p>
+      <p class="order-done__total">
+        <span data-order-done-total-label></span>
+        <span data-order-done-total></span>
+      </p>
+      <div class="order-next order-next--done">
+        <h2 class="order-h3">Adesso</h2>
+        <ol>
+          <li data-order-done-confirm>{ORDER_STEP_CONFIRM}</li>
+          <li>
+            {ORDER_STEP_PAY}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>":
+            <div class="order-bank">
+              <div class="order-bank__iban">
+                <p class="order-bank__label" id="order-iban-label">IBAN</p>
+                <p class="order-bank__iban-value order-iban" aria-labelledby="order-iban-label">
+                  {formatIban(ORDER_IBAN)}
+                </p>
+                <button type="button" class="order-bank__copy" data-order-copy-iban hidden>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="11" height="11"></rect>
+                    <path d="M5 15V4h11"></path>
+                  </svg>
+                  <span data-order-copy-label>Copia l'IBAN</span>
+                </button>
+              </div>
+              <dl>
+                <div>
+                  <dt>Intestato a</dt>
+                  <dd>{ORDER_ACCOUNT_HOLDER}</dd>
+                </div>
+                <div>
+                  <dt>Banca</dt>
+                  <dd>{ORDER_BANK}</dd>
+                </div>
+                <div>
+                  <dt>BIC</dt>
+                  <dd>{ORDER_BIC}</dd>
+                </div>
+                <div>
+                  <dt>Banca intermediaria (SWIFT)</dt>
+                  <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
+                </div>
+              </dl>
+              <div class="order-bank__paypal">
+                <p>Oppure con PayPal a <b>{ORDER_PAYPAL}</b></p>
+                <a
+                  class="order-bank__paypal-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-order-paypal-link
+                  hidden
+                >
+                  <span data-order-paypal-label>{ORDER_PAYPAL_LINK_LABEL}</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 4h6v6"></path>
+                    <path d="M20 4 10 14"></path>
+                    <path d="M18 14v6H4V6h6"></path>
+                  </svg>
+                  <span class="sr-only"> (si apre in una nuova scheda)</span>
+                </a>
+              </div>
+              <p class="sr-only" aria-live="polite" data-order-announce-done></p>
+            </div>
+          </li>
+          <li>{ORDER_STEP_RECEIPT_LEAD} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+        </ol>
+      </div>
+      <div class="order-done__actions">
+        <Button href="/libri" variant="outline">Torna al catalogo</Button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import { initOrderPage } from './_order-page.client';
+    initOrderPage();
+  </script>
+  <DraftModeQueryListener query={SHOP_PAGE_QUERY} />
+</BaseLayout>

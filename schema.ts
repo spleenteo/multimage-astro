@@ -434,6 +434,26 @@ export const Button = {
   REF: { type: 'item_type', id: 'NT-1f6AdRFuEqgoY824_uw' },
 } as const;
 
+export type Buyer = ItemTypeDefinition<
+  EnvironmentSettings,
+  'AHAz9R8nSfWd3wC_TxUz0g',
+  {
+    name: {
+      type: 'string';
+    };
+    discount: {
+      type: 'integer';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const Buyer = {
+  ID: 'AHAz9R8nSfWd3wC_TxUz0g',
+  REF: { type: 'item_type', id: 'AHAz9R8nSfWd3wC_TxUz0g' },
+} as const;
+
 export type Collection = ItemTypeDefinition<
   EnvironmentSettings,
   '70447',
@@ -726,6 +746,26 @@ export const NewsletterSubscription = {
   REF: { type: 'item_type', id: 'JL95W2TbQkq54DqhCfeN2w' },
 } as const;
 
+export type OrderStep = ItemTypeDefinition<
+  EnvironmentSettings,
+  'dYyd-UOjR3C2vMfBa80r7g',
+  {
+    icon: {
+      type: 'file';
+    };
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+  }
+>;
+export const OrderStep = {
+  ID: 'dYyd-UOjR3C2vMfBa80r7g',
+  REF: { type: 'item_type', id: 'dYyd-UOjR3C2vMfBa80r7g' },
+} as const;
+
 export type Page = ItemTypeDefinition<
   EnvironmentSettings,
   '70448',
@@ -863,6 +903,27 @@ export type SchemaMigration = ItemTypeDefinition<
 export const SchemaMigration = {
   ID: 'EjRfQRvWTDauECjdZHaFQQ',
   REF: { type: 'item_type', id: 'EjRfQRvWTDauECjdZHaFQQ' },
+} as const;
+
+export type Shop = ItemTypeDefinition<
+  EnvironmentSettings,
+  'MqTkBjTbQW6LB1xXvjyv1g',
+  {
+    steps: {
+      type: 'rich_text';
+      blocks: OrderStep;
+    };
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+  }
+>;
+export const Shop = {
+  ID: 'MqTkBjTbQW6LB1xXvjyv1g',
+  REF: { type: 'item_type', id: 'MqTkBjTbQW6LB1xXvjyv1g' },
 } as const;
 
 export type SingleAuthor = ItemTypeDefinition<
@@ -1004,6 +1065,7 @@ export type AnyBlock =
   | MenuExternalItem
   | MenuItem
   | NewsletterSubscription
+  | OrderStep
   | PillsBlock
   | Question
   | Reprint
@@ -1021,6 +1083,7 @@ export type AnyModel =
   | BlogPostOld
   | BlogTag
   | Book
+  | Buyer
   | Collection
   | CoverSize
   | Home
@@ -1030,5 +1093,6 @@ export type AnyModel =
   | Page
   | ProjectComment
   | SchemaMigration
+  | Shop
   | Supplier;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

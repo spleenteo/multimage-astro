@@ -26,4 +26,24 @@
     "Backend": { "type": "worker", "cache": { "enabled": true } },
   },
   "observability": { "enabled": true },
+  // Orders store, shared with the staff app (contract: d1/README.md).
+  // PLACEHOLDER: replaced with the real id from `wrangler d1 create` before the merge; never leave it empty.
+  "d1_databases": [
+    {
+      "binding": "ORDERS",
+      "database_name": "multimage-orders",
+      "database_id": "70d0fa72-96c4-4ec5-b618-ebb5c4da3295",
+      "migrations_dir": "d1/migrations",
+    },
+  ],
+  // Order notification to the shop, sent only from the Email Routing subdomain address.
+  // Bag counters (add, start, emptied, order): aggregate events, no visitor id. See src/lib/bag-events.ts.
+  "analytics_engine_datasets": [{ "binding": "BAG_EVENTS", "dataset": "multimage_bag_events" }],
+  "send_email": [
+    {
+      "name": "ORDER_MAIL",
+      "destination_address": "ordini@multimage.org",
+      "allowed_sender_addresses": ["sito@ordini.multimage.org"],
+    },
+  ],
 }

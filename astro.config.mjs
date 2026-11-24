@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig, envField } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
@@ -90,6 +92,12 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      // Cloudflare Turnstile secret, verified server-side on /api/ordine.
+      TURNSTILE_SECRET_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
       PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN: envField.string({
         context: 'client',
         access: 'public',
@@ -97,6 +105,12 @@ export default defineConfig({
       PUBLIC_SITE_URL: envField.string({
         context: 'client',
         access: 'public',
+      }),
+      // Turnstile site key for the widget on /borsa; public, inlined at build.
+      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
       }),
     },
     validateSecrets: true,
@@ -107,6 +121,19 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // Vercel build and Node dev compile the bindings wrapper against an empty stub; the
+    // Cloudflare build gets the real `cloudflare:workers`.
+    ...(isCloudflare
+      ? {}
+      : {
+          resolve: {
+            alias: {
+              'cloudflare:workers': fileURLToPath(
+                new URL('./src/lib/cloudflare-workers-stub.ts', import.meta.url),
+              ),
+            },
+          },
+        }),
     define: {
       'import.meta.env.DEPLOY_TARGET': JSON.stringify(process.env.DEPLOY_TARGET ?? 'vercel'),
     },

@@ -6,6 +6,8 @@ import BookCarouselSection from '~/components/BookCarouselSection';
 import DetailList from '~/components/DetailList';
 import AuthorsSection from '~/components/AuthorsSection';
 import Button from '~/components/ui/Button';
+import BagAdd from '~/components/BagAdd';
+import { bagBookFor, isPrintInCatalogue } from '~/lib/order';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText, truncateToLength, decodeEntities } from '~/lib/text';
 import { structuredTextToPlainText, hasStructuredTextContent } from '~/lib/datocms/structuredText';
@@ -166,16 +168,27 @@ const furtherEditions = (currentEdition ? printEditions.slice(1) : printEditions
     href: `/libri/${edition.slug}`,
   }));
 
-// There is no cart: the order is an email to ordini@, prefilled with this book.
-const canOrderPrint = !isArchived && !isEbookFormat;
+const coverPalette = coverFieldPalette(book.coverImage?.colors);
+
+// Print books in the catalogue: the bag when priced, the email otherwise and without JavaScript.
+const canOrderPrint = isPrintInCatalogue({ archive: book.archive, format: book.format });
+const bagBook = bagBookFor({
+  id: book.id,
+  slug: book.slug,
+  title: book.title,
+  authors: authorNames,
+  archive: book.archive,
+  format: book.format,
+  price: book.price,
+  coverUrl: book.coverImage?.url ?? null,
+  tint: coverPalette.field,
+});
 const orderHref = buildOrderMailto({
   title: book.title,
   authors: authorNames,
   isbn: book.isbn,
   price: formattedPrice,
 });
-
-const coverPalette = coverFieldPalette(book.coverImage?.colors);
 
 let collectionCarouselTitle: string | null = null;
 let collectionCarouselDescription: string | null = null;
@@ -509,9 +522,7 @@ const seo = sanitizeMetaTags(
                 {formattedPrice ? <p class={styles.price}>{formattedPrice}</p> : null}
                 <div class={styles.actions}>
                   {canOrderPrint ? (
-                    <Button href={orderHref} primary icon="iconoir:mail" iconPosition="left">
-                      Ordina via email
-                    </Button>
+                    <BagAdd book={bagBook} mailto={orderHref} label="Ordina via email" />
                   ) : null}
                   {isEbookFormat && ebookUrl ? (
                     <Button
@@ -549,6 +560,7 @@ const seo = sanitizeMetaTags(
                     <p class={styles.ways}>
                       <a href="/distributori">Trovalo in libreria</a>
                       <a href="/info/ordinare">Come funziona l'ordine</a>
+                      {bagBook ? <a href={orderHref}>oppure scrivici un'email</a> : null}
                     </p>
                   </>
                 ) : null}

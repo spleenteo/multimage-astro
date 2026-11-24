@@ -3,13 +3,65 @@
 /* The card itself stays put; only the cover lifts on hover (DESIGN.md, "Only the Book Floats").
    No overflow clipping: the 3D book may step out of its coloured field, over the card's edges, and
    the card under the pointer rises above its neighbours so the book is never covered. */
+/* The card: the link, plus the bag control beside it (a button cannot sit inside a link). */
+.card {
+  @apply relative h-full;
+}
+
+.card:hover,
+.card:focus-within {
+  z-index: 10;
+}
+
 .root {
   @apply relative flex h-full flex-col bg-white shadow-soft focus-visible:-outline-offset-4;
 }
 
-.root:hover,
-.root:focus-visible {
-  z-index: 10;
+/* Bag control: a white square in the card's bottom right corner, level with the price (centred
+   on the price line, inside the body's padding). The tooltip above it names the action on hover
+   and keyboard focus, and says "Aggiunto alla borsa" after a click. In the bag, the square turns
+   solid navy. */
+.bag {
+  @apply absolute bottom-4 right-6 z-20;
+}
+
+.bagCatalogue {
+  @apply bottom-3 right-5 max-sm:bottom-2 max-sm:right-2;
+}
+
+/* Phones hide the catalogue price: the last text line (the authors) keeps clear of the button. */
+@media (width < 40rem) {
+  .card:has(.bagCatalogue:not([hidden])) .catalogue .body {
+    @apply pr-14;
+  }
+}
+
+.bag[hidden] {
+  display: none;
+}
+
+.bagButton {
+  @apply flex size-11 cursor-pointer items-center justify-center border border-brand-navy/25 bg-white text-brand-navy shadow-soft transition-colors hover:border-brand-navy hover:bg-brand-navy hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy;
+}
+
+.bag[data-in-bag] .bagButton {
+  @apply border-brand-navy bg-brand-navy text-white;
+}
+
+.bagTip {
+  @apply pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap bg-brand-charcoal px-2.5 py-1.5 text-xs font-semibold text-white opacity-0 shadow-soft transition-opacity;
+}
+
+.bag:hover .bagTip,
+.bag:has(:focus-visible) .bagTip,
+.bag[data-flash] .bagTip {
+  @apply opacity-100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bagTip {
+    transition: none;
+  }
 }
 
 .heroPanel {

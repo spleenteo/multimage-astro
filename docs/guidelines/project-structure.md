@@ -72,7 +72,11 @@ description: Fastro is based on and extends the [Astro project structure](https:
 - **`/staff` & `/staff/archivio-catalogo`**
   - Data: `src/pages/staff/index/_graphql.ts`, `src/pages/staff/archivio-catalogo/_graphql.ts`.
   - Primary components: bespoke markup + CSV export script.
-  - Notes: Entire toolset is publicly prerendered; see Security task **S1**.
+  - Notes: gated by the editor session in `src/middleware.ts` (Security task **S1**, resolved).
+- **`/designsystem`**
+  - Data: no query; reads `DESIGN.md` at build time (`src/pages/designsystem/_tokens.ts`).
+  - Primary components: renders `Button`, `BookCard`, `Book3D`, `HomeDoors`, `AuthorCard`, `SupplierCard` and the `BooksCatalogue` / `/borsa` classes with sample data (covers in `public/design-samples/`).
+  - Notes: public and `noindex`, not listed in the sitemap.
 - **`/cerca`**
   - Data: `src/pages/cerca/index.astro` (no GraphQL) plus the Site Search bundle.
   - Primary components: Search form + `public/generated/search-page.client.js`.
@@ -90,6 +94,7 @@ description: Fastro is based on and extends the [Astro project structure](https:
 - **`/api/draft-mode/enable`** mirrors the preview secret guard before redirecting to a relative URL; **`/api/draft-mode/disable`** only clears the cookie but still rejects absolute redirects.
 - **`/api/preview-links`** powers the Dato “Web Previews” plugin: it maps records to website routes via `recordToWebsiteRoute`, generates draft/published URLs (enabling or disabling draft mode on the way), and responds with permissive CORS headers.
 - **`/api/seo-analysis`** is called by the “SEO/Readability Analysis” plugin. It validates the secret, fetches the record via `@datocms/cma-client`, hits the frontend with `draftModeHeaders()` to capture unpublished content, and returns metadata + rendered HTML via `jsdom`.
+- **`/api/ordine`** (POST only) saves a book order to D1 and notifies the shop through the Workers `send_email` binding, after a Turnstile check and a CDA refetch of titles and prices; it is not part of the preview plumbing and fails closed without its secret and bindings. Defences and keys: `docs/guidelines/security.md` § Order endpoint.
 - **`/api/post-deploy`** installs/configures both plugins right after the initial deploy. Because it accepts an arbitrary CMA token and writes preview URLs containing our `SECRET_API_TOKEN`, retire it (or require an extra server-side secret) once staging/production are configured (docs/TODO.md Security task **S5**).
 
 ## Known gaps & violations
