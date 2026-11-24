@@ -47,6 +47,10 @@ type HomeBannerSectionData = {
 
 type HomeSingleBookHighlightData = {
   book: {
+    id: string;
+    slug: string;
+    price: number | null;
+    coverUrl: string | null;
     title: string;
     subtitle?: string | null;
     summary?: string | null;
@@ -129,6 +133,10 @@ function toHighlightData(
 
   return {
     book: {
+      id: card.id,
+      slug: card.slug,
+      price: card.price ?? null,
+      coverUrl: card.coverImage?.url ?? null,
       title: card.title,
       subtitle: card.subtitle ?? null,
       summary: card.summary ?? undefined,
