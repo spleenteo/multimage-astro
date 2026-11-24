@@ -316,13 +316,35 @@ The book's own page opens with the Book Cover Field, full-bleed and flush under 
 - the price as a Playfair figure;
 - the actions.
 
-There is no cart, so the primary action is "Ordina via email": a `mailto:` prefilled with the book (`buildOrderMailto`). The ebook is one white secondary button, "Ebook 2,99 € su Bookrepublic", with an external icon. Under the actions sits one charcoal line, "Spedizione gratuita con piego di libri · Soci: 30% di sconto", followed by two navy links, "Trovalo in libreria" and "Come funziona l'ordine". An out-of-catalogue edition says so in a sentence. When a newer print edition exists, the primary action becomes "Vai alla nuova edizione". Below the hero sits one flat reading column (max 4xl, prose at 68ch), with sections divided by hairlines and left-aligned serif h2s and no cards or shadows:
+The primary action is "Metti in borsa" (`BagAdd`: shopping-bag icon on the one orange button), with a navy 0.875rem status line under it that confirms the add. Without JavaScript, or for a book the bag cannot take, it is "Ordina via email": a `mailto:` prefilled with the book (`buildOrderMailto`). The ebook is one white secondary button, "Ebook 2,99 € su Bookrepublic", with an external icon. Under the actions sits one charcoal line, "Spedizione gratuita con piego di libri · Soci: 30% di sconto", followed by two navy links, "Trovalo in libreria" and "Come funziona l'ordine". An out-of-catalogue edition says so in a sentence. When a newer print edition exists, the primary action becomes "Vai alla nuova edizione". Below the hero sits one flat reading column (max 4xl, prose at 68ch), with sections divided by hairlines and left-aligned serif h2s and no cards or shadows:
 
 - description;
 - Quarta di copertina;
 - Autrice/Autore del libro;
 - Dettagli, holding "Edizione" and "Grafica" in two-column lists;
 - Recensioni (date · author, a linked title, an excerpt with URLs stripped).
+
+### Bag drawer
+
+The bag opens from the right as a native modal `<dialog>` mounted once in `BaseLayout`, opened by every `[data-bag-open]` control (header button, "Metti in borsa" on the book page and the home hero).
+
+- **Sheet:** white, `min(28rem, 100vw)` wide, full height, square. The sheet lift of the Elevation section turned sideways: `-18px 0 45px` navy at 16%. The backdrop is deep navy at 45%. It slides in over 320ms on the same exponential ease-out as the catalogue sheet; under reduced motion there is no transition. The page behind does not scroll while it is open. Under 36rem of height the whole panel scrolls so nothing is clipped.
+- **Head:** a navy-at-15% rule below, 24px side padding. The serif h2 "La tua borsa" (1.5rem, navy) over a Playfair size line ("2 libri · 3 copie", slate, 0.875rem), and a 44px square close button on the right (mist on hover).
+- **Lines:** one row per book on a navy-at-15% hairline: a 48x72 cover on a mist tile, then the title as a serif navy link (underlines on hover), the authors in 0.875rem, and below them the stepper and the line amount. The stepper is two 44px square white buttons around a number, in one 1px navy-at-30% frame; the amount is a Playfair figure. "Togli dalla borsa" is a navy underlined text button, 44px high.
+- **Foot:** on white under a hairline. Totals in a two-column list ("Copie", "Totale a prezzo di copertina" with the Playfair total at 1.5rem), one slate 0.875rem line on free shipping and no payment now, then the surface's one primary: a full-width orange "Completa l'ordine" leading to `/borsa`. "Svuota la borsa" is a centred navy text button; it opens an inline confirm on a mist panel ("Togliere tutti i libri dalla borsa?", a secondary "Sì, svuota", a text button "No, tienili"), never a modal on a modal.
+- **Empty:** the h3 "La borsa è vuota", one sentence and a secondary "Sfoglia il catalogo".
+- **Announcements:** a persistent polite live region inside the dialog announces adds, removals and the count; focus lands on the h2 when the drawer opens and returns to the opener on close.
+
+### Order page (`/borsa`)
+
+A reading page, noindex, whose state lives in the browser: empty, filled, email box, success. The head is a serif navy h1 (3xl, 4xl from 768px) with a Playfair size line in slate and one charcoal lede.
+
+- **Grid:** one column on phones; from 768px a 7fr / 5fr grid with a 48px gap. The mist recap comes first in the DOM (so a screen reader hears the order before the form) and sits on the right; the recap is not sticky, because with its steps and bank box it is taller than a laptop screen.
+- **Recap:** a mist panel (20px padding, 24px from 768px) headed "Nella borsa": one row per book (title, Playfair amount) between hairlines, the totals (copies, price at cover price, the Playfair total at 1.5rem), the "Modifica la borsa" navy text button, and the next steps as a numbered list at 0.875rem with serif navy markers. The white bank box under it carries the IBAN, BIC, intermediary SWIFT and PayPal as a label and value list (side by side from 640px to 767px and from 1280px).
+- **Form:** two fieldsets with serif navy 1.5rem legends, in the field style of Inputs / Fields (44px, 40px from 1024px, textarea for notes). Name pairs and address pairs sit two to a row from 640px. "Ordini come" is a segmented control of four cells (2x2 under 640px, a row from there): navy-at-25% frame, white cells, the checked cell solid navy with a semibold white label, the focus ring drawn on the cell by `:has(:focus-visible)`. Payment choices are a hairline-divided list of radio rows (44px, price right-aligned in Playfair). The consent is a checkbox row with a navy link to the privacy policy.
+- **Errors:** each field's message sits under it in crimson semibold 0.875rem, linked by `aria-describedby`, with `aria-invalid` turning the border crimson; a mist summary box with the same crimson text sits above the send row when the whole send fails, with a navy link to the email way out.
+- **Send:** the page's one primary, orange "Invia l'ordine", with a slate 0.875rem line beside it (stacked on phones). The Turnstile widget sits above it; without a site key the form is replaced by a mist box headed "Mandaci l'ordine via email", and when sending fails the error box offers "mandacelo via email".
+- **Success:** a serif h1 ("Ordine inviato, grazie") that takes focus, a lede, the lines as a hairline list with the total, an "Adesso" list of three steps with the IBAN, PayPal and the receipt address, and an outlined "Torna al catalogo"; the bag is emptied. A failed visitor copy adds a "Stampa questa pagina" text button.
 
 ### Doors (wayfinding strip)
 
@@ -445,6 +467,7 @@ Below 1024px the column is a bottom sheet (max 85dvh): it slides up over 320ms o
 ### Navigation
 
 - **Header:** three navy bands: a top bar of channel links (social colours, white text, uppercase 0.75rem), the logo and search band in deep window navy, the main tabs on navy (uppercase Inter semibold, 1px translucent white border, square). Dropdowns are navy panels with divided rows. Focus ring is white throughout. Below 768px a full-screen navy menu replaces the tabs.
+- **Header bag button:** a "Borsa" control with an inline shopping-bag icon, hidden until the script runs: from 768px a 44px high square button with a translucent white border and an uppercase label, under 768px a 44px square icon button beside search and menu. The book count sits in a white square badge with navy digits, shown only when the bag holds something. It opens the bag drawer.
 - **Header search:** on the deep window navy band, the "Cerca" submit is a solid navy block with a white uppercase label (hover navy at 80%).
 - **Primary navigation (books):** "Catalogo" (`/libri`) and "Collane" are two first-level items of the header menu, with no dropdown and no sub-navigation band. Ebook and In evidenza are catalogue filters, not pages.
 - **Footer:** navy, mist text, white on hover and focus, white focus ring, mist-at-10% squares behind social icons (44px).
