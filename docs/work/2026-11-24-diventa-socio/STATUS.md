@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V1
-step: execute
+slice: V2
+step: plan
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
@@ -30,7 +30,7 @@ Owner answers at opening (2026-11-24):
 
 ## Slices
 
-- [ ] V1 — The page and the form, from the CMS
+- [x] V1 — The page and the form, from the CMS
 - [ ] V2 — Sending the request and the confirmation
 - [ ] V3 — Live on multimage.org
 
@@ -45,3 +45,4 @@ Owner answers at opening (2026-11-24):
 - 2026-11-24 — opening — work opened, technical path: frame, shaping, breadboard and design skipped (outcome clear, form styled like /borsa) — slicing, impact, slices — 10 min — n/a
 - 2026-11-24 — slicing — 3 slices (page+CMS, send path, live); fidelity check skipped (no frame) — impact — 10 min — n/a
 - 2026-11-24 — impact — 2 agents, 24 findings (1 high: live model has subtitle+content, not description; rate limit; links in code; info@ unverified; seed must be published; shared modules) — all applied to slices.md — V1 plan — 15 min — n/a
+- 2026-11-24 — V1 close — page + form from the CMS, schema and seed published, shared form CSS/helpers; gate green; 3 browser checks pending — V2 — ~45 min — n/a
