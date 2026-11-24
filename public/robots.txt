@@ -1,3 +1,5 @@
 User-agent: *
 Disallow: /staff/
 Disallow: /libri/schede/
+# Catalogue filters (?autore=, ?collana=, ?ordine=, …) repeat /libri: not worth a crawl.
+Disallow: /libri?

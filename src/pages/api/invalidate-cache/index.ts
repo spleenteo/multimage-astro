@@ -2,7 +2,10 @@
  * POST /api/invalidate-cache: DatoCMS cache-tags webhook receiver. Cloudflare only.
  *
  * Purges the Workers Cache entries carrying the tags in `entity.attributes.tags`
- * (plus the coarse `site` tag), then triggers the Site Search reindex.
+ * (plus the coarse `site` tag). It does not reindex Site Search: the gateway
+ * Worker's daily Cron Trigger does (src/worker.ts), because a reindex per publish
+ * sent the crawler over freshly purged pages, and a bulk edit (thousands of
+ * webhooks) pushed the Worker past the Free plan CPU limit (2026-11-23).
  *
  * Why `locals.cfContext.cache.purge` and not `context.cache.invalidate` or a
  * direct import of the Workers runtime module: the Astro provider's `invalidate`
@@ -21,7 +24,6 @@
 import type { APIRoute } from 'astro';
 import { CACHE_INVALIDATION_WEBHOOK_SECRET } from 'astro:env/server';
 import { invalidationTags, purgeInBatches, type PurgeFn } from '~/lib/datocms/cacheInvalidation';
-import { reindexSiteSearch } from '~/lib/datocms/siteSearch';
 
 export const prerender = false;
 
@@ -85,9 +87,8 @@ export const POST: APIRoute = async ({ request, locals, cache }) => {
     return reply({ error: 'Purge failed', batches: result.batches, errors: result.errors }, 502);
   }
 
-  const reindexed = await reindexSiteSearch(LOG);
   console.log(
-    `${LOG} 200 purged ${tags.length} tags in ${result.batches} batch(es), ${dropped} dropped, reindexed: ${reindexed}`,
+    `${LOG} 200 purged ${tags.length} tags in ${result.batches} batch(es), ${dropped} dropped`,
   );
-  return reply({ purged: tags.length, batches: result.batches, reindexed }, 200);
+  return reply({ purged: tags.length, batches: result.batches }, 200);
 };

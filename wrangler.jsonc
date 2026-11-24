@@ -38,6 +38,8 @@
   ],
   // Order notification to the shop, sent only from the Email Routing subdomain address.
   // Bag counters (add, start, emptied, order): aggregate events, no visitor id. See src/lib/bag-events.ts.
+  // Daily Site Search reindex (src/worker.ts `scheduled`), 02:00 UTC: 03:00 in Italy in winter, 04:00 in summer.
+  "triggers": { "crons": ["0 2 * * *"] },
   "analytics_engine_datasets": [{ "binding": "BAG_EVENTS", "dataset": "multimage_bag_events" }],
   "send_email": [
     {

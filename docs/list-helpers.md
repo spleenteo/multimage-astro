@@ -37,7 +37,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Notes: the purge function is injected, so it runs under plain `tsx`; checked by `npm run check:cache-tags`.
 - **`siteSearch` helper** (`src/lib/datocms/siteSearch.ts`)
   - Purpose: `reindexSiteSearch(logPrefix)` triggers the Site Search build trigger through the CMA; best-effort, returns false (no throw) when the tokens are missing or the call fails.
-  - Used in: `/api/revalidate`, `/api/invalidate-cache`.
+  - Used in: `/api/revalidate` (Vercel). On Cloudflare the daily Cron Trigger in `src/worker.ts` makes the same CMA call directly (`astro:env` is not available there).
   - Notes: needs `DATOCMS_CMA_TOKEN` and `SITE_SEARCH_BUILD_TRIGGER_ID`; imports `astro:env/server`, so it does not load under plain `tsx`.
 - **Cache-tags check** (`check.ts` in scripts/cache-tags)
   - Purpose: no-network check of `decidePageTags`, `addCacheTags`, `invalidationTags` and `purgeInBatches` (stub purge function), printing `OK`/`MISMATCH` per case.

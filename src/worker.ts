@@ -13,6 +13,14 @@
 //   `/magazine?categoria=<slug>` (the category filter): it gets its own entry,
 //   and the page's cache tags purge every variant together.
 //
+// - Cron Trigger (wrangler.jsonc `triggers.crons`, once a day at night):
+//   re-spiders the DatoCMS Site Search index through the CMA build trigger
+//   `SITE_SEARCH_BUILD_TRIGGER_ID` (with `DATOCMS_CMA_TOKEN`). It replaces the
+//   reindex per publish of /api/invalidate-cache: the crawler then reads a warm
+//   cache once a day instead of purged pages after every publish. The same call
+//   as `reindexSiteSearch` (src/lib/datocms/siteSearch.ts), which `astro:env`
+//   keeps out of this file.
+//
 // The cookie name rule is copied from src/lib/draftMode.ts:9 (keep in sync; the
 // worker cannot import `astro:env`).
 //
@@ -54,5 +62,30 @@ export default {
       init = { cf: { cacheKey: cacheKeyFor(url) } } as RequestInit;
     }
     return ctx.exports.Backend.fetch(request, init);
+  },
+
+  async scheduled(_controller: unknown, env: any, ctx: any) {
+    const token = env.DATOCMS_CMA_TOKEN?.trim();
+    const trigger = env.SITE_SEARCH_BUILD_TRIGGER_ID?.trim();
+    if (!token || !trigger) {
+      console.log('[site-search] cron: reindex skipped (token or trigger id unset)');
+      return;
+    }
+    ctx.waitUntil(
+      fetch(`https://site-api.datocms.com/build-triggers/${encodeURIComponent(trigger)}/reindex`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'X-Api-Version': '3',
+        },
+      }).then(
+        (res) =>
+          console.log(
+            `[site-search] cron: reindex ${res.ok ? 'triggered' : 'failed'} ${res.status}`,
+          ),
+        (error) => console.error('[site-search] cron: reindex failed', error),
+      ),
+    );
   },
 };
