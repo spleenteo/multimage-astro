@@ -47,5 +47,11 @@
       "destination_address": "ordini@multimage.org",
       "allowed_sender_addresses": ["sito@ordini.multimage.org"],
     },
+    // Membership request notice to the association mailbox (POST /api/socio), same sender as ORDER_MAIL.
+    {
+      "name": "MEMBERSHIP_MAIL",
+      "destination_address": "info@multimage.org",
+      "allowed_sender_addresses": ["sito@ordini.multimage.org"],
+    },
   ],
 }

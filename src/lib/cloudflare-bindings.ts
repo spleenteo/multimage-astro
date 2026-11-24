@@ -1,5 +1,5 @@
-// Access to the Cloudflare bindings (D1, send_email, Analytics Engine) for the order and event
-// endpoints. Only /api/ordine and /api/evento import this module. On the Cloudflare build `cloudflare:workers`
+// Access to the Cloudflare bindings (D1, send_email, Analytics Engine) for the order, membership and
+// event endpoints. Only /api/ordine, /api/socio and /api/evento import this module. On the Cloudflare build `cloudflare:workers`
 // is the real module and `env` holds the bindings of wrangler.jsonc; on the Vercel
 // build and in plain `astro dev` the Vite alias in astro.config.mjs points it at an
 // empty stub, so both getters return null.
@@ -45,5 +45,11 @@ export function getOrderDb(): OrderDb | null {
 /** The ORDER_MAIL send_email binding, or null when it is not available. */
 export function getOrderMail(): OrderMail | null {
   const mail = env.ORDER_MAIL as Partial<OrderMail> | undefined;
+  return mail && typeof mail.send === 'function' ? (mail as OrderMail) : null;
+}
+
+/** The MEMBERSHIP_MAIL send_email binding (/api/socio), or null when it is not available. */
+export function getMembershipMail(): OrderMail | null {
+  const mail = env.MEMBERSHIP_MAIL as Partial<OrderMail> | undefined;
   return mail && typeof mail.send === 'function' ? (mail as OrderMail) : null;
 }
