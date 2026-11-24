@@ -19,3 +19,8 @@
 - A plan's absence grep anchors on the code form (`\.innerHTML`, not `innerHTML`) so a comment naming the rule doesn't trip it, and a grep's context window is counted against the real file.
 - Dev-server checks go to the runner/conductor, not the executor's Verified line (executor.md forbids executors starting servers).
 - In the gateway/Backend Worker, an endpoint that answers before reading the body logs "Can't read from request stream after response has been sent" in workerd; the client's answer is correct, so judge it as gateway noise, not an endpoint failure.
+- A print stylesheet that hides everything but one section must be scoped to the state where that section shows (e.g. body:has(.x:not([hidden]))), or printing the page in any other state gives a blank sheet.
+- A sanitiser that drops control characters must first turn \n, \r and \t into spaces, or multi-line user text runs its words together.
+- A document the visitor keeps (PDF, email) must say the same sequence as the page: check each step against the page's own list, and never add a clause the plan did not write.
+- A fix round must not reword text the user dictated: name the binding strings in the fix instruction, and the reviewer checks them verbatim.
+- Docs describing endpoint behaviour (503 conditions, dev path) are checked line by line against the endpoint's condition order, not paraphrased from the plan.
