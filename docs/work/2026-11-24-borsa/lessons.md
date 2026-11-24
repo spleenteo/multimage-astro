@@ -10,3 +10,7 @@
 - The CDA rejects a whole `filter: { id: { in } }` query when one id is not a valid ItemId: pre-filter ids by format and treat a CDA error as a safe failure.
 - A production-mode check of the Cloudflare build runs with `npx wrangler dev --local -c dist/server/wrangler.json`, adding `--compatibility-date` when the bundled workerd is older; `astro preview` and `.wrangler/deploy/config.json` do not start it.
 - An executor that skips a step of its Verified line lists it under Concerns, not only under Tests.
+- A DOM dump for a static detector is taken before injecting test scripts (axe) and without the dev toolbar; otherwise the detector scans the tool's own source.
+- Impeccable detector 4.8.2 matches ignoreValues by value only for overused-font; other rules take `value: "*"` with `files` globs, and file-scoped ignores never apply to rendered-DOM scans: triage those by hand.
+- A rollback or fallback check in a user note states what the visitor sees at each step from the client code (which state shows before and after a submit), not from the endpoint's answer alone.
+- A plan rule on docs language ("new and rewritten text in English") is checked on every new line of the diff, not only on the lines a finding names.
