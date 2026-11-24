@@ -170,6 +170,7 @@ export type OrderFieldKey =
   | 'email'
   | 'phone'
   | 'address'
+  | 'postcode'
   | 'city'
   | 'province'
   | 'shipping'
@@ -182,6 +183,8 @@ export type OrderFields = {
   email: string;
   phone: string;
   address: string;
+  /** Italian CAP, five digits. Stored with the city in the `city` column (`orderPlace`). */
+  postcode: string;
   city: string;
   province: string;
   shipping: string;
@@ -276,7 +279,8 @@ export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
     "L'email non è completa: controlla la chiocciola e il dominio, per esempio nome@esempio.it.",
   phone: 'Il telefono può avere solo cifre, spazi e il segno +: correggilo o lascialo vuoto.',
   address: 'Scrivi via e numero civico per la spedizione.',
-  city: 'Scrivi CAP e città, per esempio 50123 Firenze.',
+  postcode: 'Scrivi il CAP: cinque cifre, per esempio 50123.',
+  city: 'Scrivi la città, per esempio Firenze.',
   province: 'Scrivi la provincia, per esempio FI.',
   shipping: 'Scegli come spedire i libri.',
   buyer: 'Scegli come ordini: privato, scuola, associazione o libreria.',
@@ -287,6 +291,7 @@ export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
 const EMAIL_EMPTY_MESSAGE = "Scrivi la tua email: ci serve per risponderti sull'ordine.";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_PATTERN = /^[+0-9 ()./-]{6,30}$/;
+const POSTCODE_PATTERN = /^\d{5}$/;
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;
 
 const has = (obj: object, key: string): boolean => Object.prototype.hasOwnProperty.call(obj, key);
@@ -308,7 +313,8 @@ export function validateOrderFields(f: OrderFields): Partial<Record<OrderFieldKe
   if (phone !== '' && (CONTROL_CHARS.test(phone) || !PHONE_PATTERN.test(phone)))
     errors.phone = m.phone;
   if (!inRange(f.address.trim(), 3, 200)) errors.address = m.address;
-  if (!inRange(f.city.trim(), 3, 100)) errors.city = m.city;
+  if (!POSTCODE_PATTERN.test(f.postcode.trim())) errors.postcode = m.postcode;
+  if (!inRange(f.city.trim(), 2, 100)) errors.city = m.city;
   if (!inRange(f.province.trim(), 2, 40)) errors.province = m.province;
   if (!has(SHIPPING_KINDS, f.shipping.trim())) errors.shipping = m.shipping;
   if (!has(BUYER_KINDS, f.buyer.trim())) errors.buyer = m.buyer;
@@ -350,6 +356,7 @@ export function parseOrderRequest(body: unknown): ParseResult {
     email: text(o.email),
     phone: text(o.phone),
     address: text(o.address),
+    postcode: text(o.postcode),
     city: text(o.city),
     province: text(o.province),
     shipping: text(o.shipping),
@@ -491,6 +498,11 @@ export const ORDER_COLUMNS = [
   'discount_cents',
 ] as const;
 
+/** CAP and city as one string ("50123 Firenze"): the `city` column, the email and the PDF. */
+export function orderPlace(f: Pick<OrderFields, 'postcode' | 'city'>): string {
+  return [f.postcode.trim(), f.city.trim()].filter(Boolean).join(' ');
+}
+
 /** The values of one `orders` row, in `ORDER_COLUMNS` order; an empty phone or notes is NULL. */
 export function orderRow(data: {
   order: OrderRequest;
@@ -508,7 +520,7 @@ export function orderRow(data: {
     order.email,
     order.phone || null,
     order.address,
-    order.city,
+    orderPlace(order),
     order.province,
     order.shipping,
     order.buyer,
@@ -589,7 +601,7 @@ export function orderEmail(data: {
     `Nome e cognome: ${order.name}`,
     `Email: ${order.email}`,
     `Telefono: ${order.phone || 'non indicato'}`,
-    `Indirizzo: ${order.address}, ${order.city} (${order.province})`,
+    `Indirizzo: ${order.address}, ${orderPlace(order)} (${order.province})`,
     '',
     'Libri',
     ...lines.map(

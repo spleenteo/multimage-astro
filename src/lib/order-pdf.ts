@@ -18,6 +18,7 @@ import {
   formatCents,
   formatDiscount,
   formatIban,
+  orderPlace,
   orderTotalLabel,
   type BuyerKind,
   type OrderFields,
@@ -108,7 +109,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('heading', 'Spedizione a');
   add('text', buyer.name);
   add('text', buyer.address);
-  add('text', `${buyer.city} (${buyer.province})`);
+  add('text', `${orderPlace(buyer)} (${buyer.province})`);
   add('text', `Email: ${buyer.email}`);
   if (buyer.phone) add('text', `Telefono: ${buyer.phone}`);
   add('text', `Ordini come: ${BUYER_KINDS[buyer.buyer as BuyerKind] ?? buyer.buyer}`);

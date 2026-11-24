@@ -25,7 +25,7 @@ The `orders` table is the contract between two Workers: this site and the separa
 | `email`          | TEXT NULL                | Buyer email; NULL once anonymised                                                                               | site (INSERT), staff (anonymise)     |
 | `phone`          | TEXT NULL                | Buyer phone, optional; NULL once anonymised                                                                     | site (INSERT), staff (anonymise)     |
 | `address`        | TEXT NULL                | Street address; NULL once anonymised                                                                            | site (INSERT), staff (anonymise)     |
-| `city`           | TEXT NOT NULL            | Shipping city                                                                                                   | site (INSERT)                        |
+| `city`           | TEXT NOT NULL            | Shipping CAP and city, "50123 Firenze" (two form fields, joined by the site)                                    | site (INSERT)                        |
 | `province`       | TEXT NOT NULL            | Shipping province                                                                                               | site (INSERT)                        |
 | `shipping_kind`  | TEXT NOT NULL            | `piego` or `rapida`                                                                                             | site (INSERT)                        |
 | `buyer_kind`     | TEXT NOT NULL            | `privato`, `scuola`, `associazione` or `libreria`                                                               | site (INSERT)                        |

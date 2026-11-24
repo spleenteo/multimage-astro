@@ -46,6 +46,7 @@ const ERROR_KEYS = [
   'email',
   'phone',
   'address',
+  'postcode',
   'city',
   'province',
   'shipping',
@@ -66,8 +67,25 @@ const MSG = {
     'Nessuno dei libri nella borsa si può ancora ordinare dal sito: scrivici, ti aiutiamo noi.',
   generic:
     "Non siamo riusciti a inviare l'ordine. Riprova tra qualche minuto, oppure mandacelo via email.",
-  checkFields: 'Controlla i campi segnati.',
 } as const;
+
+// The names the error summary links to, as the labels and legends read.
+const FIELD_NAMES: Record<ErrorKey, string> = {
+  name: 'Nome e cognome',
+  email: 'Email',
+  phone: 'Telefono',
+  address: 'Indirizzo',
+  postcode: 'CAP',
+  city: 'Città',
+  province: 'Provincia',
+  shipping: 'Spedizione',
+  buyer: 'Ordini come',
+  notes: 'Note',
+  consent: "Consenso all'uso dei dati",
+  turnstile: 'Verifica anti-spam',
+};
+
+const checkFieldsLabel = (n: number) => (n === 1 ? 'Controlla 1 campo:' : `Controlla ${n} campi:`);
 
 const isErrorKey = (k: string): k is ErrorKey => (ERROR_KEYS as readonly string[]).includes(k);
 
@@ -97,6 +115,7 @@ export function initOrderPage(): void {
   const mailtoBox = $('[data-order-mailto-box]');
   const formError = $('[data-order-form-error]');
   const formErrorText = $('[data-order-form-error-text]');
+  const formErrorList = $('[data-order-form-error-list]');
   const status = $('[data-order-status]');
   const done = $('[data-order-done]');
 
@@ -180,18 +199,43 @@ export function initOrderPage(): void {
     formErrorText.textContent = text;
     const mailto = formError.querySelector<HTMLElement>('[data-order-mailto]');
     if (mailto) mailto.hidden = !withMailto;
+    if (formErrorList) {
+      formErrorList.replaceChildren();
+      formErrorList.hidden = true;
+    }
     formError.hidden = false;
   };
 
   const hideFormError = () => {
     if (!formError || !formErrorText) return;
     formErrorText.textContent = '';
+    formErrorList?.replaceChildren();
     formError.hidden = true;
   };
 
-  const focusFirstError = (keys: ErrorKey[]) => {
-    const first = ERROR_KEYS.find((k) => keys.includes(k));
-    if (first) focusTarget(first)?.focus();
+  // The summary of invalid fields (client check or server answer): "Controlla N campi:" and one
+  // link per field, in DOM order, each moving focus to its control. Focus goes to the summary.
+  const showFieldSummary = (keys: ErrorKey[]) => {
+    const ordered = ERROR_KEYS.filter((k) => keys.includes(k));
+    showFormError(checkFieldsLabel(ordered.length), false);
+    if (formErrorList) {
+      formErrorList.replaceChildren(
+        ...ordered.map((key) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.textContent = FIELD_NAMES[key];
+          a.setAttribute('href', `#order-${key}-error`);
+          a.addEventListener('click', (event) => {
+            event.preventDefault();
+            focusTarget(key)?.focus();
+          });
+          li.append(a);
+          return li;
+        }),
+      );
+      formErrorList.hidden = ordered.length === 0;
+    }
+    formError?.focus();
   };
 
   // --- Fields -------------------------------------------------------------
@@ -203,6 +247,7 @@ export function initOrderPage(): void {
       email: val('email'),
       phone: val('phone'),
       address: val('address'),
+      postcode: val('postcode'),
       city: val('city'),
       province: val('province'),
       shipping:
@@ -461,8 +506,7 @@ export function initOrderPage(): void {
           break;
         }
         keys.forEach((k) => setError(k, ORDER_FIELD_MESSAGES[k]));
-        showFormError(MSG.checkFields, false);
-        focusFirstError(keys);
+        showFieldSummary(keys);
         break;
       }
       case 'turnstile':
@@ -515,7 +559,7 @@ export function initOrderPage(): void {
       keys.push('turnstile');
     }
     if (keys.length > 0) {
-      focusFirstError(keys);
+      showFieldSummary(keys);
       return;
     }
 

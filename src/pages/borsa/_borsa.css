@@ -206,9 +206,10 @@
   @apply grid grid-cols-1 gap-x-4 sm:grid-cols-2;
 }
 
+/* CAP, città, provincia: one column on phones, one row from 640px. */
 @media (min-width: 640px) {
   .order-pair--city {
-    grid-template-columns: minmax(0, 1fr) 7rem;
+    grid-template-columns: 6.5rem minmax(0, 1fr) 6.5rem;
   }
 }
 
@@ -335,8 +336,17 @@
   outline-offset: 2px;
 }
 
+/* The error summary: crimson text on mist; in a list, each field is a navy link to it. */
 .order-form-error {
   @apply mb-4 bg-brand-mist p-3 text-sm font-semibold text-brand-crimson;
+}
+
+.order-form-error ul {
+  @apply mt-1.5 space-y-0.5;
+}
+
+.order-form-error li a {
+  @apply inline-flex min-h-11 items-center md:min-h-8;
 }
 
 .order-form-error a {

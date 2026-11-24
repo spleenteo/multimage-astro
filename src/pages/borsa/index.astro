@@ -166,13 +166,33 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               </div>
               <div class="order-pair order-pair--city">
                 <div class="order-field">
-                  <label for="order-city">CAP e città</label>
+                  <label for="order-postcode">CAP</label>
+                  <input
+                    class="order-input"
+                    id="order-postcode"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="postal-code"
+                    pattern="[0-9]{5}"
+                    placeholder="50123"
+                    maxlength="5"
+                    required
+                  />
+                  <p
+                    class="order-error"
+                    id="order-postcode-error"
+                    data-error-for="postcode"
+                    hidden
+                  ></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-city">Città</label>
                   <input
                     class="order-input"
                     id="order-city"
                     type="text"
-                    autocomplete="postal-code"
-                    placeholder="50123 Firenze"
+                    autocomplete="address-level2"
+                    placeholder="Firenze"
                     maxlength="100"
                     required
                   />
@@ -286,12 +306,15 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               ></p>
             </div>
 
-            <p class="order-form-error" role="alert" data-order-form-error hidden>
-              <span data-order-form-error-text></span>
-              <span data-order-mailto hidden>
-                <a href={mailtoHref}>mandacelo via email</a>
-              </span>
-            </p>
+            <div class="order-form-error" role="alert" tabindex="-1" data-order-form-error hidden>
+              <p>
+                <span data-order-form-error-text></span>
+                <span data-order-mailto hidden>
+                  <a href={mailtoHref}>mandacelo via email</a>
+                </span>
+              </p>
+              <ul data-order-form-error-list hidden></ul>
+            </div>
 
             <div class="order-send">
               <Button type="submit" primary>Invia l'ordine</Button>
