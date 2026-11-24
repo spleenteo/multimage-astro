@@ -90,6 +90,7 @@ export function initMembershipPage(): void {
     const val = (key: string) => $<HTMLInputElement>(`#socio-${key}`)?.value ?? '';
     const checked = (name: string) =>
       Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`));
+    const areas = checked('areas').map((el) => el.value);
     return {
       email: val('email'),
       firstName: val('firstName'),
@@ -104,8 +105,8 @@ export function initMembershipPage(): void {
       country: val('country'),
       fee: checked('fee')[0]?.value ?? '',
       payment: checked('payment')[0]?.value ?? '',
-      areas: checked('areas').map((el) => el.value),
-      areasOther: val('areasOther'),
+      areas,
+      areasOther: areas.includes(AREA_OTHER) ? val('areasOther') : '',
       consent: $<HTMLInputElement>('#socio-consent')?.checked ?? false,
     };
   };
@@ -178,7 +179,10 @@ export function initMembershipPage(): void {
   const onFieldChange = (event: Event) => {
     const target = event.target as HTMLInputElement | null;
     if (!target) return;
-    if (target.name === 'areas') syncOthers();
+    if (target.name === 'areas') {
+      syncOthers();
+      if (!readFields().areas.includes(AREA_OTHER)) clearError('areasOther');
+    }
     const key = target.name || target.id.replace(/^socio-/, '');
     if (!isErrorKey(key) || key === 'turnstile') return;
     const el = errorEl(key);

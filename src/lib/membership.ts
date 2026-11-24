@@ -81,7 +81,7 @@ export const MEMBERSHIP_LABELS: Record<MembershipFieldKey, string> = {
   address1: 'Indirizzo',
   address2: 'Indirizzo, seconda riga (facoltativo)',
   city: 'Città',
-  region: 'Provincia o regione (facoltativo)',
+  region: 'Provincia (facoltativo)',
   postcode: 'CAP',
   country: 'Paese',
   fee: 'Tipo di quota',
@@ -133,7 +133,6 @@ const POSTCODE_PATTERN = /^[A-Za-z0-9 -]+$/;
 const FEE_ID_PATTERN = /^[A-Za-z0-9_-]{1,40}$/;
 const AREA_ID_PATTERN = /^[A-Za-z0-9_-]{1,40}$/;
 const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
-// eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;
 
 const has = (obj: object, key: string): boolean => Object.prototype.hasOwnProperty.call(obj, key);

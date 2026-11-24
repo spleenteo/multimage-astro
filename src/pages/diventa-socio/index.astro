@@ -1,7 +1,7 @@
 ---
 // /diventa-socio: the membership page. Server-rendered and cached like every page, identical for
 // every visitor: no cookie. Title, subtitle, text, fee tiers and collaboration areas come from the
-// Membership singleton in DatoCMS. The markup contract the client script (T7) binds to: the
+// Membership singleton in DatoCMS. The markup contract the page script `_membership-page.client.ts` binds to: the
 // root `data-socio-page`, the form `data-socio-form`, control ids `socio-<key>` (keys of
 // MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
 // error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
@@ -86,7 +86,6 @@ type TextField = {
   max?: number;
   required: boolean;
   placeholder?: string;
-  inputmode?: 'numeric';
   value?: string;
 };
 const email: TextField = {
@@ -167,6 +166,13 @@ const country: TextField = {
 // the postcode, city and region row.
 const personalRows: TextField[][] = [[email], [firstName, lastName], [birthDate, birthPlace]];
 const addressRows: TextField[][] = [[address1], [address2], [postcode, city, region], [country]];
+const fieldGroups = [
+  { legend: 'I tuoi dati', rows: personalRows },
+  { legend: 'Indirizzo', rows: addressRows },
+];
+// Two fields share a row as a pair; the postcode / city / region row has its own column widths.
+const rowClass = (n: number) =>
+  n === 2 ? 'order-pair' : n === 3 ? 'order-pair order-pair--city' : undefined;
 const paymentEntries = Object.entries(PAYMENT_METHODS);
 ---
 
@@ -221,9 +227,9 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
             <ul data-socio-form-error-list hidden></ul>
           </div>
 
-          <fieldset class="order-fieldset">
-            <legend>I tuoi dati</legend>
-            {personalRows.map((row) => <div class:list={[row.length > 1 && 'order-pair']}>
+          {fieldGroups.map((group) => <fieldset class="order-fieldset">
+            <legend>{group.legend}</legend>
+            {group.rows.map((row) => <div class:list={[rowClass(row.length)]}>
               {row.map((f) => <div class="order-field">
                 <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
                 <input
@@ -235,38 +241,13 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
                   maxlength={f.max}
                   min={f.type === 'date' ? MEMBERSHIP_BIRTH_DATE_MIN : undefined}
                   placeholder={f.placeholder}
-                  required={f.required}
-                />
-                <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
-              </div>)}
-            </div>)}
-          </fieldset>
-
-          <fieldset class="order-fieldset">
-            <legend>Indirizzo</legend>
-            {addressRows.map((row) => <div
-              class:list={[
-                row.length === 2 && 'order-pair',
-                row.length === 3 && 'order-pair order-pair--city',
-              ]}
-            >
-              {row.map((f) => <div class="order-field">
-                <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
-                <input
-                  class="order-input"
-                  id={`socio-${f.key}`}
-                  name={f.key}
-                  type="text"
-                  autocomplete={f.autocomplete}
-                  maxlength={f.max}
-                  placeholder={f.placeholder}
                   value={f.value}
                   required={f.required}
                 />
                 <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
               </div>)}
             </div>)}
-          </fieldset>
+          </fieldset>)}
 
           <fieldset class="order-fieldset">
             <legend>Quota</legend>
