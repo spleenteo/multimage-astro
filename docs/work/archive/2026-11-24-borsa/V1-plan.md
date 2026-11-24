@@ -8,7 +8,7 @@ updated: 2026-11-24
 
 # V1 plan — The bag: add, see, change, empty
 
-**Mandate**: [slices.md § V1](slices.md#v1--the-bag-add-see-change-empty) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [accessibility.md](../../guidelines/accessibility.md), [blocks-and-components.md](../../guidelines/blocks-and-components.md), [performance.md](../../guidelines/performance.md), [DESIGN.md](../../../DESIGN.md) (Colors, Buttons, Elevation, Book Page) · **Visual**: [borsa-mock.html](../../design/borsa/borsa-mock.html) · **Lessons**: [lessons.md](lessons.md) (none yet) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V1](slices.md#v1--the-bag-add-see-change-empty) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [accessibility.md](../../../guidelines/accessibility.md), [blocks-and-components.md](../../../guidelines/blocks-and-components.md), [performance.md](../../../guidelines/performance.md), [DESIGN.md](../../../../DESIGN.md) (Colors, Buttons, Elevation, Book Page) · **Visual**: [borsa-mock.html](../../../design/borsa/borsa-mock.html) · **Lessons**: [lessons.md](lessons.md) (none yet) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. T1: `src/lib/order.ts`, which imports nothing. It holds ordini@, the cap of 20, the storage key and `BagItem`, plus the two orderable rules and helpers for cents, totals, euro format, Italian count labels, `toBagItem` and `bagBookFor`. T2: `ORDER_EMAIL` moves there (books.ts and /distributori import it); the stale "no cart" comment is fixed.

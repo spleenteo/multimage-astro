@@ -8,7 +8,7 @@ updated: 2026-11-24
 
 # V3 plan — Hardening, docs and handover
 
-**Mandate**: [slices.md § V3](slices.md#v3--hardening-docs-and-handover) (with the impact corrections in [V3-packet.md](V3-packet.md)) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [security.md](../../guidelines/security.md), [operations.md](../../guidelines/operations.md), [accessibility.md](../../guidelines/accessibility.md), [DESIGN.md](../../../DESIGN.md) · **Context**: [spike-email.md](spike-email.md), [shaping.md](shaping.md) B5.3–B5.4, [V2-plan.md](V2-plan.md) (decisions) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V3](slices.md#v3--hardening-docs-and-handover) (with the impact corrections in [V3-packet.md](V3-packet.md)) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [security.md](../../../guidelines/security.md), [operations.md](../../../guidelines/operations.md), [accessibility.md](../../../guidelines/accessibility.md), [DESIGN.md](../../../../DESIGN.md) · **Context**: [spike-email.md](spike-email.md), [shaping.md](shaping.md) B5.3–B5.4, [V2-plan.md](V2-plan.md) (decisions) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. T5 (conductor): Impeccable detector and axe (WCAG 2.2 A/AA) on the bag drawer, `/borsa` (empty, filled) and the success state at 390px and 1280px, in dev with empty keys; a real finding is fixed by an executor before the docs are written.

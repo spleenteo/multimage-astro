@@ -8,7 +8,7 @@ updated: 2026-11-24
 
 # V6 plan — Member discount (soci 30%)
 
-**Mandate**: [slices.md § V6](slices.md#v6--member-discount-soci-30) (in [V6-packet.md](V6-packet.md); no separate impact review: the blast radius below was traced in the code) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [security.md](../../guidelines/security.md) § Order endpoint, [accessibility.md](../../guidelines/accessibility.md), [DESIGN.md](../../../DESIGN.md) § Order page · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V6](slices.md#v6--member-discount-soci-30) (in [V6-packet.md](V6-packet.md); no separate impact review: the blast radius below was traced in the code) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [security.md](../../../guidelines/security.md) § Order endpoint, [accessibility.md](../../../guidelines/accessibility.md), [DESIGN.md](../../../../DESIGN.md) § Order page · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. T1: `order.ts` gains the 30% member discount (books only, never shipping), the `member` field, two D1 columns (migration 0002) and the email lines; the endpoint recomputes it on the server and returns `member` and `discount`.

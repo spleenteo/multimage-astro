@@ -7,6 +7,7 @@ work: borsa
 stacks: [astro, datocms]
 base: main
 updated: 2026-11-24
+archived: 2026-11-24
 tags: [work, borsa]
 description: "A 'bag' (not an e-commerce cart) where visitors put books: titles, editable quantities, total copies and total amount at cover price, emptiable. It ends in a form (name, email, shipping address, notes) that sends the order to ordini@multimage.org (read by Olivier) and a copy to the visitor. Payment stays a bank transfer after shipping. Multimage is an association with promotional-only sales: no transactions, no accounts."
 ---

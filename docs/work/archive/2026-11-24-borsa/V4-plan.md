@@ -8,7 +8,7 @@ updated: 2026-11-24
 
 # V4 plan — Orders in D1, notification through Cloudflare, no Resend
 
-**Mandate**: [slices.md § V4](slices.md#v4--orders-in-d1-notification-through-cloudflare-no-resend) (with its impact corrections, in [V4-packet.md](V4-packet.md)) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md), [security.md](../../guidelines/security.md) § Order endpoint, [operations.md](../../guidelines/operations.md), [caching.md](../../guidelines/caching.md) · **Context**: [shaping.md](shaping.md) § Revision (B5.3′, B5.5, B5.6), [spike-cloudflare-only.md](spike-cloudflare-only.md) A5–A9, B2–B4, E · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
+**Mandate**: [slices.md § V4](slices.md#v4--orders-in-d1-notification-through-cloudflare-no-resend) (with its impact corrections, in [V4-packet.md](V4-packet.md)) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md), [security.md](../../../guidelines/security.md) § Order endpoint, [operations.md](../../../guidelines/operations.md), [caching.md](../../../guidelines/caching.md) · **Context**: [shaping.md](shaping.md) § Revision (B5.3′, B5.5, B5.6), [spike-cloudflare-only.md](spike-cloudflare-only.md) A5–A9, B2–B4, E · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md)
 
 **Summary**
 1. T1: D1 migration `d1/migrations/0001_orders.sql`, the table contract `d1/README.md`, and the `ORDERS` (D1, placeholder id) and `ORDER_MAIL` (`send_email`) bindings in `wrangler.jsonc`.
