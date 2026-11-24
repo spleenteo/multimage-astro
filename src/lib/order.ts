@@ -444,6 +444,23 @@ export function formatDiscount(cents: number): string {
 export const ORDER_SUBTOTAL_LABEL = 'Libri a prezzo di copertina';
 export const ORDER_TOTAL_LABEL = 'Totale da pagare';
 
+/**
+ * The three next steps, in the same order and words before sending, on the success screen and in
+ * the PDF: confirm, pay, send the receipt. The pay step ends differently before sending (no data
+ * yet, no code) and after (the causale with the code, then the bank details).
+ */
+export const ORDER_STEP_CONFIRM = `Lo staff ti scrive da ${ORDER_EMAIL} per confermare l'ordine, di solito entro due giorni lavorativi.`;
+/** Step 1 when the notice to the staff did not go out: the buyer writes first. */
+export const ORDER_STEP_CONFIRM_UNNOTIFIED = `Scrivi a ${ORDER_EMAIL} indicando il codice: lo staff ti conferma l'ordine.`;
+export const ORDER_STEP_PAY = 'Paghi con bonifico o PayPal dopo la conferma dello staff';
+export const ORDER_STEP_PAY_LATER = `${ORDER_STEP_PAY}: i dati te li diamo alla fine.`;
+export const ORDER_STEP_RECEIPT_LEAD = 'Mandi la ricevuta del pagamento a';
+
+/** The causale of the payment for an order code. */
+export function orderCausale(code: string): string {
+  return `${ORDER_CAUSALE} ${code}`;
+}
+
 /** The buyer-kind question, as the form, the email and the PDF ask it. */
 export const BUYER_LABEL = 'Chi ordina';
 
@@ -636,7 +653,7 @@ export function orderEmail(data: {
     `BIC: ${ORDER_BIC}`,
     `Banca intermediaria (SWIFT): ${ORDER_SWIFT_INTERMEDIARY}`,
     `PayPal: ${ORDER_PAYPAL}`,
-    `Causale: ${ORDER_CAUSALE} ${code}`,
+    `Causale: ${orderCausale(code)}`,
     `Manda la ricevuta a ${ORDER_EMAIL}.`,
   );
   return { subject, text: out.join('\n') };

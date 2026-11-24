@@ -19,6 +19,10 @@ import {
   ORDER_IBAN,
   ORDER_NOTES_MAX,
   ORDER_PAYPAL,
+  ORDER_STEP_CONFIRM,
+  ORDER_STEP_PAY,
+  ORDER_STEP_PAY_LATER,
+  ORDER_STEP_RECEIPT_LEAD,
   ORDER_SUBTOTAL_LABEL,
   ORDER_SWIFT_INTERMEDIARY,
   ORDER_TOTAL_LABEL,
@@ -98,13 +102,9 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         <div class="order-next">
           <h2 class="order-h3">Cosa succede dopo</h2>
           <ol>
-            <li>Lo staff legge l'ordine e ti risponde per confermarlo.</li>
-            <li>Spediamo i libri: con il piego arrivano di solito in una settimana.</li>
-            <li>
-              Paghi con bonifico o PayPal solo dopo la conferma dello staff: i dati te li diamo alla
-              fine.
-            </li>
-            <li>Mandi la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+            <li>{ORDER_STEP_CONFIRM}</li>
+            <li>{ORDER_STEP_PAY_LATER}</li>
+            <li>{ORDER_STEP_RECEIPT_LEAD} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
           </ol>
           <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>
           <p class="sr-only" aria-live="polite" data-order-announce></p>
@@ -349,10 +349,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       </h1>
       <p class="order-done__lede" data-order-done-lede></p>
       <div class="order-done__pdf">
-        <p>
-          Non ti mandiamo una copia dell'ordine via email: scarica il PDF della tua richiesta e
-          conservalo. Lo staff ti risponderà presto per confermarlo.
-        </p>
+        <p>Scarica il PDF della tua richiesta e conservalo: non ti mandiamo una copia via email.</p>
         <div class="order-done__pdf-row">
           <span data-order-pdf><Button primary>Scarica il PDF</Button></span>
           <button type="button" class="order-textbtn" data-order-print hidden>
@@ -370,10 +367,9 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <div class="order-next order-next--done">
         <h2 class="order-h3">Adesso</h2>
         <ol>
-          <li>Aspetta la conferma dello staff, di solito entro due giorni lavorativi.</li>
+          <li data-order-done-confirm>{ORDER_STEP_CONFIRM}</li>
           <li>
-            Paghi con bonifico o PayPal, causale
-            "<span data-order-done-causale>{ORDER_CAUSALE}</span>".
+            {ORDER_STEP_PAY}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>":
             <div class="order-bank">
               <dl>
                 <div>
@@ -407,7 +403,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               <p class="sr-only" aria-live="polite" data-order-announce-done></p>
             </div>
           </li>
-          <li>Manda la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+          <li>{ORDER_STEP_RECEIPT_LEAD} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
         </ol>
       </div>
       <div class="order-done__actions">

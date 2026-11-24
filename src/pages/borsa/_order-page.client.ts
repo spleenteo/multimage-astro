@@ -6,7 +6,8 @@ import {
   MEMBER_DISCOUNT_LABEL,
   MEMBER_LINE,
   ORDER_ACTION,
-  ORDER_CAUSALE,
+  ORDER_STEP_CONFIRM_UNNOTIFIED,
+  orderCausale,
   ORDER_EMAIL,
   ORDER_FIELD_MESSAGES,
   ORDER_IBAN,
@@ -385,7 +386,7 @@ export function initOrderPage(): void {
       strong.textContent = res.code;
       if (res.notified) {
         lede.replaceChildren(
-          "L'abbiamo girato allo staff. Il codice del tuo ordine è ",
+          `Lo staff ti scrive da ${ORDER_EMAIL} entro due giorni lavorativi per confermare l'ordine. Il codice del tuo ordine è `,
           strong,
           '.',
         );
@@ -411,7 +412,10 @@ export function initOrderPage(): void {
     if (printBtn) printBtn.hidden = false;
 
     const causale = done.querySelector('[data-order-done-causale]');
-    if (causale) causale.textContent = `${ORDER_CAUSALE} ${res.code}`;
+    if (causale) causale.textContent = orderCausale(res.code);
+    // Without the notice the staff knows nothing yet: step 1 asks the buyer to write first.
+    const confirmStep = done.querySelector('[data-order-done-confirm]');
+    if (confirmStep && !res.notified) confirmStep.textContent = ORDER_STEP_CONFIRM_UNNOTIFIED;
 
     // The PDF module (and jsPDF) loads on the first tap only. aria-disabled, never disabled, so
     // focus stays on the button while it works; `busy` ignores repeat taps.

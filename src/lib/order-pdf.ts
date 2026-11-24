@@ -8,7 +8,11 @@ import {
   ORDER_ACCOUNT_HOLDER,
   ORDER_BANK,
   ORDER_BIC,
-  ORDER_CAUSALE,
+  ORDER_STEP_CONFIRM,
+  ORDER_STEP_CONFIRM_UNNOTIFIED,
+  ORDER_STEP_PAY,
+  ORDER_STEP_RECEIPT_LEAD,
+  orderCausale,
   ORDER_EMAIL,
   ORDER_IBAN,
   ORDER_PAYPAL,
@@ -142,12 +146,9 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   }
 
   add('heading', 'Cosa succede dopo');
-  add('text', "1. Lo staff conferma l'ordine entro due giorni lavorativi.");
-  add(
-    'text',
-    `2. Spediamo i libri, poi paghi con bonifico o PayPal, con causale "${ORDER_CAUSALE} ${code}".`,
-  );
-  add('text', `3. Mandi la ricevuta a ${ORDER_EMAIL}.`);
+  add('text', `1. ${order.notified ? ORDER_STEP_CONFIRM : ORDER_STEP_CONFIRM_UNNOTIFIED}`);
+  add('text', `2. ${ORDER_STEP_PAY}, causale "${orderCausale(code)}": i dati sono qui sotto.`);
+  add('text', `3. ${ORDER_STEP_RECEIPT_LEAD} ${ORDER_EMAIL}.`);
 
   add('heading', 'Pagamento');
   add('text', `Intestato a: ${ORDER_ACCOUNT_HOLDER}`);
@@ -156,7 +157,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `BIC: ${ORDER_BIC}`);
   add('text', `Banca intermediaria (SWIFT): ${ORDER_SWIFT_INTERMEDIARY}`);
   add('text', `PayPal: ${ORDER_PAYPAL}`);
-  add('text', `Causale: ${ORDER_CAUSALE} ${code}`);
+  add('text', `Causale: ${orderCausale(code)}`);
   add('meta', 'I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.');
 
   return { filename: `ordine-${code}.pdf`, title: `Ordine ${code}`, blocks };
