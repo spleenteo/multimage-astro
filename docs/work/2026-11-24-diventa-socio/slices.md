@@ -37,6 +37,10 @@ Technical work, no frame or shaping doc: the owner's answers at opening are in `
 - `astro check` does not validate CDA field names (result types are hand-written): a wrong name only shows as a runtime CDA error, hence the draft on/off load in the Done.
 - Block naming follows the `… Block` rule (`cms-content-modelling.md`), not the `order_step` precedent.
 
+### Deviations found while planning V1
+
+- "Altro" is a checkbox fixed in code with its own text input, not a CMS-seeded area: the free text stays tied to it even if editors rename or remove areas.
+
 ## V2 — Sending the request and the confirmation
 
 **In**
