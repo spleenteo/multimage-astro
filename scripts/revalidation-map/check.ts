@@ -17,12 +17,7 @@ import * as stub from './stub-execute-query.mjs';
 const { executeQuery } = stub as { executeQuery: RevalidationQuery };
 
 const SITEMAP = '/sitemap.xml';
-const bookStatic = [
-  '/libri/libro-pubblicato',
-  '/libri/archivio',
-  '/',
-  SITEMAP,
-];
+const bookStatic = ['/libri/libro-pubblicato', '/libri/archivio', '/', SITEMAP];
 
 // Expected URL set per payload file (null = the endpoint skips the map, apiKey is null).
 // note: GAP when the expectation encodes a known hole in the map.
@@ -38,13 +33,7 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
   },
   // book resolves to null: author/collection pages not revalidated
   'book-unpublish': {
-    urls: [
-      '/libri/libro-non-pubblicato',
-      '/libri/archivio',
-      '/',
-      SITEMAP,
-      '/libri',
-    ],
+    urls: ['/libri/libro-non-pubblicato', '/libri/archivio', '/', SITEMAP, '/libri'],
     note: 'GAP',
   },
   'author-publish': { urls: ['/autori/autore-uno', '/autori', SITEMAP] },
