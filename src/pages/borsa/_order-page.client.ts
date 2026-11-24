@@ -14,12 +14,14 @@ import {
   SHIPPING_KINDS,
   bagMailto,
   bagTotals,
-  booksLabel,
   copiesLabel,
   formatCents,
   formatDiscount,
   memberDiscount,
-  orderTotalLabel,
+  ORDER_SUBTOTAL_LABEL,
+  ORDER_TOTAL_LABEL,
+  BUYER_LABEL,
+  bagSizeLabel,
   validateOrderFields,
   type BagItem,
   type OrderFieldKey,
@@ -79,7 +81,7 @@ const FIELD_NAMES: Record<ErrorKey, string> = {
   city: 'Città',
   province: 'Provincia',
   shipping: 'Spedizione',
-  buyer: 'Ordini come',
+  buyer: BUYER_LABEL,
   notes: 'Note',
   consent: "Consenso all'uso dei dati",
   turnstile: 'Verifica anti-spam',
@@ -104,11 +106,10 @@ export function initOrderPage(): void {
   const sizeLine = $('[data-order-size]');
   const list = $('[data-order-lines]');
   const lineTemplate = $<HTMLTemplateElement>('template[data-order-line]');
-  const copiesEl = $('[data-order-copies]');
+  const subtotalEl = $('[data-order-subtotal]');
   const shippingEl = $('[data-order-shipping]');
   const discountRow = $('[data-order-discount-row]');
   const discountEl = $('[data-order-discount]');
-  const totalLabelEl = $('[data-order-total-label]');
   const totalEl = $('[data-order-total]');
   const announce = $('[data-order-announce]');
   const form = $<HTMLFormElement>('form[data-order-form]');
@@ -291,12 +292,11 @@ export function initOrderPage(): void {
       list.replaceChildren(...nodes);
     }
     if (sizeLine)
-      sizeLine.textContent = `${booksLabel(totals.lines)} · ${copiesLabel(totals.copies)} · ${formatCents(total)}`;
-    if (copiesEl) copiesEl.textContent = String(totals.copies);
+      sizeLine.textContent = `${bagSizeLabel(totals.lines, totals.copies)} · ${formatCents(total)}`;
+    if (subtotalEl) subtotalEl.textContent = formatCents(totals.cents);
     if (shippingEl) shippingEl.textContent = formatCents(fee);
     if (discountRow) discountRow.hidden = !member;
     if (discountEl) discountEl.textContent = formatDiscount(discount);
-    if (totalLabelEl) totalLabelEl.textContent = orderTotalLabel(member);
     if (totalEl) totalEl.textContent = formatCents(total);
 
     const href = bagMailto(items, shippingKind, member);
@@ -448,8 +448,17 @@ export function initOrderPage(): void {
         }),
       );
     }
-    if (doneLines && res.member) {
-      const extra = [MEMBER_LINE, `${MEMBER_DISCOUNT_LABEL} · ${formatDiscount(res.discount)}`];
+    // The same scheme as the recap: books at cover price, member discount, shipping, total.
+    if (doneLines) {
+      const subtotal = res.lines.reduce((sum, l) => sum + l.amountCents, 0);
+      const shippingLabel = SHIPPING_KINDS[res.shippingKind].label.toLowerCase();
+      const extra = [
+        `${ORDER_SUBTOTAL_LABEL} · ${formatCents(subtotal)}`,
+        ...(res.member
+          ? [MEMBER_LINE, `${MEMBER_DISCOUNT_LABEL} · ${formatDiscount(res.discount)}`]
+          : []),
+        `Spedizione, ${shippingLabel} · ${formatCents(res.shipping)}`,
+      ];
       doneLines.append(
         ...extra.map((text) => {
           const li = document.createElement('li');
@@ -459,10 +468,7 @@ export function initOrderPage(): void {
       );
     }
     const totalLabel = done.querySelector('[data-order-done-total-label]');
-    if (totalLabel) {
-      const shippingLabel = SHIPPING_KINDS[res.shippingKind].label.toLowerCase();
-      totalLabel.textContent = `${res.member ? orderTotalLabel(true) : 'Totale'} · ${shippingLabel}`;
-    }
+    if (totalLabel) totalLabel.textContent = ORDER_TOTAL_LABEL;
     const doneTotal = done.querySelector('[data-order-done-total]');
     if (doneTotal) doneTotal.textContent = formatCents(res.total);
 
@@ -630,7 +636,7 @@ export function initOrderPage(): void {
     const key = target.name || target.id.replace(/^order-/, '');
     if (key === 'shipping' || key === 'member') render(readBag());
     if (key === 'member' && event.type === 'change')
-      say(`${totalLabelEl?.textContent ?? ''}: ${totalEl?.textContent ?? ''}`);
+      say(`${ORDER_TOTAL_LABEL}: ${totalEl?.textContent ?? ''}`);
     if (!isErrorKey(key) || key === 'turnstile') return;
     const el = errorEl(key);
     if (!el || el.hidden) return;

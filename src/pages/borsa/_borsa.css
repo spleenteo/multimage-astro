@@ -133,6 +133,14 @@
   @apply text-brand-navy underline underline-offset-2;
 }
 
+.order-next__more {
+  @apply mt-3 text-sm;
+}
+
+.order-next__more a {
+  @apply inline-flex min-h-11 items-center font-semibold md:min-h-0;
+}
+
 .order-next--done {
   @apply border-t-0 pt-2;
 }
@@ -259,7 +267,7 @@
   outline-offset: 2px;
 }
 
-/* "Ordini come": flat segmented cells, a 2x2 grid on phones and one row from 640px. */
+/* "Chi ordina": flat segmented cells, a 2x2 grid on phones and one row from 640px. */
 .order-who {
   @apply grid grid-cols-2 border border-brand-navy/25 sm:grid-cols-4;
 }

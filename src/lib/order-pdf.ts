@@ -19,7 +19,9 @@ import {
   formatDiscount,
   formatIban,
   orderPlace,
-  orderTotalLabel,
+  ORDER_SUBTOTAL_LABEL,
+  ORDER_TOTAL_LABEL,
+  BUYER_LABEL,
   type BuyerKind,
   type OrderFields,
   type OrderResponse,
@@ -112,7 +114,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `${orderPlace(buyer)} (${buyer.province})`);
   add('text', `Email: ${buyer.email}`);
   if (buyer.phone) add('text', `Telefono: ${buyer.phone}`);
-  add('text', `Ordini come: ${BUYER_KINDS[buyer.buyer as BuyerKind] ?? buyer.buyer}`);
+  add('text', `${BUYER_LABEL}: ${BUYER_KINDS[buyer.buyer as BuyerKind] ?? buyer.buyer}`);
   if (order.member) add('text', MEMBER_LINE);
 
   add('heading', 'Libri');
@@ -124,14 +126,15 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
     );
   }
   add('rule');
-  add('row', 'Copie', String(order.copies));
+  const subtotal = order.lines.reduce((sum, l) => sum + l.amountCents, 0);
+  add('row', `${ORDER_SUBTOTAL_LABEL} · ${copiesLabel(order.copies)}`, formatCents(subtotal));
   if (order.member) add('row', MEMBER_DISCOUNT_LABEL, formatDiscount(order.discount));
   add(
     'row',
     `Spedizione: ${SHIPPING_KINDS[order.shippingKind].label}`,
     formatCents(order.shipping),
   );
-  add('total', orderTotalLabel(order.member), formatCents(order.total));
+  add('total', ORDER_TOTAL_LABEL, formatCents(order.total));
 
   if (buyer.notes) {
     add('heading', 'Note');

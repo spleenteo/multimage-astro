@@ -8,6 +8,7 @@ import Button from '~/components/ui/Button';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import {
   BUYER_KINDS,
+  BUYER_LABEL,
   MEMBER_DISCOUNT_LABEL,
   MEMBER_DISCOUNT_PERCENT,
   ORDER_ACCOUNT_HOLDER,
@@ -18,7 +19,9 @@ import {
   ORDER_IBAN,
   ORDER_NOTES_MAX,
   ORDER_PAYPAL,
+  ORDER_SUBTOTAL_LABEL,
   ORDER_SWIFT_INTERMEDIARY,
+  ORDER_TOTAL_LABEL,
   SHIPPING_KINDS,
   formatCents,
   formatIban,
@@ -74,8 +77,8 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         </template>
         <dl class="order-totals">
           <div>
-            <dt>Copie</dt>
-            <dd data-order-copies></dd>
+            <dt>{ORDER_SUBTOTAL_LABEL}</dt>
+            <dd data-order-subtotal></dd>
           </div>
           <div data-order-discount-row hidden>
             <dt>{MEMBER_DISCOUNT_LABEL}</dt>
@@ -86,7 +89,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             <dd data-order-shipping></dd>
           </div>
           <div class="order-totals__big">
-            <dt data-order-total-label>Totale a prezzo di copertina</dt>
+            <dt>{ORDER_TOTAL_LABEL}</dt>
             <dd data-order-total></dd>
           </div>
         </dl>
@@ -103,6 +106,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             </li>
             <li>Mandi la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
           </ol>
+          <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>
           <p class="sr-only" aria-live="polite" data-order-announce></p>
         </div>
       </aside>
@@ -237,7 +241,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             </fieldset>
 
             <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
-              <legend>Ordini come</legend>
+              <legend>{BUYER_LABEL}</legend>
               <div class="order-who">
                 {buyerEntries.map(([key, label]) => <label class="order-who__cell">
                   <input type="radio" name="buyer" value={key} checked={key === 'privato'} />

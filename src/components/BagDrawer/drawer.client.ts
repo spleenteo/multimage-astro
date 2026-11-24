@@ -12,8 +12,8 @@ import {
   QTY_MAX,
   QTY_MIN,
   bagTotals,
+  bagSizeLabel,
   clampQty,
-  booksLabel,
   copiesLabel,
   formatCents,
   type BagItem,
@@ -103,10 +103,7 @@ export function initBagDrawer(): void {
     const focusRole = focusedControl?.dataset.lineControl ?? null;
 
     const totals = bagTotals(items);
-    size!.textContent =
-      items.length === 0
-        ? booksLabel(0)
-        : `${booksLabel(totals.lines)} · ${copiesLabel(totals.copies)}`;
+    size!.textContent = bagSizeLabel(totals.lines, totals.copies);
     copies!.textContent = String(totals.copies);
     total!.textContent = formatCents(totals.cents);
 
@@ -193,6 +190,8 @@ export function initBagDrawer(): void {
     if (trigger) open(trigger);
   });
   dialog.querySelector('[data-bag-close]')?.addEventListener('click', () => dialog.close());
+  // On /borsa the primary is "Torna al modulo": the form is right behind the drawer.
+  dialog.querySelector('[data-bag-back] button')?.addEventListener('click', () => dialog.close());
   // The panel fills the dialog, so only a click on the backdrop lands on the dialog itself.
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();

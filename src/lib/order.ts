@@ -77,6 +77,12 @@ export function booksLabel(n: number): string {
   return n === 1 ? '1 libro' : `${n} libri`;
 }
 
+/** The bag's size, copies first like the header badge: "4 copie di 2 libri". */
+export function bagSizeLabel(lines: number, copies: number): string {
+  if (lines === 0) return booksLabel(0);
+  return `${copiesLabel(copies)} di ${booksLabel(lines)}`;
+}
+
 const isNonEmptyString = (v: unknown): v is string => typeof v === 'string' && v !== '';
 const isStringOrNull = (v: unknown): v is string | null => v === null || typeof v === 'string';
 
@@ -283,7 +289,7 @@ export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
   city: 'Scrivi la città, per esempio Firenze.',
   province: 'Scrivi la provincia, per esempio FI.',
   shipping: 'Scegli come spedire i libri.',
-  buyer: 'Scegli come ordini: privato, scuola, associazione o libreria.',
+  buyer: 'Scegli chi ordina: privato, scuola, associazione o libreria.',
   notes: `Le note superano i ${ORDER_NOTES_MAX} caratteri: accorciale.`,
   consent: "Per inviare l'ordine spunta il consenso all'uso dei dati.",
 };
@@ -431,10 +437,15 @@ export function formatDiscount(cents: number): string {
   return `−${formatCents(cents)}`;
 }
 
-/** The label of the total: with a discount, "a prezzo di copertina" would be false. */
-export function orderTotalLabel(member: boolean): string {
-  return member ? 'Totale con sconto soci' : 'Totale a prezzo di copertina';
-}
+/**
+ * One scheme for every total (recap, success screen, email, PDF): the books at cover price, the
+ * member discount, the shipping, then the total to pay.
+ */
+export const ORDER_SUBTOTAL_LABEL = 'Libri a prezzo di copertina';
+export const ORDER_TOTAL_LABEL = 'Totale da pagare';
+
+/** The buyer-kind question, as the form, the email and the PDF ask it. */
+export const BUYER_LABEL = 'Chi ordina';
 
 /**
  * Totals in cents; the shipping fee counts once per order. The member discount
@@ -595,7 +606,7 @@ export function orderEmail(data: {
   const out: string[] = [
     `Nuovo ordine dal sito: ${code}.`,
     '',
-    `Ordini come: ${buyer}`,
+    `${BUYER_LABEL}: ${buyer}`,
     ...(order.member ? [MEMBER_LINE] : []),
     '',
     `Nome e cognome: ${order.name}`,
@@ -610,9 +621,10 @@ export function orderEmail(data: {
     ),
     '',
     `Copie: ${totals.copies}`,
+    `${ORDER_SUBTOTAL_LABEL}: ${formatCents(totals.subtotal)}`,
     ...(order.member ? [`${MEMBER_DISCOUNT_LABEL}: ${formatDiscount(totals.discount)}`] : []),
     `Spedizione: ${shipping.label}, ${formatCents(totals.shipping)}`,
-    `${orderTotalLabel(order.member)}: ${formatCents(totals.total)}`,
+    `${ORDER_TOTAL_LABEL}: ${formatCents(totals.total)}`,
   ];
   if (order.notes) out.push('', 'Note', order.notes);
   out.push(
@@ -658,7 +670,7 @@ export function bagMailto(
     '',
     'Nome e cognome:',
     'Indirizzo di spedizione:',
-    'Ordini come:',
+    `${BUYER_LABEL}:`,
   ].join('\r\n');
   return `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}&body=${encodeURIComponent(body)}`;
 }

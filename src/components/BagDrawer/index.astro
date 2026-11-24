@@ -1,6 +1,10 @@
 ---
 import Button from '~/components/ui/Button/index.astro';
 import styles from './style.module.css';
+
+// On the order page the drawer only edits the bag: its primary goes back to the form, and its
+// total names what it counts (no shipping, no member discount).
+const onOrderPage = Astro.url.pathname.replace(/\/+$/, '') === '/borsa';
 ---
 
 <dialog id="bag-drawer" class={styles.dialog} aria-labelledby="bag-drawer-title" data-bag-drawer>
@@ -34,16 +38,22 @@ import styles from './style.module.css';
         <dl class={styles.totals}>
           <dt>Copie</dt>
           <dd data-bag-copies>0</dd>
-          <dt>Totale a prezzo di copertina</dt>
+          <dt>{onOrderPage ? 'Libri a prezzo di copertina' : 'Totale a prezzo di copertina'}</dt>
           <dd class={styles.total} data-bag-total>0,00 €</dd>
         </dl>
         <p class={styles.fine}>
           Con il piego di libri la spedizione è gratuita. Non paghi adesso: ti spieghiamo come al
           passo dopo.
         </p>
-        <div class={styles.cta}>
-          <Button href="/borsa" primary fullWidth>Completa l'ordine</Button>
-        </div>
+        {onOrderPage ? (
+          <div class={styles.cta} data-bag-back>
+            <Button primary fullWidth>Torna al modulo</Button>
+          </div>
+        ) : (
+          <div class={styles.cta}>
+            <Button href="/borsa" primary fullWidth>Completa l'ordine</Button>
+          </div>
+        )}
         <button type="button" class={styles.textButton} data-bag-empty-ask>Svuota la borsa</button>
         <div class={styles.confirm} data-bag-confirm hidden>
           <p>Togliere tutti i libri dalla borsa?</p>
