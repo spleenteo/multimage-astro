@@ -310,10 +310,20 @@ export function initOrderPage(): void {
     if (!done) return;
 
     const lede = done.querySelector('[data-order-done-lede]');
-    if (lede)
-      lede.textContent = res.copySent
-        ? `L'abbiamo girato a Olivier. Una copia è in viaggio verso ${email}: se non la vedi, guarda nello spam.`
-        : "L'ordine è arrivato a Olivier, ma non siamo riusciti a mandarti la copia: tienila tu stampando questa pagina.";
+    if (lede) {
+      if (res.copySent) {
+        const strong = document.createElement('b');
+        strong.textContent = email;
+        lede.replaceChildren(
+          "L'abbiamo girato a Olivier. Una copia è in viaggio verso ",
+          strong,
+          ': se non la vedi, guarda nello spam.',
+        );
+      } else {
+        lede.textContent =
+          "L'ordine è arrivato a Olivier, ma non siamo riusciti a mandarti la copia: tienila tu stampando questa pagina.";
+      }
+    }
 
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
     if (printBtn) printBtn.hidden = res.copySent;
@@ -369,6 +379,10 @@ export function initOrderPage(): void {
     switch (res.error) {
       case 'invalid': {
         const keys = (res.fields ?? []).filter((k): k is OrderFieldKey & ErrorKey => isErrorKey(k));
+        if (keys.length === 0) {
+          showFormError(MSG.generic, true);
+          break;
+        }
         keys.forEach((k) => setError(k, ORDER_FIELD_MESSAGES[k]));
         showFormError(MSG.checkFields, false);
         focusFirstError(keys);
