@@ -79,8 +79,18 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`.
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
+- **`order` facts** (`src/lib/order.ts`)
+  - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping and buyer kinds), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, `orderEmail` text, `checkSiteverify` and `bagMailto`.
+  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `books.ts`.
+  - Notes: IBAN, BIC and PayPal must stay in step with the CMS page `/info/ordinare` (TODO **BORSA-info-sync**).
+- **bag store** (`src/lib/bag.client.ts`)
+  - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
+  - Used in: `BagDrawer`, `BagAdd`, `Header`, `/borsa`.
+- **Order page script** (`src/pages/borsa/_order-page.client.ts`)
+  - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget and the POST to `/api/ordine`.
+  - Used in: `src/pages/borsa/index.astro`.
 - **`books` helper** (`src/lib/books.ts`)
-  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book: subject, title, authors, ISBN, price, copies, address), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
+  - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book, the mailto fallback of `BagAdd` on the book page and the home hero: subject, title, authors, ISBN, price, copies, address; `ORDER_EMAIL` and `euroFormatter` come from `order.ts`), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.
   - Used in: listings, carousels, detail pages, staff exports, printable schede; `/libri` route, sitemap, `publicUrls.ts`, `revalidationUrls.ts`.
   - Notes: `mapBooksToCards` is the canonical adapter for `BookCard` props. Keep `BOOKS_PER_PAGE` here so route/sitemap/revalidation agree on page count.
 - **`authors` helper** (`src/lib/authors.ts`)

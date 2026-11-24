@@ -14,7 +14,12 @@ scope: A list to describe all components used in the project
   - Key props: `currentPath`, `infoPages`.
   - Used in: `BaseLayout`.
   - Owner: @codex.
-  - Notes: remote PNG logos still lack intrinsic dimensions (track under docs/TODO.md PS1).
+  - Notes: remote PNG logos still lack intrinsic dimensions (track under docs/TODO.md PS1). Carries the bag button with the live count (`data-bag-open`, `data-bag-count`), in the desktop and the mobile row.
+- `BagDrawer` — **BagDrawer** (`src/components/BagDrawer/index.astro` + `drawer.client.ts`)
+  - Purpose: the bag as a native modal `<dialog>` sliding in from the right. Static markup filled by the script from `<template data-bag-line>`: a line per book with a quantity stepper, remove, an empty-bag confirm, a persistent live region, the total, and "Completa l'ordine" → `/borsa`.
+  - Key props: none.
+  - Used in: `BaseLayout` (once per page). Opened by every `[data-bag-open]` control (header buttons).
+  - Notes: reads and writes through `src/lib/bag.client.ts`; the panel scrolls under 36rem so the footer never clips.
 - `Footer` — **Footer** (`src/components/Footer.astro`)
   - Purpose: builds footer link columns, social links, and legal links using `_site` footer pages.
   - Key props: `footerPages`.
@@ -162,7 +167,7 @@ scope: A list to describe all components used in the project
     - A serif size line with the country first ("Italia · 3 libri · 1 fuori catalogo").
     - The editors' one-line bio (`one_line_bio`, 100 characters at most), clamped to 4 lines.
     - At the foot, up to 4 latest covers, small and plain (no tinted field), beside "Vedi i libri" → `/libri?autore=<slug>`.
-    - `fill.client.ts` writes the same values into a clone of the card for the letters the browser builds.
+    - The browser copy, `fill.client.ts`, writes the same values into a clone of the card for the letters the browser builds.
   - Key props: `author` (`AuthorIndexItem` from `src/lib/authorIndex.ts`).
   - Used in: `src/pages/autori/index.astro`.
   - Owner: @codex.
@@ -221,6 +226,11 @@ scope: A list to describe all components used in the project
   - Purpose: shared anchor/button primitive with variants and optional icons.
   - Key props: `href`, `variant`, `primary`, `icon`, `type`, `target`, `rel`.
   - Notes: rely on `data-variant` classes when styling new buttons.
+- `BagAdd` — **BagAdd** (`src/components/BagAdd/index.astro` + `add.client.ts`)
+  - Purpose: the single add control. Without JavaScript, or when the book can't go in the bag, it is the mailto link; `add.client.ts` swaps in "Metti in borsa" and keeps a status line current.
+  - Key props: `book: BagBook | null`, `mailto`, `label`, `primary?`.
+  - Used in: `/libri/[slug]`, `HomeHero`.
+  - Notes: `book` comes from `bagBookFor` (`src/lib/order.ts`); `null` for ebooks and unpriced or out-of-catalogue books.
 - `AuthorNames` — **AuthorNames** (`src/components/ui/AuthorNames/index.astro`)
   - Purpose: formats author lists with Italian separators (commas + “e”).
   - Key props: `authors[]`, `fallback?`, `prefix?`, `suffix?`.
