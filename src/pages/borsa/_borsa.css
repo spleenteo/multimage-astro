@@ -411,10 +411,10 @@
 }
 
 /* The error summary: crimson text on mist; in a list, each field is a navy link to it. */
-/* Error summary at the top of the form: an alert band (crimson rule on a pale crimson wash),
+/* Error summary at the top of the form: an alert band (a hairline crimson frame on a pale crimson wash),
    the count as its heading line, the invalid fields as navy links. Focus lands on it. */
 .order-form-error {
-  @apply mb-8 border-l-4 border-brand-crimson bg-[#fbeeee] px-4 py-3.5 text-sm text-brand-charcoal md:px-5 md:py-4;
+  @apply mb-8 border border-brand-crimson/35 bg-[#fbeeee] px-4 py-3.5 text-sm text-brand-charcoal md:px-5 md:py-4;
 }
 
 .order-form-error:focus-visible {
