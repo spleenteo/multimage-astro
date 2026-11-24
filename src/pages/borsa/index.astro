@@ -185,6 +185,32 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <div class="order-main">
         {siteKey ? (
           <form data-order-form data-sitekey={siteKey} novalidate>
+            <div class="order-form-error" role="alert" tabindex="-1" data-order-form-error hidden>
+              <p class="order-form-error__head">
+                <svg
+                  class="order-form-error__icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M12 7.5v5.5"></path>
+                  <path d="M12 16.5h.01"></path>
+                </svg>
+                <span data-order-form-error-text></span>
+                <span data-order-mailto hidden>
+                  <a href={mailtoHref}>mandacelo via email</a>
+                </span>
+              </p>
+              <ul data-order-form-error-list hidden></ul>
+            </div>
+
             <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
               <legend>{BUYER_LABEL}</legend>
               <div class="order-who">
@@ -392,16 +418,6 @@ const buyerEntries = Object.entries(BUYER_KINDS);
                 data-error-for="turnstile"
                 hidden
               ></p>
-            </div>
-
-            <div class="order-form-error" role="alert" tabindex="-1" data-order-form-error hidden>
-              <p>
-                <span data-order-form-error-text></span>
-                <span data-order-mailto hidden>
-                  <a href={mailtoHref}>mandacelo via email</a>
-                </span>
-              </p>
-              <ul data-order-form-error-list hidden></ul>
             </div>
 
             <div class="order-send">

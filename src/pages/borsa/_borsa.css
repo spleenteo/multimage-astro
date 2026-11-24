@@ -411,16 +411,30 @@
 }
 
 /* The error summary: crimson text on mist; in a list, each field is a navy link to it. */
+/* Error summary at the top of the form: an alert band (crimson rule on a pale crimson wash),
+   the count as its heading line, the invalid fields as navy links. Focus lands on it. */
 .order-form-error {
-  @apply mb-4 bg-brand-mist p-3 text-sm font-semibold text-brand-crimson;
+  @apply mb-8 border-l-4 border-brand-crimson bg-[#fbeeee] px-4 py-3.5 text-sm text-brand-charcoal md:px-5 md:py-4;
+}
+
+.order-form-error:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand-crimson;
+}
+
+.order-form-error__head {
+  @apply flex items-start gap-2.5 text-[0.9375rem] font-semibold text-brand-crimson;
+}
+
+.order-form-error__icon {
+  @apply mt-px flex-none;
 }
 
 .order-form-error ul {
-  @apply mt-1.5 space-y-0.5;
+  @apply mt-2 grid gap-x-6 pl-[1.875rem] sm:grid-cols-2;
 }
 
 .order-form-error li a {
-  @apply inline-flex min-h-11 items-center md:min-h-8;
+  @apply inline-flex min-h-11 items-center font-semibold md:min-h-8;
 }
 
 .order-form-error a {
