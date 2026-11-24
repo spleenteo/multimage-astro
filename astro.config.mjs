@@ -90,6 +90,18 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
+      // Order email through the Resend HTTP API (/api/ordine); unset = endpoint answers 503 outside dev.
+      RESEND_API_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
+      // Cloudflare Turnstile secret, verified server-side on /api/ordine.
+      TURNSTILE_SECRET_KEY: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
       PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN: envField.string({
         context: 'client',
         access: 'public',
@@ -97,6 +109,12 @@ export default defineConfig({
       PUBLIC_SITE_URL: envField.string({
         context: 'client',
         access: 'public',
+      }),
+      // Turnstile site key for the widget on /borsa; public, inlined at build.
+      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
+        context: 'client',
+        access: 'public',
+        optional: true,
       }),
     },
     validateSecrets: true,
