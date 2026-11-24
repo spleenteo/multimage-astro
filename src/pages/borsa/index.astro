@@ -471,6 +471,29 @@ const buyerEntries = Object.entries(BUYER_KINDS);
           <li>
             {ORDER_STEP_PAY}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>":
             <div class="order-bank">
+              <div class="order-bank__iban">
+                <p class="order-bank__label" id="order-iban-label">IBAN</p>
+                <p class="order-bank__iban-value order-iban" aria-labelledby="order-iban-label">
+                  {formatIban(ORDER_IBAN)}
+                </p>
+                <button type="button" class="order-bank__copy" data-order-copy-iban hidden>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="11" height="11"></rect>
+                    <path d="M5 15V4h11"></path>
+                  </svg>
+                  <span data-order-copy-label>Copia l'IBAN</span>
+                </button>
+              </div>
               <dl>
                 <div>
                   <dt>Intestato a</dt>
@@ -481,10 +504,6 @@ const buyerEntries = Object.entries(BUYER_KINDS);
                   <dd>{ORDER_BANK}</dd>
                 </div>
                 <div>
-                  <dt>IBAN</dt>
-                  <dd class="order-iban">{formatIban(ORDER_IBAN)}</dd>
-                </div>
-                <div>
                   <dt>BIC</dt>
                   <dd>{ORDER_BIC}</dd>
                 </div>
@@ -492,14 +511,8 @@ const buyerEntries = Object.entries(BUYER_KINDS);
                   <dt>Banca intermediaria (SWIFT)</dt>
                   <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
                 </div>
-                <div>
-                  <dt>PayPal</dt>
-                  <dd>{ORDER_PAYPAL}</dd>
-                </div>
               </dl>
-              <button type="button" class="order-textbtn" data-order-copy-iban hidden>
-                Copia l'IBAN
-              </button>
+              <p class="order-bank__paypal">Oppure con PayPal a <b>{ORDER_PAYPAL}</b></p>
               <p class="sr-only" aria-live="polite" data-order-announce-done></p>
             </div>
           </li>

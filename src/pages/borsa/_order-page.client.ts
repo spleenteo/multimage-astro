@@ -625,8 +625,15 @@ export function initOrderPage(): void {
       const tell = (text: string) => {
         if (copyStatus) copyStatus.textContent = text;
       };
+      const label = copyBtn.querySelector<HTMLElement>('[data-order-copy-label]');
       navigator.clipboard.writeText(ORDER_IBAN).then(
-        () => tell('IBAN copiato'),
+        () => {
+          tell('IBAN copiato');
+          if (label) {
+            label.textContent = 'IBAN copiato';
+            window.setTimeout(() => (label.textContent = "Copia l'IBAN"), 2500);
+          }
+        },
         () => tell("Non siamo riusciti a copiare l'IBAN: selezionalo a mano."),
       );
     });

@@ -206,7 +206,32 @@
 /* The payment details, shown only after sending, inside the "Adesso" step on the white page:
    a mist box, so labels are charcoal (slate on mist is under 4.5:1). */
 .order-bank {
-  @apply mt-3 bg-brand-mist p-4 text-sm text-brand-charcoal;
+  @apply mt-3 bg-brand-mist p-4 text-sm text-brand-charcoal md:p-5;
+}
+
+/* The IBAN leads: a white slab with the number large in navy and a navy copy button. */
+.order-bank__iban {
+  @apply mb-4 flex flex-wrap items-center gap-x-4 gap-y-3 border border-brand-navy/15 bg-white p-4;
+}
+
+.order-bank__label {
+  @apply w-full text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#4a5560];
+}
+
+.order-bank__iban-value {
+  @apply min-w-0 flex-1 basis-56 text-lg font-semibold tracking-[0.04em] text-brand-navy md:text-xl;
+}
+
+.order-bank__copy {
+  @apply inline-flex min-h-11 flex-none cursor-pointer items-center gap-2 bg-brand-navy px-4 text-xs font-semibold uppercase text-white transition-colors hover:bg-brand-navy-light;
+}
+
+.order-bank__paypal {
+  @apply mt-3 border-t border-brand-navy/12 pt-3;
+}
+
+.order-bank__paypal b {
+  @apply font-semibold;
 }
 
 .order-bank dl {
