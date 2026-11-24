@@ -232,10 +232,15 @@ const initialBuyer = defaultBuyer(buyers);
                   <span>{b.name}</span>
                 </label>)}
               </div>
-              <p class="order-hint-line" id="order-buyer-hint" aria-live="polite">
+              <p
+                class="order-hint-line"
+                id="order-buyer-hint"
+                aria-live="polite"
+                hidden={initialBuyer.discount === 0}
+              >
                 {initialBuyer.discount > 0
                   ? `Sconto del ${initialBuyer.discount}% sul prezzo di copertina dei libri: lo staff verifica che ti spetti.`
-                  : 'Nessuno sconto: paghi i libri a prezzo di copertina.'}
+                  : ''}
               </p>
               <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
             </fieldset>

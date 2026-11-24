@@ -311,11 +311,13 @@ export function initOrderPage(): void {
     if (shippingEl) shippingEl.textContent = formatCents(fee);
     if (discountRow) discountRow.hidden = discount === 0;
     if (discountLabelEl) discountLabelEl.textContent = discountLabel(buyer);
+    // The hint names the discount; with none there is nothing to say, so it goes.
     if (buyerHint) {
+      buyerHint.hidden = buyer.discount === 0;
       buyerHint.textContent =
         buyer.discount > 0
           ? `Sconto del ${buyer.discount}% sul prezzo di copertina dei libri: lo staff verifica che ti spetti.`
-          : 'Nessuno sconto: paghi i libri a prezzo di copertina.';
+          : '';
     }
     if (discountEl) discountEl.textContent = formatDiscount(discount);
     if (totalEl) totalEl.textContent = formatCents(total);
