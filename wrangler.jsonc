@@ -26,4 +26,22 @@
     "Backend": { "type": "worker", "cache": { "enabled": true } },
   },
   "observability": { "enabled": true },
+  // Orders store, shared with the staff app (contract: d1/README.md).
+  // PLACEHOLDER: replaced with the real id from `wrangler d1 create` before the merge; never leave it empty.
+  "d1_databases": [
+    {
+      "binding": "ORDERS",
+      "database_name": "multimage-orders",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "d1/migrations",
+    },
+  ],
+  // Order notification to the shop, sent only from the Email Routing subdomain address.
+  "send_email": [
+    {
+      "name": "ORDER_MAIL",
+      "destination_address": "ordini@multimage.org",
+      "allowed_sender_addresses": ["sito@ordini.multimage.org"],
+    },
+  ],
 }
