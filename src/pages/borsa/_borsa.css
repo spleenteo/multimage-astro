@@ -122,7 +122,7 @@
 }
 
 .order-next ol {
-  @apply mt-3 list-decimal space-y-2.5 pl-5 text-[0.9375rem];
+  @apply mt-3 list-decimal space-y-2.5 pl-5 text-sm;
 }
 
 .order-next ol li::marker {
