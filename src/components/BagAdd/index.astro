@@ -1,0 +1,44 @@
+---
+// "Metti in borsa": one add control. Without JavaScript (or with no orderable book) it is the
+// mailto link; `add.client.ts` swaps in the bag button and keeps the status line current.
+import Button from '~/components/ui/Button/index.astro';
+import type { BagBook } from '~/lib/order';
+
+interface Props {
+  book: BagBook | null;
+  mailto: string;
+  label: string;
+  primary?: boolean;
+}
+
+const { book, mailto, label, primary = true } = Astro.props;
+---
+
+{book === null ? (
+  <Button href={mailto} primary={primary} icon="iconoir:mail" iconPosition="left">
+    {label}
+  </Button>
+) : (
+  <div class="contents" data-bag-add data-bag-item={JSON.stringify(book)}>
+    <span class="contents" data-bag-fallback>
+      <Button href={mailto} primary={primary} icon="iconoir:mail" iconPosition="left">
+        {label}
+      </Button>
+    </span>
+    <span class="contents" data-bag-enhanced hidden>
+      <Button primary={primary} icon="iconoir:shopping-bag" iconPosition="left">
+        Metti in borsa
+      </Button>
+    </span>
+    <span
+      data-bag-status
+      aria-live="polite"
+      class="order-last basis-full text-sm font-semibold text-brand-navy empty:hidden"
+    />
+  </div>
+)}
+
+<script>
+  import { initBagAdd } from './add.client';
+  initBagAdd();
+</script>
