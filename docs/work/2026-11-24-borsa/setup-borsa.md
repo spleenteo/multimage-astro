@@ -11,7 +11,7 @@ Every command runs from the repo root as `npx dotenv -e .env.cloudflare -- <comm
 - With all three, the form sends two emails: the order to `ordini@multimage.org` and a copy to the visitor.
 - First, after the merge into `main`, deploy once with no keys.
   - **Do**: `npx dotenv -e .env.cloudflare -- npm run deploy:cf`
-  - **Check**: `curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.multimage.org/api/ordine -H 'content-type: application/json' -d '{}'` prints 503, and `/borsa` shows the email box.
+  - **Check**: `curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.multimage.org/api/ordine -H 'content-type: application/json' -d '{}'` prints 503, and `/borsa` with a book in the bag shows the email box.
 
 ## 1. Sender
 
@@ -73,8 +73,10 @@ Every command runs from the repo root as `npx dotenv -e .env.cloudflare -- <comm
 
 ## 9. Rollback
 
-- **Do**: `npx dotenv -e .env.cloudflare -- npx wrangler secret delete RESEND_API_KEY`
-- **Check**: `POST /api/ordine` answers 503 and `/borsa` shows the email box.
+- **Do**:
+  1. Stop the sending: `npx dotenv -e .env.cloudflare -- npx wrangler secret delete RESEND_API_KEY`.
+  2. Take the form away: remove the `PUBLIC_TURNSTILE_SITE_KEY` line from `.env.cloudflare` and redeploy with `npx dotenv -e .env.cloudflare -- npm run deploy:cf`.
+- **Check**: after step 1 alone, `curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.multimage.org/api/ordine -H 'content-type: application/json' -d '{}'` prints 503, but the site key is still built in, so `/borsa` still shows the form and the widget; the email box appears only after a visitor submits. After step 2, `/borsa` with a book in the bag shows the email box at once.
 
 ## 10. Follow-up, separate (TODO MAIL-auth)
 
