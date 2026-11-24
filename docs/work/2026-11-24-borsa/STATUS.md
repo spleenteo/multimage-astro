@@ -1,6 +1,6 @@
 ---
-status: open
-phase: slice
+status: closed
+phase: done
 slice: null
 step: null
 work: borsa
@@ -37,6 +37,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — work closed — 6 slices; Cloudflare setup done (SPF, Email Routing on ordini., D1 EU with 0001+0002); ordini@ destination verification pending (user click) — n/a — n/a
 - 2026-11-24 — V6 closed — 4 commits, gate green; 28,00 → 19,60 €, +5 € Rapida undiscounted; server ignores forged discount — 12 min run — n/a
 - 2026-11-24 — V6 plan + review — 4 tasks; review 1 medium (wrapped grep), 1 low (retention sentence); applied — 8 min — n/a
 - 2026-11-24 — Cloudflare setup (user's ok) — apex SPF Google added; Email Routing enabled on ordini.multimage.org only (apex MX untouched, DNS diffed: +3 MX +SPF on subdomain, +DKIM cf2024-1 at apex); destination ordini@ created, unverified (click pending); D1 multimage-orders created (EU, id 70d0fa72…) and 0001 migrated remotely; real id committed — 10 min — n/a
