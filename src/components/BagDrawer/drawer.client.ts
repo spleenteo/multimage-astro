@@ -12,6 +12,7 @@ import {
   QTY_MAX,
   QTY_MIN,
   bagTotals,
+  clampQty,
   booksLabel,
   copiesLabel,
   formatCents,
@@ -47,6 +48,11 @@ export function initBagDrawer(): void {
     !template
   )
     return;
+
+  const announce = $<HTMLElement>('[data-bag-announce]');
+  const say = (text: string) => {
+    if (announce) announce.textContent = text;
+  };
 
   let opener: HTMLElement | null = null;
 
@@ -153,9 +159,14 @@ export function initBagDrawer(): void {
     const item = readBag().find((i) => i.id === id);
     if (!item) return;
     const role = control.dataset.lineControl;
-    if (role === 'minus') setQty(id, item.qty - 1);
-    else if (role === 'plus') setQty(id, item.qty + 1);
-    else if (role === 'remove') removeItem(id);
+    if (role === 'minus' || role === 'plus') {
+      const qty = clampQty(item.qty + (role === 'minus' ? -1 : 1));
+      setQty(id, qty);
+      say(`${item.title}: ${copiesLabel(qty)}`);
+    } else if (role === 'remove') {
+      removeItem(id);
+      say(`${item.title} tolto dalla borsa`);
+    }
   });
 
   emptyAsk.addEventListener('click', () => {
@@ -164,6 +175,7 @@ export function initBagDrawer(): void {
   });
   confirmBox.querySelector('[data-bag-empty-yes]')?.addEventListener('click', () => {
     emptyBag();
+    say('Borsa svuotata');
     confirmBox.hidden = true;
     heading.focus();
   });

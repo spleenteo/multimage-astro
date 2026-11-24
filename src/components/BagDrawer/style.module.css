@@ -162,3 +162,16 @@
 .empty p {
   @apply mt-2 mb-5;
 }
+
+/* Short viewports (phone landscape, zoom): the whole panel scrolls so nothing is clipped. */
+@media (max-height: 36rem) {
+  .panel {
+    overflow-y: auto;
+  }
+
+  .filled,
+  .list {
+    flex: none;
+    overflow: visible;
+  }
+}
