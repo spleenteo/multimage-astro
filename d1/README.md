@@ -71,3 +71,21 @@ npx wrangler d1 create multimage-orders --jurisdiction eu   # once, then put the
 npx wrangler d1 migrations apply multimage-orders --local
 npx wrangler d1 migrations apply multimage-orders --remote
 ```
+
+## Membership requests
+
+The `membership_requests` table (migration `0004_membership_requests.sql`) holds the requests of `/diventa-socio`, one row each. Same rules as `orders`: the site only writes (INSERT, then UPDATE of `notify_status` and `notify_error` by `code`; on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`.
+
+Columns: `id` (INTEGER PK AUTOINCREMENT), `code` (TEXT NOT NULL UNIQUE, `SO-YYMMDD-XXXX`), `created_at`, the personal columns `email`, `first_name`, `last_name`, `birth_date`, `birth_place`, `address1`, `address2`, `city`, `region`, `postcode`, `country` (all TEXT NULL, so an erased row is valid), `fee_id`, `fee_label`, `fee_cents` (the tier as the CMS had it, re-read on the server; integer cents), `payment_method` (`bonifico` or `paypal`, CHECK), `areas_json` (JSON array of the chosen areas, CHECK `json_valid`), `areas_other` (free text, NULL if none), `consent_at`, `notify_status` (`pending` default, `sent`, `failed`, `skipped`, CHECK) and `notify_error`.
+
+No retention rule (owner, 2026-11-24): rows stay until erased. Erasure, by `code`, sets every personal column to NULL:
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE membership_requests SET email=NULL, first_name=NULL, last_name=NULL, birth_date=NULL, birth_place=NULL, address1=NULL, address2=NULL, city=NULL, region=NULL, postcode=NULL, country=NULL, areas_other=NULL WHERE code='<code>'"
+```
+
+Unsent notices, run at least weekly; each row is forwarded to `info@` by hand:
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --json --command "SELECT code, created_at, notify_status, notify_error FROM membership_requests WHERE notify_status <> 'sent' ORDER BY created_at DESC"
+```

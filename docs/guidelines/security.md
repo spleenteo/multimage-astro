@@ -39,6 +39,20 @@ Every answer carries `cache-control: private, no-store`. Error bodies carry code
 
 Outer limits, beyond the code: a Cloudflare WAF rate limiting rule on `/api/ordine` (set it before `TURNSTILE_SECRET_KEY`, see `docs/guidelines/operations.md` § Environment & Secrets). There is no third-party mail tier to hit: Cloudflare is the only service involved (Workers Free limits apply). The WAF rule covers only the zone hostnames: the `workers.dev` and preview URLs (`workers_dev`, `preview_urls` in `wrangler.jsonc`) bypass it. No order goes through them (the siteverify hostname check refuses it), but each request costs a siteverify call and Worker time; TODO `CF-vercel-cleanup` turns them off after go-live. Setup steps for the user: `docs/work/archive/2026-11-24-borsa/setup-borsa.md`.
 
+### Membership endpoint (/api/socio)
+
+`POST /api/socio` (`src/pages/api/socio/index.ts`, helpers in `src/lib/membership-request.ts`) follows the order endpoint step by step (405, fail-closed 503, size, shape, Turnstile, one published CDA read, save then notify, `cache-control: private, no-store`, error bodies with codes only). What differs:
+
+- **Size.** Body capped at 8192 bytes (`MEMBERSHIP_BODY_MAX_BYTES`), on `content-length` and again on the read body.
+- **Consent on the server.** The privacy consent is checked in `parseMembershipRequest`, not only in the browser: a missing consent is `400` with `fields: ["consent"]`.
+- **Turnstile action `socio`.** The check is the shared one in `src/lib/turnstile.ts` (success, hostname, action). The always-pass test secret is accepted in dev and also on the hostnames `localhost` and `127.0.0.1`, for both `/api/socio` and `/api/ordine`.
+- **No amount from the client.** The fee and the areas come from the published `membership` singleton, re-read on every request and resolved by id (`resolveMembershipChoices`); the client sends ids only, a draft-only or unknown tier is rejected, and the amount and the bank causale in the answer are the server's.
+- **Save, then notify.** The row goes into the D1 table `membership_requests` with the code `SO-YYMMDD-XXXX` (one retry on a clash on `membership_requests.code`). One plain-text email goes to `info@multimage.org` through the `MEMBERSHIP_MAIL` `send_email` binding, with reply-to the applicant, and `notify_status` is updated. The visitor gets no email.
+- **New personal data.** The form collects date and place of birth and the full address, which `/borsa` does not. There is **no retention rule** for these rows (owner, 2026-11-24): they stay until someone erases them with the UPDATE by `code` in `d1/README.md`. TODO **BORSA-privacy** covers the policy side (birth data, address, iubenda).
+- **Logs.** `[socio] <status> <code>` (or `[socio] 200 ok areas=<n> saved=<bool> notified=<bool>`), plus `code_clash`, `save_error` and `notify_update_error`: counts only, never a name, email, birth data, address or token.
+
+The WAF rate limiting rule covers both endpoints (`/api/ordine` and `/api/socio`, one shared counter per IP); see `docs/guidelines/operations.md`.
+
 ---
 
 ## Bag event endpoint (/api/evento)
@@ -61,10 +75,10 @@ Outer limits, beyond the code: a Cloudflare WAF rate limiting rule on `/api/ordi
 | `BYPASS_TOKEN` | build / server | secret | yes | no | `astro.config.mjs` (ISR `bypassToken`), `src/lib/draftMode.ts`, `/api/revalidate` | Vercel only (not on the Worker) |
 | `DRAFT_MODE_COOKIE_NAME` | server | secret | yes | no | `src/lib/draftMode.ts` | optional |
 | `CACHE_INVALIDATION_WEBHOOK_SECRET` | server | secret | yes | no | `src/pages/api/invalidate-cache/index.ts` (Bearer) | no (Cloudflare Worker secret only) |
-| `TURNSTILE_SECRET_KEY` | server | secret | yes | no | `src/pages/api/ordine/index.ts` | Worker secret only (unset = `/api/ordine` answers 503) |
+| `TURNSTILE_SECRET_KEY` | server | secret | yes | no | `src/pages/api/ordine/index.ts`, `src/pages/api/socio/index.ts` | Worker secret only (unset = `/api/ordine` and `/api/socio` answer 503) |
 | `PUBLIC_DATOCMS_SITE_SEARCH_API_TOKEN` | client | public | no | **YES** | `src/pages/cerca/index.astro` (via `import.meta.env`), search bundle | yes |
 | `PUBLIC_SITE_URL` | client | public | no | **YES** | BaseLayout canonical, sitemap, `post-deploy` | yes |
-| `PUBLIC_TURNSTILE_SITE_KEY` | client | public | yes | **YES** | `src/pages/borsa/index.astro` (widget) | build env file (`.env.cloudflare`), inlined at build; unset = `/borsa` shows the email box |
+| `PUBLIC_TURNSTILE_SITE_KEY` | client | public | yes | **YES** | `src/pages/borsa/index.astro`, `src/pages/diventa-socio/index.astro` (widget) | build env file (`.env.cloudflare`), inlined at build; unset = `/borsa` shows the email box |
 | `DATOCMS_API_TOKEN` | — (not declared) | — | — | no | only `scripts/sync-datocms.mjs` (local dev) | **NO — dead weight on Vercel** |
 
 ### Findings
