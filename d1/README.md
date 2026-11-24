@@ -6,7 +6,7 @@ Database `multimage-orders` (Cloudflare D1, EU jurisdiction). Migrations live in
 
 The `orders` table is the contract between two Workers: this site and the separate staff app.
 
-- The site only writes. It INSERTs one row per order, then UPDATEs `notify_status` and `notify_error` of that row by `code`.
+- The site only writes. It INSERTs one row per order, then UPDATEs `notify_status` and `notify_error` of that row by `code`. On a UNIQUE clash on `orders.code` the endpoint regenerates the code and retries the insert once.
 - The staff app reads, fulfils, deletes or anonymises rows. It addresses a row by `code`, never by `id`.
 - Anonymise: `UPDATE orders SET name=NULL, email=NULL, phone=NULL, address=NULL, notes=NULL WHERE code=?`. The site always writes name, email and address, so NULL means anonymised.
 - Money is integer cents. Times are ISO 8601 in UTC (`2026-11-24T10:15:00.000Z`).
@@ -40,7 +40,23 @@ The `orders` table is the contract between two Workers: this site and the separa
 
 `lines_json` is an array of `{ id, slug, title, authors, priceCents, qty, amountCents }`: titles and prices come from the catalogue, never from the browser.
 
-Retention of personal data is not decided yet (documented in V5).
+## Retention
+
+Personal fields (`name`, `email`, `phone`, `address`, `notes`) are kept until the order ships, then anonymised with the UPDATE by `code` (the staff app will do it; until then it is run by hand after each shipment):
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE orders SET name=NULL, email=NULL, phone=NULL, address=NULL, notes=NULL WHERE code='<code>'"
+```
+
+Erasure requests are the same UPDATE with `WHERE email='<address>'`. City, province, lines and totals stay for statistics.
+
+## Unsent notices
+
+Until the staff app exists, orders whose notice did not go out (`notify_status <> 'sent'`) are found with this query, run at least weekly and whenever a visitor writes about a code; each row is forwarded to `ordini@` by hand:
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --json --command "SELECT code, created_at, notify_status, notify_error FROM orders WHERE notify_status <> 'sent' ORDER BY created_at DESC"
+```
 
 ## Commands
 
