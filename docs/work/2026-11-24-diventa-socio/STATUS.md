@@ -1,0 +1,40 @@
+---
+status: open
+phase: slicing
+slice: null
+step: null
+work: diventa-socio
+stacks: [astro, datocms]
+base: main
+updated: 2026-11-24
+tags: [work, diventa-socio]
+description: "A /diventa-socio page with the texts of the DatoCMS `membership` singleton and a membership request form; the data reaches info@multimage.org by email through Cloudflare (and a D1 copy); the confirmation says the person will be contacted soon and can already pay the fee by bank transfer or PayPal."
+---
+
+# Status — Diventa socio
+
+> Update at the **end of every session**: done, remaining, blockers.
+
+**Entry**: technical, decided on 2026-11-24 because the outcome fits one sentence: a visitor reads the membership info at /diventa-socio, sends the request, and sees a confirmation with the bank transfer and PayPal details.
+
+Owner answers at opening (2026-11-24):
+
+- Form fields: email, first name, last name, date of birth, place of birth, address (line 1, line 2, city, state/province/region, postal code, country defaulting to Italy), fee type (a list, e.g. "10€ — Studente under 25"), payment method (bank transfer or PayPal), collaboration areas as checkboxes (area editoriale, web e social, impaginare, fare video, scrivere articoli per il Magazine, ufficio stampa, partecipare in un gruppo locale, altro with free text).
+- Destination mailbox: info@multimage.org.
+- D1 copy of each request: yes.
+- New fields on the `membership` singleton, edited on the primary environment: yes. Fee tiers and collaboration areas live in DatoCMS.
+- Menu link: added by the editors (no answer; assumed).
+
+## Slices
+
+- [ ] (defined during slicing)
+
+## Pending proposals
+
+<!-- date — kind:name — link, when an adapter returns proposed -->
+
+## Log
+
+<!-- date — step — done — remaining — wall-clock — cost -->
+
+- 2026-11-24 — opening — work opened, technical path: frame, shaping, breadboard and design skipped (outcome clear, form styled like /borsa) — slicing, impact, slices — 10 min — n/a

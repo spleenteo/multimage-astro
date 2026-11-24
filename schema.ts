@@ -674,6 +674,23 @@ export const License = {
   REF: { type: 'item_type', id: '183992' },
 } as const;
 
+export type Membership = ItemTypeDefinition<
+  EnvironmentSettings,
+  'LHYUU8UnQeG-_VSVHqGX9Q',
+  {
+    title: {
+      type: 'string';
+    };
+    description: {
+      type: 'text';
+    };
+  }
+>;
+export const Membership = {
+  ID: 'LHYUU8UnQeG-_VSVHqGX9Q',
+  REF: { type: 'item_type', id: 'LHYUU8UnQeG-_VSVHqGX9Q' },
+} as const;
+
 export type MenuDropdown = ItemTypeDefinition<
   EnvironmentSettings,
   'KqTe02scRaOINXc7vgwjbA',
@@ -1090,6 +1107,7 @@ export type AnyModel =
   | IndexPage
   | Keyword
   | License
+  | Membership
   | Page
   | ProjectComment
   | SchemaMigration
