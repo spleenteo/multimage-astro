@@ -98,41 +98,11 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             <li>Lo staff legge l'ordine e ti risponde per confermarlo.</li>
             <li>Spediamo i libri: con il piego arrivano di solito in una settimana.</li>
             <li>
-              Paghi con bonifico o PayPal, causale <b>"{ORDER_CAUSALE}"</b> e il codice dell'ordine.
+              Paghi con bonifico o PayPal solo dopo la conferma dello staff: i dati te li diamo alla
+              fine.
             </li>
             <li>Mandi la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
           </ol>
-          <div class="order-bank">
-            <dl>
-              <div>
-                <dt>Intestato a</dt>
-                <dd>{ORDER_ACCOUNT_HOLDER}</dd>
-              </div>
-              <div>
-                <dt>Banca</dt>
-                <dd>{ORDER_BANK}</dd>
-              </div>
-              <div>
-                <dt>IBAN</dt>
-                <dd>{formatIban(ORDER_IBAN)}</dd>
-              </div>
-              <div>
-                <dt>BIC</dt>
-                <dd>{ORDER_BIC}</dd>
-              </div>
-              <div>
-                <dt>Banca intermediaria (SWIFT)</dt>
-                <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
-              </div>
-              <div>
-                <dt>PayPal</dt>
-                <dd>{ORDER_PAYPAL}</dd>
-              </div>
-            </dl>
-            <button type="button" class="order-textbtn" data-order-copy-iban hidden>
-              Copia l'IBAN
-            </button>
-          </div>
           <p class="sr-only" aria-live="polite" data-order-announce></p>
         </div>
       </aside>
@@ -375,8 +345,40 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         <ol>
           <li>Aspetta la conferma dello staff, di solito entro due giorni lavorativi.</li>
           <li>
-            Paghi con bonifico su IBAN <b class="order-iban">{ORDER_IBAN}</b> o con PayPal a
-            {ORDER_PAYPAL}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>".
+            Paghi con bonifico o PayPal, causale
+            "<span data-order-done-causale>{ORDER_CAUSALE}</span>".
+            <div class="order-bank">
+              <dl>
+                <div>
+                  <dt>Intestato a</dt>
+                  <dd>{ORDER_ACCOUNT_HOLDER}</dd>
+                </div>
+                <div>
+                  <dt>Banca</dt>
+                  <dd>{ORDER_BANK}</dd>
+                </div>
+                <div>
+                  <dt>IBAN</dt>
+                  <dd class="order-iban">{formatIban(ORDER_IBAN)}</dd>
+                </div>
+                <div>
+                  <dt>BIC</dt>
+                  <dd>{ORDER_BIC}</dd>
+                </div>
+                <div>
+                  <dt>Banca intermediaria (SWIFT)</dt>
+                  <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
+                </div>
+                <div>
+                  <dt>PayPal</dt>
+                  <dd>{ORDER_PAYPAL}</dd>
+                </div>
+              </dl>
+              <button type="button" class="order-textbtn" data-order-copy-iban hidden>
+                Copia l'IBAN
+              </button>
+              <p class="sr-only" aria-live="polite" data-order-announce-done></p>
+            </div>
           </li>
           <li>Manda la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
         </ol>

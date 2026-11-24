@@ -561,13 +561,18 @@ export function initOrderPage(): void {
   const edit = $<HTMLButtonElement>('[data-order-edit]');
   edit?.addEventListener('click', () => openBag(edit));
 
+  // "Copia l'IBAN" lives on the success screen, which has its own live region.
   const copyBtn = $<HTMLButtonElement>('[data-order-copy-iban]');
+  const copyStatus = $('[data-order-announce-done]');
   if (copyBtn && navigator.clipboard) {
     copyBtn.hidden = false;
     copyBtn.addEventListener('click', () => {
+      const tell = (text: string) => {
+        if (copyStatus) copyStatus.textContent = text;
+      };
       navigator.clipboard.writeText(ORDER_IBAN).then(
-        () => say('IBAN copiato'),
-        () => say("Non siamo riusciti a copiare l'IBAN: selezionalo a mano."),
+        () => tell('IBAN copiato'),
+        () => tell("Non siamo riusciti a copiare l'IBAN: selezionalo a mano."),
       );
     });
   }
