@@ -1,4 +1,5 @@
 import type { AssetImage } from './datocms/types';
+import { ORDER_EMAIL } from './order';
 import { toPlainText, truncateToLength } from './text';
 
 type BookAuthor = {
@@ -308,8 +309,6 @@ export function buildGraphicsDetails(source: BookDetailSource): BookDetailItem[]
   return details;
 }
 
-const ORDER_EMAIL = 'ordini@multimage.org';
-
 type OrderMailtoInput = {
   title: string;
   authors?: string[];
@@ -318,8 +317,8 @@ type OrderMailtoInput = {
 };
 
 /**
- * A `mailto:` that starts the order of one book: there is no cart, the email to ordini@ is the
- * order (see /info/ordinare: titles, copies, shipping address). Subject and body are prefilled so
+ * A `mailto:` that starts the order of one book: the order email: the bag's no-JS fallback and its
+ * email alternative (see /info/ordinare: titles, copies, shipping address). Subject and body are prefilled so
  * the reader only adds name and address.
  */
 export function buildOrderMailto({
