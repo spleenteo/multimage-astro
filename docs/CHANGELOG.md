@@ -2,6 +2,22 @@
 
 All notable changes to the Multimage site, newest first.
 
+## v1.3.0 — 2026-11-24 — Buyer kinds from the CMS, a bag button on every book card, bag counters
+
+After a review with the product owner, the order form takes its buyer kinds and discounts from DatoCMS, book cards gain a quick "add to bag" button, and the site counts how the bag is used without tracking anyone.
+
+- **Who orders**: "Chi ordina" lists the records of the new DatoCMS `buyer` collection in their order (Socio, Privato, Scuola, Associazione, Libreria), each with its own discount on the books, never on shipping; the first is preselected and the server recomputes the discount. The member checkbox is gone.
+- **Order data**: D1 migration 0003 lets `buyer_kind` hold any buyer name and stores the discount percentage of each order.
+- **Order form**: the name field reads "Nome e cognome o ragione sociale"; the optional phone explains that the courier uses it; the error summary sits at the top of the form.
+- **Page texts**: the `/borsa` head and next steps come from the DatoCMS `Shop` singleton, with formatting rendered through an allowlist sanitizer.
+- **Payment**: the confirmation leads with the IBAN and a visible copy button, and offers a PayPal button prefilled with the amount and the order code.
+- **Book cards**: every orderable print book card has a bag button level with the price, with a tooltip, that adds one copy.
+- **Bag counters**: adds per book and per button, bags started, emptied and ordered go to Workers Analytics Engine with no visitor identifier; `npm run stats:bag` shows the books added most and the bags left behind.
+- **Design system**: a public, noindex `/designsystem` page renders the components described in `DESIGN.md`.
+- **Work**: `borsa`
+
+---
+
 ## v1.2.0 — 2026-11-24 — Order your books through a bag and an order form
 
 Visitors can now put books in a bag, review quantities and totals, and send an order request to the association from a new order page. Payment stays a bank transfer after shipping: there is no checkout and no account.
