@@ -1,17 +1,17 @@
 ---
 // /diventa-socio: the membership page. Server-rendered and cached like every page, identical for
 // every visitor: no cookie. Title, subtitle, text, fee tiers and collaboration areas come from the
-// Membership singleton in DatoCMS. The markup contract read by _membership-page.client.ts: the
+// Membership singleton in DatoCMS. The markup contract the client script (T7) binds to: the
 // root `data-socio-page`, the form `data-socio-form`, control ids `socio-<key>` (keys of
 // MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
 // error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
 // `data-socio-mailto-box`, the status line `data-socio-status`, the "Altro" field
 // `data-socio-areas-other` and the Turnstile slot `#socio-turnstile`.
-import { createComponent, render } from 'astro/runtime/server/index.js';
 import { StructuredText } from '@datocms/astro/StructuredText';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import Button from '~/components/ui/Button';
+import EmptyBlock from '~/components/datocms/structuredText/blocks/EmptyBlock.astro';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
@@ -72,7 +72,6 @@ const seo = withFallbackSeo(membership?._seoMetaTags, {
 
 // Blocks the content field allows but the page does not render: present in the query so the
 // structured text finds them, drawn as nothing.
-const EmptyBlock = createComponent(() => render``);
 const blockComponents = {
   ...defaultBlockComponents,
   SingleInfoBlockRecord: EmptyBlock,
