@@ -92,7 +92,7 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
-      // Cloudflare Turnstile secret, verified server-side on /api/ordine.
+      // Cloudflare Turnstile secret, verified server-side on /api/ordine and /api/socio.
       TURNSTILE_SECRET_KEY: envField.string({
         context: 'server',
         access: 'secret',
@@ -106,7 +106,7 @@ export default defineConfig({
         context: 'client',
         access: 'public',
       }),
-      // Turnstile site key for the widget on /borsa; public, inlined at build.
+      // Turnstile site key for the widget on /borsa and /diventa-socio; public, inlined at build.
       PUBLIC_TURNSTILE_SITE_KEY: envField.string({
         context: 'client',
         access: 'public',

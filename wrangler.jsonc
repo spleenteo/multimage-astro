@@ -26,8 +26,8 @@
     "Backend": { "type": "worker", "cache": { "enabled": true } },
   },
   "observability": { "enabled": true },
-  // Orders store, shared with the staff app (contract: d1/README.md).
-  // PLACEHOLDER: replaced with the real id from `wrangler d1 create` before the merge; never leave it empty.
+  // D1 database with two tables: `orders` (shared with the staff app, contract in d1/README.md)
+  // and `membership_requests` (written only by the site).
   "d1_databases": [
     {
       "binding": "ORDERS",
