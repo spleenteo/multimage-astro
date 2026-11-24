@@ -254,7 +254,7 @@ export function initOrderPage(): void {
     if (totalLabelEl) totalLabelEl.textContent = orderTotalLabel(member);
     if (totalEl) totalEl.textContent = formatCents(total);
 
-    const href = bagMailto(items, shippingKind);
+    const href = bagMailto(items, shippingKind, member);
     $$<HTMLElement>('[data-order-mailto] a').forEach((a) => a.setAttribute('href', href));
 
     if (items.length > ORDER_MAX_LINES) {

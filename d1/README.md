@@ -12,7 +12,7 @@ The `orders` table is the contract between two Workers: this site and the separa
 - Money is integer cents. Times are ISO 8601 in UTC (`2026-11-24T10:15:00.000Z`).
 - Migrations are additive only: never rename or drop a column the other side reads. The staff app adds its own columns (for example a status) by a new migration.
 - `shipping_kind`, `buyer_kind`, `member` and `notify_status` have CHECK constraints: a new value needs a migration.
-- `member` (0/1) and `discount_cents` come from migration 0002; the discount is 30% of `subtotal_cents`, never of shipping.
+- `member` (0/1) and `discount_cents` come from migration 0002; the discount is 30% of `subtotal_cents`, never of shipping; it is 0 unless `member` = 1, rounded half up to the cent (`memberDiscount` in `src/lib/order.ts`).
 
 ## Columns
 
@@ -36,7 +36,7 @@ The `orders` table is the contract between two Workers: this site and the separa
 | `shipping_cents` | INTEGER NOT NULL         | Shipping cost, in cents                                                                                         | site (INSERT)                        |
 | `total_cents`    | INTEGER NOT NULL         | Subtotal minus discount plus shipping, in cents                                                                 | site (INSERT)                        |
 | `member`         | INTEGER NOT NULL         | 1 when the buyer ticked 'Sono socia o socio'; the staff checks membership (default 0, CHECK 0/1)                | site (INSERT)                        |
-| `discount_cents` | INTEGER NOT NULL         | Member discount, in cents (default 0)                                                                           | site (INSERT)                        |
+| `discount_cents` | INTEGER NOT NULL         | Member discount, in cents: 0 unless `member` = 1, rounded half up (`memberDiscount`); default 0                 | site (INSERT)                        |
 | `consent_at`     | TEXT NOT NULL            | When the buyer accepted the privacy line                                                                        | site (INSERT)                        |
 | `notify_status`  | TEXT NOT NULL            | `pending` (default), `sent`, `failed` or `skipped`                                                              | site (INSERT, then UPDATE by `code`) |
 | `notify_error`   | TEXT NULL                | Why the notification email did not go: an `E_...` code from the send, `unknown` or `no_binding`; NULL otherwise | site (UPDATE by `code`)              |

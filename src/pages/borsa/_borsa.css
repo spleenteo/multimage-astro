@@ -297,10 +297,7 @@
 }
 
 /* Consent and member checkbox rows. */
-.order-consent {
-  @apply mb-5;
-}
-
+.order-consent,
 .order-member {
   @apply mb-5;
 }

@@ -3,6 +3,8 @@
 // src/pages/borsa/_order-pdf.client.ts and is loaded on tap, never with the page.
 import {
   BUYER_KINDS,
+  MEMBER_DISCOUNT_LABEL,
+  MEMBER_LINE,
   ORDER_ACCOUNT_HOLDER,
   ORDER_BANK,
   ORDER_BIC,
@@ -11,11 +13,10 @@ import {
   ORDER_IBAN,
   ORDER_PAYPAL,
   ORDER_SWIFT_INTERMEDIARY,
-  MEMBER_DISCOUNT_LABEL,
-  MEMBER_LINE,
   SHIPPING_KINDS,
   copiesLabel,
   formatCents,
+  formatDiscount,
   formatIban,
   orderTotalLabel,
   type BuyerKind,
@@ -123,7 +124,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   }
   add('rule');
   add('row', 'Copie', String(order.copies));
-  if (order.member) add('row', MEMBER_DISCOUNT_LABEL, `−${formatCents(order.discount)}`);
+  if (order.member) add('row', MEMBER_DISCOUNT_LABEL, formatDiscount(order.discount));
   add(
     'row',
     `Spedizione: ${SHIPPING_KINDS[order.shippingKind].label}`,

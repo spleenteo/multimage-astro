@@ -399,7 +399,10 @@ export function rebuildOrder(
   return { lines: out, dropped };
 }
 
-/** Members get this percentage off the books (PRODUCT.md, /info/adesioni); the staff verifies membership. */
+/**
+ * Members get this percentage off the books (PRODUCT.md, /info/adesioni); the staff verifies
+ * membership.
+ */
 export const MEMBER_DISCOUNT_PERCENT = 30;
 
 /** The discount line label, with U+2212 as the minus sign. */
@@ -408,7 +411,10 @@ export const MEMBER_DISCOUNT_LABEL = `Sconto soci −${MEMBER_DISCOUNT_PERCENT}%
 /** The line that marks a member order in the email, the success screen and the PDF. */
 export const MEMBER_LINE = 'Socia/socio: sì';
 
-/** The member discount on a books subtotal, in cents, rounded half up to the cent (1599 gives 480). */
+/**
+ * The member discount on a books subtotal, in cents, rounded half up to the cent (1599 gives
+ * 480).
+ */
 export function memberDiscount(subtotal: number): number {
   return Math.round((subtotal * MEMBER_DISCOUNT_PERCENT) / 100);
 }
@@ -458,7 +464,10 @@ export function orderCode(at: Date, random: Uint8Array): string {
   return `MM-${date}-${suffix}`;
 }
 
-/** The `orders` columns the site writes, in table order (`id` and `notify_error` are left out; `member` and `discount_cents` come from migration 0002). */
+/**
+ * The `orders` columns the site writes, in table order (`id` and `notify_error` are left out;
+ * `member` and `discount_cents` come from migration 0002).
+ */
 export const ORDER_COLUMNS = [
   'code',
   'created_at',
@@ -624,11 +633,16 @@ export function checkSiteverify(
 }
 
 /** The email fallback: a mailto with every bag line, for when the form is off or sending failed. */
-export function bagMailto(items: BagItem[], shipping: ShippingKind = 'piego'): string {
+export function bagMailto(
+  items: BagItem[],
+  shipping: ShippingKind = 'piego',
+  member = false,
+): string {
   const body = [
     ...items.map((i) => `${i.title} · ${copiesLabel(i.qty)}`),
     '',
     `Spedizione: ${SHIPPING_KINDS[shipping].label}`,
+    ...(member ? [MEMBER_LINE] : []),
     '',
     'Nome e cognome:',
     'Indirizzo di spedizione:',
