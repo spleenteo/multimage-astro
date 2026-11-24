@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig, envField } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
@@ -125,6 +127,19 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // Vercel build and Node dev compile the bindings wrapper against an empty stub; the
+    // Cloudflare build gets the real `cloudflare:workers`.
+    ...(isCloudflare
+      ? {}
+      : {
+          resolve: {
+            alias: {
+              'cloudflare:workers': fileURLToPath(
+                new URL('./src/lib/cloudflare-workers-stub.ts', import.meta.url),
+              ),
+            },
+          },
+        }),
     define: {
       'import.meta.env.DEPLOY_TARGET': JSON.stringify(process.env.DEPLOY_TARGET ?? 'vercel'),
     },
