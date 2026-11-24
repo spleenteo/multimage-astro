@@ -62,6 +62,10 @@ Cross-cutting rules for every slice:
 - `isPrintInCatalogue` sits next to `isOrderablePrint`, so a print book with no price keeps the mailto (`isOrderablePrint` alone can't say that).
 - The navy "oppure scrivici un'email" link is on the book page only; the home hero keeps its "Altri modi per averlo" list.
 
+**V1 — done on 2026-11-24**
+
+V1 shipped the bag end to end on the client: `src/lib/order.ts` (no imports) holds ordini@, the 1–20 cap, the storage key, the two order rules and the money helpers; `bag.client.ts` keeps `{"v":1,"items":[]}` in localStorage with cross-tab sync; `BagDrawer` (native modal dialog in BaseLayout, static markup) renders it and drives the header buttons; `BagAdd` swaps a mailto fallback for "Metti in borsa" on the book page and the home hero. Reviews caught what the plan didn't foresee: the header row overflowed at 390px once the bag button joined it (Menu text now sr-only below sm); the drawer clipped its footer on short screens and announced nothing to screen readers (panel scrolls under 36rem, a persistent live region); the browser walk measured the stepper at 44×42 because the group's border ate 2px (fixed); the BagAdd second-init guard used an empty-string flag that never stopped anything. T2 had to edit T1's order.ts to export the euro formatter the plan said it exported (ruling). Executors sign commits with their own model name in the trailer (ruling). Packets were passed by reference to a file, not inline (ruling). The browser walk ran in headless Chromium from a cached Playwright; Done 1–7 pass, Done 9 has no live example in the catalogue. Pending, accepted: Done 9 (no unpriced print book in the catalogue to try; covered by T1's check and the T7/T8 reviews).
+
 ## V2 — The order page and the sending endpoint
 
 **In**

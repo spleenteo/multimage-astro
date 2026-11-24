@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V1
-step: execute
+slice: V2
+step: plan
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -24,7 +24,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Slices
 
-- [ ] V1 — The bag: add, see, change, empty
+- [x] V1 — The bag: add, see, change, empty
 - [ ] V2 — The order page and the sending endpoint
 - [ ] V3 — Hardening, docs and handover
 
@@ -34,6 +34,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — V1 closed — 13 commits, gate green, Done 1–7 verified in headless Chromium, Done 9 pending (no example); 3 rulings — 19 min run — n/a
 - 2026-11-24 — V1 plan + review — 9 tasks; review 1 high, 4 medium, 4 low, all applied — 20 min — n/a
 - 2026-11-24 — impact — 2 agents: 3 high (fail-closed keys, Turnstile test key in prod), 11 medium, 7 low; all fixes applied to slices.md (user asked for no stops) — 15 min — n/a
 - 2026-11-24 — design + slicing — Impeccable mock docs/design/borsa/borsa-mock.html (artifact HCDpvQfMtVnqefTtB1NNeq); 3 slices; fidelity checks skipped: no frame — 30 min — n/a
