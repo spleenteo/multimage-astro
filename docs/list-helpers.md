@@ -88,7 +88,7 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: `order.ts` (the order facts and `orderPaypalUrl` build on them), `/diventa-socio` and its client script.
   - Notes: IBAN, BIC and PayPal must stay in step with the CMS pages (TODO **BORSA-info-sync**).
 - **`turnstile`** (`src/lib/turnstile.ts`)
-  - Purpose: server-side Turnstile check shared by the form endpoints: `DEV_TURNSTILE_SECRET` (Cloudflare's always-pass test secret), `turnstileSecret(configured, isDev)`, `checkSiteverify(result, { hostname, action, lenient })` (`success`, and unless lenient the hostname and action) and `verifyTurnstile({ secret, token, request, action, isDev })` (siteverify call with a 10 s timeout, never logs the token; `502 turnstile_unavailable` when unreachable). The test secret and the lenient check apply to localhost hostnames only.
+  - Purpose: server-side Turnstile check shared by the form endpoints: `DEV_TURNSTILE_SECRET` (Cloudflare's always-pass test secret), `turnstileSecret(configured, isDev)`, `checkSiteverify(result, { hostname, action, lenient })` (`success`, and unless lenient the hostname and action) and `verifyTurnstile({ secret, token, request, action, isDev })` (siteverify call with a 10 s timeout, never logs the token; `502 turnstile_unavailable` when unreachable). The test secret is the fallback in dev only; the lenient check applies in dev, and outside dev only on the hostnames `localhost` and `127.0.0.1` with a test secret.
   - Used in: `/api/ordine` (action `ordine`), `/api/socio` (action `socio`).
 - **`membership` facts** (`src/lib/membership.ts`)
   - Purpose: shared by browser and server. Field keys and limits (`MEMBERSHIP_*_MIN/MAX`), `MembershipFields`, `PAYMENT_METHODS` (bonifico, PayPal), `AREA_OTHER`, `MEMBERSHIP_EMAIL`, `MEMBERSHIP_ACTION` (`socio`), the Italian labels, per-field messages and the consent wording (`MEMBERSHIP_LABELS`, `MEMBERSHIP_FIELD_MESSAGES`, `MEMBERSHIP_CONSENT_LABEL`, `MEMBERSHIP_CONSENT_HINT`), the response types (`MembershipResponse`, `MembershipErrorCode`), `membershipFeeLabel` and `validateMembershipFields`.
@@ -107,10 +107,10 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Purpose: `renderOrderPdf` draws the model with jsPDF (A4, text only), `saveOrderPdf` saves `ordine-<code>.pdf`. Loaded only by a dynamic `import()` on the tap of "Scarica il PDF", so jsPDF is a lazy chunk.
   - Used in: `_order-page.client.ts`.
 - **Cloudflare bindings** (`src/lib/cloudflare-bindings.ts`)
-  - Purpose: the one wrapper over `cloudflare:workers`: `getOrderDb()` (D1 `ORDERS`) and `getOrderMail()` (`send_email` `ORDER_MAIL`), each returning `null` when the binding is missing. Outside the Cloudflare build the module is aliased to `cloudflare-workers-stub.ts` in `astro.config.mjs`.
-  - Used in: `/api/ordine`.
+  - Purpose: the one wrapper over `cloudflare:workers`: `getOrderDb()` (D1 `ORDERS`), `getOrderMail()` (`send_email` `ORDER_MAIL`), `getMembershipMail()` (`send_email` `MEMBERSHIP_MAIL`) and `getBagEvents()` (Analytics Engine `BAG_EVENTS`), each returning `null` when the binding is missing. Outside the Cloudflare build the module is aliased to `cloudflare-workers-stub.ts` in `astro.config.mjs`.
+  - Used in: `/api/ordine` (`getOrderDb`, `getOrderMail`, `getBagEvents`), `/api/socio` (`getOrderDb`, `getMembershipMail`), `/api/evento` (`getBagEvents`).
 - **`cloudflare:workers` stub** (`src/lib/cloudflare-workers-stub.ts`)
-  - Purpose: an empty `env`, so the Vercel build and plain `npm run dev` compile and both getters above return `null`.
+  - Purpose: an empty `env`, so the Vercel build and plain `npm run dev` compile and all getters above return `null`.
   - Used in: the Vite alias for `cloudflare:workers` (non-Cloudflare builds).
 - **bag store** (`src/lib/bag.client.ts`)
   - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
