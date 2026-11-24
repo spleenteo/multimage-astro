@@ -187,9 +187,9 @@ export function toBuyers(
   return out.length > 0 ? out : FALLBACK_BUYERS;
 }
 
-/** The buyer preselected in the form: the first without discount, else the first. */
+/** The buyer preselected in the form: the first of the collection (members come first). */
 export function defaultBuyer(buyers: Buyer[]): Buyer {
-  return buyers.find((b) => b.discount === 0) ?? buyers[0];
+  return buyers[0];
 }
 
 // --- Types -----------------------------------------------------------------
