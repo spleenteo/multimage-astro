@@ -96,7 +96,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('heading', `Richiesta d'ordine ${code}`);
   add('meta', dateIt.format(at));
   if (!order.notified) {
-    add('text', `L'avviso a Olivier non è partito: scrivi a ${ORDER_EMAIL} indicando il codice.`);
+    add('text', `L'avviso allo staff non è partito: scrivi a ${ORDER_EMAIL} indicando il codice.`);
   }
 
   add('heading', 'Spedizione a');
@@ -130,7 +130,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   }
 
   add('heading', 'Cosa succede dopo');
-  add('text', "1. Olivier conferma l'ordine entro due giorni lavorativi.");
+  add('text', "1. Lo staff conferma l'ordine entro due giorni lavorativi.");
   add('text', `2. Paghi con bonifico o PayPal, con causale "${ORDER_CAUSALE} ${code}".`);
   add('text', `3. Mandi la ricevuta a ${ORDER_EMAIL}: i libri partono.`);
 

@@ -326,7 +326,7 @@ export function initOrderPage(): void {
       strong.textContent = res.code;
       if (res.notified) {
         lede.replaceChildren(
-          "L'abbiamo girato a Olivier. Il codice del tuo ordine è ",
+          "L'abbiamo girato allo staff. Il codice del tuo ordine è ",
           strong,
           '.',
         );
@@ -341,7 +341,7 @@ export function initOrderPage(): void {
         lede.replaceChildren(
           'Abbiamo registrato il tuo ordine con il codice ',
           strong,
-          ", ma l'avviso a Olivier non è partito. Scrivici a ",
+          ", ma l'avviso allo staff non è partito. Scrivici a ",
           link,
           ' indicando il codice.',
         );

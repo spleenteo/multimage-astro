@@ -46,7 +46,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <p class="order-page__size" data-order-size></p>
       {siteKey ? (
         <p class="order-page__lede" data-order-lede>
-          Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri. Alla
+          Lasciaci i tuoi dati: l'ordine arriva allo staff, che lo conferma e spedisce i libri. Alla
           fine scarichi il PDF della tua richiesta, con le istruzioni per il pagamento.
         </p>
       ) : null}
@@ -89,7 +89,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         <div class="order-next">
           <h2 class="order-h3">Cosa succede dopo</h2>
           <ol>
-            <li>Olivier legge l'ordine e ti risponde per confermarlo.</li>
+            <li>Lo staff legge l'ordine e ti risponde per confermarlo.</li>
             <li>Spediamo i libri: con il piego arrivano di solito in una settimana.</li>
             <li>
               Paghi con bonifico o PayPal, causale <b>"{ORDER_CAUSALE}"</b> e il codice dell'ordine.
@@ -353,7 +353,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <div class="order-next order-next--done">
         <h2 class="order-h3">Adesso</h2>
         <ol>
-          <li>Aspetta la conferma di Olivier, di solito entro due giorni lavorativi.</li>
+          <li>Aspetta la conferma dello staff, di solito entro due giorni lavorativi.</li>
           <li>
             Paghi con bonifico su IBAN <b class="order-iban">{ORDER_IBAN}</b> o con PayPal a
             {ORDER_PAYPAL}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>".
