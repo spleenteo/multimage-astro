@@ -11,6 +11,8 @@ export const PAYMENT_METHODS = {
   paypal: 'PayPal',
 } as const;
 
+export type PaymentMethod = keyof typeof PAYMENT_METHODS;
+
 /** Value of the fixed "Altro" collaboration checkbox. */
 export const AREA_OTHER = 'altro';
 
@@ -71,6 +73,30 @@ export interface MembershipFields {
   areasOther: string;
   consent: boolean;
 }
+
+export type MembershipErrorCode =
+  | 'method_not_allowed'
+  | 'bad_request'
+  | 'too_large'
+  | 'invalid'
+  | 'turnstile'
+  | 'turnstile_unavailable'
+  | 'cms_unavailable'
+  | 'save_failed'
+  | 'not_configured';
+
+export type MembershipResponse =
+  | {
+      ok: true;
+      code: string;
+      notified: boolean;
+      /** The fee as the server resolved it from the CMS. */
+      fee: { label: string; amountCents: number };
+      payment: PaymentMethod;
+      /** The payment reason to write on the transfer or the PayPal payment. */
+      causale: string;
+    }
+  | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
 
 export const MEMBERSHIP_LABELS: Record<MembershipFieldKey, string> = {
   email: 'Email',
