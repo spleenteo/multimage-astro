@@ -8,6 +8,7 @@ import {
   ORDER_ACTION,
   ORDER_STEP_CONFIRM_UNNOTIFIED,
   orderCausale,
+  orderPaypalUrl,
   ORDER_EMAIL,
   ORDER_FIELD_MESSAGES,
   ORDER_IBAN,
@@ -411,6 +412,14 @@ export function initOrderPage(): void {
 
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
     if (printBtn) printBtn.hidden = false;
+
+    // Private buyers get a prefilled PayPal link; for the others the staff sets the amount.
+    const paypal = done.querySelector<HTMLElement>('[data-order-paypal]');
+    const paypalLink = done.querySelector<HTMLAnchorElement>('[data-order-paypal-link]');
+    if (paypal && paypalLink && fields.buyer === 'privato') {
+      paypalLink.href = orderPaypalUrl(res.code, res.total);
+      paypal.hidden = false;
+    }
 
     const causale = done.querySelector('[data-order-done-causale]');
     if (causale) causale.textContent = orderCausale(res.code);

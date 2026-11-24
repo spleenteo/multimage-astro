@@ -59,6 +59,15 @@ export function renderOrderPdf(pdf: OrderPdf): jsPDF {
         }
         break;
       }
+      case 'link': {
+        font('normal', 10);
+        doc.setTextColor(0, 72, 129);
+        room(lineH(10));
+        y += lineH(10);
+        doc.textWithLink(b.text, MARGIN, y - lineH(10) * 0.25, { url: b.url ?? '' });
+        doc.setTextColor(0, 0, 0);
+        break;
+      }
       case 'row': {
         font('normal', 10);
         const lines: string[] = doc.splitTextToSize(b.text, width - AMOUNT_COL);

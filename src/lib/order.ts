@@ -461,6 +461,26 @@ export function orderCausale(code: string): string {
   return `${ORDER_CAUSALE} ${code}`;
 }
 
+/** The PayPal link's text: the payment still waits for the staff's confirmation. */
+export const ORDER_PAYPAL_LINK_LABEL = 'Paga con PayPal dopo la conferma dello staff';
+
+/**
+ * A PayPal payment link prefilled with recipient, amount and causale (PayPal's classic
+ * `_xclick` URL: it needs only the account email, no API key). Private buyers only: for schools,
+ * associations and bookshops the staff sets the amount.
+ */
+export function orderPaypalUrl(code: string, totalCents: number): string {
+  const params = new URLSearchParams({
+    cmd: '_xclick',
+    business: ORDER_PAYPAL,
+    amount: (totalCents / 100).toFixed(2),
+    currency_code: 'EUR',
+    item_name: orderCausale(code),
+    no_shipping: '1',
+  });
+  return `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
+}
+
 /** The buyer-kind question, as the form, the email and the PDF ask it. */
 export const BUYER_LABEL = 'Chi ordina';
 

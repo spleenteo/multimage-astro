@@ -13,9 +13,11 @@ import {
   ORDER_STEP_PAY,
   ORDER_STEP_RECEIPT_LEAD,
   orderCausale,
+  orderPaypalUrl,
   ORDER_EMAIL,
   ORDER_IBAN,
   ORDER_PAYPAL,
+  ORDER_PAYPAL_LINK_LABEL,
   ORDER_SWIFT_INTERMEDIARY,
   SHIPPING_KINDS,
   copiesLabel,
@@ -32,9 +34,11 @@ import {
 } from './order';
 
 export type OrderPdfBlock = {
-  kind: 'brand' | 'meta' | 'heading' | 'text' | 'row' | 'total' | 'rule';
+  kind: 'brand' | 'meta' | 'heading' | 'text' | 'row' | 'total' | 'rule' | 'link';
   text: string;
   right?: string;
+  /** For `link`: the target URL (not passed through pdfText). */
+  url?: string;
 };
 
 export type OrderPdf = { filename: string; title: string; blocks: OrderPdfBlock[] };
@@ -157,6 +161,13 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `BIC: ${ORDER_BIC}`);
   add('text', `Banca intermediaria (SWIFT): ${ORDER_SWIFT_INTERMEDIARY}`);
   add('text', `PayPal: ${ORDER_PAYPAL}`);
+  if (buyer.buyer === 'privato') {
+    blocks.push({
+      kind: 'link',
+      text: pdfText(ORDER_PAYPAL_LINK_LABEL),
+      url: orderPaypalUrl(code, order.total),
+    });
+  }
   add('text', `Causale: ${orderCausale(code)}`);
   add('meta', 'I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.');
 

@@ -20,6 +20,7 @@ import {
   ORDER_IBAN,
   ORDER_NOTES_MAX,
   ORDER_PAYPAL,
+  ORDER_PAYPAL_LINK_LABEL,
   ORDER_STEP_CONFIRM,
   ORDER_STEP_PAY,
   ORDER_STEP_PAY_LATER,
@@ -513,6 +514,12 @@ const buyerEntries = Object.entries(BUYER_KINDS);
                 </div>
               </dl>
               <p class="order-bank__paypal">Oppure con PayPal a <b>{ORDER_PAYPAL}</b></p>
+              <p class="order-bank__paypal-link" data-order-paypal hidden>
+                <a target="_blank" rel="noopener noreferrer" data-order-paypal-link>
+                  {ORDER_PAYPAL_LINK_LABEL}<span class="sr-only">
+                    (si apre in una nuova scheda)</span>
+                </a>
+              </p>
               <p class="sr-only" aria-live="polite" data-order-announce-done></p>
             </div>
           </li>

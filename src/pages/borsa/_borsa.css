@@ -234,6 +234,10 @@
   @apply font-semibold;
 }
 
+.order-bank__paypal-link a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:no-underline md:min-h-8;
+}
+
 .order-bank dl {
   @apply space-y-2;
 }
