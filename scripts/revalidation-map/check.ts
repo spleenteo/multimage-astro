@@ -131,6 +131,7 @@ const ROUTES: Array<[string, string, string | null]> = [
   ['index_page', 'sconosciuta', null],
   ['index_page', 'constructor', null],
   ['supplier', '', '/distributori'],
+  ['membership', '', '/diventa-socio'],
   ['books_index', '', null],
 ];
 for (const [apiKey, slug, want] of ROUTES) {

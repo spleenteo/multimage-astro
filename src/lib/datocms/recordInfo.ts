@@ -55,6 +55,8 @@ export async function recordToWebsiteRoute(
       return '/distributori';
     case 'page':
       return buildUrl('/info', item.attributes.slug as MaybeSlug);
+    case 'membership':
+      return '/diventa-socio';
     default:
       return null;
   }

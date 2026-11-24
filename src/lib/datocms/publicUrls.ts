@@ -14,6 +14,7 @@ const STATIC_URLS: readonly string[] = [
   '/distributori',
   '/cerca',
   '/info',
+  '/diventa-socio',
 ];
 
 const ALL_SLUGS_QUERY = /* GraphQL */ `

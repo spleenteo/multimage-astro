@@ -12,6 +12,7 @@ const STATIC_PATHS = [
   '/distributori',
   '/magazine',
   '/info',
+  '/diventa-socio',
 ];
 
 type SitemapEntry = {
