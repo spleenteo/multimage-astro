@@ -239,3 +239,25 @@ V4 moved the order record to Cloudflare: d1/migrations/0001_orders.sql creates `
 **V5 — done on 2026-11-24**
 
 V5 finished the Cloudflare-only order flow. The endpoint retries the insert once with a fresh code on a UNIQUE clash on orders.code (saveWithCodeRetry/isCodeClash in order.ts; the local D1 error text "UNIQUE constraint failed: orders.code" was confirmed in T6), and builds the shop email after the save so it carries the saved code. The success screen gained "Non riceverai un'email: scarica il PDF della tua richiesta.", a "Scarica il PDF" button that lazy-loads jsPDF 4.2.1 (exact pin; a separate ~400 KB chunk, none of it in /borsa's entry closure) and saves ordine-<code>.pdf built from a pure model (order-pdf.ts, WinAnsi-safe text, line breaks kept as spaces), the print button beside it, and a print sheet scoped to the success state (the first version blanked any print of /borsa before sending). The causale now carries the code; every visitor-email promise is gone; the consent carries the staff-retention line. Mid-slice the user asked for "lo staff" instead of "Olivier" in all visitor text (T3b). setup-borsa.md was rewritten for Cloudflare only (SPF first … rollback, WAF before the Turnstile secret, unsent-notice query and anonymising UPDATE), d1/README.md got retention and unsent notices, and guidelines, inventories (docs:inventory green again), current state, TODO (BORSA-staff-app, BORSA-privacy, BORSA-stream-log; MAIL-auth to H) and DESIGN.md were brought in line. The final review caught a PDF step that contradicted the page ("i libri partono" after the receipt) and five doc statements wrong against the code; its fix round first dropped the user's binding wording and was sent back. Rulings: the packet was read from file rather than pasted; "Non riceverai un'email" kept as the user's wording; anonymising keeps city/province (privacy call for the user). Mobile Safari download is pending for the user. Pending: PDF on mobile Safari (user, on a phone).
+
+## V6 — Member discount (soci 30%)
+
+User's request (2026-11-24): a checkbox "sono socio" on the form; when ticked, 30% off the total. Soci get 30% off every publication (PRODUCT.md, `/info/adesioni`). Also from the same message: anonymising keeps city and province (they are not personal once name and address are gone).
+
+**In**
+
+- `src/lib/order.ts`: `MEMBER_DISCOUNT_PERCENT = 30`; totals gain `discount` (cents, 30% of the books subtotal, rounded to the cent) applied to the books only, never to shipping; the fast-shipping +5 € stays whole. Field `member: boolean` in `OrderFields` and the request parsing.
+- Form: a checkbox row (DESIGN.md checkbox rows, 44px) "Sono socia o socio di Multimage" with a note "Sconto del 30% sul prezzo di copertina: lo staff verifica l'iscrizione." (feminine first, as the site's paired forms). The recap aside and its totals show the "Sconto soci −30%" line live when ticked.
+- Endpoint: recomputes the discount on the server (never trusts the client), stores it; D1 migration `d1/migrations/0002_member_discount.sql`, additive: `member INTEGER NOT NULL DEFAULT 0 CHECK (member IN (0,1))`, `discount_cents INTEGER NOT NULL DEFAULT 0`; `total_cents` is after discount; `d1/README.md` contract updated.
+- Shop email, success screen and PDF: a "Socia/socio: sì" line and the discount line, total after discount.
+- Docs: d1/README retention paragraph says city and province stay after anonymising (user's call); setup note gets the remote apply of 0002; current-state, DESIGN.md order page.
+
+**Out**: checking membership (the staff does it).
+
+**Done**
+
+1. Ticking the box shows "Sconto soci" and a total 30% lower on the books; with fast shipping the 5 € is not discounted.
+2. A submit with `member: true` stores `member=1`, `discount_cents` and the discounted `total_cents` in local D1; the email, success screen and PDF show the discount.
+3. Unticked: no discount line anywhere, totals as before.
+4. Gate green (lint, build, docs:inventory, build:cf).
+
