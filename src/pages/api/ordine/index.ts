@@ -1,37 +1,46 @@
 /**
- * POST /api/ordine: sends one order by email.
+ * POST /api/ordine: saves one order to D1 and notifies the shop by email.
  *
  * Order of answers (the first failing check wins):
  *   405 method_not_allowed (any method but POST)
- *   503 not_configured (Resend key or Turnstile secret unset, outside dev)
+ *   503 not_configured (Turnstile secret unset, or neither ORDERS nor ORDER_MAIL bound, outside dev)
  *   400 too_large, bad_request, empty_bag, too_many_lines, bad_lines, invalid, turnstile
  *   502 turnstile_unavailable (siteverify unreachable)
  *   502 catalogue_unavailable (CDA read failed)
  *   409 nothing_orderable (every line dropped)
- *   502 send_failed (the mail to the shop failed)
- *   200 { ok, copySent, lines, copies, shipping, shippingKind, total, dropped }
+ *   502 save_failed (not saved and the notification failed or has no binding)
+ *   200 { ok, code, notified, lines, copies, shipping, shippingKind, total, dropped }
  *
+ * D1 is the record, the email a notification: saved and mail failed (or no mail
+ * binding) is still 200 with `notified: false` and the row marked `failed` or
+ * `skipped`; not saved but mailed is 200 too (the email carries the whole order).
  * The client sends only book ids and quantities: titles and prices are rebuilt
- * from the published catalogue, so a tampered bag never reaches the email.
+ * from the published catalogue, so a tampered bag never reaches D1 or the email.
  * Error bodies carry codes only. Nothing personal is ever logged: one line per
- * answer with the status, the code and counts. In dev with no Resend key the
- * email text goes to the console instead of the network.
+ * answer with the status, the code and counts. Bindings come only through
+ * `~/lib/cloudflare-bindings`; with none (Vercel build, plain dev) dev prints the
+ * email text to the console and answers 200.
  *
  * It does not use `src/pages/api/utils.ts` (CORS `*` and error echo do not fit
- * a form endpoint) nor the Workers runtime module (breaks the Vercel build). It sets
- * `cache-control: private, no-store` itself, so the check also holds in dev.
+ * a form endpoint). It sets `cache-control: private, no-store` itself, so the
+ * check also holds in dev.
  */
 import type { APIRoute } from 'astro';
-import { RESEND_API_KEY, TURNSTILE_SECRET_KEY } from 'astro:env/server';
+import { TURNSTILE_SECRET_KEY } from 'astro:env/server';
+import { getOrderDb, getOrderMail } from '~/lib/cloudflare-bindings';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { getAuthorDisplayName } from '~/lib/authors';
 import {
   ORDER_ACTION,
   ORDER_BODY_MAX_BYTES,
   ORDER_EMAIL,
-  ORDER_FROM,
+  ORDER_COLUMNS,
+  ORDER_FROM_ADDRESS,
+  ORDER_FROM_NAME,
   checkSiteverify,
+  orderCode,
   orderEmail,
+  orderRow,
   orderTotals,
   parseOrderRequest,
   rebuildOrder,
@@ -47,12 +56,21 @@ export const prerender = false;
 
 const LOG = '[ordine]';
 const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-const RESEND_URL = 'https://api.resend.com/emails';
 // Cloudflare's always-pass test secret, used only in dev when no secret is set.
 const DEV_TURNSTILE_SECRET = '1x0000000000000000000000000000000AA';
 const TEST_SECRET = /^\dx0+AA$/;
 // DatoCMS item ids: 22 base64url characters, or digits on older records.
 const ITEM_ID = /^(?:[A-Za-z0-9_-]{22}|\d{1,20})$/;
+// Built once: values only ever go through bind().
+const INSERT_SQL = `INSERT INTO orders (${ORDER_COLUMNS.join(', ')}) VALUES (${ORDER_COLUMNS.map((_, i) => `?${i + 1}`).join(', ')})`;
+const NOTIFY_SQL = 'UPDATE orders SET notify_status = ?1, notify_error = ?2 WHERE code = ?3';
+const MAIL_ERROR = /^E_[A-Z0-9_]{1,60}$/;
+
+// The send_email error code when it has the expected shape, else 'unknown': never a message.
+function mailErrorCode(err: unknown): string {
+  const code = typeof err === 'object' && err !== null ? (err as { code?: unknown }).code : null;
+  return typeof code === 'string' && MAIL_ERROR.test(code) ? code : 'unknown';
+}
 
 function reply(body: OrderResponse, status: number, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
@@ -80,36 +98,14 @@ export const ALL: APIRoute = () => {
   return reply({ ok: false, error: 'method_not_allowed' }, 405, { allow: 'POST' });
 };
 
-async function sendMail(
-  apiKey: string,
-  mail: { to: string; replyTo: string; subject: string; text: string },
-): Promise<boolean> {
-  try {
-    const res = await fetch(RESEND_URL, {
-      method: 'POST',
-      headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        from: ORDER_FROM,
-        to: [mail.to],
-        reply_to: mail.replyTo,
-        subject: mail.subject,
-        text: mail.text,
-      }),
-      signal: AbortSignal.timeout(10000),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
 export const POST: APIRoute = async ({ request }) => {
   const isDev = import.meta.env.DEV;
-  const resendKey = RESEND_API_KEY || '';
+  const db = getOrderDb();
+  const mail = getOrderMail();
   const turnstileSecret = TURNSTILE_SECRET_KEY || (isDev ? DEV_TURNSTILE_SECRET : '');
 
   // 1. Config: fail closed outside dev.
-  if (!turnstileSecret || (!resendKey && !isDev)) return fail(503, 'not_configured');
+  if (!turnstileSecret || (!db && !mail && !isDev)) return fail(503, 'not_configured');
 
   // 2. Size: the declared length first, then the real bytes.
   const declared = Number(request.headers.get('content-length'));
@@ -194,41 +190,83 @@ export const POST: APIRoute = async ({ request }) => {
   const { lines, dropped } = rebuildOrder(order.lines, books);
   if (lines.length === 0) return fail(409, 'nothing_orderable');
 
-  // 7. Totals and email.
+  // 7. Totals, save, notify.
   const shippingKind = order.shipping as ShippingKind;
   const totals = orderTotals(lines, shippingKind);
-  const data = { order, lines, totals };
-  const shopMail = orderEmail(data, 'shop');
-  const visitorMail = orderEmail(data, 'visitor');
+  const at = new Date();
+  const code = orderCode(at, crypto.getRandomValues(new Uint8Array(4)));
+  const { subject, text } = orderEmail({ order, lines, totals, code });
 
-  let copySent: boolean;
-  if (resendKey) {
-    const shopSent = await sendMail(resendKey, {
-      to: ORDER_EMAIL,
-      replyTo: order.email,
-      ...shopMail,
-    });
-    if (!shopSent) return fail(502, 'send_failed');
-    copySent = await sendMail(resendKey, {
-      to: order.email,
-      replyTo: ORDER_EMAIL,
-      ...visitorMail,
-    });
-  } else if (isDev) {
-    // Dev with no key: print the texts instead of sending them.
-    console.log(`${LOG} (dev) to ${ORDER_EMAIL}\n${shopMail.subject}\n\n${shopMail.text}`);
-    console.log(`${LOG} (dev) to ${order.email}\n${visitorMail.subject}\n\n${visitorMail.text}`);
-    copySent = true;
+  let saved = false;
+  let notified = false;
+  let notifyError: string | null = null;
+
+  if (!db && !mail) {
+    // No bindings (plain dev): print the text instead of sending it.
+    if (import.meta.env.DEV) {
+      console.log(`${LOG} (dev) to ${ORDER_EMAIL}\n${subject}\n\n${text}`);
+    } else {
+      return fail(503, 'not_configured');
+    }
   } else {
-    return fail(503, 'not_configured');
+    if (db) {
+      try {
+        await db
+          .prepare(INSERT_SQL)
+          .bind(...orderRow({ order, lines, totals, code, at }))
+          .run();
+        saved = true;
+      } catch {
+        // No error text: it can quote the row.
+        console.error(`${LOG} save_error`);
+      }
+    }
+    if (mail) {
+      try {
+        await mail.send({
+          from: { email: ORDER_FROM_ADDRESS, name: ORDER_FROM_NAME },
+          to: ORDER_EMAIL,
+          replyTo: order.email,
+          subject,
+          text,
+        });
+        notified = true;
+      } catch (err) {
+        notifyError = mailErrorCode(err);
+      }
+    } else {
+      notifyError = 'no_binding';
+    }
+    if (!saved && !notified) return fail(502, 'save_failed');
+    if (saved) {
+      try {
+        await db!
+          .prepare(NOTIFY_SQL)
+          .bind(
+            notified ? 'sent' : notifyError === 'no_binding' ? 'skipped' : 'failed',
+            notifyError,
+            code,
+          )
+          .run();
+      } catch {
+        console.error(`${LOG} notify_update_error`);
+      }
+    }
   }
 
   // 8. Answer.
-  console.log(`${LOG} 200 ok lines=${lines.length} dropped=${dropped.length} copySent=${copySent}`);
+  if (!db && !mail) {
+    console.log(`${LOG} 200 ok (dev) lines=${lines.length} dropped=${dropped.length}`);
+  } else {
+    console.log(
+      `${LOG} 200 ok lines=${lines.length} dropped=${dropped.length} saved=${saved} notified=${notified}${notifyError ? ` notify_error=${notifyError}` : ''}`,
+    );
+  }
   return reply(
     {
       ok: true,
-      copySent,
+      code,
+      notified,
       lines: lines.map(({ id, title, qty, priceCents, amountCents }) => ({
         id,
         title,

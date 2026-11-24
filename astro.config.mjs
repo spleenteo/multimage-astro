@@ -92,12 +92,6 @@ export default defineConfig({
         access: 'secret',
         optional: true,
       }),
-      // Order email through the Resend HTTP API (/api/ordine); unset = endpoint answers 503 outside dev.
-      RESEND_API_KEY: envField.string({
-        context: 'server',
-        access: 'secret',
-        optional: true,
-      }),
       // Cloudflare Turnstile secret, verified server-side on /api/ordine.
       TURNSTILE_SECRET_KEY: envField.string({
         context: 'server',

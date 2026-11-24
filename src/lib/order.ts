@@ -236,7 +236,6 @@ export type OrderErrorCode =
   | 'nothing_orderable'
   | 'turnstile_unavailable'
   | 'catalogue_unavailable'
-  | 'send_failed'
   | 'save_failed'
   | 'not_configured';
 
