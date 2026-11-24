@@ -51,7 +51,8 @@ const RESEND_URL = 'https://api.resend.com/emails';
 // Cloudflare's always-pass test secret, used only in dev when no secret is set.
 const DEV_TURNSTILE_SECRET = '1x0000000000000000000000000000000AA';
 const TEST_SECRET = /^\dx0+AA$/;
-const ITEM_ID = /^[A-Za-z0-9_-]{22}$/;
+// DatoCMS item ids: 22 base64url characters, or digits on older records.
+const ITEM_ID = /^(?:[A-Za-z0-9_-]{22}|\d{1,20})$/;
 
 function reply(body: OrderResponse, status: number, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
@@ -114,6 +115,8 @@ export const POST: APIRoute = async ({ request }) => {
   } catch {
     return fail(400, 'bad_request');
   }
+  // A string never has more characters than UTF-8 bytes: skip the encoder when already over.
+  if (raw.length > ORDER_BODY_MAX_BYTES) return fail(400, 'too_large');
   if (new TextEncoder().encode(raw).length > ORDER_BODY_MAX_BYTES) return fail(400, 'too_large');
 
   // 3. JSON.
@@ -203,11 +206,13 @@ export const POST: APIRoute = async ({ request }) => {
       replyTo: ORDER_EMAIL,
       ...visitorMail,
     });
-  } else {
+  } else if (isDev) {
     // Dev with no key: print the texts instead of sending them.
     console.log(`${LOG} (dev) to ${ORDER_EMAIL}\n${shopMail.subject}\n\n${shopMail.text}`);
     console.log(`${LOG} (dev) to ${order.email}\n${visitorMail.subject}\n\n${visitorMail.text}`);
     copySent = true;
+  } else {
+    return fail(503, 'not_configured');
   }
 
   // 8. Answer.
