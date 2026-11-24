@@ -30,14 +30,14 @@ Defences, in the order the endpoint answers (the first failing check wins):
 
 1. **Config, fail closed.** Without `RESEND_API_KEY` or `TURNSTILE_SECRET_KEY` it answers `503 not_configured` outside dev. In dev, with no Resend key the email text goes to the console instead of the network, and an unset Turnstile secret falls back to Cloudflare's always-pass test secret (siteverify then checks `success` only).
 2. **Size.** Body capped at 16384 bytes (`ORDER_BODY_MAX_BYTES`), checked on `content-length` and again on the read body (`400 too_large`).
-3. **Shape.** Invalid JSON, at most 30 lines (`ORDER_MAX_LINES`), quantity 1-20 per line, field validation (`400` with codes, `too_many_lines`, `bad_lines`, `invalid`).
-4. **Turnstile.** Server-side siteverify checks `success`, the hostname of the request and the action `ordine`; a failure logs which check failed (`reason=success|hostname|action`), never the token. Siteverify unreachable: `502 turnstile_unavailable`.
+3. **Shape.** Invalid JSON, at most 30 lines (`ORDER_MAX_LINES`), quantity 1-20 per line, field validation (`400` with codes `bad_request`, `empty_bag`, `too_many_lines`, `bad_lines`, `invalid`).
+4. **Turnstile.** Server-side siteverify checks `success`, the hostname of the request and the action `ordine`; a failure logs which check failed (`reason=success|hostname|action`), never the token (`400 turnstile`). Siteverify unreachable: `502 turnstile_unavailable`.
 5. **Catalogue refetch.** Ids are pre-filtered by format (22 base64url characters, or digits) because the CDA rejects a whole `id: { in }` query on a bad ItemId; a forged id ends as a dropped line or a safe `502 catalogue_unavailable`. If every line drops: `409 nothing_orderable`.
 6. **Send.** Resend to `ordini@multimage.org` first (a failure is `502 send_failed`), then the visitor copy, which omits the notes. A failed copy does not fail the order (`copySent: false`).
 
 Every answer carries `cache-control: private, no-store`. Error bodies carry codes only. Logs are one line per answer, `[ordine] <status> <code>` (or `[ordine] 200 ok lines=<n> dropped=<n> copySent=<bool>`): counts only, never a name, email, address, notes or token.
 
-Outer limits, beyond the code: a Cloudflare WAF rate limiting rule on `/api/ordine` (set it before `RESEND_API_KEY`, see `docs/guidelines/operations.md` § Environment & Secrets) and Resend's free tier hard stop (100 emails/day, 3,000/month). Setup steps for the user: `docs/work/2026-11-24-borsa/setup-borsa.md`.
+Outer limits, beyond the code: a Cloudflare WAF rate limiting rule on `/api/ordine` (set it before `RESEND_API_KEY`, see `docs/guidelines/operations.md` § Environment & Secrets) and Resend's free tier hard stop (100 emails/day, 3,000/month; two emails per order, so about 50 orders a day). The WAF rule covers only the zone hostnames: the `workers.dev` and preview URLs (`workers_dev`, `preview_urls` in `wrangler.jsonc`) bypass it. No mail goes out from them (the siteverify hostname check refuses it), but each request costs a siteverify call and Worker time; TODO `CF-vercel-cleanup` turns them off after go-live. Setup steps for the user: `docs/work/2026-11-24-borsa/setup-borsa.md`.
 
 ---
 

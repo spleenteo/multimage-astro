@@ -7,7 +7,7 @@ Every command runs from the repo root as `npx dotenv -e .env.cloudflare -- <comm
 ## 0. What ships and what a missing key means
 
 - Without `PUBLIC_TURNSTILE_SITE_KEY` built in, `/borsa` shows the email box only (the `mailto:` way). A half-done setup never shows a form that cannot send.
-- With the site key but without `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY`, `POST /api/ordine` answers 503 `not_configured` and the page falls back to the email box.
+- With the site key but without `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY`, `POST /api/ordine` answers 503 `not_configured`: the form still shows, and the page falls back to the email box after a submit.
 - With all three, the form sends two emails: the order to `ordini@multimage.org` and a copy to the visitor.
 - First, after the merge into `main`, deploy once with no keys.
   - **Do**: `npx dotenv -e .env.cloudflare -- npm run deploy:cf`

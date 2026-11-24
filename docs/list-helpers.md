@@ -81,11 +81,11 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`order` facts** (`src/lib/order.ts`)
   - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping and buyer kinds), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, `orderEmail` text, `checkSiteverify` and `bagMailto`.
-  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `books.ts`.
+  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `books.ts`, `HomeHero`, `/libri/[slug]`, `/distributori`.
   - Notes: IBAN, BIC and PayPal must stay in step with the CMS page `/info/ordinare` (TODO **BORSA-info-sync**).
 - **bag store** (`src/lib/bag.client.ts`)
   - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
-  - Used in: `BagDrawer`, `BagAdd`, `Header`, `/borsa`.
+  - Used in: `BagDrawer`, `BagAdd`, header buttons (through `drawer.client.ts`), `/borsa`.
 - **Order page script** (`src/pages/borsa/_order-page.client.ts`)
   - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget and the POST to `/api/ordine`.
   - Used in: `src/pages/borsa/index.astro`.

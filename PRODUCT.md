@@ -39,7 +39,7 @@ The website is the publisher's catalogue and front door. **Success means books o
 - Catalogue: books with collections (collane), authors, prices, covers; paginated catalogue, author pages, collection pages, magazine, site search (`/cerca`).
 - Stack and hosting are set by the codebase (Astro, Tailwind 4, DatoCMS, Cloudflare Workers); see `CLAUDE.md` and `docs/current-state.md`.
 - Anything shown on the site must be editable by non-technical volunteers in DatoCMS; layouts must survive real CMS content (long texts, missing covers, images of any colour).
-- Undecided: whether online ordering (cart or payment) will ever exist. Until then, every path to a book ends at the email order, a bookshop, or an ebook.
+- Undecided: whether online payment will ever exist (the bag and the order form do). Until then, every path to a book ends at the email order, a bookshop, or an ebook.
 
 ## Brand Commitments
 
