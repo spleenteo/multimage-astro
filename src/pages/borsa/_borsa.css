@@ -191,6 +191,26 @@
   @apply block text-sm leading-normal;
 }
 
+.order-steps__body > * + *,
+.order-page__lede > * + * {
+  @apply mt-2;
+}
+
+.order-steps__body a,
+.order-page__lede a {
+  @apply text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+.order-steps__body ul,
+.order-page__lede ul {
+  @apply list-disc pl-5;
+}
+
+.order-steps__body ol,
+.order-page__lede ol {
+  @apply list-decimal pl-5;
+}
+
 .order-next__more {
   @apply mt-3 text-sm;
 }

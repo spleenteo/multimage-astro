@@ -33,6 +33,7 @@ import {
   formatIban,
 } from '~/lib/order';
 import { executeQuery } from '~/lib/datocms/executeQuery';
+import { sanitizeCmsHtml } from '~/lib/text';
 import { resolveDraftMode } from '~/lib/draftPreview';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { SHOP_PAGE_QUERY, type ShopPageQueryResult } from './_graphql';
@@ -56,34 +57,43 @@ const { shop } = await executeQuery<ShopPageQueryResult>(SHOP_PAGE_QUERY, {
 });
 
 const pageTitle = shop?.title?.trim() || 'La tua borsa';
-const pageLede =
-  shop?.description?.trim() ||
-  "Lasciaci i tuoi dati: l'ordine arriva allo staff, che lo conferma e spedisce i libri. Alla fine scarichi il PDF della tua richiesta, con le istruzioni per il pagamento.";
+const pageLedeHtml =
+  sanitizeCmsHtml(shop?.description) ??
+  "<p>Lasciaci i tuoi dati: l'ordine arriva allo staff, che lo conferma e spedisce i libri. Alla fine scarichi il PDF della tua richiesta, con le istruzioni per il pagamento.</p>";
 
-// Steps from the CMS; the built-in ones when the record has none. The order email in a step's
-// text becomes a mailto link.
-type Step = { key: string; title: string; text: string; icon: { url: string; alt: string } | null };
+// Steps from the CMS (WYSIWYG descriptions, sanitized); the built-in ones when the record has
+// none. The order email in a step without links of its own becomes a mailto link.
+type Step = { key: string; title: string; html: string; icon: { url: string; alt: string } | null };
+const linkEmail = (html: string) =>
+  html.includes('<a')
+    ? html
+    : html.split(ORDER_EMAIL).join(`<a href="mailto:${ORDER_EMAIL}">${ORDER_EMAIL}</a>`);
+const stepHtml = (text: string | null | undefined) => linkEmail(sanitizeCmsHtml(text) ?? '');
 const cmsSteps: Step[] = (shop?.steps ?? [])
   .filter((b) => b.title?.trim())
   .map((b) => ({
     key: b.id,
     title: b.title!.trim(),
-    text: b.description?.trim() ?? '',
+    html: stepHtml(b.description),
     icon: b.icon?.url ? { url: b.icon.url, alt: '' } : null,
   }));
 const steps: Step[] = cmsSteps.length
   ? cmsSteps
   : [
-      { key: 'confirm', title: 'Lo staff conferma', text: ORDER_STEP_CONFIRM, icon: null },
-      { key: 'pay', title: 'Paghi', text: ORDER_STEP_PAY_LATER, icon: null },
+      {
+        key: 'confirm',
+        title: 'Lo staff conferma',
+        html: stepHtml(ORDER_STEP_CONFIRM),
+        icon: null,
+      },
+      { key: 'pay', title: 'Paghi', html: stepHtml(ORDER_STEP_PAY_LATER), icon: null },
       {
         key: 'receipt',
         title: 'Mandi la ricevuta',
-        text: `${ORDER_STEP_RECEIPT_LEAD} ${ORDER_EMAIL}.`,
+        html: stepHtml(`${ORDER_STEP_RECEIPT_LEAD} ${ORDER_EMAIL}.`),
         icon: null,
       },
     ];
-const splitEmail = (text: string) => text.split(ORDER_EMAIL);
 
 const shippingEntries = Object.entries(SHIPPING_KINDS);
 const buyerEntries = Object.entries(BUYER_KINDS);
@@ -94,7 +104,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
     <div class="order-page__head" data-order-head>
       <h1 class="order-page__title">{pageTitle}</h1>
       <p class="order-page__size" data-order-size></p>
-      {siteKey ? <p class="order-page__lede" data-order-lede>{pageLede}</p> : null}
+      {siteKey ? <div class="order-page__lede" data-order-lede set:html={pageLedeHtml} /> : null}
       <noscript>
         <p class="order-page__lede">
           Per ordinare dal sito serve JavaScript. Puoi scriverci a {ORDER_EMAIL}.
@@ -164,18 +174,11 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               <span class="order-steps__icon">
                 {step.icon ? <img src={step.icon.url} alt="" width="20" height="20" /> : null}
               </span>
-              <span>
+              <div>
                 <span class="order-steps__count"> Passo {i + 1} di {steps.length} </span>
                 <span class="order-steps__title">{step.title}</span>
-                <span class="order-steps__body">
-                  {splitEmail(step.text).map((part, j) => (
-                    <>
-                      {j > 0 ? <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a> : null}
-                      {part}
-                    </>
-                  ))}
-                </span>
-              </span>
+                <div class="order-steps__body" set:html={step.html} />
+              </div>
             </li>)}
           </ol>
           <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>

@@ -76,9 +76,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
     - `categoryHref` (`/magazine?categoria=<slug>`).
   - Used in: `/magazine`, `/magazine/[slug]`, `MagazinePostCard`.
 - **`text` utilities** (`src/lib/text.ts`)
-  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`.
-  - Used in: book hero copy, supplier bios, staff notices.
-  - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
+  - Purpose: `toPlainText`, `truncateToLength`, `withoutUrls` (drops bare URLs from plain text), entity decoding, `toRichTextHtml`, `sanitizeCmsHtml` (allowlist sanitizer for short WYSIWYG fragments: p, br, strong/b, em/i, u, links with a safe href, lists; everything else dropped).
+  - Used in: book hero copy, supplier bios, staff notices; `sanitizeCmsHtml` on `/borsa` (Shop description and step descriptions).
+  - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**, for which `sanitizeCmsHtml` is the candidate shared sanitizer.
 - **`order` facts** (`src/lib/order.ts`)
   - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), the member discount (`MEMBER_DISCOUNT_PERCENT`, `MEMBER_DISCOUNT_LABEL`, `MEMBER_LINE`, `memberDiscount`, `formatDiscount`), the totals scheme (`ORDER_SUBTOTAL_LABEL`, `ORDER_TOTAL_LABEL`: books at cover price, discount, shipping, "Totale da pagare"), `bagSizeLabel` ("4 copie di 2 libri"), `BUYER_LABEL` ("Chi ordina"), `orderPlace` (CAP and city as one string), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping and buyer kinds), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, the readable order code (`orderCode`, `MM-YYMMDD-XXXX`), the D1 row (`ORDER_COLUMNS`, `orderRow`), the clash retry (`isCodeClash`, `saveWithCodeRetry`: one more insert with a new code on a UNIQUE clash on `orders.code`), `orderEmail` text, `checkSiteverify` and `bagMailto`.
   - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `order-pdf.ts`, `books.ts`, `HomeHero`, `/libri/[slug]`, `/distributori`.
