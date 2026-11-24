@@ -42,8 +42,8 @@ Email Routing is enabled on the subdomain `ordini.multimage.org` only, so the ap
 - **Do**:
   1. `npx dotenv -e .env.cloudflare -- npx wrangler d1 create multimage-orders --jurisdiction eu` (EU jurisdiction: the order data stays in the EU). It prints the database id.
   2. Put the id in `wrangler.jsonc`, as `database_id` of the `ORDERS` binding, replacing the placeholder, and commit it before the merge.
-  3. `npx dotenv -e .env.cloudflare -- npx wrangler d1 migrations apply multimage-orders --remote` (migrations are in `d1/migrations/`).
-- **Check**: `npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "SELECT count(*) AS n FROM orders"` prints `n` = 0.
+  3. `npx dotenv -e .env.cloudflare -- npx wrangler d1 migrations apply multimage-orders --remote` (migrations are in `d1/migrations/`). The remote already holds 0001; the same command applies 0002 (member discount) and must run before any deploy of this code, otherwise inserts fail and orders reach ordini@ by email only.
+- **Check**: `npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "SELECT count(*) AS n FROM orders"` prints `n` = 0 on a fresh database; `PRAGMA table_info(orders)` (same `d1 execute --remote --command`) lists `member` and `discount_cents`.
 
 ## 5. WAF rate limiting rule (before the Turnstile secret)
 

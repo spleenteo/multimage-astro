@@ -11,7 +11,8 @@ The `orders` table is the contract between two Workers: this site and the separa
 - Anonymise: `UPDATE orders SET name=NULL, email=NULL, phone=NULL, address=NULL, notes=NULL WHERE code=?`. The site always writes name, email and address, so NULL means anonymised.
 - Money is integer cents. Times are ISO 8601 in UTC (`2026-11-24T10:15:00.000Z`).
 - Migrations are additive only: never rename or drop a column the other side reads. The staff app adds its own columns (for example a status) by a new migration.
-- `shipping_kind`, `buyer_kind` and `notify_status` have CHECK constraints: a new value needs a migration.
+- `shipping_kind`, `buyer_kind`, `member` and `notify_status` have CHECK constraints: a new value needs a migration.
+- `member` (0/1) and `discount_cents` come from migration 0002; the discount is 30% of `subtotal_cents`, never of shipping.
 
 ## Columns
 
@@ -31,9 +32,11 @@ The `orders` table is the contract between two Workers: this site and the separa
 | `notes`          | TEXT NULL                | Buyer notes, optional; NULL once anonymised                                                                     | site (INSERT), staff (anonymise)     |
 | `lines_json`     | TEXT NOT NULL            | JSON array of the order lines, rebuilt on the server (see below)                                                | site (INSERT)                        |
 | `copies`         | INTEGER NOT NULL         | Total copies                                                                                                    | site (INSERT)                        |
-| `subtotal_cents` | INTEGER NOT NULL         | Books total, in cents                                                                                           | site (INSERT)                        |
+| `subtotal_cents` | INTEGER NOT NULL         | Books total at cover price, in cents                                                                            | site (INSERT)                        |
 | `shipping_cents` | INTEGER NOT NULL         | Shipping cost, in cents                                                                                         | site (INSERT)                        |
-| `total_cents`    | INTEGER NOT NULL         | Subtotal plus shipping, in cents                                                                                | site (INSERT)                        |
+| `total_cents`    | INTEGER NOT NULL         | Subtotal minus discount plus shipping, in cents                                                                 | site (INSERT)                        |
+| `member`         | INTEGER NOT NULL         | 1 when the buyer ticked 'Sono socia o socio'; the staff checks membership (default 0, CHECK 0/1)                | site (INSERT)                        |
+| `discount_cents` | INTEGER NOT NULL         | Member discount, in cents (default 0)                                                                           | site (INSERT)                        |
 | `consent_at`     | TEXT NOT NULL            | When the buyer accepted the privacy line                                                                        | site (INSERT)                        |
 | `notify_status`  | TEXT NOT NULL            | `pending` (default), `sent`, `failed` or `skipped`                                                              | site (INSERT, then UPDATE by `code`) |
 | `notify_error`   | TEXT NULL                | Why the notification email did not go: an `E_...` code from the send, `unknown` or `no_binding`; NULL otherwise | site (UPDATE by `code`)              |
@@ -48,7 +51,7 @@ Personal fields (`name`, `email`, `phone`, `address`, `notes`) are kept until th
 npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE orders SET name=NULL, email=NULL, phone=NULL, address=NULL, notes=NULL WHERE code='<code>'"
 ```
 
-Erasure requests are the same UPDATE with `WHERE email='<address>'`. City, province, lines and totals stay for statistics.
+Erasure requests are the same UPDATE with `WHERE email='<address>'`. City, province, `member`, lines and totals stay after anonymising: without name and address they no longer identify a person (the user's call, 2026-11-24).
 
 ## Unsent notices
 
