@@ -6,7 +6,13 @@
 // MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
 // error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
 // `data-socio-mailto-box`, the status line `data-socio-status`, the "Altro" field
-// `data-socio-areas-other` and the Turnstile slot `#socio-turnstile`.
+// `data-socio-areas-other` and the Turnstile slot `#socio-turnstile`. The confirmation, hidden
+// until the send succeeds: `data-socio-done` (section), `data-socio-done-heading` (focus target),
+// `data-socio-done-lede` and `data-socio-done-fee` (filled by the script), `data-socio-methods`
+// holding one `data-socio-method="bonifico|paypal"` box each (the script moves the chosen one
+// first), `data-socio-copy-iban` + `data-socio-copy-label`, `data-socio-paypal-link` +
+// `data-socio-paypal-label`, `data-socio-causale` (one per method, filled from the server's
+// answer, never from the page), `data-socio-announce` (live region).
 import { StructuredText } from '@datocms/astro/StructuredText';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import BaseLayout from '~/layouts/BaseLayout.astro';
@@ -23,6 +29,15 @@ import {
 import { resolveDraftMode } from '~/lib/draftPreview';
 import { withFallbackSeo } from '~/lib/seo';
 import { sanitizeCmsHtml, toPlainText } from '~/lib/text';
+import {
+  PAYMENT_ACCOUNT_HOLDER,
+  PAYMENT_BANK,
+  PAYMENT_BIC,
+  PAYMENT_IBAN,
+  PAYMENT_PAYPAL,
+  PAYMENT_SWIFT_INTERMEDIARY,
+  formatIban,
+} from '~/lib/payment';
 import {
   AREA_OTHER,
   MEMBERSHIP_ADDRESS_MAX,
@@ -173,6 +188,13 @@ const fieldGroups = [
 // Two fields share a row as a pair; the postcode / city / region row has its own column widths.
 const rowClass = (n: number) =>
   n === 2 ? 'order-pair' : n === 3 ? 'order-pair order-pair--city' : undefined;
+const textLines = (s: string | null | undefined) =>
+  (s ?? '')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+const successLines = textLines(membership?.successText);
+const noteLines = textLines(membership?.paymentNote).slice(1);
 const paymentEntries = Object.entries(PAYMENT_METHODS);
 ---
 
@@ -360,6 +382,105 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
           </span>
         </section>
       )}
+      {showForm ? (
+        <section class="order-done" data-socio-done hidden>
+          <h2 class="order-page__title" tabindex="-1" data-socio-done-heading>
+            Richiesta inviata, grazie
+          </h2>
+          {successLines.map((line) => <p>{line}</p>)}
+          <p class="order-done__lede" data-socio-done-lede></p>
+          <p data-socio-done-fee></p>
+          <div data-socio-methods>
+            <div class="order-bank" data-socio-method="bonifico">
+              <h3>Bonifico bancario</h3>
+              <div class="order-bank__iban">
+                <p class="order-bank__label" id="socio-iban-label">IBAN</p>
+                <p class="order-bank__iban-value order-iban" aria-labelledby="socio-iban-label">
+                  {formatIban(PAYMENT_IBAN)}
+                </p>
+                <button type="button" class="order-bank__copy" data-socio-copy-iban hidden>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="9" y="9" width="11" height="11"></rect>
+                    <path d="M5 15V4h11"></path>
+                  </svg>
+                  <span data-socio-copy-label>Copia l'IBAN</span>
+                </button>
+              </div>
+              <dl>
+                <div>
+                  <dt>Intestato a</dt>
+                  <dd>{PAYMENT_ACCOUNT_HOLDER}</dd>
+                </div>
+                <div>
+                  <dt>Banca</dt>
+                  <dd>{PAYMENT_BANK}</dd>
+                </div>
+                <div>
+                  <dt>BIC</dt>
+                  <dd>{PAYMENT_BIC}</dd>
+                </div>
+                <div>
+                  <dt>Banca intermediaria (SWIFT)</dt>
+                  <dd>{PAYMENT_SWIFT_INTERMEDIARY}</dd>
+                </div>
+                <div>
+                  <dt>Causale</dt>
+                  <dd data-socio-causale></dd>
+                </div>
+              </dl>
+            </div>
+            <div class="order-bank" data-socio-method="paypal">
+              <h3>PayPal</h3>
+              <div class="order-bank__paypal">
+                <p>Paga con PayPal a <b>{PAYMENT_PAYPAL}</b></p>
+                <a
+                  class="order-bank__paypal-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-socio-paypal-link
+                  hidden
+                >
+                  <span data-socio-paypal-label>Paga con PayPal</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 4h6v6"></path>
+                    <path d="M20 4 10 14"></path>
+                    <path d="M18 14v6H4V6h6"></path>
+                  </svg>
+                  <span class="sr-only"> (si apre in una nuova scheda)</span>
+                </a>
+              </div>
+              <dl>
+                <div>
+                  <dt>Causale</dt>
+                  <dd data-socio-causale></dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          {noteLines.map((line) => <p>{line}</p>)}
+          <p class="sr-only" aria-live="polite" data-socio-announce></p>
+        </section>
+      ) : null}
     </div>
   </div>
   <script>

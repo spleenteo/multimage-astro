@@ -2,7 +2,7 @@ import { RESPONSIVE_IMAGE_FRAGMENT } from '~/lib/datocms/commonFragments';
 import type { SeoMetaTag } from '~/lib/datocms/types';
 
 // /diventa-socio: the Membership singleton. The `slug` field is ignored (fixed route), and
-// `payment_note` / `success_text` are read by the send path, not by the page.
+// `paymentNote` / `successText` feed the confirmation shown after the send.
 // The `content` field accepts six blocks. The three the page renders (image, video, banner) take
 // the selections of /info/[slug]; the other three only need their id and type, because the page
 // renders them as nothing (@datocms/astro throws on a block missing from `blocks`).
@@ -12,6 +12,8 @@ export const MEMBERSHIP_PAGE_QUERY = /* GraphQL */ `
     membership {
       title
       subtitle
+      paymentNote
+      successText
       content {
         value
         blocks {
@@ -100,6 +102,8 @@ export type MembershipPageQueryResult = {
   membership: {
     title: string | null;
     subtitle: string | null;
+    paymentNote: string | null;
+    successText: string | null;
     // Structured text value + its blocks and links, as @datocms/astro's StructuredText reads it.
     content: {
       value: unknown;
