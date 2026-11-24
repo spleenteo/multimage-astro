@@ -4,6 +4,7 @@
 import { emptyBag, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import {
   ORDER_ACTION,
+  ORDER_CAUSALE,
   ORDER_EMAIL,
   ORDER_FIELD_MESSAGES,
   ORDER_IBAN,
@@ -306,7 +307,11 @@ export function initOrderPage(): void {
 
   // --- Success ------------------------------------------------------------
 
-  const showDone = (res: Extract<OrderResponse, { ok: true }>, snapshot: BagItem[]) => {
+  const showDone = (
+    res: Extract<OrderResponse, { ok: true }>,
+    snapshot: BagItem[],
+    fields: OrderFields,
+  ) => {
     finished = true;
     emptyBag();
     if (head) head.hidden = true;
@@ -345,6 +350,34 @@ export function initOrderPage(): void {
 
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
     if (printBtn) printBtn.hidden = false;
+
+    const causale = done.querySelector('[data-order-done-causale]');
+    if (causale) causale.textContent = `${ORDER_CAUSALE} ${res.code}`;
+
+    // The PDF module (and jsPDF) loads on the first tap only. aria-disabled, never disabled, so
+    // focus stays on the button while it works; `busy` ignores repeat taps.
+    const at = new Date();
+    const pdfBtn = done.querySelector<HTMLButtonElement>('[data-order-pdf] button');
+    const pdfStatus = done.querySelector<HTMLElement>('[data-order-pdf-status]');
+    let busy = false;
+    pdfBtn?.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true;
+      pdfBtn.setAttribute('aria-disabled', 'true');
+      if (pdfStatus) pdfStatus.textContent = 'Preparo il PDF…';
+      try {
+        const { saveOrderPdf } = await import('./_order-pdf.client');
+        saveOrderPdf({ order: res, buyer: fields, at });
+        if (pdfStatus) pdfStatus.textContent = 'PDF scaricato.';
+      } catch {
+        if (pdfStatus) {
+          pdfStatus.textContent =
+            'Non siamo riusciti a creare il PDF: stampa la pagina o annota il codice.';
+        }
+      }
+      pdfBtn.removeAttribute('aria-disabled');
+      busy = false;
+    });
 
     const doneLines = done.querySelector('[data-order-done-lines]');
     if (doneLines) {
@@ -493,7 +526,7 @@ export function initOrderPage(): void {
     if (submit) submit.disabled = false;
     if (status) status.textContent = '';
 
-    if (result?.ok) showDone(result, snapshot);
+    if (result?.ok) showDone(result, snapshot, fields);
     else showFailure(result);
   };
 

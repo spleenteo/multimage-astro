@@ -276,7 +276,7 @@ export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
   consent: "Per inviare l'ordine spunta il consenso all'uso dei dati.",
 };
 
-const EMAIL_EMPTY_MESSAGE = "Scrivi la tua email: ci serve per mandarti la copia dell'ordine.";
+const EMAIL_EMPTY_MESSAGE = "Scrivi la tua email: ci serve per risponderti sull'ordine.";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_PATTERN = /^[+0-9 ()./-]{6,30}$/;
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;

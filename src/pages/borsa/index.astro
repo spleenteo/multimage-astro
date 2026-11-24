@@ -46,8 +46,8 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <p class="order-page__size" data-order-size></p>
       {siteKey ? (
         <p class="order-page__lede" data-order-lede>
-          Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri.
-          Riceverai una copia via email con le istruzioni per il pagamento.
+          Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri. Alla
+          fine scarichi il PDF della tua richiesta, con le istruzioni per il pagamento.
         </p>
       ) : null}
       <noscript>
@@ -91,7 +91,9 @@ const buyerEntries = Object.entries(BUYER_KINDS);
           <ol>
             <li>Olivier legge l'ordine e ti risponde per confermarlo.</li>
             <li>Spediamo i libri: con il piego arrivano di solito in una settimana.</li>
-            <li>Paghi con bonifico o PayPal, causale <b>"{ORDER_CAUSALE}"</b> e i titoli.</li>
+            <li>
+              Paghi con bonifico o PayPal, causale <b>"{ORDER_CAUSALE}"</b> e il codice dell'ordine.
+            </li>
             <li>Mandi la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
           </ol>
           <div class="order-bank">
@@ -270,15 +272,20 @@ const buyerEntries = Object.entries(BUYER_KINDS);
 
             <div class="order-consent">
               <label class="order-check">
-                <input type="checkbox" id="order-consent" required />
-                <span>
-                  Acconsento all'uso dei miei dati solo per gestire questo ordine
-                  (<a href={PRIVACY_URL} target="_blank" rel="noopener"
-                    >informativa
-                    privacy<span class="sr-only"> , si apre in una nuova scheda</span></a
-                  >).
-                </span>
+                <input
+                  type="checkbox"
+                  id="order-consent"
+                  aria-describedby="order-consent-hint"
+                  required
+                />
+                <span>Acconsento all'uso dei miei dati solo per gestire questo ordine.</span>
               </label>
+              <p class="order-hint-line order-consent__hint" id="order-consent-hint">
+                I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.
+                <a href={PRIVACY_URL} target="_blank" rel="noopener"
+                  >Informativa privacy<span class="sr-only">, si apre in una nuova scheda</span></a
+                >
+              </p>
               <p class="order-error" id="order-consent-error" data-error-for="consent" hidden></p>
             </div>
 
@@ -301,7 +308,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
 
             <div class="order-send">
               <Button type="submit" primary>Invia l'ordine</Button>
-              <p>Non paghi adesso. Ti arriva una copia dell'ordine con le istruzioni.</p>
+              <p>Non paghi adesso. Dopo l'invio scarichi il PDF con le istruzioni.</p>
             </div>
             <p class="order-status" aria-live="polite" data-order-status></p>
           </form>
@@ -327,6 +334,16 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         Ordine inviato, grazie
       </h1>
       <p class="order-done__lede" data-order-done-lede></p>
+      <div class="order-done__pdf">
+        <p>Non riceverai un'email: scarica il PDF della tua richiesta.</p>
+        <div class="order-done__pdf-row">
+          <span data-order-pdf><Button primary>Scarica il PDF</Button></span>
+          <button type="button" class="order-textbtn" data-order-print hidden>
+            Stampa questa pagina
+          </button>
+        </div>
+        <p class="order-hint-line" aria-live="polite" data-order-pdf-status></p>
+      </div>
       <ul class="order-done__lines" data-order-done-lines></ul>
       <p class="order-done__notes" data-order-done-notes hidden></p>
       <p class="order-done__total">
@@ -339,16 +356,13 @@ const buyerEntries = Object.entries(BUYER_KINDS);
           <li>Aspetta la conferma di Olivier, di solito entro due giorni lavorativi.</li>
           <li>
             Paghi con bonifico su IBAN <b class="order-iban">{ORDER_IBAN}</b> o con PayPal a
-            {ORDER_PAYPAL}, causale "{ORDER_CAUSALE}".
+            {ORDER_PAYPAL}, causale "<span data-order-done-causale>{ORDER_CAUSALE}</span>".
           </li>
           <li>Manda la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
         </ol>
       </div>
       <div class="order-done__actions">
         <Button href="/libri" variant="outline">Torna al catalogo</Button>
-        <button type="button" class="order-textbtn" data-order-print hidden>
-          Stampa questa pagina
-        </button>
       </div>
     </section>
   </div>
