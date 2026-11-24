@@ -1,0 +1,399 @@
+---
+// /borsa: the order page. Server-rendered and cached like every page, identical for every visitor:
+// no query, no cookie. The bag lives in the browser; _order-page.client.ts fills the recap, runs the
+// form and shows the success state. The markup contract (data-order-* attributes and the ids
+// `order-<key>`) is read by that script.
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Button from '~/components/ui/Button';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+import {
+  BUYER_KINDS,
+  ORDER_ACCOUNT_HOLDER,
+  ORDER_BANK,
+  ORDER_BIC,
+  ORDER_CAUSALE,
+  ORDER_EMAIL,
+  ORDER_IBAN,
+  ORDER_NOTES_MAX,
+  ORDER_PAYPAL,
+  ORDER_SWIFT_INTERMEDIARY,
+  SHIPPING_KINDS,
+  formatCents,
+  formatIban,
+} from '~/lib/order';
+import './_borsa.css';
+
+const seo = [
+  { tag: 'title', content: 'La tua borsa · Multimage' },
+  { tag: 'meta', attributes: { name: 'robots', content: 'noindex' } },
+];
+
+// The env value, else Cloudflare's always-pass test key in dev, else none (email fallback).
+const siteKey =
+  PUBLIC_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
+
+const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
+const mailtoHref = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}`;
+
+const textFields = [
+  { key: 'name', label: 'Nome e cognome', type: 'text', autocomplete: 'name', maxlength: 100 },
+  {
+    key: 'email',
+    label: 'Email',
+    type: 'email',
+    autocomplete: 'email',
+    maxlength: 254,
+  },
+  {
+    key: 'phone',
+    label: 'Telefono',
+    hint: '(facoltativo)',
+    type: 'tel',
+    autocomplete: 'tel',
+    maxlength: 30,
+  },
+  {
+    key: 'address',
+    label: 'Indirizzo',
+    type: 'text',
+    autocomplete: 'street-address',
+    placeholder: 'Via e numero civico',
+    maxlength: 200,
+  },
+  {
+    key: 'city',
+    label: 'CAP e città',
+    type: 'text',
+    autocomplete: 'postal-code',
+    placeholder: '50123 Firenze',
+    maxlength: 100,
+  },
+  {
+    key: 'province',
+    label: 'Provincia',
+    type: 'text',
+    autocomplete: 'address-level1',
+    placeholder: 'FI',
+    maxlength: 40,
+  },
+];
+const field = (key: string) => textFields.find((f) => f.key === key)!;
+const shippingEntries = Object.entries(SHIPPING_KINDS);
+const buyerEntries = Object.entries(BUYER_KINDS);
+---
+
+<BaseLayout seo={seo}>
+  <div class="order-page" data-order-page>
+    <div class="order-page__head" data-order-head>
+      <h1 class="order-page__title">La tua borsa</h1>
+      <p class="order-page__size" data-order-size></p>
+      <p class="order-page__lede">
+        Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri.
+        Riceverai una copia via email con le istruzioni per il pagamento.
+      </p>
+      <noscript>
+        <p class="order-page__lede">
+          Per ordinare dal sito serve JavaScript. Puoi scriverci a {ORDER_EMAIL}.
+        </p>
+      </noscript>
+    </div>
+
+    <section class="order-empty" data-order-empty hidden>
+      <h2 class="order-h2">La borsa è vuota</h2>
+      <p>Scegli un libro dal catalogo e mettilo in borsa: qui trovi il riepilogo dell'ordine.</p>
+      <Button href="/libri" variant="secondary">Sfoglia il catalogo</Button>
+    </section>
+
+    <div class="order-grid" data-order-filled hidden>
+      <aside class="order-recap" aria-labelledby="order-recap-title">
+        <h2 class="order-h2" id="order-recap-title">Nella borsa</h2>
+        <ul class="order-lines" data-order-lines></ul>
+        <template data-order-line>
+          <li><b data-line-title></b><span data-line-amount></span></li>
+        </template>
+        <dl class="order-totals">
+          <div>
+            <dt>Copie</dt>
+            <dd data-order-copies></dd>
+          </div>
+          <div>
+            <dt>Spedizione</dt>
+            <dd data-order-shipping></dd>
+          </div>
+          <div class="order-totals__big">
+            <dt>Totale a prezzo di copertina</dt>
+            <dd data-order-total></dd>
+          </div>
+        </dl>
+        <button type="button" class="order-textbtn" data-order-edit>Modifica la borsa</button>
+
+        <div class="order-next">
+          <h2 class="order-h3">Cosa succede dopo</h2>
+          <ol>
+            <li>Olivier legge l'ordine e ti risponde per confermarlo.</li>
+            <li>Spediamo i libri: con il piego arrivano di solito in una settimana.</li>
+            <li>Paghi con bonifico o PayPal, causale <b>"{ORDER_CAUSALE}"</b> e i titoli.</li>
+            <li>Mandi la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+          </ol>
+          <div class="order-bank">
+            <dl>
+              <div>
+                <dt>Intestato a</dt>
+                <dd>{ORDER_ACCOUNT_HOLDER}</dd>
+              </div>
+              <div>
+                <dt>Banca</dt>
+                <dd>{ORDER_BANK}</dd>
+              </div>
+              <div>
+                <dt>IBAN</dt>
+                <dd>{formatIban(ORDER_IBAN)}</dd>
+              </div>
+              <div>
+                <dt>BIC</dt>
+                <dd>{ORDER_BIC}</dd>
+              </div>
+              <div>
+                <dt>Banca intermediaria (SWIFT)</dt>
+                <dd>{ORDER_SWIFT_INTERMEDIARY}</dd>
+              </div>
+              <div>
+                <dt>PayPal</dt>
+                <dd>{ORDER_PAYPAL}</dd>
+              </div>
+            </dl>
+            <button type="button" class="order-textbtn" data-order-copy-iban hidden>
+              Copia l'IBAN
+            </button>
+          </div>
+          <p class="sr-only" aria-live="polite" data-order-announce></p>
+        </div>
+      </aside>
+
+      <div class="order-main">
+        {siteKey ? (
+          <form data-order-form data-sitekey={siteKey} novalidate>
+            <fieldset class="order-fieldset">
+              <legend>A chi spediamo</legend>
+              <div class="order-field">
+                <label for="order-name">{field('name').label}</label>
+                <input
+                  class="order-input"
+                  id="order-name"
+                  type="text"
+                  autocomplete="name"
+                  maxlength={field('name').maxlength}
+                  required
+                />
+                <p class="order-error" id="order-name-error" data-error-for="name" hidden></p>
+              </div>
+              <div class="order-pair">
+                <div class="order-field">
+                  <label for="order-email">{field('email').label}</label>
+                  <input
+                    class="order-input"
+                    id="order-email"
+                    type="email"
+                    autocomplete="email"
+                    maxlength={field('email').maxlength}
+                    required
+                  />
+                  <p class="order-error" id="order-email-error" data-error-for="email" hidden></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-phone">
+                    {field('phone').label} <span class="order-hint">{field('phone').hint}</span>
+                  </label>
+                  <input
+                    class="order-input"
+                    id="order-phone"
+                    type="tel"
+                    autocomplete="tel"
+                    maxlength={field('phone').maxlength}
+                  />
+                  <p class="order-error" id="order-phone-error" data-error-for="phone" hidden></p>
+                </div>
+              </div>
+              <div class="order-field">
+                <label for="order-address">{field('address').label}</label>
+                <input
+                  class="order-input"
+                  id="order-address"
+                  type="text"
+                  autocomplete="street-address"
+                  placeholder={field('address').placeholder}
+                  maxlength={field('address').maxlength}
+                  required
+                />
+                <p class="order-error" id="order-address-error" data-error-for="address" hidden></p>
+              </div>
+              <div class="order-pair order-pair--city">
+                <div class="order-field">
+                  <label for="order-city">{field('city').label}</label>
+                  <input
+                    class="order-input"
+                    id="order-city"
+                    type="text"
+                    autocomplete="postal-code"
+                    placeholder={field('city').placeholder}
+                    maxlength={field('city').maxlength}
+                    required
+                  />
+                  <p class="order-error" id="order-city-error" data-error-for="city" hidden></p>
+                </div>
+                <div class="order-field">
+                  <label for="order-province">{field('province').label}</label>
+                  <input
+                    class="order-input"
+                    id="order-province"
+                    type="text"
+                    autocomplete="address-level1"
+                    placeholder={field('province').placeholder}
+                    maxlength={field('province').maxlength}
+                    required
+                  />
+                  <p
+                    class="order-error"
+                    id="order-province-error"
+                    data-error-for="province"
+                    hidden
+                  ></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="order-fieldset">
+              <legend>Spedizione</legend>
+              <div class="order-choices">
+                {shippingEntries.map(([key, kind]) => <label class="order-choice">
+                  <input type="radio" name="shipping" value={key} checked={key === 'piego'} />
+                  <span class="order-choice__text">
+                    <b>{kind.label}</b>
+                    <span>{kind.note}</span>
+                  </span>
+                  <span class="order-choice__fee">
+                    {kind.cents === 0 ? formatCents(0) : `+${formatCents(kind.cents)}`}
+                  </span>
+                </label>)}
+              </div>
+              <p class="order-error" id="order-shipping-error" data-error-for="shipping" hidden></p>
+            </fieldset>
+
+            <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
+              <legend>Ordini come</legend>
+              <div class="order-who">
+                {buyerEntries.map(([key, label]) => <label class="order-who__cell">
+                  <input type="radio" name="buyer" value={key} checked={key === 'privato'} />
+                  <span>{label}</span>
+                </label>)}
+              </div>
+              <p class="order-hint-line" id="order-buyer-hint">
+                Per scuole, associazioni e librerie applichiamo condizioni speciali: ti scriviamo
+                noi.
+              </p>
+              <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
+            </fieldset>
+
+            <div class="order-field">
+              <label for="order-notes">Note <span class="order-hint">(facoltative)</span></label>
+              <textarea
+                class="order-input order-input--area"
+                id="order-notes"
+                maxlength={ORDER_NOTES_MAX}
+                aria-describedby="order-notes-hint"
+                placeholder="Una dedica, un orario di consegna, il nome della scuola…"
+              ></textarea>
+              <p class="order-hint-line" id="order-notes-hint">
+                Facoltative, al massimo {ORDER_NOTES_MAX} caratteri.
+              </p>
+              <p class="order-error" id="order-notes-error" data-error-for="notes" hidden></p>
+            </div>
+
+            <div class="order-consent">
+              <label class="order-check">
+                <input type="checkbox" id="order-consent" required />
+                <span>
+                  Acconsento all'uso dei miei dati solo per gestire questo ordine
+                  (<a href={PRIVACY_URL} target="_blank" rel="noopener"
+                    >informativa
+                    privacy<span class="sr-only"> , si apre in una nuova scheda</span></a
+                  >).
+                </span>
+              </label>
+              <p class="order-error" id="order-consent-error" data-error-for="consent" hidden></p>
+            </div>
+
+            <div class="order-turnstile">
+              <div id="order-turnstile" tabindex="-1" data-order-turnstile></div>
+              <p
+                class="order-error"
+                id="order-turnstile-error"
+                data-error-for="turnstile"
+                hidden
+              ></p>
+            </div>
+
+            <p class="order-form-error" role="alert" data-order-form-error hidden>
+              <span data-order-form-error-text></span>
+              <span data-order-mailto hidden>
+                <a href={mailtoHref}>mandacelo via email</a>
+              </span>
+            </p>
+
+            <div class="order-send">
+              <Button type="submit" primary>Invia l'ordine</Button>
+              <p>Non paghi adesso. Ti arriva una copia dell'ordine con le istruzioni.</p>
+            </div>
+            <p class="order-status" aria-live="polite" data-order-status></p>
+          </form>
+        ) : null}
+
+        <section class="order-mailto-box" data-order-mailto-box hidden={Boolean(siteKey)}>
+          <h2 class="order-h2">Mandaci l'ordine via email</h2>
+          <p>
+            Il modulo d'ordine non è attivo in questo momento: scrivici, prepariamo noi l'ordine con
+            i libri della tua borsa.
+          </p>
+          <span data-order-mailto>
+            <Button primary href={mailtoHref}>Scrivi a {ORDER_EMAIL}</Button>
+          </span>
+        </section>
+      </div>
+    </div>
+
+    <section class="order-done" data-order-done hidden>
+      <h1 class="order-page__title" tabindex="-1" data-order-done-heading>
+        Ordine inviato, grazie
+      </h1>
+      <p class="order-done__lede" data-order-done-lede></p>
+      <ul class="order-done__lines" data-order-done-lines></ul>
+      <p class="order-done__notes" data-order-done-notes hidden></p>
+      <p class="order-done__total">
+        <span data-order-done-total-label></span>
+        <span data-order-done-total></span>
+      </p>
+      <div class="order-next order-next--done">
+        <h2 class="order-h3">Adesso</h2>
+        <ol>
+          <li>Aspetta la conferma di Olivier, di solito entro due giorni lavorativi.</li>
+          <li>
+            Paghi con bonifico su IBAN <b class="order-iban">{ORDER_IBAN}</b> o con PayPal a
+            {ORDER_PAYPAL}, causale "{ORDER_CAUSALE}".
+          </li>
+          <li>Manda la ricevuta a <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+        </ol>
+      </div>
+      <div class="order-done__actions">
+        <Button href="/libri" variant="outline">Torna al catalogo</Button>
+        <button type="button" class="order-textbtn" data-order-print hidden>
+          Stampa questa pagina
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import { initOrderPage } from './_order-page.client';
+    initOrderPage();
+  </script>
+</BaseLayout>
