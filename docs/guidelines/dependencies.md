@@ -13,6 +13,8 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 
 - `maplibre-gl` 6.17.0 (exact pin) draws the `/distributori` map (`SuppliersMap`) with OpenFreeMap vector tiles (`tiles.openfreemap.org`, no key, no cookies). It is loaded on demand when the map nears the viewport: about 295 KB gzip, plus a 148 KB worker and 10 KB CSS, on that page only. The worker URL is set explicitly via `maplibre-gl/dist/maplibre-gl-worker.mjs?url` + `setWorkerUrl`, because Vite's dependency pre-bundling moves the module away from its worker.
 
+- `jspdf` 4.2.1 (exact pin) builds the PDF of an order request on the `/borsa` success screen. It is a lazy chunk, loaded on the tap of "Scarica il PDF" (`src/pages/borsa/_order-pdf.client.ts`), so no other page and not the `/borsa` entry script carries it. The document is text only (built-in Helvetica, WinAnsi, strings sanitised by `pdfText` in `src/lib/order-pdf.ts`); `html()` and custom fonts are never used, so its optional dependencies (`html2canvas`, `dompurify`, `canvg`) are never loaded.
+
 ## CMS & Data
 
 - `@datocms/astro`, `@datocms/cda-client`, and the `datocms` CLI package (not `@datocms/cli`) handle rendering helpers, GraphQL fetching, and schema generation. `@datocms/cma-client` is a runtime dependency: `/api/revalidate` (Site Search reindex), `/api/post-deploy` and `/api/seo-analysis` call `buildClient`.
@@ -32,5 +34,6 @@ description: Summarise runtime, CMS, and tooling dependencies used by Multimage.
 ## Risk Notes
 
 - `maplibre-gl` is pinned at exactly 6.17.0; check the worker loading (dev and build) on upgrade. Tiles come from a third-party server that sees the visitor's IP: keep OpenFreeMap named in the privacy policy.
+- `jspdf` is pinned at exactly 4.2.1: keep the PDF text only (no `html()`), and re-check the lazy chunk size and that `/borsa`'s entry script stays free of it on upgrade.
 - `swiper` is pinned at exactly 14.4.0 in `package.json`; keep it pinned to avoid sudden bundle regressions introduced by caret releases.
 - Track `datocms` CLI updates, especially when schema generation APIs change.

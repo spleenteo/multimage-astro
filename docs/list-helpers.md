@@ -80,14 +80,26 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: book hero copy, supplier bios, staff notices.
   - Notes: `toRichTextHtml` trusts HTML; see Security task **S2**.
 - **`order` facts** (`src/lib/order.ts`)
-  - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping and buyer kinds), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, `orderEmail` text, `checkSiteverify` and `bagMailto`.
-  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `books.ts`, `HomeHero`, `/libri/[slug]`, `/distributori`.
-  - Notes: IBAN, BIC and PayPal must stay in step with the CMS page `/info/ordinare` (TODO **BORSA-info-sync**).
+  - Purpose: no imports, shared by browser and server. Bag rules (`QTY_MIN`/`QTY_MAX` 1–20, `BAG_STORAGE_KEY`, `isOrderablePrint`, `bagBookFor`, `toBagItem`), money helpers (`toCents`, `formatCents`, `euroFormatter`, `bagTotals`, `orderTotals`), order facts (`ORDER_EMAIL`, bank and PayPal details, shipping and buyer kinds), request validation and parsing (`validateOrderFields`, `parseOrderRequest`), `rebuildOrder` from CDA data, the readable order code (`orderCode`, `MM-YYMMDD-XXXX`), the D1 row (`ORDER_COLUMNS`, `orderRow`), the clash retry (`isCodeClash`, `saveWithCodeRetry`: one more insert with a new code on a UNIQUE clash on `orders.code`), `orderEmail` text, `checkSiteverify` and `bagMailto`.
+  - Used in: `bag.client.ts`, `BagDrawer`, `BagAdd`, `/borsa`, `/api/ordine`, `order-pdf.ts`, `books.ts`, `HomeHero`, `/libri/[slug]`, `/distributori`.
+  - Notes: IBAN, BIC and PayPal must stay in step with the CMS page `/info/ordinare` (TODO **BORSA-info-sync**). The table contract is in `d1/README.md`.
+- **`order-pdf`** (`src/lib/order-pdf.ts`)
+  - Purpose: pure model of the PDF of an order request: `orderPdf(input)` returns `{ filename, title, blocks }` (header, date, code, contact, lines, copies, shipping, total, next steps, payment details with the code as causale); `pdfText` keeps every string inside WinAnsi, the only set jsPDF's built-in Helvetica draws. No jsPDF import, so it is testable with `npx tsx`.
+  - Used in: `_order-pdf.client.ts`.
+- **Order PDF renderer** (`src/pages/borsa/_order-pdf.client.ts`)
+  - Purpose: `renderOrderPdf` draws the model with jsPDF (A4, text only), `saveOrderPdf` saves `ordine-<code>.pdf`. Loaded only by a dynamic `import()` on the tap of "Scarica il PDF", so jsPDF is a lazy chunk.
+  - Used in: `_order-page.client.ts`.
+- **Cloudflare bindings** (`src/lib/cloudflare-bindings.ts`)
+  - Purpose: the one wrapper over `cloudflare:workers`: `getOrderDb()` (D1 `ORDERS`) and `getOrderMail()` (`send_email` `ORDER_MAIL`), each returning `null` when the binding is missing. Outside the Cloudflare build the module is aliased to `cloudflare-workers-stub.ts` in `astro.config.mjs`.
+  - Used in: `/api/ordine`.
+- **`cloudflare:workers` stub** (`src/lib/cloudflare-workers-stub.ts`)
+  - Purpose: an empty `env`, so the Vercel build and plain `npm run dev` compile and both getters above return `null`.
+  - Used in: the Vite alias for `cloudflare:workers` (non-Cloudflare builds).
 - **bag store** (`src/lib/bag.client.ts`)
   - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
   - Used in: `BagDrawer`, `BagAdd`, header buttons (through `drawer.client.ts`), `/borsa`.
 - **Order page script** (`src/pages/borsa/_order-page.client.ts`)
-  - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget and the POST to `/api/ordine`.
+  - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget, the POST to `/api/ordine` and, on success, the "Scarica il PDF" button (lazy import of `_order-pdf.client.ts`) and the print fallback.
   - Used in: `src/pages/borsa/index.astro`.
 - **`books` helper** (`src/lib/books.ts`)
   - Purpose: builds book view models, formats price/edition/licence/year, exposes `buildEditionDetails` + `buildGraphicsDetails`, `buildOrderMailto` (prefilled `mailto:ordini@multimage.org` for one book, the mailto fallback of `BagAdd` on the book page and the home hero: subject, title, authors, ISBN, price, copies, address; `ORDER_EMAIL` and `euroFormatter` come from `order.ts`), `ebookStoreName` (store label from an ebook URL, "Bookrepublic"), and owns the catalogue-pagination source of truth: `BOOKS_PER_PAGE`, `booksCataloguePageCount(total)`, `buildBooksCataloguePaths(total)`.

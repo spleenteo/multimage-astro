@@ -82,7 +82,7 @@ Email Routing is enabled on the subdomain `ordini.multimage.org` only, so the ap
   - [ ] The PDF opens and reads well on a phone (iPhone Safari and Android Chrome).
   - [ ] `/info/ordinare` (CMS) shows the same IBAN, BIC and PayPal as `src/lib/order.ts` (TODO BORSA-info-sync).
   - [ ] The privacy policy (iubenda) and `/info/ordinare` name Cloudflare as processor and the retention (TODO BORSA-privacy).
-  - [ ] Tell Olivier the order form is live and where the notices arrive.
+  - [ ] Tell the staff the order form is live and where the notices arrive.
 
 ## 9. Unsent notices and anonymising
 
