@@ -9,11 +9,12 @@
  *   502 catalogue_unavailable (CDA read failed)
  *   409 nothing_orderable (every line dropped)
  *   502 save_failed (not saved and the notification failed or has no binding)
- *   200 { ok, code, notified, lines, copies, shipping, shippingKind, total, dropped }
+ *   200 { ok, code, notified, lines, copies, shipping, shippingKind, member, discount, total, dropped }
  *
  * D1 is the record, the email a notification: saved and mail failed (or no mail
  * binding) is still 200 with `notified: false` and the row marked `failed` or
  * `skipped`; not saved but mailed is 200 too (the email carries the whole order).
+ * The member discount is computed here from the rebuilt lines; the client sends only the flag.
  * The client sends only book ids and quantities: titles and prices are rebuilt
  * from the published catalogue, so a tampered bag never reaches D1 or the email.
  * Error bodies carry codes only. Nothing personal is ever logged: one line per
@@ -195,7 +196,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   // 7. Totals, save, notify.
   const shippingKind = order.shipping as ShippingKind;
-  const totals = orderTotals(lines, shippingKind);
+  const totals = orderTotals(lines, shippingKind, order.member);
   const at = new Date();
   let code = orderCode(at, crypto.getRandomValues(new Uint8Array(4)));
 
@@ -285,6 +286,8 @@ export const POST: APIRoute = async ({ request }) => {
       copies: totals.copies,
       shipping: totals.shipping,
       shippingKind,
+      member: order.member,
+      discount: totals.discount,
       total: totals.total,
       dropped,
     },

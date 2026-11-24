@@ -188,6 +188,8 @@ export type OrderFields = {
   buyer: string;
   notes: string;
   consent: boolean;
+  /** The buyer ticked "Sono socia o socio": the server applies the member discount. */
+  member: boolean;
 };
 
 export type OrderLineInput = { id: string; qty: number };
@@ -219,8 +221,12 @@ export type OrderLine = {
 
 export type OrderTotals = {
   copies: number;
+  /** Books at cover price, in cents. */
   subtotal: number;
+  /** Member discount in cents (0 when not a member); books only, never shipping. */
+  discount: number;
   shipping: number;
+  /** Subtotal minus discount plus shipping. */
   total: number;
 };
 
@@ -248,6 +254,8 @@ export type OrderResponse =
       copies: number;
       shipping: number;
       shippingKind: ShippingKind;
+      member: boolean;
+      discount: number;
       total: number;
       dropped: string[];
     }
@@ -348,6 +356,7 @@ export function parseOrderRequest(body: unknown): ParseResult {
     buyer: text(o.buyer),
     notes: text(o.notes),
     consent: o.consent === true,
+    member: o.member === true,
   };
   const errors = validateOrderFields(fields);
   const keys = Object.keys(errors) as OrderFieldKey[];
@@ -390,16 +399,48 @@ export function rebuildOrder(
   return { lines: out, dropped };
 }
 
-/** Totals in cents; the shipping fee counts once per order. */
-export function orderTotals(lines: OrderLine[], shipping: ShippingKind): OrderTotals {
+/** Members get this percentage off the books (PRODUCT.md, /info/adesioni); the staff verifies membership. */
+export const MEMBER_DISCOUNT_PERCENT = 30;
+
+/** The discount line label, with U+2212 as the minus sign. */
+export const MEMBER_DISCOUNT_LABEL = `Sconto soci −${MEMBER_DISCOUNT_PERCENT}%`;
+
+/** The line that marks a member order in the email, the success screen and the PDF. */
+export const MEMBER_LINE = 'Socia/socio: sì';
+
+/** The member discount on a books subtotal, in cents, rounded half up to the cent (1599 gives 480). */
+export function memberDiscount(subtotal: number): number {
+  return Math.round((subtotal * MEMBER_DISCOUNT_PERCENT) / 100);
+}
+
+/** A discount amount shown as a deduction, e.g. `−9,60 €` (U+2212). */
+export function formatDiscount(cents: number): string {
+  return `−${formatCents(cents)}`;
+}
+
+/** The label of the total: with a discount, "a prezzo di copertina" would be false. */
+export function orderTotalLabel(member: boolean): string {
+  return member ? 'Totale con sconto soci' : 'Totale a prezzo di copertina';
+}
+
+/**
+ * Totals in cents; the shipping fee counts once per order. The member discount
+ * applies to the books only, never to shipping.
+ */
+export function orderTotals(
+  lines: OrderLine[],
+  shipping: ShippingKind,
+  member: boolean,
+): OrderTotals {
   let copies = 0;
   let subtotal = 0;
   for (const line of lines) {
     copies += line.qty;
     subtotal += line.amountCents;
   }
+  const discount = member ? memberDiscount(subtotal) : 0;
   const fee = SHIPPING_KINDS[shipping].cents;
-  return { copies, subtotal, shipping: fee, total: subtotal + fee };
+  return { copies, subtotal, discount, shipping: fee, total: subtotal - discount + fee };
 }
 
 // --- Order code and D1 row -------------------------------------------------
@@ -417,7 +458,7 @@ export function orderCode(at: Date, random: Uint8Array): string {
   return `MM-${date}-${suffix}`;
 }
 
-/** The `orders` columns the site writes, in table order (`id` and `notify_error` are left out). */
+/** The `orders` columns the site writes, in table order (`id` and `notify_error` are left out; `member` and `discount_cents` come from migration 0002). */
 export const ORDER_COLUMNS = [
   'code',
   'created_at',
@@ -437,6 +478,8 @@ export const ORDER_COLUMNS = [
   'total_cents',
   'consent_at',
   'notify_status',
+  'member',
+  'discount_cents',
 ] as const;
 
 /** The values of one `orders` row, in `ORDER_COLUMNS` order; an empty phone or notes is NULL. */
@@ -468,6 +511,8 @@ export function orderRow(data: {
     totals.total,
     time,
     'pending',
+    order.member ? 1 : 0,
+    totals.discount,
   ];
 }
 
@@ -530,6 +575,7 @@ export function orderEmail(data: {
     `Nuovo ordine dal sito: ${code}.`,
     '',
     `Ordini come: ${buyer}`,
+    ...(order.member ? [MEMBER_LINE] : []),
     '',
     `Nome e cognome: ${order.name}`,
     `Email: ${order.email}`,
@@ -543,8 +589,9 @@ export function orderEmail(data: {
     ),
     '',
     `Copie: ${totals.copies}`,
+    ...(order.member ? [`${MEMBER_DISCOUNT_LABEL}: ${formatDiscount(totals.discount)}`] : []),
     `Spedizione: ${shipping.label}, ${formatCents(totals.shipping)}`,
-    `Totale a prezzo di copertina: ${formatCents(totals.total)}`,
+    `${orderTotalLabel(order.member)}: ${formatCents(totals.total)}`,
   ];
   if (order.notes) out.push('', 'Note', order.notes);
   out.push(

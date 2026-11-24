@@ -202,6 +202,7 @@ export function initOrderPage(): void {
       buyer: form?.querySelector<HTMLInputElement>('input[name="buyer"]:checked')?.value ?? '',
       notes: val('notes'),
       consent: $<HTMLInputElement>('#order-consent')?.checked === true,
+      member: $<HTMLInputElement>('#order-member')?.checked === true,
     };
   };
 
