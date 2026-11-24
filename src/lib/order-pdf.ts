@@ -52,7 +52,7 @@ const LETTER_FALLBACK: Record<string, string> = {
  */
 export function pdfText(s: string): string {
   let out = '';
-  for (const ch of s.normalize('NFC')) {
+  for (const ch of s.replace(/[\t\n\r]+/g, ' ').normalize('NFC')) {
     const code = ch.codePointAt(0)!;
     if (code < 0x20 || (code >= 0x7f && code <= 0x9f)) continue;
     if ((code >= 0x2000 && code <= 0x200b) || code === 0x202f || code === 0x205f) {
