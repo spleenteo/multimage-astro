@@ -381,5 +381,9 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
       )}
     </div>
   </div>
+  <script>
+    import { initMembershipPage } from './_membership-page.client';
+    initMembershipPage();
+  </script>
   <DraftModeQueryListener query={MEMBERSHIP_PAGE_QUERY} />
 </BaseLayout>
