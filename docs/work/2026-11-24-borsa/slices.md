@@ -117,6 +117,10 @@ V1 shipped the bag end to end on the client: `src/lib/order.ts` (no imports) hol
 - The visitor copy omits the notes (anti-abuse, plan review); the WAF rule is a prerequisite before setting `RESEND_API_KEY`.
 - Docs (current-state, list-*, env tables in security.md and operations.md) are left to V3; `.env.example` is not touched (no `.env*` edits): the key names go in the closing report.
 
+**V2 — done on 2026-11-24**
+
+V2 shipped /borsa and POST /api/ordine as planned: order facts and pure functions in order.ts, three optional env fields, an endpoint that fails closed (503 without keys outside dev), verifies Turnstile, refetches titles and prices from the CDA and mails through Resend or, in dev, the console; the page drives empty, filled, mailto, error and success states from one script. Execution showed that the CDA rejects the whole `id: { in }` query on an id that isn't a valid ItemId, so the endpoint pre-filters ids (22-char or numeric) and a forged id ends in a safe 502; the dev-only email print was moved under import.meta.env.DEV itself, not left behind the config check; the final review added the email way out when the Turnstile widget errors, focus for the not_configured and missing-check paths, and a reason on refused siteverify logs. Rulings: packet by reference as in V1; T2's report-only medium closed after the runner ran the grep; ITEM_ID widened to numeric ids. The production-mode check runs with wrangler dev --local on dist/server/wrangler.json with an older compatibility date, since astro preview exits. Pending: a screen-reader pass. For the closing report: set the public site key last (after RESEND_API_KEY and TURNSTILE_SECRET_KEY), the WAF rate-limit rule before the Resend key, and the env matrix in security.md and operations.md. Pending, accepted: Done 6 screen-reader pass (VoiceOver) — attributes and focus verified; listed for the user.
+
 ## V3 — Hardening, docs and handover
 
 **In**

@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V2
-step: execute
+slice: V3
+step: plan
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -25,7 +25,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 ## Slices
 
 - [x] V1 — The bag: add, see, change, empty
-- [ ] V2 — The order page and the sending endpoint
+- [x] V2 — The order page and the sending endpoint
 - [ ] V3 — Hardening, docs and handover
 
 ## Pending proposals
@@ -34,6 +34,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — V2 closed — 9 commits, gate green, Done 1–5, 8–10 verified (dev + production build with no keys), Done 6 VoiceOver pending — 24 min run — n/a
 - 2026-11-24 — V2 plan + review — 6 tasks (planner needed 3 attempts: sleep, API timeout); review 0 high, 2 medium, 5 low, all applied; ruling: visitor copy omits notes (anti-abuse) — 35 min — n/a
 - 2026-11-24 — V1 closed — 13 commits, gate green, Done 1–7 verified in headless Chromium, Done 9 pending (no example); 3 rulings — 19 min run — n/a
 - 2026-11-24 — V1 plan + review — 9 tasks; review 1 high, 4 medium, 4 low, all applied — 20 min — n/a
