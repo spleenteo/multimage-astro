@@ -37,6 +37,7 @@ export type OrderPdfInput = {
 // Characters above U+00FF that jsPDF's built-in Helvetica (WinAnsi) can still draw.
 const WIN_ANSI_EXTRA = '€…‘’“”–—•';
 // ø and Ø are in Latin-1, so they never reach this table.
+const COMBINING_MARKS = new RegExp('[\\u0300-\\u036f]', 'g');
 const LETTER_FALLBACK: Record<string, string> = {
   ł: 'l',
   Ł: 'L',
@@ -64,7 +65,7 @@ export function pdfText(s: string): string {
     } else if (LETTER_FALLBACK[ch]) {
       out += LETTER_FALLBACK[ch];
     } else {
-      const base = ch.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC');
+      const base = ch.normalize('NFD').replace(COMBINING_MARKS, '').normalize('NFC');
       out += base.length > 0 && [...base].every((c) => c.codePointAt(0)! <= 0xff) ? base : '?';
     }
   }
