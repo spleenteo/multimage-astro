@@ -56,6 +56,12 @@ Cross-cutting rules for every slice:
 - Update the stale code comments at `src/lib/books.ts:321` and `src/pages/libri/[slug]/index.astro:169` ("there is no cart").
 - Done, added: 9. A print book with no price has no "Metti in borsa".
 
+**Deviations found while planning V1**
+
+- `order.ts` holds only the facts V1 uses (email, cap 20, storage key); IBAN, BIC, SWIFT, PayPal and shipping arrive in V2 with their first use.
+- `isPrintInCatalogue` sits next to `isOrderablePrint`, so a print book with no price keeps the mailto (`isOrderablePrint` alone can't say that).
+- The navy "oppure scrivici un'email" link is on the book page only; the home hero keeps its "Altri modi per averlo" list.
+
 ## V2 — The order page and the sending endpoint
 
 **In**
