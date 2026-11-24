@@ -157,6 +157,40 @@
   @apply text-brand-navy underline underline-offset-2;
 }
 
+/* "Cosa succede dopo" in the recap: a white card with a navy top rule, one row per step
+   (mist icon tile, "Passo n di 3", bold title, the shared step sentence). */
+.order-next--steps {
+  @apply mt-6 border-t-4 border-brand-navy bg-white p-5;
+}
+
+.order-steps__lead {
+  @apply mb-4 mt-1.5 text-[0.9375rem] font-semibold;
+}
+
+.order-next ol.order-steps {
+  @apply m-0 list-none space-y-0 p-0 text-base;
+}
+
+.order-steps > li {
+  @apply grid grid-cols-[2.5rem_1fr] items-start gap-3 border-t border-brand-navy/12 py-3.5;
+}
+
+.order-steps__icon {
+  @apply grid size-10 place-items-center bg-brand-mist text-brand-navy;
+}
+
+.order-steps__count {
+  @apply block text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-[#4a5560];
+}
+
+.order-steps__title {
+  @apply block font-bold text-brand-navy;
+}
+
+.order-steps__body {
+  @apply block text-sm leading-normal;
+}
+
 .order-next__more {
   @apply mt-3 text-sm;
 }

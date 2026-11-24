@@ -120,12 +120,84 @@ const buyerEntries = Object.entries(BUYER_KINDS);
           </div>
         </dl>
 
-        <div class="order-next">
+        <div class="order-next order-next--steps">
           <h2 class="order-h3">Cosa succede dopo</h2>
-          <ol>
-            <li>{ORDER_STEP_CONFIRM}</li>
-            <li>{ORDER_STEP_PAY_LATER}</li>
-            <li>{ORDER_STEP_RECEIPT_LEAD} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a>.</li>
+          <p class="order-steps__lead">Non paghi adesso. Succede così:</p>
+          <ol class="order-steps">
+            <li>
+              <span class="order-steps__icon"
+                ><svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 6h16v12H4z"></path>
+                  <path d="m4 7 8 6 8-6"></path>
+                </svg></span
+              >
+              <span>
+                <span class="order-steps__count">Passo 1 di 3</span>
+                <span class="order-steps__title">Lo staff conferma</span>
+                <span class="order-steps__body">{ORDER_STEP_CONFIRM}</span>
+              </span>
+            </li>
+            <li>
+              <span class="order-steps__icon"
+                ><svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 10h18"></path>
+                  <path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"></path>
+                  <path d="M3 20h18"></path>
+                  <path d="m12 3 9 5H3z"></path>
+                </svg></span
+              >
+              <span>
+                <span class="order-steps__count">Passo 2 di 3</span>
+                <span class="order-steps__title">Paghi</span>
+                <span class="order-steps__body">{ORDER_STEP_PAY_LATER}</span>
+              </span>
+            </li>
+            <li>
+              <span class="order-steps__icon"
+                ><svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"></path>
+                  <path d="M9 8h6M9 12h6"></path>
+                </svg></span
+              >
+              <span>
+                <span class="order-steps__count">Passo 3 di 3</span>
+                <span class="order-steps__title">Mandi la ricevuta</span>
+                <span class="order-steps__body"
+                  >{ORDER_STEP_RECEIPT_LEAD} <a href={`mailto:${ORDER_EMAIL}`}>{ORDER_EMAIL}</a
+                  >.</span
+                >
+              </span>
+            </li>
           </ol>
           <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>
           <p class="sr-only" aria-live="polite" data-order-announce></p>
