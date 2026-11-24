@@ -1,0 +1,386 @@
+---
+// /diventa-socio: the membership page. Server-rendered and cached like every page, identical for
+// every visitor: no cookie. Title, subtitle, text, fee tiers and collaboration areas come from the
+// Membership singleton in DatoCMS. The markup contract read by _membership-page.client.ts: the
+// root `data-socio-page`, the form `data-socio-form`, control ids `socio-<key>` (keys of
+// MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
+// error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
+// `data-socio-mailto-box`, the status line `data-socio-status`, the "Altro" field
+// `data-socio-areas-other` and the Turnstile slot `#socio-turnstile`.
+import { createComponent, render } from 'astro/runtime/server/index.js';
+import { StructuredText } from '@datocms/astro/StructuredText';
+import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Button from '~/components/ui/Button';
+import DraftModeQueryListener from '~/components/DraftModeQueryListener';
+import { executeQuery } from '~/lib/datocms/executeQuery';
+import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import {
+  defaultBlockComponents,
+  defaultInlineRecordComponents,
+  defaultLinkToRecordComponents,
+} from '~/lib/datocms/structuredTextComponents';
+import { resolveDraftMode } from '~/lib/draftPreview';
+import { withFallbackSeo } from '~/lib/seo';
+import { sanitizeCmsHtml, toPlainText } from '~/lib/text';
+import {
+  AREA_OTHER,
+  MEMBERSHIP_ADDRESS_MAX,
+  MEMBERSHIP_AREAS_OTHER_MAX,
+  MEMBERSHIP_BIRTH_DATE_MIN,
+  MEMBERSHIP_BIRTH_PLACE_MAX,
+  MEMBERSHIP_CITY_MAX,
+  MEMBERSHIP_CONSENT_HINT,
+  MEMBERSHIP_CONSENT_LABEL,
+  MEMBERSHIP_COUNTRY_MAX,
+  MEMBERSHIP_EMAIL,
+  MEMBERSHIP_LABELS,
+  MEMBERSHIP_NAME_MAX,
+  MEMBERSHIP_POSTCODE_MAX,
+  MEMBERSHIP_REGION_MAX,
+  PAYMENT_METHODS,
+  membershipFeeLabel,
+  type MembershipFieldKey,
+} from '~/lib/membership';
+import { MEMBERSHIP_PAGE_QUERY, type MembershipPageQueryResult } from './_graphql';
+import '../../styles/form.css';
+
+// The env value, else Cloudflare's always-pass test key in dev, else none (email fallback).
+const siteKey =
+  PUBLIC_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
+
+const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
+const mailtoHref = `mailto:${MEMBERSHIP_EMAIL}?subject=${encodeURIComponent('Diventa socio')}`;
+
+const draftModeEnabled = resolveDraftMode(Astro);
+const { membership } = await executeQuery<MembershipPageQueryResult>(MEMBERSHIP_PAGE_QUERY, {
+  includeDrafts: draftModeEnabled,
+});
+
+const pageTitle = membership?.title?.trim() || 'Diventa socio';
+const subtitleHtml = sanitizeCmsHtml(membership?.subtitle);
+const description = toPlainText(membership?.subtitle ?? null);
+const hasContent = hasStructuredTextContent(membership?.content);
+const fees = membership?.fees ?? [];
+const areas = membership?.collaborationAreas ?? [];
+const showForm = Boolean(membership) && fees.length > 0 && Boolean(siteKey);
+
+const seo = withFallbackSeo(membership?._seoMetaTags, {
+  title: `${pageTitle} | Multimage`,
+  description: description || undefined,
+});
+
+// Blocks the content field allows but the page does not render: present in the query so the
+// structured text finds them, drawn as nothing.
+const EmptyBlock = createComponent(() => render``);
+const blockComponents = {
+  ...defaultBlockComponents,
+  SingleInfoBlockRecord: EmptyBlock,
+  NewsletterSubscriptionRecord: EmptyBlock,
+  ButtonRecord: EmptyBlock,
+};
+
+type TextField = {
+  key: MembershipFieldKey;
+  type?: 'text' | 'email' | 'date';
+  autocomplete: string;
+  max?: number;
+  required: boolean;
+  placeholder?: string;
+  inputmode?: 'numeric';
+  value?: string;
+};
+const email: TextField = {
+  key: 'email',
+  type: 'email',
+  autocomplete: 'email',
+  max: 254,
+  required: true,
+};
+const firstName: TextField = {
+  key: 'firstName',
+  autocomplete: 'given-name',
+  max: MEMBERSHIP_NAME_MAX,
+  required: true,
+};
+const lastName: TextField = {
+  key: 'lastName',
+  autocomplete: 'family-name',
+  max: MEMBERSHIP_NAME_MAX,
+  required: true,
+};
+const birthDate: TextField = {
+  key: 'birthDate',
+  type: 'date',
+  autocomplete: 'bday',
+  required: true,
+};
+const birthPlace: TextField = {
+  key: 'birthPlace',
+  autocomplete: 'off',
+  max: MEMBERSHIP_BIRTH_PLACE_MAX,
+  required: true,
+  placeholder: 'Firenze',
+};
+const address1: TextField = {
+  key: 'address1',
+  autocomplete: 'address-line1',
+  max: MEMBERSHIP_ADDRESS_MAX,
+  required: true,
+  placeholder: 'Via e numero civico',
+};
+const address2: TextField = {
+  key: 'address2',
+  autocomplete: 'address-line2',
+  max: MEMBERSHIP_ADDRESS_MAX,
+  required: false,
+};
+const postcode: TextField = {
+  key: 'postcode',
+  autocomplete: 'postal-code',
+  max: MEMBERSHIP_POSTCODE_MAX,
+  required: true,
+  placeholder: '50123',
+};
+const city: TextField = {
+  key: 'city',
+  autocomplete: 'address-level2',
+  max: MEMBERSHIP_CITY_MAX,
+  required: true,
+  placeholder: 'Firenze',
+};
+const region: TextField = {
+  key: 'region',
+  autocomplete: 'address-level1',
+  max: MEMBERSHIP_REGION_MAX,
+  required: false,
+  placeholder: 'FI',
+};
+const country: TextField = {
+  key: 'country',
+  autocomplete: 'country-name',
+  max: MEMBERSHIP_COUNTRY_MAX,
+  required: true,
+  value: 'Italia',
+};
+
+// Rows of the personal data and address fieldsets: one field is full width, two a pair, three
+// the postcode, city and region row.
+const personalRows: TextField[][] = [[email], [firstName, lastName], [birthDate, birthPlace]];
+const addressRows: TextField[][] = [[address1], [address2], [postcode, city, region], [country]];
+const paymentEntries = Object.entries(PAYMENT_METHODS);
+---
+
+<BaseLayout seo={seo}>
+  <div class="space-y-8 py-8 md:py-12" data-socio-page>
+    <div class="max-w-3xl space-y-4">
+      <h1 class="font-serif text-3xl text-brand-navy md:text-4xl">{pageTitle}</h1>
+      {subtitleHtml ? (
+        <div class="text-base text-brand-charcoal md:text-lg" set:html={subtitleHtml} />
+      ) : null}
+    </div>
+
+    {hasContent && membership?.content ? (
+      <div
+        class="max-w-3xl space-y-5 text-base leading-relaxed text-brand-charcoal [&_a]:text-brand-navy [&_a]:underline [&_a]:underline-offset-2 [&_h2]:mt-8 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:text-brand-navy [&_h3]:mt-6 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:text-brand-navy [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+      >
+        <StructuredText
+          data={membership.content as any}
+          blockComponents={blockComponents as any}
+          inlineRecordComponents={defaultInlineRecordComponents as any}
+          linkToRecordComponents={defaultLinkToRecordComponents as any}
+        />
+      </div>
+    ) : null}
+
+    <div class="max-w-3xl">
+      {showForm ? (
+        <form data-socio-form data-sitekey={siteKey} novalidate>
+          <div class="order-form-error" role="alert" tabindex="-1" data-socio-form-error hidden>
+            <p class="order-form-error__head">
+              <svg
+                class="order-form-error__icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 7.5v5.5"></path>
+                <path d="M12 16.5h.01"></path>
+              </svg>
+              <span data-socio-form-error-text></span>
+              <span data-socio-mailto hidden>
+                <a href={mailtoHref}>scrivici via email</a>
+              </span>
+            </p>
+            <ul data-socio-form-error-list hidden></ul>
+          </div>
+
+          <fieldset class="order-fieldset">
+            <legend>I tuoi dati</legend>
+            {personalRows.map((row) => <div class:list={[row.length > 1 && 'order-pair']}>
+              {row.map((f) => <div class="order-field">
+                <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
+                <input
+                  class="order-input"
+                  id={`socio-${f.key}`}
+                  name={f.key}
+                  type={f.type ?? 'text'}
+                  autocomplete={f.autocomplete}
+                  maxlength={f.max}
+                  min={f.type === 'date' ? MEMBERSHIP_BIRTH_DATE_MIN : undefined}
+                  placeholder={f.placeholder}
+                  required={f.required}
+                />
+                <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
+              </div>)}
+            </div>)}
+          </fieldset>
+
+          <fieldset class="order-fieldset">
+            <legend>Indirizzo</legend>
+            {addressRows.map((row) => <div
+              class:list={[
+                row.length === 2 && 'order-pair',
+                row.length === 3 && 'order-pair order-pair--city',
+              ]}
+            >
+              {row.map((f) => <div class="order-field">
+                <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
+                <input
+                  class="order-input"
+                  id={`socio-${f.key}`}
+                  name={f.key}
+                  type="text"
+                  autocomplete={f.autocomplete}
+                  maxlength={f.max}
+                  placeholder={f.placeholder}
+                  value={f.value}
+                  required={f.required}
+                />
+                <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
+              </div>)}
+            </div>)}
+          </fieldset>
+
+          <fieldset class="order-fieldset">
+            <legend>Quota</legend>
+            <div class="order-choices">
+              {fees.map((fee) => <label class="order-choice">
+                <input type="radio" name="fee" value={fee.id} required />
+                <span class="order-choice__text">
+                  <b>{membershipFeeLabel(fee)}</b>
+                </span>
+              </label>)}
+            </div>
+            <p class="order-error" id="socio-fee-error" data-error-for="fee" hidden></p>
+          </fieldset>
+
+          <fieldset class="order-fieldset">
+            <legend>Come paghi</legend>
+            <div class="order-choices">
+              {paymentEntries.map(([key, label]) => <label class="order-choice">
+                <input type="radio" name="payment" value={key} required />
+                <span class="order-choice__text">
+                  <b>{label}</b>
+                </span>
+              </label>)}
+            </div>
+            <p class="order-error" id="socio-payment-error" data-error-for="payment" hidden></p>
+          </fieldset>
+
+          <fieldset class="order-fieldset">
+            <legend>Come vuoi collaborare</legend>
+            <div class="order-choices">
+              {areas.map((area) => <label class="order-choice">
+                <input type="checkbox" name="areas" value={area.id} />
+                <span class="order-choice__text">
+                  <b>{area.label}</b>
+                </span>
+              </label>)}
+              <label class="order-choice">
+                <input type="checkbox" name="areas" value={AREA_OTHER} />
+                <span class="order-choice__text">
+                  <b>Altro</b>
+                </span>
+              </label>
+            </div>
+            <div class="order-field" data-socio-areas-other hidden>
+              <label for="socio-areasOther">{MEMBERSHIP_LABELS.areasOther}</label>
+              <input
+                class="order-input"
+                id="socio-areasOther"
+                name="areasOther"
+                type="text"
+                autocomplete="off"
+                maxlength={MEMBERSHIP_AREAS_OTHER_MAX}
+              />
+              <p
+                class="order-error"
+                id="socio-areasOther-error"
+                data-error-for="areasOther"
+                hidden
+              ></p>
+            </div>
+            <p class="order-error" id="socio-areas-error" data-error-for="areas" hidden></p>
+          </fieldset>
+
+          <div class="order-consent">
+            <label class="order-check">
+              <input
+                type="checkbox"
+                id="socio-consent"
+                name="consent"
+                aria-labelledby="socio-consent-label"
+                aria-describedby="socio-consent-hint"
+                required
+              />
+              <span class="order-check__text">
+                <span id="socio-consent-label">{MEMBERSHIP_CONSENT_LABEL}</span>
+                <span class="order-check__hint" id="socio-consent-hint">
+                  {MEMBERSHIP_CONSENT_HINT}
+                  <a href={PRIVACY_URL} target="_blank" rel="noopener"
+                    >Informativa
+                    privacy<span class="sr-only">, si apre in una nuova scheda</span></a
+                  >
+                </span>
+              </span>
+            </label>
+            <p class="order-error" id="socio-consent-error" data-error-for="consent" hidden></p>
+          </div>
+
+          <div class="order-turnstile">
+            <div id="socio-turnstile" tabindex="-1" data-socio-turnstile></div>
+            <p class="order-error" id="socio-turnstile-error" data-error-for="turnstile" hidden></p>
+          </div>
+
+          <div class="order-send">
+            <Button type="submit" primary>Invia la richiesta</Button>
+          </div>
+          <p class="order-status" aria-live="polite" data-socio-status></p>
+        </form>
+      ) : (
+        <section
+          class="max-w-xl space-y-4 bg-brand-mist p-5 text-brand-charcoal"
+          data-socio-mailto-box
+        >
+          <h2 class="font-serif text-2xl text-brand-navy">Scrivici a {MEMBERSHIP_EMAIL}</h2>
+          <p>
+            Il modulo per associarsi non è attivo in questo momento: scrivici e ti rispondiamo con i
+            passi per iscriverti.
+          </p>
+          <span data-socio-mailto>
+            <Button primary href={mailtoHref}>Scrivi a {MEMBERSHIP_EMAIL}</Button>
+          </span>
+        </section>
+      )}
+    </div>
+  </div>
+  <DraftModeQueryListener query={MEMBERSHIP_PAGE_QUERY} />
+</BaseLayout>
