@@ -99,3 +99,9 @@ Conductor checks at close (2026-11-25): local Cloudflare run with `build:cf` (te
 **Out**: any member management beyond the email and the D1 row; the `adesioni` record itself (editors may remove it from the menus).
 
 **Done**: on www.multimage.org a request at /diventa-socio arrives in info@multimage.org, its row is in D1, the confirmation is shown; the header button leads there, `/info/adesioni` redirects; rapid POSTs get 429; docs updated.
+
+### Deviations found while planning V3
+
+- T4 also updates `docs/guidelines/caching.md` (membership model, `/diventa-socio` route, block count 19 → 21), left over by V1.
+- T4 changes the `/info/adesioni` link in `PRODUCT.md` to `/diventa-socio`.
+- T3 removes the stale PLACEHOLDER comment in `wrangler.jsonc` next to the D1 comment it rewrites.
