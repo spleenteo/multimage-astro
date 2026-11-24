@@ -73,6 +73,7 @@ export function initOrderPage(): void {
   const $$ = <T extends HTMLElement>(sel: string) => Array.from(root.querySelectorAll<T>(sel));
 
   const head = $('[data-order-head]');
+  const lede = $('[data-order-lede]');
   const emptyView = $('[data-order-empty]');
   const filled = $('[data-order-filled]');
   const sizeLine = $('[data-order-size]');
@@ -134,7 +135,8 @@ export function initOrderPage(): void {
       el.hidden = false;
     }
     if (control) {
-      control.setAttribute('aria-invalid', 'true');
+      // The widget container is a plain div: aria-invalid has no meaning there.
+      if (key !== 'turnstile') control.setAttribute('aria-invalid', 'true');
       // Keep the hint ids the markup already gave the control, then append the error id.
       if (control.dataset.orderHints === undefined)
         control.dataset.orderHints = control.getAttribute('aria-describedby') ?? '';
@@ -208,6 +210,7 @@ export function initOrderPage(): void {
     const isEmpty = items.length === 0;
     if (emptyView) emptyView.hidden = !isEmpty;
     if (filled) filled.hidden = isEmpty;
+    if (lede) lede.hidden = isEmpty;
     if (isEmpty) {
       if (sizeLine) sizeLine.textContent = '';
       return;
@@ -255,22 +258,28 @@ export function initOrderPage(): void {
     const sitekey = form?.dataset.sitekey;
     const container = $('#order-turnstile');
     if (!sitekey || !container || widgetId !== undefined || !window.turnstile) return;
-    widgetId = window.turnstile.render(container, {
-      sitekey,
-      action: ORDER_ACTION,
-      language: 'it',
-      size: 'flexible',
-      callback: (t: string) => {
-        token = t;
-        clearError('turnstile');
-      },
-      'expired-callback': () => {
-        token = '';
-      },
-      'error-callback': () => {
-        token = '';
-      },
-    });
+    try {
+      widgetId = window.turnstile.render(container, {
+        sitekey,
+        action: ORDER_ACTION,
+        language: 'it',
+        size: 'flexible',
+        callback: (t: string) => {
+          token = t;
+          clearError('turnstile');
+        },
+        'expired-callback': () => {
+          token = '';
+        },
+        // The widget itself failed (bad site key or hostname): offer the email way out.
+        'error-callback': () => {
+          token = '';
+          showFormError(MSG.turnstileLoad, true);
+        },
+      });
+    } catch {
+      showFormError(MSG.turnstileLoad, true);
+    }
   };
 
   function loadTurnstile() {
@@ -399,7 +408,12 @@ export function initOrderPage(): void {
         break;
       case 'not_configured':
         if (form) form.hidden = true;
-        if (mailtoBox) mailtoBox.hidden = false;
+        if (lede) lede.hidden = true;
+        if (mailtoBox) {
+          mailtoBox.hidden = false;
+          // The submit button that had focus is gone: move focus to the box heading.
+          mailtoBox.querySelector<HTMLElement>('[data-order-mailto-heading]')?.focus();
+        }
         break;
       default:
         showFormError(MSG.generic, true);

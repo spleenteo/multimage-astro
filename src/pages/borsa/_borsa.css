@@ -317,8 +317,9 @@
   @apply mb-5;
 }
 
-#order-turnstile:focus {
-  outline: none;
+#order-turnstile:focus-visible {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
 }
 
 .order-form-error {

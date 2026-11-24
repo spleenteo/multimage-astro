@@ -44,10 +44,12 @@ const buyerEntries = Object.entries(BUYER_KINDS);
     <div class="order-page__head" data-order-head>
       <h1 class="order-page__title">La tua borsa</h1>
       <p class="order-page__size" data-order-size></p>
-      <p class="order-page__lede">
-        Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri.
-        Riceverai una copia via email con le istruzioni per il pagamento.
-      </p>
+      {siteKey ? (
+        <p class="order-page__lede" data-order-lede>
+          Lasciaci i tuoi dati: l'ordine arriva a Olivier, che lo conferma e spedisce i libri.
+          Riceverai una copia via email con le istruzioni per il pagamento.
+        </p>
+      ) : null}
       <noscript>
         <p class="order-page__lede">
           Per ordinare dal sito serve JavaScript. Puoi scriverci a {ORDER_EMAIL}.
@@ -306,7 +308,9 @@ const buyerEntries = Object.entries(BUYER_KINDS);
         ) : null}
 
         <section class="order-mailto-box" data-order-mailto-box hidden={Boolean(siteKey)}>
-          <h2 class="order-h2">Mandaci l'ordine via email</h2>
+          <h2 class="order-h2" tabindex="-1" data-order-mailto-heading>
+            Mandaci l'ordine via email
+          </h2>
           <p>
             Il modulo d'ordine non è attivo in questo momento: scrivici, prepariamo noi l'ordine con
             i libri della tua borsa.

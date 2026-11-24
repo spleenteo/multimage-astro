@@ -65,8 +65,13 @@ function reply(body: OrderResponse, status: number, headers: Record<string, stri
   });
 }
 
-function fail(status: number, error: OrderErrorCode, fields?: OrderFieldKey[]): Response {
-  console.warn(`${LOG} ${status} ${error}`);
+function fail(
+  status: number,
+  error: OrderErrorCode,
+  fields?: OrderFieldKey[],
+  detail?: string,
+): Response {
+  console.warn(`${LOG} ${status} ${error}${detail ? ` ${detail}` : ''}`);
   return reply(fields ? { ok: false, error, fields } : { ok: false, error }, status);
 }
 
@@ -149,14 +154,17 @@ export const POST: APIRoute = async ({ request }) => {
     return fail(502, 'turnstile_unavailable');
   }
   const lenient = isDev && TEST_SECRET.test(turnstileSecret);
-  if (
-    !checkSiteverify(verdict, {
-      hostname: new URL(request.url).hostname,
-      action: ORDER_ACTION,
-      lenient,
-    })
-  )
-    return fail(400, 'turnstile');
+  const expected = { hostname: new URL(request.url).hostname, action: ORDER_ACTION, lenient };
+  if (!checkSiteverify(verdict, expected)) {
+    // Which check failed, for the operator: no token, no visitor data.
+    const r = (typeof verdict === 'object' && verdict !== null ? verdict : {}) as Record<
+      string,
+      unknown
+    >;
+    const reason =
+      r.success !== true ? 'success' : r.hostname !== expected.hostname ? 'hostname' : 'action';
+    return fail(400, 'turnstile', undefined, `reason=${reason}`);
+  }
 
   // 6. Rebuild the lines from the published catalogue.
   let books: OrderBook[];
