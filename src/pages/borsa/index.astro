@@ -67,9 +67,11 @@ const buyerEntries = Object.entries(BUYER_KINDS);
     </div>
 
     <section class="order-empty" data-order-empty hidden>
-      <h2 class="order-h2">La borsa è vuota</h2>
-      <p>Scegli un libro dal catalogo e mettilo in borsa: qui trovi il riepilogo dell'ordine.</p>
-      <Button href="/libri" variant="secondary">Sfoglia il catalogo</Button>
+      <p>
+        È ancora vuota. Scegli un libro dal catalogo e mettilo in borsa: qui trovi il riepilogo
+        dell'ordine.
+      </p>
+      <Button href="/libri" variant="secondary">Guarda le novità</Button>
     </section>
 
     <div class="order-grid" data-order-filled hidden>
@@ -257,13 +259,20 @@ const buyerEntries = Object.entries(BUYER_KINDS);
 
             <div class="order-member">
               <label class="order-check">
-                <input type="checkbox" id="order-member" aria-describedby="order-member-hint" />
-                <span>Sono socia o socio di Multimage</span>
+                <input
+                  type="checkbox"
+                  id="order-member"
+                  aria-labelledby="order-member-label"
+                  aria-describedby="order-member-hint"
+                />
+                <span class="order-check__text">
+                  <span id="order-member-label">Sono socia o socio di Multimage</span>
+                  <span class="order-check__hint" id="order-member-hint">
+                    Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
+                    l'iscrizione.
+                  </span>
+                </span>
               </label>
-              <p class="order-hint-line order-member__hint" id="order-member-hint">
-                Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
-                l'iscrizione.
-              </p>
             </div>
 
             <div class="order-field">
@@ -286,17 +295,23 @@ const buyerEntries = Object.entries(BUYER_KINDS);
                 <input
                   type="checkbox"
                   id="order-consent"
+                  aria-labelledby="order-consent-label"
                   aria-describedby="order-consent-hint"
                   required
                 />
-                <span>Acconsento all'uso dei miei dati solo per gestire questo ordine.</span>
+                <span class="order-check__text">
+                  <span id="order-consent-label">
+                    Acconsento all'uso dei miei dati solo per gestire questo ordine.
+                  </span>
+                  <span class="order-check__hint" id="order-consent-hint">
+                    I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.
+                    <a href={PRIVACY_URL} target="_blank" rel="noopener"
+                      >Informativa
+                      privacy<span class="sr-only">, si apre in una nuova scheda</span></a
+                    >
+                  </span>
+                </span>
               </label>
-              <p class="order-hint-line order-consent__hint" id="order-consent-hint">
-                I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.
-                <a href={PRIVACY_URL} target="_blank" rel="noopener"
-                  >Informativa privacy<span class="sr-only">, si apre in una nuova scheda</span></a
-                >
-              </p>
               <p class="order-error" id="order-consent-error" data-error-for="consent" hidden></p>
             </div>
 

@@ -1,5 +1,12 @@
 @reference '../../styles/global.css';
 
+/* No one-word last lines in the page's running text. */
+.order-page p,
+.order-page li,
+.order-page dt {
+  text-wrap: pretty;
+}
+
 /* /borsa: a slim title row, then the form (7fr) and the recap aside on mist (5fr). One column on
    phones with the recap first. Small text inside the mist aside is charcoal (slate on mist is under
    4.5:1); slate stays on white. The 44px goes on the controls, never on a bordered group. */
@@ -36,7 +43,7 @@
   @apply font-serif text-xl text-brand-navy;
 }
 
-/* Empty bag */
+/* Empty bag: the page h1, one line, one way to the catalogue. */
 .order-empty {
   @apply max-w-xl space-y-4;
 }
@@ -307,7 +314,9 @@
   outline-offset: 2px;
 }
 
-/* Consent and member checkbox rows. */
+/* Consent and member checkbox rows: the hint sits inside the label, right under its text, so the
+   whole block is the hit area (at least 44px) and nothing floats detached below it. The input is
+   named by the text span alone (aria-labelledby) and described by the hint. */
 .order-consent,
 .order-member {
   @apply mb-5;
@@ -321,13 +330,15 @@
   @apply mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-brand-navy;
 }
 
-/* Checkbox rows: the hint lines up with the label text, not the box. */
-.order-consent__hint,
-.order-member__hint {
-  @apply pl-[1.875rem];
+.order-check__text {
+  @apply flex min-w-0 flex-col;
 }
 
-.order-consent__hint a {
+.order-check__hint {
+  @apply mt-1 text-sm text-brand-slate;
+}
+
+.order-check__hint a {
   @apply text-brand-navy underline underline-offset-2;
 }
 

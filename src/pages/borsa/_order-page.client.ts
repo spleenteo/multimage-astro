@@ -269,6 +269,7 @@ export function initOrderPage(): void {
     if (emptyView) emptyView.hidden = !isEmpty;
     if (filled) filled.hidden = isEmpty;
     if (lede) lede.hidden = isEmpty;
+    if (sizeLine) sizeLine.hidden = isEmpty;
     if (isEmpty) {
       if (sizeLine) sizeLine.textContent = '';
       return;
