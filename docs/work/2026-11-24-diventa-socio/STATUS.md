@@ -1,6 +1,6 @@
 ---
 status: open
-phase: slicing
+phase: impact
 slice: null
 step: null
 work: diventa-socio
@@ -27,7 +27,9 @@ Owner answers at opening (2026-11-24):
 
 ## Slices
 
-- [ ] (defined during slicing)
+- [ ] V1 — The page and the form, from the CMS
+- [ ] V2 — Sending the request and the confirmation
+- [ ] V3 — Live on multimage.org
 
 ## Pending proposals
 
@@ -38,3 +40,4 @@ Owner answers at opening (2026-11-24):
 <!-- date — step — done — remaining — wall-clock — cost -->
 
 - 2026-11-24 — opening — work opened, technical path: frame, shaping, breadboard and design skipped (outcome clear, form styled like /borsa) — slicing, impact, slices — 10 min — n/a
+- 2026-11-24 — slicing — 3 slices (page+CMS, send path, live); fidelity check skipped (no frame) — impact — 10 min — n/a
