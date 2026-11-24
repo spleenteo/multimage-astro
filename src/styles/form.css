@@ -1,0 +1,219 @@
+@reference './global.css';
+
+/* Form */
+.order-fieldset {
+  @apply mb-8 min-w-0 border-0 p-0;
+}
+
+.order-fieldset legend {
+  @apply mb-4 p-0 font-serif text-2xl font-semibold text-brand-navy;
+}
+
+.order-field {
+  @apply mb-4 min-w-0 space-y-1.5;
+}
+
+.order-field > label {
+  @apply block text-sm font-semibold text-brand-charcoal;
+}
+
+.order-hint {
+  @apply font-normal text-brand-slate;
+}
+
+.order-hint-line {
+  @apply mt-2 text-sm text-brand-slate;
+}
+
+.order-input {
+  @apply block h-11 w-full min-w-0 border border-brand-navy/25 bg-white px-3 text-base text-brand-charcoal placeholder:text-brand-slate lg:h-10;
+}
+
+.order-input--area {
+  @apply h-auto min-h-24 resize-y py-2.5 lg:h-auto;
+}
+
+.order-input[aria-invalid='true'],
+.order-fieldset[aria-invalid='true'] .order-who {
+  border-color: var(--color-brand-crimson);
+}
+
+.order-pair {
+  @apply grid grid-cols-1 gap-x-4 sm:grid-cols-2;
+}
+
+/* CAP, città, provincia: one column on phones, one row from 640px. */
+@media (min-width: 640px) {
+  .order-pair--city {
+    grid-template-columns: 9rem minmax(0, 1fr) 9rem;
+  }
+}
+
+.order-error {
+  @apply mt-1.5 text-sm font-semibold text-brand-crimson;
+}
+
+/* Shipping: radio rows, the label is the 44px control. */
+.order-choices {
+  @apply border-t border-brand-navy/15;
+}
+
+.order-choice {
+  @apply grid min-h-11 cursor-pointer grid-cols-[1.125rem_minmax(0,1fr)_auto] items-start gap-3 border-b border-brand-navy/15 py-3.5;
+}
+
+.order-choice input {
+  @apply mt-1 h-[1.125rem] w-[1.125rem] accent-brand-navy;
+}
+
+.order-choice__text {
+  @apply flex min-w-0 flex-col;
+}
+
+.order-choice__text b {
+  @apply font-semibold text-brand-charcoal;
+}
+
+.order-choice__text span {
+  @apply text-sm text-brand-slate;
+}
+
+.order-choice:has(input:checked) b {
+  @apply text-brand-navy;
+}
+
+.order-choice:hover b {
+  @apply underline;
+}
+
+.order-choice__fee {
+  @apply font-serif text-base font-semibold text-brand-navy;
+}
+
+.order-choice:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* "Chi ordina": flat segmented cells for any number of buyer kinds from the CMS. Two columns on
+   phones (a last odd cell takes the whole row), one row from 640px. The 1px gaps on a navy-tinted
+   ground draw the dividers, so no per-count border rules. */
+.order-who {
+  @apply grid grid-cols-2 gap-px border border-brand-navy/25 bg-brand-navy/25;
+}
+
+.order-who__cell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 640px) {
+  .order-who {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+  }
+
+  .order-who__cell:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+}
+
+.order-who__cell {
+  @apply relative flex min-h-11 cursor-pointer items-center justify-center bg-white px-3 text-center text-sm text-brand-navy hover:bg-brand-mist;
+}
+
+.order-who__cell input {
+  @apply absolute inset-0 h-full w-full cursor-pointer opacity-0;
+}
+
+.order-who__cell:has(input:checked) {
+  @apply bg-brand-navy font-semibold text-white hover:bg-brand-navy;
+}
+
+.order-who__cell:has(:focus-visible) {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* The consent checkbox row: the hint sits inside the label, right under its text, so the
+   whole block is the hit area (at least 44px) and nothing floats detached below it. The input is
+   named by the text span alone (aria-labelledby) and described by the hint. */
+.order-consent {
+  @apply mb-8;
+}
+
+.order-check {
+  @apply flex min-h-11 cursor-pointer items-start gap-3 text-sm text-brand-charcoal;
+}
+
+.order-check input {
+  @apply mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-brand-navy;
+}
+
+.order-check__text {
+  @apply flex min-w-0 flex-col;
+}
+
+.order-check__hint {
+  @apply mt-1 text-sm text-brand-slate;
+}
+
+.order-check__hint a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-check a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-turnstile {
+  @apply mb-5;
+}
+
+.order-turnstile > [tabindex]:focus-visible {
+  outline: 3px solid var(--focus-ring, var(--color-brand-navy));
+  outline-offset: 2px;
+}
+
+/* The error summary: crimson text on mist; in a list, each field is a navy link to it. */
+/* Error summary at the top of the form: an alert band (a hairline crimson frame on a pale crimson wash),
+   the count as its heading line, the invalid fields as navy links. Focus lands on it. */
+.order-form-error {
+  @apply mb-8 border border-brand-crimson/35 bg-[#fbeeee] px-4 py-3.5 text-sm text-brand-charcoal md:px-5 md:py-4;
+}
+
+.order-form-error:focus-visible {
+  @apply outline-2 outline-offset-2 outline-brand-crimson;
+}
+
+.order-form-error__head {
+  @apply flex items-start gap-2.5 text-[0.9375rem] font-semibold text-brand-crimson;
+}
+
+.order-form-error__icon {
+  @apply mt-px flex-none;
+}
+
+.order-form-error ul {
+  @apply mt-2 grid gap-x-6 pl-[1.875rem] sm:grid-cols-2;
+}
+
+.order-form-error li a {
+  @apply inline-flex min-h-11 items-center font-semibold md:min-h-8;
+}
+
+.order-form-error a {
+  @apply text-brand-navy underline underline-offset-2;
+}
+
+.order-send {
+  @apply flex flex-wrap items-center gap-x-4 gap-y-3;
+}
+
+.order-send p {
+  @apply max-w-[36ch] text-sm text-brand-slate;
+}
+
+.order-status {
+  @apply mt-3 text-sm text-brand-slate;
+}
