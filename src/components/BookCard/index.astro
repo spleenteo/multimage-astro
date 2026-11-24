@@ -4,7 +4,7 @@
 // (Book3D) with its spine, in a pose of its own derived from the slug. The `catalogue` variant is the
 // quieter one used in the /libri grid: lighter field, no summary, compact on phones.
 // An orderable print book (an `id`, in the catalogue, with a price) gets a bag button in the top
-// right corner of the field, outside the link: `bag.client.ts` shows it and adds the book.
+// right corner of the card, level with the price, outside the link: `bag.client.ts` shows it and adds the book.
 import Book3D from '~/components/Book3D';
 import { bookCardView, type BookCardInput } from '~/lib/bookCardView';
 import AuthorNames from '~/components/ui/AuthorNames';
@@ -140,7 +140,12 @@ const bag = id
   </a>
 
   {bag ? (
-    <span class={styles.bag} data-card-bag data-bag-item={JSON.stringify(bag)} hidden>
+    <span
+      class:list={[styles.bag, isCatalogue ? styles.bagCatalogue : null]}
+      data-card-bag
+      data-bag-item={JSON.stringify(bag)}
+      hidden
+    >
       <button
         type="button"
         class={styles.bagButton}
