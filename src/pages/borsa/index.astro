@@ -135,6 +135,39 @@ const buyerEntries = Object.entries(BUYER_KINDS);
       <div class="order-main">
         {siteKey ? (
           <form data-order-form data-sitekey={siteKey} novalidate>
+            <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
+              <legend>{BUYER_LABEL}</legend>
+              <div class="order-who">
+                {buyerEntries.map(([key, label]) => <label class="order-who__cell">
+                  <input type="radio" name="buyer" value={key} checked={key === 'privato'} />
+                  <span>{label}</span>
+                </label>)}
+              </div>
+              <p class="order-hint-line" id="order-buyer-hint">
+                Per scuole, associazioni e librerie applichiamo condizioni speciali: ti scriviamo
+                noi.
+              </p>
+              <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
+            </fieldset>
+
+            <div class="order-member">
+              <label class="order-check">
+                <input
+                  type="checkbox"
+                  id="order-member"
+                  aria-labelledby="order-member-label"
+                  aria-describedby="order-member-hint"
+                />
+                <span class="order-check__text">
+                  <span id="order-member-label">Sono socia o socio di Multimage</span>
+                  <span class="order-check__hint" id="order-member-hint">
+                    Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
+                    l'iscrizione.
+                  </span>
+                </span>
+              </label>
+            </div>
+
             <fieldset class="order-fieldset">
               <legend>A chi spediamo</legend>
               <div class="order-field">
@@ -260,39 +293,6 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               </div>
               <p class="order-error" id="order-shipping-error" data-error-for="shipping" hidden></p>
             </fieldset>
-
-            <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
-              <legend>{BUYER_LABEL}</legend>
-              <div class="order-who">
-                {buyerEntries.map(([key, label]) => <label class="order-who__cell">
-                  <input type="radio" name="buyer" value={key} checked={key === 'privato'} />
-                  <span>{label}</span>
-                </label>)}
-              </div>
-              <p class="order-hint-line" id="order-buyer-hint">
-                Per scuole, associazioni e librerie applichiamo condizioni speciali: ti scriviamo
-                noi.
-              </p>
-              <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
-            </fieldset>
-
-            <div class="order-member">
-              <label class="order-check">
-                <input
-                  type="checkbox"
-                  id="order-member"
-                  aria-labelledby="order-member-label"
-                  aria-describedby="order-member-hint"
-                />
-                <span class="order-check__text">
-                  <span id="order-member-label">Sono socia o socio di Multimage</span>
-                  <span class="order-check__hint" id="order-member-hint">
-                    Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
-                    l'iscrizione.
-                  </span>
-                </span>
-              </label>
-            </div>
 
             <div class="order-field">
               <label for="order-notes">Note <span class="order-hint">(facoltative)</span></label>

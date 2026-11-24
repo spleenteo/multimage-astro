@@ -340,7 +340,7 @@
    named by the text span alone (aria-labelledby) and described by the hint. */
 .order-consent,
 .order-member {
-  @apply mb-5;
+  @apply mb-8;
 }
 
 .order-check {

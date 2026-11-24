@@ -45,6 +45,7 @@ const ENDPOINT = '/api/ordine';
 
 // Field keys in DOM order, then the widget: the first error in this order gets focus.
 const ERROR_KEYS = [
+  'buyer',
   'name',
   'email',
   'phone',
@@ -53,7 +54,6 @@ const ERROR_KEYS = [
   'city',
   'province',
   'shipping',
-  'buyer',
   'notes',
   'consent',
   'turnstile',
