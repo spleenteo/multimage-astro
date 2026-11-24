@@ -24,3 +24,6 @@
 - A document the visitor keeps (PDF, email) must say the same sequence as the page: check each step against the page's own list, and never add a clause the plan did not write.
 - A fix round must not reword text the user dictated: name the binding strings in the fix instruction, and the reviewer checks them verbatim.
 - Docs describing endpoint behaviour (503 conditions, dev path) are checked line by line against the endpoint's condition order, not paraphrased from the plan.
+- A change to what the recap promises (a price, a discount) is traced through every way the order can leave the page, fallbacks included (mailto), not only the main submit.
+- A Verified grep is checked against any binding "Review fixes" text that rewrites the line it looks for, and adjusted in the plan.
+- A browser walk on /borsa clicks `[data-order-form] button[type=submit]` (the header search has submit buttons too) and waits on `load` plus a selector, never `networkidle` (the dev server keeps a socket open).
