@@ -1,0 +1,296 @@
+@reference '../../../styles/global.css';
+
+/* /staff/designsystem: a quiet reading page. Slim title row, an anchor index, then sections
+   divided by navy-at-10% hairlines. Flat: no cards, no shadows except the shadow specimens. */
+
+.page {
+  @apply min-w-0;
+}
+
+.page :where(code) {
+  @apply font-mono text-[0.8125rem] text-brand-navy [overflow-wrap:anywhere];
+}
+
+.page :where(p, li) {
+  text-wrap: pretty;
+}
+
+.intro {
+  @apply max-w-3xl space-y-3;
+}
+
+.title {
+  @apply font-serif text-3xl text-balance text-brand-navy md:text-4xl;
+}
+
+.size {
+  @apply font-serif text-xl text-brand-slate lining-nums;
+}
+
+.lede {
+  @apply text-base text-brand-charcoal md:text-lg;
+}
+
+/* Anchor index: not sticky, one hairline-framed strip of links. */
+.toc {
+  @apply mt-8 border-t border-brand-navy/10 pt-3;
+}
+
+.toc ul {
+  @apply grid gap-x-8 sm:grid-cols-2 md:grid-cols-3;
+}
+
+.toc a {
+  @apply inline-flex min-h-11 items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:no-underline md:min-h-9;
+}
+
+.section {
+  @apply mt-14 scroll-mt-6 border-t border-brand-navy/10 pt-10 md:mt-16 md:pt-12;
+}
+
+.h2 {
+  @apply font-serif text-3xl text-brand-navy;
+}
+
+.h3 {
+  @apply mb-4 font-serif text-xl text-brand-navy;
+}
+
+.block {
+  @apply mt-10;
+}
+
+.note {
+  @apply mt-3 max-w-[68ch] text-base text-brand-charcoal;
+}
+
+.meta {
+  @apply text-sm text-brand-slate tabular-nums;
+}
+
+.usage {
+  @apply block max-w-[68ch] text-sm text-brand-charcoal;
+}
+
+/* Named rules: a quoted sentence on a hairline, not a callout box. */
+.rule {
+  @apply mt-6 max-w-[68ch] border-t border-brand-navy/10 pt-4 text-sm text-brand-charcoal;
+}
+
+.rule strong {
+  @apply font-serif text-base font-semibold text-brand-navy;
+}
+
+/* Colours */
+.swatches {
+  @apply grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.swatch {
+  @apply flex min-w-0 flex-col gap-3;
+}
+
+.chipColor {
+  @apply flex h-24 items-end border border-brand-navy/10 p-3 font-mono text-sm;
+}
+
+.swatchText {
+  @apply min-w-0 space-y-1;
+}
+
+.swatchName {
+  @apply block font-semibold text-brand-charcoal;
+}
+
+.swatchRole {
+  @apply text-sm text-brand-charcoal;
+}
+
+.tints {
+  @apply mt-6 grid gap-8 md:grid-cols-3;
+}
+
+.tint ul {
+  @apply mt-3 border-t border-brand-navy/10;
+}
+
+.tint li {
+  @apply grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-x-3 border-b border-brand-navy/10 py-2;
+}
+
+.tint li code {
+  @apply col-start-2 text-xs;
+}
+
+.tintChip {
+  @apply row-span-2 block h-10 w-10 border border-brand-navy/10;
+}
+
+.tintLabel {
+  @apply text-sm text-brand-charcoal;
+}
+
+/* Typography */
+.typeList {
+  @apply mt-6 border-t border-brand-navy/10;
+}
+
+.typeRow {
+  @apply space-y-2 border-b border-brand-navy/10 py-6;
+}
+
+.specimenSerif {
+  @apply text-balance text-brand-navy lining-nums;
+}
+
+.specimenSans {
+  @apply max-w-[60ch] text-brand-charcoal;
+}
+
+/* Spacing, corners, shadows */
+.spacing li {
+  @apply grid grid-cols-[6.5rem_auto_auto] items-center justify-start gap-4 py-1.5;
+}
+
+.bar {
+  @apply block h-3 bg-brand-navy;
+}
+
+.corners {
+  @apply flex items-center gap-6;
+}
+
+.corners .note {
+  @apply mt-0;
+}
+
+.shadows {
+  @apply grid gap-10 sm:grid-cols-2 lg:grid-cols-3;
+}
+
+.shadowSample {
+  @apply flex flex-col gap-4;
+}
+
+.shadowSample figcaption {
+  @apply space-y-1;
+}
+
+.shadowSample figcaption code {
+  @apply block;
+}
+
+.shadowBox {
+  @apply mt-6 h-28 bg-white;
+}
+
+.shadowCover {
+  @apply flex h-36 items-center justify-center;
+}
+
+/* Buttons */
+.specimens {
+  @apply mt-6 border-t border-brand-navy/10;
+}
+
+.specimens > li {
+  @apply grid gap-3 border-b border-brand-navy/10 py-5 md:grid-cols-[16rem_minmax(0,1fr)] md:items-center md:gap-8;
+}
+
+.specimen {
+  @apply flex flex-wrap items-center gap-3;
+}
+
+/* The catalogue hides its "Filtri" button from 1024px; the specimen shows it at every width. */
+.alwaysShown {
+  display: inline-flex !important;
+}
+
+/* Fields */
+.fieldsGrid {
+  @apply mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2;
+}
+
+.stack {
+  @apply mb-3 flex flex-col items-start gap-3;
+}
+
+.stack > label:first-child {
+  @apply w-full md:w-full;
+}
+
+.narrow {
+  @apply max-w-md;
+}
+
+/* Books */
+.cardGrid {
+  @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4;
+}
+
+.book3dRow {
+  @apply flex flex-wrap items-center justify-around gap-x-16 gap-y-20 px-6 pt-20 pb-16;
+}
+
+.coverField {
+  @apply grid md:grid-cols-[7fr_5fr];
+}
+
+.coverFieldCopy {
+  @apply order-2 flex flex-col gap-2 px-6 py-8 md:order-1 md:px-10 md:py-12;
+}
+
+.coverFieldTitle {
+  @apply font-serif text-3xl font-semibold text-balance text-brand-navy md:text-4xl;
+}
+
+.coverFieldSub {
+  @apply text-lg text-brand-charcoal;
+}
+
+.coverFieldBy {
+  @apply text-base text-brand-charcoal;
+}
+
+.coverFieldBy a {
+  @apply font-semibold text-brand-navy underline underline-offset-2;
+}
+
+.coverFieldPrice {
+  @apply pt-2 font-serif text-2xl font-semibold text-brand-navy lining-nums;
+}
+
+.coverFieldMedia {
+  @apply order-1 flex min-h-80 items-center justify-center p-12 md:order-2;
+}
+
+/* Bag and order */
+.navyBand {
+  @apply flex flex-wrap items-center gap-4 bg-brand-navy-light px-5 py-4 [--focus-ring:var(--color-white)];
+}
+
+.recapGrid {
+  @apply mt-10 grid items-start gap-8 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-12;
+}
+
+/* Navigation and cards */
+.cardsPair {
+  @apply mt-10 grid items-start gap-10 md:grid-cols-2;
+}
+
+/* Do's and Don'ts */
+.rulesGrid {
+  @apply mt-6 grid gap-10 md:grid-cols-2;
+}
+
+.ruleList {
+  @apply border-t border-brand-navy/10;
+}
+
+.ruleList li {
+  @apply border-b border-brand-navy/10 py-3 text-sm text-brand-charcoal;
+}
+
+.ruleList strong {
+  @apply font-semibold text-brand-navy;
+}

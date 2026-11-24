@@ -1,0 +1,1066 @@
+---
+// /staff/designsystem: a static reference of the design system, read from DESIGN.md at build time
+// (`_tokens.ts`) and rendered with the site's own components and classes, so it drifts with the
+// code. Gated by the middleware like every /staff route; no page query (the layout's cached site
+// query is the only CDA read). Every book, person and order here is sample data. Nothing binds
+// to the client scripts of the real pages: no data-* hooks, ids prefixed with `ds-`.
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import Button from '~/components/ui/Button';
+import BookCard from '~/components/BookCard';
+import Book3D from '~/components/Book3D';
+import HomeDoors from '~/components/HomeDoors';
+import AuthorCard from '~/components/AuthorCard';
+import SupplierCard from '~/components/SupplierCard';
+import cat from '~/components/BooksCatalogue/style.module.css';
+import {
+  contrastRatio,
+  coverFieldPalette,
+  darkenColor,
+  lightenColor,
+  pickBaseColor,
+  readableTextOn,
+} from '~/lib/colors';
+import { bookPose, bookSpineColors } from '~/lib/bookPose';
+import { formatEuro } from '~/lib/currency';
+import {
+  BUYER_KINDS,
+  MEMBER_DISCOUNT_LABEL,
+  ORDER_EMAIL,
+  ORDER_STEP_CONFIRM,
+  ORDER_STEP_PAY_LATER,
+  ORDER_STEP_RECEIPT_LEAD,
+  ORDER_SUBTOTAL_LABEL,
+  ORDER_TOTAL_LABEL,
+  SHIPPING_KINDS,
+  bagSizeLabel,
+  formatCents,
+  memberDiscount,
+} from '~/lib/order';
+import type { AuthorIndexItem } from '~/lib/authorIndex';
+import type { SupplierCardViewModel } from '~/lib/suppliers';
+import {
+  colorGroups,
+  colorTokens,
+  donts,
+  dos,
+  inlineMarkdown,
+  namedRules,
+  spacingTokens,
+  typographyTokens,
+  typographyUsage,
+} from './_tokens';
+import '~/pages/borsa/_borsa.css';
+import styles from './_style.module.css';
+
+const seo = [
+  { tag: 'title', content: 'Sistema di design · Area staff' },
+  { tag: 'meta', attributes: { name: 'robots', content: 'noindex' } },
+];
+
+// Sample covers: plain static files, so BookCard can append its imgix query as it does for DatoCMS.
+const coverTeal = '/design-samples/cover-teal.svg';
+const coverPlum = '/design-samples/cover-plum.svg';
+const coverMustard = '/design-samples/cover-mustard.svg';
+
+const toc = [
+  { id: 'colori', label: 'Colori' },
+  { id: 'tipografia', label: 'Tipografia' },
+  { id: 'spazi', label: 'Spazi, angoli e ombre' },
+  { id: 'pulsanti', label: 'Pulsanti' },
+  { id: 'campi', label: 'Chip e campi' },
+  { id: 'libri', label: 'Libri' },
+  { id: 'borsa', label: 'Borsa e ordine' },
+  { id: 'navigazione', label: 'Navigazione e schede' },
+  { id: 'regole', label: 'Cosa fare, cosa evitare' },
+];
+
+// --- Colours ---------------------------------------------------------------------------------
+const WHITE = '#ffffff';
+const groupLabel = {
+  Primary: 'Primari',
+  Secondary: 'Secondari',
+  Tertiary: 'Terziari',
+  Neutral: 'Neutri',
+  Social: 'Social',
+} as const;
+const swatches = colorGroups().map(({ group, entries }) => ({
+  group,
+  label: groupLabel[group],
+  entries: entries.map((entry) => {
+    const ratio = contrastRatio(entry.hex, WHITE);
+    const usage =
+      ratio === null
+        ? ''
+        : ratio >= 4.5
+          ? 'regge il testo'
+          : ratio >= 3
+            ? 'solo testo grande'
+            : 'mai per il testo';
+    return {
+      ...entry,
+      ink: readableTextOn(entry.hex),
+      ratio: ratio === null ? null : ratio.toFixed(2).replace('.', ','),
+      usage,
+    };
+  }),
+}));
+
+// Sample books: their base colour plays the part of the DatoCMS image colours.
+const samples = [
+  {
+    slug: 'esempio-camminare-insieme',
+    title: 'Camminare insieme',
+    subtitle: 'Pratiche di nonviolenza quotidiana',
+    authors: [{ id: 'a1', fullName: 'Autrice Esempio' }],
+    summary:
+      'Un libro di esempio: la sintesi serve a vedere come la card si comporta con un testo vero, su due o tre righe.',
+    cover: { url: coverTeal, width: 300, height: 435, colors: [{ hex: '#2a6f77' }] },
+    pages: 220,
+    price: 14,
+    printYear: '2025',
+    collectionName: 'Collana di esempio',
+    format: 'Cartaceo',
+  },
+  {
+    slug: 'esempio-la-voce-del-dialogo',
+    title: 'La voce del dialogo',
+    subtitle: null,
+    authors: [
+      { id: 'a2', fullName: 'Autore Esempio' },
+      { id: 'a1', fullName: 'Autrice Esempio' },
+    ],
+    summary: 'Seconda card di esempio, con due nomi e il formato ebook nella riga dei dati.',
+    cover: { url: coverPlum, width: 300, height: 435, colors: [{ hex: '#6b3d6e' }] },
+    pages: 96,
+    price: 2.99,
+    printYear: '2024',
+    collectionName: 'Collana di esempio',
+    format: 'Ebook',
+  },
+  {
+    slug: 'esempio-piccole-paci',
+    title: 'Piccole paci',
+    subtitle: 'Un albo illustrato',
+    authors: [{ id: 'a1', fullName: 'Autrice Esempio' }],
+    summary:
+      'Copertina quadrata e fuori catalogo: lo stato sta nella riga dei dati, mai sulla copertina.',
+    cover: { url: coverMustard, width: 300, height: 300, colors: [{ hex: '#c9a227' }] },
+    pages: 40,
+    price: 12,
+    printYear: '2019',
+    collectionName: 'Collana di esempio',
+    format: 'Cartaceo',
+    isArchived: true,
+  },
+];
+
+// Cover Tint, computed with src/lib/colors.ts exactly as the components do.
+const tints = samples.map((book) => {
+  const base = pickBaseColor(book.cover.colors);
+  const palette = coverFieldPalette(book.cover.colors);
+  return {
+    title: book.title,
+    base,
+    steps: [
+      { label: 'Base (pickBaseColor)', value: base },
+      { label: 'Campo copertina · +16%', value: palette.field },
+      { label: 'Metà testo · +88%', value: palette.copy },
+      { label: 'BookCard · +18%', value: lightenColor(base, 0.18) },
+      { label: 'BookCard catalogo · +55%', value: lightenColor(base, 0.55) },
+      { label: 'Pulsante banner · −30%', value: darkenColor(base, 0.3) },
+    ],
+    shadow: palette.shadow,
+  };
+});
+
+// --- Typography ------------------------------------------------------------------------------
+const typeSpecimens: Array<{ key: string; text: string; serif: boolean; upper?: boolean }> = [
+  { key: 'display', text: 'Camminare insieme', serif: true },
+  { key: 'headline', text: 'Le novità in catalogo', serif: true },
+  { key: 'title', text: 'Autrici e autori · 14,00 €', serif: true },
+  {
+    key: 'body',
+    text: 'Multimage pubblica dal 1995 libri sui diritti umani, la pace e la nonviolenza: saggi, narrativa, poesia, libri per ragazzi.',
+    serif: false,
+  },
+  {
+    key: 'body-large',
+    text: 'Dal 768px il corpo del testo cresce: le righe restano sotto i 68 caratteri.',
+    serif: false,
+  },
+  { key: 'label', text: 'Sfoglia il catalogo', serif: false, upper: true },
+  { key: 'caption', text: 'Collana di esempio · 2025 · Ebook', serif: false },
+];
+const typeRows = typeSpecimens
+  .filter((specimen) => typographyTokens[specimen.key])
+  .map((specimen) => {
+    const token = typographyTokens[specimen.key];
+    const family = token.fontFamily?.split(',')[0]?.trim() ?? '';
+    const spec = [
+      family,
+      token.fontWeight,
+      `${token.fontSize} / ${token.lineHeight}`,
+      token.letterSpacing ? `tracking ${token.letterSpacing}` : null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+    const style = [
+      `font-family: ${token.fontFamily}`,
+      `font-size: ${token.fontSize}`,
+      `font-weight: ${token.fontWeight}`,
+      `line-height: ${token.lineHeight}`,
+      token.letterSpacing ? `letter-spacing: ${token.letterSpacing}` : null,
+      specimen.upper ? 'text-transform: uppercase' : null,
+    ]
+      .filter(Boolean)
+      .join('; ');
+    return { ...specimen, spec, style, usage: typographyUsage[specimen.key] ?? null };
+  });
+const typeRules = ['The Title Is the Heading Rule', 'The Serif Is for Published Things Rule']
+  .filter((name) => namedRules[name])
+  .map((name) => ({ name, text: namedRules[name] }));
+const orangeRule = namedRules['The One Orange Rule'] ?? null;
+const whiteOnOrangeRule = namedRules['The White-on-Orange-Deep Rule'] ?? null;
+const floatRule = namedRules['The Only the Book Floats Rule'] ?? null;
+const coverRule = namedRules['The Cover Is the Colour Rule'] ?? null;
+
+// --- Spacing ---------------------------------------------------------------------------------
+const spacingRows = Object.entries(spacingTokens).map(([name, value]) => ({ name, value }));
+
+const shadowSamples = [
+  {
+    name: 'Soft navy lift',
+    css: '0 18px 45px rgba(0, 72, 129, 0.08)',
+    where: 'Header, pulsanti pieni, card dei libri a riposo.',
+  },
+  {
+    name: 'Sheet lift',
+    css: '0 -18px 45px rgba(0, 72, 129, 0.16)',
+    where: 'Solo il foglio dei filtri del catalogo (e, di lato, il cassetto della borsa).',
+  },
+];
+
+// --- Book Cover Field and Book3D -------------------------------------------------------------
+const fieldBook = samples[0];
+const fieldPalette = coverFieldPalette(fieldBook.cover.colors);
+const posedBook = samples[1];
+const book3dHeight = 220;
+const book3dAspect = posedBook.cover.height / posedBook.cover.width;
+
+// --- Bag and order ---------------------------------------------------------------------------
+const recapLines = [
+  { title: samples[0].title, qty: 2, cents: 1400 },
+  { title: 'Un altro libro di esempio', qty: 1, cents: 1200 },
+];
+const recapCopies = recapLines.reduce((sum, line) => sum + line.qty, 0);
+const recapSubtotal = recapLines.reduce((sum, line) => sum + line.qty * line.cents, 0);
+const recapDiscount = memberDiscount(recapSubtotal);
+const recapShipping = SHIPPING_KINDS.piego.cents;
+const recapTotal = recapSubtotal - recapDiscount + recapShipping;
+const recapSteps = [
+  { icon: 'iconoir:mail', title: 'Lo staff conferma', text: ORDER_STEP_CONFIRM },
+  { icon: 'iconoir:bank', title: 'Paghi', text: ORDER_STEP_PAY_LATER },
+  {
+    icon: 'iconoir:page',
+    title: 'Mandi la ricevuta',
+    text: `${ORDER_STEP_RECEIPT_LEAD} ${ORDER_EMAIL}.`,
+  },
+];
+
+// --- Navigation and cards --------------------------------------------------------------------
+const sampleAuthor: AuthorIndexItem = {
+  k: 'esempio',
+  l: 'E',
+  a: 'lettera-e',
+  n: 'Autrice Esempio',
+  sz: 'Italia · 3 libri · 1 fuori catalogo',
+  b: 'Una riga di biografia di esempio, tenuta in 40 caratteri di misura.',
+  i: 'A',
+  h: '#navigazione',
+  cv: [
+    { src: coverTeal, width: 30, height: 44 },
+    { src: coverPlum, width: 30, height: 44 },
+    { src: coverMustard, width: 44, height: 44 },
+  ],
+  s: '',
+};
+const sampleSupplier: SupplierCardViewModel = {
+  id: 'ds-esempio',
+  name: 'Libreria di esempio',
+  region: 'Toscana',
+  city: 'Firenze',
+  address: 'Via dell’Esempio 1',
+  googleMapsUrl: null,
+  telephone: '055 000 0000',
+  email: 'libreria@example.org',
+  website: 'example.org',
+  descriptionHtml:
+    '<p>Una libreria indipendente di esempio: tiene i titoli Multimage e ordina quelli che mancano.</p>',
+  logo: null,
+  latitude: null,
+  longitude: null,
+};
+
+const counts = [
+  `${Object.keys(colorTokens).length} colori`,
+  `${typeRows.length} stili di testo`,
+  `${spacingRows.length} spazi`,
+].join(' · ');
+---
+
+<BaseLayout seo={seo}>
+  <div class={styles.page}>
+    <header class={styles.intro}>
+      <h1 class={styles.title}>Sistema di design</h1>
+      <p class={styles.size}>{counts}</p>
+      <p class={styles.lede}>
+        Token, componenti e regole di <code>DESIGN.md</code>, resi con i componenti e le classi del
+        sito: se il codice cambia, questa pagina cambia con lui. Libri, persone e ordine sono dati
+        di esempio, non vengono dal CMS.
+      </p>
+    </header>
+
+    <nav class={styles.toc} aria-label="In questa pagina">
+      <ul>
+        {toc.map((item) => <li><a href={`#${item.id}`}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    {/* 1. Colours */}
+    <section id="colori" class={styles.section} aria-labelledby="colori-titolo">
+      <h2 id="colori-titolo" class={styles.h2}>Colori</h2>
+      <p class={styles.note}>
+        Ogni token del front matter di <code>DESIGN.md</code>. Il ruolo è la voce della prosa; il
+        contrasto con il bianco è calcolato qui con <code>contrastRatio</code>.
+      </p>
+
+      {swatches.map(({ label, entries }) => <div class={styles.block}>
+        <h3 class={styles.h3}>{label}</h3>
+        <ul class={styles.swatches}>
+          {entries.map((entry) => <li class={styles.swatch}>
+            <div class={styles.chipColor} style={`background: ${entry.hex}; color: ${entry.ink};`}>
+              <span>{entry.hex}</span>
+            </div>
+            <div class={styles.swatchText}>
+              <p class={styles.swatchName}>{entry.name}</p>
+              <p><code>{entry.token}</code></p>
+              <p class={styles.swatchRole} set:html={inlineMarkdown(entry.role)} />
+              {entry.ratio ? (
+                <p class={styles.meta}>
+                  Con il bianco {entry.ratio}:1 · {entry.usage}
+                  {entry.statedContrast ? ` · DESIGN.md: ${entry.statedContrast}` : ''}
+                </p>
+              ) : null}
+            </div>
+          </li>)}
+        </ul>
+      </div>)}
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Cover Tint</h3>
+        <p class={styles.note}>
+          Il colore di un libro viene dalla sua copertina: <code>pickBaseColor</code>, poi
+          <code>lightenColor</code> e <code>darkenColor</code> da <code>src/lib/colors.ts</code>.
+          Qui da tre colori base di esempio.
+        </p>
+        {coverRule ? (
+          <p class={styles.rule}>
+            <strong>The Cover Is the Colour Rule.</strong>
+            <span set:html={inlineMarkdown(coverRule)} />
+          </p>
+        ) : null}
+        <div class={styles.tints}>
+          {tints.map((tint) => <div class={styles.tint}>
+            <p class={styles.swatchName}>{tint.title}</p>
+            <ul>
+              {tint.steps.map((step) => <li>
+                <span class={styles.tintChip} style={`background: ${step.value};`} />
+                <span class={styles.tintLabel}>{step.label}</span>
+                <code>{step.value}</code>
+              </li>)}
+              <li>
+                <span class={styles.tintChip} style={`background: ${tint.shadow};`} />
+                <span class={styles.tintLabel}>Ombra copertina · −45% al 45%</span>
+                <code>{tint.shadow}</code>
+              </li>
+            </ul>
+          </div>)}
+        </div>
+      </div>
+    </section>
+
+    {/* 2. Typography */}
+    <section id="tipografia" class={styles.section} aria-labelledby="tipografia-titolo">
+      <h2 id="tipografia-titolo" class={styles.h2}>Tipografia</h2>
+      <p class={styles.note}>
+        Playfair Display per ciò che è pubblicato, Inter per ciò che il lettore fa. Ogni riga usa i
+        valori del token.
+      </p>
+      <ul class={styles.typeList}>
+        {typeRows.map((row) => <li class={styles.typeRow}>
+          <p class={row.serif ? styles.specimenSerif : styles.specimenSans} style={row.style}>
+            {row.text}
+          </p>
+          <p class={styles.meta}><code>{row.key}</code> · {row.spec}</p>
+          {row.usage ? <p class={styles.usage} set:html={inlineMarkdown(row.usage)} /> : null}
+        </li>)}
+      </ul>
+      {typeRules.map((rule) => <p class={styles.rule}>
+        <strong>{rule.name}.</strong> <span set:html={inlineMarkdown(rule.text)} />
+      </p>)}
+    </section>
+
+    {/* 3. Spacing and shape */}
+    <section id="spazi" class={styles.section} aria-labelledby="spazi-titolo">
+      <h2 id="spazi-titolo" class={styles.h2}>Spazi, angoli e ombre</h2>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Spazi</h3>
+        <ul class={styles.spacing}>
+          {spacingRows.map((row) => <li>
+            <code>{row.name}</code>
+            <span class={styles.bar} style={`width: ${row.value};`} />
+            <span class={styles.meta}>{row.value}</span>
+          </li>)}
+        </ul>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Angoli</h3>
+        <div class={styles.corners}>
+          <span class="block size-16 rounded-full bg-brand-navy" aria-hidden="true"></span>
+          <p class={styles.note}>
+            Questo quadrato porta <code>rounded-full</code>: il tema riporta ogni raggio a 0px,
+            quindi resta quadrato. Niente raggi letterali (<code>rounded-[2rem]</code>).
+          </p>
+        </div>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Ombre</h3>
+        <div class={styles.shadows}>
+          {shadowSamples.map((sample) => <figure class={styles.shadowSample}>
+            <div class={styles.shadowBox} style={`box-shadow: ${sample.css};`} />
+            <figcaption>
+              <span class={styles.swatchName}>{sample.name}</span>
+              <code>{sample.css}</code>
+              <span class={styles.usage}>{sample.where}</span>
+            </figcaption>
+          </figure>)}
+          <figure class={styles.shadowSample}>
+            <div class={styles.shadowCover} style={`background: ${fieldPalette.field};`}>
+              <img
+                src={fieldBook.cover.url}
+                width="72"
+                height="104"
+                alt=""
+                style={`filter: drop-shadow(24px 36px 48px ${fieldPalette.shadow}); transform: rotate(4deg);`}
+              />
+            </div>
+            <figcaption>
+              <span class={styles.swatchName}>Cover drop shadow</span>
+              <code>drop-shadow(24px 36px 48px …)</code>
+              <span class={styles.usage}>
+                Solo una copertina sul suo campo colorato: segue la sagoma e la tinta del libro.
+              </span>
+            </figcaption>
+          </figure>
+        </div>
+        {floatRule ? (
+          <p class={styles.rule}>
+            <strong>The Only the Book Floats Rule.</strong>
+            <span set:html={inlineMarkdown(floatRule)} />
+          </p>
+        ) : null}
+      </div>
+    </section>
+
+    {/* 4. Buttons */}
+    <section id="pulsanti" class={styles.section} aria-labelledby="pulsanti-titolo">
+      <h2 id="pulsanti-titolo" class={styles.h2}>Pulsanti</h2>
+      <p class={styles.note}>
+        Primario, secondario e ghost sono <code>src/components/ui/Button</code>. Il secondario
+        bordato e il navy vivono nel catalogo (<code>BooksCatalogue</code>); la variante
+        <code>outline</code> di Button oggi rende un secondario.
+      </p>
+      <ul class={styles.specimens}>
+        <li>
+          <div class={styles.specimen}><Button primary>Scopri il libro</Button></div>
+          <div>
+            <p class={styles.swatchName}>Primario</p>
+            <p class={styles.usage}>
+              Arancio bruciato, etichetta bianca maiuscola, ombra navy morbida. Hover: cremisi. Uno
+              solo per blocco.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}>
+            <Button primary icon="iconoir:shopping-bag" iconPosition="left">Metti in borsa</Button>
+          </div>
+          <div>
+            <p class={styles.swatchName}>Primario con icona</p>
+            <p class={styles.usage}>Icona Iconoir 16px, prima o dopo l'etichetta.</p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}>
+            <Button variant="secondary" icon="iconoir:nav-arrow-right">Vai alla collana</Button>
+          </div>
+          <div>
+            <p class={styles.swatchName}>Secondario</p>
+            <p class={styles.usage}>Mist, etichetta navy. Hover: il mist si schiarisce.</p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}>
+            <button type="button" class={cat.secondaryButton}>Mostra altri 24</button>
+          </div>
+          <div>
+            <p class={styles.swatchName}>Secondario bordato</p>
+            <p class={styles.usage}>
+              Bianco, anello navy al 15%, ombra morbida. Hover: pieno navy, testo bianco.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}>
+            <button type="button" class:list={[cat.filtersButton, styles.alwaysShown]}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M4 7h16M7 12h10M10 17h4"></path>
+              </svg>
+              Filtri (2)
+            </button>
+          </div>
+          <div>
+            <p class={styles.swatchName}>Navy</p>
+            <p class={styles.usage}>
+              Per i comandi di servizio ("Filtri", "Cerca" nell'header). Hover: Deep Window Navy.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}><Button variant="ghost">Annulla</Button></div>
+          <div>
+            <p class={styles.swatchName}>Ghost</p>
+            <p class={styles.usage}>Senza fondo, etichetta navy, mist in hover.</p>
+          </div>
+        </li>
+        <li>
+          <div class={styles.specimen}>
+            <button type="button" class="order-textbtn">Svuota la borsa</button>
+          </div>
+          <div>
+            <p class={styles.swatchName}>Pulsante testo</p>
+            <p class={styles.usage}>Navy sottolineato, 44px di altezza. Per le vie in più.</p>
+          </div>
+        </li>
+      </ul>
+      <p class={styles.note}>
+        Focus: un solo contorno globale di 3px a 2px di distanza, navy sulle superfici chiare,
+        bianco su header e footer. Prova con Tab.
+      </p>
+      {orangeRule ? (
+        <p class={styles.rule}>
+          <strong>The One Orange Rule.</strong> <span set:html={inlineMarkdown(orangeRule)} />
+        </p>
+      ) : null}
+      {whiteOnOrangeRule ? (
+        <p class={styles.rule}>
+          <strong>The White-on-Orange-Deep Rule.</strong>
+          <span set:html={inlineMarkdown(whiteOnOrangeRule)} />
+        </p>
+      ) : null}
+    </section>
+
+    {/* 5. Chips and fields */}
+    <section id="campi" class={styles.section} aria-labelledby="campi-titolo">
+      <h2 id="campi-titolo" class={styles.h2}>Chip e campi</h2>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Chip dei filtri</h3>
+        <div class={cat.active}>
+          <ul class={cat.chips} aria-label="Filtri attivi (esempio)">
+            {['Collana di esempio', 'Ebook', '2020–2025'].map((label) => <li>
+              <button type="button" aria-label={`Togli il filtro ${label}`}>
+                <span>{label}</span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 6l12 12M18 6L6 18"></path>
+                </svg>
+              </button>
+            </li>)}
+          </ul>
+          <button type="button" class={cat.clearAll}>Azzera filtri</button>
+        </div>
+      </div>
+
+      <div class={styles.fieldsGrid}>
+        <div>
+          <h3 class={styles.h3}>Campo di testo</h3>
+          <div class="order-field">
+            <label for="ds-name">Nome e cognome</label>
+            <input
+              class="order-input"
+              id="ds-name"
+              type="text"
+              autocomplete="off"
+              placeholder="Maria Rossi"
+            />
+          </div>
+          <div class="order-field">
+            <label for="ds-email">Email</label>
+            <input
+              class="order-input"
+              id="ds-email"
+              type="email"
+              autocomplete="off"
+              value="maria.rossi@"
+              aria-invalid="true"
+              aria-describedby="ds-email-error"
+            />
+            <p class="order-error" id="ds-email-error">Scrivi un indirizzo email completo.</p>
+          </div>
+          <p class={styles.usage}>
+            Stato di errore: <code>aria-invalid</code> fa il bordo cremisi, il messaggio sta sotto,
+            cremisi semibold 0.875rem.
+          </p>
+        </div>
+
+        <div>
+          <h3 class={styles.h3}>Ricerca e ordinamento</h3>
+          <div class={styles.stack}>
+            <label class={cat.search}>
+              <span class="sr-only">Cerca nel catalogo (esempio)</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="6.5"></circle>
+                <path d="M16 16l4.5 4.5"></path>
+              </svg>
+              <input type="search" placeholder="Titolo, autrice, autore…" autocomplete="off" />
+            </label>
+            <label class={cat.sort}>
+              <span>Ordina per</span>
+              <select>
+                <option>Novità</option>
+                <option>Titolo (A–Z)</option>
+              </select>
+            </label>
+          </div>
+          <p class={styles.usage}>
+            Il contorno di focus va sull'etichetta che avvolge il campo
+            (<code>:has(:focus-visible)</code>).
+          </p>
+        </div>
+
+        <div>
+          <h3 class={styles.h3}>Righe con casella</h3>
+          <ul class={cat.options}>
+            {[
+              { label: 'Saggistica', count: 128, checked: true },
+              { label: 'Narrativa', count: 74, checked: false },
+              { label: 'Poesia', count: 0, checked: false },
+            ].map((option) => <li>
+              <label class={cat.option} data-zero={option.count === 0 ? '' : undefined}>
+                <input type="checkbox" checked={option.checked} />
+                <span class={cat.optionLabel}>{option.label}</span>
+                <span class={cat.count}>{option.count}</span>
+              </label>
+            </li>)}
+          </ul>
+        </div>
+
+        <div>
+          <h3 class={styles.h3}>Righe con scelta</h3>
+          <div class="order-choices">
+            {Object.entries(SHIPPING_KINDS).map(([key, kind]) => <label class="order-choice">
+              <input type="radio" name="ds-shipping" value={key} checked={key === 'piego'} />
+              <span class="order-choice__text">
+                <b>{kind.label}</b>
+                <span>{kind.note}</span>
+              </span>
+              <span class="order-choice__fee">
+                {kind.cents === 0 ? formatCents(0) : `+${formatCents(kind.cents)}`}
+              </span>
+            </label>)}
+          </div>
+        </div>
+      </div>
+
+      <div class={styles.block}>
+        <fieldset class="order-fieldset">
+          <legend>Chi ordina</legend>
+          <div class="order-who">
+            {Object.entries(BUYER_KINDS).map(([key, label]) => <label class="order-who__cell">
+              <input type="radio" name="ds-buyer" value={key} checked={key === 'privato'} />
+              <span>{label}</span>
+            </label>)}
+          </div>
+        </fieldset>
+        <label class="order-check">
+          <input
+            type="checkbox"
+            aria-labelledby="ds-member-label"
+            aria-describedby="ds-member-hint"
+          />
+          <span class="order-check__text">
+            <span id="ds-member-label">Sono socia o socio di Multimage</span>
+            <span class="order-check__hint" id="ds-member-hint">
+              Casella con il suggerimento dentro l'etichetta: tutto il blocco è l'area cliccabile.
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Riepilogo degli errori</h3>
+        <div class:list={['order-form-error', styles.narrow]}>
+          <p>Controlla 2 campi:</p>
+          <ul>
+            <li><a href="#ds-email">Email</a></li>
+            <li><a href="#ds-name">Nome e cognome</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    {/* 6. Books */}
+    <section id="libri" class={styles.section} aria-labelledby="libri-titolo">
+      <h2 id="libri-titolo" class={styles.h2}>Libri</h2>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>BookCard</h3>
+        <p class={styles.note}>
+          Il componente vero con dati di esempio. Passa il mouse: si muove solo la copertina.
+        </p>
+        <ul class={styles.cardGrid}>
+          {samples.map((book) => <li>
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              href="#libri"
+              subtitle={book.subtitle}
+              summary={book.summary}
+              format={book.format}
+              coverImage={book.cover}
+              pages={book.pages}
+              authors={book.authors}
+              price={book.price}
+              printYear={book.printYear}
+              collectionName={book.collectionName}
+              isArchived={book.isArchived ?? false}
+              headingLevel="h3"
+            />
+          </li>)}
+          <li>
+            <BookCard
+              title="Un libro senza copertina"
+              slug="esempio-senza-copertina"
+              href="#libri"
+              authors={[{ id: 'a3', fullName: 'Autore Esempio' }]}
+              price={10}
+              printYear="2026"
+              collectionName="Collana di esempio"
+              headingLevel="h3"
+            />
+          </li>
+        </ul>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>BookCard, variante catalogue</h3>
+        <ul class={cat.grid}>
+          {samples.map((book) => <li>
+            <BookCard
+              title={book.title}
+              slug={book.slug}
+              href="#libri"
+              subtitle={book.subtitle}
+              format={book.format}
+              coverImage={book.cover}
+              pages={book.pages}
+              authors={book.authors}
+              price={book.price}
+              printYear={book.printYear}
+              collectionName={book.collectionName}
+              isArchived={book.isArchived ?? false}
+              variant="catalogue"
+              headingLevel="h3"
+            />
+          </li>)}
+        </ul>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Book3D</h3>
+        <p class={styles.note}>
+          Libro 3D in solo CSS. A sinistra piatto finché non passi il mouse, a destra sempre in posa
+          (<code>flatUntilHover=false</code>); la posa viene dallo slug (<code>bookPose</code>).
+        </p>
+        <div
+          class={styles.book3dRow}
+          style={`background: ${lightenColor(pickBaseColor(posedBook.cover.colors), 0.55)};`}
+        >
+          <Book3D
+            cover={posedBook.cover.url}
+            title={posedBook.title}
+            alt=""
+            pages={posedBook.pages}
+            height={book3dHeight}
+            aspect={book3dAspect}
+            {...bookSpineColors(posedBook.cover.colors)}
+            {...bookPose(posedBook.slug)}
+          />
+          <Book3D
+            cover={samples[0].cover.url}
+            title={samples[0].title}
+            alt=""
+            pages={samples[0].pages}
+            height={book3dHeight}
+            aspect={book3dAspect}
+            {...bookSpineColors(samples[0].cover.colors)}
+            {...bookPose('esempio-spine')}
+            flatUntilHover={false}
+          />
+        </div>
+      </div>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Book Cover Field</h3>
+        <p class={styles.note}>
+          Markup statico con la palette vera di <code>coverFieldPalette</code>: HomeHero e
+          FeaturedBookHighlight chiedono immagini DatoCMS e portano il pulsante d'ordine, quindi non
+          sono resi qui.
+        </p>
+        <div class={styles.coverField}>
+          <div class={styles.coverFieldCopy} style={`background: ${fieldPalette.copy};`}>
+            <p class={styles.coverFieldTitle}>{fieldBook.title}</p>
+            <p class={styles.coverFieldSub}>{fieldBook.subtitle}</p>
+            <p class={styles.coverFieldBy}>di <a href="#libri">Autrice Esempio</a></p>
+            <p class={styles.coverFieldPrice}>{formatEuro(fieldBook.price)}</p>
+          </div>
+          <div class={styles.coverFieldMedia} style={`background: ${fieldPalette.field};`}>
+            <img
+              src={fieldBook.cover.url}
+              width="180"
+              height="261"
+              alt=""
+              style={`filter: drop-shadow(24px 36px 48px ${fieldPalette.shadow}); transform: rotate(4deg);`}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* 7. Bag and order */}
+    <section id="borsa" class={styles.section} aria-labelledby="borsa-titolo">
+      <h2 id="borsa-titolo" class={styles.h2}>Borsa e ordine</h2>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Pulsante Borsa nell'header</h3>
+        <p class={styles.note}>
+          Copia statica delle classi di <code>Header.astro</code>: il pulsante vero compare solo
+          quando lo script della borsa gira, e apre il cassetto (<code>BagDrawer</code>, montato una
+          volta in BaseLayout).
+        </p>
+        <div class={styles.navyBand}>
+          <span
+            class="relative inline-flex min-h-11 items-center gap-2 border border-white/40 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 8h14l-1 13H6L5 8Z"></path>
+              <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+            </svg>
+            <span>Borsa</span>
+            <span
+              class="min-w-5 bg-white px-1.5 text-center text-xs font-bold leading-5 text-brand-navy"
+              >3</span
+            >
+          </span>
+          <span
+            class="relative flex h-11 w-11 items-center justify-center border border-white/40 text-white"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 8h14l-1 13H6L5 8Z"></path>
+              <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+            </svg>
+            <span
+              class="absolute -right-1.5 -top-1.5 min-w-5 bg-white px-1 text-center text-xs font-bold leading-5 text-brand-navy"
+              >3</span
+            >
+          </span>
+          <span class="text-sm text-brand-mist">Da 768px · sotto i 768px</span>
+        </div>
+      </div>
+
+      <div class={styles.recapGrid}>
+        <div>
+          <h3 class={styles.h3}>Riepilogo dell'ordine</h3>
+          <p class={styles.note}>
+            Le classi di <code>/borsa</code> con righe e totali di esempio
+            ({bagSizeLabel(recapLines.length, recapCopies)}, con lo sconto soci). Lo schema dei
+            totali è lo stesso nel riepilogo, nel messaggio di conferma, nell'email e nel PDF.
+          </p>
+        </div>
+        <div class="order-recap">
+          <div class="order-recap__head">
+            <svg
+              class="order-recap__icon"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 8h14l-1 13H6L5 8Z"></path>
+              <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+            </svg>
+            <p class="order-h2">Nella borsa</p>
+            <button type="button" class="order-recap__edit">
+              Modifica<span class="sr-only"> la borsa (esempio)</span>
+            </button>
+          </div>
+          <ul class="order-lines">
+            {recapLines.map((line) => <li>
+              <b>{line.qty > 1 ? `${line.title} × ${line.qty}` : line.title}</b>
+              <span>{formatCents(line.qty * line.cents)}</span>
+            </li>)}
+          </ul>
+          <dl class="order-totals">
+            <div>
+              <dt>{ORDER_SUBTOTAL_LABEL}</dt>
+              <dd>{formatCents(recapSubtotal)}</dd>
+            </div>
+            <div>
+              <dt>{MEMBER_DISCOUNT_LABEL}</dt>
+              <dd>−{formatCents(recapDiscount)}</dd>
+            </div>
+            <div>
+              <dt>Spedizione</dt>
+              <dd>{formatCents(recapShipping)}</dd>
+            </div>
+            <div class="order-totals__big">
+              <dt>{ORDER_TOTAL_LABEL}</dt>
+              <dd>{formatCents(recapTotal)}</dd>
+            </div>
+          </dl>
+          <div class="order-next order-next--steps">
+            <p class="order-h3">Cosa succede dopo</p>
+            <p class="order-steps__lead">Non paghi adesso. Succede così:</p>
+            <ol class="order-steps">
+              {recapSteps.map((step, i) => <li>
+                <span class="order-steps__icon">
+                  <iconify-icon icon={step.icon} width="20" height="20" aria-hidden="true" />
+                </span>
+                <span>
+                  <span class="order-steps__count">Passo {i + 1} di {recapSteps.length}</span>
+                  <span class="order-steps__title">{step.title}</span>
+                  <span class="order-steps__body">{step.text}</span>
+                </span>
+              </li>)}
+            </ol>
+            <p class="order-next__more"><a href="/info/ordinare">Come funzionano gli ordini</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* 8. Navigation and cards */}
+    <section id="navigazione" class={styles.section} aria-labelledby="navigazione-titolo">
+      <h2 id="navigazione-titolo" class={styles.h2}>Navigazione e schede</h2>
+      <p class={styles.note}>
+        Header, footer e banda newsletter di questa pagina sono quelli veri. Qui sotto: le porte
+        della home (<code>HomeDoors</code>), una scheda autore (<code>AuthorCard</code>) e una
+        scheda luogo (<code>SupplierCard</code>) con dati di esempio.
+      </p>
+
+      <div class={styles.block}>
+        <h3 class={styles.h3}>Porte</h3>
+        <HomeDoors />
+      </div>
+
+      <div class={styles.cardsPair}>
+        <div>
+          <h3 class={styles.h3}>Scheda autore</h3>
+          <AuthorCard author={sampleAuthor} />
+        </div>
+        <div>
+          <h3 class={styles.h3}>Scheda luogo</h3>
+          <SupplierCard {...sampleSupplier} />
+        </div>
+      </div>
+    </section>
+
+    {/* 9. Do's and Don'ts */}
+    <section id="regole" class={styles.section} aria-labelledby="regole-titolo">
+      <h2 id="regole-titolo" class={styles.h2}>Cosa fare, cosa evitare</h2>
+      <div class={styles.rulesGrid}>
+        <div>
+          <h3 class={styles.h3}>Da fare</h3>
+          <ul class={styles.ruleList}>
+            {dos.map((item) => (
+              <li set:html={inlineMarkdown(item)} />
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 class={styles.h3}>Da evitare</h3>
+          <ul class={styles.ruleList}>
+            {donts.map((item) => (
+              <li set:html={inlineMarkdown(item)} />
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

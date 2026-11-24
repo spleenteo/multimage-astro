@@ -69,10 +69,10 @@ description: Fastro is based on and extends the [Astro project structure](https:
   - Data: Static placeholder (`src/pages/info/index.astro`) plus `src/pages/info/[slug]/_graphql.ts` for CMS-driven pages.
   - Primary components: `InfoSection`, Structured Text renderer.
   - Notes: `BaseLayout` maps `allPages` into header/footer menus used here.
-- **`/staff` & `/staff/archivio-catalogo`**
-  - Data: `src/pages/staff/index/_graphql.ts`, `src/pages/staff/archivio-catalogo/_graphql.ts`.
-  - Primary components: bespoke markup + CSV export script.
-  - Notes: Entire toolset is publicly prerendered; see Security task **S1**.
+- **`/staff`, `/staff/archivio-catalogo` & `/staff/designsystem`**
+  - Data: `src/pages/staff/index/_graphql.ts`, `src/pages/staff/archivio-catalogo/_graphql.ts`; `/staff/designsystem` has no query and reads `DESIGN.md` at build time (`src/pages/staff/designsystem/_tokens.ts`).
+  - Primary components: bespoke markup + CSV export script; the design-system page renders `Button`, `BookCard`, `Book3D`, `HomeDoors`, `AuthorCard`, `SupplierCard` and the `BooksCatalogue` / `/borsa` classes with sample data (covers in `public/design-samples/`).
+  - Notes: gated by the editor session in `src/middleware.ts` (Security task **S1**, resolved).
 - **`/cerca`**
   - Data: `src/pages/cerca/index.astro` (no GraphQL) plus the Site Search bundle.
   - Primary components: Search form + `public/generated/search-page.client.js`.

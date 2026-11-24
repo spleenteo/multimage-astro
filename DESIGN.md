@@ -167,6 +167,8 @@ components:
 
 # Design System: Multimage
 
+A live reference of this document, rendered with the site's components, is at `/staff/designsystem` (editor session required).
+
 ## Overview
 
 **Creative North Star: "The Bookshop Window"**
