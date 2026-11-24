@@ -191,6 +191,12 @@ Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice ch
 - Done 2 becomes: Vercel production build with no bindings → 503 `not_configured` and the mailto; plain `npm run dev` → console output and 200 with a dev code (so the success screen and V5's PDF can be exercised).
 - Done, added: 5. `cloudflare:workers` is absent from the Vercel output and from client chunks. 6. No placeholder `database_id` at merge time (checked at the work's close).
 
+**Deviations found while planning V4**
+
+- Done 2's no-bindings check runs on the Cloudflare production build with both bindings stripped from a copy of its config (the Vercel output can't run locally); plain dev and a `.vercel/output` grep cover the stub path.
+- The causale line in the static success steps of `index.astro` is left to V5; V4 puts the code in the email causale and the success lede.
+- `send_email` also gets `allowed_sender_addresses` (tightening).
+
 ## V5 — The PDF of the request, copy and docs
 
 **In**

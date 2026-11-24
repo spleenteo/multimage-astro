@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V4
-step: plan
+step: execute
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -36,6 +36,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — V4 plan + review — 6 tasks; review 0 high, 2 medium (nullable PII for anonymising; two wranglers in Done 1), 4 low; all applied — 20 min — n/a
 - 2026-11-24 — impact V4–V5 — 1 agent (small scope): 2 high (D1 placeholder id breaks deploy, Done 1 unrunnable as written), 6 medium, 5 low; all applied — 10 min — n/a
 - 2026-11-24 — reshaping — user drops Resend: D1 store + send_email to verified ordini@ + PDF for the visitor; staff app separate; spike-cloudflare-only.md; slices V4, V5 added — 20 min — n/a
 - 2026-11-24 — V3 closed — 9 commits, gate green (lint, docs:inventory, build), axe 0 violations in 8 checks; WAVE and VoiceOver pending after deploy — 20 min run — n/a
