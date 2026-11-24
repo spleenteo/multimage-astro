@@ -51,7 +51,7 @@ Email Routing is enabled on the subdomain `ordini.multimage.org` only, so the ap
   - Expression: `http.request.uri.path eq "/api/ordine"` (path only: the Free plan likely offers only Path and Verified Bot fields, so no Method condition; GET requests count too, they get 405 and are harmless).
   - Counted per IP, 2 requests per 10 seconds, action Block for 10 seconds.
   - Confirm the field and period options in the dashboard: if it offers other values, keep 2 requests per 10 s.
-- **Check**: `for i in 1 2 3 4; do curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.multimage.org/api/ordine -H 'content-type: application/json' -d '{}'; done` prints 503 (or 400 once the bindings are live) for the first ones and 429 by the 3rd or 4th request (counters are approximate). A bare `{}` fails before anything is saved or sent.
+- **Check**: `for i in 1 2 3 4; do curl -s -o /dev/null -w '%{http_code}\n' -X POST https://www.multimage.org/api/ordine -H 'content-type: application/json' -d '{}'; done` prints 404 for the first ones (the endpoint is not on production until the deploy of step 7; 503 or 400 after it) and 429 by the 3rd or 4th request (counters are approximate). The 429 is what proves the rule. A bare `{}` fails before anything is saved or sent. Run the same check again after step 7.
 
 ## 6. Turnstile widget, secret and site key
 
@@ -65,6 +65,7 @@ Email Routing is enabled on the subdomain `ordini.multimage.org` only, so the ap
 
 - **Do**: after the merge into `main`, `npx dotenv -e .env.cloudflare -- npm run deploy:cf`. Then place one real order from `/borsa` with your own email.
 - **Check**:
+  - The step 5 loop now prints 400 for the first requests, then 429.
   - Saved and notified: `npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "SELECT code, notify_status, notify_error FROM orders ORDER BY created_at DESC LIMIT 1"` shows `notify_status` = `sent`. If it shows `failed`, `notify_error` holds the send error code (see `spike-cloudflare-only.md` A2, A6; the fallback for `E_SENDER_DOMAIN_NOT_AVAILABLE` is a raw `EmailMessage`).
   - Delivered and authenticated: the notice is in the `ordini@` inbox (the Email Routing summary shows `send_email` messages as dropped even when delivered: trust the inbox). In Gmail, "Show original" reads `dkim=pass` (and `spf=pass`).
   - The confirmation screen shows the code and the PDF downloads.
