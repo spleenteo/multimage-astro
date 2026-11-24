@@ -4,6 +4,7 @@
 import { emptyBag, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import {
   ORDER_ACTION,
+  ORDER_EMAIL,
   ORDER_FIELD_MESSAGES,
   ORDER_IBAN,
   ORDER_MAX_LINES,
@@ -318,7 +319,28 @@ export function initOrderPage(): void {
     if (lede) {
       const strong = document.createElement('b');
       strong.textContent = res.code;
-      lede.replaceChildren("L'abbiamo girato a Olivier. Il codice del tuo ordine è ", strong, '.');
+      if (res.notified) {
+        lede.replaceChildren(
+          "L'abbiamo girato a Olivier. Il codice del tuo ordine è ",
+          strong,
+          '.',
+        );
+      } else {
+        // Saved in D1 but the notice did not go out: nobody is reading D1 yet, so ask for an email.
+        const link = document.createElement('a');
+        link.textContent = ORDER_EMAIL;
+        link.setAttribute(
+          'href',
+          `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(`Ordine ${res.code}`)}`,
+        );
+        lede.replaceChildren(
+          'Abbiamo registrato il tuo ordine con il codice ',
+          strong,
+          ", ma l'avviso a Olivier non è partito. Scrivici a ",
+          link,
+          ' indicando il codice.',
+        );
+      }
     }
 
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
