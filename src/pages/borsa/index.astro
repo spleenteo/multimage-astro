@@ -8,10 +8,11 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import Button from '~/components/ui/Button';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import {
-  BUYER_KINDS,
   BUYER_LABEL,
-  MEMBER_DISCOUNT_LABEL,
-  MEMBER_DISCOUNT_PERCENT,
+  ORDER_NAME_LABEL,
+  defaultBuyer,
+  discountLabel,
+  toBuyers,
   ORDER_ACCOUNT_HOLDER,
   ORDER_BANK,
   ORDER_BIC,
@@ -52,7 +53,7 @@ const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
 const mailtoHref = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}`;
 
 const draftModeEnabled = resolveDraftMode(Astro);
-const { shop } = await executeQuery<ShopPageQueryResult>(SHOP_PAGE_QUERY, {
+const { shop, allBuyers } = await executeQuery<ShopPageQueryResult>(SHOP_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
 });
 
@@ -96,7 +97,8 @@ const steps: Step[] = cmsSteps.length
     ];
 
 const shippingEntries = Object.entries(SHIPPING_KINDS);
-const buyerEntries = Object.entries(BUYER_KINDS);
+const buyers = toBuyers(allBuyers);
+const initialBuyer = defaultBuyer(buyers);
 ---
 
 <BaseLayout seo={seo}>
@@ -153,7 +155,7 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             <dd data-order-subtotal></dd>
           </div>
           <div data-order-discount-row hidden>
-            <dt>{MEMBER_DISCOUNT_LABEL}</dt>
+            <dt data-order-discount-label>{discountLabel(initialBuyer)}</dt>
             <dd data-order-discount></dd>
           </div>
           <div>
@@ -217,41 +219,31 @@ const buyerEntries = Object.entries(BUYER_KINDS);
 
             <fieldset class="order-fieldset" aria-describedby="order-buyer-hint">
               <legend>{BUYER_LABEL}</legend>
-              <div class="order-who">
-                {buyerEntries.map(([key, label]) => <label class="order-who__cell">
-                  <input type="radio" name="buyer" value={key} checked={key === 'privato'} />
-                  <span>{label}</span>
+              <div class="order-who" data-count={buyers.length}>
+                {buyers.map((b) => <label class="order-who__cell">
+                  <input
+                    type="radio"
+                    name="buyer"
+                    value={b.id}
+                    data-name={b.name}
+                    data-discount={b.discount}
+                    checked={b.id === initialBuyer.id}
+                  />
+                  <span>{b.name}</span>
                 </label>)}
               </div>
-              <p class="order-hint-line" id="order-buyer-hint">
-                Per scuole, associazioni e librerie applichiamo condizioni speciali: ti scriviamo
-                noi.
+              <p class="order-hint-line" id="order-buyer-hint" aria-live="polite">
+                {initialBuyer.discount > 0
+                  ? `Sconto del ${initialBuyer.discount}% sul prezzo di copertina dei libri: lo staff verifica che ti spetti.`
+                  : 'Nessuno sconto: paghi i libri a prezzo di copertina.'}
               </p>
               <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
             </fieldset>
 
-            <div class="order-member">
-              <label class="order-check">
-                <input
-                  type="checkbox"
-                  id="order-member"
-                  aria-labelledby="order-member-label"
-                  aria-describedby="order-member-hint"
-                />
-                <span class="order-check__text">
-                  <span id="order-member-label">Sono socia o socio di Multimage</span>
-                  <span class="order-check__hint" id="order-member-hint">
-                    Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
-                    l'iscrizione.
-                  </span>
-                </span>
-              </label>
-            </div>
-
             <fieldset class="order-fieldset">
               <legend>A chi spediamo</legend>
               <div class="order-field">
-                <label for="order-name">Nome e cognome</label>
+                <label for="order-name">{ORDER_NAME_LABEL}</label>
                 <input
                   class="order-input"
                   id="order-name"

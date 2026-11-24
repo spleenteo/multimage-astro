@@ -12,6 +12,11 @@ export const ORDER_BOOKS_QUERY = /* GraphQL */ `
         alias
       }
     }
+    allBuyers(first: 50, orderBy: position_ASC) {
+      id
+      name
+      discount
+    }
   }
 `;
 
@@ -25,4 +30,5 @@ export type OrderBooksQueryResult = {
     archive: boolean | null;
     authors: Array<{ fullName: string | null; alias: string | null }>;
   }>;
+  allBuyers: Array<{ id: string; name: string | null; discount: number | null }>;
 };

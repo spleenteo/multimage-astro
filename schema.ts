@@ -434,6 +434,26 @@ export const Button = {
   REF: { type: 'item_type', id: 'NT-1f6AdRFuEqgoY824_uw' },
 } as const;
 
+export type Buyer = ItemTypeDefinition<
+  EnvironmentSettings,
+  'AHAz9R8nSfWd3wC_TxUz0g',
+  {
+    name: {
+      type: 'string';
+    };
+    discount: {
+      type: 'integer';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const Buyer = {
+  ID: 'AHAz9R8nSfWd3wC_TxUz0g',
+  REF: { type: 'item_type', id: 'AHAz9R8nSfWd3wC_TxUz0g' },
+} as const;
+
 export type Collection = ItemTypeDefinition<
   EnvironmentSettings,
   '70447',
@@ -1063,6 +1083,7 @@ export type AnyModel =
   | BlogPostOld
   | BlogTag
   | Book
+  | Buyer
   | Collection
   | CoverSize
   | Home

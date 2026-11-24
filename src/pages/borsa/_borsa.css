@@ -378,31 +378,31 @@
   outline-offset: 2px;
 }
 
-/* "Chi ordina": flat segmented cells, a 2x2 grid on phones and one row from 640px. */
+/* "Chi ordina": flat segmented cells for any number of buyer kinds from the CMS. Two columns on
+   phones (a last odd cell takes the whole row), one row from 640px. The 1px gaps on a navy-tinted
+   ground draw the dividers, so no per-count border rules. */
 .order-who {
-  @apply grid grid-cols-2 border border-brand-navy/25 sm:grid-cols-4;
+  @apply grid grid-cols-2 gap-px border border-brand-navy/25 bg-brand-navy/25;
 }
 
-.order-who__cell {
-  @apply relative flex min-h-11 cursor-pointer items-center justify-center border-brand-navy/25 bg-white px-3 text-sm text-brand-navy hover:bg-brand-mist;
-}
-
-.order-who__cell:nth-child(odd) {
-  @apply border-r;
-}
-
-.order-who__cell:nth-child(n + 3) {
-  @apply border-t;
+.order-who__cell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 @media (min-width: 640px) {
-  .order-who__cell:not(:last-child) {
-    @apply border-r;
+  .order-who {
+    grid-template-columns: none;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
   }
 
-  .order-who__cell:nth-child(n + 3) {
-    @apply border-t-0;
+  .order-who__cell:last-child:nth-child(odd) {
+    grid-column: auto;
   }
+}
+
+.order-who__cell {
+  @apply relative flex min-h-11 cursor-pointer items-center justify-center bg-white px-3 text-center text-sm text-brand-navy hover:bg-brand-mist;
 }
 
 .order-who__cell input {
@@ -418,11 +418,10 @@
   outline-offset: 2px;
 }
 
-/* Consent and member checkbox rows: the hint sits inside the label, right under its text, so the
+/* The consent checkbox row: the hint sits inside the label, right under its text, so the
    whole block is the hit area (at least 44px) and nothing floats detached below it. The input is
    named by the text span alone (aria-labelledby) and described by the hint. */
-.order-consent,
-.order-member {
+.order-consent {
   @apply mb-8;
 }
 

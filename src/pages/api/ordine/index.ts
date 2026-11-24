@@ -9,18 +9,20 @@
  *   502 catalogue_unavailable (CDA read failed)
  *   409 nothing_orderable (every line dropped)
  *   502 save_failed (not saved and the notification failed or has no binding)
- *   200 { ok, code, notified, lines, copies, shipping, shippingKind, member, discount, total, dropped }
+ *   200 { ok, code, notified, lines, copies, shipping, shippingKind, buyer, discount, total, dropped }
  *
  * D1 is the record, the email a notification: saved and mail failed (or no mail
  * binding) is still 200 with `notified: false` and the row marked `failed` or
  * `skipped`; not saved but mailed is 200 too (the email carries the whole order).
- * The member discount is computed here from the rebuilt lines; the client sends only the flag.
+ * The discount comes from the buyer record (DatoCMS `buyer`), read here with the books: the client
+ * sends only the buyer id, an unknown id is an invalid `buyer` field.
  * The client sends only book ids and quantities: titles and prices are rebuilt
  * from the published catalogue, so a tampered bag never reaches D1 or the email.
  * Error bodies carry codes only. Nothing personal is ever logged: one line per
  * answer with the status, the code and counts. Bindings come only through
  * `~/lib/cloudflare-bindings`; with none (Vercel build, plain dev) dev prints the
- * email text to the console and answers 200. A code clash at insert regenerates
+ * email text to the console and answers 200 with `notified: true` (the console stands in for the
+ * mailbox, so the dev flow matches production). A code clash at insert regenerates
  * the code and retries once (`saveWithCodeRetry`), so the visitor never gets another
  * order's code.
  *
@@ -53,6 +55,8 @@ import {
   type OrderFieldKey,
   type OrderResponse,
   type ShippingKind,
+  toBuyers,
+  type Buyer,
 } from '~/lib/order';
 import { ORDER_BOOKS_QUERY, type OrderBooksQueryResult } from './_graphql';
 
@@ -166,19 +170,20 @@ export const POST: APIRoute = async ({ request }) => {
     return fail(400, 'turnstile', undefined, `reason=${reason}`);
   }
 
-  // 6. Rebuild the lines from the published catalogue.
+  // 6. Rebuild the lines from the published catalogue; read the buyers with them.
   let books: OrderBook[];
+  let buyers: Buyer[];
   try {
     // The CDA rejects the whole query on a value that is not an ItemId (22 characters),
     // so other ids are not sent: they simply come back as dropped lines.
     const ids = order.lines.map((l) => l.id).filter((id) => ITEM_ID.test(id));
-    const data =
-      ids.length > 0
-        ? await executeQuery<OrderBooksQueryResult>(ORDER_BOOKS_QUERY, {
-            variables: { ids },
-            includeDrafts: false,
-          })
-        : { allBooks: [] };
+    // No valid id: every line would be dropped, so there is nothing to read.
+    if (ids.length === 0) return fail(409, 'nothing_orderable');
+    const data = await executeQuery<OrderBooksQueryResult>(ORDER_BOOKS_QUERY, {
+      variables: { ids },
+      includeDrafts: false,
+    });
+    buyers = toBuyers(data.allBuyers);
     books = data.allBooks.map((b) => ({
       id: b.id,
       title: b.title ?? '',
@@ -191,12 +196,14 @@ export const POST: APIRoute = async ({ request }) => {
   } catch {
     return fail(502, 'catalogue_unavailable');
   }
+  const buyer = buyers.find((b) => b.id === order.buyer);
+  if (!buyer) return fail(400, 'invalid', ['buyer']);
   const { lines, dropped } = rebuildOrder(order.lines, books);
   if (lines.length === 0) return fail(409, 'nothing_orderable');
 
   // 7. Totals, save, notify.
   const shippingKind = order.shipping as ShippingKind;
-  const totals = orderTotals(lines, shippingKind, order.member);
+  const totals = orderTotals(lines, shippingKind, buyer.discount);
   const at = new Date();
   let code = orderCode(at, crypto.getRandomValues(new Uint8Array(4)));
 
@@ -209,7 +216,7 @@ export const POST: APIRoute = async ({ request }) => {
       (c) =>
         db
           .prepare(INSERT_SQL)
-          .bind(...orderRow({ order, lines, totals, code: c, at }))
+          .bind(...orderRow({ order, buyer, lines, totals, code: c, at }))
           .run(),
       code,
       () => orderCode(at, crypto.getRandomValues(new Uint8Array(4))),
@@ -220,12 +227,13 @@ export const POST: APIRoute = async ({ request }) => {
     if (r.retried) console.warn(`${LOG} code_clash`);
     if (!saved) console.error(`${LOG} save_error`);
   }
-  const { subject, text } = orderEmail({ order, lines, totals, code });
+  const { subject, text } = orderEmail({ order, buyer, lines, totals, code });
 
   if (!db && !mail) {
     // No bindings (plain dev): print the text instead of sending it.
     if (import.meta.env.DEV) {
       console.log(`${LOG} (dev) to ${ORDER_EMAIL}\n${subject}\n\n${text}`);
+      notified = true;
     } else {
       return fail(503, 'not_configured');
     }
@@ -286,7 +294,7 @@ export const POST: APIRoute = async ({ request }) => {
       copies: totals.copies,
       shipping: totals.shipping,
       shippingKind,
-      member: order.member,
+      buyer: { name: buyer.name, discount: buyer.discount },
       discount: totals.discount,
       total: totals.total,
       dropped,

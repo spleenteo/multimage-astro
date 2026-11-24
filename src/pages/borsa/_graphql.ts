@@ -1,4 +1,5 @@
-// /borsa: the page head and the "Cosa succede dopo" steps, edited in the Shop singleton.
+// /borsa: the page head and the "Cosa succede dopo" steps, edited in the Shop singleton, and the
+// buyer kinds of "Chi ordina" (the `buyer` collection, in its order, with their discount).
 export const SHOP_PAGE_QUERY = /* GraphQL */ `
   query ShopPage {
     shop {
@@ -16,6 +17,11 @@ export const SHOP_PAGE_QUERY = /* GraphQL */ `
         }
       }
     }
+    allBuyers(first: 50, orderBy: position_ASC) {
+      id
+      name
+      discount
+    }
   }
 `;
 
@@ -32,4 +38,5 @@ export type ShopPageQueryResult = {
     description: string | null;
     steps: ShopStep[] | null;
   } | null;
+  allBuyers: Array<{ id: string; name: string | null; discount: number | null }>;
 };

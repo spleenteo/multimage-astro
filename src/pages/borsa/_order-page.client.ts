@@ -3,8 +3,6 @@
 // The markup contract (data-order-* attributes, ids `order-<key>`) is defined in index.astro.
 import { emptyBag, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import {
-  MEMBER_DISCOUNT_LABEL,
-  MEMBER_LINE,
   ORDER_ACTION,
   ORDER_STEP_CONFIRM_UNNOTIFIED,
   orderCausale,
@@ -19,10 +17,12 @@ import {
   copiesLabel,
   formatCents,
   formatDiscount,
-  memberDiscount,
+  buyerDiscount,
+  discountLabel,
   ORDER_SUBTOTAL_LABEL,
   ORDER_TOTAL_LABEL,
   BUYER_LABEL,
+  ORDER_NAME_LABEL,
   bagSizeLabel,
   validateOrderFields,
   type BagItem,
@@ -75,7 +75,7 @@ const MSG = {
 
 // The names the error summary links to, as the labels and legends read.
 const FIELD_NAMES: Record<ErrorKey, string> = {
-  name: 'Nome e cognome',
+  name: ORDER_NAME_LABEL,
   email: 'Email',
   phone: 'Telefono',
   address: 'Indirizzo',
@@ -112,6 +112,8 @@ export function initOrderPage(): void {
   const shippingEl = $('[data-order-shipping]');
   const discountRow = $('[data-order-discount-row]');
   const discountEl = $('[data-order-discount]');
+  const discountLabelEl = $('[data-order-discount-label]');
+  const buyerHint = $('#order-buyer-hint');
   const totalEl = $('[data-order-total]');
   const announce = $('[data-order-announce]');
   const form = $<HTMLFormElement>('form[data-order-form]');
@@ -258,7 +260,16 @@ export function initOrderPage(): void {
       buyer: form?.querySelector<HTMLInputElement>('input[name="buyer"]:checked')?.value ?? '',
       notes: val('notes'),
       consent: $<HTMLInputElement>('#order-consent')?.checked === true,
-      member: $<HTMLInputElement>('#order-member')?.checked === true,
+    };
+  };
+
+  /** The checked buyer, as the markup carries it (data-name, data-discount). */
+  const checkedBuyer = () => {
+    const input = form?.querySelector<HTMLInputElement>('input[name="buyer"]:checked');
+    const discount = Number(input?.dataset.discount ?? 0);
+    return {
+      name: input?.dataset.name ?? '',
+      discount: Number.isFinite(discount) ? discount : 0,
     };
   };
 
@@ -279,8 +290,8 @@ export function initOrderPage(): void {
     const shippingKind = checkedShipping();
     const fee = SHIPPING_KINDS[shippingKind].cents;
     const totals = bagTotals(items);
-    const member = $<HTMLInputElement>('#order-member')?.checked === true;
-    const discount = member ? memberDiscount(totals.cents) : 0;
+    const buyer = checkedBuyer();
+    const discount = buyerDiscount(totals.cents, buyer.discount);
     const total = totals.cents - discount + fee;
 
     if (list && lineTemplate) {
@@ -298,11 +309,18 @@ export function initOrderPage(): void {
       sizeLine.textContent = `${bagSizeLabel(totals.lines, totals.copies)} · ${formatCents(total)}`;
     if (subtotalEl) subtotalEl.textContent = formatCents(totals.cents);
     if (shippingEl) shippingEl.textContent = formatCents(fee);
-    if (discountRow) discountRow.hidden = !member;
+    if (discountRow) discountRow.hidden = discount === 0;
+    if (discountLabelEl) discountLabelEl.textContent = discountLabel(buyer);
+    if (buyerHint) {
+      buyerHint.textContent =
+        buyer.discount > 0
+          ? `Sconto del ${buyer.discount}% sul prezzo di copertina dei libri: lo staff verifica che ti spetti.`
+          : 'Nessuno sconto: paghi i libri a prezzo di copertina.';
+    }
     if (discountEl) discountEl.textContent = formatDiscount(discount);
     if (totalEl) totalEl.textContent = formatCents(total);
 
-    const href = bagMailto(items, shippingKind, member);
+    const href = bagMailto(items, shippingKind, buyer.name);
     $$<HTMLElement>('[data-order-mailto] a').forEach((a) => a.setAttribute('href', href));
 
     if (items.length > ORDER_MAX_LINES) {
@@ -393,7 +411,7 @@ export function initOrderPage(): void {
           '.',
         );
       } else {
-        // Saved in D1 but the notice did not go out: nobody is reading D1 yet, so ask for an email.
+        // Saved, but the automatic notice to the staff failed: the buyer forwards the code.
         const link = document.createElement('a');
         link.textContent = ORDER_EMAIL;
         link.setAttribute(
@@ -401,11 +419,11 @@ export function initOrderPage(): void {
           `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(`Ordine ${res.code}`)}`,
         );
         lede.replaceChildren(
-          'Abbiamo registrato il tuo ordine con il codice ',
+          'Il tuo ordine è salvato con il codice ',
           strong,
-          ", ma l'avviso allo staff non è partito. Scrivici a ",
+          ", ma l'avviso automatico allo staff non è partito. Scrivi a ",
           link,
-          ' indicando il codice.',
+          " con il codice: lo staff ti conferma l'ordine.",
         );
       }
     }
@@ -413,10 +431,10 @@ export function initOrderPage(): void {
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
     if (printBtn) printBtn.hidden = false;
 
-    // Private buyers get a prefilled PayPal link; for the others the staff sets the amount.
+    // A PayPal link prefilled with the total and the causale.
     const paypal = done.querySelector<HTMLElement>('[data-order-paypal]');
     const paypalLink = done.querySelector<HTMLAnchorElement>('[data-order-paypal-link]');
-    if (paypal && paypalLink && fields.buyer === 'privato') {
+    if (paypal && paypalLink) {
       paypalLink.href = orderPaypalUrl(res.code, res.total);
       paypal.hidden = false;
     }
@@ -462,14 +480,15 @@ export function initOrderPage(): void {
         }),
       );
     }
-    // The same scheme as the recap: books at cover price, member discount, shipping, total.
+    // The same scheme as the recap: books at cover price, buyer discount, shipping, total.
     if (doneLines) {
       const subtotal = res.lines.reduce((sum, l) => sum + l.amountCents, 0);
       const shippingLabel = SHIPPING_KINDS[res.shippingKind].label.toLowerCase();
       const extra = [
+        `${BUYER_LABEL}: ${res.buyer.name}`,
         `${ORDER_SUBTOTAL_LABEL} · ${formatCents(subtotal)}`,
-        ...(res.member
-          ? [MEMBER_LINE, `${MEMBER_DISCOUNT_LABEL} · ${formatDiscount(res.discount)}`]
+        ...(res.discount > 0
+          ? [`${discountLabel(res.buyer)} · ${formatDiscount(res.discount)}`]
           : []),
         `Spedizione, ${shippingLabel} · ${formatCents(res.shipping)}`,
       ];
@@ -655,8 +674,8 @@ export function initOrderPage(): void {
     const target = event.target as HTMLInputElement | null;
     if (!target) return;
     const key = target.name || target.id.replace(/^order-/, '');
-    if (key === 'shipping' || key === 'member') render(readBag());
-    if (key === 'member' && event.type === 'change')
+    if (key === 'shipping' || key === 'buyer') render(readBag());
+    if (key === 'buyer' && event.type === 'change')
       say(`${ORDER_TOTAL_LABEL}: ${totalEl?.textContent ?? ''}`);
     if (!isErrorKey(key) || key === 'turnstile') return;
     const el = errorEl(key);

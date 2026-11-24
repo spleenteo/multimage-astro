@@ -2,9 +2,6 @@
 // It imports only from ./order. The renderer (jsPDF) lives in
 // src/pages/borsa/_order-pdf.client.ts and is loaded on tap, never with the page.
 import {
-  BUYER_KINDS,
-  MEMBER_DISCOUNT_LABEL,
-  MEMBER_LINE,
   ORDER_ACCOUNT_HOLDER,
   ORDER_BANK,
   ORDER_BIC,
@@ -28,7 +25,7 @@ import {
   ORDER_SUBTOTAL_LABEL,
   ORDER_TOTAL_LABEL,
   BUYER_LABEL,
-  type BuyerKind,
+  discountLabel,
   type OrderFields,
   type OrderResponse,
 } from './order';
@@ -113,7 +110,10 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('heading', `Richiesta d'ordine ${code}`);
   add('meta', dateIt.format(at));
   if (!order.notified) {
-    add('text', `L'avviso allo staff non è partito: scrivi a ${ORDER_EMAIL} indicando il codice.`);
+    add(
+      'text',
+      `L'avviso automatico allo staff non è partito: scrivi a ${ORDER_EMAIL} con il codice.`,
+    );
   }
 
   add('heading', 'Spedizione a');
@@ -122,8 +122,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `${orderPlace(buyer)} (${buyer.province})`);
   add('text', `Email: ${buyer.email}`);
   if (buyer.phone) add('text', `Telefono: ${buyer.phone}`);
-  add('text', `${BUYER_LABEL}: ${BUYER_KINDS[buyer.buyer as BuyerKind] ?? buyer.buyer}`);
-  if (order.member) add('text', MEMBER_LINE);
+  add('text', `${BUYER_LABEL}: ${order.buyer.name}`);
 
   add('heading', 'Libri');
   for (const l of order.lines) {
@@ -136,7 +135,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('rule');
   const subtotal = order.lines.reduce((sum, l) => sum + l.amountCents, 0);
   add('row', `${ORDER_SUBTOTAL_LABEL} · ${copiesLabel(order.copies)}`, formatCents(subtotal));
-  if (order.member) add('row', MEMBER_DISCOUNT_LABEL, formatDiscount(order.discount));
+  if (order.discount > 0) add('row', discountLabel(order.buyer), formatDiscount(order.discount));
   add(
     'row',
     `Spedizione: ${SHIPPING_KINDS[order.shippingKind].label}`,
@@ -161,13 +160,11 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `BIC: ${ORDER_BIC}`);
   add('text', `Banca intermediaria (SWIFT): ${ORDER_SWIFT_INTERMEDIARY}`);
   add('text', `PayPal: ${ORDER_PAYPAL}`);
-  if (buyer.buyer === 'privato') {
-    blocks.push({
-      kind: 'link',
-      text: pdfText(ORDER_PAYPAL_LINK_LABEL),
-      url: orderPaypalUrl(code, order.total),
-    });
-  }
+  blocks.push({
+    kind: 'link',
+    text: pdfText(ORDER_PAYPAL_LINK_LABEL),
+    url: orderPaypalUrl(code, order.total),
+  });
   add('text', `Causale: ${orderCausale(code)}`);
   add('meta', 'I tuoi dati restano allo staff solo per il tempo necessario alla spedizione.');
 

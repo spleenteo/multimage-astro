@@ -161,13 +161,36 @@ export const SHIPPING_KINDS = {
 } as const;
 export type ShippingKind = keyof typeof SHIPPING_KINDS;
 
-export const BUYER_KINDS = {
-  privato: 'Privato',
-  scuola: 'Scuola',
-  associazione: 'Associazione',
-  libreria: 'Libreria',
-} as const;
-export type BuyerKind = keyof typeof BUYER_KINDS;
+/**
+ * Who orders: a record of the DatoCMS `buyer` collection (Socio, Privato, Scuola, …), with the
+ * percentage off the books it gets. The form lists them in the collection's order; the server
+ * reads them again, so the discount never comes from the browser.
+ */
+export type Buyer = { id: string; name: string; discount: number };
+
+/** Used only when the CMS has no buyer records: one buyer, no discount. */
+export const FALLBACK_BUYERS: Buyer[] = [{ id: 'privato', name: 'Privato', discount: 0 }];
+
+export const BUYER_ID_PATTERN = /^[A-Za-z0-9_-]{1,40}$/;
+
+/** CMS buyer records as buyers: named ones only, the discount an integer from 0 to 100. */
+export function toBuyers(
+  records: Array<{ id: string; name: string | null; discount: number | null }> | null | undefined,
+): Buyer[] {
+  const out = (records ?? [])
+    .filter((r) => r.name?.trim())
+    .map((r) => ({
+      id: r.id,
+      name: r.name!.trim(),
+      discount: Math.min(100, Math.max(0, Math.round(r.discount ?? 0))),
+    }));
+  return out.length > 0 ? out : FALLBACK_BUYERS;
+}
+
+/** The buyer preselected in the form: the first without discount, else the first. */
+export function defaultBuyer(buyers: Buyer[]): Buyer {
+  return buyers.find((b) => b.discount === 0) ?? buyers[0];
+}
 
 // --- Types -----------------------------------------------------------------
 
@@ -197,8 +220,6 @@ export type OrderFields = {
   buyer: string;
   notes: string;
   consent: boolean;
-  /** The buyer ticked "Sono socia o socio": the server applies the member discount. */
-  member: boolean;
 };
 
 export type OrderLineInput = { id: string; qty: number };
@@ -232,7 +253,7 @@ export type OrderTotals = {
   copies: number;
   /** Books at cover price, in cents. */
   subtotal: number;
-  /** Member discount in cents (0 when not a member); books only, never shipping. */
+  /** The buyer's discount in cents (0 without one); books only, never shipping. */
   discount: number;
   shipping: number;
   /** Subtotal minus discount plus shipping. */
@@ -263,7 +284,9 @@ export type OrderResponse =
       copies: number;
       shipping: number;
       shippingKind: ShippingKind;
-      member: boolean;
+      /** The buyer as the server resolved it; `discount` is the percentage. */
+      buyer: { name: string; discount: number };
+      /** The discount in cents. */
       discount: number;
       total: number;
       dropped: string[];
@@ -280,7 +303,7 @@ export function formatIban(s: string): string {
 // --- Validation ------------------------------------------------------------
 
 export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
-  name: 'Scrivi nome e cognome di chi riceve i libri.',
+  name: 'Scrivi nome e cognome, o la ragione sociale, di chi riceve i libri.',
   email:
     "L'email non è completa: controlla la chiocciola e il dominio, per esempio nome@esempio.it.",
   phone: 'Il telefono può avere solo cifre, spazi e il segno +: correggilo o lascialo vuoto.',
@@ -289,7 +312,7 @@ export const ORDER_FIELD_MESSAGES: Record<OrderFieldKey, string> = {
   city: 'Scrivi la città, per esempio Firenze.',
   province: 'Scrivi la sigla, per esempio FI.',
   shipping: 'Scegli come spedire i libri.',
-  buyer: 'Scegli chi ordina: privato, scuola, associazione o libreria.',
+  buyer: 'Scegli chi ordina.',
   notes: `Le note superano i ${ORDER_NOTES_MAX} caratteri: accorciale.`,
   consent: "Per inviare l'ordine spunta il consenso all'uso dei dati.",
 };
@@ -323,7 +346,7 @@ export function validateOrderFields(f: OrderFields): Partial<Record<OrderFieldKe
   if (!inRange(f.city.trim(), 2, 100)) errors.city = m.city;
   if (!inRange(f.province.trim(), 2, 40)) errors.province = m.province;
   if (!has(SHIPPING_KINDS, f.shipping.trim())) errors.shipping = m.shipping;
-  if (!has(BUYER_KINDS, f.buyer.trim())) errors.buyer = m.buyer;
+  if (!BUYER_ID_PATTERN.test(f.buyer.trim())) errors.buyer = m.buyer;
   if (f.notes.trim().length > ORDER_NOTES_MAX) errors.notes = m.notes;
   if (f.consent !== true) errors.consent = m.consent;
   return errors;
@@ -369,7 +392,6 @@ export function parseOrderRequest(body: unknown): ParseResult {
     buyer: text(o.buyer),
     notes: text(o.notes),
     consent: o.consent === true,
-    member: o.member === true,
   };
   const errors = validateOrderFields(fields);
   const keys = Object.keys(errors) as OrderFieldKey[];
@@ -412,24 +434,14 @@ export function rebuildOrder(
   return { lines: out, dropped };
 }
 
-/**
- * Members get this percentage off the books (PRODUCT.md, /info/adesioni); the staff verifies
- * membership.
- */
-export const MEMBER_DISCOUNT_PERCENT = 30;
+/** The discount line label, with U+2212 as the minus sign: `Sconto Socio −30%`. */
+export function discountLabel(buyer: Pick<Buyer, 'name' | 'discount'>): string {
+  return `Sconto ${buyer.name} −${buyer.discount}%`;
+}
 
-/** The discount line label, with U+2212 as the minus sign. */
-export const MEMBER_DISCOUNT_LABEL = `Sconto soci −${MEMBER_DISCOUNT_PERCENT}%`;
-
-/** The line that marks a member order in the email, the success screen and the PDF. */
-export const MEMBER_LINE = 'Socia/socio: sì';
-
-/**
- * The member discount on a books subtotal, in cents, rounded half up to the cent (1599 gives
- * 480).
- */
-export function memberDiscount(subtotal: number): number {
-  return Math.round((subtotal * MEMBER_DISCOUNT_PERCENT) / 100);
+/** A percentage off a books subtotal, in cents, rounded half up to the cent (30% of 1599 is 480). */
+export function buyerDiscount(subtotal: number, percent: number): number {
+  return Math.round((subtotal * percent) / 100);
 }
 
 /** A discount amount shown as a deduction, e.g. `−9,60 €` (U+2212). */
@@ -450,8 +462,8 @@ export const ORDER_TOTAL_LABEL = 'Totale da pagare';
  * yet, no code) and after (the causale with the code, then the bank details).
  */
 export const ORDER_STEP_CONFIRM = `Lo staff ti scrive da ${ORDER_EMAIL} per confermare l'ordine, di solito entro due giorni lavorativi.`;
-/** Step 1 when the notice to the staff did not go out: the buyer writes first. */
-export const ORDER_STEP_CONFIRM_UNNOTIFIED = `Scrivi a ${ORDER_EMAIL} indicando il codice: lo staff ti conferma l'ordine.`;
+/** Step 1 when the notice to the staff did not go out: the buyer forwards the code. */
+export const ORDER_STEP_CONFIRM_UNNOTIFIED = `Scrivi a ${ORDER_EMAIL} con il codice dell'ordine: lo staff te lo conferma.`;
 export const ORDER_STEP_PAY = 'Paghi con bonifico o PayPal dopo la conferma dello staff';
 export const ORDER_STEP_PAY_LATER = `${ORDER_STEP_PAY}: i dati te li diamo alla fine.`;
 export const ORDER_STEP_RECEIPT_LEAD = 'Mandi la ricevuta del pagamento a';
@@ -466,8 +478,7 @@ export const ORDER_PAYPAL_LINK_LABEL = 'Paga con PayPal dopo la conferma dello s
 
 /**
  * A PayPal payment link prefilled with recipient, amount and causale (PayPal's classic
- * `_xclick` URL: it needs only the account email, no API key). Private buyers only: for schools,
- * associations and bookshops the staff sets the amount.
+ * `_xclick` URL: it needs only the account email, no API key).
  */
 export function orderPaypalUrl(code: string, totalCents: number): string {
   const params = new URLSearchParams({
@@ -484,14 +495,17 @@ export function orderPaypalUrl(code: string, totalCents: number): string {
 /** The buyer-kind question, as the form, the email and the PDF ask it. */
 export const BUYER_LABEL = 'Chi ordina';
 
+/** The name field's label, in the form, the email, the PDF and the mailto. */
+export const ORDER_NAME_LABEL = 'Nome e cognome o ragione sociale';
+
 /**
- * Totals in cents; the shipping fee counts once per order. The member discount
- * applies to the books only, never to shipping.
+ * Totals in cents; the shipping fee counts once per order. The buyer's discount
+ * (a percentage) applies to the books only, never to shipping.
  */
 export function orderTotals(
   lines: OrderLine[],
   shipping: ShippingKind,
-  member: boolean,
+  discountPercent: number,
 ): OrderTotals {
   let copies = 0;
   let subtotal = 0;
@@ -499,7 +513,7 @@ export function orderTotals(
     copies += line.qty;
     subtotal += line.amountCents;
   }
-  const discount = member ? memberDiscount(subtotal) : 0;
+  const discount = buyerDiscount(subtotal, discountPercent);
   const fee = SHIPPING_KINDS[shipping].cents;
   return { copies, subtotal, discount, shipping: fee, total: subtotal - discount + fee };
 }
@@ -521,7 +535,8 @@ export function orderCode(at: Date, random: Uint8Array): string {
 
 /**
  * The `orders` columns the site writes, in table order (`id` and `notify_error` are left out;
- * `member` and `discount_cents` come from migration 0002).
+ * `member` and `discount_cents` come from migration 0002, `discount_percent` from 0003; `member`
+ * is always 0 since buyers come from the CMS).
  */
 export const ORDER_COLUMNS = [
   'code',
@@ -544,6 +559,7 @@ export const ORDER_COLUMNS = [
   'notify_status',
   'member',
   'discount_cents',
+  'discount_percent',
 ] as const;
 
 /** CAP and city as one string ("50123 Firenze"): the `city` column, the email and the PDF. */
@@ -554,12 +570,13 @@ export function orderPlace(f: Pick<OrderFields, 'postcode' | 'city'>): string {
 /** The values of one `orders` row, in `ORDER_COLUMNS` order; an empty phone or notes is NULL. */
 export function orderRow(data: {
   order: OrderRequest;
+  buyer: Buyer;
   lines: OrderLine[];
   totals: OrderTotals;
   code: string;
   at: Date;
 }): Array<string | number | null> {
-  const { order, lines, totals, code, at } = data;
+  const { order, buyer, lines, totals, code, at } = data;
   const time = at.toISOString();
   return [
     code,
@@ -571,7 +588,7 @@ export function orderRow(data: {
     orderPlace(order),
     order.province,
     order.shipping,
-    order.buyer,
+    buyer.name,
     order.notes || null,
     JSON.stringify(lines),
     totals.copies,
@@ -580,8 +597,9 @@ export function orderRow(data: {
     totals.total,
     time,
     'pending',
-    order.member ? 1 : 0,
+    0,
     totals.discount,
+    buyer.discount,
   ];
 }
 
@@ -629,24 +647,23 @@ export async function saveWithCodeRetry(
 /** The plain-text order email for the shop. */
 export function orderEmail(data: {
   order: OrderRequest;
+  buyer: Buyer;
   lines: OrderLine[];
   totals: OrderTotals;
   code: string;
 }): { subject: string; text: string } {
-  const { order, lines, totals, code } = data;
+  const { order, buyer, lines, totals, code } = data;
   const copies = copiesLabel(totals.copies);
   const shipping = SHIPPING_KINDS[order.shipping as ShippingKind];
-  const buyer = BUYER_KINDS[order.buyer as BuyerKind];
 
   const subject = `Ordine ${code} · ${order.name} · ${copies}`;
 
   const out: string[] = [
     `Nuovo ordine dal sito: ${code}.`,
     '',
-    `${BUYER_LABEL}: ${buyer}`,
-    ...(order.member ? [MEMBER_LINE] : []),
+    `${BUYER_LABEL}: ${buyer.name}`,
     '',
-    `Nome e cognome: ${order.name}`,
+    `${ORDER_NAME_LABEL}: ${order.name}`,
     `Email: ${order.email}`,
     `Telefono: ${order.phone || 'non indicato'}`,
     `Indirizzo: ${order.address}, ${orderPlace(order)} (${order.province})`,
@@ -659,7 +676,7 @@ export function orderEmail(data: {
     '',
     `Copie: ${totals.copies}`,
     `${ORDER_SUBTOTAL_LABEL}: ${formatCents(totals.subtotal)}`,
-    ...(order.member ? [`${MEMBER_DISCOUNT_LABEL}: ${formatDiscount(totals.discount)}`] : []),
+    ...(totals.discount > 0 ? [`${discountLabel(buyer)}: ${formatDiscount(totals.discount)}`] : []),
     `Spedizione: ${shipping.label}, ${formatCents(totals.shipping)}`,
     `${ORDER_TOTAL_LABEL}: ${formatCents(totals.total)}`,
   ];
@@ -697,17 +714,16 @@ export function checkSiteverify(
 export function bagMailto(
   items: BagItem[],
   shipping: ShippingKind = 'piego',
-  member = false,
+  buyerName = '',
 ): string {
   const body = [
     ...items.map((i) => `${i.title} · ${copiesLabel(i.qty)}`),
     '',
     `Spedizione: ${SHIPPING_KINDS[shipping].label}`,
-    ...(member ? [MEMBER_LINE] : []),
     '',
-    'Nome e cognome:',
+    `${ORDER_NAME_LABEL}:`,
     'Indirizzo di spedizione:',
-    `${BUYER_LABEL}:`,
+    `${BUYER_LABEL}:${buyerName ? ` ${buyerName}` : ''}`,
   ].join('\r\n');
   return `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('Ordine dal sito')}&body=${encodeURIComponent(body)}`;
 }
