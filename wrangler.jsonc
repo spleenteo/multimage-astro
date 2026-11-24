@@ -37,6 +37,8 @@
     },
   ],
   // Order notification to the shop, sent only from the Email Routing subdomain address.
+  // Bag counters (add, start, emptied, order): aggregate events, no visitor id. See src/lib/bag-events.ts.
+  "analytics_engine_datasets": [{ "binding": "BAG_EVENTS", "dataset": "multimage_bag_events" }],
   "send_email": [
     {
       "name": "ORDER_MAIL",

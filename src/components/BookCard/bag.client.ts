@@ -68,7 +68,7 @@ function onClick(e: Event): void {
   const book = parseBook(root?.dataset.bagItem);
   if (!button || !root || !book) return;
   e.preventDefault();
-  addBook(book);
+  addBook(book, 'card');
   const line = readBag().find((i) => i.id === book.id);
   const tip = root.querySelector<HTMLElement>('[data-card-bag-tip]');
   root.dataset.flash = 'true';

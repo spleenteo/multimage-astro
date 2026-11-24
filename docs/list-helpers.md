@@ -97,7 +97,11 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
   - Used in: the Vite alias for `cloudflare:workers` (non-Cloudflare builds).
 - **bag store** (`src/lib/bag.client.ts`)
   - Purpose: the bag in the browser: `readBag`, `addBook`, `setQty`, `removeItem`, `emptyBag`, `onBagChange`, `openBag`. `localStorage` key `multimage:bag` holding `{"v":1,"items":[]}`, an in-memory fallback when storage is blocked, cross-tab sync.
-  - Used in: `BagDrawer`, `BagAdd`, header buttons (through `drawer.client.ts`), `/borsa`.
+  - Used in: `BagDrawer`, `BagAdd`, header buttons (through `drawer.client.ts`), `/borsa`, the `BookCard` bag button.
+  - Notes: `addBook(book, place)` and `emptyBag({ byVisitor })` send the bag counters (`trackBag`).
+- **bag counters** (`src/lib/bag-events.ts`, `src/lib/bag-events.client.ts`)
+  - Purpose: aggregate bag events for Workers Analytics Engine (dataset `multimage_bag_events`, binding `BAG_EVENTS`): `add` and `start` (slug and place: `card`, `book`, `hero`), `emptied`, and `order` (server only). `parseBagEvent` validates a browser body, `bagDataPoint` builds the data point (blob1 event, blob2 slug, blob3 place, double1 count, double2 copies, index1 event), `trackBag` sends with `sendBeacon`. No visitor identifier, no cookie, nothing stored in the browser.
+  - Used in: `bag.client.ts`, `/api/evento`, `/api/ordine`, `scripts/bag-stats.mjs`.
 - **Order page script** (`src/pages/borsa/_order-page.client.ts`)
   - Purpose: `initOrderPage` drives the `/borsa` states (empty, filled, mailto, error, success), the Turnstile widget, the POST to `/api/ordine` and, on success, the "Scarica il PDF" button (lazy import of `_order-pdf.client.ts`) and the print fallback.
   - Used in: `src/pages/borsa/index.astro`.
@@ -150,6 +154,9 @@ scope: A list to describe all helpers, scripts, middlewares used in the project
 - **Search/Swiper bundler** (`scripts/build-search-client.mjs`)
   - Purpose: builds `public/generated/search-page.client.js` and `swiper-element.js` via esbuild.
   - Notes: deletes stale artefacts and honors `NODE_ENV` for sourcemaps.
+- **Bag stats** (`scripts/bag-stats.mjs`, `npm run stats:bag`)
+  - Purpose: reads the bag counters from the Analytics Engine SQL API: bags started, ordered, emptied and left (started − ordered − emptied), adds per place, the 20 books added most. Optional argument: days (default 30, max 90).
+  - Notes: run with `npx dotenv -e .env.cloudflare -- npm run stats:bag`; needs `CLOUDFLARE_ACCOUNT_ID` and a `CLOUDFLARE_API_TOKEN` with Account Analytics: Read.
 - **`docs:inventory` checker** (`scripts/check-docs-inventory.mjs`)
   - Purpose: scans `src/components/**` + helper directories and verifies `docs/list-*` includes every component/helper path.
   - Notes: fails `npm run docs:inventory` when entries drift; keep bullets aligned with the script’s parsed format.

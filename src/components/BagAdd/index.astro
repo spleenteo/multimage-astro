@@ -9,9 +9,11 @@ interface Props {
   mailto: string;
   label: string;
   primary?: boolean;
+  /** Which button this is, for the bag counters: the book page or the home hero. */
+  place?: 'book' | 'hero';
 }
 
-const { book, mailto, label, primary = true } = Astro.props;
+const { book, mailto, label, primary = true, place = 'book' } = Astro.props;
 ---
 
 {book === null ? (
@@ -19,7 +21,7 @@ const { book, mailto, label, primary = true } = Astro.props;
     {label}
   </Button>
 ) : (
-  <div class="contents" data-bag-add data-bag-item={JSON.stringify(book)}>
+  <div class="contents" data-bag-add data-bag-place={place} data-bag-item={JSON.stringify(book)}>
     <span class="contents" data-bag-fallback>
       <Button href={mailto} primary={primary} icon="iconoir:mail" iconPosition="left">
         {label}

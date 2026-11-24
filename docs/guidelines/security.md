@@ -41,6 +41,10 @@ Outer limits, beyond the code: a Cloudflare WAF rate limiting rule on `/api/ordi
 
 ---
 
+## Bag event endpoint (/api/evento)
+
+`POST /api/evento` (`src/pages/api/evento/index.ts`) writes one aggregate counter to Workers Analytics Engine. It accepts only `add` and `start` (with a book slug matching `^[a-z0-9][a-z0-9-]{0,119}$` and a place among `card`, `book`, `hero`) and `emptied`; `order` is written only by `/api/ordine`, so the browser cannot inflate orders. Bodies over 512 bytes and foreign `Origin` headers are refused (400, 403); any other method gets 405. It answers 204 with no body, reads and sets nothing on the visitor and stores no identifier or IP, so it needs no consent. Spam can still inflate the add counters; the figures are indicative, not accounting.
+
 ## Environment Variables Audit (2026-05-16)
 
 ### Matrix

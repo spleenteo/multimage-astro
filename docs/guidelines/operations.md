@@ -44,6 +44,7 @@ description: Describe how Multimage is built, deployed, and configured across en
 - Client monitoring uses Google Analytics (legacy UA) only; Vercel Analytics and Speed Insights were removed on 2026-11-22, on both targets.
 - Server side: on Vercel there is no logging or alerting beyond `vercel logs`. On Cloudflare, Workers observability is on (`observability.enabled` in `wrangler.jsonc`: logs in the dashboard, `wrangler tail` live).
 - Order endpoint: `npx wrangler tail multimage-astro --format json` shows the `[ordine] <status> <code>` lines (counts only, no personal data). Notices that did not go out are found in D1, not in a mail dashboard: run the `notify_status <> 'sent'` query of `d1/README.md` (`wrangler d1 execute multimage-orders --remote`) at least weekly.
+- Bag counters (since 2026-11-24): every add to the bag, every first book in an empty bag, every bag emptied by hand and every saved order is one data point in Workers Analytics Engine (dataset `multimage_bag_events`, binding `BAG_EVENTS`; Free plan: 100,000 writes and 10,000 queries a day, kept three months). Aggregate only: no visitor identifier, no cookie, no IP. `POST /api/evento` takes the browser events, `/api/ordine` writes `order`. Read them with `npx dotenv -e .env.cloudflare -- npm run stats:bag [days]` (the token needs Account Analytics: Read): the books added most, adds per place, and bags left (started − ordered − emptied, an estimate over the period).
 - The `/llms-full.txt` export route was removed (2026-06-20); no exporter to maintain.
 
 ## Testing & Automation

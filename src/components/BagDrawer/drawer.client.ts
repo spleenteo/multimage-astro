@@ -171,7 +171,7 @@ export function initBagDrawer(): void {
     confirmBox.querySelector<HTMLElement>('[data-bag-empty-yes] button')?.focus();
   });
   confirmBox.querySelector('[data-bag-empty-yes]')?.addEventListener('click', () => {
-    emptyBag();
+    emptyBag({ byVisitor: true });
     say('Borsa svuotata');
     confirmBox.hidden = true;
     heading.focus();

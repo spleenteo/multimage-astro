@@ -22,7 +22,8 @@
     "test": "npm run format && npm run lint && npm run build",
     "lint": "prettier --check --ignore-path .prettierignore .",
     "build:cf": "npm run bundle-search-client && DEPLOY_TARGET=cloudflare astro build",
-    "deploy:cf": "npm run build:cf && wrangler deploy"
+    "deploy:cf": "npm run build:cf && wrangler deploy",
+    "stats:bag": "node scripts/bag-stats.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",

@@ -1,6 +1,6 @@
 // Browser side of BagAdd: swaps the mailto fallback for the bag button once the book data
 // validates, adds the book on click and keeps the "Nella borsa" line current.
-// Structure it relies on (see index.astro): [data-bag-add] > [data-bag-fallback],
+// Structure it relies on (see index.astro): [data-bag-add][data-bag-place] > [data-bag-fallback],
 // [data-bag-enhanced] > button, [data-bag-status].
 import { addBook, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import { copiesLabel, toBagItem, type BagBook, type BagItem } from '~/lib/order';
@@ -39,7 +39,7 @@ function enhance(root: HTMLElement): void {
   fallback.hidden = true;
   enhanced.hidden = false;
   button.addEventListener('click', () => {
-    addBook(book);
+    addBook(book, root.dataset.bagPlace === 'hero' ? 'hero' : 'book');
     openBag(button);
   });
   showStatus(readBag());

@@ -171,7 +171,13 @@ const titleId = 'home-hero-book-title';
         <div class="mt-6 flex flex-wrap gap-3">
           <Button href={book.link} primary class="min-h-11">Scopri il libro</Button>
           {canOrderPrint ? (
-            <BagAdd book={bagBook} mailto={orderHref} label="Ordinalo via email" primary={false} />
+            <BagAdd
+              book={bagBook}
+              mailto={orderHref}
+              label="Ordinalo via email"
+              primary={false}
+              place="hero"
+            />
           ) : null}
         </div>
 

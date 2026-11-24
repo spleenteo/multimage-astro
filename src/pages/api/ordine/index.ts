@@ -32,7 +32,8 @@
  */
 import type { APIRoute } from 'astro';
 import { TURNSTILE_SECRET_KEY } from 'astro:env/server';
-import { getOrderDb, getOrderMail } from '~/lib/cloudflare-bindings';
+import { getBagEvents, getOrderDb, getOrderMail } from '~/lib/cloudflare-bindings';
+import { bagDataPoint } from '~/lib/bag-events';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { getAuthorDisplayName } from '~/lib/authors';
 import {
@@ -271,7 +272,14 @@ export const POST: APIRoute = async ({ request }) => {
     }
   }
 
-  // 8. Answer.
+  // 8. Bag counter: one order (aggregate, no visitor data; never fails the answer).
+  try {
+    getBagEvents()?.writeDataPoint(bagDataPoint('order', { copies: totals.copies }));
+  } catch {
+    console.warn(`${LOG} event_error`);
+  }
+
+  // 8b. Answer.
   if (!db && !mail) {
     console.log(`${LOG} 200 ok (dev) lines=${lines.length} dropped=${dropped.length}`);
   } else {

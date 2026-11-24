@@ -1,6 +1,8 @@
 // Client-side bag store: localStorage-backed, with an in-memory fallback.
 // Browser only; `window` is touched inside functions, never at import time.
 import { BAG_STORAGE_KEY, clampQty, QTY_MAX, toBagItem, type BagBook, type BagItem } from './order';
+import type { BagPlace } from './bag-events';
+import { trackBag } from './bag-events.client';
 
 export const BAG_CHANGE_EVENT = 'bag:change';
 export const BAG_OPEN_EVENT = 'bag:open';
@@ -57,12 +59,16 @@ function commit(items: BagItem[]): void {
   window.dispatchEvent(new CustomEvent(BAG_CHANGE_EVENT, { detail: { items } }));
 }
 
-export function addBook(book: BagBook): void {
+/** Adds one copy; `place` names the button for the bag counters (Analytics Engine, no visitor id). */
+export function addBook(book: BagBook, place: BagPlace): void {
   const items = readBag();
+  const wasEmpty = items.length === 0;
   const existing = items.find((i) => i.id === book.id);
   if (existing) existing.qty = Math.min(QTY_MAX, existing.qty + 1);
   else items.push({ ...book, qty: 1 });
   commit(items);
+  if (wasEmpty) trackBag({ e: 'start', s: book.slug, p: place });
+  trackBag({ e: 'add', s: book.slug, p: place });
 }
 
 export function setQty(id: string, n: number): void {
@@ -77,8 +83,11 @@ export function removeItem(id: string): void {
   commit(readBag().filter((i) => i.id !== id));
 }
 
-export function emptyBag(): void {
+/** Empties the bag; `byVisitor` counts it as an emptied bag (not after an order is sent). */
+export function emptyBag(options: { byVisitor?: boolean } = {}): void {
+  const hadItems = readBag().length > 0;
   commit([]);
+  if (options.byVisitor && hadItems) trackBag({ e: 'emptied' });
 }
 
 /** Subscribes to bag changes (this tab and, through `storage`, other tabs). Returns an unsubscribe. */

@@ -1,5 +1,5 @@
-// Access to the Cloudflare bindings (D1 and send_email) for the order endpoint.
-// Only /api/ordine imports this module. On the Cloudflare build `cloudflare:workers`
+// Access to the Cloudflare bindings (D1, send_email, Analytics Engine) for the order and event
+// endpoints. Only /api/ordine and /api/evento import this module. On the Cloudflare build `cloudflare:workers`
 // is the real module and `env` holds the bindings of wrangler.jsonc; on the Vercel
 // build and in plain `astro dev` the Vite alias in astro.config.mjs points it at an
 // empty stub, so both getters return null.
@@ -23,6 +23,17 @@ export interface OrderMailMessage {
 /** The part of a send_email binding the endpoint uses. */
 export interface OrderMail {
   send(message: OrderMailMessage): Promise<unknown>;
+}
+
+/** The part of an Analytics Engine dataset binding the endpoints use. */
+export interface EventSink {
+  writeDataPoint(point: { blobs?: string[]; doubles?: number[]; indexes?: string[] }): void;
+}
+
+/** The BAG_EVENTS Analytics Engine binding, or null when it is not available. */
+export function getBagEvents(): EventSink | null {
+  const sink = env.BAG_EVENTS as Partial<EventSink> | undefined;
+  return sink && typeof sink.writeDataPoint === 'function' ? (sink as EventSink) : null;
 }
 
 /** The ORDERS D1 binding, or null when it is not available (not on Cloudflare). */
