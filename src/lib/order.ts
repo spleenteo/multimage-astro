@@ -1,5 +1,18 @@
 // Order facts and pure helpers, shared by pages, the bag drawer and the order email.
-// No imports: client scripts bundle this file and plain `tsx` loads it.
+// Imports only `./payment` (relative, no alias): client scripts bundle this file and plain `tsx` loads it.
+
+import {
+  PAYMENT_ACCOUNT_HOLDER,
+  PAYMENT_BANK,
+  PAYMENT_BIC,
+  PAYMENT_IBAN,
+  PAYMENT_PAYPAL,
+  PAYMENT_SWIFT_INTERMEDIARY,
+  formatIban,
+  paypalUrl,
+} from './payment';
+
+export { formatIban };
 
 export const ORDER_EMAIL = 'ordini@multimage.org';
 export const BAG_STORAGE_KEY = 'multimage:bag';
@@ -138,12 +151,12 @@ export function bagBookFor(book: {
 export const ORDER_FROM_ADDRESS = 'sito@ordini.multimage.org';
 export const ORDER_FROM_NAME = 'Multimage';
 export const ORDER_FROM = `${ORDER_FROM_NAME} <${ORDER_FROM_ADDRESS}>`;
-export const ORDER_ACCOUNT_HOLDER = 'Associazione Multimage';
-export const ORDER_BANK = 'Banca Etica';
-export const ORDER_IBAN = 'IT50T0501802800000011361524';
-export const ORDER_BIC = 'ETICIT22XXX';
-export const ORDER_SWIFT_INTERMEDIARY = 'POSOIT22XXX';
-export const ORDER_PAYPAL = 'info@multimage.org';
+export const ORDER_ACCOUNT_HOLDER = PAYMENT_ACCOUNT_HOLDER;
+export const ORDER_BANK = PAYMENT_BANK;
+export const ORDER_IBAN = PAYMENT_IBAN;
+export const ORDER_BIC = PAYMENT_BIC;
+export const ORDER_SWIFT_INTERMEDIARY = PAYMENT_SWIFT_INTERMEDIARY;
+export const ORDER_PAYPAL = PAYMENT_PAYPAL;
 export const ORDER_CAUSALE = 'Ordine libri';
 export const ORDER_ACTION = 'ordine';
 export const ORDER_MAX_LINES = 30;
@@ -292,13 +305,6 @@ export type OrderResponse =
       dropped: string[];
     }
   | { ok: false; error: OrderErrorCode; fields?: OrderFieldKey[] };
-
-// --- Formatting ------------------------------------------------------------
-
-/** The IBAN in groups of four, for reading and copying by hand. */
-export function formatIban(s: string): string {
-  return s.replace(/\s+/g, '').replace(/(.{4})(?=.)/g, '$1 ');
-}
 
 // --- Validation ------------------------------------------------------------
 
@@ -476,20 +482,9 @@ export function orderCausale(code: string): string {
 /** The PayPal button's text (the success screen adds the amount: "Paga 35,00 € con PayPal"). */
 export const ORDER_PAYPAL_LINK_LABEL = 'Paga con PayPal';
 
-/**
- * A PayPal payment link prefilled with recipient, amount and causale (PayPal's classic
- * `_xclick` URL: it needs only the account email, no API key).
- */
+/** A PayPal payment link for an order: the code's causale and the total in cents. */
 export function orderPaypalUrl(code: string, totalCents: number): string {
-  const params = new URLSearchParams({
-    cmd: '_xclick',
-    business: ORDER_PAYPAL,
-    amount: (totalCents / 100).toFixed(2),
-    currency_code: 'EUR',
-    item_name: orderCausale(code),
-    no_shipping: '1',
-  });
-  return `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
+  return paypalUrl(orderCausale(code), totalCents);
 }
 
 /** The buyer-kind question, as the form, the email and the PDF ask it. */
@@ -524,13 +519,18 @@ export function orderTotals(
 export const ORDER_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
 export const ORDER_CODE_PATTERN = /^MM-\d{6}-[2-9A-HJ-NP-Z]{4}$/;
 
-/** `MM-YYMMDD-XXXX`: the UTC date and four characters, one random byte each (`byte % 32`, no bias). */
-export function orderCode(at: Date, random: Uint8Array): string {
+/** `<prefix>-YYMMDD-XXXX`: the UTC date and four characters, one random byte each (`byte % 32`, no bias). */
+export function requestCode(prefix: string, at: Date, random: Uint8Array): string {
   const iso = at.toISOString();
   const date = iso.slice(2, 4) + iso.slice(5, 7) + iso.slice(8, 10);
   let suffix = '';
   for (let i = 0; i < 4; i++) suffix += ORDER_CODE_ALPHABET[random[i] % 32];
-  return `MM-${date}-${suffix}`;
+  return `${prefix}-${date}-${suffix}`;
+}
+
+/** `MM-YYMMDD-XXXX`, the code of a book order. */
+export function orderCode(at: Date, random: Uint8Array): string {
+  return requestCode('MM', at, random);
 }
 
 /**
@@ -603,17 +603,16 @@ export function orderRow(data: {
   ];
 }
 
-const CODE_CLASH = /UNIQUE constraint failed: orders\.code/;
-
-/** True when a D1 error is the UNIQUE clash on `orders.code` (in the message or in its cause). */
-export function isCodeClash(err: unknown): boolean {
+/** True when a D1 error is the UNIQUE clash on `<table>.code` (in the message or in its cause). */
+export function isCodeClash(err: unknown, table = 'orders'): boolean {
   if (typeof err !== 'object' || err === null) return false;
+  const clash = `UNIQUE constraint failed: ${table}.code`;
   const { message, cause } = err as { message?: unknown; cause?: unknown };
   const causeMessage =
     typeof cause === 'object' && cause !== null ? (cause as { message?: unknown }).message : null;
   return (
-    (typeof message === 'string' && CODE_CLASH.test(message)) ||
-    (typeof causeMessage === 'string' && CODE_CLASH.test(causeMessage))
+    (typeof message === 'string' && message.includes(clash)) ||
+    (typeof causeMessage === 'string' && causeMessage.includes(clash))
   );
 }
 
@@ -626,12 +625,13 @@ export async function saveWithCodeRetry(
   insert: (code: string) => Promise<unknown>,
   first: string,
   next: () => string,
+  table = 'orders',
 ): Promise<{ saved: boolean; code: string; retried: boolean }> {
   try {
     await insert(first);
     return { saved: true, code: first, retried: false };
   } catch (err) {
-    if (!isCodeClash(err)) return { saved: false, code: first, retried: false };
+    if (!isCodeClash(err, table)) return { saved: false, code: first, retried: false };
   }
   const code = next();
   try {
