@@ -60,8 +60,14 @@ export async function verifyTurnstile(args: {
   } catch {
     return { ok: false, status: 502, error: 'turnstile_unavailable' };
   }
-  const lenient = isDev && TEST_SECRET.test(secret);
-  const expected = { hostname: new URL(request.url).hostname, action, lenient };
+  // Lenient (success only) for Cloudflare's test secrets, in dev or on a local hostname.
+  // The hostname comes only from `new URL(request.url).hostname`, matched exactly: never
+  // from Host / X-Forwarded-Host, never startsWith/includes. Setting `security.allowedDomains`
+  // in Astro would let X-Forwarded-Host rewrite `request.url`, and must re-examine this.
+  const hostname = new URL(request.url).hostname;
+  const lenient =
+    TEST_SECRET.test(secret) && (isDev || ['localhost', '127.0.0.1'].includes(hostname));
+  const expected = { hostname, action, lenient };
   if (checkSiteverify(verdict, expected)) return { ok: true };
   // Which check failed, for the operator: no token, no visitor data.
   const r = (typeof verdict === 'object' && verdict !== null ? verdict : {}) as Record<
