@@ -21,14 +21,14 @@ function parseBook(raw: string | undefined): BagBook | null {
 }
 
 function enhance(root: HTMLElement): void {
-  if (root.dataset.bagAddReady) return;
+  if (root.dataset.bagAddReady === 'true') return;
   const book = parseBook(root.dataset.bagItem);
   const fallback = root.querySelector<HTMLElement>('[data-bag-fallback]');
   const enhanced = root.querySelector<HTMLElement>('[data-bag-enhanced]');
   const button = enhanced?.querySelector<HTMLButtonElement>('button');
   const status = root.querySelector<HTMLElement>('[data-bag-status]');
   if (!book || !fallback || !enhanced || !button) return;
-  root.dataset.bagAddReady = '';
+  root.dataset.bagAddReady = 'true';
 
   const showStatus = (items: BagItem[]) => {
     if (!status) return;
