@@ -1,6 +1,6 @@
-@reference '../../../styles/global.css';
+@reference '../../styles/global.css';
 
-/* /staff/designsystem: a quiet reading page. Slim title row, an anchor index, then sections
+/* /designsystem: a quiet reading page. Slim title row, an anchor index, then sections
    divided by navy-at-10% hairlines. Flat: no cards, no shadows except the shadow specimens. */
 
 .page {

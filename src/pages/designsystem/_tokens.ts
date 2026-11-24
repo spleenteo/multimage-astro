@@ -1,8 +1,8 @@
-// Reads DESIGN.md at build time (bundled as a string, no runtime fs) so the /staff/designsystem
+// Reads DESIGN.md at build time (bundled as a string, no runtime fs) so the /designsystem
 // page drifts with the design document: tokens from the YAML front matter, roles, named rules and
 // the Do's and Don'ts from the prose. The parser covers only the YAML subset DESIGN.md uses
 // (nested maps of quoted or bare scalars).
-import designMd from '../../../../DESIGN.md?raw';
+import designMd from '../../../DESIGN.md?raw';
 
 type YamlNode = { [key: string]: string | YamlNode };
 

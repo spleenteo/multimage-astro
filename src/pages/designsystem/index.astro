@@ -1,7 +1,7 @@
 ---
-// /staff/designsystem: a static reference of the design system, read from DESIGN.md at build time
+// /designsystem: a public, noindex, static reference of the design system, read from DESIGN.md at build time
 // (`_tokens.ts`) and rendered with the site's own components and classes, so it drifts with the
-// code. Gated by the middleware like every /staff route; no page query (the layout's cached site
+// code. No page query (the layout's cached site
 // query is the only CDA read). Every book, person and order here is sample data. Nothing binds
 // to the client scripts of the real pages: no data-* hooks, ids prefixed with `ds-`.
 import BaseLayout from '~/layouts/BaseLayout.astro';
@@ -53,7 +53,7 @@ import '~/pages/borsa/_borsa.css';
 import styles from './_style.module.css';
 
 const seo = [
-  { tag: 'title', content: 'Sistema di design · Area staff' },
+  { tag: 'title', content: 'Sistema di design · Multimage' },
   { tag: 'meta', attributes: { name: 'robots', content: 'noindex' } },
 ];
 

@@ -167,7 +167,7 @@ components:
 
 # Design System: Multimage
 
-A live reference of this document, rendered with the site's components, is at `/staff/designsystem` (editor session required).
+A live reference of this document, rendered with the site's components, is at `/designsystem` (public, noindex).
 
 ## Overview
 
