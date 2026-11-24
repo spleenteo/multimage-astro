@@ -156,3 +156,39 @@ V2 shipped /borsa and POST /api/ordine as planned: order facts and pure function
 **V3 — done on 2026-11-24**
 
 V3 hardened and handed over the borsa without touching its behaviour beyond one line. The runner's walk ran axe-core (WCAG 2.2 A/AA) in headless Chromium on the drawer, /borsa empty and filled and the success state at 390 and 1280: 0 violations and no overflow in all eight. The Impeccable detector gave 206 hits, one real (the next-steps list at 0.9375rem, off DESIGN.md's ramp, moved to text-sm, a5608a5; ruling: text-sm over text-base); the rest were false positives: the detector's DOM engine reads Tailwind v4 spacing as 0 (cramped-padding), blends text-white into contrast (white measures ≥5.05:1), flags the template img and Book3D's paper edges, and a first dump even caught axe's own source as a <marquee>. Detector 4.8.2 can match only overused-font by value, so T3 ignored the others with file-scoped wildcards, which also don't apply to rendered-DOM scans; their reasons say colour and spacing changes in Header and Button need a manual axe check. Docs: security.md gained the order endpoint section and env rows, operations.md the keys and WAF rule, project-structure and PRODUCT updated; inventories, current-state and TODO (five follow-ups, a Features section) and DESIGN.md (Bag drawer, Order page, Book Page action) followed T5; the setup note leads from a keyless deploy to go-live and rollback. Reviews caught: the rollback check (deleting the Resend key leaves the form up; the email box shows only after a submit, the full rollback removes the site key and redeploys), Italian text where the plan said English, a TODO sort slip, the error-summary focus claim (focus goes to the first invalid field), and that the WAF rule doesn't cover workers.dev and preview URLs (no mail goes out: siteverify hostname check; CF-vercel-cleanup turns them off). Rulings: packet by reference; text-sm for the off-ramp size. Open for the user: whether .env or .env.local hold PUBLIC_TURNSTILE_SITE_KEY (they would defeat the keyless deploy and the rollback; not read, by rule); a5608a5 carries a Sonnet 5.5 trailer. Pending, for the user: WAVE on the deployed pages and the VoiceOver pass. Pending, for the user after deploy: WAVE on the live drawer, /borsa and success state; VoiceOver pass (TODO BORSA-voiceover).
+
+## V4 — Orders in D1, notification through Cloudflare, no Resend
+
+Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice changes what V2 built.
+
+**In**
+
+- D1: migration folder (`migrations/` is DatoCMS's: use `d1/migrations/` or `drizzle`-free plain SQL under a distinct path), `0001_orders.sql` creating `orders` (id, code unique, created_at, name, email, phone, address, city, province, shipping_kind, buyer_kind, notes, lines_json, copies, subtotal_cents, shipping_cents, total_cents, consent_at, notify_status, notify_error). The table is the contract with the future staff app: document it next to the migration.
+- `wrangler.jsonc`: `d1_databases` binding `ORDERS` (database id placeholder the user fills after `wrangler d1 create`, or created by the conductor only with the user's ok) and `send_email` binding `ORDER_MAIL` with `destination_address: ordini@multimage.org`. Bindings live on the Backend entrypoint path that runs the endpoint.
+- Bindings wrapper `src/lib/cloudflare-bindings.ts` over `cloudflare:workers`, with a Vite alias to a stub when `DEPLOY_TARGET` is not `cloudflare`; returns `null` bindings outside Cloudflare.
+- Endpoint: after validation, Turnstile and the CDA rebuild, insert into D1, then `ORDER_MAIL.send({ from, to, replyTo: visitor, subject: 'Ordine <code> …', text })`; update `notify_status`. Outcomes as in shaping B5.3′. Response carries `code`. Remove Resend, the visitor copy, `RESEND_API_KEY` (env schema) and `copySent`. Missing Turnstile secret outside dev still fails closed.
+- Sender constant `ORDER_FROM` on the Email Routing subdomain (placeholder `sito@ordini.multimage.org`, confirmed by the user).
+
+**Out**: the staff app; the PDF (V5); creating the D1 database or touching DNS/Email Routing without the user's ok.
+
+**Done**
+
+1. Local Cloudflare run (`DEPLOY_TARGET=cloudflare` dev or `wrangler dev --local` with a local D1): a valid order inserts one row with server prices and a code; the email send is attempted (local `send_email` is simulated/logged) and `notify_status` reflects it.
+2. With no `ORDERS` and no `ORDER_MAIL` (Vercel build, plain dev): the endpoint answers the error and the page offers the mailto.
+3. No Resend left: `grep -ri resend src astro.config.mjs` → nothing.
+4. Gate green (Vercel build included).
+
+## V5 — The PDF of the request, copy and docs
+
+**In**
+
+- Confirmation screen: the order code, "Non riceverai un'email: scarica il PDF della tua richiesta.", a "Scarica il PDF" button that lazy-loads jsPDF and saves `ordine-<code>.pdf` (Multimage header, date, code, contact, lines, copies, shipping, total, next steps with IBAN, PayPal, causale with the code); print stylesheet for desktop.
+- Copy: consent text "I tuoi dati restano allo staff solo per il tempo necessario alla spedizione." plus the iubenda link; page lede and drawer fine line no longer promise an email copy.
+- Docs: rewrite `setup-borsa.md` (SPF first, Email Routing on a subdomain through the API, verify ordini@, D1 create with `--jurisdiction eu` and migrations apply, Turnstile, WAF, deploy order, rollback); `security.md`, `operations.md`, `current-state.md`, `list-helpers.md`, `TODO.md` (remove Resend items; add the staff app and MAIL-auth), DESIGN.md order page lines.
+
+**Done**
+
+1. Success state downloads a readable PDF on desktop Chrome and mobile Safari (or the conductor records it as pending for the user on a phone).
+2. No text on the site promises an email to the visitor.
+3. Setup note complete; `docs:inventory`, lint and build green.
+

@@ -112,3 +112,29 @@ No Worker code; free tiers are small and the autoresponse copy is often a paid f
 - 🟡 Quantity per title: 1–20 (conductor's default).
 - 🟡 Design: Impeccable. A right-side panel for the bag; an order page with the form and the explanation.
 - 🟡 The user's own setup, outside the code: Resend account and sending subdomain, the Worker secret, the WAF rate limiting rule. Until the secret exists the endpoint answers a clear error and logs nothing personal.
+
+---
+
+## Revision 2026-11-24 (after V3): Cloudflare only, no Resend
+
+User's call: no new external service to manage; orders stored in a Cloudflare database; the visitor gets no email but a PDF of the request on the confirmation screen; order management (read, fulfil, delete or anonymise) lives in a separate staff app on another Worker, not in the editorial site. Privacy line: "I tuoi dati restano allo staff solo per il tempo necessario alla spedizione." Facts in `spike-cloudflare-only.md`.
+
+| Req | Requirement | Status |
+|----|-------------|--------|
+| R3 | 🟡 The order is sent from a form (name, email, shipping address, notes) to Multimage: stored in a Cloudflare database and notified to ordini@multimage.org; the visitor gets no email and can download a PDF of the request | Must-have |
+| R10 | 🟡 No external service besides Cloudflare (Workers Free) | Must-have |
+| R11 | 🟡 The order store is shared with a separate staff app (another Worker) through a stable table contract; the site only writes | Must-have |
+
+**Shape B′ = B with B5.3 and B4.3 replaced**
+
+| Part | Mechanism | Flag |
+|------|-----------|:----:|
+| B5.3′ | 🟡 Endpoint saves the order to D1 (`multimage-orders`, jurisdiction eu; table `orders` with a readable `code`, server-rebuilt lines, cents, `consent_at`, `notify_status`), then sends one notification through the Workers `send_email` binding to the verified ordini@ from an address on an Email Routing subdomain; D1 is the record, the email a notification; saved + email failed → 200 flagged; email only → 200; both fail or no binding → error and mailto | |
+| B5.5 | 🟡 Binding access through one wrapper module over `cloudflare:workers`, aliased to a stub outside the Cloudflare build so the Vercel build and plain `npm run dev` compile | |
+| B4.3′ | 🟡 Confirmation screen: order code, "Non riceverai un'email: scarica il PDF della tua richiesta", PDF generated in the browser with jsPDF loaded on tap; print stylesheet as desktop fallback | |
+| B5.6 | 🟡 Resend code, `RESEND_API_KEY` and the visitor copy removed | |
+
+User setup (not code): SPF on the apex first (`v=spf1 include:_spf.google.com ~all`), Email Routing enabled on a subdomain through the API (not `wrangler email routing enable`), ordini@ verified as a destination, D1 database created and migrated.
+
+Fit: B′ passes R0–R11 once the spike's first-send check (structured `send()` from a routing-only subdomain) holds; fallback `EmailMessage` with a hand-built MIME.
+

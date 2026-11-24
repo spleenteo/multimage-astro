@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: null
-step: null
+slice: V4
+step: plan
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -27,6 +27,8 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 - [x] V1 — The bag: add, see, change, empty
 - [x] V2 — The order page and the sending endpoint
 - [x] V3 — Hardening, docs and handover
+- [ ] V4 — Orders in D1, notification through Cloudflare, no Resend
+- [ ] V5 — The PDF of the request, copy and docs
 
 ## Pending proposals
 
@@ -34,6 +36,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — reshaping — user drops Resend: D1 store + send_email to verified ordini@ + PDF for the visitor; staff app separate; spike-cloudflare-only.md; slices V4, V5 added — 20 min — n/a
 - 2026-11-24 — V3 closed — 9 commits, gate green (lint, docs:inventory, build), axe 0 violations in 8 checks; WAVE and VoiceOver pending after deploy — 20 min run — n/a
 - 2026-11-24 — V3 plan + review — 5 tasks; review 1 high (WAF expression on Free plan), 2 medium, 4 low, all applied — 15 min — n/a
 - 2026-11-24 — V2 closed — 9 commits, gate green, Done 1–5, 8–10 verified (dev + production build with no keys), Done 6 VoiceOver pending — 24 min run — n/a
