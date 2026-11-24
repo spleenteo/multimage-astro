@@ -197,6 +197,10 @@ Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice ch
 - The causale line in the static success steps of `index.astro` is left to V5; V4 puts the code in the email causale and the success lede.
 - `send_email` also gets `allowed_sender_addresses` (tightening).
 
+**V4 — done on 2026-11-24**
+
+V4 moved the order record to Cloudflare: d1/migrations/0001_orders.sql creates `orders` (20 columns, CHECKs, AUTOINCREMENT id, nullable personal fields for anonymising) with its staff-app contract in d1/README.md; wrangler.jsonc gained top-level ORDERS (placeholder id) and ORDER_MAIL (send_email to ordini@, sender allowlisted to sito@ordini.multimage.org); one wrapper, src/lib/cloudflare-bindings.ts, reads the bindings, aliased to an empty stub outside the Cloudflare build; order.ts gained the MM-YYMMDD-XXXX code, ORDER_COLUMNS/orderRow and a shop-only email; the endpoint inserts, sends, then updates notify_status, and Resend, the visitor copy, RESEND_API_KEY and copySent are gone. The walk ran Cloudflare dev with local D1 (one row at server prices, notify_status sent, the simulated send_email logged), plain dev (200 with a dev code), and a production-mode Worker with the bindings stripped (503 not_configured) and kept (400 empty_bag), with the older-workerd compatibility date again. The final review found that a saved but unnotified order (200 notified:false) still told the visitor it had reached Olivier while nobody reads D1 yet; the success lede now says the notice did not go out and offers a mailto with the code (4f7a4e1). It also traced the workerd "Can't read from request stream" log on early returns to the gateway forwarding an unread body (not V4), and noted that a code clash would hand the visitor another order's code (no retry, accepted odds). Rulings: packet by reference; T4 dropped the unused send_failed from order.ts; T4's executor-run dev server stands. For V5: an ops check on rows with notify_status <> 'sent' until the staff app ships; whether to cancel unread bodies in Backend.fetch. Pending: Done 6, the real D1 id before the merge. Pending: Done 6 (real `database_id` before the merge, needs the user's ok for `d1 create`).
+
 ## V5 — The PDF of the request, copy and docs
 
 **In**
@@ -218,3 +222,9 @@ Revision of 2026-11-24 (shaping § Revision). V1–V3 stay closed; this slice ch
 - Setup note order: apex SPF → Email Routing on `ordini.multimage.org` (API) → verify ordini@ → D1 create and migrate → first deploy carrying the bindings; first check: one real order with `notify_status = sent`.
 - User items (outside the repo): `/info/ordinare` (CMS) and the iubenda privacy policy should name Cloudflare as processor and the retention ("solo per il tempo necessario alla spedizione").
 - jsPDF: pinned version; `/borsa`'s entry script contains no jsPDF (lazy chunk only); the build passes with its optional dynamic imports (html2canvas, dompurify, canvg) as installed.
+
+**Carried from V4 into V5**
+
+- A way for staff to spot orders whose notice did not go out (`notify_status <> 'sent'`) until the staff app exists: at least documented in the setup note and `d1/README.md` (a `wrangler d1 execute --remote` query).
+- Order code clash: on a UNIQUE conflict at insert, regenerate the code and retry once.
+- workerd logs "Can't read from request stream" on early answers (gateway, not this work): note in TODO if reproducible.

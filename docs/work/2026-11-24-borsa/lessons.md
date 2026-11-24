@@ -14,3 +14,8 @@
 - Impeccable detector 4.8.2 matches ignoreValues by value only for overused-font; other rules take `value: "*"` with `files` globs, and file-scoped ignores never apply to rendered-DOM scans: triage those by hand.
 - A rollback or fallback check in a user note states what the visitor sees at each step from the client code (which state shows before and after a submit), not from the endpoint's answer alone.
 - A plan rule on docs language ("new and rewritten text in English") is checked on every new line of the diff, not only on the lines a finding names.
+- A task that changes a shared type updates its consumers in the same commit, or the plan orders tasks so every commit type-checks.
+- When a response gains a degraded-success flag (e.g. notified:false), the same slice makes the client read it; never leave a success screen that claims more than the flag says.
+- A plan's absence grep anchors on the code form (`\.innerHTML`, not `innerHTML`) so a comment naming the rule doesn't trip it, and a grep's context window is counted against the real file.
+- Dev-server checks go to the runner/conductor, not the executor's Verified line (executor.md forbids executors starting servers).
+- In the gateway/Backend Worker, an endpoint that answers before reading the body logs "Can't read from request stream after response has been sent" in workerd; the client's answer is correct, so judge it as gateway noise, not an endpoint failure.
