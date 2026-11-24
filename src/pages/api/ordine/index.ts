@@ -19,7 +19,9 @@
  * Error bodies carry codes only. Nothing personal is ever logged: one line per
  * answer with the status, the code and counts. Bindings come only through
  * `~/lib/cloudflare-bindings`; with none (Vercel build, plain dev) dev prints the
- * email text to the console and answers 200.
+ * email text to the console and answers 200. A code clash at insert regenerates
+ * the code and retries once (`saveWithCodeRetry`), so the visitor never gets another
+ * order's code.
  *
  * It does not use `src/pages/api/utils.ts` (CORS `*` and error echo do not fit
  * a form endpoint). It sets `cache-control: private, no-store` itself, so the
@@ -44,6 +46,7 @@ import {
   orderTotals,
   parseOrderRequest,
   rebuildOrder,
+  saveWithCodeRetry,
   type OrderBook,
   type OrderErrorCode,
   type OrderFieldKey,
@@ -194,12 +197,29 @@ export const POST: APIRoute = async ({ request }) => {
   const shippingKind = order.shipping as ShippingKind;
   const totals = orderTotals(lines, shippingKind);
   const at = new Date();
-  const code = orderCode(at, crypto.getRandomValues(new Uint8Array(4)));
-  const { subject, text } = orderEmail({ order, lines, totals, code });
+  let code = orderCode(at, crypto.getRandomValues(new Uint8Array(4)));
 
   let saved = false;
   let notified = false;
   let notifyError: string | null = null;
+
+  if (db) {
+    const r = await saveWithCodeRetry(
+      (c) =>
+        db
+          .prepare(INSERT_SQL)
+          .bind(...orderRow({ order, lines, totals, code: c, at }))
+          .run(),
+      code,
+      () => orderCode(at, crypto.getRandomValues(new Uint8Array(4))),
+    );
+    saved = r.saved;
+    code = r.code;
+    // No error text: it can quote the row.
+    if (r.retried) console.warn(`${LOG} code_clash`);
+    if (!saved) console.error(`${LOG} save_error`);
+  }
+  const { subject, text } = orderEmail({ order, lines, totals, code });
 
   if (!db && !mail) {
     // No bindings (plain dev): print the text instead of sending it.
@@ -209,18 +229,6 @@ export const POST: APIRoute = async ({ request }) => {
       return fail(503, 'not_configured');
     }
   } else {
-    if (db) {
-      try {
-        await db
-          .prepare(INSERT_SQL)
-          .bind(...orderRow({ order, lines, totals, code, at }))
-          .run();
-        saved = true;
-      } catch {
-        // No error text: it can quote the row.
-        console.error(`${LOG} save_error`);
-      }
-    }
     if (mail) {
       try {
         await mail.send({

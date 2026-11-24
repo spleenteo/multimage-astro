@@ -471,6 +471,45 @@ export function orderRow(data: {
   ];
 }
 
+const CODE_CLASH = /UNIQUE constraint failed: orders\.code/;
+
+/** True when a D1 error is the UNIQUE clash on `orders.code` (in the message or in its cause). */
+export function isCodeClash(err: unknown): boolean {
+  if (typeof err !== 'object' || err === null) return false;
+  const { message, cause } = err as { message?: unknown; cause?: unknown };
+  const causeMessage =
+    typeof cause === 'object' && cause !== null ? (cause as { message?: unknown }).message : null;
+  return (
+    (typeof message === 'string' && CODE_CLASH.test(message)) ||
+    (typeof causeMessage === 'string' && CODE_CLASH.test(causeMessage))
+  );
+}
+
+/**
+ * Inserts with `first`; on a code clash inserts once more with `next()`. Any other
+ * error, or a second failure, gives `saved: false`. `code` is the one that was
+ * last tried. Never logs or rethrows: the caller reports.
+ */
+export async function saveWithCodeRetry(
+  insert: (code: string) => Promise<unknown>,
+  first: string,
+  next: () => string,
+): Promise<{ saved: boolean; code: string; retried: boolean }> {
+  try {
+    await insert(first);
+    return { saved: true, code: first, retried: false };
+  } catch (err) {
+    if (!isCodeClash(err)) return { saved: false, code: first, retried: false };
+  }
+  const code = next();
+  try {
+    await insert(code);
+    return { saved: true, code, retried: true };
+  } catch {
+    return { saved: false, code, retried: true };
+  }
+}
+
 // --- Email -----------------------------------------------------------------
 
 /** The plain-text order email for the shop. */
