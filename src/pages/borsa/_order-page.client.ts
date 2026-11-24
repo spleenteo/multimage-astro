@@ -32,16 +32,8 @@ import {
   type ShippingKind,
 } from '~/lib/order';
 
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (container: string | HTMLElement, options: Record<string, unknown>) => string;
-      reset: (widgetId?: string) => void;
-    };
-  }
-}
+import { checkFieldsLabel, createFieldErrors, loadTurnstile } from '~/lib/form.client';
 
-const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 const ENDPOINT = '/api/ordine';
 
 // Field keys in DOM order, then the widget: the first error in this order gets focus.
@@ -89,8 +81,6 @@ const FIELD_NAMES: Record<ErrorKey, string> = {
   turnstile: 'Verifica anti-spam',
 };
 
-const checkFieldsLabel = (n: number) => (n === 1 ? 'Controlla 1 campo:' : `Controlla ${n} campi:`);
-
 const isErrorKey = (k: string): k is ErrorKey => (ERROR_KEYS as readonly string[]).includes(k);
 
 export function initOrderPage(): void {
@@ -128,7 +118,7 @@ export function initOrderPage(): void {
   let sending = false;
   let lineLimitShown = false;
   let token = '';
-  let widgetId: string | undefined;
+  let turnstile: { reset: () => void } | undefined;
   let turnstileRequested = false;
 
   const say = (text: string) => {
@@ -142,106 +132,26 @@ export function initOrderPage(): void {
 
   // --- Form errors --------------------------------------------------------
 
-  const errorEl = (key: ErrorKey) => $(`[data-error-for="${key}"]`);
-
-  const controlFor = (key: ErrorKey): HTMLElement | null => {
-    if (key === 'shipping' || key === 'buyer')
-      return form?.querySelector<HTMLElement>(`input[name="${key}"]`)?.closest('fieldset') ?? null;
-    return $(`#order-${key}`);
-  };
-
-  const focusTarget = (key: ErrorKey): HTMLElement | null => {
-    if (key === 'shipping' || key === 'buyer') {
-      return (
-        form?.querySelector<HTMLInputElement>(`input[name="${key}"]:checked`) ??
-        form?.querySelector<HTMLInputElement>(`input[name="${key}"]`) ??
-        null
-      );
-    }
-    return controlFor(key);
-  };
-
-  const setError = (key: ErrorKey, message: string) => {
-    const el = errorEl(key);
-    const control = controlFor(key);
-    if (el) {
-      el.textContent = message;
-      el.hidden = false;
-    }
-    if (control) {
-      // The widget container is a plain div: aria-invalid has no meaning there.
-      if (key !== 'turnstile') control.setAttribute('aria-invalid', 'true');
-      // Keep the hint ids the markup already gave the control, then append the error id.
-      if (control.dataset.orderHints === undefined)
-        control.dataset.orderHints = control.getAttribute('aria-describedby') ?? '';
-      if (el?.id)
-        control.setAttribute(
-          'aria-describedby',
-          [control.dataset.orderHints, el.id].filter(Boolean).join(' '),
-        );
-    }
-  };
-
-  const clearError = (key: ErrorKey) => {
-    const el = errorEl(key);
-    const control = controlFor(key);
-    if (el) {
-      el.textContent = '';
-      el.hidden = true;
-    }
-    if (control) {
-      control.removeAttribute('aria-invalid');
-      const hints = control.dataset.orderHints;
-      if (hints) control.setAttribute('aria-describedby', hints);
-      else if (hints === '') control.removeAttribute('aria-describedby');
-    }
-  };
-
-  const clearAllErrors = () => ERROR_KEYS.forEach(clearError);
-
-  const showFormError = (text: string, withMailto: boolean) => {
-    if (!formError || !formErrorText) return;
-    formErrorText.textContent = text;
-    const mailto = formError.querySelector<HTMLElement>('[data-order-mailto]');
-    if (mailto) mailto.hidden = !withMailto;
-    if (formErrorList) {
-      formErrorList.replaceChildren();
-      formErrorList.hidden = true;
-    }
-    formError.hidden = false;
-  };
-
-  const hideFormError = () => {
-    if (!formError || !formErrorText) return;
-    formErrorText.textContent = '';
-    formErrorList?.replaceChildren();
-    formError.hidden = true;
-  };
-
-  // The summary of invalid fields (client check or server answer): "Controlla N campi:" and one
-  // link per field, in DOM order, each moving focus to its control. Focus goes to the summary.
-  const showFieldSummary = (keys: ErrorKey[]) => {
-    const ordered = ERROR_KEYS.filter((k) => keys.includes(k));
-    showFormError(checkFieldsLabel(ordered.length), false);
-    if (formErrorList) {
-      formErrorList.replaceChildren(
-        ...ordered.map((key) => {
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.textContent = FIELD_NAMES[key];
-          a.setAttribute('href', `#order-${key}-error`);
-          a.addEventListener('click', (event) => {
-            event.preventDefault();
-            focusTarget(key)?.focus();
-          });
-          li.append(a);
-          return li;
-        }),
-      );
-      formErrorList.hidden = ordered.length === 0;
-    }
-    formError?.focus();
-  };
+  const {
+    errorEl,
+    setError,
+    clearError,
+    clearAll: clearAllErrors,
+    showFormError,
+    hideFormError,
+    showFieldSummary,
+  } = createFieldErrors<ErrorKey>({
+    root,
+    idPrefix: 'order',
+    keys: ERROR_KEYS,
+    names: FIELD_NAMES,
+    groupKeys: ['shipping', 'buyer'],
+    plainKeys: ['turnstile'],
+    box: formError,
+    boxText: formErrorText,
+    boxList: formErrorList,
+    mailto: formError?.querySelector<HTMLElement>('[data-order-mailto]'),
+  });
 
   // --- Fields -------------------------------------------------------------
 
@@ -333,58 +243,38 @@ export function initOrderPage(): void {
       lineLimitShown = false;
     }
 
-    loadTurnstile();
+    loadWidget();
   };
 
   // --- Turnstile ----------------------------------------------------------
 
-  const renderWidget = () => {
+  const loadWidget = () => {
     const sitekey = form?.dataset.sitekey;
     const container = $('#order-turnstile');
-    if (!sitekey || !container || widgetId !== undefined || !window.turnstile) return;
-    try {
-      widgetId = window.turnstile.render(container, {
-        sitekey,
-        action: ORDER_ACTION,
-        language: 'it',
-        size: 'flexible',
-        callback: (t: string) => {
-          token = t;
-          clearError('turnstile');
-        },
-        'expired-callback': () => {
-          token = '';
-        },
-        // The widget itself failed (bad site key or hostname): offer the email way out.
-        'error-callback': () => {
-          token = '';
-          showFormError(MSG.turnstileLoad, true);
-        },
-      });
-    } catch {
-      showFormError(MSG.turnstileLoad, true);
-    }
-  };
-
-  function loadTurnstile() {
-    if (!form?.dataset.sitekey || turnstileRequested) return;
+    if (!sitekey || !container || turnstileRequested) return;
     turnstileRequested = true;
-    if (window.turnstile) {
-      renderWidget();
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = TURNSTILE_SRC;
-    script.async = true;
-    script.defer = true;
-    script.addEventListener('load', renderWidget);
-    script.addEventListener('error', () => showFormError(MSG.turnstileLoad, true));
-    document.head.append(script);
-  }
+    turnstile = loadTurnstile({
+      container,
+      sitekey,
+      action: ORDER_ACTION,
+      onToken: (t) => {
+        token = t;
+        clearError('turnstile');
+      },
+      onExpire: () => {
+        token = '';
+      },
+      // The script or the widget failed (bad site key or hostname): offer the email way out.
+      onError: () => {
+        token = '';
+        showFormError(MSG.turnstileLoad, true);
+      },
+    });
+  };
 
   const resetWidget = () => {
     token = '';
-    if (widgetId !== undefined) window.turnstile?.reset(widgetId);
+    turnstile?.reset();
   };
 
   // --- Success ------------------------------------------------------------
