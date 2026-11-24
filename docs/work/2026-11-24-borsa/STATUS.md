@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V6
-step: plan
+step: execute
 work: borsa
 stacks: [astro, datocms]
 base: main
@@ -37,6 +37,7 @@ description: "A 'bag' (not an e-commerce cart) where visitors put books: titles,
 
 ## Log
 
+- 2026-11-24 — V6 plan + review — 4 tasks; review 1 medium (wrapped grep), 1 low (retention sentence); applied — 8 min — n/a
 - 2026-11-24 — Cloudflare setup (user's ok) — apex SPF Google added; Email Routing enabled on ordini.multimage.org only (apex MX untouched, DNS diffed: +3 MX +SPF on subdomain, +DKIM cf2024-1 at apex); destination ordini@ created, unverified (click pending); D1 multimage-orders created (EU, id 70d0fa72…) and 0001 migrated remotely; real id committed — 10 min — n/a
 - 2026-11-24 — V5 closed — 12 commits, gate green (lint, docs:inventory, build, build:cf); "lo staff" in order texts; PDF on mobile Safari pending — 23 min run — n/a
 - 2026-11-24 — V5 plan + review — 6 tasks; review 1 high (T1 step 7 reshape), 3 medium (contrast, WAF order, manual anonymising until the staff app), 6 low; all applied — 20 min — n/a
