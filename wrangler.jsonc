@@ -32,7 +32,7 @@
     {
       "binding": "ORDERS",
       "database_name": "multimage-orders",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "70d0fa72-96c4-4ec5-b618-ebb5c4da3295",
       "migrations_dir": "d1/migrations",
     },
   ],
