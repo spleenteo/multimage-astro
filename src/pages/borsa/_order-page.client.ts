@@ -305,11 +305,7 @@ export function initOrderPage(): void {
 
   // --- Success ------------------------------------------------------------
 
-  const showDone = (
-    res: Extract<OrderResponse, { ok: true }>,
-    snapshot: BagItem[],
-    email: string,
-  ) => {
+  const showDone = (res: Extract<OrderResponse, { ok: true }>, snapshot: BagItem[]) => {
     finished = true;
     emptyBag();
     if (head) head.hidden = true;
@@ -320,22 +316,13 @@ export function initOrderPage(): void {
 
     const lede = done.querySelector('[data-order-done-lede]');
     if (lede) {
-      if (res.copySent) {
-        const strong = document.createElement('b');
-        strong.textContent = email;
-        lede.replaceChildren(
-          "L'abbiamo girato a Olivier. Una copia è in viaggio verso ",
-          strong,
-          ': se non la vedi, guarda nello spam.',
-        );
-      } else {
-        lede.textContent =
-          "L'ordine è arrivato a Olivier, ma non siamo riusciti a mandarti la copia: tienila tu stampando questa pagina.";
-      }
+      const strong = document.createElement('b');
+      strong.textContent = res.code;
+      lede.replaceChildren("L'abbiamo girato a Olivier. Il codice del tuo ordine è ", strong, '.');
     }
 
     const printBtn = done.querySelector<HTMLElement>('[data-order-print]');
-    if (printBtn) printBtn.hidden = res.copySent;
+    if (printBtn) printBtn.hidden = false;
 
     const doneLines = done.querySelector('[data-order-done-lines]');
     if (doneLines) {
@@ -415,6 +402,9 @@ export function initOrderPage(): void {
           mailtoBox.querySelector<HTMLElement>('[data-order-mailto-heading]')?.focus();
         }
         break;
+      case 'save_failed':
+        showFormError(MSG.generic, true);
+        break;
       default:
         showFormError(MSG.generic, true);
     }
@@ -481,7 +471,7 @@ export function initOrderPage(): void {
     if (submit) submit.disabled = false;
     if (status) status.textContent = '';
 
-    if (result?.ok) showDone(result, snapshot, fields.email);
+    if (result?.ok) showDone(result, snapshot);
     else showFailure(result);
   };
 
