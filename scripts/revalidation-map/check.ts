@@ -19,8 +19,6 @@ const { executeQuery } = stub as { executeQuery: RevalidationQuery };
 const SITEMAP = '/sitemap.xml';
 const bookStatic = [
   '/libri/libro-pubblicato',
-  '/libri/ebooks',
-  '/libri/highlights',
   '/libri/archivio',
   '/',
   SITEMAP,
@@ -33,8 +31,6 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
     urls: [
       ...bookStatic,
       '/libri',
-      '/libri/pagina/2',
-      '/libri/pagina/3',
       '/autori/autore-uno',
       '/autori/autore-due',
       '/collane/collana-uno',
@@ -44,14 +40,10 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
   'book-unpublish': {
     urls: [
       '/libri/libro-non-pubblicato',
-      '/libri/ebooks',
-      '/libri/highlights',
       '/libri/archivio',
       '/',
       SITEMAP,
       '/libri',
-      '/libri/pagina/2',
-      '/libri/pagina/3',
     ],
     note: 'GAP',
   },
@@ -64,7 +56,7 @@ const EXPECTED: Record<string, { urls: string[] | null; note?: 'GAP' }> = {
   // phantom model: not in the schema, no longer mapped
   'books_index-publish': { urls: [] },
   'index_page-publish': { urls: ['/autori'] },
-  'index_page-libri-publish': { urls: ['/libri', '/libri/pagina/2', '/libri/pagina/3'] },
+  'index_page-libri-publish': { urls: ['/libri'] },
   'index_page-unknown-publish': { urls: [] },
   'supplier-publish': { urls: ['/distributori'] },
   'license-publish': { urls: ['/libri/libro-cc', '/libri/libro-cc-due'] },
@@ -121,8 +113,8 @@ for (const key of Object.keys(EXPECTED)) {
 // recordToWebsiteRoute: the Web Previews / SEO side of the same map.
 const ROUTES: Array<[string, string, string | null]> = [
   ['index_page', 'libri', '/libri'],
-  ['index_page', 'ebooks', '/libri/ebooks'],
-  ['index_page', 'highlights', '/libri/highlights'],
+  ['index_page', 'ebooks', null],
+  ['index_page', 'highlights', null],
   ['index_page', 'archivio', '/libri/archivio'],
   ['index_page', 'collane', '/collane'],
   ['index_page', 'autori', '/autori'],
