@@ -696,19 +696,7 @@ export function orderEmail(data: {
   return { subject, text: out.join('\n') };
 }
 
-// --- Turnstile and mailto --------------------------------------------------
-
-/** A siteverify answer passes when `success` is true and, unless lenient, hostname and action match. */
-export function checkSiteverify(
-  result: unknown,
-  expected: { hostname: string; action: string; lenient: boolean },
-): boolean {
-  if (typeof result !== 'object' || result === null) return false;
-  const r = result as Record<string, unknown>;
-  if (r.success !== true) return false;
-  if (expected.lenient) return true;
-  return r.hostname === expected.hostname && r.action === expected.action;
-}
+// --- Mailto --------------------------------------------------
 
 /** The email fallback: a mailto with every bag line, for when the form is off or sending failed. */
 export function bagMailto(
