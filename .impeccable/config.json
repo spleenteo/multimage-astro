@@ -19,7 +19,7 @@
           "src/components/Header.astro"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "The detector's DOM engine reads Tailwind v4 spacing (calc(var(--spacing)*n)) as 0px; the flagged boxes do have padding (e.g. BagDrawer .head px-6 py-5). Scoped to the bag surfaces."
+        "reason": "The detector's DOM engine reads Tailwind v4 spacing (calc(var(--spacing)*n)) as 0px; the flagged boxes do have padding (e.g. BagDrawer .head px-6 py-5). Scoped to the bag surfaces. Wildcard because the rule can't match by value in 4.8.2: a colour or spacing change in these files must be checked with axe (or a measured ratio) by hand; revisit when value matching exists. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "broken-image",
@@ -28,7 +28,7 @@
           "src/components/BagDrawer/**"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "The <img src=\"\"> sits inside <template data-bag-line>; drawer.client.ts sets src from the book cover at runtime."
+        "reason": "The <img src=\"\"> sits inside <template data-bag-line>; drawer.client.ts sets src from the book cover at runtime. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "low-contrast",
@@ -38,7 +38,7 @@
           "src/components/ui/Button/**"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "The detector blends text-white; pure white on #c13584, #2e7d32 and #b84f00 measures 5.11, 5.13 and 5.05:1 and axe in Chromium reports no contrast violation (header channel buttons, orange primary Button)."
+        "reason": "The detector blends text-white; pure white on #c13584, #2e7d32 and #b84f00 measures 5.11, 5.13 and 5.05:1 and axe in Chromium reports no contrast violation (header channel buttons, orange primary Button). Wildcard because the rule can't match by value in 4.8.2: a colour or spacing change in these files must be checked with axe (or a measured ratio) by hand; revisit when value matching exists. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "dark-glow",
@@ -47,7 +47,7 @@
           "src/components/BagDrawer/**"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "BagDrawer sheet lift -18px 0 45px rgba(0,72,129,.16) (#004881): a directional sheet lift (DESIGN.md Bag drawer), not a zero-offset glow, on a light page."
+        "reason": "BagDrawer sheet lift -18px 0 45px rgba(0,72,129,.16) (#004881): a directional sheet lift (DESIGN.md Bag drawer), not a zero-offset glow, on a light page. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "dark-glow",
@@ -56,7 +56,7 @@
           "src/components/Book3D/**"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "Book3D paper edges (#5a461e inset shadow, src/components/Book3D/index.astro:222-239) are intentional."
+        "reason": "Book3D paper edges (#5a461e inset shadow, src/components/Book3D/index.astro:222-239) are intentional. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "repeating-stripes-gradient",
@@ -65,13 +65,13 @@
           "src/components/Book3D/**"
         ],
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "Book3D page-edge stripes (src/components/Book3D/index.astro:222-239) imitate paper, intentional."
+        "reason": "Book3D page-edge stripes (src/components/Book3D/index.astro:222-239) imitate paper, intentional. File-scoped wildcards do not apply to rendered-DOM scans: those need --no-config and a manual triage."
       },
       {
         "rule": "overused-font",
         "value": "arial",
         "createdAt": "2026-11-24T12:00:00.000Z",
-        "reason": "Arial is third-party or fallback text on the book page, not a design font."
+        "reason": "Arial appears on the book page as third-party or fallback text, not a design font (source not identified: no Arial in src)."
       }
     ]
   }

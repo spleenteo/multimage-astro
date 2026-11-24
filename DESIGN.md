@@ -326,7 +326,7 @@ The primary action is "Metti in borsa" (`BagAdd`: shopping-bag icon on the one o
 
 ### Bag drawer
 
-The bag opens from the right as a native modal `<dialog>` mounted once in `BaseLayout`, opened by every `[data-bag-open]` control (header button, "Metti in borsa" on the book page and the home hero).
+The bag opens from the right as a native modal `<dialog>` mounted once in `BaseLayout`, opened by the header bag button, and by `BagAdd` on the book page and the home hero after an add.
 
 - **Sheet:** white, `min(28rem, 100vw)` wide, full height, square. The sheet lift of the Elevation section turned sideways: `-18px 0 45px` navy at 16%. The backdrop is deep navy at 45%. It slides in over 320ms on the same exponential ease-out as the catalogue sheet; under reduced motion there is no transition. The page behind does not scroll while it is open. Under 36rem of height the whole panel scrolls so nothing is clipped.
 - **Head:** a navy-at-15% rule below, 24px side padding. The serif h2 "La tua borsa" (1.5rem, navy) over a Playfair size line ("2 libri · 3 copie", slate, 0.875rem), and a 44px square close button on the right (mist on hover).
