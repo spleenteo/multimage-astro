@@ -1,8 +1,8 @@
 ---
 status: open
-phase: impact
-slice: null
-step: null
+phase: slice
+slice: V1
+step: plan
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
@@ -23,7 +23,10 @@ Owner answers at opening (2026-11-24):
 - Destination mailbox: info@multimage.org.
 - D1 copy of each request: yes.
 - New fields on the `membership` singleton, edited on the primary environment: yes. Fee tiers and collaboration areas live in DatoCMS.
-- Menu link: added by the editors (no answer; assumed).
+- Menu link: corrected at impact: the links are in code; /info/adesioni gets a 301 to /diventa-socio (owner).
+- Retention of personal data: no rule (owner).
+- info@multimage.org added as Email Routing destination 2026-11-24, unverified until the owner clicks.
+- Texts of `content`, `payment_note`, `success_text`: drafted by Claude, approved by the owner.
 
 ## Slices
 
@@ -41,3 +44,4 @@ Owner answers at opening (2026-11-24):
 
 - 2026-11-24 — opening — work opened, technical path: frame, shaping, breadboard and design skipped (outcome clear, form styled like /borsa) — slicing, impact, slices — 10 min — n/a
 - 2026-11-24 — slicing — 3 slices (page+CMS, send path, live); fidelity check skipped (no frame) — impact — 10 min — n/a
+- 2026-11-24 — impact — 2 agents, 24 findings (1 high: live model has subtitle+content, not description; rate limit; links in code; info@ unverified; seed must be published; shared modules) — all applied to slices.md — V1 plan — 15 min — n/a
