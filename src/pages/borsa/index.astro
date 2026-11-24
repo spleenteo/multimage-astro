@@ -282,7 +282,11 @@ const initialBuyer = defaultBuyer(buyers);
                     type="tel"
                     autocomplete="tel"
                     maxlength="30"
+                    aria-describedby="order-phone-hint"
                   />
+                  <p class="order-hint-line" id="order-phone-hint">
+                    Lo usa il corriere se ha problemi con la consegna: ti consigliamo di lasciarlo.
+                  </p>
                   <p class="order-error" id="order-phone-error" data-error-for="phone" hidden></p>
                 </div>
               </div>
