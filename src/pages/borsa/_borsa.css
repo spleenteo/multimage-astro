@@ -401,33 +401,35 @@
   @apply flex flex-wrap items-center gap-x-4 gap-y-2 pt-4;
 }
 
+/* Print only the success screen: visibility plus absolute positioning keeps the rest of the page
+   from taking space or adding blank pages; scoped so printing the bag or the form is not blank. */
 @media print {
   @page {
     margin: 15mm;
   }
 
-  body > header,
-  body > footer {
+  body:has(.order-done:not([hidden])) > header,
+  body:has(.order-done:not([hidden])) > footer {
     display: none;
   }
 
-  body * {
+  body:has(.order-done:not([hidden])) * {
     visibility: hidden;
   }
 
-  .order-done,
-  .order-done * {
+  body:has(.order-done:not([hidden])) .order-done,
+  body:has(.order-done:not([hidden])) .order-done * {
     visibility: visible;
   }
 
-  .order-done {
+  body:has(.order-done:not([hidden])) .order-done {
     position: absolute;
     inset: 0 auto auto 0;
     max-width: none;
   }
 
-  .order-done__pdf,
-  .order-done__actions {
+  body:has(.order-done:not([hidden])) .order-done__pdf,
+  body:has(.order-done:not([hidden])) .order-done__actions {
     display: none;
   }
 }
