@@ -1,6 +1,7 @@
 // /borsa page script: renders the bag recap, validates the form, runs Turnstile and sends the order.
 // The DOM is built from templates, textContent and setAttribute only (never innerHTML).
 // The markup contract (data-order-* attributes, ids `order-<key>`) is defined in index.astro.
+import { createFieldErrors, loadTurnstile } from '~/lib/form.client';
 import { emptyBag, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import {
   ORDER_ACTION,
@@ -31,8 +32,6 @@ import {
   type OrderResponse,
   type ShippingKind,
 } from '~/lib/order';
-
-import { checkFieldsLabel, createFieldErrors, loadTurnstile } from '~/lib/form.client';
 
 const ENDPOINT = '/api/ordine';
 
