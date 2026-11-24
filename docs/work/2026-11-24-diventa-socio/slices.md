@@ -10,7 +10,7 @@ Technical work, no frame or shaping doc: the owner's answers at opening are in `
 
 - **Singleton** `membership` on the primary environment `home-featured-book` (backup env `bkup-2026-11-24`): live fields `slug` (`diventa-socio`), `seo`, `title`, `subtitle` (HTML text), `content` (structured text). The record `D-sTlquHR7GiqaEOpMA80w` is published. The committed `schema.ts` is stale (shows `title` + `description`): regenerate before writing queries.
 - **Form fields** (owner's list): email, first name, last name, date of birth, place of birth, address line 1, address line 2, city, state/province/region, postal code, country (default Italia), fee type (one of the CMS tiers, e.g. "10€ — Studente under 25"), payment method (bonifico | PayPal), collaboration areas (checkboxes from the CMS, "altro" with free text). Plus a required privacy consent with membership-specific wording, since the form collects date of birth and address.
-- **Mailbox**: info@multimage.org, through a new `send_email` binding. Added as an Email Routing destination on 2026-11-24, **unverified** until the owner clicks the link sent to info@.
+- **Mailbox**: info@multimage.org, through a new `send_email` binding. Added as an Email Routing destination on 2026-11-24, verified on 2026-11-24 at 22:47 UTC.
 - **Record**: every request also saved in D1 (`multimage-orders`). No retention rule (owner, 2026-11-24).
 - **Old page**: `/info/adesioni` (CMS `page` record, in header and footer menus) gets a 301 to `/diventa-socio` (owner, 2026-11-24).
 - **Rate limit**: the zone's one Free-plan rule covers only `/api/ordine`.
@@ -73,11 +73,17 @@ Pending at close (conductor, browser): /diventa-socio form behaviour in a browse
 - A fee tier only in a draft is rejected by the published re-read: expected, editor-only.
 - Worker CPU on the Free plan (10 ms): one CDA read, one insert, one send, like `/api/ordine`.
 
+### Deviations found while planning V2
+
+- T3 moves the `.order-bank*` rules from `_borsa.css` to `form.css` so the confirmation reuses the /borsa bank box instead of copying ~70 lines.
+- T2 accepts Turnstile test secrets on `localhost`/`127.0.0.1` outside dev (affects `/api/ordine` too): the always-pass test secret answers hostname `example.com`, so the local `wrangler dev` submit would fail otherwise. Production hosts keep the strict check.
+- Parse, row, email and code live in a new `src/lib/membership-request.ts`; `membership.ts` stays import-free for the browser.
+
 ## V3 — Live on multimage.org
 
 **In**
 
-- Blocking: `info@multimage.org` verified in Email Routing (owner clicks the link).
+- `info@multimage.org` is verified in Email Routing (2026-11-24): nothing to wait for.
 - With the owner's yes, before the deploy: widen the zone's rate limiting rule to `(http.request.uri.path in {"/api/ordine" "/api/socio"})` (or the `or` form if the Free editor refuses `in`); check with bare `{}` POSTs to `/api/socio` until one gets 429.
 - Links: the Header "Diventa socio" button (`src/components/Header.astro`) and the three "Soci: 30% di sconto" links (`src/pages/distributori/index.astro`, `src/pages/autori/[slug]/index.astro`, `src/pages/libri/[slug]/index.astro`) point to `/diventa-socio`; a 301 from `/info/adesioni` to `/diventa-socio`.
 - With the owner's yes: D1 migration 0004 on the remote database, then deploy with `npx dotenv -e .env.cloudflare -- npm run deploy:cf`.
