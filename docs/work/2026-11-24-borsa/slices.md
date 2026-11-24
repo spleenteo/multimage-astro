@@ -144,3 +144,11 @@ V2 shipped /borsa and POST /api/ordine as planned: order facts and pure function
 - `PUBLIC_TURNSTILE_SITE_KEY` is inlined at build: the setup note says to add it to `.env.cloudflare` before `deploy:cf`; `wrangler secret put` only for `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY`. Update the env matrix in `docs/guidelines/security.md` and the Worker secrets list in `docs/guidelines/operations.md`.
 - `docs/current-state.md:38` ("non c'è carrello") and `docs/list-helpers.md:83` (`buildOrderMailto`) become false: update them.
 - TODO follow-up: keep the IBAN and PayPal details of `/info/ordinare` (CMS) in step with `src/lib/order.ts`.
+
+**Deviations found while planning V3**
+
+- `docs:inventory` already fails on an old line of `docs/list-components.md` (165, `fill.client.ts`); T2 rewords it so the gate passes.
+- WAVE runs only as a browser extension: the local check is axe-core (WCAG 2.2 A/AA); WAVE on the deployed pages goes in the setup note's checklist.
+- Detector false positives are recorded and ignored in `.impeccable/config.json`, not fixed.
+- TODO.md also gets BORSA-voiceover and a Completed line.
+- WAF rule suggested at 2 requests per 10 s per IP (planner's choice, the user can change it).
