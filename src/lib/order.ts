@@ -128,8 +128,10 @@ export function bagBookFor(book: {
 
 // --- Order facts -----------------------------------------------------------
 
-// Not decided: the user confirms the sender at Resend setup.
-export const ORDER_FROM = 'Multimage <ordini@send.multimage.org>';
+// Sender on the Email Routing subdomain, confirmed in the shaping revision.
+export const ORDER_FROM_ADDRESS = 'sito@ordini.multimage.org';
+export const ORDER_FROM_NAME = 'Multimage';
+export const ORDER_FROM = `${ORDER_FROM_NAME} <${ORDER_FROM_ADDRESS}>`;
 export const ORDER_ACCOUNT_HOLDER = 'Associazione Multimage';
 export const ORDER_BANK = 'Banca Etica';
 export const ORDER_IBAN = 'IT50T0501802800000011361524';
@@ -235,12 +237,14 @@ export type OrderErrorCode =
   | 'turnstile_unavailable'
   | 'catalogue_unavailable'
   | 'send_failed'
+  | 'save_failed'
   | 'not_configured';
 
 export type OrderResponse =
   | {
       ok: true;
-      copySent: boolean;
+      code: string;
+      notified: boolean;
       lines: Array<Pick<OrderLine, 'id' | 'title' | 'qty' | 'priceCents' | 'amountCents'>>;
       copies: number;
       shipping: number;
@@ -399,27 +403,93 @@ export function orderTotals(lines: OrderLine[], shipping: ShippingKind): OrderTo
   return { copies, subtotal, shipping: fee, total: subtotal + fee };
 }
 
+// --- Order code and D1 row -------------------------------------------------
+
+/** 32 letters and digits without 0, 1, I and O, so a code read aloud or by hand stays unambiguous. */
+export const ORDER_CODE_ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+export const ORDER_CODE_PATTERN = /^MM-\d{6}-[2-9A-HJ-NP-Z]{4}$/;
+
+/** `MM-YYMMDD-XXXX`: the UTC date and four characters, one random byte each (`byte % 32`, no bias). */
+export function orderCode(at: Date, random: Uint8Array): string {
+  const iso = at.toISOString();
+  const date = iso.slice(2, 4) + iso.slice(5, 7) + iso.slice(8, 10);
+  let suffix = '';
+  for (let i = 0; i < 4; i++) suffix += ORDER_CODE_ALPHABET[random[i] % 32];
+  return `MM-${date}-${suffix}`;
+}
+
+/** The `orders` columns the site writes, in table order (`id` and `notify_error` are left out). */
+export const ORDER_COLUMNS = [
+  'code',
+  'created_at',
+  'name',
+  'email',
+  'phone',
+  'address',
+  'city',
+  'province',
+  'shipping_kind',
+  'buyer_kind',
+  'notes',
+  'lines_json',
+  'copies',
+  'subtotal_cents',
+  'shipping_cents',
+  'total_cents',
+  'consent_at',
+  'notify_status',
+] as const;
+
+/** The values of one `orders` row, in `ORDER_COLUMNS` order; an empty phone or notes is NULL. */
+export function orderRow(data: {
+  order: OrderRequest;
+  lines: OrderLine[];
+  totals: OrderTotals;
+  code: string;
+  at: Date;
+}): Array<string | number | null> {
+  const { order, lines, totals, code, at } = data;
+  const time = at.toISOString();
+  return [
+    code,
+    time,
+    order.name,
+    order.email,
+    order.phone || null,
+    order.address,
+    order.city,
+    order.province,
+    order.shipping,
+    order.buyer,
+    order.notes || null,
+    JSON.stringify(lines),
+    totals.copies,
+    totals.subtotal,
+    totals.shipping,
+    totals.total,
+    time,
+    'pending',
+  ];
+}
+
 // --- Email -----------------------------------------------------------------
 
-/** The plain-text order email. The visitor copy leaves the notes out (anti-abuse). */
-export function orderEmail(
-  data: { order: OrderRequest; lines: OrderLine[]; totals: OrderTotals },
-  to: 'shop' | 'visitor',
-): { subject: string; text: string } {
-  const { order, lines, totals } = data;
+/** The plain-text order email for the shop. */
+export function orderEmail(data: {
+  order: OrderRequest;
+  lines: OrderLine[];
+  totals: OrderTotals;
+  code: string;
+}): { subject: string; text: string } {
+  const { order, lines, totals, code } = data;
   const copies = copiesLabel(totals.copies);
   const shipping = SHIPPING_KINDS[order.shipping as ShippingKind];
   const buyer = BUYER_KINDS[order.buyer as BuyerKind];
 
-  const subject =
-    to === 'shop'
-      ? `Ordine dal sito · ${order.name} · ${copies}`
-      : `Il tuo ordine a Multimage · ${copies}`;
+  const subject = `Ordine ${code} · ${order.name} · ${copies}`;
 
   const out: string[] = [
-    to === 'shop'
-      ? 'Nuovo ordine dal sito.'
-      : 'Grazie, abbiamo ricevuto il tuo ordine: Olivier lo legge e ti scrive per confermarlo.',
+    `Nuovo ordine dal sito: ${code}.`,
     '',
     `Ordini come: ${buyer}`,
     '',
@@ -438,7 +508,7 @@ export function orderEmail(
     `Spedizione: ${shipping.label}, ${formatCents(totals.shipping)}`,
     `Totale a prezzo di copertina: ${formatCents(totals.total)}`,
   ];
-  if (to === 'shop' && order.notes) out.push('', 'Note', order.notes);
+  if (order.notes) out.push('', 'Note', order.notes);
   out.push(
     '',
     'Pagamento',
@@ -448,7 +518,7 @@ export function orderEmail(
     `BIC: ${ORDER_BIC}`,
     `Banca intermediaria (SWIFT): ${ORDER_SWIFT_INTERMEDIARY}`,
     `PayPal: ${ORDER_PAYPAL}`,
-    `Causale: ${ORDER_CAUSALE} (${lines.map((l) => l.title).join(', ')})`,
+    `Causale: ${ORDER_CAUSALE} ${code}`,
     `Manda la ricevuta a ${ORDER_EMAIL}.`,
   );
   return { subject, text: out.join('\n') };
