@@ -3,6 +3,8 @@
 // The markup contract (data-order-* attributes, ids `order-<key>`) is defined in index.astro.
 import { emptyBag, onBagChange, openBag, readBag } from '~/lib/bag.client';
 import {
+  MEMBER_DISCOUNT_LABEL,
+  MEMBER_LINE,
   ORDER_ACTION,
   ORDER_CAUSALE,
   ORDER_EMAIL,
@@ -15,6 +17,9 @@ import {
   booksLabel,
   copiesLabel,
   formatCents,
+  formatDiscount,
+  memberDiscount,
+  orderTotalLabel,
   validateOrderFields,
   type BagItem,
   type OrderFieldKey,
@@ -83,6 +88,9 @@ export function initOrderPage(): void {
   const lineTemplate = $<HTMLTemplateElement>('template[data-order-line]');
   const copiesEl = $('[data-order-copies]');
   const shippingEl = $('[data-order-shipping]');
+  const discountRow = $('[data-order-discount-row]');
+  const discountEl = $('[data-order-discount]');
+  const totalLabelEl = $('[data-order-total-label]');
   const totalEl = $('[data-order-total]');
   const announce = $('[data-order-announce]');
   const form = $<HTMLFormElement>('form[data-order-form]');
@@ -222,7 +230,9 @@ export function initOrderPage(): void {
     const shippingKind = checkedShipping();
     const fee = SHIPPING_KINDS[shippingKind].cents;
     const totals = bagTotals(items);
-    const total = totals.cents + fee;
+    const member = $<HTMLInputElement>('#order-member')?.checked === true;
+    const discount = member ? memberDiscount(totals.cents) : 0;
+    const total = totals.cents - discount + fee;
 
     if (list && lineTemplate) {
       const nodes = items.map((item) => {
@@ -239,6 +249,9 @@ export function initOrderPage(): void {
       sizeLine.textContent = `${booksLabel(totals.lines)} · ${copiesLabel(totals.copies)} · ${formatCents(total)}`;
     if (copiesEl) copiesEl.textContent = String(totals.copies);
     if (shippingEl) shippingEl.textContent = formatCents(fee);
+    if (discountRow) discountRow.hidden = !member;
+    if (discountEl) discountEl.textContent = formatDiscount(discount);
+    if (totalLabelEl) totalLabelEl.textContent = orderTotalLabel(member);
     if (totalEl) totalEl.textContent = formatCents(total);
 
     const href = bagMailto(items, shippingKind);
@@ -390,9 +403,21 @@ export function initOrderPage(): void {
         }),
       );
     }
+    if (doneLines && res.member) {
+      const extra = [MEMBER_LINE, `${MEMBER_DISCOUNT_LABEL} · ${formatDiscount(res.discount)}`];
+      doneLines.append(
+        ...extra.map((text) => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          return li;
+        }),
+      );
+    }
     const totalLabel = done.querySelector('[data-order-done-total-label]');
-    if (totalLabel)
-      totalLabel.textContent = `Totale · ${SHIPPING_KINDS[res.shippingKind].label.toLowerCase()}`;
+    if (totalLabel) {
+      const shippingLabel = SHIPPING_KINDS[res.shippingKind].label.toLowerCase();
+      totalLabel.textContent = `${res.member ? orderTotalLabel(true) : 'Totale'} · ${shippingLabel}`;
+    }
     const doneTotal = done.querySelector('[data-order-done-total]');
     if (doneTotal) doneTotal.textContent = formatCents(res.total);
 
@@ -554,7 +579,9 @@ export function initOrderPage(): void {
     const target = event.target as HTMLInputElement | null;
     if (!target) return;
     const key = target.name || target.id.replace(/^order-/, '');
-    if (key === 'shipping') render(readBag());
+    if (key === 'shipping' || key === 'member') render(readBag());
+    if (key === 'member' && event.type === 'change')
+      say(`${totalLabelEl?.textContent ?? ''}: ${totalEl?.textContent ?? ''}`);
     if (!isErrorKey(key) || key === 'turnstile') return;
     const el = errorEl(key);
     if (!el || el.hidden) return;

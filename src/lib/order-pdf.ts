@@ -11,10 +11,13 @@ import {
   ORDER_IBAN,
   ORDER_PAYPAL,
   ORDER_SWIFT_INTERMEDIARY,
+  MEMBER_DISCOUNT_LABEL,
+  MEMBER_LINE,
   SHIPPING_KINDS,
   copiesLabel,
   formatCents,
   formatIban,
+  orderTotalLabel,
   type BuyerKind,
   type OrderFields,
   type OrderResponse,
@@ -43,6 +46,8 @@ const LETTER_FALLBACK: Record<string, string> = {
   Ł: 'L',
   đ: 'd',
   Đ: 'D',
+  // U+2212 (minus) is not WinAnsi and would print as "?"; the discount reads "-30%".
+  '−': '-',
 };
 
 /**
@@ -106,6 +111,7 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   add('text', `Email: ${buyer.email}`);
   if (buyer.phone) add('text', `Telefono: ${buyer.phone}`);
   add('text', `Ordini come: ${BUYER_KINDS[buyer.buyer as BuyerKind] ?? buyer.buyer}`);
+  if (order.member) add('text', MEMBER_LINE);
 
   add('heading', 'Libri');
   for (const l of order.lines) {
@@ -117,12 +123,13 @@ export function orderPdf(input: OrderPdfInput): OrderPdf {
   }
   add('rule');
   add('row', 'Copie', String(order.copies));
+  if (order.member) add('row', MEMBER_DISCOUNT_LABEL, `−${formatCents(order.discount)}`);
   add(
     'row',
     `Spedizione: ${SHIPPING_KINDS[order.shippingKind].label}`,
     formatCents(order.shipping),
   );
-  add('total', 'Totale a prezzo di copertina', formatCents(order.total));
+  add('total', orderTotalLabel(order.member), formatCents(order.total));
 
   if (buyer.notes) {
     add('heading', 'Note');

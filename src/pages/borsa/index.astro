@@ -8,6 +8,8 @@ import Button from '~/components/ui/Button';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import {
   BUYER_KINDS,
+  MEMBER_DISCOUNT_LABEL,
+  MEMBER_DISCOUNT_PERCENT,
   ORDER_ACCOUNT_HOLDER,
   ORDER_BANK,
   ORDER_BIC,
@@ -75,12 +77,16 @@ const buyerEntries = Object.entries(BUYER_KINDS);
             <dt>Copie</dt>
             <dd data-order-copies></dd>
           </div>
+          <div data-order-discount-row hidden>
+            <dt>{MEMBER_DISCOUNT_LABEL}</dt>
+            <dd data-order-discount></dd>
+          </div>
           <div>
             <dt>Spedizione</dt>
             <dd data-order-shipping></dd>
           </div>
           <div class="order-totals__big">
-            <dt>Totale a prezzo di copertina</dt>
+            <dt data-order-total-label>Totale a prezzo di copertina</dt>
             <dd data-order-total></dd>
           </div>
         </dl>
@@ -254,6 +260,17 @@ const buyerEntries = Object.entries(BUYER_KINDS);
               </p>
               <p class="order-error" id="order-buyer-error" data-error-for="buyer" hidden></p>
             </fieldset>
+
+            <div class="order-member">
+              <label class="order-check">
+                <input type="checkbox" id="order-member" aria-describedby="order-member-hint" />
+                <span>Sono socia o socio di Multimage</span>
+              </label>
+              <p class="order-hint-line order-member__hint" id="order-member-hint">
+                Sconto del {MEMBER_DISCOUNT_PERCENT}% sul prezzo di copertina: lo staff verifica
+                l'iscrizione.
+              </p>
+            </div>
 
             <div class="order-field">
               <label for="order-notes">Note <span class="order-hint">(facoltative)</span></label>

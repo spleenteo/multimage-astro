@@ -296,8 +296,12 @@
   outline-offset: 2px;
 }
 
-/* Consent checkbox row. */
+/* Consent and member checkbox rows. */
 .order-consent {
+  @apply mb-5;
+}
+
+.order-member {
   @apply mb-5;
 }
 
@@ -309,7 +313,9 @@
   @apply mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 accent-brand-navy;
 }
 
-.order-consent__hint {
+/* Checkbox rows: the hint lines up with the label text, not the box. */
+.order-consent__hint,
+.order-member__hint {
   @apply pl-[1.875rem];
 }
 
