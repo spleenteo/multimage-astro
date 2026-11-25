@@ -38,6 +38,8 @@ import {
 } from '~/lib/datocms/structuredTextComponents';
 import { resolveDraftMode } from '~/lib/draftPreview';
 import { withFallbackSeo } from '~/lib/seo';
+import { toCents } from '~/lib/order';
+import { membershipCausale } from '~/lib/membership-request';
 import { sanitizeCmsHtml, toPlainText } from '~/lib/text';
 import {
   PAYMENT_ACCOUNT_HOLDER,
@@ -63,6 +65,7 @@ import {
   MEMBERSHIP_POSTCODE_MAX,
   MEMBERSHIP_REGION_MAX,
   membershipFeeAmount,
+  membershipFeeLabel,
   PAYMENT_METHODS,
 } from '~/lib/membership';
 import { MEMBERSHIP_PAGE_QUERY, type MembershipPageQueryResult } from './_graphql';
@@ -211,10 +214,35 @@ const textLines = (s: string | null | undefined) =>
     .filter(Boolean);
 const successLines = textLines(membership?.successText);
 const noteLines = textLines(membership?.paymentNote).slice(1);
+
+// Localhost-only preview of the two end states (`?anteprima=conferma|errore`): no request is
+// made. On any other host the query is never read, so the HTML is the plain page (the gateway
+// caches by path only). The fake code has an O, outside the code alphabet: it never matches a
+// real request.
+const previewAllowed =
+  import.meta.env.DEV || ['localhost', '127.0.0.1'].includes(Astro.url.hostname);
+const preview = previewAllowed ? Astro.url.searchParams.get('anteprima') : null;
+const previewMode = preview === 'conferma' || preview === 'errore' ? preview : null;
+const previewFee = fees[0];
+const previewAnswer =
+  previewMode === 'conferma' && previewFee
+    ? JSON.stringify({
+        ok: true,
+        code: 'SO-000000-PROV',
+        notified: true,
+        fee: { label: membershipFeeLabel(previewFee), amountCents: toCents(previewFee.amount) },
+        causale: membershipCausale(membership?.paymentNote, 'SO-000000-PROV', 'Ada', 'Neri'),
+      })
+    : undefined;
 ---
 
 <BaseLayout seo={seo}>
-  <div class="socio-layout py-8 md:py-12" data-socio-page>
+  <div
+    class="socio-layout py-8 md:py-12"
+    data-socio-page
+    data-socio-preview={previewMode ?? undefined}
+    data-socio-preview-answer={previewAnswer}
+  >
     <div class="socio-intro">
       <div class="max-w-3xl space-y-4">
         <h1 class="font-serif text-3xl text-brand-navy md:text-4xl">{pageTitle}</h1>

@@ -376,6 +376,16 @@ export function initMembershipPage(): void {
   };
 
   form.addEventListener('submit', onSubmit);
+
+  // Localhost preview of the end states (the server sets the attributes only there): no request.
+  if (root.dataset.socioPreview === 'conferma' && root.dataset.socioPreviewAnswer) {
+    showDone(
+      JSON.parse(root.dataset.socioPreviewAnswer) as Extract<MembershipResponse, { ok: true }>,
+    );
+  } else if (root.dataset.socioPreview === 'errore') {
+    goStep(2, false);
+    showSendFailure('generic');
+  }
   $('[data-socio-back] button')?.addEventListener('click', back);
   $('[data-socio-retry] button')?.addEventListener('click', retry);
 
