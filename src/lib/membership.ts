@@ -83,6 +83,7 @@ export type MembershipErrorCode =
   | 'turnstile_unavailable'
   | 'cms_unavailable'
   | 'save_failed'
+  | 'not_found'
   | 'not_configured';
 
 export type MembershipResponse =
@@ -97,6 +98,22 @@ export type MembershipResponse =
       causale: string;
     }
   | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
+
+/** The collaboration step: the part of a request sent after the sign-up. */
+export interface CollaborationFields {
+  /** Ids of the area blocks, plus AREA_OTHER. */
+  areas: string[];
+  areasOther: string;
+}
+
+export type CollaborationResponse =
+  | { ok: true; notified: boolean }
+  | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
+
+/** How long after the sign-up the collaboration step is still accepted. */
+export const COLLABORATION_WINDOW_MS = 3600000;
+
+export const COLLABORATION_EMPTY_MESSAGE = 'Scegli almeno un modo per collaborare, oppure Altro.';
 
 export const MEMBERSHIP_LABELS: Record<MembershipFieldKey, string> = {
   email: 'Email',
@@ -143,14 +160,19 @@ export const MEMBERSHIP_CONSENT_LABEL =
 export const MEMBERSHIP_CONSENT_HINT =
   "Li usiamo solo per il libro soci e per le comunicazioni dell'associazione.";
 
-/** "10 € — Studente under 25": whole euros without decimals, others with two. */
-export function membershipFeeLabel(fee: { label: string; amount: number }): string {
-  const whole = Number.isInteger(fee.amount);
-  const amount = fee.amount.toLocaleString('it-IT', {
+/** "20 €": whole euros without decimals, others with two. */
+export function membershipFeeAmount(amount: number): string {
+  const whole = Number.isInteger(amount);
+  const text = amount.toLocaleString('it-IT', {
     minimumFractionDigits: whole ? 0 : 2,
     maximumFractionDigits: whole ? 0 : 2,
   });
-  return `${amount} € — ${fee.label}`;
+  return `${text} €`;
+}
+
+/** "10 € — Studente under 25". */
+export function membershipFeeLabel(fee: { label: string; amount: number }): string {
+  return `${membershipFeeAmount(fee.amount)} — ${fee.label}`;
 }
 
 const EMAIL_EMPTY_MESSAGE = 'Scrivi la tua email: ci serve per risponderti.';
@@ -224,5 +246,25 @@ export function validateMembershipFields(
   )
     errors.areasOther = m.areasOther;
   if (f.consent !== true) errors.consent = m.consent;
+  return errors;
+}
+
+/** Collaboration rules, on trimmed values: at least one area, ids and "Altro" as in the sign-up. */
+export function validateCollaborationFields(
+  f: CollaborationFields,
+): Partial<Record<'areas' | 'areasOther', string>> {
+  const errors: Partial<Record<'areas' | 'areasOther', string>> = {};
+  const areas = Array.isArray(f.areas) ? f.areas : [];
+  if (areas.length === 0) errors.areas = COLLABORATION_EMPTY_MESSAGE;
+  else if (
+    areas.length > MEMBERSHIP_AREAS_MAX ||
+    areas.some((a) => typeof a !== 'string' || !AREA_ID_PATTERN.test(a))
+  )
+    errors.areas = MEMBERSHIP_FIELD_MESSAGES.areas;
+  if (
+    areas.includes(AREA_OTHER) &&
+    !inRange(f.areasOther.trim(), MEMBERSHIP_AREAS_OTHER_MIN, MEMBERSHIP_AREAS_OTHER_MAX)
+  )
+    errors.areasOther = MEMBERSHIP_FIELD_MESSAGES.areasOther;
   return errors;
 }

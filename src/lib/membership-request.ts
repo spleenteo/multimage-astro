@@ -6,7 +6,9 @@ import {
   MEMBERSHIP_LABELS,
   PAYMENT_METHODS,
   membershipFeeLabel,
+  validateCollaborationFields,
   validateMembershipFields,
+  type CollaborationFields,
   type MembershipErrorCode,
   type MembershipFieldKey,
   type MembershipFields,
@@ -129,6 +131,25 @@ export function membershipCausale(
   return (names ? `${head} ${names}` : head).trim();
 }
 
+/** The areas named by id, resolved against the published CMS ones; "Altro" is always known. Pure. */
+export function resolveMembershipAreas(
+  ids: string[],
+  cmsAreas: MembershipArea[],
+): { ok: true; areas: MembershipArea[] } | { ok: false } {
+  const areas: MembershipArea[] = [];
+  let ok = true;
+  for (const id of ids) {
+    if (id === AREA_OTHER) {
+      areas.push({ id: AREA_OTHER, label: 'Altro' });
+      continue;
+    }
+    const area = cmsAreas.find((a) => a.id === id);
+    if (area) areas.push({ id: area.id, label: area.label });
+    else ok = false;
+  }
+  return ok ? { ok: true, areas } : { ok: false };
+}
+
 /** The fee and areas the applicant named, read again from the published CMS; an unknown id is invalid. */
 export function resolveMembershipChoices(
   request: Pick<MembershipRequest, 'fee' | 'areas'>,
@@ -138,18 +159,9 @@ export function resolveMembershipChoices(
   const fee = cms.fees.find((f) => f.id === request.fee);
   if (!fee || !Number.isFinite(fee.amount) || fee.amount < 0) fields.push('fee');
 
-  const areas: MembershipArea[] = [];
-  let areasOk = true;
-  for (const id of request.areas) {
-    if (id === AREA_OTHER) {
-      areas.push({ id: AREA_OTHER, label: 'Altro' });
-      continue;
-    }
-    const area = cms.areas.find((a) => a.id === id);
-    if (area) areas.push({ id: area.id, label: area.label });
-    else areasOk = false;
-  }
-  if (!areasOk) fields.push('areas');
+  const resolved = resolveMembershipAreas(request.areas, cms.areas);
+  if (!resolved.ok) fields.push('areas');
+  const areas = resolved.ok ? resolved.areas : [];
 
   if (fields.length > 0 || !fee) return { ok: false, fields };
   return {
@@ -233,5 +245,86 @@ export function membershipEmail(data: {
     '',
     `${L.consent}: sì, il ${at.toISOString()}`,
   ];
+  return { subject, text: out.join('\n') };
+}
+
+const CODE_PATTERN = /^SO-\d{6}-[2-9A-HJ-NP-Z]{4}$/;
+/** 16 bytes in base64url without padding: 22 characters, the last one carries 2 bits. */
+const COLLAB_TOKEN_PATTERN = /^[A-Za-z0-9_-]{21}[AQgw]$/;
+
+export type CollaborationUpdate = CollaborationFields & { code: string; token: string };
+
+/** Reads an untrusted collaboration body `{ code, token, areas, areasOther }`. */
+export function parseCollaborationUpdate(
+  body: unknown,
+):
+  | { ok: true; update: CollaborationUpdate }
+  | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] } {
+  if (typeof body !== 'object' || body === null || Array.isArray(body))
+    return { ok: false, error: 'bad_request' };
+  const o = body as Record<string, unknown>;
+  const code = text(o.code);
+  const token = typeof o.token === 'string' ? o.token : '';
+  if (!CODE_PATTERN.test(code) || !COLLAB_TOKEN_PATTERN.test(token))
+    return { ok: false, error: 'bad_request' };
+
+  const areas = Array.isArray(o.areas)
+    ? [...new Set((o.areas as unknown[]).map((a) => text(a)))]
+    : [];
+  const fields: CollaborationFields = {
+    areas,
+    areasOther: areas.includes(AREA_OTHER) ? text(o.areasOther) : '',
+  };
+  const errors = validateCollaborationFields(fields);
+  const keys = Object.keys(errors) as MembershipFieldKey[];
+  if (keys.length > 0) return { ok: false, error: 'invalid', fields: keys };
+  return { ok: true, update: { code, token, ...fields } };
+}
+
+/** SHA-256 of the token, lower-case hex: the only form D1 stores. */
+export async function hashCollabToken(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** A fresh 128-bit collaboration token (base64url, 22 characters) and its SHA-256 hex. Web Crypto only. */
+export async function newCollabToken(): Promise<{ token: string; hash: string }> {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  const token = btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return { token, hash: await hashCollabToken(token) };
+}
+
+/**
+ * The one-shot collaboration update. Bind order: ?1 areas_json, ?2 areas_other, ?3 collaboration_at
+ * (ISO now), ?4 code, ?5 collab_token_hash (SHA-256 hex of the token), ?6 cutoff (ISO, now minus
+ * COLLABORATION_WINDOW_MS). Run it with `.first()`: a row means it matched; null covers an unknown,
+ * wrong-token, expired, already-sent or erased request alike.
+ */
+export const COLLABORATION_UPDATE_SQL =
+  'UPDATE membership_requests SET areas_json=?1, areas_other=?2, collaboration_at=?3 ' +
+  'WHERE code=?4 AND collab_token_hash=?5 AND collaboration_at IS NULL AND created_at >= ?6 ' +
+  'AND email IS NOT NULL RETURNING email, first_name, last_name';
+
+/** The second plain-text email for the association. Without `applicant` (dev print) no personal data is written. */
+export function collaborationEmail(data: {
+  code: string;
+  applicant?: { email: string; firstName: string; lastName: string } | null;
+  areas: MembershipArea[];
+  areasOther: string;
+}): { subject: string; text: string } {
+  const { code, applicant, areas, areasOther } = data;
+  const L = MEMBERSHIP_LABELS;
+  const other = areas.some((a) => a.id === AREA_OTHER) ? areasOther : '';
+  const subject = applicant
+    ? `Collaborazione socio ${code} · ${applicant.firstName} ${applicant.lastName}`
+    : `Collaborazione socio ${code}`;
+  const out = [`Preferenze di collaborazione per la richiesta ${code}.`, ''];
+  if (applicant) out.push(`${L.email}: ${applicant.email}`, '');
+  out.push(
+    `${L.areas}: ${areas.length > 0 ? areas.map((a) => a.label).join(', ') : NOT_GIVEN}`,
+    `${L.areasOther}: ${other || NOT_GIVEN}`,
+  );
   return { subject, text: out.join('\n') };
 }
