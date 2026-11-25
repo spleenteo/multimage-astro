@@ -34,3 +34,95 @@
   @apply mt-1 block text-sm text-brand-charcoal;
   text-wrap: pretty;
 }
+
+/* The confirmation: "Cosa succede adesso" as a plain numbered list in the page's reading size. */
+.socio-steps {
+  @apply max-w-prose list-decimal space-y-2 pl-6 text-base text-brand-charcoal;
+}
+
+.socio-steps a {
+  @apply text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+/* The payment toggle: two radio rows, the label is the 44px control. */
+.socio-pay-toggle {
+  @apply mt-6 min-w-0 border-0 p-0;
+}
+
+.socio-pay-toggle legend {
+  @apply mb-1 p-0 text-sm font-semibold text-brand-charcoal;
+}
+
+/* The optional collaboration step: a hairline above, the checkboxes in one column on phones and
+   two from 640px. The status line carries both the thank-you and the failures. */
+.socio-collab {
+  @apply mt-8 border-t border-brand-navy/10 pt-6;
+}
+
+.socio-collab__areas {
+  @apply grid gap-x-6 sm:grid-cols-2;
+}
+
+.socio-collab .order-field {
+  @apply mt-3;
+}
+
+.socio-collab__status {
+  @apply text-base text-brand-charcoal;
+}
+
+.socio-collab__status:focus {
+  outline: none;
+}
+
+.socio-collab__status:empty {
+  display: none;
+}
+
+.socio-collab__status[data-state='error'] {
+  @apply text-sm font-semibold text-brand-crimson;
+}
+
+/* The closing actions: navy underlined text buttons, the catalogue link beside print. */
+.socio-actions {
+  @apply flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-brand-navy/10 pt-4;
+}
+
+.socio-text-btn {
+  @apply inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+/* Print only the confirmation: the same visibility trick as /borsa, scoped to the shown block.
+   The toggle, the collaboration step, the actions and the copy button are screen controls. */
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  body:has([data-socio-done]:not([hidden])) > header,
+  body:has([data-socio-done]:not([hidden])) > footer {
+    display: none;
+  }
+
+  body:has([data-socio-done]:not([hidden])) * {
+    visibility: hidden;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-done],
+  body:has([data-socio-done]:not([hidden])) [data-socio-done] * {
+    visibility: visible;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-done] {
+    position: absolute;
+    inset: 0 auto auto 0;
+    max-width: none;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-pay-toggle],
+  body:has([data-socio-done]:not([hidden])) .socio-collab,
+  body:has([data-socio-done]:not([hidden])) .socio-actions,
+  body:has([data-socio-done]:not([hidden])) [data-socio-copy-iban] {
+    display: none;
+  }
+}
