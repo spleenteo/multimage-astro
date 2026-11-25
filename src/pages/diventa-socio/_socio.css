@@ -1,50 +1,48 @@
 @reference '../../styles/global.css';
 
-/* /diventa-socio: the benefit band under the head. Flat, no cards: three items between navy-at-10%
-   hairlines, stacked on phones (divided by the same hairline), a row of three from 768px. The
-   figure is a Playfair title with lining numerals, the line under it is charcoal caption text. */
+/* /diventa-socio: the benefit band under the head, the page's one peak. A navy block (the header
+   and footer navy), square, no shadow. The two figures lead side by side in large white Playfair
+   with lining numerals; under a translucent-white hairline, the support line closes it in a
+   quieter register. Same layout at every width: the figures shrink, they never stack. */
 .socio-band {
-  @apply grid max-w-3xl grid-cols-1 border-y border-brand-navy/10;
+  @apply grid grid-cols-2 bg-brand-navy text-white;
 }
 
-.socio-band li {
-  @apply min-w-0 py-4 md:px-5 md:py-5;
+.socio-band__cell {
+  @apply min-w-0 px-5 pt-6 pb-5 sm:px-7 sm:pt-8 sm:pb-6;
 }
 
-.socio-band li + li {
-  @apply border-t border-brand-navy/10 md:border-t-0 md:border-l;
-}
-
-.socio-band li:first-child {
-  @apply md:pl-0;
-}
-
-/* A row of three only while the band has the full width (768–1023px); in the reading column
-   from 1024px it stacks again, divided by the same hairline. */
-@media (min-width: 768px) and (max-width: 1023.98px) {
-  .socio-band {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .socio-band li {
-    @apply px-0 py-4;
-  }
-
-  .socio-band li + li {
-    @apply border-t border-l-0;
-  }
+.socio-band__cell + .socio-band__cell {
+  @apply border-l border-white/15;
 }
 
 .socio-band__figure {
-  @apply block font-serif text-2xl font-semibold text-brand-navy;
+  @apply block font-serif leading-none font-semibold text-white;
+  font-size: clamp(3rem, 2rem + 4vw, 4.5rem);
   font-variant-numeric: lining-nums;
+  letter-spacing: -0.02em;
 }
 
-.socio-band__text {
-  @apply mt-1 block text-sm text-brand-charcoal;
+.socio-band__unit {
+  @apply ml-1 align-baseline text-2xl font-semibold sm:text-3xl;
+  letter-spacing: 0;
+}
+
+.socio-band__cell .socio-band__text {
+  @apply mt-3 block text-sm text-white/85 sm:text-base;
   text-wrap: pretty;
+}
+
+.socio-band__support {
+  @apply col-span-2 border-t border-white/15 px-5 py-4 sm:px-7 sm:py-5;
+}
+
+.socio-band__support-figure {
+  @apply mr-2 font-serif text-xl font-semibold text-white italic;
+}
+
+.socio-band__support .socio-band__text {
+  @apply text-sm text-white/85 sm:text-base;
 }
 
 /* The confirmation: "Cosa succede adesso" as a plain numbered list in the page's reading size. */

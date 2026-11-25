@@ -209,14 +209,15 @@ const fieldGroups = [
     rows: addressRows,
   },
 ];
-const bandItems = [
-  { figure: '2 libri', text: 'in omaggio con la quota' },
-  { figure: '−30%', text: 'su tutti i nostri libri' },
-  {
-    figure: 'Sostieni',
-    text: "un'editrice non profit che pubblica libri sulla nonviolenza e i diritti umani",
-  },
+// The two figures lead the band; the support line closes it.
+const bandFigures = [
+  { figure: '2', unit: 'libri', text: 'in omaggio con la quota' },
+  { figure: '−30%', unit: '', text: 'su tutti i nostri libri' },
 ];
+const bandSupport = {
+  figure: 'Sostieni',
+  text: "un'editrice non profit che pubblica libri sulla nonviolenza e i diritti umani",
+};
 // Two fields share a row as a pair; a single field takes the whole row.
 const rowClass = (n: number) => (n === 2 ? 'order-pair' : undefined);
 const textLines = (s: string | null | undefined) =>
@@ -239,10 +240,17 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
       </div>
 
       <ul class="socio-band" aria-label="Cosa ricevi">
-        {bandItems.map((item) => <li>
-          <span class="socio-band__figure">{item.figure}</span>
+        {bandFigures.map((item) => <li class="socio-band__cell">
+          <span class="socio-band__figure">
+            {item.figure}
+            {item.unit ? <span class="socio-band__unit">{item.unit}</span> : null}
+          </span>
           <span class="socio-band__text">{item.text}</span>
         </li>)}
+        <li class="socio-band__support">
+          <span class="socio-band__support-figure">{bandSupport.figure}</span>
+          <span class="socio-band__text">{bandSupport.text}</span>
+        </li>
       </ul>
 
       {hasContent && membership?.content ? (
