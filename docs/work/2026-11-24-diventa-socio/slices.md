@@ -133,3 +133,9 @@ Source: `/impeccable critique` of 2026-11-25 (25/40), `.impeccable/critique/2026
 - The collaboration endpoint must not let anyone write to another person's request: bind it to the code returned only to the submitter, accept it once, and only shortly after the request.
 - CMS label changes are seen by `/api/socio` (it re-reads fees): no id changes.
 - The WAF rule matches exact paths: a new path needs adding to the expression, or reuse `/api/socio` with a different body shape.
+
+### Deviations found while planning V4
+
+- No book covers in the benefit band: `membership` has no CMS selection of books.
+- The "vale per il 2026" hint is computed from the render year (to be challenged in review: a year that rolls over before editors update the fees would state a wrong fact).
+- The IBAN box padding is a visual check in the conductor sequence; no code change unless it fails.

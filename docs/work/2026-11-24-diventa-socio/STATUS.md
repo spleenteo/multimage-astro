@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V4
-step: plan
+step: execute
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
