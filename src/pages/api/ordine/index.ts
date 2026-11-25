@@ -43,7 +43,6 @@ import {
   ORDER_COLUMNS,
   ORDER_FROM_ADDRESS,
   ORDER_FROM_NAME,
-  checkSiteverify,
   orderCode,
   orderEmail,
   orderRow,
@@ -59,15 +58,12 @@ import {
   toBuyers,
   type Buyer,
 } from '~/lib/order';
+import { turnstileSecret, verifyTurnstile } from '~/lib/turnstile';
 import { ORDER_BOOKS_QUERY, type OrderBooksQueryResult } from './_graphql';
 
 export const prerender = false;
 
 const LOG = '[ordine]';
-const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-// Cloudflare's always-pass test secret, used only in dev when no secret is set.
-const DEV_TURNSTILE_SECRET = '1x0000000000000000000000000000000AA';
-const TEST_SECRET = /^\dx0+AA$/;
 // DatoCMS item ids: 22 base64url characters, or digits on older records.
 const ITEM_ID = /^(?:[A-Za-z0-9_-]{22}|\d{1,20})$/;
 // Built once: values only ever go through bind().
@@ -111,10 +107,10 @@ export const POST: APIRoute = async ({ request }) => {
   const isDev = import.meta.env.DEV;
   const db = getOrderDb();
   const mail = getOrderMail();
-  const turnstileSecret = TURNSTILE_SECRET_KEY || (isDev ? DEV_TURNSTILE_SECRET : '');
+  const secret = turnstileSecret(TURNSTILE_SECRET_KEY, isDev);
 
   // 1. Config: fail closed outside dev.
-  if (!turnstileSecret || (!db && !mail && !isDev)) return fail(503, 'not_configured');
+  if (!secret || (!db && !mail && !isDev)) return fail(503, 'not_configured');
 
   // 2. Size: the declared length first, then the real bytes.
   const declared = Number(request.headers.get('content-length'));
@@ -143,32 +139,20 @@ export const POST: APIRoute = async ({ request }) => {
   const { order } = parsed;
 
   // 5. Turnstile.
-  let verdict: unknown;
-  try {
-    const form = new URLSearchParams({ secret: turnstileSecret, response: order.turnstileToken });
-    const ip = request.headers.get('cf-connecting-ip');
-    if (ip) form.set('remoteip', ip);
-    const res = await fetch(SITEVERIFY_URL, {
-      method: 'POST',
-      body: form,
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!res.ok) return fail(502, 'turnstile_unavailable');
-    verdict = await res.json();
-  } catch {
-    return fail(502, 'turnstile_unavailable');
-  }
-  const lenient = isDev && TEST_SECRET.test(turnstileSecret);
-  const expected = { hostname: new URL(request.url).hostname, action: ORDER_ACTION, lenient };
-  if (!checkSiteverify(verdict, expected)) {
-    // Which check failed, for the operator: no token, no visitor data.
-    const r = (typeof verdict === 'object' && verdict !== null ? verdict : {}) as Record<
-      string,
-      unknown
-    >;
-    const reason =
-      r.success !== true ? 'success' : r.hostname !== expected.hostname ? 'hostname' : 'action';
-    return fail(400, 'turnstile', undefined, `reason=${reason}`);
+  const turnstile = await verifyTurnstile({
+    secret,
+    token: order.turnstileToken,
+    request,
+    action: ORDER_ACTION,
+    isDev,
+  });
+  if (!turnstile.ok) {
+    return fail(
+      turnstile.status,
+      turnstile.error,
+      undefined,
+      turnstile.reason ? `reason=${turnstile.reason}` : undefined,
+    );
   }
 
   // 6. Rebuild the lines from the published catalogue; read the buyers with them.

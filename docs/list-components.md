@@ -190,6 +190,9 @@ scope: A list to describe all components used in the project
 - `CtaButtonWithImageBlock` — **CtaButtonWithImageBlock** (`src/components/datocms/structuredText/blocks/CtaButtonWithImageBlock.astro`)
   - Purpose: CTA layout with up to two buttons plus optional image.
   - Notes: enforces label/url validation and sanitization checklist from docs/guidelines/assets.md.
+- `EmptyBlock` — **EmptyBlock** (`src/components/datocms/structuredText/blocks/EmptyBlock.astro`)
+  - Purpose: renders nothing; the block renderer for block types a page accepts but does not show.
+  - Used in: `/diventa-socio` (`SingleInfoBlock`, `NewsletterSubscription`, `Button`: `@datocms/astro` throws on a block missing from `blocks`).
 - `ImageBlock` — **ImageBlock** (`src/components/datocms/structuredText/blocks/ImageBlock.astro`)
   - Purpose: responsive image with optional caption.
   - Notes: an image without alt in the CMS gets `alt=""` (no generic "Immagine").

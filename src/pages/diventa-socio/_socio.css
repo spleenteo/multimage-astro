@@ -1,0 +1,201 @@
+@reference '../../styles/global.css';
+
+/* /diventa-socio: the benefit band under the head, the page's one peak. A navy block (the header
+   and footer navy), square, no shadow. The two figures lead side by side in large white Playfair
+   with lining numerals; under a translucent-white hairline, the support line closes it in a
+   quieter register. Same layout at every width: the figures shrink, they never stack. */
+.socio-band {
+  @apply grid grid-cols-2 bg-brand-navy text-white;
+}
+
+.socio-band__cell {
+  @apply min-w-0 px-5 pt-6 pb-5 sm:px-7 sm:pt-8 sm:pb-6;
+}
+
+.socio-band__cell + .socio-band__cell {
+  @apply border-l border-white/15;
+}
+
+.socio-band__figure {
+  @apply block font-serif text-5xl leading-none font-semibold text-white sm:text-6xl;
+  font-variant-numeric: lining-nums;
+  letter-spacing: -0.02em;
+}
+
+.socio-band__unit {
+  @apply ml-1 align-baseline text-2xl font-semibold sm:text-3xl;
+  letter-spacing: 0;
+}
+
+.socio-band__cell .socio-band__text {
+  @apply mt-3 block text-sm text-white/85 sm:text-base;
+  text-wrap: pretty;
+}
+
+.socio-band__support {
+  @apply col-span-2 border-t border-white/15 px-5 py-4 sm:px-7 sm:py-5;
+}
+
+.socio-band__support-figure {
+  @apply mr-2 font-serif text-xl font-semibold text-white italic;
+}
+
+.socio-band__support .socio-band__text {
+  @apply text-sm text-white/85 sm:text-base;
+}
+
+/* The confirmation: "Cosa succede adesso" as a plain numbered list in the page's reading size. */
+.socio-steps {
+  @apply max-w-prose list-decimal space-y-2 pl-6 text-base text-brand-charcoal;
+}
+
+.socio-steps a {
+  @apply text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+/* The payment toggle: two radio rows, the label is the 44px control. */
+.socio-pay-toggle {
+  @apply mt-6 min-w-0 border-0 p-0;
+}
+
+.socio-pay-toggle legend {
+  @apply mb-1 p-0 text-sm font-semibold text-brand-charcoal;
+}
+
+/* The closing actions: navy underlined text buttons, the catalogue link beside print. */
+.socio-actions {
+  @apply flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-brand-navy/10 pt-4;
+}
+
+.socio-text-btn {
+  @apply inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-brand-navy underline underline-offset-2 hover:no-underline;
+}
+
+/* Print only the confirmation: the same visibility trick as /borsa, scoped to the shown block.
+   The toggle, the actions and the copy button are screen controls. */
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  body:has([data-socio-done]:not([hidden])) > header,
+  body:has([data-socio-done]:not([hidden])) > footer {
+    display: none;
+  }
+
+  body:has([data-socio-done]:not([hidden])) * {
+    visibility: hidden;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-done],
+  body:has([data-socio-done]:not([hidden])) [data-socio-done] * {
+    visibility: visible;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-done] {
+    position: absolute;
+    inset: 0 auto auto 0;
+    max-width: none;
+  }
+
+  body:has([data-socio-done]:not([hidden])) [data-socio-pay-toggle],
+  body:has([data-socio-done]:not([hidden])) .socio-actions,
+  body:has([data-socio-done]:not([hidden])) [data-socio-copy-iban] {
+    display: none;
+  }
+}
+
+/* Two columns from 1024px: the reading column on the left (head, band, CMS text), the form on the
+   right on a mist panel, so the two jobs read as two distinct surfaces. Text comes first in the
+   DOM, so reading and focus order match the visual order; below 1024px the two stack. Neither
+   column is sticky: the CMS text can be taller than the viewport. */
+.socio-layout {
+  @apply grid gap-10;
+}
+
+.socio-intro {
+  @apply min-w-0 space-y-8;
+}
+
+.socio-side {
+  @apply min-w-0;
+}
+
+@media (min-width: 1024px) {
+  .socio-layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: 4rem;
+    align-items: start;
+  }
+}
+
+/* The form panel: mist, square, no frame and no shadow; the white fields sit on it. */
+.socio-panel {
+  @apply bg-brand-mist p-5 sm:p-8;
+}
+
+/* In the panel the hint belongs to its legend: close under it, clear of the first label. */
+.socio-panel .order-hint-line {
+  @apply -mt-2 mb-5;
+}
+
+/* Slate is 4.7:1 on white but 4.25:1 on mist: on the panel the secondary text takes a charcoal
+   tint instead (about 6.6:1), still a step below the labels. */
+.socio-panel .order-hint,
+.socio-panel .order-hint-line,
+.socio-panel .socio-step__count,
+.socio-panel .order-choice__text span,
+.socio-panel .order-check__hint,
+.socio-panel .order-send p,
+.socio-panel .order-status {
+  color: color-mix(in srgb, var(--color-brand-charcoal) 82%, var(--color-brand-mist));
+}
+
+/* The two steps: a serif navy title the size of the legends, "Passo n di 2" under it (context
+   below the title, never above). The title takes focus when a step opens: no ring on a heading. */
+.socio-step__title {
+  @apply font-serif text-2xl font-semibold text-brand-navy focus:outline-none;
+}
+
+.socio-step__count {
+  @apply mt-1 mb-5 text-sm text-brand-slate;
+}
+
+.socio-step__count + .order-hint-line {
+  @apply -mt-3;
+}
+
+/* Indietro on the left, Invia on the right, one row while they fit. */
+.socio-step__nav {
+  @apply justify-between;
+}
+
+/* The collaboration areas: one column, two from 640px. */
+.socio-areas {
+  @apply grid grid-cols-1 gap-x-6 sm:grid-cols-2;
+}
+
+.socio-areas-other {
+  @apply mt-2 mb-0;
+}
+
+/* The failure block replaces the send area: white on the mist panel, crimson title, no shadow. */
+.socio-fail {
+  @apply bg-white p-4 text-sm text-brand-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-crimson md:p-5;
+}
+
+.socio-fail h3 {
+  @apply font-serif text-xl font-semibold text-brand-crimson;
+}
+
+.socio-fail p {
+  @apply mt-2 max-w-[48ch];
+}
+
+.socio-fail__actions {
+  @apply mt-4 flex flex-wrap items-center gap-x-5 gap-y-2;
+}
+
+.socio-fail a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:no-underline;
+}

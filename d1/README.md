@@ -71,3 +71,23 @@ npx wrangler d1 create multimage-orders --jurisdiction eu   # once, then put the
 npx wrangler d1 migrations apply multimage-orders --local
 npx wrangler d1 migrations apply multimage-orders --remote
 ```
+
+## Membership requests
+
+The `membership_requests` table (migration `0004_membership_requests.sql`, rebuilt by `0005_membership_collaboration.sql` and again by `0006_membership_simplify.sql`) holds the requests of `/diventa-socio`, one row each. Same rules as `orders`, simpler: the site only INSERTs one row per request and never updates it (on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`. Every row implies the applicant's consent at `created_at`: the server rejects a request without the privacy consent, and the email carries the consent time, so the table has no consent column.
+
+Columns (18): `id` (INTEGER PK AUTOINCREMENT), `code` (TEXT NOT NULL UNIQUE, `SO-YYMMDD-XXXX`), `created_at`, the personal columns `email`, `first_name`, `last_name`, `birth_date`, `birth_place`, `address1`, `address2`, `city`, `region`, `postcode`, `country` (all TEXT NULL, so an erased row is valid), `fee_label`, `fee_cents` (the tier as the CMS had it, re-read on the server; integer cents), `areas` (TEXT NULL: the labels of the chosen collaboration areas joined by ", ", NULL when none; plain text, not JSON) and `areas_other` (free text, NULL if none).
+
+Migration 0006 rebuilt the table (SQLite cannot drop several columns and a CHECK in place) and copied the existing rows, converting `areas_json` into the `areas` text. It dropped `fee_id`, `payment_method`, `areas_json`, `collaboration_at`, `collab_token_hash`, `consent_at`, `notify_status` and `notify_error`: there is no notify column, an email failure is logged by the Worker (`notify_error=<E> code=SO-…`, see `docs/guidelines/operations.md` § Monitoring & Logging) and not kept in D1. The AUTOINCREMENT ids restart from the largest copied id, so address a row by `code`. Migrations 0004, 0005 and 0006 were applied remotely on 2026-11-25 (0006 at 09:34 UTC, two existing rows copied, `orders` unchanged).
+
+No retention rule (owner, 2026-11-24): rows stay until erased. Erasure, by `code`, sets every personal column to NULL:
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE membership_requests SET email=NULL, first_name=NULL, last_name=NULL, birth_date=NULL, birth_place=NULL, address1=NULL, address2=NULL, city=NULL, region=NULL, postcode=NULL, country=NULL, areas_other=NULL WHERE code='<code>'"
+```
+
+To read one request by `code` (for instance to forward an unsent notice, found in the Worker logs):
+
+```bash
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --json --command "SELECT * FROM membership_requests WHERE code='<code>'"
+```

@@ -32,7 +32,7 @@ description: Fastro is based on and extends the [Astro project structure](https:
 
 ## Co-location & layering rules
 - **Queries next to consumers.** Every page/component that needs data keeps an adjacent `_graphql.ts` exporting both the document and TypeScript helpers. Shared fragments (`BookCardFragment`, `BANNER_SECTION_FRAGMENT`, etc.) are re-exported from `index.ts` to keep import sites tidy.
-- **CSS modules per component.** Styles live beside the component they affect. Global typography/colors stay in `src/styles/global.css` and Tailwind theme tokens.
+- **CSS modules per component.** Styles live beside the component they affect. Global typography/colors stay in `src/styles/global.css` and Tailwind theme tokens; the form styles shared by `/borsa` and `/diventa-socio` live in `src/styles/form.css` (imported by relative path, since `~/` has no alias for `src/styles`).
 - **Map data in `src/lib`.** Only `src/lib` should know how to massage GraphQL payloads (`mapBooksToCards`, `mapAuthorsToCards`, `groupSuppliersByRegion`, `withFallbackSeo`, `toRichTextHtml`). Pages should stick to view-model orchestration.
 - **Generated JS under `public/generated`.** Do not scatter ad-hoc bundles. `BookCarouselSection` and `/cerca` expect their modules there, so always run `npm run prebuild` locally and in CI.
 
@@ -65,6 +65,10 @@ description: Fastro is based on and extends the [Astro project structure](https:
   - Data: `src/pages/magazine/index/_graphql.ts`, `src/pages/magazine/[slug]/_graphql.ts`.
   - Primary components: `MagazinePostCard`, Structured Text blocks, `BookCarouselSection`.
   - Notes: `LinkToRecord.astro` still targets `/blog/...`; fix via Project Structure task **PS2**.
+- **`/diventa-socio`**
+  - Data: `src/pages/diventa-socio/_graphql.ts` (singleton `membership`); client script `_membership-page.client.ts`; field-row partial `_FieldRows.astro` (page-private); styles shared with `/borsa` in `src/styles/form.css`, page styles in `_socio.css`.
+  - Primary components: Structured Text renderer (`EmptyBlock` for the blocks it does not show), the form markup of `index.astro` (two steps, one send).
+  - Notes: `/info/adesioni` is a static page (`src/pages/info/adesioni/index.astro`) that answers a 301 to it and wins over `/info/[slug]`.
 - **`/info` & `/info/[slug]`**
   - Data: Static placeholder (`src/pages/info/index.astro`) plus `src/pages/info/[slug]/_graphql.ts` for CMS-driven pages.
   - Primary components: `InfoSection`, Structured Text renderer.
@@ -95,6 +99,7 @@ description: Fastro is based on and extends the [Astro project structure](https:
 - **`/api/preview-links`** powers the Dato “Web Previews” plugin: it maps records to website routes via `recordToWebsiteRoute`, generates draft/published URLs (enabling or disabling draft mode on the way), and responds with permissive CORS headers.
 - **`/api/seo-analysis`** is called by the “SEO/Readability Analysis” plugin. It validates the secret, fetches the record via `@datocms/cma-client`, hits the frontend with `draftModeHeaders()` to capture unpublished content, and returns metadata + rendered HTML via `jsdom`.
 - **`/api/ordine`** (POST only) saves a book order to D1 and notifies the shop through the Workers `send_email` binding, after a Turnstile check and a CDA refetch of titles and prices; it is not part of the preview plumbing and fails closed without its secret and bindings. Defences and keys: `docs/guidelines/security.md` § Order endpoint.
+- **`/api/socio`** (POST only) saves a membership request to D1 (`membership_requests`) and notifies info@ through the `MEMBERSHIP_MAIL` binding, after a Turnstile check and a CDA re-resolve of the fee and the collaboration areas; one request carries the whole sign-up and makes one row and one email; same shape and defences as `/api/ordine` (`src/pages/api/socio/index.ts`, query in `_graphql.ts`). Details: `docs/guidelines/security.md`.
 - **`/api/post-deploy`** installs/configures both plugins right after the initial deploy. Because it accepts an arbitrary CMA token and writes preview URLs containing our `SECRET_API_TOKEN`, retire it (or require an extra server-side secret) once staging/production are configured (docs/TODO.md Security task **S5**).
 
 ## Known gaps & violations

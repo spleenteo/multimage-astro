@@ -454,6 +454,20 @@ export const Buyer = {
   REF: { type: 'item_type', id: 'AHAz9R8nSfWd3wC_TxUz0g' },
 } as const;
 
+export type CollaborationAreaBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'CRu9LWGERhyIsdrlwYQhHQ',
+  {
+    label: {
+      type: 'string';
+    };
+  }
+>;
+export const CollaborationAreaBlock = {
+  ID: 'CRu9LWGERhyIsdrlwYQhHQ',
+  REF: { type: 'item_type', id: 'CRu9LWGERhyIsdrlwYQhHQ' },
+} as const;
+
 export type Collection = ItemTypeDefinition<
   EnvironmentSettings,
   '70447',
@@ -672,6 +686,73 @@ export type License = ItemTypeDefinition<
 export const License = {
   ID: '183992',
   REF: { type: 'item_type', id: '183992' },
+} as const;
+
+export type Membership = ItemTypeDefinition<
+  EnvironmentSettings,
+  'LHYUU8UnQeG-_VSVHqGX9Q',
+  {
+    slug: {
+      type: 'slug';
+    };
+    seo: {
+      type: 'seo';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'text';
+    };
+    content: {
+      type: 'structured_text';
+      blocks:
+        | SingleInfoBlock
+        | Banner
+        | NewsletterSubscription
+        | ImageBlock
+        | Button
+        | Video;
+    };
+    fees: {
+      type: 'rich_text';
+      blocks: MembershipFeeBlock;
+    };
+    fee_note: {
+      type: 'string';
+    };
+    collaboration_areas: {
+      type: 'rich_text';
+      blocks: CollaborationAreaBlock;
+    };
+    payment_note: {
+      type: 'text';
+    };
+    success_text: {
+      type: 'text';
+    };
+  }
+>;
+export const Membership = {
+  ID: 'LHYUU8UnQeG-_VSVHqGX9Q',
+  REF: { type: 'item_type', id: 'LHYUU8UnQeG-_VSVHqGX9Q' },
+} as const;
+
+export type MembershipFeeBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'atldWDPdSCC9CtxlEcm65Q',
+  {
+    label: {
+      type: 'string';
+    };
+    amount: {
+      type: 'float';
+    };
+  }
+>;
+export const MembershipFeeBlock = {
+  ID: 'atldWDPdSCC9CtxlEcm65Q',
+  REF: { type: 'item_type', id: 'atldWDPdSCC9CtxlEcm65Q' },
 } as const;
 
 export type MenuDropdown = ItemTypeDefinition<
@@ -1057,10 +1138,12 @@ export type AnyBlock =
   | Banner
   | BookCarousel
   | Button
+  | CollaborationAreaBlock
   | CtaButtonWithImage
   | FaqSection
   | FooterMenuBlock
   | ImageBlock
+  | MembershipFeeBlock
   | MenuDropdown
   | MenuExternalItem
   | MenuItem
@@ -1090,6 +1173,7 @@ export type AnyModel =
   | IndexPage
   | Keyword
   | License
+  | Membership
   | Page
   | ProjectComment
   | SchemaMigration

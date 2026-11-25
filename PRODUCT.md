@@ -29,7 +29,7 @@ The website is the publisher's catalogue and front door. **Success means books o
 ## Operating Context
 
 - **Ordering**: there is no e-commerce. Readers order by email to `ordini@multimage.org` (titles, copies, address), pay by bank transfer (Banca Etica) or PayPal; standard shipping by "piego di libri" is free, tracked shipping +5 €. Books are also sold through bookshops and distributors (`/distributori`), and some as ebooks (`/libri/ebooks`).
-- **Membership**: soci 2026 cost 20 € (10 € students and unemployed), include two free books and 30% off every publication (`/info/adesioni`); sign-up through an online form.
+- **Membership**: soci 2026 cost 20 € (10 € students and unemployed), include two free books and 30% off every publication (`/diventa-socio`); sign-up through an online form.
 - **Content**: everything is edited by volunteers in DatoCMS (books, authors, collections, magazine posts, info pages, home blocks). The home page is assembled from CMS blocks whose order editors control; seasonal content (hero image, "Proposte per l'autunno") changes during the year.
 - **Channels**: newsletter, Instagram, Facebook; festivals and events (e.g. Eirenefest) where authors take part.
 
