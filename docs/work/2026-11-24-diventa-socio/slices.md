@@ -171,3 +171,9 @@ Source: owner, 2026-11-25: "il form può avere multi step per rendere il form pi
 - Focus management between steps (heading of the new step, `aria-live` "Passo 2 di 2") and the error summary must only list the current step's fields; on the final send a server `invalid` naming a step-1 field must bring the user back to step 1.
 - Turnstile loads on first focus inside the form: keep it in step 2 so the token is fresh at send.
 - 0006 must copy the existing row, keep `code` UNIQUE, keep `membership_requests_created_at` index.
+
+### Deviations found while planning V5
+
+- No separate live "Passo 2 di 2": focus moves to the step's h2, described by the step line.
+- Step titles carry "I tuoi dati" and "Quota"; the personal fieldset legend goes and the fee legend becomes "Tipo di quota" (DESIGN.md: no label stacked above a heading).
+- A Turnstile load failure stays in the top error band, not the failure block.
