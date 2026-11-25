@@ -376,7 +376,7 @@ async function collaborate(ctx: {
       applicant = await db
         .prepare(COLLABORATION_UPDATE_SQL)
         .bind(
-          JSON.stringify(areas.map((a) => a.id)),
+          JSON.stringify(areas),
           areasOther || null,
           new Date().toISOString(),
           code,
@@ -412,6 +412,8 @@ async function collaborate(ctx: {
       } catch (err) {
         console.warn(`${LOG} collaboration_notify_error ${mailErrorCode(err)}`);
       }
+    } else {
+      console.warn(`${LOG} collaboration_notify_error no_binding`);
     }
   }
   console.log(`${LOG} 200 collabora areas=${areas.length} notified=${notified}`);
