@@ -2,11 +2,11 @@
 status: open
 phase: slice
 slice: V4
-step: execute
+step: null
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
-updated: 2026-11-24
+updated: 2026-11-25
 tags: [work, diventa-socio]
 description: "A /diventa-socio page with the texts of the DatoCMS `membership` singleton and a membership request form; the data reaches info@multimage.org by email through Cloudflare (and a D1 copy); the confirmation says the person will be contacted soon and can already pay the fee by bank transfer or PayPal."
 ---
@@ -33,7 +33,7 @@ Owner answers at opening (2026-11-24):
 - [x] V1 — The page and the form, from the CMS
 - [x] V2 — Sending the request and the confirmation
 - [x] V3 — Live on multimage.org
-- [ ] V4 — From the critique: trust, a shorter form, a confirmation that leads to books
+- [x] V4 — From the critique: trust, a shorter form, a confirmation that leads to books
 
 ## Pending proposals
 
@@ -51,3 +51,4 @@ Owner answers at opening (2026-11-24):
 - 2026-11-25 — V3 close — links + 301, docs, WAF widened, remote D1 0004, deployed 2922a340, real request saved/notified/deleted — closing sequence (changelog, archive, merge) — ~50 min — n/a
 - 2026-11-25 — slicing — V4 added from the Impeccable critique (25/40), owner chose all five issues, payment and collaboration moved to the confirmation — V4 plan — 10 min — n/a
 - 2026-11-25 — V4 plan — packet written; the planner was cut off three times by machine sleep before writing V4-plan.md — resume: dispatch the planner again on V4-packet.md — n/a — n/a
+- 2026-11-25 — V4 close — critique fixes shipped: CMS texts, 0005 remote, collaboration step with per-request token, deployed c9bfe8bc, owner request saved+collab+deleted; Olivier's row 8UHV kept — critique re-run, closing sequence — ~90 min — n/a

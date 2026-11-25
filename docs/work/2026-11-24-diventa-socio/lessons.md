@@ -13,3 +13,12 @@
 - Docs written before a deploy should not carry a "live since" date; leave the date to the step that writes the production facts.
 - A doc sentence that names one endpoint ("the order code", "on /api/ordine") goes stale when a sibling endpoint joins it: grep the old path across docs/guidelines when adding the new one.
 - A plain `astro dev` submit answers with a real-looking code that is saved nowhere: when a production test is asked for, say which host to use and match codes against the Worker logs (`cf observability telemetry query`) before suspecting a bug.
+
+## From V4
+
+- When a binding review fix changes a request or table shape (a new token, a new column), grep the plan's Verified lines and Conductor steps for the old shape (probes, column counts) and pass the corrected ones in the dispatch, so checks don't expect the pre-fix answer.
+- A doc sentence that says what a path is "not protected by" must be checked against the rule's expression: a new step on an existing path inherits its WAF rule even when its authorisation differs.
+- Write DESIGN.md sections from the markup and CSS as committed, not from the plan or commit messages: read the classes and rows you describe.
+- When a task's Verified asks for an extraction inside an "additive" task, commit the extraction first and separately, and say so in the report.
+- When a change makes an export unused, grep the docs that describe it and either use it or remove both.
+- A real production test can return a code that is not the only new row: list all rows of the table before deleting, and keep any row sent by someone else.
