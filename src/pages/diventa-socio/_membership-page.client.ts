@@ -73,8 +73,6 @@ export function initMembershipPage(): void {
   let turnstile: { reset: () => void } | undefined;
   let sending = false;
   let finished = false;
-  // In memory only: the request code.
-  const session = { code: '' };
 
   const {
     errorEl,
@@ -116,6 +114,8 @@ export function initMembershipPage(): void {
       postcode: val('postcode'),
       country: val('country'),
       fee: checked('fee')[0]?.value ?? '',
+      areas: checked('areas').map((c) => c.value),
+      areasOther: $<HTMLInputElement>('#socio-areas-other')?.checked ? val('areasOther') : '',
       consent: $<HTMLInputElement>('#socio-consent')?.checked ?? false,
     };
   };
@@ -179,8 +179,6 @@ export function initMembershipPage(): void {
         'href',
         `mailto:${MEMBERSHIP_EMAIL}?subject=${encodeURIComponent(`Ricevuta quota ${res.code}`)}`,
       );
-
-    session.code = res.code;
 
     const link = done.querySelector<HTMLAnchorElement>('[data-socio-paypal-link]');
     if (link) {

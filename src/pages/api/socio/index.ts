@@ -8,15 +8,15 @@
  *   400 too_large, bad_request, invalid (with `fields`), turnstile
  *   502 turnstile_unavailable (siteverify unreachable)
  *   502 cms_unavailable (CDA read failed or no published membership record)
- *   400 invalid (fee not in the published CMS record)
+ *   400 invalid (fee or an area not in the published CMS record)
  *   502 save_failed (not saved and the notification failed or has no binding)
  *   200 { ok, code, notified, fee: { label, amountCents }, causale }
  *
  * D1 is the record, the email a notification: saved and mail failed (or no mail
- * binding) is still 200 with `notified: false` and the row marked `failed` or
- * `skipped`; not saved but mailed is 200 too (the email carries the whole request).
- * The sign-up carries no payment method and no areas (the confirmation covers them). The client
- * sends only the fee id: label and amount are read from the published CMS, never from the client.
+ * binding) is still 200 with `notified: false`; not saved but mailed is 200 too (the email carries the whole request).
+ * One send, one row, one email: the insert is the only write (mail failures live in the Worker
+ * logs, with the request code). The client sends only the fee id and the area ids: labels and
+ * amount are read from the published CMS, never from the client.
  * `fee.label` in the answer is `membershipFeeLabel` ("10 € — Studentessa o studente under 25"),
  * the text the page shows. Error bodies carry codes only. Nothing personal is ever
  * logged: one line per answer with the status, the code and counts. Bindings come only through
@@ -58,7 +58,6 @@ export const prerender = false;
 const LOG = '[socio]';
 // Built once: values only ever go through bind().
 const INSERT_SQL = `INSERT INTO ${MEMBERSHIP_TABLE} (${MEMBERSHIP_COLUMNS.join(', ')}) VALUES (${MEMBERSHIP_COLUMNS.map((_, i) => `?${i + 1}`).join(', ')})`;
-const NOTIFY_SQL = `UPDATE ${MEMBERSHIP_TABLE} SET notify_status = ?1, notify_error = ?2 WHERE code = ?3`;
 const MAIL_ERROR = /^E_[A-Z0-9_]{1,60}$/;
 
 // The send_email error code when it has the expected shape, else 'unknown': never a message.
@@ -147,9 +146,10 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  // 6. Fee, read again from the published CMS.
+  // 6. Fee and areas, read again from the published CMS.
   let paymentNote: string | null;
   let fees: Array<{ id: string; label: string; amount: number }>;
+  let areas: Array<{ id: string; label: string }>;
   try {
     const data = await executeQuery<MembershipRequestQueryResult>(MEMBERSHIP_REQUEST_QUERY, {
       includeDrafts: false,
@@ -159,10 +159,13 @@ export const POST: APIRoute = async ({ request }) => {
     fees = data.membership.fees
       .filter((f) => f.id && f.label && typeof f.amount === 'number')
       .map((f) => ({ id: f.id, label: f.label as string, amount: f.amount as number }));
+    areas = data.membership.collaborationAreas
+      .filter((a) => a.id && a.label)
+      .map((a) => ({ id: a.id, label: a.label as string }));
   } catch {
     return fail(502, 'cms_unavailable');
   }
-  const resolved = resolveMembershipChoices(req, { fees });
+  const resolved = resolveMembershipChoices(req, { fees, areas });
   if (!resolved.ok) return fail(400, 'invalid', resolved.fields);
   const { choices } = resolved;
 
@@ -219,20 +222,6 @@ export const POST: APIRoute = async ({ request }) => {
       notifyError = 'no_binding';
     }
     if (!saved && !notified) return fail(502, 'save_failed');
-    if (saved) {
-      try {
-        await db!
-          .prepare(NOTIFY_SQL)
-          .bind(
-            notified ? 'sent' : notifyError === 'no_binding' ? 'skipped' : 'failed',
-            notifyError,
-            code,
-          )
-          .run();
-      } catch {
-        console.error(`${LOG} notify_update_error`);
-      }
-    }
   }
 
   // 8. Answer.
@@ -240,7 +229,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.log(`${LOG} 200 ok (dev)`);
   } else {
     console.log(
-      `${LOG} 200 ok saved=${saved} notified=${notified}${notifyError ? ` notify_error=${notifyError}` : ''}`,
+      `${LOG} 200 ok saved=${saved} notified=${notified} areas=${choices.areas.length}${notifyError ? ` notify_error=${notifyError} code=${code}` : ''}`,
     );
   }
   return reply(

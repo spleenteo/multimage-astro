@@ -65,6 +65,10 @@ export interface MembershipFields {
   country: string;
   /** Id of the fee block. */
   fee: string;
+  /** Ids of the area blocks, plus AREA_OTHER; optional. */
+  areas: string[];
+  /** Free text, only with AREA_OTHER. */
+  areasOther: string;
   consent: boolean;
 }
 
@@ -90,15 +94,6 @@ export type MembershipResponse =
       causale: string;
     }
   | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
-
-/** The collaboration step: the part of a request sent after the sign-up. */
-export interface CollaborationFields {
-  /** Ids of the area blocks, plus AREA_OTHER. */
-  areas: string[];
-  areasOther: string;
-}
-
-export const COLLABORATION_EMPTY_MESSAGE = 'Scegli almeno un modo per collaborare, oppure Altro.';
 
 export const MEMBERSHIP_LABELS: Record<MembershipFieldKey, string> = {
   email: 'Email',
@@ -215,26 +210,17 @@ export function validateMembershipFields(
   if (!inRange(f.country.trim(), MEMBERSHIP_COUNTRY_MIN, MEMBERSHIP_COUNTRY_MAX))
     errors.country = m.country;
   if (!FEE_ID_PATTERN.test(f.fee.trim())) errors.fee = m.fee;
-  if (f.consent !== true) errors.consent = m.consent;
-  return errors;
-}
-
-/** Collaboration rules, on trimmed values: at least one area, ids and "Altro" as in the sign-up. */
-export function validateCollaborationFields(
-  f: CollaborationFields,
-): Partial<Record<'areas' | 'areasOther', string>> {
-  const errors: Partial<Record<'areas' | 'areasOther', string>> = {};
   const areas = Array.isArray(f.areas) ? f.areas : [];
-  if (areas.length === 0) errors.areas = COLLABORATION_EMPTY_MESSAGE;
-  else if (
+  if (
     areas.length > MEMBERSHIP_AREAS_MAX ||
     areas.some((a) => typeof a !== 'string' || !AREA_ID_PATTERN.test(a))
   )
-    errors.areas = MEMBERSHIP_FIELD_MESSAGES.areas;
+    errors.areas = m.areas;
   if (
     areas.includes(AREA_OTHER) &&
     !inRange(f.areasOther.trim(), MEMBERSHIP_AREAS_OTHER_MIN, MEMBERSHIP_AREAS_OTHER_MAX)
   )
-    errors.areasOther = MEMBERSHIP_FIELD_MESSAGES.areasOther;
+    errors.areasOther = m.areasOther;
+  if (f.consent !== true) errors.consent = m.consent;
   return errors;
 }

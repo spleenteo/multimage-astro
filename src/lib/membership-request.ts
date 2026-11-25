@@ -20,7 +20,7 @@ const CAUSALE_MAX = 120;
 const CAUSALE_BASE_MAX = 60;
 const NOT_GIVEN = 'non indicato';
 
-/** The `membership_requests` columns the sign-up writes (`id`, `collaboration_at` and `notify_error` left out). */
+/** The `membership_requests` columns the sign-up writes: all of 0006 but `id`. */
 export const MEMBERSHIP_COLUMNS = [
   'code',
   'created_at',
@@ -35,14 +35,10 @@ export const MEMBERSHIP_COLUMNS = [
   'region',
   'postcode',
   'country',
-  'fee_id',
   'fee_label',
   'fee_cents',
-  'payment_method',
-  'areas_json',
+  'areas',
   'areas_other',
-  'consent_at',
-  'notify_status',
 ] as const;
 
 export type MembershipRequest = MembershipFields & { turnstileToken: string };
@@ -51,6 +47,7 @@ export type MembershipFee = { id: string; label: string; amount: number };
 export type MembershipArea = { id: string; label: string };
 export type MembershipChoices = {
   fee: { id: string; label: string; amount: number; cents: number };
+  areas: MembershipArea[];
 };
 
 type ParseResult =
@@ -60,12 +57,17 @@ type ParseResult =
 /** Form values may arrive as anything: only strings count, trimmed. */
 const text = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
 
+/** Area ids: only strings, trimmed, empty dropped, deduplicated in order. */
+const idList = (v: unknown): string[] =>
+  Array.isArray(v) ? [...new Set(v.map(text).filter((s) => s !== ''))] : [];
+
 /** Reads an untrusted JSON body into a MembershipRequest, or names the first problem. */
 export function parseMembershipRequest(body: unknown): ParseResult {
   if (typeof body !== 'object' || body === null || Array.isArray(body))
     return { ok: false, error: 'bad_request' };
   const o = body as Record<string, unknown>;
 
+  const areas = idList(o.areas);
   const fields: MembershipFields = {
     email: text(o.email),
     firstName: text(o.firstName),
@@ -79,6 +81,8 @@ export function parseMembershipRequest(body: unknown): ParseResult {
     postcode: text(o.postcode),
     country: text(o.country),
     fee: text(o.fee),
+    areas,
+    areasOther: areas.includes(AREA_OTHER) ? text(o.areasOther) : '',
     consent: o.consent === true,
   };
   const errors = validateMembershipFields(fields);
@@ -137,28 +141,32 @@ export function resolveMembershipAreas(
   return ok ? { ok: true, areas } : { ok: false };
 }
 
-/** The fee the applicant named, read again from the published CMS; an unknown id is invalid. */
+/** The fee and areas the applicant named, read again from the published CMS; an unknown id is invalid. */
 export function resolveMembershipChoices(
-  request: Pick<MembershipRequest, 'fee'>,
-  cms: { fees: MembershipFee[] },
+  request: Pick<MembershipRequest, 'fee' | 'areas'>,
+  cms: { fees: MembershipFee[]; areas: MembershipArea[] },
 ): { ok: true; choices: MembershipChoices } | { ok: false; fields: MembershipFieldKey[] } {
   const fields: MembershipFieldKey[] = [];
   const fee = cms.fees.find((f) => f.id === request.fee);
   if (!fee || !Number.isFinite(fee.amount) || fee.amount < 0) fields.push('fee');
 
-  if (fields.length > 0 || !fee) return { ok: false, fields };
+  const areas = resolveMembershipAreas(request.areas, cms.areas);
+  if (!areas.ok) fields.push('areas');
+
+  if (fields.length > 0 || !fee || !areas.ok) return { ok: false, fields };
   return {
     ok: true,
     choices: {
       fee: { id: fee.id, label: fee.label, amount: fee.amount, cents: toCents(fee.amount) },
+      areas: areas.areas,
     },
   };
 }
 
 /**
  * The values of one `membership_requests` row, in `MEMBERSHIP_COLUMNS` order; empty optionals are
- * NULL. The sign-up carries no payment method and no areas (`payment_method` NULL, `areas_json`
- * '[]', `areas_other` NULL): the collaboration step fills the areas later.
+ * NULL. `areas` is the CMS labels of the chosen ids joined by ", " ("Altro" included when ticked),
+ * NULL when none; `areas_other` is the free text, only with "Altro".
  */
 export function membershipRow(data: {
   request: MembershipRequest;
@@ -182,14 +190,10 @@ export function membershipRow(data: {
     r.region || null,
     r.postcode,
     r.country,
-    choices.fee.id,
     choices.fee.label,
     choices.fee.cents,
-    null,
-    '[]',
-    null,
-    time,
-    'pending',
+    choices.areas.length > 0 ? choices.areas.map((a) => a.label).join(', ') : null,
+    r.areasOther || null,
   ];
 }
 
@@ -223,6 +227,9 @@ export function membershipEmail(data: {
     '',
     `${L.fee}: ${membershipFeeLabel({ label: choices.fee.label, amount: choices.fee.amount })}`,
     `Causale: ${causale}`,
+    '',
+    `${L.areas}: ${choices.areas.length > 0 ? choices.areas.map((a) => a.label).join(', ') : NOT_GIVEN}`,
+    `${L.areasOther}: ${opt(r.areasOther)}`,
     '',
     `${L.consent}: sì, il ${at.toISOString()}`,
   ];
