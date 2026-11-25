@@ -22,3 +22,10 @@
 - When a task's Verified asks for an extraction inside an "additive" task, commit the extraction first and separately, and say so in the report.
 - When a change makes an export unused, grep the docs that describe it and either use it or remove both.
 - A real production test can return a code that is not the only new row: list all rows of the table before deleting, and keep any row sent by someone else.
+
+## From V5
+
+- In a multi-step form with one `<form>`, the browser's default button is the first submit in tree order even when its step is hidden: route every submit through one handler that branches on the current step and resets transient UI (failure block, send area) before sending.
+- When an error path changes the visible step, switch the step before any side effect that depends on visibility (widget reset, focus), so deferred-on-hidden rules apply.
+- A "Next" step validator must clear only its own step's errors, or it silently drops server-supplied errors for the later step.
+- When a page's field markup repeats across groups, extract a page-private `_Partial.astro` under the route folder (leading underscore keeps it out of routing) instead of copying the row.
