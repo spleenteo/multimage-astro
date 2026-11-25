@@ -206,9 +206,8 @@ const bandItems = [
     text: "un'editrice non profit che pubblica libri sulla nonviolenza e i diritti umani",
   },
 ];
-// Two fields share a row as a pair; the postcode / city / region row has its own column widths.
-const rowClass = (n: number) =>
-  n === 2 ? 'order-pair' : n === 3 ? 'order-pair order-pair--city' : undefined;
+// Two fields share a row as a pair; a single field takes the whole row.
+const rowClass = (n: number) => (n === 2 ? 'order-pair' : undefined);
 const textLines = (s: string | null | undefined) =>
   (s ?? '')
     .split(/\r?\n/)
