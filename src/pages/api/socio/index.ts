@@ -58,6 +58,7 @@ import {
   MEMBERSHIP_BODY_MAX_BYTES,
   MEMBERSHIP_COLUMNS,
   MEMBERSHIP_TABLE,
+  COLLABORATION_MATCH_SQL,
   COLLABORATION_UPDATE_SQL,
   collaborationEmail,
   hashCollabToken,
@@ -80,10 +81,6 @@ const LOG = '[socio]';
 // Built once: values only ever go through bind().
 const INSERT_SQL = `INSERT INTO ${MEMBERSHIP_TABLE} (${MEMBERSHIP_COLUMNS.join(', ')}) VALUES (${MEMBERSHIP_COLUMNS.map((_, i) => `?${i + 1}`).join(', ')})`;
 const NOTIFY_SQL = `UPDATE ${MEMBERSHIP_TABLE} SET notify_status = ?1, notify_error = ?2 WHERE code = ?3`;
-// Read-only twin of COLLABORATION_UPDATE_SQL's WHERE (?1 code, ?2 hash, ?3 cutoff).
-const COLLABORATION_MATCH_SQL =
-  `SELECT 1 AS ok FROM ${MEMBERSHIP_TABLE} WHERE code=?1 AND collab_token_hash=?2 ` +
-  'AND collaboration_at IS NULL AND created_at >= ?3 AND email IS NOT NULL';
 const SITE_HOSTS = new Set(['www.multimage.org', 'multimage.org']);
 const MAIL_ERROR = /^E_[A-Z0-9_]{1,60}$/;
 
@@ -376,12 +373,12 @@ async function collaborate(ctx: {
       applicant = await db
         .prepare(COLLABORATION_UPDATE_SQL)
         .bind(
-          JSON.stringify(areas),
-          areasOther || null,
-          new Date().toISOString(),
           code,
           hash,
           cutoff(),
+          JSON.stringify(areas),
+          areasOther || null,
+          new Date().toISOString(),
         )
         .first<{ email: string; first_name: string; last_name: string }>();
     } catch {

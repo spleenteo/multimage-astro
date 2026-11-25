@@ -1,4 +1,6 @@
 // Server-side helpers for a membership request: parse, code, causale, CMS choices, D1 row, email.
+// Also the optional collaboration update that follows the sign-up: the per-request token
+// (newCollabToken, hashCollabToken), its parse, the match and update SQL, and the second email.
 // Imports only `./membership` and `./order` (relative, no alias): plain `tsx` loads this file.
 
 import {
@@ -297,15 +299,26 @@ export async function newCollabToken(): Promise<{ token: string; hash: string }>
 }
 
 /**
- * The one-shot collaboration update. Bind order: ?1 areas_json, ?2 areas_other, ?3 collaboration_at
- * (ISO now), ?4 code, ?5 collab_token_hash (SHA-256 hex of the token), ?6 cutoff (ISO, now minus
- * COLLABORATION_WINDOW_MS). Run it with `.first()`: a row means it matched; null covers an unknown,
- * wrong-token, expired, already-sent or erased request alike.
+ * The guards shared by the collaboration match and update, so they cannot drift. Bind order, the
+ * same in both statements: ?1 code, ?2 collab_token_hash (SHA-256 hex of the token), ?3 cutoff
+ * (ISO, now minus COLLABORATION_WINDOW_MS).
+ */
+const COLLABORATION_WHERE =
+  'WHERE code=?1 AND collab_token_hash=?2 AND collaboration_at IS NULL AND created_at >= ?3 ' +
+  'AND email IS NOT NULL';
+
+/** Read-only check that a request matches code + token + guards. Bind ?1 code, ?2 hash, ?3 cutoff; use `.first()`. */
+export const COLLABORATION_MATCH_SQL = `SELECT 1 AS ok FROM ${MEMBERSHIP_TABLE} ${COLLABORATION_WHERE}`;
+
+/**
+ * The one-shot collaboration update. Bind order: ?1 code, ?2 collab_token_hash, ?3 cutoff (the
+ * shared guards), then ?4 areas_json, ?5 areas_other, ?6 collaboration_at (ISO now). Run it with
+ * `.first()`: a row means it matched; null covers an unknown, wrong-token, expired, already-sent
+ * or erased request alike.
  */
 export const COLLABORATION_UPDATE_SQL =
-  'UPDATE membership_requests SET areas_json=?1, areas_other=?2, collaboration_at=?3 ' +
-  'WHERE code=?4 AND collab_token_hash=?5 AND collaboration_at IS NULL AND created_at >= ?6 ' +
-  'AND email IS NOT NULL RETURNING email, first_name, last_name';
+  `UPDATE ${MEMBERSHIP_TABLE} SET areas_json=?4, areas_other=?5, collaboration_at=?6 ` +
+  `${COLLABORATION_WHERE} RETURNING email, first_name, last_name`;
 
 /** The second plain-text email for the association. Without `applicant` (dev print) no personal data is written. */
 export function collaborationEmail(data: {
