@@ -74,7 +74,7 @@ npx wrangler d1 migrations apply multimage-orders --remote
 
 ## Membership requests
 
-The `membership_requests` table (migration `0004_membership_requests.sql`) holds the requests of `/diventa-socio`, one row each. Same rules as `orders`: the site only writes (INSERT, then UPDATE of `notify_status` and `notify_error` by `code`; on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`.
+The `membership_requests` table (migration `0004_membership_requests.sql`) holds the requests of `/diventa-socio`, one row each. Migration 0004 was applied remotely on 2026-11-25. Same rules as `orders`: the site only writes (INSERT, then UPDATE of `notify_status` and `notify_error` by `code`; on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`.
 
 Columns: `id` (INTEGER PK AUTOINCREMENT), `code` (TEXT NOT NULL UNIQUE, `SO-YYMMDD-XXXX`), `created_at`, the personal columns `email`, `first_name`, `last_name`, `birth_date`, `birth_place`, `address1`, `address2`, `city`, `region`, `postcode`, `country` (all TEXT NULL, so an erased row is valid), `fee_id`, `fee_label`, `fee_cents` (the tier as the CMS had it, re-read on the server; integer cents), `payment_method` (`bonifico` or `paypal`, CHECK), `areas_json` (JSON array of the chosen areas, CHECK `json_valid`), `areas_other` (free text, NULL if none), `consent_at`, `notify_status` (`pending` default, `sent`, `failed`, `skipped`, CHECK) and `notify_error`.
 
