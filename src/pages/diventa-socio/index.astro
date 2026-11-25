@@ -1,13 +1,13 @@
 ---
 // /diventa-socio: the membership page. Server-rendered and cached like every page, identical for
-// every visitor: no cookie. Title, subtitle, text, fee tiers come from the
-// Membership singleton in DatoCMS. The markup contract the page script `_membership-page.client.ts` binds to: the
-// root `data-socio-page`, the form `data-socio-form`, control ids `socio-<key>` (keys of
-// MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
-// error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
-// `data-socio-mailto-box`, the status line `data-socio-status` and the Turnstile slot
-// `#socio-turnstile`. The confirmation, hidden
-// until the send succeeds: `data-socio-done` (section), `data-socio-done-heading` (focus target),
+// every visitor: no cookie. Title, subtitle, text, fee tiers and the optional fee note come from
+// the Membership singleton in DatoCMS. The markup contract the page script
+// `_membership-page.client.ts` binds to: the root `data-socio-page`, the form `data-socio-form`,
+// control ids `socio-<key>` (keys of MembershipFieldKey), error slots `[data-error-for="<key>"]`
+// with id `socio-<key>-error`, the error band `data-socio-form-error` (+ `-text`, `-list`),
+// `data-socio-mailto`, the way-out box `data-socio-mailto-box`, the status line
+// `data-socio-status` and the Turnstile slot `#socio-turnstile`. The confirmation, hidden until
+// the send succeeds: `data-socio-done` (section), `data-socio-done-heading` (focus target),
 // `data-socio-done-lede` and `data-socio-done-fee` (filled by the script), `data-socio-methods`
 // holding one `data-socio-method="bonifico|paypal"` box each (the script moves the chosen one
 // first), `data-socio-copy-iban` + `data-socio-copy-label`, `data-socio-paypal-link` +
@@ -51,34 +51,41 @@ import {
   MEMBERSHIP_NAME_MAX,
   MEMBERSHIP_POSTCODE_MAX,
   MEMBERSHIP_REGION_MAX,
-  membershipFeeLabel,
+  membershipFeeAmount,
   type MembershipFieldKey,
 } from '~/lib/membership';
 import { MEMBERSHIP_PAGE_QUERY, type MembershipPageQueryResult } from './_graphql';
 import '../../styles/form.css';
+import './_socio.css';
 
 // The env value, else Cloudflare's always-pass test key in dev, else none (email fallback).
 const siteKey =
   PUBLIC_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
 
 const PRIVACY_URL = 'https://www.iubenda.com/privacy-policy/47684062';
-const mailtoHref = `mailto:${MEMBERSHIP_EMAIL}?subject=${encodeURIComponent('Diventa socio')}`;
+const mailtoHref = `mailto:${MEMBERSHIP_EMAIL}?subject=${encodeURIComponent('Diventa socia o socio')}`;
 
 const draftModeEnabled = resolveDraftMode(Astro);
 const { membership } = await executeQuery<MembershipPageQueryResult>(MEMBERSHIP_PAGE_QUERY, {
   includeDrafts: draftModeEnabled,
 });
 
-const pageTitle = membership?.title?.trim() || 'Diventa socio';
+const pageTitle = membership?.title?.trim() || 'Diventa socia o socio';
 const subtitleHtml = sanitizeCmsHtml(membership?.subtitle);
-const description = toPlainText(membership?.subtitle ?? null);
+const subtitleText = toPlainText(membership?.subtitle ?? null);
+// A subtitle too short to describe the page in search results gives way to a fuller sentence.
+const description =
+  subtitleText.length >= 50
+    ? subtitleText
+    : "Diventa socia o socio dell'Associazione Multimage: con la quota annuale ricevi due libri in omaggio e il 30% di sconto su tutti i nostri libri.";
+const feeNote = membership?.feeNote?.trim() ?? '';
 const hasContent = hasStructuredTextContent(membership?.content);
 const fees = membership?.fees ?? [];
 const showForm = Boolean(membership) && fees.length > 0 && Boolean(siteKey);
 
 const seo = withFallbackSeo(membership?._seoMetaTags, {
   title: `${pageTitle} | Multimage`,
-  description: description || undefined,
+  description,
 });
 
 // Blocks the content field allows but the page does not render: present in the query so the
@@ -129,7 +136,7 @@ const birthPlace: TextField = {
   autocomplete: 'off',
   max: MEMBERSHIP_BIRTH_PLACE_MAX,
   required: true,
-  placeholder: 'Firenze',
+  placeholder: 'Bologna',
 };
 const address1: TextField = {
   key: 'address1',
@@ -173,13 +180,31 @@ const country: TextField = {
   value: 'Italia',
 };
 
-// Rows of the personal data and address fieldsets: one field is full width, two a pair, three
-// the postcode, city and region row.
+// Rows of the personal data and address fieldsets: one field is full width, two a pair, so
+// "Provincia (facoltativo)" sits beside the country and never wraps.
 const personalRows: TextField[][] = [[email], [firstName, lastName], [birthDate, birthPlace]];
-const addressRows: TextField[][] = [[address1], [address2], [postcode, city, region], [country]];
+const addressRows: TextField[][] = [[address1], [address2], [postcode, city], [region, country]];
 const fieldGroups = [
-  { legend: 'I tuoi dati', rows: personalRows },
-  { legend: 'Indirizzo', rows: addressRows },
+  {
+    id: 'data',
+    legend: 'I tuoi dati',
+    hint: 'Data e luogo di nascita ci servono per iscriverti nel libro soci.',
+    rows: personalRows,
+  },
+  {
+    id: 'address',
+    legend: 'Indirizzo',
+    hint: 'Ci serve per spedirti i due libri in omaggio.',
+    rows: addressRows,
+  },
+];
+const bandItems = [
+  { figure: '2 libri', text: 'in omaggio con la quota' },
+  { figure: '−30%', text: 'su tutti i nostri libri' },
+  {
+    figure: 'Sostieni',
+    text: "un'editrice non profit che pubblica libri sulla nonviolenza e i diritti umani",
+  },
 ];
 // Two fields share a row as a pair; the postcode / city / region row has its own column widths.
 const rowClass = (n: number) =>
@@ -201,6 +226,13 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
         <div class="text-base text-brand-charcoal md:text-lg" set:html={subtitleHtml} />
       ) : null}
     </div>
+
+    <ul class="socio-band" aria-label="Cosa ricevi">
+      {bandItems.map((item) => <li>
+        <span class="socio-band__figure">{item.figure}</span>
+        <span class="socio-band__text">{item.text}</span>
+      </li>)}
+    </ul>
 
     {hasContent && membership?.content ? (
       <div
@@ -244,8 +276,12 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
             <ul data-socio-form-error-list hidden></ul>
           </div>
 
-          {fieldGroups.map((group) => <fieldset class="order-fieldset">
+          {fieldGroups.map((group) => <fieldset
+            class="order-fieldset"
+            aria-describedby={`socio-hint-${group.id}`}
+          >
             <legend>{group.legend}</legend>
+            <p class="order-hint-line" id={`socio-hint-${group.id}`}>{group.hint}</p>
             {group.rows.map((row) => <div class:list={[rowClass(row.length)]}>
               {row.map((f) => <div class="order-field">
                 <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
@@ -266,14 +302,19 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
             </div>)}
           </fieldset>)}
 
-          <fieldset class="order-fieldset">
+          <fieldset
+            class="order-fieldset"
+            aria-describedby={feeNote ? 'socio-hint-fee' : undefined}
+          >
             <legend>Quota</legend>
+            {feeNote ? <p class="order-hint-line" id="socio-hint-fee">{feeNote}</p> : null}
             <div class="order-choices">
               {fees.map((fee) => <label class="order-choice">
                 <input type="radio" name="fee" value={fee.id} required />
                 <span class="order-choice__text">
-                  <b>{membershipFeeLabel(fee)}</b>
+                  <b>{fee.label}</b>
                 </span>
+                <span class="order-choice__fee">{membershipFeeAmount(fee.amount)}</span>
               </label>)}
             </div>
             <p class="order-error" id="socio-fee-error" data-error-for="fee" hidden></p>

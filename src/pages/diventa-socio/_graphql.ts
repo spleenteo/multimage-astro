@@ -12,6 +12,7 @@ export const MEMBERSHIP_PAGE_QUERY = /* GraphQL */ `
     membership {
       title
       subtitle
+      feeNote
       paymentNote
       successText
       content {
@@ -102,6 +103,7 @@ export type MembershipPageQueryResult = {
   membership: {
     title: string | null;
     subtitle: string | null;
+    feeNote: string | null;
     paymentNote: string | null;
     successText: string | null;
     // Structured text value + its blocks and links, as @datocms/astro's StructuredText reads it.
