@@ -1,0 +1,46 @@
+---
+// Rows of text fields for the membership form: one field is full width, two a pair. Used by the
+// step-1 data and the address fieldset, so the label, input and error slot are defined once.
+import {
+  MEMBERSHIP_BIRTH_DATE_MIN,
+  MEMBERSHIP_LABELS,
+  type MembershipFieldKey,
+} from '~/lib/membership';
+
+export interface TextField {
+  key: MembershipFieldKey;
+  type?: 'text' | 'email' | 'date';
+  autocomplete: string;
+  max?: number;
+  required: boolean;
+  placeholder?: string;
+  value?: string;
+  describedby?: string;
+}
+
+interface Props {
+  rows: TextField[][];
+}
+
+const { rows } = Astro.props;
+---
+
+{rows.map((row) => <div class:list={[row.length === 2 ? 'order-pair' : undefined]}>
+  {row.map((f) => <div class="order-field">
+    <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
+    <input
+      class="order-input"
+      id={`socio-${f.key}`}
+      name={f.key}
+      type={f.type ?? 'text'}
+      autocomplete={f.autocomplete}
+      maxlength={f.max}
+      min={f.type === 'date' ? MEMBERSHIP_BIRTH_DATE_MIN : undefined}
+      placeholder={f.placeholder}
+      value={f.value}
+      required={f.required}
+      aria-describedby={f.describedby}
+    />
+    <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
+  </div>)}
+</div>)}
