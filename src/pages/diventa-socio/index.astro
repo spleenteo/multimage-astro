@@ -3,10 +3,14 @@
 // every visitor: no cookie. Title, subtitle, text, fee tiers and the optional fee note come from
 // the Membership singleton in DatoCMS. The markup contract the page script
 // `_membership-page.client.ts` binds to: the root `data-socio-page`, the form `data-socio-form`,
-// control ids `socio-<key>` (keys of MembershipFieldKey), error slots `[data-error-for="<key>"]`
-// with id `socio-<key>-error`, the error band `data-socio-form-error` (+ `-text`, `-list`),
-// `data-socio-mailto`, the way-out box `data-socio-mailto-box`, the status line
-// `data-socio-status` and the Turnstile slot `#socio-turnstile`. The confirmation, hidden until
+// control ids `socio-<key>` (keys of MembershipFieldKey; the areas are checkboxes `name="areas"`,
+// "Altro" is `#socio-areas-other`, its input `#socio-areasOther` in `data-socio-other`), error
+// slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the error band
+// `data-socio-form-error` (+ `-text`, `-list`), the two steps `data-socio-step="1|2"` (each with
+// an h2 `.socio-step__title`, the focus target), `data-socio-next` (Avanti, the submit of step 1)
+// and `data-socio-back`, the send area `data-socio-send` and the failure block `data-socio-fail`
+// (+ `-text`, with `data-socio-retry`), `data-socio-mailto`, the way-out box
+// `data-socio-mailto-box`, the status line `data-socio-status` and the Turnstile slot `#socio-turnstile`. The confirmation, hidden until
 // the send succeeds: `data-socio-done` (section), `data-socio-done-heading` (focus target),
 // `data-socio-done-lede` and `data-socio-done-fee` (filled by the script), the steps `<ol>` with
 // `data-socio-receipt-link` (mailto, subject filled by the script), the toggle
@@ -112,6 +116,7 @@ type TextField = {
   required: boolean;
   placeholder?: string;
   value?: string;
+  describedby?: string;
 };
 const email: TextField = {
   key: 'email',
@@ -137,6 +142,7 @@ const birthDate: TextField = {
   type: 'date',
   autocomplete: 'bday',
   required: true,
+  describedby: 'socio-hint-data',
 };
 const birthPlace: TextField = {
   key: 'birthPlace',
@@ -144,6 +150,7 @@ const birthPlace: TextField = {
   max: MEMBERSHIP_BIRTH_PLACE_MAX,
   required: true,
   placeholder: 'Bologna',
+  describedby: 'socio-hint-data',
 };
 const address1: TextField = {
   key: 'address1',
@@ -187,24 +194,16 @@ const country: TextField = {
   value: 'Italia',
 };
 
-// Rows of the personal data and address fieldsets: one field is full width, two a pair, so
+// Rows of the step-1 fields and the address fieldset: one field is full width, two a pair, so
 // "Provincia (facoltativo)" sits beside the country and never wraps.
 const personalRows: TextField[][] = [[email], [firstName, lastName], [birthDate, birthPlace]];
 const addressRows: TextField[][] = [[address1], [address2], [postcode, city], [region, country]];
-const fieldGroups = [
-  {
-    id: 'data',
-    legend: 'I tuoi dati',
-    hint: 'Data e luogo di nascita ci servono per iscriverti nel libro soci.',
-    rows: personalRows,
-  },
-  {
-    id: 'address',
-    legend: 'Indirizzo',
-    hint: 'Ci serve per spedirti i due libri in omaggio.',
-    rows: addressRows,
-  },
-];
+const dataHint = 'Data e luogo di nascita ci servono per iscriverti nel libro soci.';
+const addressGroup = {
+  legend: 'Indirizzo',
+  hint: 'Ci serve per spedirti i due libri in omaggio.',
+  rows: addressRows,
+};
 // The two figures lead the band; the support line closes it.
 const bandFigures = [
   { figure: '2', unit: 'libri', text: 'in omaggio con la quota' },
@@ -292,13 +291,18 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
             <ul data-socio-form-error-list hidden></ul>
           </div>
 
-          {fieldGroups.map((group) => <fieldset
-            class="order-fieldset"
-            aria-describedby={`socio-hint-${group.id}`}
-          >
-            <legend>{group.legend}</legend>
-            <p class="order-hint-line" id={`socio-hint-${group.id}`}>{group.hint}</p>
-            {group.rows.map((row) => <div class:list={[rowClass(row.length)]}>
+          <section class="socio-step" data-socio-step="1" aria-labelledby="socio-step-1-title">
+            <h2
+              class="socio-step__title"
+              id="socio-step-1-title"
+              tabindex="-1"
+              aria-describedby="socio-step-1-count"
+            >
+              I tuoi dati
+            </h2>
+            <p class="socio-step__count" id="socio-step-1-count">Passo 1 di 2</p>
+            <p class="order-hint-line" id="socio-hint-data">{dataHint}</p>
+            {personalRows.map((row) => <div class:list={[rowClass(row.length)]}>
               {row.map((f) => <div class="order-field">
                 <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
                 <input
@@ -312,63 +316,162 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
                   placeholder={f.placeholder}
                   value={f.value}
                   required={f.required}
+                  aria-describedby={f.describedby}
                 />
                 <p class="order-error" id={`socio-${f.key}-error`} data-error-for={f.key} hidden />
               </div>)}
             </div>)}
-          </fieldset>)}
 
-          <fieldset
-            class="order-fieldset"
-            aria-describedby={feeNote ? 'socio-hint-fee' : undefined}
-          >
-            <legend>Quota</legend>
-            {feeNote ? <p class="order-hint-line" id="socio-hint-fee">{feeNote}</p> : null}
-            <div class="order-choices">
-              {fees.map((fee) => <label class="order-choice">
-                <input type="radio" name="fee" value={fee.id} required />
-                <span class="order-choice__text">
-                  <b>{fee.label}</b>
-                </span>
-                <span class="order-choice__fee">{membershipFeeAmount(fee.amount)}</span>
-              </label>)}
+            <fieldset class="order-fieldset" aria-describedby="socio-hint-address">
+              <legend>{addressGroup.legend}</legend>
+              <p class="order-hint-line" id="socio-hint-address">{addressGroup.hint}</p>
+              {addressGroup.rows.map((row) => <div class:list={[rowClass(row.length)]}>
+                {row.map((f) => <div class="order-field">
+                  <label for={`socio-${f.key}`}>{MEMBERSHIP_LABELS[f.key]}</label>
+                  <input
+                    class="order-input"
+                    id={`socio-${f.key}`}
+                    name={f.key}
+                    type={f.type ?? 'text'}
+                    autocomplete={f.autocomplete}
+                    maxlength={f.max}
+                    placeholder={f.placeholder}
+                    value={f.value}
+                    required={f.required}
+                  />
+                  <p
+                    class="order-error"
+                    id={`socio-${f.key}-error`}
+                    data-error-for={f.key}
+                    hidden
+                  />
+                </div>)}
+              </div>)}
+            </fieldset>
+
+            <div class="order-send">
+              <span data-socio-next><Button type="submit" primary>Avanti</Button></span>
             </div>
-            <p class="order-error" id="socio-fee-error" data-error-for="fee" hidden></p>
-          </fieldset>
+          </section>
 
-          <div class="order-consent">
-            <label class="order-check">
-              <input
-                type="checkbox"
-                id="socio-consent"
-                name="consent"
-                aria-labelledby="socio-consent-label"
-                aria-describedby="socio-consent-hint"
-                required
-              />
-              <span class="order-check__text">
-                <span id="socio-consent-label">{MEMBERSHIP_CONSENT_LABEL}</span>
-                <span class="order-check__hint" id="socio-consent-hint">
-                  {MEMBERSHIP_CONSENT_HINT}
-                  <a href={PRIVACY_URL} target="_blank" rel="noopener"
-                    >Informativa
-                    privacy<span class="sr-only">, si apre in una nuova scheda</span></a
-                  >
+          <section
+            class="socio-step"
+            data-socio-step="2"
+            aria-labelledby="socio-step-2-title"
+            hidden
+          >
+            <h2
+              class="socio-step__title"
+              id="socio-step-2-title"
+              tabindex="-1"
+              aria-describedby="socio-step-2-count"
+            >
+              Quota
+            </h2>
+            <p class="socio-step__count" id="socio-step-2-count">Passo 2 di 2</p>
+
+            <fieldset
+              class="order-fieldset"
+              aria-describedby={feeNote ? 'socio-hint-fee' : undefined}
+            >
+              <legend>{MEMBERSHIP_LABELS.fee}</legend>
+              {feeNote ? <p class="order-hint-line" id="socio-hint-fee">{feeNote}</p> : null}
+              <div class="order-choices">
+                {fees.map((fee) => <label class="order-choice">
+                  <input type="radio" name="fee" value={fee.id} required />
+                  <span class="order-choice__text">
+                    <b>{fee.label}</b>
+                  </span>
+                  <span class="order-choice__fee">{membershipFeeAmount(fee.amount)}</span>
+                </label>)}
+              </div>
+              <p class="order-error" id="socio-fee-error" data-error-for="fee" hidden></p>
+            </fieldset>
+
+            {areas.length > 0 ? (
+              <fieldset class="order-fieldset" aria-describedby="socio-hint-areas">
+                <legend>Vuoi anche darci una mano? (facoltativo)</legend>
+                <p class="order-hint-line" id="socio-hint-areas">
+                  Scegli come ti piacerebbe collaborare e ti scriviamo al più presto.
+                </p>
+                <div class="socio-areas">
+                  {areas.map((area) => <label class="order-check">
+                    <input type="checkbox" name="areas" value={area.id} />
+                    <span class="order-check__text">{area.label}</span>
+                  </label>)}
+                  <label class="order-check">
+                    <input type="checkbox" name="areas" id="socio-areas-other" value={AREA_OTHER} />
+                    <span class="order-check__text">Altro</span>
+                  </label>
+                </div>
+                <div class="order-field socio-areas-other" data-socio-other hidden>
+                  <label for="socio-areasOther">{MEMBERSHIP_LABELS.areasOther}</label>
+                  <input
+                    class="order-input"
+                    id="socio-areasOther"
+                    name="areasOther"
+                    type="text"
+                    maxlength={MEMBERSHIP_AREAS_OTHER_MAX}
+                  />
+                  <p
+                    class="order-error"
+                    id="socio-areasOther-error"
+                    data-error-for="areasOther"
+                    hidden
+                  ></p>
+                </div>
+                <p class="order-error" id="socio-areas-error" data-error-for="areas" hidden></p>
+              </fieldset>
+            ) : null}
+
+            <div class="order-consent">
+              <label class="order-check">
+                <input
+                  type="checkbox"
+                  id="socio-consent"
+                  name="consent"
+                  aria-labelledby="socio-consent-label"
+                  aria-describedby="socio-consent-hint"
+                  required
+                />
+                <span class="order-check__text">
+                  <span id="socio-consent-label">{MEMBERSHIP_CONSENT_LABEL}</span>
+                  <span class="order-check__hint" id="socio-consent-hint">
+                    {MEMBERSHIP_CONSENT_HINT}
+                    <a href={PRIVACY_URL} target="_blank" rel="noopener"
+                      >Informativa
+                      privacy<span class="sr-only">, si apre in una nuova scheda</span></a
+                    >
+                  </span>
                 </span>
-              </span>
-            </label>
-            <p class="order-error" id="socio-consent-error" data-error-for="consent" hidden></p>
-          </div>
+              </label>
+              <p class="order-error" id="socio-consent-error" data-error-for="consent" hidden></p>
+            </div>
 
-          <div class="order-turnstile">
-            <div id="socio-turnstile" tabindex="-1" data-socio-turnstile></div>
-            <p class="order-error" id="socio-turnstile-error" data-error-for="turnstile" hidden></p>
-          </div>
+            <div class="order-turnstile">
+              <div id="socio-turnstile" tabindex="-1" data-socio-turnstile></div>
+              <p
+                class="order-error"
+                id="socio-turnstile-error"
+                data-error-for="turnstile"
+                hidden
+              ></p>
+            </div>
 
-          <div class="order-send">
-            <Button type="submit" primary>Invia la richiesta</Button>
-          </div>
-          <p class="order-status" aria-live="polite" data-socio-status></p>
+            <div class="order-send socio-step__nav" data-socio-send>
+              <span data-socio-back><Button type="button" primary={false}>Indietro</Button></span>
+              <Button type="submit" primary>Invia la richiesta</Button>
+            </div>
+            <div class="socio-fail" data-socio-fail role="alert" tabindex="-1" hidden>
+              <h3>La richiesta non è partita</h3>
+              <p data-socio-fail-text></p>
+              <div class="socio-fail__actions">
+                <span data-socio-retry><Button type="button" primary>Riprova</Button></span>
+                <a href={mailtoHref}>Scrivi a {MEMBERSHIP_EMAIL}</a>
+              </div>
+            </div>
+            <p class="order-status" aria-live="polite" data-socio-status></p>
+          </section>
         </form>
       ) : (
         <section

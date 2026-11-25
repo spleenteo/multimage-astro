@@ -36,16 +36,33 @@ const ERROR_KEYS = [
   'region',
   'country',
   'fee',
+  'areas',
+  'areasOther',
   'consent',
   'turnstile',
 ] as const;
 type ErrorKey = (typeof ERROR_KEYS)[number];
 
+// The fields of step 1; step 2 holds the rest (fee, areas, consent, widget).
+const STEP_ONE_KEYS: readonly (MembershipFieldKey & ErrorKey)[] = [
+  'email',
+  'firstName',
+  'lastName',
+  'birthDate',
+  'birthPlace',
+  'address1',
+  'address2',
+  'postcode',
+  'city',
+  'region',
+  'country',
+];
+
 const MSG = {
   turnstileMissing: 'Completa la verifica anti-spam qui sopra, poi invia di nuovo.',
   turnstileLoad: 'La verifica anti-spam non si carica: riprova più tardi o scrivici via email.',
-  turnstileFailed: 'La verifica anti-spam non è andata a buon fine: completala di nuovo e riprova.',
-  generic: `Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure scrivici a ${MEMBERSHIP_EMAIL}.`,
+  failGeneric: `Non siamo riusciti a inviare la richiesta. I tuoi dati sono ancora qui: riprova tra poco, oppure scrivici a ${MEMBERSHIP_EMAIL}.`,
+  failTurnstile: `La verifica anti-spam non è andata a buon fine. I tuoi dati sono ancora qui: riprova, oppure scrivici a ${MEMBERSHIP_EMAIL}.`,
 } as const;
 
 // The names the error summary links to, as the labels and legends read.
@@ -73,6 +90,15 @@ export function initMembershipPage(): void {
   let turnstile: { reset: () => void } | undefined;
   let sending = false;
   let finished = false;
+  let step: 1 | 2 = 1;
+  // A widget reset asked while step 1 shows waits for the next goStep(2); a load error is shown
+  // again on step 2.
+  let needsReset = false;
+  let widgetLoadFailed = false;
+
+  const steps = Array.from(root.querySelectorAll<HTMLElement>('[data-socio-step]'));
+  const sendArea = $('[data-socio-send]');
+  const failBlock = $('[data-socio-fail]');
 
   const {
     errorEl,
@@ -87,7 +113,7 @@ export function initMembershipPage(): void {
     idPrefix: 'socio',
     keys: ERROR_KEYS,
     names: FIELD_NAMES,
-    groupKeys: ['fee'],
+    groupKeys: ['fee', 'areas'],
     plainKeys: ['turnstile'],
     box: formError,
     boxText: $('[data-socio-form-error-text]'),
@@ -133,6 +159,7 @@ export function initMembershipPage(): void {
       action: MEMBERSHIP_ACTION,
       onToken: (t) => {
         token = t;
+        widgetLoadFailed = false;
         clearError('turnstile');
       },
       onExpire: () => {
@@ -141,6 +168,7 @@ export function initMembershipPage(): void {
       // The script or the widget failed (bad site key or hostname): offer the email way out.
       onError: () => {
         token = '';
+        widgetLoadFailed = true;
         showFormError(MSG.turnstileLoad, true);
       },
     });
@@ -149,7 +177,49 @@ export function initMembershipPage(): void {
   // A token is single-use: after any answer but success the widget needs a new one.
   const resetWidget = () => {
     token = '';
-    turnstile?.reset();
+    if (step === 2) turnstile?.reset();
+    else needsReset = true;
+  };
+
+  // --- Steps --------------------------------------------------------------
+
+  // Shows step n and, unless asked not to, moves focus to its heading (read with "Passo n di 2").
+  const goStep = (n: 1 | 2, focus = true) => {
+    step = n;
+    steps.forEach((el) => (el.hidden = el.dataset.socioStep !== String(n)));
+    if (n === 2) {
+      loadWidget();
+      if (needsReset) {
+        needsReset = false;
+        turnstile?.reset();
+      }
+      if (widgetLoadFailed) showFormError(MSG.turnstileLoad, true);
+    }
+    if (focus)
+      steps
+        .find((el) => !el.hidden)
+        ?.querySelector<HTMLElement>('h2')
+        ?.focus();
+  };
+
+  const next = () => {
+    hideFormError();
+    clearAllErrors();
+    const problems = validateMembershipFields(readFields());
+    const keys = STEP_ONE_KEYS.filter((k) => problems[k]);
+    if (keys.length > 0) {
+      keys.forEach((k) => setError(k, problems[k] ?? ''));
+      showFieldSummary(keys);
+      return;
+    }
+    goStep(2);
+  };
+
+  const back = () => {
+    // The band's field links would point into the hidden step; a load error stays for step 2.
+    if (formError && !formError.hidden && !$('[data-socio-form-error-list]')?.hidden)
+      hideFormError();
+    goStep(1);
   };
 
   // --- Success ------------------------------------------------------------
@@ -194,10 +264,40 @@ export function initMembershipPage(): void {
 
   // --- Failure ------------------------------------------------------------
 
+  // A failure that is not a field error: the block replaces the send area, values stay.
+  const showSendFailure = (kind: 'generic' | 'turnstile') => {
+    const text = $('[data-socio-fail-text]');
+    if (text) text.textContent = kind === 'turnstile' ? MSG.failTurnstile : MSG.failGeneric;
+    if (sendArea) sendArea.hidden = true;
+    if (failBlock) {
+      failBlock.hidden = false;
+      failBlock.focus();
+    }
+  };
+
+  const retry = () => {
+    if (failBlock) failBlock.hidden = true;
+    if (sendArea) sendArea.hidden = false;
+    sendArea?.querySelector<HTMLElement>('button[type="submit"]')?.focus();
+  };
+
+  // Field errors, inline; a step-1 field brings the user back to step 1 with its summary only.
+  const showInvalid = (
+    invalid: readonly ErrorKey[],
+    messages: Partial<Record<ErrorKey, string>>,
+  ) => {
+    invalid.forEach((k) => setError(k, messages[k] ?? ''));
+    const stepOne = invalid.filter((k) => (STEP_ONE_KEYS as readonly string[]).includes(k));
+    if (stepOne.length > 0) {
+      goStep(1, false);
+      showFieldSummary(stepOne);
+    } else showFieldSummary(invalid);
+  };
+
   const showFailure = (res: MembershipResponse | null) => {
     resetWidget();
     if (!res || res.ok) {
-      showFormError(MSG.generic, true);
+      showSendFailure('generic');
       return;
     }
     switch (res.error) {
@@ -206,18 +306,17 @@ export function initMembershipPage(): void {
           isErrorKey(k),
         );
         if (keys.length === 0) {
-          showFormError(MSG.generic, true);
+          showSendFailure('generic');
           break;
         }
-        keys.forEach((k) => setError(k, MEMBERSHIP_FIELD_MESSAGES[k]));
-        showFieldSummary(keys);
+        showInvalid(keys, MEMBERSHIP_FIELD_MESSAGES);
         break;
       }
       case 'turnstile':
-        showFormError(MSG.turnstileFailed, false);
+        showSendFailure('turnstile');
         break;
       default:
-        showFormError(MSG.generic, true);
+        showSendFailure('generic');
     }
   };
 
@@ -226,6 +325,11 @@ export function initMembershipPage(): void {
   const onSubmit = async (event: Event) => {
     event.preventDefault();
     if (sending || finished) return;
+    // Enter in a step-1 field is Avanti: the one submit goes only from step 2.
+    if (step === 1) {
+      next();
+      return;
+    }
     hideFormError();
     clearAllErrors();
     if (status) status.textContent = '';
@@ -233,24 +337,19 @@ export function initMembershipPage(): void {
 
     const fields = readFields();
     const problems = validateMembershipFields(fields);
-    const keys: ErrorKey[] = [];
+    const messages: Partial<Record<ErrorKey, string>> = {};
     for (const key of ERROR_KEYS) {
       const message = key === 'turnstile' ? undefined : problems[key];
-      if (message) {
-        setError(key, message);
-        keys.push(key);
-      }
+      if (message) messages[key] = message;
     }
-    if (!token) {
-      setError('turnstile', MSG.turnstileMissing);
-      keys.push('turnstile');
-    }
+    if (!token) messages.turnstile = MSG.turnstileMissing;
+    const keys = ERROR_KEYS.filter((k) => messages[k]);
     if (keys.length > 0) {
-      showFieldSummary(keys);
+      showInvalid(keys, messages);
       return;
     }
 
-    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const submit = sendArea?.querySelector<HTMLButtonElement>('button[type="submit"]');
     sending = true;
     if (submit) submit.disabled = true;
     if (status) status.textContent = 'Invio in corso…';
@@ -277,7 +376,16 @@ export function initMembershipPage(): void {
   };
 
   form.addEventListener('submit', onSubmit);
-  form.addEventListener('focusin', loadWidget, { once: true });
+  $('[data-socio-back] button')?.addEventListener('click', back);
+  $('[data-socio-retry] button')?.addEventListener('click', retry);
+
+  // "Altro" opens its text input; unticked, the input and its error go away.
+  const otherBox = $<HTMLInputElement>('#socio-areas-other');
+  const otherField = $('[data-socio-other]');
+  otherBox?.addEventListener('change', () => {
+    if (otherField) otherField.hidden = !otherBox.checked;
+    if (!otherBox.checked) clearError('areasOther');
+  });
 
   const onFieldChange = (event: Event) => {
     const target = event.target as HTMLInputElement | null;

@@ -143,9 +143,59 @@
    tint instead (about 6.6:1), still a step below the labels. */
 .socio-panel .order-hint,
 .socio-panel .order-hint-line,
+.socio-panel .socio-step__count,
 .socio-panel .order-choice__text span,
 .socio-panel .order-check__hint,
 .socio-panel .order-send p,
 .socio-panel .order-status {
   color: color-mix(in srgb, var(--color-brand-charcoal) 82%, var(--color-brand-mist));
+}
+
+/* The two steps: a serif navy title the size of the legends, "Passo n di 2" under it (context
+   below the title, never above). The title takes focus when a step opens: no ring on a heading. */
+.socio-step__title {
+  @apply font-serif text-2xl font-semibold text-brand-navy focus:outline-none;
+}
+
+.socio-step__count {
+  @apply mt-1 mb-5 text-sm text-brand-slate;
+}
+
+.socio-step__count + .order-hint-line {
+  @apply -mt-3;
+}
+
+/* Indietro on the left, Invia on the right, one row while they fit. */
+.socio-step__nav {
+  @apply justify-between;
+}
+
+/* The collaboration areas: one column, two from 640px. */
+.socio-areas {
+  @apply grid grid-cols-1 gap-x-6 sm:grid-cols-2;
+}
+
+.socio-areas-other {
+  @apply mt-2 mb-0;
+}
+
+/* The failure block replaces the send area: white on the mist panel, crimson title, no shadow. */
+.socio-fail {
+  @apply bg-white p-4 text-sm text-brand-charcoal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-crimson md:p-5;
+}
+
+.socio-fail h3 {
+  @apply font-serif text-xl font-semibold text-brand-crimson;
+}
+
+.socio-fail p {
+  @apply mt-2 max-w-[48ch];
+}
+
+.socio-fail__actions {
+  @apply mt-4 flex flex-wrap items-center gap-x-5 gap-y-2;
+}
+
+.socio-fail a {
+  @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:no-underline;
 }
