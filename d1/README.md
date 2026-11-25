@@ -74,22 +74,20 @@ npx wrangler d1 migrations apply multimage-orders --remote
 
 ## Membership requests
 
-The `membership_requests` table (migration `0004_membership_requests.sql`, rebuilt by `0005_membership_collaboration.sql`) holds the requests of `/diventa-socio`, one row each. Migration 0004 was applied remotely on 2026-11-25. Same rules as `orders`: the site only writes (INSERT, then UPDATE of `notify_status` and `notify_error` by `code`; on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`.
+The `membership_requests` table (migration `0004_membership_requests.sql`, rebuilt by `0005_membership_collaboration.sql` and again by `0006_membership_simplify.sql`) holds the requests of `/diventa-socio`, one row each. Same rules as `orders`, simpler: the site only INSERTs one row per request and never updates it (on a UNIQUE clash on `membership_requests.code` the endpoint regenerates the code and retries the insert once), and any reader addresses a row by `code`, never by `id`. Every row implies the applicant's consent at `created_at`: the server rejects a request without the privacy consent, and the email carries the consent time, so the table has no consent column.
 
-Columns: `id` (INTEGER PK AUTOINCREMENT), `code` (TEXT NOT NULL UNIQUE, `SO-YYMMDD-XXXX`), `created_at`, the personal columns `email`, `first_name`, `last_name`, `birth_date`, `birth_place`, `address1`, `address2`, `city`, `region`, `postcode`, `country` (all TEXT NULL, so an erased row is valid), `fee_id`, `fee_label`, `fee_cents` (the tier as the CMS had it, re-read on the server; integer cents), `payment_method` (nullable since 0005: the sign-up writes NULL, `bonifico` or `paypal` otherwise, CHECK), `areas_json` (JSON array, CHECK `json_valid`: the sign-up writes `'[]'`, the collaboration step writes the chosen areas as `[{id,label}]`), `areas_other` (free text, NULL if none), `collaboration_at` (TEXT NULL, set by the one allowed collaboration update; NULL means the step has not happened), `collab_token_hash` (TEXT NULL, the SHA-256 hex of the secret token returned once to the submitter; the clear token is never stored), `consent_at`, `notify_status` (`pending` default, `sent`, `failed`, `skipped`, CHECK) and `notify_error`.
+Columns (18): `id` (INTEGER PK AUTOINCREMENT), `code` (TEXT NOT NULL UNIQUE, `SO-YYMMDD-XXXX`), `created_at`, the personal columns `email`, `first_name`, `last_name`, `birth_date`, `birth_place`, `address1`, `address2`, `city`, `region`, `postcode`, `country` (all TEXT NULL, so an erased row is valid), `fee_label`, `fee_cents` (the tier as the CMS had it, re-read on the server; integer cents), `areas` (TEXT NULL: the labels of the chosen collaboration areas joined by ", ", NULL when none; plain text, not JSON) and `areas_other` (free text, NULL if none).
 
-Migration 0005 rebuilt the table (SQLite cannot drop a CHECK or NOT NULL in place): rows are copied with their `code`, `id` and `notify_error`, and the AUTOINCREMENT ids restart from the largest copied id, so a reader must address a row by `code`, never by `id`. The table now has 25 columns. Migration 0005 was applied remotely on 2026-11-25 (table empty at the time; `orders` unchanged).
-
-The collaboration step updates a row only while `collaboration_at IS NULL`, within one hour of `created_at`, with `email IS NOT NULL` and a matching `collab_token_hash`; the erasure below therefore also closes that door.
+Migration 0006 rebuilt the table (SQLite cannot drop several columns and a CHECK in place) and copied the existing rows, converting `areas_json` into the `areas` text. It dropped `fee_id`, `payment_method`, `areas_json`, `collaboration_at`, `collab_token_hash`, `consent_at`, `notify_status` and `notify_error`: there is no notify column, an email failure is logged by the Worker (`notify_error=<E> code=SO-…`, see `docs/guidelines/operations.md` § Monitoring & Logging) and not kept in D1. The AUTOINCREMENT ids restart from the largest copied id, so address a row by `code`. Migrations 0004 and 0005 were applied remotely on 2026-11-25.
 
 No retention rule (owner, 2026-11-24): rows stay until erased. Erasure, by `code`, sets every personal column to NULL:
 
 ```bash
-npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE membership_requests SET email=NULL, first_name=NULL, last_name=NULL, birth_date=NULL, birth_place=NULL, address1=NULL, address2=NULL, city=NULL, region=NULL, postcode=NULL, country=NULL, areas_other=NULL, collab_token_hash=NULL WHERE code='<code>'"
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --command "UPDATE membership_requests SET email=NULL, first_name=NULL, last_name=NULL, birth_date=NULL, birth_place=NULL, address1=NULL, address2=NULL, city=NULL, region=NULL, postcode=NULL, country=NULL, areas_other=NULL WHERE code='<code>'"
 ```
 
-Unsent notices, run at least weekly; each row is forwarded to `info@` by hand:
+To read one request by `code` (for instance to forward an unsent notice, found in the Worker logs):
 
 ```bash
-npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --json --command "SELECT code, created_at, notify_status, notify_error FROM membership_requests WHERE notify_status <> 'sent' ORDER BY created_at DESC"
+npx dotenv -e .env.cloudflare -- npx wrangler d1 execute multimage-orders --remote --json --command "SELECT * FROM membership_requests WHERE code='<code>'"
 ```
