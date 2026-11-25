@@ -204,7 +204,8 @@ export function initMembershipPage(): void {
 
   const next = () => {
     hideFormError();
-    clearAllErrors();
+    // Step-2 errors (e.g. from the server) stay for the way back.
+    STEP_ONE_KEYS.forEach(clearError);
     const problems = validateMembershipFields(readFields());
     const keys = STEP_ONE_KEYS.filter((k) => problems[k]);
     if (keys.length > 0) {
@@ -275,9 +276,13 @@ export function initMembershipPage(): void {
     }
   };
 
-  const retry = () => {
+  const hideSendFailure = () => {
     if (failBlock) failBlock.hidden = true;
     if (sendArea) sendArea.hidden = false;
+  };
+
+  const retry = () => {
+    hideSendFailure();
     sendArea?.querySelector<HTMLElement>('button[type="submit"]')?.focus();
   };
 
@@ -294,8 +299,14 @@ export function initMembershipPage(): void {
     } else showFieldSummary(invalid);
   };
 
+  // The widget is reset after the branch: a step-1 field error has already moved the user to step 1,
+  // so the reset waits for the next goStep(2) instead of running in a hidden container.
   const showFailure = (res: MembershipResponse | null) => {
+    handleFailure(res);
     resetWidget();
+  };
+
+  const handleFailure = (res: MembershipResponse | null) => {
     if (!res || res.ok) {
       showSendFailure('generic');
       return;
@@ -330,6 +341,7 @@ export function initMembershipPage(): void {
       next();
       return;
     }
+    hideSendFailure();
     hideFormError();
     clearAllErrors();
     if (status) status.textContent = '';
