@@ -19,9 +19,21 @@
   @apply md:pl-0;
 }
 
-@media (min-width: 768px) {
+/* A row of three only while the band has the full width (768–1023px); in the reading column
+   from 1024px it stacks again, divided by the same hairline. */
+@media (min-width: 768px) and (max-width: 1023.98px) {
   .socio-band {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .socio-band li {
+    @apply px-0 py-4;
+  }
+
+  .socio-band li + li {
+    @apply border-t border-l-0;
   }
 }
 
@@ -125,4 +137,49 @@
   body:has([data-socio-done]:not([hidden])) [data-socio-copy-iban] {
     display: none;
   }
+}
+
+/* Two columns from 1024px: the reading column on the left (head, band, CMS text), the form on the
+   right on a mist panel, so the two jobs read as two distinct surfaces. Text comes first in the
+   DOM, so reading and focus order match the visual order; below 1024px the two stack. Neither
+   column is sticky: the CMS text can be taller than the viewport. */
+.socio-layout {
+  @apply grid gap-10;
+}
+
+.socio-intro {
+  @apply min-w-0 space-y-8;
+}
+
+.socio-side {
+  @apply min-w-0;
+}
+
+@media (min-width: 1024px) {
+  .socio-layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: 4rem;
+    align-items: start;
+  }
+}
+
+/* The form panel: mist, square, no frame and no shadow; the white fields sit on it. */
+.socio-panel {
+  @apply bg-brand-mist p-5 sm:p-8;
+}
+
+/* In the panel the hint belongs to its legend: close under it, clear of the first label. */
+.socio-panel .order-hint-line {
+  @apply -mt-2 mb-5;
+}
+
+/* Slate is 4.7:1 on white but 4.25:1 on mist: on the panel the secondary text takes a charcoal
+   tint instead (about 6.6:1), still a step below the labels. */
+.socio-panel .order-hint,
+.socio-panel .order-hint-line,
+.socio-panel .order-choice__text span,
+.socio-panel .order-check__hint,
+.socio-panel .order-send p,
+.socio-panel .order-status {
+  color: color-mix(in srgb, var(--color-brand-charcoal) 82%, var(--color-brand-mist));
 }

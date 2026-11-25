@@ -229,37 +229,39 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
 ---
 
 <BaseLayout seo={seo}>
-  <div class="space-y-8 py-8 md:py-12" data-socio-page>
-    <div class="max-w-3xl space-y-4">
-      <h1 class="font-serif text-3xl text-brand-navy md:text-4xl">{pageTitle}</h1>
-      {subtitleHtml ? (
-        <div class="text-base text-brand-charcoal md:text-lg" set:html={subtitleHtml} />
+  <div class="socio-layout py-8 md:py-12" data-socio-page>
+    <div class="socio-intro">
+      <div class="max-w-3xl space-y-4">
+        <h1 class="font-serif text-3xl text-brand-navy md:text-4xl">{pageTitle}</h1>
+        {subtitleHtml ? (
+          <div class="text-base text-brand-charcoal md:text-lg" set:html={subtitleHtml} />
+        ) : null}
+      </div>
+
+      <ul class="socio-band" aria-label="Cosa ricevi">
+        {bandItems.map((item) => <li>
+          <span class="socio-band__figure">{item.figure}</span>
+          <span class="socio-band__text">{item.text}</span>
+        </li>)}
+      </ul>
+
+      {hasContent && membership?.content ? (
+        <div
+          class="max-w-3xl space-y-5 text-base leading-relaxed text-brand-charcoal [&_a]:text-brand-navy [&_a]:underline [&_a]:underline-offset-2 [&_h2]:mt-8 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:text-brand-navy [&_h3]:mt-6 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:text-brand-navy [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+        >
+          <StructuredText
+            data={membership.content as any}
+            blockComponents={blockComponents as any}
+            inlineRecordComponents={defaultInlineRecordComponents as any}
+            linkToRecordComponents={defaultLinkToRecordComponents as any}
+          />
+        </div>
       ) : null}
     </div>
 
-    <ul class="socio-band" aria-label="Cosa ricevi">
-      {bandItems.map((item) => <li>
-        <span class="socio-band__figure">{item.figure}</span>
-        <span class="socio-band__text">{item.text}</span>
-      </li>)}
-    </ul>
-
-    {hasContent && membership?.content ? (
-      <div
-        class="max-w-3xl space-y-5 text-base leading-relaxed text-brand-charcoal [&_a]:text-brand-navy [&_a]:underline [&_a]:underline-offset-2 [&_h2]:mt-8 [&_h2]:font-serif [&_h2]:text-2xl [&_h2]:text-brand-navy [&_h3]:mt-6 [&_h3]:font-serif [&_h3]:text-xl [&_h3]:text-brand-navy [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
-      >
-        <StructuredText
-          data={membership.content as any}
-          blockComponents={blockComponents as any}
-          inlineRecordComponents={defaultInlineRecordComponents as any}
-          linkToRecordComponents={defaultLinkToRecordComponents as any}
-        />
-      </div>
-    ) : null}
-
-    <div class="max-w-3xl">
+    <div class="socio-side">
       {showForm ? (
-        <form data-socio-form data-sitekey={siteKey} novalidate>
+        <form class="socio-panel" data-socio-form data-sitekey={siteKey} novalidate>
           <div class="order-form-error" role="alert" tabindex="-1" data-socio-form-error hidden>
             <p class="order-form-error__head">
               <svg
