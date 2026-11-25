@@ -8,14 +8,16 @@
  *   400 too_large, bad_request, invalid (with `fields`), turnstile
  *   502 turnstile_unavailable (siteverify unreachable)
  *   502 cms_unavailable (CDA read failed or no published membership record)
- *   400 invalid (fee or areas not in the published CMS record)
+ *   400 invalid (fee not in the published CMS record)
  *   502 save_failed (not saved and the notification failed or has no binding)
- *   200 { ok, code, notified, fee: { label, amountCents }, payment, causale }
+ *   200 { ok, code, notified, fee: { label, amountCents }, causale, collabToken }
  *
  * D1 is the record, the email a notification: saved and mail failed (or no mail
  * binding) is still 200 with `notified: false` and the row marked `failed` or
  * `skipped`; not saved but mailed is 200 too (the email carries the whole request).
- * The client sends only the fee and area ids: label and amount are read from the published
+ * The sign-up carries no payment method and no areas (the confirmation and the collaboration step
+ * cover them). The 200 answer returns `collabToken`, a fresh 128-bit token whose SHA-256 is the only
+ * form stored (`collab_token_hash`); it never goes in emails, logs or the causale. The client sends only the fee id: label and amount are read from the published
  * CMS, never from the client. `fee.label` in the answer is `membershipFeeLabel` ("10 € — Studente
  * under 25"), the text the page shows. Error bodies carry codes only. Nothing personal is ever
  * logged: one line per answer with the status, the code and counts. Bindings come only through
@@ -52,7 +54,6 @@ import {
   type MembershipErrorCode,
   type MembershipFieldKey,
   type MembershipResponse,
-  type PaymentMethod,
 } from '~/lib/membership';
 import {
   MEMBERSHIP_BODY_MAX_BYTES,
@@ -62,6 +63,7 @@ import {
   COLLABORATION_UPDATE_SQL,
   collaborationEmail,
   hashCollabToken,
+  newCollabToken,
   parseCollaborationUpdate,
   resolveMembershipAreas,
   membershipCausale,
@@ -183,10 +185,9 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  // 6. Fee and areas, read again from the published CMS.
+  // 6. Fee, read again from the published CMS.
   let paymentNote: string | null;
   let fees: Array<{ id: string; label: string; amount: number }>;
-  let areas: Array<{ id: string; label: string }>;
   try {
     const data = await executeQuery<MembershipRequestQueryResult>(MEMBERSHIP_REQUEST_QUERY, {
       includeDrafts: false,
@@ -196,18 +197,17 @@ export const POST: APIRoute = async ({ request }) => {
     fees = data.membership.fees
       .filter((f) => f.id && f.label && typeof f.amount === 'number')
       .map((f) => ({ id: f.id, label: f.label as string, amount: f.amount as number }));
-    areas = data.membership.collaborationAreas
-      .filter((a) => a.id && a.label)
-      .map((a) => ({ id: a.id, label: a.label as string }));
   } catch {
     return fail(502, 'cms_unavailable');
   }
-  const resolved = resolveMembershipChoices(req, { fees, areas });
+  const resolved = resolveMembershipChoices(req, { fees });
   if (!resolved.ok) return fail(400, 'invalid', resolved.fields);
   const { choices } = resolved;
 
   // 7. Code, save, notify.
   const at = new Date();
+  // The collaboration token: only its hash is stored; the clear token goes back in the answer.
+  const collab = await newCollabToken();
   let code = membershipCode(at, crypto.getRandomValues(new Uint8Array(4)));
   let saved = false;
   let notified = false;
@@ -218,7 +218,9 @@ export const POST: APIRoute = async ({ request }) => {
       (c) =>
         db
           .prepare(INSERT_SQL)
-          .bind(...membershipRow({ request: req, choices, code: c, at }))
+          .bind(
+            ...membershipRow({ request: req, choices, code: c, at, collabTokenHash: collab.hash }),
+          )
           .run(),
       code,
       () => membershipCode(at, crypto.getRandomValues(new Uint8Array(4))),
@@ -277,10 +279,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   // 8. Answer.
   if (!db && !mail) {
-    console.log(`${LOG} 200 ok (dev) areas=${choices.areas.length}`);
+    console.log(`${LOG} 200 ok (dev)`);
   } else {
     console.log(
-      `${LOG} 200 ok areas=${choices.areas.length} saved=${saved} notified=${notified}${notifyError ? ` notify_error=${notifyError}` : ''}`,
+      `${LOG} 200 ok saved=${saved} notified=${notified}${notifyError ? ` notify_error=${notifyError}` : ''}`,
     );
   }
   return reply(
@@ -292,8 +294,8 @@ export const POST: APIRoute = async ({ request }) => {
         label: membershipFeeLabel({ label: choices.fee.label, amount: choices.fee.amount }),
         amountCents: choices.fee.cents,
       },
-      payment: req.payment as PaymentMethod,
       causale,
+      collabToken: collab.token,
     },
     200,
   );

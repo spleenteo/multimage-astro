@@ -6,7 +6,6 @@
 import {
   AREA_OTHER,
   MEMBERSHIP_LABELS,
-  PAYMENT_METHODS,
   membershipFeeLabel,
   validateCollaborationFields,
   validateMembershipFields,
@@ -14,7 +13,6 @@ import {
   type MembershipErrorCode,
   type MembershipFieldKey,
   type MembershipFields,
-  type PaymentMethod,
 } from './membership';
 import { requestCode, toCents } from './order';
 
@@ -49,6 +47,7 @@ export const MEMBERSHIP_COLUMNS = [
   'areas_other',
   'consent_at',
   'notify_status',
+  'collab_token_hash',
 ] as const;
 
 export type MembershipRequest = MembershipFields & { turnstileToken: string };
@@ -57,7 +56,6 @@ export type MembershipFee = { id: string; label: string; amount: number };
 export type MembershipArea = { id: string; label: string };
 export type MembershipChoices = {
   fee: { id: string; label: string; amount: number; cents: number };
-  areas: MembershipArea[];
 };
 
 type ParseResult =
@@ -73,10 +71,6 @@ export function parseMembershipRequest(body: unknown): ParseResult {
     return { ok: false, error: 'bad_request' };
   const o = body as Record<string, unknown>;
 
-  // A non-string area becomes '', which the area rule rejects as an invalid `areas`.
-  const areas = Array.isArray(o.areas)
-    ? [...new Set((o.areas as unknown[]).map((a) => text(a)))]
-    : [];
   const fields: MembershipFields = {
     email: text(o.email),
     firstName: text(o.firstName),
@@ -90,10 +84,6 @@ export function parseMembershipRequest(body: unknown): ParseResult {
     postcode: text(o.postcode),
     country: text(o.country),
     fee: text(o.fee),
-    payment: text(o.payment),
-    areas,
-    // The free text only counts with "Altro" checked.
-    areasOther: areas.includes(AREA_OTHER) ? text(o.areasOther) : '',
     consent: o.consent === true,
   };
   const errors = validateMembershipFields(fields);
@@ -152,37 +142,38 @@ export function resolveMembershipAreas(
   return ok ? { ok: true, areas } : { ok: false };
 }
 
-/** The fee and areas the applicant named, read again from the published CMS; an unknown id is invalid. */
+/** The fee the applicant named, read again from the published CMS; an unknown id is invalid. */
 export function resolveMembershipChoices(
-  request: Pick<MembershipRequest, 'fee' | 'areas'>,
-  cms: { fees: MembershipFee[]; areas: MembershipArea[] },
+  request: Pick<MembershipRequest, 'fee'>,
+  cms: { fees: MembershipFee[] },
 ): { ok: true; choices: MembershipChoices } | { ok: false; fields: MembershipFieldKey[] } {
   const fields: MembershipFieldKey[] = [];
   const fee = cms.fees.find((f) => f.id === request.fee);
   if (!fee || !Number.isFinite(fee.amount) || fee.amount < 0) fields.push('fee');
-
-  const resolved = resolveMembershipAreas(request.areas, cms.areas);
-  if (!resolved.ok) fields.push('areas');
-  const areas = resolved.ok ? resolved.areas : [];
 
   if (fields.length > 0 || !fee) return { ok: false, fields };
   return {
     ok: true,
     choices: {
       fee: { id: fee.id, label: fee.label, amount: fee.amount, cents: toCents(fee.amount) },
-      areas,
     },
   };
 }
 
-/** The values of one `membership_requests` row, in `MEMBERSHIP_COLUMNS` order; empty optionals are NULL. */
+/**
+ * The values of one `membership_requests` row, in `MEMBERSHIP_COLUMNS` order; empty optionals are
+ * NULL. The sign-up carries no payment method and no areas (`payment_method` NULL, `areas_json`
+ * '[]', `areas_other` NULL): the collaboration step fills the areas later. `collabTokenHash` is
+ * the SHA-256 hex of the token returned to the applicant; the clear token is never stored.
+ */
 export function membershipRow(data: {
   request: MembershipRequest;
   choices: MembershipChoices;
   code: string;
   at: Date;
+  collabTokenHash: string;
 }): Array<string | number | null> {
-  const { request: r, choices, code, at } = data;
+  const { request: r, choices, code, at, collabTokenHash } = data;
   const time = at.toISOString();
   return [
     code,
@@ -201,11 +192,12 @@ export function membershipRow(data: {
     choices.fee.id,
     choices.fee.label,
     choices.fee.cents,
-    r.payment,
-    JSON.stringify(choices.areas),
-    (r.areas.includes(AREA_OTHER) ? r.areasOther : '') || null,
+    null,
+    '[]',
+    null,
     time,
     'pending',
+    collabTokenHash,
   ];
 }
 
@@ -220,7 +212,6 @@ export function membershipEmail(data: {
   const { request: r, choices, code, causale, at } = data;
   const L = MEMBERSHIP_LABELS;
   const opt = (v: string): string => v || NOT_GIVEN;
-  const other = r.areas.includes(AREA_OTHER) ? r.areasOther : '';
 
   const subject = `Richiesta socio ${code} · ${r.firstName} ${r.lastName}`;
   const out = [
@@ -239,11 +230,7 @@ export function membershipEmail(data: {
     `${L.country}: ${r.country}`,
     '',
     `${L.fee}: ${membershipFeeLabel({ label: choices.fee.label, amount: choices.fee.amount })}`,
-    `${L.payment}: ${PAYMENT_METHODS[r.payment as PaymentMethod]}`,
     `Causale: ${causale}`,
-    '',
-    `${L.areas}: ${choices.areas.length > 0 ? choices.areas.map((a) => a.label).join(', ') : NOT_GIVEN}`,
-    `${L.areasOther}: ${opt(other)}`,
     '',
     `${L.consent}: sì, il ${at.toISOString()}`,
   ];

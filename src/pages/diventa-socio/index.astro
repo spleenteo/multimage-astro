@@ -1,12 +1,12 @@
 ---
 // /diventa-socio: the membership page. Server-rendered and cached like every page, identical for
-// every visitor: no cookie. Title, subtitle, text, fee tiers and collaboration areas come from the
+// every visitor: no cookie. Title, subtitle, text, fee tiers come from the
 // Membership singleton in DatoCMS. The markup contract the page script `_membership-page.client.ts` binds to: the
 // root `data-socio-page`, the form `data-socio-form`, control ids `socio-<key>` (keys of
 // MembershipFieldKey), error slots `[data-error-for="<key>"]` with id `socio-<key>-error`, the
 // error band `data-socio-form-error` (+ `-text`, `-list`), `data-socio-mailto`, the way-out box
-// `data-socio-mailto-box`, the status line `data-socio-status`, the "Altro" field
-// `data-socio-areas-other` and the Turnstile slot `#socio-turnstile`. The confirmation, hidden
+// `data-socio-mailto-box`, the status line `data-socio-status` and the Turnstile slot
+// `#socio-turnstile`. The confirmation, hidden
 // until the send succeeds: `data-socio-done` (section), `data-socio-done-heading` (focus target),
 // `data-socio-done-lede` and `data-socio-done-fee` (filled by the script), `data-socio-methods`
 // holding one `data-socio-method="bonifico|paypal"` box each (the script moves the chosen one
@@ -39,9 +39,7 @@ import {
   formatIban,
 } from '~/lib/payment';
 import {
-  AREA_OTHER,
   MEMBERSHIP_ADDRESS_MAX,
-  MEMBERSHIP_AREAS_OTHER_MAX,
   MEMBERSHIP_BIRTH_DATE_MIN,
   MEMBERSHIP_BIRTH_PLACE_MAX,
   MEMBERSHIP_CITY_MAX,
@@ -53,7 +51,6 @@ import {
   MEMBERSHIP_NAME_MAX,
   MEMBERSHIP_POSTCODE_MAX,
   MEMBERSHIP_REGION_MAX,
-  PAYMENT_METHODS,
   membershipFeeLabel,
   type MembershipFieldKey,
 } from '~/lib/membership';
@@ -77,7 +74,6 @@ const subtitleHtml = sanitizeCmsHtml(membership?.subtitle);
 const description = toPlainText(membership?.subtitle ?? null);
 const hasContent = hasStructuredTextContent(membership?.content);
 const fees = membership?.fees ?? [];
-const areas = membership?.collaborationAreas ?? [];
 const showForm = Boolean(membership) && fees.length > 0 && Boolean(siteKey);
 
 const seo = withFallbackSeo(membership?._seoMetaTags, {
@@ -195,7 +191,6 @@ const textLines = (s: string | null | undefined) =>
     .filter(Boolean);
 const successLines = textLines(membership?.successText);
 const noteLines = textLines(membership?.paymentNote).slice(1);
-const paymentEntries = Object.entries(PAYMENT_METHODS);
 ---
 
 <BaseLayout seo={seo}>
@@ -282,55 +277,6 @@ const paymentEntries = Object.entries(PAYMENT_METHODS);
               </label>)}
             </div>
             <p class="order-error" id="socio-fee-error" data-error-for="fee" hidden></p>
-          </fieldset>
-
-          <fieldset class="order-fieldset">
-            <legend>Come paghi</legend>
-            <div class="order-choices">
-              {paymentEntries.map(([key, label]) => <label class="order-choice">
-                <input type="radio" name="payment" value={key} required />
-                <span class="order-choice__text">
-                  <b>{label}</b>
-                </span>
-              </label>)}
-            </div>
-            <p class="order-error" id="socio-payment-error" data-error-for="payment" hidden></p>
-          </fieldset>
-
-          <fieldset class="order-fieldset">
-            <legend>Come vuoi collaborare</legend>
-            <div class="order-choices">
-              {areas.map((area) => <label class="order-choice">
-                <input type="checkbox" name="areas" value={area.id} />
-                <span class="order-choice__text">
-                  <b>{area.label}</b>
-                </span>
-              </label>)}
-              <label class="order-choice">
-                <input type="checkbox" name="areas" value={AREA_OTHER} />
-                <span class="order-choice__text">
-                  <b>Altro</b>
-                </span>
-              </label>
-            </div>
-            <div class="order-field" data-socio-areas-other hidden>
-              <label for="socio-areasOther">{MEMBERSHIP_LABELS.areasOther}</label>
-              <input
-                class="order-input"
-                id="socio-areasOther"
-                name="areasOther"
-                type="text"
-                autocomplete="off"
-                maxlength={MEMBERSHIP_AREAS_OTHER_MAX}
-              />
-              <p
-                class="order-error"
-                id="socio-areasOther-error"
-                data-error-for="areasOther"
-                hidden
-              ></p>
-            </div>
-            <p class="order-error" id="socio-areas-error" data-error-for="areas" hidden></p>
           </fieldset>
 
           <div class="order-consent">

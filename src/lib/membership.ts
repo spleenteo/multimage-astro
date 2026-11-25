@@ -46,7 +46,6 @@ export type MembershipFieldKey =
   | 'postcode'
   | 'country'
   | 'fee'
-  | 'payment'
   | 'areas'
   | 'areasOther'
   | 'consent';
@@ -66,11 +65,6 @@ export interface MembershipFields {
   country: string;
   /** Id of the fee block. */
   fee: string;
-  /** A key of PAYMENT_METHODS. */
-  payment: string;
-  /** Ids of the area blocks, plus AREA_OTHER. */
-  areas: string[];
-  areasOther: string;
   consent: boolean;
 }
 
@@ -93,9 +87,10 @@ export type MembershipResponse =
       notified: boolean;
       /** The fee as the server resolved it from the CMS. */
       fee: { label: string; amountCents: number };
-      payment: PaymentMethod;
       /** The payment reason to write on the transfer or the PayPal payment. */
       causale: string;
+      /** Clear token for the collaboration step: held by the page in memory only, never stored by the server in clear. */
+      collabToken: string;
     }
   | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
 
@@ -128,7 +123,6 @@ export const MEMBERSHIP_LABELS: Record<MembershipFieldKey, string> = {
   postcode: 'CAP',
   country: 'Paese',
   fee: 'Tipo di quota',
-  payment: 'Come paghi',
   areas: 'Come vuoi collaborare',
   areasOther: 'Altro: scrivi come',
   consent: 'Consenso al trattamento dei dati',
@@ -141,7 +135,7 @@ export const MEMBERSHIP_FIELD_MESSAGES: Record<MembershipFieldKey, string> = {
   lastName: `Scrivi il tuo cognome, per esempio Neri (al massimo ${MEMBERSHIP_NAME_MAX} caratteri).`,
   birthDate:
     'Scrivi la data di nascita come giorno, mese e anno, per esempio 01/05/1990: non può essere futura.',
-  birthPlace: 'Scrivi il luogo di nascita, per esempio Firenze.',
+  birthPlace: 'Scrivi il luogo di nascita, per esempio Bologna.',
   address1: 'Scrivi via e numero civico, per esempio Via Roma 1.',
   address2: `La seconda riga dell'indirizzo supera i ${MEMBERSHIP_ADDRESS_MAX} caratteri: accorciala o lasciala vuota.`,
   city: 'Scrivi la città, per esempio Firenze.',
@@ -149,7 +143,6 @@ export const MEMBERSHIP_FIELD_MESSAGES: Record<MembershipFieldKey, string> = {
   postcode: 'Scrivi il CAP: da 2 a 12 tra lettere, cifre, spazi e trattini, per esempio 50100.',
   country: 'Scrivi il paese, per esempio Italia.',
   fee: 'Scegli il tipo di quota.',
-  payment: 'Scegli come vuoi pagare: bonifico bancario o PayPal.',
   areas: 'Le aree scelte non sono valide: ricarica la pagina e riprova.',
   areasOther: `Hai spuntato Altro: scrivi in poche parole come vuoi collaborare, per esempio "traduzioni dall'inglese" (da ${MEMBERSHIP_AREAS_OTHER_MIN} a ${MEMBERSHIP_AREAS_OTHER_MAX} caratteri).`,
   consent: 'Per inviare la richiesta spunta il consenso al trattamento dei dati.',
@@ -183,7 +176,6 @@ const AREA_ID_PATTERN = /^[A-Za-z0-9_-]{1,40}$/;
 const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/;
 
-const has = (obj: object, key: string): boolean => Object.prototype.hasOwnProperty.call(obj, key);
 const inRange = (s: string, min: number, max: number): boolean =>
   s.length >= min && s.length <= max && !CONTROL_CHARS.test(s);
 
@@ -209,7 +201,6 @@ export function validateMembershipFields(
   const address2 = f.address2.trim();
   const region = f.region.trim();
   const postcode = f.postcode.trim();
-  const areas = Array.isArray(f.areas) ? f.areas : [];
 
   if (email === '') errors.email = EMAIL_EMPTY_MESSAGE;
   else if (email.length > 254 || CONTROL_CHARS.test(email) || !EMAIL_PATTERN.test(email))
@@ -234,17 +225,6 @@ export function validateMembershipFields(
   if (!inRange(f.country.trim(), MEMBERSHIP_COUNTRY_MIN, MEMBERSHIP_COUNTRY_MAX))
     errors.country = m.country;
   if (!FEE_ID_PATTERN.test(f.fee.trim())) errors.fee = m.fee;
-  if (!has(PAYMENT_METHODS, f.payment.trim())) errors.payment = m.payment;
-  if (
-    areas.length > MEMBERSHIP_AREAS_MAX ||
-    areas.some((a) => typeof a !== 'string' || !AREA_ID_PATTERN.test(a))
-  )
-    errors.areas = m.areas;
-  if (
-    areas.includes(AREA_OTHER) &&
-    !inRange(f.areasOther.trim(), MEMBERSHIP_AREAS_OTHER_MIN, MEMBERSHIP_AREAS_OTHER_MAX)
-  )
-    errors.areasOther = m.areasOther;
   if (f.consent !== true) errors.consent = m.consent;
   return errors;
 }

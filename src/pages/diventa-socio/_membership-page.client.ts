@@ -1,11 +1,10 @@
 // /diventa-socio page script: validates the membership form, shows the field errors and the
-// summary, shows the "Altro" field, runs Turnstile, sends the request to /api/socio and swaps the
-// form for the confirmation (payment method first). The DOM is touched with textContent and
+// summary, runs Turnstile, sends the request to /api/socio and swaps the form for the
+// confirmation (bonifico first). The DOM is touched with textContent and
 // setAttribute only.
 // The markup contract (data-socio-* attributes, ids `socio-<key>`) is defined in index.astro.
 import { createFieldErrors, loadTurnstile } from '~/lib/form.client';
 import {
-  AREA_OTHER,
   MEMBERSHIP_ACTION,
   MEMBERSHIP_EMAIL,
   MEMBERSHIP_FIELD_MESSAGES,
@@ -14,7 +13,6 @@ import {
   type MembershipFieldKey,
   type MembershipFields,
   type MembershipResponse,
-  type PaymentMethod,
 } from '~/lib/membership';
 import { PAYMENT_IBAN, paypalUrl } from '~/lib/payment';
 
@@ -37,9 +35,6 @@ const ERROR_KEYS = [
   'region',
   'country',
   'fee',
-  'payment',
-  'areas',
-  'areasOther',
   'consent',
   'turnstile',
 ] as const;
@@ -71,13 +66,14 @@ export function initMembershipPage(): void {
 
   const formError = $('[data-socio-form-error]');
   const status = $('[data-socio-status]');
-  const othersField = $('[data-socio-areas-other]');
 
   let token = '';
   let turnstileRequested = false;
   let turnstile: { reset: () => void } | undefined;
   let sending = false;
   let finished = false;
+  // In memory only; the collaboration step (next task) reads it from here.
+  const session = { collabToken: '' };
 
   const {
     errorEl,
@@ -92,7 +88,7 @@ export function initMembershipPage(): void {
     idPrefix: 'socio',
     keys: ERROR_KEYS,
     names: FIELD_NAMES,
-    groupKeys: ['fee', 'payment', 'areas'],
+    groupKeys: ['fee'],
     plainKeys: ['turnstile'],
     box: formError,
     boxText: $('[data-socio-form-error-text]'),
@@ -106,7 +102,6 @@ export function initMembershipPage(): void {
     const val = (key: string) => $<HTMLInputElement>(`#socio-${key}`)?.value ?? '';
     const checked = (name: string) =>
       Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${name}"]:checked`));
-    const areas = checked('areas').map((el) => el.value);
     return {
       email: val('email'),
       firstName: val('firstName'),
@@ -120,15 +115,8 @@ export function initMembershipPage(): void {
       postcode: val('postcode'),
       country: val('country'),
       fee: checked('fee')[0]?.value ?? '',
-      payment: checked('payment')[0]?.value ?? '',
-      areas,
-      areasOther: areas.includes(AREA_OTHER) ? val('areasOther') : '',
       consent: $<HTMLInputElement>('#socio-consent')?.checked ?? false,
     };
-  };
-
-  const syncOthers = () => {
-    if (othersField) othersField.hidden = !readFields().areas.includes(AREA_OTHER);
   };
 
   // --- Turnstile ----------------------------------------------------------
@@ -181,12 +169,9 @@ export function initMembershipPage(): void {
       .querySelectorAll<HTMLElement>('[data-socio-causale]')
       .forEach((el) => (el.textContent = res.causale));
 
-    // The chosen method first, the other below.
-    const methods = done.querySelector<HTMLElement>('[data-socio-methods]');
-    const chosen = done.querySelector<HTMLElement>(
-      `[data-socio-method="${res.payment satisfies PaymentMethod}"]`,
-    );
-    if (methods && chosen) methods.prepend(chosen);
+    // Bonifico stays first, as the markup has it. The collaboration token stays in memory only
+    // (the collaboration step reads it from here); it is never written to the DOM or to storage.
+    session.collabToken = res.collabToken;
 
     const link = done.querySelector<HTMLAnchorElement>('[data-socio-paypal-link]');
     if (link) {
@@ -290,10 +275,6 @@ export function initMembershipPage(): void {
   const onFieldChange = (event: Event) => {
     const target = event.target as HTMLInputElement | null;
     if (!target) return;
-    if (target.name === 'areas') {
-      syncOthers();
-      if (!readFields().areas.includes(AREA_OTHER)) clearError('areasOther');
-    }
     const key = target.name || target.id.replace(/^socio-/, '');
     if (!isErrorKey(key) || key === 'turnstile') return;
     const el = errorEl(key);
@@ -325,6 +306,4 @@ export function initMembershipPage(): void {
       );
     });
   }
-
-  syncOthers();
 }
