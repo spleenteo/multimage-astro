@@ -50,3 +50,4 @@ Owner answers at opening (2026-11-24):
 - 2026-11-25 — V2 close — /api/socio, D1 0004 (local), MEMBERSHIP_MAIL, shared payment/turnstile modules, confirmation; gate green; local D1 row proven, full submit deferred to production (local workerd outbound timeouts) — V3 — ~60 min — n/a
 - 2026-11-25 — V3 close — links + 301, docs, WAF widened, remote D1 0004, deployed 2922a340, real request saved/notified/deleted — closing sequence (changelog, archive, merge) — ~50 min — n/a
 - 2026-11-25 — slicing — V4 added from the Impeccable critique (25/40), owner chose all five issues, payment and collaboration moved to the confirmation — V4 plan — 10 min — n/a
+- 2026-11-25 — V4 plan — packet written; the planner was cut off three times by machine sleep before writing V4-plan.md — resume: dispatch the planner again on V4-packet.md — n/a — n/a
