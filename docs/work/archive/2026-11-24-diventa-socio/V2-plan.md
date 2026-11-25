@@ -6,7 +6,7 @@ level: essential
 
 # V2 plan — Sending the request and the confirmation
 
-**Mandate**: [slices.md § V2](./slices.md#v2--sending-the-request-and-the-confirmation) · **Guidelines**: [docs/development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
+**Mandate**: [slices.md § V2](./slices.md#v2--sending-the-request-and-the-confirmation) · **Guidelines**: [docs/development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
 
 **Summary**
 1. T1 moves the payment facts to an import-free `src/lib/payment.ts` and generalises the request code and the code-clash check in `order.ts`; T2 moves Turnstile out of `order.ts` and `/api/ordine` into `src/lib/turnstile.ts`. `/borsa` unchanged.

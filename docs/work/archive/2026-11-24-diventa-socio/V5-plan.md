@@ -6,7 +6,7 @@ level: essential
 
 # V5 plan — One send: a two-step form, one save, one email
 
-**Mandate**: [slices.md § V5](./slices.md#v5--one-send-a-two-step-form-one-save-one-email) · **Guidelines**: [docs/development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
+**Mandate**: [slices.md § V5](./slices.md#v5--one-send-a-two-step-form-one-save-one-email) · **Guidelines**: [docs/development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
 
 **Summary**
 1. T1 adds D1 migration 0006: `membership_requests` rebuilt with 18 columns, rows copied, `areas_json` turned into a labels text.

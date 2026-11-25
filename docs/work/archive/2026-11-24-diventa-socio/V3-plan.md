@@ -6,7 +6,7 @@ level: essential
 
 # V3 plan — Live on multimage.org
 
-**Mandate**: [slices.md § V3](./slices.md#v3--live-on-multimageorg) · **Guidelines**: [docs/development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
+**Mandate**: [slices.md § V3](./slices.md#v3--live-on-multimageorg) · **Guidelines**: [docs/development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
 
 **Summary**
 1. T1 points the Header "Diventa socio" button and the three "Soci: 30% di sconto" links to `/diventa-socio`; T2 adds the 301 from `/info/adesioni`, as a page like `/libri/ebooks`.

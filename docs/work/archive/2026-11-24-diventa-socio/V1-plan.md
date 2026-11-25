@@ -6,7 +6,7 @@ level: essential
 
 # V1 plan — The page and the form, from the CMS
 
-**Mandate**: [slices.md § V1](./slices.md#v1--the-page-and-the-form-from-the-cms) · **Guidelines**: [docs/development-guidelines.md](../../development-guidelines.md) · **Lessons**: none yet · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules)
+**Mandate**: [slices.md § V1](./slices.md#v1--the-page-and-the-form-from-the-cms) · **Guidelines**: [docs/development-guidelines.md](../../../development-guidelines.md) · **Lessons**: none yet · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules)
 
 **Summary**
 1. T1 adds two blocks and four fields to the `membership` singleton on the primary environment through the CMA, between two `npm run generate-schema` runs.

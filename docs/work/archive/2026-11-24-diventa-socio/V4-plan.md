@@ -6,7 +6,7 @@ level: essential
 
 # V4 plan — Trust, a shorter form, a confirmation that leads to books
 
-**Mandate**: [slices.md § V4](./slices.md#v4--from-the-critique-trust-a-shorter-form-a-confirmation-that-leads-to-books) · **Guidelines**: [docs/development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
+**Mandate**: [slices.md § V4](./slices.md#v4--from-the-critique-trust-a-shorter-form-a-confirmation-that-leads-to-books) · **Guidelines**: [docs/development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](./lessons.md) · **Execution rules**: Flow `agents/executor.md` (Test policy, Commit rules, Server rule)
 
 **Summary**
 1. T1 edits the published `membership` record through the CMA (title, subtitle, two fee labels, `success_text`; ids unchanged) and publishes it.
