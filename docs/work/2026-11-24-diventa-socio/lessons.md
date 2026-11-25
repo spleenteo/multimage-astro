@@ -9,3 +9,7 @@
 - When a page reuses another page's markup, check that each class is defined in a stylesheet the page itself loads (src/styles/form.css), not in the source page's private CSS.
 - Under `wrangler dev`, `request.url` carries the first route's host (www.multimage.org) unless `--local-upstream localhost:8787` is passed: plan local Worker checks that depend on the hostname with that flag.
 - Local `wrangler dev` needs `--compatibility-date` at or below the installed workerd's newest date, and its outbound fetches can be too slow for a 10 s siteverify timeout: test the insert path directly against local D1, and the full submit on production.
+- When a new endpoint reuses a shared helper module (bindings, Turnstile, payment data), update that module's inventory entry in the same slice: grep its exports against list-helpers.md, not only the new files'.
+- Docs written before a deploy should not carry a "live since" date; leave the date to the step that writes the production facts.
+- A doc sentence that names one endpoint ("the order code", "on /api/ordine") goes stale when a sibling endpoint joins it: grep the old path across docs/guidelines when adding the new one.
+- A plain `astro dev` submit answers with a real-looking code that is saved nowhere: when a production test is asked for, say which host to use and match codes against the Worker logs (`cf observability telemetry query`) before suspecting a bug.
