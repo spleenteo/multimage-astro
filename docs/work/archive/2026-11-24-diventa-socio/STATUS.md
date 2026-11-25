@@ -6,6 +6,7 @@ step: null
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
+archived: 2026-11-25
 updated: 2026-11-25
 tags: [work, diventa-socio]
 description: "A /diventa-socio page with the texts of the DatoCMS `membership` singleton and a membership request form; the data reaches info@multimage.org by email through Cloudflare (and a D1 copy); the confirmation says the person will be contacted soon and can already pay the fee by bank transfer or PayPal."
