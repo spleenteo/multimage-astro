@@ -718,6 +718,9 @@ export type Membership = ItemTypeDefinition<
       type: 'rich_text';
       blocks: MembershipFeeBlock;
     };
+    fee_note: {
+      type: 'string';
+    };
     collaboration_areas: {
       type: 'rich_text';
       blocks: CollaborationAreaBlock;
