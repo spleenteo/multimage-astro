@@ -1,8 +1,8 @@
 ---
 status: open
 phase: slice
-slice: V4
-step: null
+slice: V5
+step: plan
 work: diventa-socio
 stacks: [astro, datocms]
 base: main
@@ -34,6 +34,7 @@ Owner answers at opening (2026-11-24):
 - [x] V2 — Sending the request and the confirmation
 - [x] V3 — Live on multimage.org
 - [x] V4 — From the critique: trust, a shorter form, a confirmation that leads to books
+- [ ] V5 — One send: a two-step form, one save, one email
 
 ## Pending proposals
 
@@ -52,3 +53,4 @@ Owner answers at opening (2026-11-24):
 - 2026-11-25 — slicing — V4 added from the Impeccable critique (25/40), owner chose all five issues, payment and collaboration moved to the confirmation — V4 plan — 10 min — n/a
 - 2026-11-25 — V4 plan — packet written; the planner was cut off three times by machine sleep before writing V4-plan.md — resume: dispatch the planner again on V4-packet.md — n/a — n/a
 - 2026-11-25 — V4 close — critique fixes shipped: CMS texts, 0005 remote, collaboration step with per-request token, deployed c9bfe8bc, owner request saved+collab+deleted; Olivier's row 8UHV kept — critique re-run, closing sequence — ~90 min — n/a
+- 2026-11-25 — slicing — V5 added on the owner's request (two-step form, one send, D1 simplified, localhost preview); layout and band passes done with Impeccable between V4 and V5 — V5 plan — 10 min — n/a
