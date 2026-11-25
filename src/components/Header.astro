@@ -48,7 +48,7 @@ const TOP_LINKS: TopLink[] = [
     tone: 'newsletter',
   },
   {
-    label: 'Diventa socio',
+    label: 'Diventa socia o socio',
     href: '/diventa-socio',
     icon: 'iconoir:pen',
     tone: 'cta',
@@ -149,6 +149,7 @@ function linkIsActive(link: NavLink, pathname: string) {
         href={href}
         target={external ? '_blank' : undefined}
         rel={external ? 'noreferrer' : undefined}
+        aria-current={href === normalizedPath ? 'page' : undefined}
         class={`${socialBaseClass} ${tone ? toneClassMap[tone] : 'bg-brand-navy-light/40 hover:bg-brand-navy-light text-white'}`}
       >
         <iconify-icon icon={icon} width="16" height="16" aria-hidden="true" />
@@ -527,6 +528,7 @@ function linkIsActive(link: NavLink, pathname: string) {
                 href={href}
                 target={external ? '_blank' : undefined}
                 rel={external ? 'noreferrer' : undefined}
+                aria-current={href === normalizedPath ? 'page' : undefined}
                 class={`flex items-center gap-3 px-4 py-3 text-xs uppercase ${
                   tone ? toneClassMap[tone] : 'bg-white/10'
                 }`}
