@@ -61,6 +61,7 @@ import {
   MEMBERSHIP_POSTCODE_MAX,
   MEMBERSHIP_REGION_MAX,
   membershipFeeAmount,
+  PAYMENT_METHODS,
   type MembershipFieldKey,
 } from '~/lib/membership';
 import { MEMBERSHIP_PAGE_QUERY, type MembershipPageQueryResult } from './_graphql';
@@ -404,14 +405,17 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
           </ol>
           <fieldset class="socio-pay-toggle" data-socio-pay-toggle>
             <legend>Come preferisci pagare?</legend>
-            <label class="order-check">
-              <input type="radio" name="socio-pay" value="bonifico" checked />
-              <span class="order-check__text">Bonifico bancario</span>
-            </label>
-            <label class="order-check">
-              <input type="radio" name="socio-pay" value="paypal" />
-              <span class="order-check__text">PayPal</span>
-            </label>
+            {(Object.keys(PAYMENT_METHODS) as (keyof typeof PAYMENT_METHODS)[]).map(
+              (method) => <label class="order-check">
+                <input
+                  type="radio"
+                  name="socio-pay"
+                  value={method}
+                  checked={method === 'bonifico'}
+                />
+                <span class="order-check__text">{PAYMENT_METHODS[method]}</span>
+              </label>,
+            )}
           </fieldset>
           <div data-socio-methods>
             <div class="order-bank" data-socio-method="bonifico">

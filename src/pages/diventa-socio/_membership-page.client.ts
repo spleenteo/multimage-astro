@@ -427,7 +427,10 @@ export function initMembershipPage(): void {
       } else if (result?.error === 'not_found') {
         session.collabToken = '';
         closeCollab(collabText.gone(code), true);
-      } else if (result?.error === 'invalid' && result.fields?.length) {
+      } else if (
+        result?.error === 'invalid' &&
+        COLLAB_KEYS.some((key) => (result.fields as string[] | undefined)?.includes(key))
+      ) {
         tellCollab('', false);
         const fromServer: Partial<Record<CollabKey, string>> = {};
         for (const key of COLLAB_KEYS) {

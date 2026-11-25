@@ -17,9 +17,10 @@
  * `skipped`; not saved but mailed is 200 too (the email carries the whole request).
  * The sign-up carries no payment method and no areas (the confirmation and the collaboration step
  * cover them). The 200 answer returns `collabToken`, a fresh 128-bit token whose SHA-256 is the only
- * form stored (`collab_token_hash`); it never goes in emails, logs or the causale. The client sends only the fee id: label and amount are read from the published
- * CMS, never from the client. `fee.label` in the answer is `membershipFeeLabel` ("10 € — Studente
- * under 25"), the text the page shows. Error bodies carry codes only. Nothing personal is ever
+ * form stored (`collab_token_hash`); it never goes in emails, logs or the causale. The client
+ * sends only the fee id: label and amount are read from the published CMS, never from the client.
+ * `fee.label` in the answer is `membershipFeeLabel` ("10 € — Studentessa o studente under 25"),
+ * the text the page shows. Error bodies carry codes only. Nothing personal is ever
  * logged: one line per answer with the status, the code and counts. Bindings come only through
  * `~/lib/cloudflare-bindings`; with none (plain dev) dev prints the email text to the console and
  * answers 200 with `notified: true` and a code that is not saved.

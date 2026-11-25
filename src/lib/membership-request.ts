@@ -24,7 +24,7 @@ const CAUSALE_MAX = 120;
 const CAUSALE_BASE_MAX = 60;
 const NOT_GIVEN = 'non indicato';
 
-/** The `membership_requests` columns the site writes, in table order (`id` and `notify_error` left out). */
+/** The `membership_requests` columns the sign-up writes, `collab_token_hash` last (`id`, `collaboration_at` and `notify_error` left out). */
 export const MEMBERSHIP_COLUMNS = [
   'code',
   'created_at',

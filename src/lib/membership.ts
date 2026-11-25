@@ -163,7 +163,7 @@ export function membershipFeeAmount(amount: number): string {
   return `${text} €`;
 }
 
-/** "10 € — Studente under 25". */
+/** "10 € — Studentessa o studente under 25". */
 export function membershipFeeLabel(fee: { label: string; amount: number }): string {
   return `${membershipFeeAmount(fee.amount)} — ${fee.label}`;
 }
