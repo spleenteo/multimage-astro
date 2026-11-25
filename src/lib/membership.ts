@@ -77,7 +77,6 @@ export type MembershipErrorCode =
   | 'turnstile_unavailable'
   | 'cms_unavailable'
   | 'save_failed'
-  | 'not_found'
   | 'not_configured';
 
 export type MembershipResponse =
@@ -89,8 +88,6 @@ export type MembershipResponse =
       fee: { label: string; amountCents: number };
       /** The payment reason to write on the transfer or the PayPal payment. */
       causale: string;
-      /** Clear token for the collaboration step: held by the page in memory only, never stored by the server in clear. */
-      collabToken: string;
     }
   | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
 
@@ -100,13 +97,6 @@ export interface CollaborationFields {
   areas: string[];
   areasOther: string;
 }
-
-export type CollaborationResponse =
-  | { ok: true; notified: boolean }
-  | { ok: false; error: MembershipErrorCode; fields?: MembershipFieldKey[] };
-
-/** How long after the sign-up the collaboration step is still accepted. */
-export const COLLABORATION_WINDOW_MS = 3600000;
 
 export const COLLABORATION_EMPTY_MESSAGE = 'Scegli almeno un modo per collaborare, oppure Altro.';
 

@@ -1,8 +1,7 @@
 // /diventa-socio page script: validates the membership form, shows the field errors and the
 // summary, runs Turnstile, sends the request to /api/socio and swaps the form for the
 // confirmation: the amounts, the receipt mailto, the payment toggle (moves the chosen box first,
-// no request), print, and the optional collaboration step, sent to the same endpoint with the
-// request code and the token kept in memory. The DOM is touched with textContent and
+// no request) and print. The DOM is touched with textContent and
 // setAttribute only.
 // The markup contract (data-socio-* attributes, ids `socio-<key>`) is defined in index.astro.
 import { createFieldErrors, loadTurnstile } from '~/lib/form.client';
@@ -11,9 +10,7 @@ import {
   MEMBERSHIP_EMAIL,
   MEMBERSHIP_FIELD_MESSAGES,
   MEMBERSHIP_LABELS,
-  validateCollaborationFields,
   validateMembershipFields,
-  type CollaborationResponse,
   type MembershipFieldKey,
   type MembershipFields,
   type MembershipResponse,
@@ -51,17 +48,6 @@ const MSG = {
   generic: `Non siamo riusciti a inviare la richiesta. Riprova tra poco oppure scrivici a ${MEMBERSHIP_EMAIL}.`,
 } as const;
 
-// The collaboration step: the texts the plan decided; `<code>` is the request code.
-const collabText = {
-  sent: (code: string) => `Grazie, abbiamo aggiunto le tue preferenze alla richiesta ${code}.`,
-  gone: (code: string) =>
-    `Non possiamo più aggiungere le preferenze a questa richiesta: scrivile a ${MEMBERSHIP_EMAIL} indicando il codice ${code}.`,
-  other: (code: string) =>
-    `Invio non riuscito. Riprova tra poco, oppure scrivi a ${MEMBERSHIP_EMAIL} indicando il codice ${code}.`,
-} as const;
-const COLLAB_KEYS = ['areas', 'areasOther'] as const;
-type CollabKey = (typeof COLLAB_KEYS)[number];
-
 // The names the error summary links to, as the labels and legends read.
 const FIELD_NAMES: Record<ErrorKey, string> = {
   ...MEMBERSHIP_LABELS,
@@ -87,9 +73,8 @@ export function initMembershipPage(): void {
   let turnstile: { reset: () => void } | undefined;
   let sending = false;
   let finished = false;
-  // In memory only: the request code and the one-shot collaboration token. The token is never
-  // written to the DOM, a URL, storage or a log.
-  const session = { code: '', collabToken: '' };
+  // In memory only: the request code.
+  const session = { code: '' };
 
   const {
     errorEl,
@@ -187,7 +172,7 @@ export function initMembershipPage(): void {
     done
       .querySelectorAll<HTMLElement>('[data-socio-amount]')
       .forEach((el) => (el.textContent = formatCents(res.fee.amountCents)));
-    // The receipt mailto carries the code only, never the token.
+    // The receipt mailto carries the code only.
     done
       .querySelector<HTMLAnchorElement>('[data-socio-receipt-link]')
       ?.setAttribute(
@@ -196,7 +181,6 @@ export function initMembershipPage(): void {
       );
 
     session.code = res.code;
-    session.collabToken = res.collabToken;
 
     const link = done.querySelector<HTMLAnchorElement>('[data-socio-paypal-link]');
     if (link) {
@@ -321,128 +305,6 @@ export function initMembershipPage(): void {
     if (box) methods?.prepend(box);
   });
   $('[data-socio-print]')?.addEventListener('click', () => window.print());
-
-  // --- Confirmation: the optional collaboration step ------------------------
-
-  const collab = $<HTMLFormElement>('form[data-socio-collab]');
-  const collabStatus = $('[data-socio-collab-status]');
-  if (collab) {
-    const collabErrors = createFieldErrors<CollabKey>({
-      root: collab,
-      idPrefix: 'socio',
-      keys: COLLAB_KEYS,
-      names: { areas: MEMBERSHIP_LABELS.areas, areasOther: MEMBERSHIP_LABELS.areasOther },
-      groupKeys: ['areas'],
-      box: null,
-      boxText: null,
-      boxList: null,
-    });
-    const otherBox = collab.querySelector<HTMLElement>('[data-socio-collab-other]');
-    const otherCheck = collab.querySelector<HTMLInputElement>('#socio-areas-other');
-    const otherInput = collab.querySelector<HTMLInputElement>('#socio-areasOther');
-    let collabSending = false;
-
-    const readCollab = () => ({
-      areas: Array.from(
-        collab.querySelectorAll<HTMLInputElement>('input[name="areas"]:checked'),
-      ).map((i) => i.value),
-      areasOther: otherCheck?.checked ? (otherInput?.value ?? '').trim() : '',
-    });
-    const tellCollab = (text: string, isError: boolean) => {
-      if (!collabStatus) return;
-      collabStatus.textContent = text;
-      if (isError) collabStatus.dataset.state = 'error';
-      else delete collabStatus.dataset.state;
-    };
-    // The form is gone (sent, or no longer accepted): the status line takes the focus.
-    const closeCollab = (text: string, isError: boolean) => {
-      collab.hidden = true;
-      tellCollab(text, isError);
-      collabStatus?.setAttribute('tabindex', '-1');
-      collabStatus?.focus();
-    };
-    const showCollabErrors = (problems: Partial<Record<CollabKey, string>>) => {
-      let first: HTMLElement | null = null;
-      for (const key of COLLAB_KEYS) {
-        const message = problems[key];
-        if (!message) continue;
-        collabErrors.setError(key, message);
-        first ??=
-          key === 'areas'
-            ? collab.querySelector<HTMLInputElement>('input[name="areas"]')
-            : otherInput;
-      }
-      first?.focus();
-    };
-
-    otherCheck?.addEventListener('change', () => {
-      if (otherBox) otherBox.hidden = !otherCheck.checked;
-      if (!otherCheck.checked) collabErrors.clearError('areasOther');
-      else otherInput?.focus();
-    });
-    collab.addEventListener('change', () => {
-      const problems = validateCollaborationFields(readCollab());
-      for (const key of COLLAB_KEYS) {
-        if (!problems[key] && !collabErrors.errorEl(key)?.hidden) collabErrors.clearError(key);
-      }
-    });
-
-    collab.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      if (collabSending || !session.code || !session.collabToken) return;
-      collabErrors.clearAll();
-      tellCollab('', false);
-      const picked = readCollab();
-      const problems = validateCollaborationFields(picked);
-      if (problems.areas || problems.areasOther) {
-        showCollabErrors(problems);
-        return;
-      }
-
-      const submit = collab.querySelector<HTMLButtonElement>('button[type="submit"]');
-      collabSending = true;
-      if (submit) submit.disabled = true;
-      tellCollab('Invio in corso…', false);
-
-      let result: CollaborationResponse | null = null;
-      try {
-        const response = await fetch(ENDPOINT, {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ code: session.code, token: session.collabToken, ...picked }),
-        });
-        result = (await response.json().catch(() => null)) as CollaborationResponse | null;
-        if (!response.ok && result?.ok) result = null;
-      } catch {
-        result = null;
-      }
-
-      collabSending = false;
-      if (submit) submit.disabled = false;
-      const code = session.code;
-      if (result?.ok) {
-        // One send per request: the token is spent, drop it from memory too.
-        session.collabToken = '';
-        closeCollab(collabText.sent(code), false);
-      } else if (result?.error === 'not_found') {
-        session.collabToken = '';
-        closeCollab(collabText.gone(code), true);
-      } else if (
-        result?.error === 'invalid' &&
-        COLLAB_KEYS.some((key) => (result.fields as string[] | undefined)?.includes(key))
-      ) {
-        tellCollab('', false);
-        const fromServer: Partial<Record<CollabKey, string>> = {};
-        for (const key of COLLAB_KEYS) {
-          if ((result.fields as string[]).includes(key))
-            fromServer[key] = MEMBERSHIP_FIELD_MESSAGES[key];
-        }
-        showCollabErrors(fromServer);
-      } else {
-        tellCollab(collabText.other(code), true);
-      }
-    });
-  }
 
   // "Copia l'IBAN" lives on the confirmation, which has its own live region.
   const copyBtn = $<HTMLButtonElement>('[data-socio-copy-iban]');

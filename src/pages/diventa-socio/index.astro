@@ -14,12 +14,8 @@
 // chosen box first, no request), `data-socio-methods` holding one `data-socio-method=
 // "bonifico|paypal"` box each, with `data-socio-amount` and `data-socio-causale` in every box
 // (filled from the server's answer, never from the page), `data-socio-copy-iban` +
-// `data-socio-copy-label`, `data-socio-paypal-link` + `data-socio-paypal-label`. The optional
-// collaboration step: the form `data-socio-collab` (checkboxes `name="areas"`, the "Altro" one
-// with value `altro`, the text input `#socio-areasOther` inside `data-socio-collab-other`, error
-// slots `[data-error-for="areas|areasOther"]`) and the live line `data-socio-collab-status`. Then
-// `data-socio-print` and `data-socio-announce` (live region). The collaboration token is never
-// in the markup: the script keeps it in memory.
+// `data-socio-copy-label`, `data-socio-paypal-link` + `data-socio-paypal-label`. Then
+// `data-socio-print` and `data-socio-announce` (live region).
 import { StructuredText } from '@datocms/astro/StructuredText';
 import { PUBLIC_TURNSTILE_SITE_KEY } from 'astro:env/client';
 import BaseLayout from '~/layouts/BaseLayout.astro';
@@ -523,59 +519,6 @@ const noteLines = textLines(membership?.paymentNote).slice(1);
             </div>
           </div>
           {noteLines.map((line) => <p>{line}</p>)}
-          {areas.length > 0 ? (
-            <div class="socio-collab">
-              <form data-socio-collab novalidate>
-                <fieldset class="order-fieldset" aria-describedby="socio-hint-collab">
-                  <legend>Vuoi anche darci una mano?</legend>
-                  <p class="order-hint-line" id="socio-hint-collab">
-                    È facoltativo: scegli come ti piacerebbe collaborare e ti scriviamo al più
-                    presto.
-                  </p>
-                  <div class="socio-collab__areas">
-                    {areas.map((area) => <label class="order-check">
-                      <input type="checkbox" name="areas" value={area.id} />
-                      <span class="order-check__text">{area.label}</span>
-                    </label>)}
-                    <label class="order-check">
-                      <input
-                        type="checkbox"
-                        name="areas"
-                        value={AREA_OTHER}
-                        id="socio-areas-other"
-                      />
-                      <span class="order-check__text">Altro</span>
-                    </label>
-                  </div>
-                  <p class="order-error" id="socio-areas-error" data-error-for="areas" hidden></p>
-                  <div class="order-field" data-socio-collab-other hidden>
-                    <label for="socio-areasOther">{MEMBERSHIP_LABELS.areasOther}</label>
-                    <input
-                      class="order-input"
-                      id="socio-areasOther"
-                      name="areasOther"
-                      type="text"
-                      maxlength={MEMBERSHIP_AREAS_OTHER_MAX}
-                      autocomplete="off"
-                    />
-                    <p
-                      class="order-error"
-                      id="socio-areasOther-error"
-                      data-error-for="areasOther"
-                      hidden
-                    ></p>
-                  </div>
-                </fieldset>
-                <Button type="submit" primary={false}>Invia le tue preferenze</Button>
-              </form>
-              <p
-                class="socio-collab__status"
-                role="status"
-                aria-live="polite"
-                data-socio-collab-status
-              ></p>
-            </div>
-          ) : null}
           <div class="socio-actions">
             <button type="button" class="socio-text-btn" data-socio-print>
               Stampa questa pagina

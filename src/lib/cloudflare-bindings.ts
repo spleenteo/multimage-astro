@@ -5,12 +5,11 @@
 // empty stub, so both getters return null.
 import { env } from 'cloudflare:workers';
 
-/** The part of a D1 database the endpoint uses: prepare, bind, run, first. */
+/** The part of a D1 database the endpoint uses: prepare, bind, run. */
 export interface OrderDb {
   prepare(query: string): {
     bind(...values: Array<string | number | null>): {
       run(): Promise<unknown>;
-      first<T = Record<string, unknown>>(): Promise<T | null>;
     };
   };
 }

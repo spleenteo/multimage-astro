@@ -62,36 +62,6 @@
   @apply mb-1 p-0 text-sm font-semibold text-brand-charcoal;
 }
 
-/* The optional collaboration step: a hairline above, the checkboxes in one column on phones and
-   two from 640px. The status line carries both the thank-you and the failures. */
-.socio-collab {
-  @apply mt-8 border-t border-brand-navy/10 pt-6;
-}
-
-.socio-collab__areas {
-  @apply grid gap-x-6 sm:grid-cols-2;
-}
-
-.socio-collab .order-field {
-  @apply mt-3;
-}
-
-.socio-collab__status {
-  @apply text-base text-brand-charcoal;
-}
-
-.socio-collab__status:focus {
-  outline: none;
-}
-
-.socio-collab__status:empty {
-  display: none;
-}
-
-.socio-collab__status[data-state='error'] {
-  @apply text-sm font-semibold text-brand-crimson;
-}
-
 /* The closing actions: navy underlined text buttons, the catalogue link beside print. */
 .socio-actions {
   @apply flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-brand-navy/10 pt-4;
@@ -102,7 +72,7 @@
 }
 
 /* Print only the confirmation: the same visibility trick as /borsa, scoped to the shown block.
-   The toggle, the collaboration step, the actions and the copy button are screen controls. */
+   The toggle, the actions and the copy button are screen controls. */
 @media print {
   @page {
     margin: 15mm;
@@ -129,7 +99,6 @@
   }
 
   body:has([data-socio-done]:not([hidden])) [data-socio-pay-toggle],
-  body:has([data-socio-done]:not([hidden])) .socio-collab,
   body:has([data-socio-done]:not([hidden])) .socio-actions,
   body:has([data-socio-done]:not([hidden])) [data-socio-copy-iban] {
     display: none;
