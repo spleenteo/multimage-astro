@@ -17,8 +17,7 @@
 }
 
 .socio-band__figure {
-  @apply block font-serif leading-none font-semibold text-white;
-  font-size: clamp(3rem, 2rem + 4vw, 4.5rem);
+  @apply block font-serif text-5xl leading-none font-semibold text-white sm:text-6xl;
   font-variant-numeric: lining-nums;
   letter-spacing: -0.02em;
 }
