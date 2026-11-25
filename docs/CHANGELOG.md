@@ -2,6 +2,20 @@
 
 All notable changes to the Multimage site, newest first.
 
+## v1.4.0 — 2026-11-25 — A membership page and a sign-up form to become a member
+
+Visitors can now read what membership means and ask to become a member of the association from a new page, `/diventa-socio`, with no account and no checkout.
+
+- **Membership page**: `/diventa-socio` shows the membership texts edited in DatoCMS, a band with the benefits and the fee amounts, and the form beside them; the old `/info/adesioni` address redirects there and the header and menu links point to it.
+- **Two-step form**: step 1 asks for the person's data (name, email, date and place of birth, address, consent), step 2 for the fee type, the payment method and, optionally, how they would like to help; it is protected by Turnstile and keeps what was typed if sending fails.
+- **Fees from the CMS**: the fee types and the collaboration areas come from the `membership` singleton in DatoCMS, and the server re-reads them, so the browser never sends an amount.
+- **One send**: a single request is saved in Cloudflare D1, and notified by email to the association's info mailbox with the applicant as reply-to; the visitor gets a request code.
+- **Confirmation**: the screen says the person will be contacted soon, lists the next steps, offers the bank transfer details or a PayPal button for the fee, can be printed, and points to the books.
+- **Documentation**: the security, operations and D1 notes describe the membership endpoint, its two tables and the shared rate-limit rule.
+- **Work**: `diventa-socio`
+
+---
+
 ## v1.3.0 — 2026-11-24 — Buyer kinds from the CMS, a bag button on every book card, bag counters
 
 After a review with the product owner, the order form takes its buyer kinds and discounts from DatoCMS, book cards gain a quick "add to bag" button, and the site counts how the bag is used without tracking anyone.
