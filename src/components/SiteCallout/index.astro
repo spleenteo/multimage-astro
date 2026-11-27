@@ -34,8 +34,14 @@ const style = `background-color: rgb(${bg.red} ${bg.green} ${bg.blue}); color: $
 }
 
 <style>
+  /* global.css sizes every <p> (1rem, 1.125rem from md): the bar keeps its own small size. */
   .site-callout :global(p) {
     margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  .site-callout :global(strong) {
+    color: inherit;
   }
   .site-callout :global(a) {
     color: inherit;
