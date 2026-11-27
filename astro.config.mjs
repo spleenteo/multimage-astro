@@ -35,6 +35,11 @@ export default defineConfig({
   // Workers Cache provider, Cloudflare only: on Vercel there is no `cache` key (ISR does the caching).
   ...(isCloudflare ? { cache: { provider: cacheCloudflare() } } : {}),
   site: 'https://www.multimage.org',
+  // Permanent redirects for retired URLs (pages deleted from the CMS that may still be linked).
+  redirects: {
+    // Christmas 2025 membership page, deleted 2026-11-27.
+    '/info/a-natale-regala-libri-multimage': { status: 301, destination: '/diventa-socio' },
+  },
   // Astro 7 defaults to 'jsx' (strips whitespace between inline elements); keep HTML-aware compression.
   // Keep in sync with astroCompressHTML in .prettierrc (true = 'html').
   compressHTML: true,
