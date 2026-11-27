@@ -1,12 +1,15 @@
 // Payment facts shared by every request that asks for money (book orders, membership fees).
-// No imports: client scripts bundle this file and plain `tsx` loads it.
+// The values live in `src/config/site.ts`. Imports only that file (relative, no alias): client
+// scripts bundle this file and plain `tsx` loads it.
 
-export const PAYMENT_ACCOUNT_HOLDER = 'Associazione Multimage';
-export const PAYMENT_BANK = 'Banca Etica';
-export const PAYMENT_IBAN = 'IT50T0501802800000011361524';
-export const PAYMENT_BIC = 'ETICIT22XXX';
-export const PAYMENT_SWIFT_INTERMEDIARY = 'POSOIT22XXX';
-export const PAYMENT_PAYPAL = 'info@multimage.org';
+import { SITE } from '../config/site';
+
+export const PAYMENT_ACCOUNT_HOLDER = SITE.payment.accountHolder;
+export const PAYMENT_BANK = SITE.payment.bank;
+export const PAYMENT_IBAN = SITE.payment.iban;
+export const PAYMENT_BIC = SITE.payment.bic;
+export const PAYMENT_SWIFT_INTERMEDIARY = SITE.payment.swiftIntermediary;
+export const PAYMENT_PAYPAL = SITE.payment.paypal;
 
 /** The IBAN in groups of four, for reading and copying by hand. */
 export function formatIban(s: string): string {

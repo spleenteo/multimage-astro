@@ -1,4 +1,5 @@
 ---
+import { SITE } from '~/config/site';
 import { NEWSLETTER_FORM_URL } from '~/lib/newsletter';
 
 type NavLink = {
@@ -28,14 +29,14 @@ type TopLink = {
 const TOP_LINKS: TopLink[] = [
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/multimage_editrice/',
+    href: SITE.links.instagram,
     icon: 'iconoir:instagram',
     external: true,
     tone: 'instagram',
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/multimage/',
+    href: SITE.links.facebook,
     icon: 'iconoir:facebook-tag',
     external: true,
     tone: 'facebook',

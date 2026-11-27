@@ -1,9 +1,11 @@
 /**
  * Membership request ("Diventa socio"): field keys, rules, limits and Italian messages.
- * No imports: the client bundles this file, like `order.ts`.
+ * Imports only `../config/site` (relative, no alias): the client bundles this file, like `order.ts`.
  */
 
-export const MEMBERSHIP_EMAIL = 'info@multimage.org';
+import { SITE } from '../config/site';
+
+export const MEMBERSHIP_EMAIL = SITE.emails.info;
 export const MEMBERSHIP_ACTION = 'socio';
 
 export const PAYMENT_METHODS = {

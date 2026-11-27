@@ -1,6 +1,8 @@
 // Order facts and pure helpers, shared by pages, the bag drawer and the order email.
-// Imports only `./payment` (relative, no alias): client scripts bundle this file and plain `tsx` loads it.
+// Imports only `./payment` and `../config/site` (relative, no alias): client scripts bundle this file
+// and plain `tsx` loads it.
 
+import { SITE } from '../config/site';
 import {
   PAYMENT_ACCOUNT_HOLDER,
   PAYMENT_BANK,
@@ -14,7 +16,7 @@ import {
 
 export { formatIban };
 
-export const ORDER_EMAIL = 'ordini@multimage.org';
+export const ORDER_EMAIL = SITE.emails.orders;
 export const BAG_STORAGE_KEY = 'multimage:bag';
 export const QTY_MIN = 1;
 export const QTY_MAX = 20;
@@ -148,8 +150,8 @@ export function bagBookFor(book: {
 // --- Order facts -----------------------------------------------------------
 
 // Sender on the Email Routing subdomain, confirmed in the shaping revision.
-export const ORDER_FROM_ADDRESS = 'sito@ordini.multimage.org';
-export const ORDER_FROM_NAME = 'Multimage';
+export const ORDER_FROM_ADDRESS = SITE.emails.siteSender;
+export const ORDER_FROM_NAME = SITE.emails.siteSenderName;
 export const ORDER_FROM = `${ORDER_FROM_NAME} <${ORDER_FROM_ADDRESS}>`;
 export const ORDER_ACCOUNT_HOLDER = PAYMENT_ACCOUNT_HOLDER;
 export const ORDER_BANK = PAYMENT_BANK;

@@ -1,4 +1,6 @@
 ---
+import { SITE, SITE_ADDRESS_LINE } from '~/config/site';
+
 type FooterLink = {
   id?: string;
   label: string;
@@ -64,12 +66,12 @@ const FOOTER_GROUPS = buildFooterGroups(footerPages);
 const SOCIAL_LINKS: SocialLink[] = [
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/multimage_editrice/',
+    href: SITE.links.instagram,
     icon: 'iconoir:instagram',
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/multimage/',
+    href: SITE.links.facebook,
     icon: 'iconoir:facebook-tag',
   },
 ] as const;
@@ -162,13 +164,13 @@ const LEGAL_LINKS: LegalLink[] = [
     class="container flex flex-col gap-4 py-6 text-xs text-brand-mist/80 md:flex-row md:items-center md:justify-between"
   >
     <address class="not-italic leading-relaxed text-brand-mist/70">
-      Associazione Multimage APS &mdash; Via Mario Pagano 7, 50133 Firenze &mdash;
+      {SITE.association.legalName} &mdash; {SITE_ADDRESS_LINE} &mdash;
       <a
-        href="mailto:info@multimage.org"
+        href={`mailto:${SITE.emails.info}`}
         class="text-brand-mist transition hover:text-white focus:text-white"
-        >info@multimage.org</a
+        >{SITE.emails.info}</a
       >
-      &mdash; P.I. 06987750012
+      &mdash; P.I. {SITE.association.vatNumber}
     </address>
     <div class="flex flex-wrap items-center gap-x-4 md:gap-y-2">
       {LEGAL_LINKS.map(({ label, href, external }) => <a
