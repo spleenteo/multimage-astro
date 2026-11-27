@@ -462,6 +462,10 @@ The catalogue as the editors think it.
   - The magazine never infers a book: books appear only where the editors place them.
 - **End:** "Altre recensioni" (the same category, newest 3, with dates on hairlines), then "Tutte le recensioni" and "Torna al magazine". There is no orange action.
 
+### Info pages (`/info/[slug]`)
+
+The magazine article's reading surface, shared through `src/styles/reading.module.css`: the left-aligned title row (h1, the CMS subtitle as lede), a hairline, then the 68ch prose column with the editors' headings shifted to start at h2. No label above the title, no card and no shadow around title or text.
+
 ### Search (`/cerca`)
 
 - **Title row:** h1 "Cerca", then a one-line lede of what can be found.

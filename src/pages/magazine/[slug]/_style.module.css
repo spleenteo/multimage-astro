@@ -1,18 +1,5 @@
 @reference '../../../styles/global.css';
 
-.page {
-  @apply space-y-8 md:space-y-12;
-}
-
-/* Slim title row, left-aligned: h1, one slate line (category · date · byline), the lede. */
-.intro {
-  @apply max-w-[52rem] space-y-3;
-}
-
-.title {
-  @apply font-serif text-3xl leading-tight text-balance text-brand-navy md:text-5xl md:leading-[1.1];
-}
-
 .meta {
   @apply flex flex-wrap items-baseline gap-x-2 text-base text-brand-slate;
 }
@@ -24,11 +11,6 @@
 
 .meta a {
   @apply inline-flex min-h-11 items-center font-semibold text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy md:min-h-0;
-}
-
-.lede {
-  @apply max-w-[68ch] pt-1 text-lg leading-relaxed text-pretty text-brand-charcoal md:text-xl;
-  overflow-wrap: anywhere;
 }
 
 /* The featured image whole (posters and clippings carry text), on a mist field. */
@@ -44,56 +26,6 @@
   height: auto !important;
   max-height: min(70vh, 40rem);
   object-fit: contain;
-}
-
-.body {
-  @apply border-t border-brand-navy/10 pt-8;
-}
-
-/* The reading column: 68ch, the author profile's prose, hairline quotes, no stripes. */
-.prose {
-  @apply max-w-[68ch] space-y-5 text-base leading-relaxed text-brand-charcoal md:text-lg;
-  overflow-wrap: break-word;
-}
-
-.prose :global(h2) {
-  @apply pt-6 font-serif text-2xl leading-snug text-balance text-brand-navy md:text-3xl;
-}
-
-.prose :global(h3) {
-  @apply pt-4 font-serif text-xl leading-snug text-brand-navy md:text-2xl;
-}
-
-.prose :global(h4) {
-  @apply pt-2 text-lg font-semibold text-brand-navy;
-}
-
-.prose :global(a) {
-  @apply text-brand-navy underline underline-offset-2 hover:text-brand-navy focus:text-brand-navy;
-}
-
-.prose :global(strong) {
-  @apply font-semibold text-brand-charcoal;
-}
-
-.prose :global(blockquote) {
-  @apply border-y border-brand-navy/10 py-4 font-serif text-brand-navy italic;
-}
-
-.prose :global(ul) {
-  @apply list-disc space-y-1 pl-6;
-}
-
-.prose :global(ol) {
-  @apply list-decimal space-y-1 pl-6;
-}
-
-.prose :global(hr) {
-  @apply my-8 border-brand-navy/10;
-}
-
-.note {
-  @apply text-base text-brand-charcoal;
 }
 
 /* The way on: more of the same category, then back to the magazine. */

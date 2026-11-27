@@ -10,6 +10,7 @@ import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
 import { shiftHeadings } from '~/lib/datocms/structuredTextHeadings';
 import { withFallbackSeo } from '~/lib/seo';
 import styles from './_style.module.css';
+import reading from '../../../styles/reading.module.css';
 import {
   MAGAZINE_POST_QUERY,
   MAGAZINE_RELATED_QUERY,
@@ -83,9 +84,9 @@ const seo = withFallbackSeo(post._seoMetaTags, {
 ---
 
 <BaseLayout seo={seo}>
-  <article class={styles.page}>
-    <header class={styles.intro}>
-      <h1 class={styles.title}>{title}</h1>
+  <article class={reading.page}>
+    <header class={reading.intro}>
+      <h1 class={reading.title}>{title}</h1>
       {categoryName || formattedDate || authorName ? (
         <p class={styles.meta}>
           {categoryName ? (
@@ -99,7 +100,7 @@ const seo = withFallbackSeo(post._seoMetaTags, {
           {authorName ? <span>di {authorName}</span> : null}
         </p>
       ) : null}
-      {showLede ? <p class={styles.lede}>{lede}</p> : null}
+      {showLede ? <p class={reading.lede}>{lede}</p> : null}
     </header>
 
     {heroImage ? (
@@ -114,9 +115,9 @@ const seo = withFallbackSeo(post._seoMetaTags, {
       </figure>
     ) : null}
 
-    <div class={styles.body}>
+    <div class={reading.body}>
       {hasBodyContent && body ? (
-        <div class={styles.prose}>
+        <div class={reading.prose}>
           <StructuredText
             data={body as any}
             blockComponents={defaultBlockComponents as any}
@@ -126,7 +127,7 @@ const seo = withFallbackSeo(post._seoMetaTags, {
           />
         </div>
       ) : (
-        <p class={styles.note}>Il testo di questo articolo sarà disponibile a breve.</p>
+        <p class={reading.note}>Il testo di questo articolo sarà disponibile a breve.</p>
       )}
     </div>
 

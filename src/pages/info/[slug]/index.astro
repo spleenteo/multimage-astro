@@ -4,13 +4,16 @@ import { StructuredText } from '@datocms/astro/StructuredText';
 import { executeQuery } from '~/lib/datocms/executeQuery';
 import { toPlainText } from '~/lib/text';
 import { withFallbackSeo } from '~/lib/seo';
-import styles from './_style.module.css';
+import reading from '../../../styles/reading.module.css';
 import { INFO_PAGE_QUERY } from './_graphql';
 import type { PageRecord, SeoMetaTag } from '~/lib/datocms/types';
 import { hasStructuredTextContent } from '~/lib/datocms/structuredText';
+import { shiftHeadings } from '~/lib/datocms/structuredTextHeadings';
 import {
   defaultBlockComponents,
+  defaultInlineRecordComponents,
   defaultLinkToRecordComponents,
+  defaultNodeOverrides,
 } from '~/lib/datocms/structuredTextComponents';
 import DraftModeQueryListener from '~/components/DraftModeQueryListener';
 import { resolveDraftMode } from '~/lib/draftPreview';
@@ -41,8 +44,9 @@ if (!page) {
 const heroTitle = page.title ?? 'Info';
 const heroSubtitle = toPlainText(page.subtitle ?? null);
 const heroDescription = heroSubtitle.length > 0 ? heroSubtitle : undefined;
-const hasBodyContent = hasStructuredTextContent(page.body);
-const sectionLabel = toPlainText(page.label ?? null) || 'Info Multimage';
+// The editors' headings shift so the highest becomes h2 under the page's h1.
+const body = shiftHeadings(page.body);
+const hasBodyContent = hasStructuredTextContent(body);
 
 const seo = withFallbackSeo(page._seoMetaTags, {
   title: `${heroTitle} | Multimage`,
@@ -51,30 +55,27 @@ const seo = withFallbackSeo(page._seoMetaTags, {
 ---
 
 <BaseLayout seo={seo}>
-  <article class={styles.layout}>
-    <section class={styles.heroSection}>
-      <div class={styles.heroContent}>
-        <p class={styles.label}>{sectionLabel}</p>
-        <h1 class={styles.title}>{heroTitle}</h1>
-        {heroDescription ? <p class={styles.subtitle}>{heroDescription}</p> : null}
-      </div>
-    </section>
+  <article class={reading.page}>
+    <header class={reading.intro}>
+      <h1 class={reading.title}>{heroTitle}</h1>
+      {heroDescription ? <p class={reading.lede}>{heroDescription}</p> : null}
+    </header>
 
-    <section class={styles.bodySection}>
-      {hasBodyContent && page.body ? (
-        <div class={styles.bodyContent}>
+    <div class={reading.body}>
+      {hasBodyContent && body ? (
+        <div class={reading.prose}>
           <StructuredText
-            data={page.body as any}
+            data={body as any}
             blockComponents={defaultBlockComponents as any}
+            inlineRecordComponents={defaultInlineRecordComponents as any}
             linkToRecordComponents={defaultLinkToRecordComponents as any}
+            nodeOverrides={defaultNodeOverrides as any}
           />
         </div>
       ) : (
-        <p class="text-sm text-brand-slate">
-          I contenuti di questa pagina saranno disponibili a breve.
-        </p>
+        <p class={reading.note}>I contenuti di questa pagina saranno disponibili a breve.</p>
       )}
-    </section>
+    </div>
   </article>
   <DraftModeQueryListener query={INFO_PAGE_QUERY} variables={{ slug }} />
 </BaseLayout>
