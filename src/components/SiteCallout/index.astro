@@ -2,6 +2,7 @@
 // Thin announcement bar above the whole site, from the `app` singleton (callout_text +
 // callout_background). Renders nothing when the text is empty. The WYSIWYG HTML goes through the
 // allowlist sanitizer; the text colour follows the background's luminance to keep the contrast.
+// A small line-drawn sprout (currentColor) grows once beside the text.
 import { sanitizeCmsHtml } from '~/lib/text';
 
 interface Props {
@@ -28,7 +29,14 @@ const style = `background-color: rgb(${bg.red} ${bg.green} ${bg.blue}); color: $
 {
   html ? (
     <div class="site-callout" style={style} data-datocms-noindex>
-      <div class="container py-1 text-center text-[11px] leading-tight md:text-xs" set:html={html} />
+      <div class="site-callout__row container py-1 text-center text-[11px] leading-tight md:text-xs">
+        <svg class="site-callout__sprout" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M8 15V7.5" />
+          <path d="M8 10C5.2 10 3 8 3 5c2.8 0 5 2 5 5" />
+          <path d="M8 7.5C8 4.6 10.2 2.5 13 2.5c0 2.9-2.2 5-5 5" />
+        </svg>
+        <div set:html={html} />
+      </div>
     </div>
   ) : null
 }
@@ -54,5 +62,44 @@ const style = `background-color: rgb(${bg.red} ${bg.green} ${bg.blue}); color: $
   .site-callout :global(a:focus-visible) {
     outline: 2px solid currentColor;
     outline-offset: 2px;
+  }
+
+  .site-callout__row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
+
+  /* A sprout drawn in line, growing once on load: stem first, then the two leaves. */
+  .site-callout__sprout {
+    width: 1.4em;
+    height: 1.4em;
+    flex: none;
+  }
+  .site-callout__sprout path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    animation: site-callout-sprout 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s 1 backwards;
+  }
+  .site-callout__sprout path:nth-child(2) {
+    animation-delay: 0.9s;
+  }
+  .site-callout__sprout path:nth-child(3) {
+    animation-delay: 1.15s;
+  }
+  @keyframes site-callout-sprout {
+    from {
+      stroke-dashoffset: 24;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-callout__sprout path {
+      animation: none;
+    }
   }
 </style>

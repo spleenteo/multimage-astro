@@ -255,7 +255,7 @@ scope: A list to describe all components used in the project
 - `SiteCallout` — **SiteCallout** (`src/components/SiteCallout/index.astro`)
   - Purpose: thin announcement bar above the header on every page, from the `app` singleton (`callout_text`, `callout_background`).
   - Key props: `text` (WYSIWYG HTML), `background` (`{ red, green, blue }`).
-  - Notes: renders nothing when the text is empty; HTML goes through `sanitizeCmsHtml`; the text colour (near-black or white) follows the background luminance. Rendered by `BaseLayout`, data from its `SiteMeta` query (layout cache tags).
+  - Notes: renders nothing when the text is empty; a line-drawn sprout (currentColor) grows once beside the text (static under reduced motion); HTML goes through `sanitizeCmsHtml`; the text colour (near-black or white) follows the background luminance. Rendered by `BaseLayout`, data from its `SiteMeta` query (layout cache tags).
 
 ## Deprecated or missing pieces
 - ResponsiveImage/VideoPlayer components referenced in legacy docs
