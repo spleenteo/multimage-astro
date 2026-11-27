@@ -11,32 +11,11 @@ export type App = ItemTypeDefinition<
     callout_background: {
       type: 'color';
     };
-    footer_text: {
-      type: 'structured_text';
-    };
-    nav_items: {
-      type: 'rich_text';
-      blocks: MenuItem | MenuDropdown | MenuExternalItem;
-      localized: true;
-    };
     pdf_footer: {
       type: 'text';
     };
     callout_text: {
       type: 'text';
-    };
-    footer_links: {
-      type: 'rich_text';
-      blocks: FooterMenuBlock;
-      localized: true;
-    };
-    social_links: {
-      type: 'rich_text';
-      blocks: SocialLink;
-    };
-    legal_text: {
-      type: 'structured_text';
-      localized: true;
     };
   }
 >;
@@ -556,24 +535,6 @@ export const FaqSection = {
   REF: { type: 'item_type', id: 'QkR2_FyOQrKHP2IdQYmRWw' },
 } as const;
 
-export type FooterMenuBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'RkbPKoyQTc-ZOyS_6ou0vw',
-  {
-    widget_label: {
-      type: 'string';
-    };
-    nav_links: {
-      type: 'rich_text';
-      blocks: MenuItem | MenuExternalItem;
-    };
-  }
->;
-export const FooterMenuBlock = {
-  ID: 'RkbPKoyQTc-ZOyS_6ou0vw',
-  REF: { type: 'item_type', id: 'RkbPKoyQTc-ZOyS_6ou0vw' },
-} as const;
-
 export type Home = ItemTypeDefinition<
   EnvironmentSettings,
   '152502',
@@ -756,58 +717,6 @@ export type MembershipFeeBlock = ItemTypeDefinition<
 export const MembershipFeeBlock = {
   ID: 'atldWDPdSCC9CtxlEcm65Q',
   REF: { type: 'item_type', id: 'atldWDPdSCC9CtxlEcm65Q' },
-} as const;
-
-export type MenuDropdown = ItemTypeDefinition<
-  EnvironmentSettings,
-  'KqTe02scRaOINXc7vgwjbA',
-  {
-    static_label: {
-      type: 'string';
-    };
-    pages: {
-      type: 'rich_text';
-      blocks: MenuItem | MenuExternalItem;
-    };
-  }
->;
-export const MenuDropdown = {
-  ID: 'KqTe02scRaOINXc7vgwjbA',
-  REF: { type: 'item_type', id: 'KqTe02scRaOINXc7vgwjbA' },
-} as const;
-
-export type MenuExternalItem = ItemTypeDefinition<
-  EnvironmentSettings,
-  'Y3bk-wH6TKibydUwoN1eBA',
-  {
-    label: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-  }
->;
-export const MenuExternalItem = {
-  ID: 'Y3bk-wH6TKibydUwoN1eBA',
-  REF: { type: 'item_type', id: 'Y3bk-wH6TKibydUwoN1eBA' },
-} as const;
-
-export type MenuItem = ItemTypeDefinition<
-  EnvironmentSettings,
-  'HgR65F53QMCb2K39_hHZZw',
-  {
-    label: {
-      type: 'string';
-    };
-    page: {
-      type: 'link';
-    };
-  }
->;
-export const MenuItem = {
-  ID: 'HgR65F53QMCb2K39_hHZZw',
-  REF: { type: 'item_type', id: 'HgR65F53QMCb2K39_hHZZw' },
 } as const;
 
 export type NewsletterSubscription = ItemTypeDefinition<
@@ -1062,26 +971,6 @@ export const SingleInfoBlock = {
   REF: { type: 'item_type', id: 'LC9IkC3SQfeCI8hNLSoLww' },
 } as const;
 
-export type SocialLink = ItemTypeDefinition<
-  EnvironmentSettings,
-  'Uoswkz_uQ4ibh_EoJ-DwkQ',
-  {
-    platform: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-    icon_name: {
-      type: 'string';
-    };
-  }
->;
-export const SocialLink = {
-  ID: 'Uoswkz_uQ4ibh_EoJ-DwkQ',
-  REF: { type: 'item_type', id: 'Uoswkz_uQ4ibh_EoJ-DwkQ' },
-} as const;
-
 export type Supplier = ItemTypeDefinition<
   EnvironmentSettings,
   '70444',
@@ -1144,12 +1033,8 @@ export type AnyBlock =
   | CollaborationAreaBlock
   | CtaButtonWithImage
   | FaqSection
-  | FooterMenuBlock
   | ImageBlock
   | MembershipFeeBlock
-  | MenuDropdown
-  | MenuExternalItem
-  | MenuItem
   | NewsletterSubscription
   | OrderStep
   | PillsBlock
@@ -1158,7 +1043,6 @@ export type AnyBlock =
   | SingleAuthor
   | SingleBook
   | SingleInfoBlock
-  | SocialLink
   | Video;
 export type AnyModel =
   | App

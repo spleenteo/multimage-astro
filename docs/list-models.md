@@ -6,6 +6,9 @@ scope: A list to describe all models in pages
 - **`_Site`** (queried inside `BaseLayout` via `SITE_QUERY`)
   - Powers favicon/meta tags and header/footer menus for every page.
   - Notes: Italian-only site, so `menu`/`menuFooter` just control which info pages appear in the navigation.
+- **`AppRecord`** (singleton `app`; `BaseLayout` `SITE_QUERY` and `src/pages/libri/schede/_graphql.ts`)
+  - Fields: `calloutText` (WYSIWYG, the site-wide `SiteCallout` bar, hidden when empty), `calloutBackground` (color), `pdfFooter` (publisher block on the printable book sheet).
+  - Notes: the unused `nav_items`, `footer_links`, `social_links`, `footer_text`, `legal_text` fields and their blocks (`menu_item`, `menu_external_item`, `menu_dropdown`, `footer_menu_block`, `social_link`) were removed from the primary environment on 2026-11-27.
 - **`HomeRecord`** (`src/pages/index/_graphql.ts`)
   - Fields: `title`, `claim`, `heroImage`, `_seoMetaTags`, `highlight`, modular `banners`.
   - Used in home hero plus the modular block pipeline described below.
