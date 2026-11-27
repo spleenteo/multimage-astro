@@ -346,13 +346,12 @@ if (!heroBook) {
   heroBook = latestRecord ? toHighlightData(latestRecord, 'Libro del momento') : null;
 }
 
-// Fixed top: the first carousel follows the doors; the rest keeps the editors' order.
-const firstCarousel = homeBannerEntries.find((entry) => entry.kind === 'bookCarousel') ?? null;
+// Below the hero and the doors every block keeps the editors' order from the CMS.
 // A pills block whose buttons only lead to catalogue, authors and collections repeats HomeDoors.
 const repeatsDoors = (entry: HomeBannerEntry) =>
   entry.kind === 'pills' && onlyRepeatsDoors(entry.data.pills.map((pill) => pill.button?.url));
 const freeEntries = homeBannerEntries.filter(
-  (entry) => entry !== firstCarousel && entry.id !== heroBlockId && !repeatsDoors(entry),
+  (entry) => entry.id !== heroBlockId && !repeatsDoors(entry),
 );
 
 const seo = withFallbackSeo(home?._seoMetaTags, {
@@ -378,15 +377,6 @@ const seo = withFallbackSeo(home?._seoMetaTags, {
     )}
 
     <HomeDoors />
-
-    {firstCarousel?.kind === 'bookCarousel' ? (
-      <BookCarouselSection
-        id={firstCarousel.data.id}
-        title={firstCarousel.data.title}
-        description={firstCarousel.data.description}
-        books={firstCarousel.data.books}
-      />
-    ) : null}
 
     {freeEntries.length > 0 ? (
       <div class="v3-space-y-10">

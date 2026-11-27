@@ -387,6 +387,9 @@ export type Book = ItemTypeDefinition<
     keywords: {
       type: 'links';
     };
+    jytgfjhgcv: {
+      type: 'structured_text';
+    };
   }
 >;
 export const Book = {
@@ -692,14 +695,28 @@ export type Membership = ItemTypeDefinition<
   EnvironmentSettings,
   'LHYUU8UnQeG-_VSVHqGX9Q',
   {
+    collaboration_areas: {
+      type: 'rich_text';
+      blocks: CollaborationAreaBlock;
+    };
+    fees: {
+      type: 'rich_text';
+      blocks: MembershipFeeBlock;
+    };
     slug: {
       type: 'slug';
+    };
+    fee_note: {
+      type: 'string';
     };
     seo: {
       type: 'seo';
     };
     title: {
       type: 'string';
+    };
+    payment_note: {
+      type: 'text';
     };
     subtitle: {
       type: 'text';
@@ -713,20 +730,6 @@ export type Membership = ItemTypeDefinition<
         | ImageBlock
         | Button
         | Video;
-    };
-    fees: {
-      type: 'rich_text';
-      blocks: MembershipFeeBlock;
-    };
-    fee_note: {
-      type: 'string';
-    };
-    collaboration_areas: {
-      type: 'rich_text';
-      blocks: CollaborationAreaBlock;
-    };
-    payment_note: {
-      type: 'text';
     };
     success_text: {
       type: 'text';
