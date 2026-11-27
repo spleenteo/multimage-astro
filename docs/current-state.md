@@ -13,6 +13,7 @@ scope: Living snapshot of Multimage's current implementation status. Update sect
 - Helpers live in `src/lib/**` (datocms, draftMode, seo, books/authors/suppliers). All routes are SSR (no more `prerender` flag branching), cached by Vercel ISR in production and, on branch `chore/cloudflare`, by the Workers Cache with DatoCMS cache tags (`DEPLOY_TARGET=cloudflare`).
 - Layout, styles, scripts:
   - `src/layouts/BaseLayout.astro` loads site-wide data, analytics, and icon scripts.
+  - Since 2026-11-27 a `SiteCallout` bar sits above the header when `app.callout_text` has text (background from `app.callout_background`); `pdf_footer` and `callout_*` are the only `app` fields the site reads.
   - `src/styles/global.css` imports fonts + Tailwind 4 and defines the design tokens in `@theme static` (no JS config).
   - `scripts/` hosts `sync-datocms.mjs` (schema generation) and `build-search-client.mjs`.
 - Generated assets: `public/generated` stores the Site Search + Swiper bundles built during `npm run prebuild`.

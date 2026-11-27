@@ -5,6 +5,7 @@ import Footer from '~/components/Footer.astro';
 import BagDrawer from '~/components/BagDrawer/index.astro';
 import ContentLink from '~/components/ContentLink.astro';
 import EditorModeBadge from '~/components/EditorModeBadge.astro';
+import SiteCallout from '~/components/SiteCallout/index.astro';
 import '../styles/global.css';
 
 import { Seo, type TitleMetaLinkTag } from '@datocms/astro';
@@ -37,6 +38,14 @@ const SITE_QUERY = /* GraphQL */ `
       slug
       label
     }
+    app {
+      calloutText
+      calloutBackground {
+        red
+        green
+        blue
+      }
+    }
   }
 `;
 
@@ -46,6 +55,10 @@ type SiteMetaResult = {
   } | null;
   headerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
   footerPages: Array<Pick<PageRecord, 'id' | 'slug' | 'label'>> | null;
+  app: {
+    calloutText: string | null;
+    calloutBackground: { red: number; green: number; blue: number } | null;
+  } | null;
 };
 
 function normalizeCanonicalBase(candidate: string | URL | null | undefined): string | null {
@@ -78,7 +91,7 @@ function buildCanonicalHref(base: string, pathname: string): string {
 
 const draftModeEnabled = resolveDraftMode(Astro);
 
-const { _site, headerPages, footerPages } = await executeQuery<SiteMetaResult>(SITE_QUERY, {
+const { _site, headerPages, footerPages, app } = await executeQuery<SiteMetaResult>(SITE_QUERY, {
   includeDrafts: draftModeEnabled,
   cacheTagScope: 'layout',
 });
@@ -250,6 +263,7 @@ const seoData = sanitizeMetaTags([...(seo ?? []), ...faviconTags, ...canonicalTa
     >
       Vai al contenuto
     </a>
+    <SiteCallout text={app?.calloutText} background={app?.calloutBackground} />
     <Header currentPath={currentPath} infoPages={infoPages} />
     <main id="contenuto" class="flex-1 bg-white">
       <div class="container py-12 md:py-16">

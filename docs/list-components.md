@@ -252,6 +252,11 @@ scope: A list to describe all components used in the project
   - Key props: `currentPath` (used to build the exit redirect back to the current page).
   - Notes: rendered by `BaseLayout` only when `resolveDraftMode(Astro)` is true; `print:hidden`. The printable book sheet has no layout, so it shows no badge. See `docs/decisions-log/2026-05-31-editor-session-gating.md`.
 
+- `SiteCallout` — **SiteCallout** (`src/components/SiteCallout/index.astro`)
+  - Purpose: thin announcement bar above the header on every page, from the `app` singleton (`callout_text`, `callout_background`).
+  - Key props: `text` (WYSIWYG HTML), `background` (`{ red, green, blue }`).
+  - Notes: renders nothing when the text is empty; HTML goes through `sanitizeCmsHtml`; the text colour (near-black or white) follows the background luminance. Rendered by `BaseLayout`, data from its `SiteMeta` query (layout cache tags).
+
 ## Deprecated or missing pieces
 - ResponsiveImage/VideoPlayer components referenced in legacy docs
   - Status: removed in favor of direct `@datocms/astro/Image` usage and `VideoBlock`.
